@@ -70,7 +70,11 @@ aprendendo-ai/
 - A rotina só tem push garantido em branches com prefixo `claude/`. Por isso **`claude/biblioteca` é a branch padrão e única do repositório**: contém código, dados e site. Não existe `main`.
 - O GitHub Pages publica a pasta `site/` via GitHub Actions (workflow de deploy do Pages), já que o modo "deploy from branch" só aceita raiz ou `/docs`. Como `claude/biblioteca` é a branch padrão, o environment `github-pages` aceita o deploy sem configuração extra.
 
-### 3.3 Ambiente na nuvem
+### 3.3 Onde a rotina roda (decisão de 2026-09-29)
+
+O diagnóstico na nuvem mostrou que o YouTube bloqueia IPs de datacenter ("Sign in to confirm you're not a bot"): sem legendas, sem trechos de vídeo e sem storyboard. Só o RSS funciona. Por isso a rotina diária roda como **tarefa agendada local do app Claude** no Mac do usuário, às 07:00, usando `.venv/bin/python` e o mesmo `ROTINA.md`. Se o app estiver fechado, a tarefa roda na próxima abertura; se o SSD não estiver conectado, ela para sem mexer em nada. A rotina na nuvem (seção abaixo) ficou criada, mas **desativada**; reativá-la exige cookies do YouTube ou um proxy residencial.
+
+### 3.3.1 Ambiente na nuvem (desativado)
 
 - **Rede:** nível *Custom*, liberando além da lista padrão: `youtube.com`, `www.youtube.com`, `*.googlevideo.com`, `i.ytimg.com`, `api.apify.com`.
 - **Setup script (cacheado):** `apt-get install -y ffmpeg` e `pip install yt-dlp jsonschema jinja2 pillow pytest`. Precisa terminar em menos de 5 minutos.
