@@ -12,7 +12,7 @@ Você é o orquestrador. Siga os passos na ordem, sem pular. Regras gerais:
 
 ```bash
 git checkout claude/biblioteca && git pull --ff-only origin claude/biblioteca
-pip install -q -r requirements.txt
+pip install -q -r requirements.txt 2>/dev/null || pip install -q --break-system-packages -r requirements.txt
 python3 scripts/estado.py hoje
 python3 scripts/estado.py modo
 ```
