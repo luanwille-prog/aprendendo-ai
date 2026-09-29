@@ -1,0 +1,233 @@
+{
+  "id": "buHC7bQE1X4",
+  "titulo": "Get Out of the Model's Way — Kevin Hou, Google Antigravity",
+  "titulo_curto": "Get Out of the Model's Way",
+  "palestrante": "Kevin Hou, Google Antigravity",
+  "url": "https://www.youtube.com/watch?v=buHC7bQE1X4",
+  "duracao": 1141,
+  "publicado_ts": 1790532024,
+  "edicao": "2026-09-27",
+  "tese": "Projete o produto em torno de primitivas que crescem com o modelo, e deixe o modelo fazer o trabalho pesado.",
+  "tldr": [
+    "Kevin Hou, do Google Antigravity, defende que um produto de IA deve melhorar sempre que o modelo melhora, e que isso exige sair do caminho do modelo.",
+    "O Antigravity 2.0 separa o gerenciador de agentes da IDE e aposta em três primitivas para 2026: subagentes dinâmicos, sidecars e interface gerada na hora.",
+    "Como prova, ele mostra um kernel de sistema operacional feito por 93 subagentes em 12 horas por menos de US$ 1.000 e uma análise de evals em que 100 agentes testam hipóteses em paralelo."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Escalar com a inteligência do modelo",
+      "texto": "Hou diz que a lição mais forte de quatro anos criando ferramentas para devs é que o produto precisa melhorar quando o modelo melhora. Em 2022 tudo era determinístico (embeddings, regras, árvores de sintaxe). Em 2024 vieram agentes com MCP e permissões. Em 2025, o gerenciador de agentes com skills e hooks.",
+      "t": 218,
+      "legenda": "Cada era do produto nasce de uma capacidade nova do modelo",
+      "print": "img/buHC7bQE1X4/0.jpg"
+    },
+    {
+      "titulo": "Batalhas antigas mostram o padrão",
+      "texto": "Dar um terminal à IA assustava, mas com modelos melhores e sistemas de permissão os usuários entregaram mais e com segurança. Tirar o chat lateral do Windsurf gerou reclamação, e depois a pesquisa e a execução agênticas viraram o padrão. Hou usa os dois casos para justificar apostas impopulares no início.",
+      "t": 309,
+      "legenda": "Remover algo querido pelos usuários custou reclamação antes de virar padrão",
+      "print": "img/buHC7bQE1X4/1.jpg"
+    },
+    {
+      "titulo": "Times de agentes com subagentes dinâmicos",
+      "texto": "Com o comando /teamwork, um agente líder monta um time de tamanho livre com papéis especializados, como front-end, back-end, QA e design. Cada subagente é gerado na hora e pode usar um modelo diferente do líder. A demonstração mais forte foi um kernel de sistema operacional que roda Doom.",
+      "t": 645,
+      "legenda": "O custo declarado da corrida que construiu um kernel completo",
+      "print": "img/buHC7bQE1X4/2.jpg"
+    },
+    {
+      "titulo": "Automatizar a análise de evals com hipóteses em paralelo",
+      "texto": "Comparar um experimento com o controle dava trabalho manual em notebooks Jupyter. Agora o pesquisador pergunta em linguagem natural, o agente calcula a diferença, propõe 100 hipóteses e dispara um subagente por hipótese. O resultado volta como relatório e como interface interativa com filtros. Segundo Hou, 90% do fluxo foi automatizado.",
+      "t": 776,
+      "legenda": "O fluxo de análise de evals que passou a levar minutos",
+      "print": "img/buHC7bQE1X4/3.jpg"
+    },
+    {
+      "titulo": "Sidecars e interface gerada como primitivas",
+      "texto": "Sidecar é um processo de vida longa que escuta o mundo externo (SMS, webhooks, cron, pull requests) e permite ao modelo criar seus próprios gatilhos. A interface gerada troca telas fixas por gráficos, tabelas e até jogos desenhados sob demanda. Hou compara com o teclado físico que o iPhone dispensou.",
+      "t": 995,
+      "legenda": "A interface aparece dentro do chat, sem template pronto",
+      "print": "img/buHC7bQE1X4/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Subagente",
+      "traducao": "agente auxiliar criado por outro agente",
+      "nivel": "intermediario",
+      "chave": "subagente",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Agent teams",
+      "traducao": "times de agentes",
+      "nivel": "intermediario",
+      "chave": "agent teams",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sidecar",
+      "traducao": "processo auxiliar que escuta eventos externos",
+      "nivel": "avancado",
+      "chave": "sidecar",
+      "analogia": "Um sidecar é como o porteiro de um prédio, que passa o dia na portaria atento a entregas e visitas e avisa o morador assim que algo chega.",
+      "explicacao": [
+        "Um agente de IA costuma agir só quando alguém manda uma mensagem para ele.",
+        "O sidecar (processo auxiliar) é um programa que fica ligado o tempo todo ao lado do agente, apenas escutando.",
+        "Ele observa o mundo externo, como mensagens SMS, webhooks (avisos automáticos enviados por outros sistemas), horários agendados (cron) e pull requests no GitHub.",
+        "O próprio modelo configura gatilhos nesse sidecar, por exemplo pedir para revisar o código sempre que chegar um pull request novo.",
+        "No Antigravity, as tarefas agendadas já rodam sobre sidecars, e o Google promete publicar a especificação desse protocolo de plug-in para outros desenvolvedores."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "Webhook",
+        "Cron job",
+        "Gatilho de evento"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "EVENTO EXTERNO",
+            "nota": "SMS, webhook, horário ou pull request"
+          },
+          {
+            "rotulo": "SIDECAR ESCUTA",
+            "nota": "Processo sempre ligado ao lado do agente"
+          },
+          {
+            "rotulo": "GATILHO DISPARA",
+            "nota": "Regra criada pelo próprio modelo"
+          },
+          {
+            "rotulo": "AGENTE AGE SOZINHO",
+            "nota": "Trabalha sem esperar pedido humano"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Generative UI",
+      "traducao": "interface gerada pelo modelo sob demanda",
+      "nivel": "intermediario",
+      "chave": "generative ui",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Scaling with intelligence",
+      "traducao": "produto que melhora junto com o modelo",
+      "nivel": "basico",
+      "chave": "scaling with intelligence",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Agent manager",
+      "traducao": "painel para gerenciar vários agentes",
+      "nivel": "basico",
+      "chave": "agent manager",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Rollout",
+      "traducao": "execução de um modelo sobre uma tarefa de avaliação",
+      "nivel": "avancado",
+      "chave": "rollout",
+      "analogia": "Um rollout é como uma rodada de prova em que o aluno resolve a lista inteira de exercícios e entrega a folha para correção.",
+      "explicacao": [
+        "Para saber se um modelo de IA melhorou, a equipe entrega a ele uma lista fixa de tarefas de teste.",
+        "Cada vez que o modelo tenta resolver essas tarefas do começo ao fim, temos um rollout (execução completa sobre a tarefa).",
+        "Os pesquisadores rodam vários rollouts da versão atual (controle) e da versão nova (experimento) e guardam os resultados em duas tabelas.",
+        "Na eval side-by-side (avaliação lado a lado), eles comparam as tabelas para achar a diferença de desempenho e o motivo dela.",
+        "No exemplo do talk, o agente calcula essa diferença, propõe 100 hipóteses e cria um subagente para investigar cada uma em paralelo."
+      ],
+      "pre_requisitos": [
+        "Eval (avaliação de modelo)",
+        "Grupo de controle",
+        "Subagente"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "TAREFAS DE TESTE",
+            "nota": "Lista fixa usada para avaliar o modelo"
+          },
+          {
+            "rotulo": "ROLLOUTS",
+            "nota": "Modelo executa cada tarefa até o fim"
+          },
+          {
+            "rotulo": "TABELAS COMPARADAS",
+            "nota": "Controle contra experimento"
+          },
+          {
+            "rotulo": "DIFERENÇA EXPLICADA",
+            "nota": "Onde a versão nova ganhou ou perdeu"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP",
+      "traducao": "protocolo para conectar ferramentas a agentes",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é um pitch do Antigravity 2.0, feito por quem lidera a engenharia do produto e trabalha dentro do Google DeepMind, o que cria conflito de interesse. Os números do kernel e dos 90% de automação vêm de demos internas, sem medição independente, sem descrição da qualidade do resultado nem comparação com outras ferramentas. A frase sobre interfaces escritas por humanos estarem mortas é uma aposta sem dados que a sustentem. A especificação do sidecar ainda não saiu.",
+  "acoes": [
+    "Liste as primitivas do seu produto ou fluxo de trabalho com IA e pergunte quais delas melhoram sozinhas quando o modelo é trocado por um melhor.",
+    "Teste um fluxo em que um agente líder divida uma tarefa grande entre subagentes e compare custo e qualidade com o mesmo trabalho feito por um agente só.",
+    "Automatize uma análise repetitiva de dados pedindo ao agente para propor hipóteses e investigá-las em paralelo, revisando o relatório final antes de agir.",
+    "Ao adotar agentes em ferramentas com terminal, configure permissões antes de liberar acesso amplo, como o talk descreve."
+  ],
+  "numeros": [
+    {
+      "valor": "93",
+      "contexto": "subagentes na corrida do kernel",
+      "t": 645
+    },
+    {
+      "valor": "12 horas",
+      "contexto": "duração da construção do kernel",
+      "t": 645
+    },
+    {
+      "valor": "2 bilhões",
+      "contexto": "tokens usados, por menos de US$ 1.000",
+      "t": 652
+    },
+    {
+      "valor": "90%",
+      "contexto": "do fluxo de análise de evals automatizado",
+      "t": 745
+    }
+  ]
+}
