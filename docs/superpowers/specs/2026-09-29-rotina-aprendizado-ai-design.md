@@ -38,7 +38,8 @@ Todo dia às 07:00 (America/Sao_Paulo) uma rotina na nuvem detecta os vídeos no
 
 ```
 aprendendo-ai/
-├── CLAUDE.md                     # instrução do orquestrador (a receita da rotina)
+├── CLAUDE.md                     # visão geral do projeto para sessões interativas
+├── ROTINA.md                     # instrução do orquestrador (a receita da rotina)
 ├── .claude/agents/
 │   ├── analista-video.md         # model: sonnet
 │   ├── explicador.md             # model: opus
@@ -48,6 +49,7 @@ aprendendo-ai/
 │   ├── extrair.py                # legenda, capítulos, descrição, duração
 │   ├── capturar_frames.py        # frames candidatos por momento
 │   ├── validar.py                # valida os JSON dos agentes contra o schema
+│   ├── consolidar.py             # junta análise, explicação e prints em data/videos/<id>.json
 │   ├── montar_site.py            # JSON -> HTML no template Quadro Anotado
 │   └── estado.py                 # leitura/escrita de processados e pendentes
 ├── templates/                    # template HTML/CSS do Quadro Anotado
@@ -65,29 +67,28 @@ aprendendo-ai/
 
 ### 3.2 Branches e publicação
 
-- A rotina só tem push garantido em branches com prefixo `claude/`. Toda a execução trabalha na branch **`claude/biblioteca`**, que contém código, dados e site.
-- O GitHub Pages publica a pasta `site/` a partir de `claude/biblioteca` via GitHub Actions (workflow de deploy do Pages), já que o modo "deploy from branch" só aceita raiz ou `/docs`. O environment `github-pages` do repositório precisa ter `claude/biblioteca` adicionada às branches de deploy permitidas (por padrão só a branch padrão é aceita).
-- A branch padrão (`main`) recebe o código por merge manual do usuário quando houver mudança de código. A rotina, ao iniciar, faz checkout de `claude/biblioteca`.
+- A rotina só tem push garantido em branches com prefixo `claude/`. Por isso **`claude/biblioteca` é a branch padrão e única do repositório**: contém código, dados e site. Não existe `main`.
+- O GitHub Pages publica a pasta `site/` via GitHub Actions (workflow de deploy do Pages), já que o modo "deploy from branch" só aceita raiz ou `/docs`. Como `claude/biblioteca` é a branch padrão, o environment `github-pages` aceita o deploy sem configuração extra.
 
 ### 3.3 Ambiente na nuvem
 
 - **Rede:** nível *Custom*, liberando além da lista padrão: `youtube.com`, `www.youtube.com`, `*.googlevideo.com`, `i.ytimg.com`, `api.apify.com`.
-- **Setup script (cacheado):** `apt-get install -y ffmpeg` e `pip install yt-dlp jsonschema jinja2 pytest`. Precisa terminar em menos de 5 minutos.
+- **Setup script (cacheado):** `apt-get install -y ffmpeg` e `pip install yt-dlp jsonschema jinja2 pillow pytest`. Precisa terminar em menos de 5 minutos.
 - **Segredo:** `APIFY_TOKEN` configurado como credencial do ambiente.
 - **Modelo da sessão principal:** Opus.
 - **Agendamento:** diário, `0 10 * * *` em UTC (07:00 em Brasília, sem horário de verão).
-- **Prompt da rotina:** curto, apenas "Execute a rotina diária conforme o CLAUDE.md". Toda a lógica vive no repositório.
+- **Prompt da rotina:** curto, apenas "Execute a rotina conforme o ROTINA.md". Toda a lógica vive no repositório. O modo (backfill de 7 dias ou diário) é decidido pela flag `backfill_concluido` em `data/config.json`: a primeira execução na nuvem faz o backfill e liga a flag.
 - **Timeouts:** comandos longos (download em lote) configurados com `BASH_MAX_TIMEOUT_MS=600000`.
 
 ## 4. Fluxo de uma execução
 
 1. **Preparar:** checkout de `claude/biblioteca`, leitura de `processados.json` e `pendentes.json`.
-2. **Detectar** (`detectar.py`): vídeos do RSS publicados até 00:00 de hoje (Brasília) e que não estão em `processados.json`, mais os pendentes com menos de 3 tentativas. Modo `--backfill 7` lista os últimos 7 dias via `yt-dlp --flat-playlist` + data de upload.
-3. **Extrair** (`extrair.py`, em paralelo por vídeo): legenda `en-orig` (ou `en`) em json3, convertida em texto com timestamps; capítulos; descrição; duração. Fallback: actor da Apify para transcrição. Falha dupla leva o vídeo para `pendentes.json`.
-4. **Triar** (orquestrador, Opus): lê só título, descrição e capítulos de todos os vídeos do dia. Define tema, complexidade estimada e ordem de leitura. Não lê transcrições nesta etapa.
-5. **Analisar** (subagente `analista-video`, Sonnet, um por vídeo, em paralelo, ondas de até 8): lê a transcrição completa e devolve o JSON da seção 5.1.
+2. **Detectar** (`detectar.py`): vídeos do RSS publicados até 00:00 de hoje (Brasília) e que não estão em `processados.json`, mais os pendentes com menos de 3 tentativas. Modo `--backfill 7` lista os últimos 7 dias via `yt-dlp` com corte por data (`--break-match-filters`), porque o RSS só tem os 15 mais recentes. Shorts são marcados como ignorados.
+3. **Extrair** (`extrair.py`, em paralelo por vídeo): legenda `en-orig` (ou `en`) em json3, convertida em texto com timestamps; capítulos; descrição; duração. Fallback: actor da Apify para transcrição. Falha dupla leva o vídeo para `pendentes.json`. Vídeos com menos de 3 minutos são ignorados; premieres agendadas e lives em andamento são adiados sem gastar tentativa.
+4. **Triar** (orquestrador, Opus): lê só título, descrição e capítulos de todos os vídeos do dia. Estima a complexidade e escolhe o modelo do analista: Sonnet por padrão, Opus quando a estimativa é 5 (pesquisa, treino de modelos, matemática). Não lê transcrições nesta etapa.
+5. **Analisar** (subagente `analista-video`, modelo definido na triagem, um por vídeo, em paralelo, ondas de até 8): lê a transcrição completa e devolve o JSON da seção 5.1.
 6. **Explicar** (subagente `explicador`, Opus): só para vídeos com `complexidade >= 4` ou com conceito de nível avançado que ainda não esteja em `glossario.json`. Recebe apenas os conceitos e os trechos de transcrição onde aparecem.
-7. **Capturar** (`capturar_frames.py`): para cada momento candidato, baixa ~2 segundos em 720p com `yt-dlp --download-sections` e extrai 3 frames com `ffmpeg` (t-1s, t, t+1s). Fallback: storyboard do YouTube; em último caso, a thumbnail do vídeo.
+7. **Capturar** (`capturar_frames.py`): para o momento de cada ideia, baixa ~3 segundos em 720p com `yt-dlp --download-sections` e extrai 3 frames com `ffmpeg`. Fallback: storyboard do YouTube (quadros de 320x180); em último caso, a thumbnail do vídeo, usada no máximo uma vez por vídeo.
 8. **Curar** (subagente `curador-prints`, Haiku, um por vídeo): olha os frames de cada momento e escolhe o que mostra conteúdo (slide, código, diagrama, demo) em vez do rosto do palestrante. Pode descartar um momento se nenhum frame servir.
 9. **Validar** (`validar.py`): todo JSON de agente é validado contra o schema. Inválido: uma nova tentativa do agente; falhou de novo, vídeo vai para pendentes.
 10. **Editar** (orquestrador, Opus): lê os resultados do dia e escreve `data/dias/<data>.json` (abertura com o fio que liga os talks, ordem de leitura, conceitos novos do dia). Revisa consistência e tamanho dos blocos contra as regras de escrita da seção 7.
@@ -96,7 +97,7 @@ aprendendo-ai/
 
 ## 5. Agentes
 
-### 5.1 `analista-video` (Sonnet)
+### 5.1 `analista-video` (Sonnet; Opus quando a triagem estimar complexidade 5)
 
 **Entrada:** metadados do vídeo, capítulos, transcrição com timestamps, lista de conceitos já em `glossario.json` (só nomes).
 
@@ -125,7 +126,7 @@ aprendendo-ai/
 }
 ```
 
-Regras: 3 a 5 ideias; 3 a 4 momentos com conteúdo visual provável; `acoes` concretas para quem usa IA no trabalho; números só se ditos no vídeo, sempre com o minuto.
+Regras: 3 a 5 ideias, cada uma com um momento de conteúdo visual provável (vira o print); `acoes` concretas para quem usa IA no trabalho; números só se ditos no vídeo, sempre com o minuto.
 
 ### 5.2 `explicador` (Opus)
 
