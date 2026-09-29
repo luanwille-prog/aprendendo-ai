@@ -19,6 +19,8 @@ python3 scripts/estado.py modo
 
 Anote `HOJE` (primeira saída) e `MODO` (`backfill` ou `diario`).
 
+O `requirements.txt` instala o yt-dlp e um `ffmpeg` estático (pacote `imageio-ffmpeg`), então não é preciso `apt-get`. Se `pip install` falhar por falta de rede, pare e relate: o ambiente precisa de acesso à internet (YouTube, i.ytimg.com, googlevideo.com e api.apify.com).
+
 ## 1. Detectar
 
 - `MODO` = `backfill`: `python3 scripts/detectar.py --backfill 7`

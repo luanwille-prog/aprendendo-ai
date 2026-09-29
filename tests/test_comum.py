@@ -50,3 +50,20 @@ def test_titulo_e_palestrante():
 def test_chave_e_slug():
     assert chave("  LLM-as-Judge   ação ") == "llm-as-judge ação"
     assert slug("llm-as-judge ação") == "llm-as-judge-acao"
+
+
+def test_ffmpeg_cai_para_imageio_quando_nao_esta_no_path(monkeypatch):
+    import comum
+    import imageio_ffmpeg
+    monkeypatch.setattr(comum.shutil, "which", lambda nome: None)
+    monkeypatch.setattr(imageio_ffmpeg, "get_ffmpeg_exe", lambda: "/tmp/ffmpeg-estatico")
+    assert comum.ffmpeg_bin() == "/tmp/ffmpeg-estatico"
+    cmd = comum.ytdlp_base()
+    assert cmd[cmd.index("--ffmpeg-location") + 1] == "/tmp/ffmpeg-estatico"
+
+
+def test_ffmpeg_do_sistema_tem_prioridade(monkeypatch):
+    import comum
+    monkeypatch.setattr(comum.shutil, "which", lambda nome: "/usr/bin/ffmpeg" if nome == "ffmpeg" else None)
+    assert comum.ffmpeg_bin() == "/usr/bin/ffmpeg"
+    assert "--ffmpeg-location" not in comum.ytdlp_base()

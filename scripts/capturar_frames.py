@@ -12,7 +12,7 @@ from pathlib import Path
 
 from PIL import Image
 
-from comum import gravar_json, ler_json, ytdlp_base
+from comum import ffmpeg_bin, gravar_json, ler_json, ytdlp_base
 
 _cache_sprites: dict[str, bytes] = {}
 
@@ -49,7 +49,7 @@ def frames_do_video(vid: str, t: float, prefixo: Path) -> list[Path]:
             raise RuntimeError(r.stderr.strip()[-200:] or "download do trecho falhou")
         for k, deslocamento in enumerate((0.3, 1.3, 2.3)):
             destino = prefixo.with_name(f"{prefixo.name}_{k}.jpg")
-            subprocess.run(["ffmpeg", "-loglevel", "error", "-y", "-ss", str(deslocamento), "-i", str(clipes[0]),
+            subprocess.run([ffmpeg_bin(), "-loglevel", "error", "-y", "-ss", str(deslocamento), "-i", str(clipes[0]),
                             "-frames:v", "1", "-q:v", "3", str(destino)], timeout=60, check=False)
             if destino.exists():
                 frames.append(destino)

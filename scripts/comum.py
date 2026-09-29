@@ -104,8 +104,19 @@ def slug(texto: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", ascii_.lower()).strip("-")
 
 
+def ffmpeg_bin() -> str:
+    """ffmpeg do sistema; sem ele, o binário estático do pacote imageio-ffmpeg (instalável via pip)."""
+    sistema = shutil.which("ffmpeg")
+    if sistema:
+        return sistema
+    import imageio_ffmpeg
+    return imageio_ffmpeg.get_ffmpeg_exe()
+
+
 def ytdlp_base() -> list[str]:
     cmd = [sys.executable, "-m", "yt_dlp", "--no-warnings"]
     if shutil.which("deno") is None and shutil.which("node"):
         cmd += ["--js-runtimes", "node"]
+    if shutil.which("ffmpeg") is None:
+        cmd += ["--ffmpeg-location", ffmpeg_bin()]
     return cmd
