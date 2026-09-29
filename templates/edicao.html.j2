@@ -1,0 +1,13 @@
+{% from "_video.html.j2" import bloco with context %}
+<section class="edicao" id="e-{{ edicao }}">
+  <div class="edicao-head">
+    <span class="label">Edição · {{ data_fmt }} · {{ videos|length }} {{ "vídeo" if videos|length == 1 else "vídeos" }}</span>
+    <h2>{{ dia.titulo if dia else "Talks do dia" }}</h2>
+    {% if dia %}<p class="abertura">{{ dia.abertura }}</p>{% endif %}
+  </div>
+  <nav class="card ordem" aria-label="Ordem de leitura">
+    <span class="label">Ordem de leitura</span>
+    <ol>{% for v in videos %}<li><a href="#v-{{ v.id }}">{{ v.titulo_curto }}</a> <span class="muted">· {{ v.duracao|tempo }}</span></li>{% endfor %}</ol>
+  </nav>
+  {% for v in videos %}{{ bloco(v, loop.index) }}{% endfor %}
+</section>

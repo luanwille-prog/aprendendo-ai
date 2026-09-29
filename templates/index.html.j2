@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aprendendo AI</title>
+<meta name="description" content="Resumos diários dos talks do canal AI Engineer, explicados no estilo Quadro Anotado.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;500;700;900&family=Barlow:ital,wght@0,400;0,600;1,400&family=Covered+By+Your+Grace&display=swap">
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+<main class="wrap">
+  <header class="hero">
+    <span class="label">Estudo diário · canal AI Engineer{% if atual %} · {{ atual.data_fmt }}{% endif %}</span>
+    <h1>Aprendendo <span class="risco">AI</span></h1>
+    <p class="hand">um talk por bloco, explicado como numa aula particular</p>
+  </header>
+
+  <nav class="abas" aria-label="Seções">
+    <a href="#hoje">Última edição</a>
+    <a href="#arquivo">Edições anteriores</a>
+    <a href="#glossario">Glossário</a>
+  </nav>
+
+  {% if temas_presentes %}
+  <div class="filtro" role="group" aria-label="Filtrar por tema">
+    <button type="button" data-tema="" aria-pressed="true">Todos</button>
+    {% for t in temas_presentes %}<button type="button" data-tema="{{ t }}" aria-pressed="false">{{ TEMAS.get(t, t) }}</button>{% endfor %}
+  </div>
+  {% endif %}
+
+  <div id="hoje">
+    {% if atual %}
+      {% with edicao=atual.edicao, data_fmt=atual.data_fmt, dia=atual.dia, videos=atual.videos %}{% include "edicao.html.j2" %}{% endwith %}
+    {% else %}
+      <p class="card">Nenhuma edição publicada ainda.</p>
+    {% endif %}
+  </div>
+
+  <section id="arquivo">
+    <h2>Edições anteriores</h2>
+    {% for e in anteriores %}
+    <details class="arquivo" data-src="dias/{{ e.edicao }}.html">
+      <summary><span class="label">{{ e.data_fmt }}</span> <strong>{{ e.titulo or "Talks do dia" }}</strong> <span class="muted">· {{ e.n }} {{ "vídeo" if e.n == 1 else "vídeos" }}</span></summary>
+      <div class="conteudo" aria-live="polite"></div>
+    </details>
+    {% else %}
+    <p class="muted">Ainda não há edições anteriores.</p>
+    {% endfor %}
+  </section>
+
+  <section id="glossario">
+    <h2>Glossário</h2>
+    <p class="hand">tudo que você já estudou</p>
+    <div class="glossario">
+      {% for g in glossario %}
+      <div class="casper" id="g-{{ g.chave|slug }}">
+        <span class="tag">{{ g.nome }}</span>
+        <p>{% if g.traducao %}<em>{{ g.traducao }}.</em> {% endif %}{{ g.analogia }}</p>
+        <ol class="passos">{% for p in g.explicacao %}<li>{{ p }}</li>{% endfor %}</ol>
+        <p class="pre">Apareceu em <a href="#v-{{ g.video_id }}" data-edicao="{{ g.edicao }}">{{ g.video_titulo }}</a></p>
+      </div>
+      {% else %}
+      <p class="muted">Os conceitos explicados vão aparecer aqui.</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  <footer class="rodape">
+    {% if execucao %}<p>Última execução: {{ execucao.em_fmt }} · {{ execucao.videos }} {{ "vídeo" if execucao.videos == 1 else "vídeos" }}</p>{% endif %}
+    {% if pendentes %}<p>Tentando de novo: {% for p in pendentes %}<a href="https://www.youtube.com/watch?v={{ p.id }}" target="_blank" rel="noopener">{{ p.titulo }}</a> ({{ p.tentativas }}/3){% if not loop.last %}; {% endif %}{% endfor %}</p>{% endif %}
+    {% if abandonados %}<p>Não processados: {% for p in abandonados %}<a href="https://www.youtube.com/watch?v={{ p.id }}" target="_blank" rel="noopener">{{ p.titulo }}</a>{% if not loop.last %}; {% endif %}{% endfor %}</p>{% endif %}
+  </footer>
+</main>
+<script src="app.js" defer></script>
+</body>
+</html>
