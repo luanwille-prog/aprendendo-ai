@@ -1,0 +1,323 @@
+{
+  "id": "ZZcE0HeO-Hc",
+  "titulo": "From VLM/VLA's to Embodied Agents — Armen Aghajanyan, Perceptron AI",
+  "titulo_curto": "From VLM/VLA's to Embodied Agents",
+  "palestrante": "Armen Aghajanyan, Perceptron AI",
+  "url": "https://www.youtube.com/watch?v=ZZcE0HeO-Hc",
+  "duracao": 1241,
+  "publicado_ts": 1790179230,
+  "edicao": "2026-09-23",
+  "tese": "Um só modelo que percebe, raciocina e controla o robô aprende melhor, e vídeo barato passa a substituir parte da teleoperação cara.",
+  "tldr": [
+    "A Perceptron defende juntar VLM, VLA e world model em um único embodied foundation model (modelo de base incorporado), que vê, raciocina e age.",
+    "Os dois gargalos são o sinal de treino escasso em vídeo longo e o excesso de tokens de câmeras sempre ligadas, atacado com um roteador que escolhe quais tokens ler.",
+    "O palestrante afirma ter achado uma scaling law (lei de escala) em que 10 vezes mais vídeo de pré-treino compensa 10 vezes menos dados de teleoperação."
+  ],
+  "tema": "modelos",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "Vídeo longo desperdiça quase todo o treino",
+      "texto": "Uma hora de vídeo vira cerca de 1 milhão de tokens visuais, mas a loss (função de erro) cai só sobre uns 2% deles, porque a referência é a transcrição ou poucos quadros rotulados. Prever cada pixel também falha, pois dá o mesmo peso ao fundo e à ponta da garra. A Perceptron diz usar um objetivo perceptivo que aprende sozinho quais percepções importam, sem revelar como.",
+      "t": 248,
+      "legenda": "Só cerca de 2% dos tokens de um vídeo de uma hora geram sinal de aprendizado.",
+      "print": "img/ZZcE0HeO-Hc/0.jpg"
+    },
+    {
+      "titulo": "O modelo escolhe quais tokens ler",
+      "texto": "Câmeras que nunca desligam enchem o contexto. Fazer média de patches comprime até 10 vezes, mas o palestrante chama isso de gambiarra. A saída publicada foi o data sparse mixture of experts, em que um roteador decide, camada a camada, que tokens processar e quais pular. Sem regra fixa, o modelo passa a olhar o gráfico dentro de uma figura e gasta mais tokens nas frutas quando a tarefa é segmentar frutas.",
+      "t": 467,
+      "legenda": "O roteador concentra tokens no que é relevante para a tarefa pedida.",
+      "print": "img/ZZcE0HeO-Hc/1.jpg"
+    },
+    {
+      "titulo": "Detecção de objeto vira tarefa de agente",
+      "texto": "Treinado com 1 petabyte de texto, imagem, vídeo e trajetórias de uso de desktop e de videogame, o modelo passou a tratar visão computacional clássica como tarefa agêntica. Para achar um pássaro escondido, ele divide a imagem em blocos, aumenta o contraste, escreve código e propõe caixas até acertar.",
+      "t": 621,
+      "legenda": "O modelo usa ferramentas em várias etapas para detectar um objeto difícil.",
+      "print": "img/ZZcE0HeO-Hc/2.jpg"
+    },
+    {
+      "titulo": "Vídeo barato no lugar de teleoperação cara",
+      "texto": "Teleop (dados de robô guiado por humano) custa na ordem de US$ 100 por hora. Treinando percepção, raciocínio e controle juntos, a empresa diz que 10 vezes mais vídeo de pré-treino substitui 10 vezes menos teleop, dentro do cômputo que ela tem. Políticas puras (VLA) também escalam, mas ganham menos.",
+      "t": 838,
+      "legenda": "Modelos unificados trocam horas de teleoperação por vídeo de pré-treino.",
+      "print": "img/ZZcE0HeO-Hc/3.jpg"
+    },
+    {
+      "titulo": "Um modelo que lê o livro e o guarda",
+      "texto": "A demo final mostra um único modelo emitindo tokens de controle para separar livros. Ele precisa ler o título, saber o gênero e pôr o livro na caixa certa. O movimento ainda treme, e a promessa é abrir os pesos de um modelo menor em julho.",
+      "t": 900,
+      "legenda": "Percepção e controle na mesma rede resolvem uma tarefa de várias etapas.",
+      "print": "img/ZZcE0HeO-Hc/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "VLM",
+      "traducao": "modelo de visão e linguagem",
+      "nivel": "basico",
+      "chave": "vlm",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "VLA",
+      "traducao": "modelo de visão, linguagem e ação",
+      "nivel": "intermediario",
+      "chave": "vla",
+      "analogia": "Um VLA é como um garçom que ouve o pedido, olha a mesa e já estende a mão para pegar o prato certo, sem precisar que alguém traduza o pedido em movimentos.",
+      "explicacao": [
+        "Um VLM (modelo de visão e linguagem) recebe imagem e texto e responde em texto, como um chat que enxerga fotos.",
+        "Um VLA (vision-language-action, modelo de visão, linguagem e ação) usa a mesma base, mas responde também com ações.",
+        "Essas ações são comandos para um robô, como posição do braço ou abrir e fechar a garra, escritos como tokens de controle.",
+        "Para aprender, o VLA costuma usar dados de teleop (robô guiado por um humano), que custam caro, na ordem de US$ 100 por hora.",
+        "O palestrante diz que um VLA puro também melhora com mais dados, mas ganha menos do que um modelo que treina percepção, raciocínio e controle juntos."
+      ],
+      "pre_requisitos": [
+        "VLM",
+        "Token",
+        "Teleop"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "CÂMERA DO ROBÔ",
+            "nota": "Imagem da cena atual"
+          },
+          {
+            "rotulo": "INSTRUÇÃO EM TEXTO",
+            "nota": "Ex.: guarde o livro na caixa"
+          },
+          {
+            "rotulo": "MODELO VLA",
+            "nota": "Base de VLM com saída de ação"
+          },
+          {
+            "rotulo": "TOKENS DE CONTROLE",
+            "nota": "Comandos que movem o braço"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "World model",
+      "traducao": "modelo de mundo que prevê vídeo futuro",
+      "nivel": "avancado",
+      "chave": "world model",
+      "analogia": "Um world model é como o motorista que, antes de frear, já imagina onde o carro da frente vai estar daqui a dois segundos.",
+      "explicacao": [
+        "Um world model (modelo de mundo) é um programa que tenta prever o que vai acontecer em seguida numa cena.",
+        "Ele recebe imagens ou vídeo do momento atual e, às vezes, a ação que alguém vai fazer, como mover um braço robótico.",
+        "Com isso, ele gera os próximos quadros do vídeo, mostrando como a cena deve mudar depois daquela ação.",
+        "Para acertar a previsão, o modelo precisa aprender regras físicas, como gravidade, contato e objetos que ficam escondidos atrás de outros.",
+        "A variante chamada semantic world model (modelo de mundo semântico) pula o vídeo e guarda só uma representação interna útil para prever o futuro."
+      ],
+      "pre_requisitos": [
+        "Token",
+        "Modelo multimodal",
+        "Previsão do próximo quadro"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "CENA ATUAL",
+            "nota": "Imagem ou vídeo de agora"
+          },
+          {
+            "rotulo": "AÇÃO PLANEJADA",
+            "nota": "Ex.: mover o braço para a esquerda"
+          },
+          {
+            "rotulo": "WORLD MODEL",
+            "nota": "Aplica regras físicas aprendidas"
+          },
+          {
+            "rotulo": "VÍDEO FUTURO",
+            "nota": "Quadros previstos da cena"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Early fusion",
+      "traducao": "fusão precoce de modalidades",
+      "nivel": "avancado",
+      "chave": "early fusion",
+      "analogia": "Early fusion é como uma cozinheira que mistura todos os ingredientes na mesma panela desde o início, em vez de cozinhar cada um separado e juntar só no prato.",
+      "explicacao": [
+        "Um modelo multimodal trabalha com vários tipos de dado ao mesmo tempo, como texto, imagem, vídeo e som.",
+        "Na late fusion (fusão tardia), cada tipo passa por um sistema próprio, e os resultados só se encontram no final.",
+        "Na early fusion (fusão precoce), todos os tipos viram tokens logo na entrada e seguem juntos pela mesma rede.",
+        "Assim, o modelo aprende relações entre palavras e pixels desde as primeiras camadas, e também pode responder em mais de um formato.",
+        "O ponto difícil é escolher como representar cada tipo de dado, porque vídeo gera muito mais tokens do que texto para a mesma informação."
+      ],
+      "pre_requisitos": [
+        "Token",
+        "Modelo multimodal",
+        "Camadas de uma rede neural"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "TEXTO, IMAGEM, VÍDEO",
+            "nota": "Dados de tipos diferentes"
+          },
+          {
+            "rotulo": "TOKENIZAÇÃO",
+            "nota": "Tudo vira sequência de tokens"
+          },
+          {
+            "rotulo": "REDE ÚNICA",
+            "nota": "Todos os tokens juntos desde o início"
+          },
+          {
+            "rotulo": "SAÍDA MULTIMODAL",
+            "nota": "Texto, pontos na imagem ou ações"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Embodied reasoning",
+      "traducao": "raciocínio espacial e físico",
+      "nivel": "intermediario",
+      "chave": "embodied reasoning",
+      "analogia": "Embodied reasoning é como o chefe de cozinha que olha a bancada, entende onde está cada coisa e divide o preparo do café em etapas para o ajudante executar.",
+      "explicacao": [
+        "Embodied reasoning (raciocínio incorporado) é a capacidade de pensar sobre o mundo físico, como posição, distância e ordem das tarefas.",
+        "Um modelo com esse raciocínio responde perguntas como o que está à esquerda de quê, ou marca pontos exatos numa imagem.",
+        "Em robótica, um modelo de embodied reasoning pode agir como orquestrador, quebrando uma tarefa longa em subtarefas menores.",
+        "Cada subtarefa vai para uma política de controle, o modelo que de fato move o robô, e existe um espectro entre separar esses papéis ou juntá-los num só modelo.",
+        "O palestrante diz que dados da internet raramente descrevem esquerda, direita ou abaixo, e que por isso é preciso planejar esses dados desde o pré-treino."
+      ],
+      "pre_requisitos": [
+        "VLM",
+        "VLA",
+        "Política de controle"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "TAREFA LONGA",
+            "nota": "Ex.: fazer um café"
+          },
+          {
+            "rotulo": "ORQUESTRADOR",
+            "nota": "Entende a cena e o espaço"
+          },
+          {
+            "rotulo": "SUBTAREFAS",
+            "nota": "Pegar copo, pôr pó, ligar máquina"
+          },
+          {
+            "rotulo": "POLÍTICA DE CONTROLE",
+            "nota": "Executa cada movimento"
+          },
+          {
+            "rotulo": "CAFÉ PRONTO",
+            "nota": "Tarefa concluída em etapas"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Mixture of experts",
+      "traducao": "mistura de especialistas com roteador",
+      "nivel": "avancado",
+      "chave": "mixture of experts",
+      "analogia": "Mixture of experts é como a recepção de um hospital que olha cada paciente e manda só para o especialista certo, deixando os outros médicos livres.",
+      "explicacao": [
+        "Um modelo de IA grande gasta muito cálculo se toda parte dele processar toda informação que chega.",
+        "Na mixture of experts (mistura de especialistas), o modelo tem vários blocos menores, chamados experts, e cada um se especializa em um tipo de padrão.",
+        "Um router (roteador) olha cada token e decide quais experts vão trabalhar nele, e os outros ficam parados.",
+        "A versão da Perceptron, chamada data sparse mixture of experts, usa o roteador para decidir em cada camada que tokens processar e quais pular.",
+        "Sem regra fixa, o modelo aprende sozinho a gastar mais cálculo no que importa para a tarefa, como as frutas de uma foto quando o pedido é achar frutas."
+      ],
+      "pre_requisitos": [
+        "Token",
+        "Camadas de uma rede neural",
+        "Janela de contexto"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "TOKENS DE ENTRADA",
+            "nota": "Pedaços de imagem, vídeo e texto"
+          },
+          {
+            "rotulo": "ROTEADOR",
+            "nota": "Decide o destino de cada token"
+          },
+          {
+            "rotulo": "PROCESSA OU PULA",
+            "nota": "Token relevante segue, o resto sai"
+          },
+          {
+            "rotulo": "CÁLCULO FOCADO",
+            "nota": "Mais esforço no que a tarefa pede"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Teleop",
+      "traducao": "teleoperação humana de robô",
+      "nivel": "basico",
+      "chave": "teleop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Scaling law",
+      "traducao": "lei de escala",
+      "nivel": "intermediario",
+      "chave": "scaling law",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O CEO apresenta o próprio produto. As comparações com o Gemini (melhor e 15 vezes mais barato) aparecem sem benchmark mostrado na fala. O objetivo perceptivo é chamado de propriedade intelectual e não é explicado. A nova scaling law vale só no cômputo da empresa e ficou para ser detalhada no Twitter. O próprio palestrante admite que a compreensão temporal ainda falha e que o robô treme.",
+  "acoes": [
+    "Ao usar um modelo de visão, peça que ele recorte ou amplie a região de interesse antes de responder, imitando a detecção em etapas.",
+    "Antes de mandar vídeo longo a um modelo, corte trechos parados ou envie só quadros-chave para economizar contexto.",
+    "Compare custo por tarefa entre modelos de visão em anotação de vídeo, pois a diferença de preço citada chega a uma ordem de grandeza.",
+    "Trate números de palestra de fornecedor como hipótese e teste em uma amostra dos seus próprios dados."
+  ],
+  "numeros": [
+    {
+      "valor": "2%",
+      "contexto": "fração dos tokens de vídeo que recebe sinal de treino",
+      "t": 248
+    },
+    {
+      "valor": "15x",
+      "contexto": "quanto o modelo seria mais barato que o Gemini",
+      "t": 528
+    },
+    {
+      "valor": "US$ 100/h",
+      "contexto": "custo aproximado de uma hora de dados de teleoperação",
+      "t": 806
+    },
+    {
+      "valor": "10x",
+      "contexto": "mais vídeo de pré-treino compensa 10x menos teleop",
+      "t": 838
+    }
+  ]
+}

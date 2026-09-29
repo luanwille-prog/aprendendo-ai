@@ -1,91 +1,128 @@
-{% macro minuto(v, t) -%}
-<a class="minuto" href="{{ v.url }}&amp;t={{ t }}s" target="_blank" rel="noopener">▶ {{ t|tempo }}</a>
+{% macro icone_play() -%}
+<svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>
 {%- endmacro %}
 
-{% macro bloco(v, n) -%}
+{% macro minuto(v, t) -%}
+<a class="minuto" href="{{ v.url }}&amp;t={{ t }}s" target="_blank" rel="noopener" aria-label="Assistir a partir de {{ t|tempo }} no YouTube (abre em nova aba)">{{ icone_play() }}{{ t|tempo }}</a>
+{%- endmacro %}
+
+{% macro ideia_bloco(v, ideia, loop) -%}
+<div class="ideia{% if not ideia.print %} ideia-sem-print{% endif %}">
+  <div class="ideia-texto">
+    <h3>{{ ideia.titulo }}</h3>
+    <p>{{ ideia.texto }}</p>
+    {% if not ideia.print %}<p class="sem-print">{{ minuto(v, ideia.t) }} {{ ideia.legenda }}</p>{% endif %}
+  </div>
+  {% if ideia.print %}
+  <figure class="shot" style="--tilt: {{ '-0.6deg' if loop.index is odd else '0.6deg' }}">
+    <img src="{{ raiz }}{{ ideia.print }}" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>{{ ideia.legenda }}</span>{{ minuto(v, ideia.t) }}</figcaption>
+  </figure>
+  {% endif %}
+</div>
+{%- endmacro %}
+
+{% macro termo(c) -%}
+<li><a href="{{ raiz }}glossario.html#g-{{ c.chave|slug }}"><strong>{{ c.nome }}</strong>{% if c.traducao and c.traducao|lower != c.nome|lower %} <span>{{ c.traducao }}</span>{% endif %}</a></li>
+{%- endmacro %}
+
+{% macro bloco(v, n, prox) -%}
+{% set explicados = v.conceitos|selectattr("analogia")|list %}
+{% set termos = v.conceitos|rejectattr("analogia")|list %}
 <article class="video" id="v-{{ v.id }}" data-tema="{{ v.tema }}">
   <header class="sec-head">
     <span class="step" aria-hidden="true">{{ "%02d"|format(n) }}</span>
     <div class="sec-titulo">
-      <h3>{{ v.titulo_curto }}</h3>
-      <p class="hand">{{ v.tese }}</p>
+      <h2 lang="en">{{ v.titulo_curto }}</h2>
+      <p class="hand tese">{{ v.tese }}</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
     </div>
   </header>
 
   <div class="chips">
     <span class="chip">{{ TEMAS.get(v.tema, v.tema) }}</span>
     <span class="chip">{{ v.duracao|tempo }}</span>
-    <span class="chip" title="Complexidade {{ v.complexidade }} de 5">{{ "●" * v.complexidade }}{{ "○" * (5 - v.complexidade) }}</span>
+    <span class="chip" role="img" aria-label="Complexidade {{ v.complexidade }} de 5">nível {{ "●" * v.complexidade }}{{ "○" * (5 - v.complexidade) }}</span>
     {% if v.palestrante %}<span class="chip">{{ v.palestrante }}</span>{% endif %}
-    <a class="chip chip-link" href="{{ v.url }}" target="_blank" rel="noopener">Assistir no YouTube</a>
-    <label class="estudei"><input type="checkbox" data-id="{{ v.id }}"> estudei</label>
+    <a class="chip chip-link" href="{{ v.url }}" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
   </div>
 
-  <div class="card">
-    <span class="label">Em 3 frases</span>
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
     {% for frase in v.tldr %}<p>{{ frase }}</p>{% endfor %}
-  </div>
+  </section>
 
-  {% for ideia in v.ideias %}
-  <div class="grid-2">
-    <div class="card">
-      <h4>{{ ideia.titulo }}</h4>
-      <p>{{ ideia.texto }}</p>
-    </div>
-    {% if ideia.print %}
-    <figure class="shot" style="--tilt: {{ '-0.6deg' if loop.index is odd else '0.6deg' }}">
-      <img src="{{ raiz }}{{ ideia.print }}" alt="{{ ideia.legenda }}" loading="lazy" width="960" height="540">
-      <figcaption><span>{{ ideia.legenda }}</span>{{ minuto(v, ideia.t) }}</figcaption>
-    </figure>
-    {% else %}
-    <p class="sem-print">{{ minuto(v, ideia.t) }} {{ ideia.legenda }}</p>
+  {% if v.conceitos %}
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    {% set visiveis = 6 - explicados|length if explicados|length < 6 else 0 %}
+    <ul class="termos">
+      {% for c in explicados %}
+      <li><a href="#a-{{ v.id }}-{{ c.chave|slug }}"><strong>{{ c.nome }}</strong>{% if c.traducao and c.traducao|lower != c.nome|lower %} <span>{{ c.traducao }}</span>{% endif %} <em>analogia abaixo</em></a></li>
+      {% endfor %}
+      {% for c in termos[:visiveis] %}{{ termo(c) }}{% endfor %}
+    </ul>
+    {% if termos|length > visiveis %}
+    <details class="mais-termos">
+      <summary>Mais {{ termos|length - visiveis }} {{ "termo" if termos|length - visiveis == 1 else "termos" }}</summary>
+      <ul class="termos">{% for c in termos[visiveis:] %}{{ termo(c) }}{% endfor %}</ul>
+    </details>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  <div class="ideias">
+    {% for ideia in v.ideias[:3] %}{{ ideia_bloco(v, ideia, loop) }}{% endfor %}
+    {% if v.ideias|length > 3 %}
+    <details class="mais-ideias">
+      <summary>Mais {{ v.ideias|length - 3 }} {{ "ideia" if v.ideias|length - 3 == 1 else "ideias" }} deste talk</summary>
+      {% for ideia in v.ideias[3:] %}{{ ideia_bloco(v, ideia, loop) }}{% endfor %}
+    </details>
     {% endif %}
   </div>
-  {% endfor %}
 
   {% if v.numeros %}
   <div class="nums">
     {% for num in v.numeros %}
-    <a class="num" href="{{ v.url }}&amp;t={{ num.t }}s" target="_blank" rel="noopener"><strong>{{ num.valor }}</strong><span>{{ num.contexto }} · {{ num.t|tempo }}</span></a>
+    <a class="num" href="{{ v.url }}&amp;t={{ num.t }}s" target="_blank" rel="noopener"><strong>{{ num.valor }}</strong><span>{{ num.contexto }}</span><span class="num-t">{{ icone_play() }}{{ num.t|tempo }}</span></a>
     {% endfor %}
   </div>
   {% endif %}
 
-  {% for c in v.conceitos if c.analogia %}
-  <div class="casper">
+  {% for c in explicados %}
+  <div class="casper" id="a-{{ v.id }}-{{ c.chave|slug }}">
     <span class="tag">analogia</span>
-    <p><strong>{{ c.nome }}{% if c.traducao and c.traducao|lower != c.nome|lower %} ({{ c.traducao }}){% endif %}.</strong> {{ c.analogia }}</p>
+    <p class="analogia"><strong>{{ c.nome }}{% if c.traducao and c.traducao|lower != c.nome|lower %} ({{ c.traducao }}){% endif %}.</strong> {{ c.analogia }}</p>
     <ol class="passos">{% for passo in c.explicacao %}<li>{{ passo }}</li>{% endfor %}</ol>
     {% if c.desenho %}
-    <div class="fluxo">
+    <div class="fluxo" role="list" aria-label="Como funciona">
       {% for no in c.desenho.nos %}
-      <div class="no{% if loop.last %} fim{% endif %}"><strong>{{ no.rotulo }}</strong><span>{{ no.nota }}</span></div>
+      <div class="no{% if loop.last %} fim{% endif %}" role="listitem"><strong>{{ no.rotulo }}</strong><span>{{ no.nota }}</span></div>
       {% if not loop.last %}<span class="seta" aria-hidden="true">→</span>{% endif %}
       {% endfor %}
     </div>
     {% endif %}
-    {% if c.pre_requisitos %}<p class="pre">Ajuda saber antes: {{ c.pre_requisitos|join(", ") }}</p>{% endif %}
+    {% if c.pre_requisitos %}<p class="pre">Ajuda saber antes: {% for p in c.pre_requisitos %}<a href="{{ raiz }}glossario.html#g-{{ p|lower|slug }}">{{ p }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</p>{% endif %}
   </div>
   {% endfor %}
 
-  {% set no_glossario = v.conceitos|rejectattr("analogia")|selectattr("no_glossario")|list %}
-  {% set termos = v.conceitos|rejectattr("analogia")|rejectattr("no_glossario")|list %}
-  {% if no_glossario or termos %}
-  <p class="termos">
-    <span class="label">Termos do talk</span>
-    {% for c in no_glossario %}<a class="chip" href="{{ raiz }}glossario.html#g-{{ c.chave|slug }}">{{ c.nome }} · no glossário</a>{% endfor %}
-    {% for c in termos %}<span class="chip">{{ c.nome }}{% if c.traducao and c.traducao|lower != c.nome|lower %} ({{ c.traducao }}){% endif %}</span>{% endfor %}
-  </p>
-  {% endif %}
-
-  <div class="casper">
+  <div class="casper critica">
     <span class="tag">leitura crítica</span>
     <p>{{ v.leitura_critica }}</p>
   </div>
 
-  <div class="card">
-    <h4>O que fazer com isso</h4>
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
     <ul class="acoes">{% for a in v.acoes %}<li>{{ a }}</li>{% endfor %}</ul>
-  </div>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="{{ v.id }}" aria-label="Marcar {{ v.titulo_curto }} como estudado"> Marquei como estudado</label>
+    {% if prox %}
+    <a class="proximo" href="#v-{{ prox.id }}">Próximo talk <span lang="en">{{ prox.titulo_curto }}</span> <span aria-hidden="true">↓</span></a>
+    {% else %}
+    <a class="proximo" href="#fim">Fechar a edição <span aria-hidden="true">↓</span></a>
+    {% endif %}
+  </footer>
 </article>
 {%- endmacro %}

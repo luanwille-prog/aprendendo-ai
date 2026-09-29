@@ -1,0 +1,301 @@
+{
+  "id": "2LRIAfng7eA",
+  "titulo": "Teaching LLMs to Speak Spotify — Yves Raimond & Jacqueline Wood, Spotify",
+  "titulo_curto": "Teaching LLMs to Speak Spotify",
+  "palestrante": "Yves Raimond & Jacqueline Wood, Spotify",
+  "url": "https://www.youtube.com/watch?v=2LRIAfng7eA",
+  "duracao": 1180,
+  "publicado_ts": 1790346625,
+  "edicao": "2026-09-25",
+  "tese": "Para o LLM recomendar catálogo próprio, ensine tokens novos ao modelo com o corpo congelado e avalie com juízes ancorados no perfil do usuário.",
+  "tldr": [
+    "O Spotify reconstruiu seu sistema de recomendação em torno de um LLM, chamado internamente de Large Taste Model, que recomenda, explica e gera experiências que o usuário pode conduzir em linguagem natural.",
+    "Jacqueline Wood mostra a receita NEO, em quatro etapas, que adiciona semantic IDs (identificadores semânticos) ao vocabulário de um LLM aberto como o Qwen e congela o modelo base para ele não esquecer como falar.",
+    "Ela também defende avaliar com LLMs como juízes, desde que eles recebam perfis e comportamento reais dos usuários, o que aumentou a concordância com humanos, principalmente em buscas ambíguas."
+  ],
+  "tema": "modelos",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "Recomendação que vira conversa",
+      "texto": "O Spotify passou de curadoria manual para recomendação em escala e agora para personalização generativa. O usuário conduz o DJ, escreve prompts para montar playlists e edita o próprio perfil de gosto em linguagem natural. A promessa é trocar o palpite de uma caixa-preta por raciocínio que o usuário enxerga e corrige.",
+      "t": 281,
+      "legenda": "Prompts livres controlam o algoritmo de recomendação inteiro.",
+      "print": "img/2LRIAfng7eA/0.jpg"
+    },
+    {
+      "titulo": "Taste profile editável",
+      "texto": "O taste profile mostra em texto o que o sistema entendeu sobre você. Yves Raimond dá o exemplo de pedir que músicas da Disney, ouvidas pelos filhos em aparelhos compartilhados, não entrem no gosto dele. O perfil vira um ponto de controle direto do usuário, além de aceitar metas, como aprender um idioma.",
+      "t": 342,
+      "legenda": "O usuário corrige o que o modelo pensa dele, em texto.",
+      "print": "img/2LRIAfng7eA/1.jpg"
+    },
+    {
+      "titulo": "NEO em quatro etapas",
+      "texto": "A receita começa criando semantic IDs a partir de embeddings de conteúdo e adicionando esses tokens ao vocabulário de um LLM aberto. Depois vem o domain grounding com o modelo congelado, em que só os novos tokens aprendem. A terceira etapa descongela tudo e faz instruction tuning em várias tarefas do Spotify. A quarta, opcional, é pós-treino como RL.",
+      "t": 592,
+      "legenda": "As quatro etapas do treino e o que fica congelado em cada uma.",
+      "print": "img/2LRIAfng7eA/2.jpg"
+    },
+    {
+      "titulo": "Congelar preserva a linguagem",
+      "texto": "Nas ablações, fazer continued pre-training (pré-treino continuado) no lugar do domain grounding mal mudou o desempenho nas tarefas do Spotify. Mas a capacidade de linguagem natural e conhecimento de mundo do modelo caiu para perto de zero. Congelar o backbone manteve essas habilidades. Segundo Jacqueline, o resultado se repetiu com Llama.",
+      "t": 800,
+      "legenda": "O pré-treino continuado zera a habilidade de linguagem, o congelamento a mantém.",
+      "print": "img/2LRIAfng7eA/3.jpg"
+    },
+    {
+      "titulo": "Juízes LLM precisam de contexto",
+      "texto": "Métricas offline clássicas dizem se o usuário interagiu, mas não se a recomendação ou a explicação faz sentido. O time usa LLMs como juízes e os ancora em perfis textuais e em comportamento passado do usuário. Em buscas ambíguas, a concordância com humanos subiu 91%, contra 5% no geral.",
+      "t": 1067,
+      "legenda": "O ganho do grounding aparece sobretudo nos casos ambíguos.",
+      "print": "img/2LRIAfng7eA/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Semantic ID",
+      "traducao": "identificador semântico",
+      "nivel": "avancado",
+      "chave": "semantic id",
+      "analogia": "Um semantic ID é como o código de localização de um livro na biblioteca, em que livros de assuntos parecidos recebem códigos parecidos e ficam na mesma estante.",
+      "explicacao": [
+        "O modelo de linguagem conhece palavras, mas não conhece cada música ou podcast do catálogo. Ele precisa de um nome curto para cada item.",
+        "O Spotify já tem um embedding (vetor de números que resume o conteúdo) para cada episódio ou faixa. Itens parecidos têm vetores próximos.",
+        "Um algoritmo de quantization (quantização, que arredonda valores contínuos para poucas opções) transforma cada vetor em uma sequência curta de códigos fixos.",
+        "Esses códigos viram tokens (pedaços que o modelo lê e escreve) especiais, adicionados ao vocabulário de um LLM aberto como o Qwen.",
+        "Depois do treino, o modelo recebe o histórico do usuário nesses códigos e responde com o código do item recomendado junto de uma explicação em texto."
+      ],
+      "pre_requisitos": [
+        "Embedding",
+        "Token",
+        "Vocabulário de um LLM",
+        "Quantização"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "EMBEDDING DO ITEM",
+            "nota": "Vetor que resume o conteúdo"
+          },
+          {
+            "rotulo": "QUANTIZAÇÃO",
+            "nota": "Vetor vira poucos códigos fixos"
+          },
+          {
+            "rotulo": "NOVOS TOKENS",
+            "nota": "Códigos entram no vocabulário do LLM"
+          },
+          {
+            "rotulo": "LLM FALA O CATÁLOGO",
+            "nota": "Recomenda item e explica em texto"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Domain grounding",
+      "traducao": "ancoragem de domínio",
+      "nivel": "avancado",
+      "chave": "domain grounding",
+      "analogia": "O domain grounding é como um funcionário experiente que só decora o nome dos produtos novos da loja, sem mudar o jeito de atender o cliente.",
+      "explicacao": [
+        "Os tokens novos chegam ao modelo sem significado. O modelo precisa aprender o que cada um quer dizer.",
+        "Nesta etapa, o modelo treina em pares que ligam semantic ID a texto e texto a semantic ID, nos dois sentidos e em combinações.",
+        "O backbone (corpo principal do modelo, com seus pesos originais) fica congelado. Só os embeddings dos tokens novos mudam.",
+        "Assim, cada token novo passa a ocupar um lugar coerente no mesmo espaço onde o modelo já guarda o significado das palavras.",
+        "No talk, essa é a segunda etapa do NEO. Ela vem antes do ajuste por instruções, quando o modelo inteiro é descongelado."
+      ],
+      "pre_requisitos": [
+        "Semantic ID",
+        "Embedding",
+        "Fine-tuning",
+        "Pesos de um modelo"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "TOKENS SEM SENTIDO",
+            "nota": "Semantic IDs recém-adicionados"
+          },
+          {
+            "rotulo": "CONGELA O BACKBONE",
+            "nota": "Pesos originais não mudam"
+          },
+          {
+            "rotulo": "TREINO ID E TEXTO",
+            "nota": "Pares nos dois sentidos"
+          },
+          {
+            "rotulo": "TOKENS ALINHADOS",
+            "nota": "IDs no espaço das palavras"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Catastrophic forgetting",
+      "traducao": "esquecimento catastrófico",
+      "nivel": "avancado",
+      "chave": "catastrophic forgetting",
+      "analogia": "O catastrophic forgetting é como um estudante que passa o mês só decorando fórmulas de química e volta sem conseguir escrever uma redação.",
+      "explicacao": [
+        "Quando você treina um modelo em um assunto novo, ele pode perder o que já sabia fazer bem.",
+        "Isso acontece porque o treino novo ajusta os mesmos pesos que guardavam as habilidades antigas, como gramática e conhecimento geral.",
+        "No teste do Spotify, o continued pre-training (pré-treino continuado em dados do domínio) levou a habilidade de linguagem do modelo para perto de zero.",
+        "Congelar o backbone e treinar só os tokens novos manteve a linguagem intacta. O time repetiu o resultado com Qwen e com Llama."
+      ],
+      "pre_requisitos": [
+        "Pesos de um modelo",
+        "Fine-tuning",
+        "Pré-treino"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Instruction tuning multitarefa",
+      "traducao": "ajuste por instruções em várias tarefas",
+      "nivel": "intermediario",
+      "chave": "instruction tuning multitarefa",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Cold start",
+      "traducao": "partida a frio (item sem histórico)",
+      "nivel": "intermediario",
+      "chave": "cold start",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Beam search",
+      "traducao": "busca em feixe",
+      "nivel": "avancado",
+      "chave": "beam search",
+      "analogia": "O beam search é como planejar uma viagem guardando as três melhores rotas a cada cidade, em vez de seguir sempre a estrada que parece melhor na primeira placa.",
+      "explicacao": [
+        "O modelo gera a resposta um token por vez, e em cada passo existem muitas opções possíveis.",
+        "A escolha gulosa pega só a opção mais provável em cada passo e pode terminar em um caminho ruim no total.",
+        "O beam search mantém um número fixo de sequências candidatas, o feixe, e a cada passo estende todas e guarda as melhores.",
+        "No fim, ele entrega a sequência com a maior probabilidade somada. Isso custa mais tempo de resposta.",
+        "O Spotify comparou com top-p sampling (sorteio entre as opções mais prováveis) e viu queda clara de acerto, então aceitou a latência maior do beam search."
+      ],
+      "pre_requisitos": [
+        "Token",
+        "Probabilidade do próximo token",
+        "Latência"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PRIMEIRO TOKEN",
+            "nota": "Várias opções prováveis"
+          },
+          {
+            "rotulo": "GUARDA AS K MELHORES",
+            "nota": "Feixe de sequências candidatas"
+          },
+          {
+            "rotulo": "ESTENDE E PODA",
+            "nota": "Repete a cada novo token"
+          },
+          {
+            "rotulo": "MELHOR SEQUÊNCIA",
+            "nota": "Maior probabilidade total"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Constrained decoding",
+      "traducao": "decodificação restrita",
+      "nivel": "avancado",
+      "chave": "constrained decoding",
+      "analogia": "O constrained decoding é como um cardápio de restaurante, em que o cliente escolhe à vontade, mas só entre os pratos que a cozinha sabe fazer.",
+      "explicacao": [
+        "Um modelo pode inventar um código que não corresponde a nenhum item real do catálogo.",
+        "O constrained decoding (decodificação restrita) bloqueia, a cada passo, os tokens que levariam a um código inexistente.",
+        "Para isso, o sistema consulta a lista de semantic IDs válidos e só deixa o modelo escolher continuações que existem nela.",
+        "No Spotify, o modelo acertou códigos válidos em 98% dos casos sem essa trava. A restrição adiciona um pouco de latência.",
+        "Ela ajuda quando você quer limitar o tipo de item, por exemplo recomendar só conteúdo novo para o usuário."
+      ],
+      "pre_requisitos": [
+        "Semantic ID",
+        "Token",
+        "Beam search"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "MODELO PROPÕE TOKENS",
+            "nota": "Várias continuações possíveis"
+          },
+          {
+            "rotulo": "FILTRO DE VÁLIDOS",
+            "nota": "Consulta a lista de IDs reais"
+          },
+          {
+            "rotulo": "BLOQUEIA OS INVÁLIDOS",
+            "nota": "Probabilidade vai a zero"
+          },
+          {
+            "rotulo": "ID REAL GARANTIDO",
+            "nota": "Item existe no catálogo"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM as a judge",
+      "traducao": "LLM como juiz de avaliação",
+      "nivel": "intermediario",
+      "chave": "llm as a judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é em boa parte vitrine de produto do Spotify. Os ganhos de autoplay, descoberta de podcasts e mensagens do DJ são descritos como sizable ou huge, sem números, base de comparação ou tamanho de teste. O dado de um em cada quatro assinantes usar o sistema não separa curiosidade de retenção. As ablações têm métricas só em slides e a alegação de ser o primeiro sistema a reunir todas essas capacidades vem da própria equipe.",
+  "acoes": [
+    "Se você constrói recomendação ou busca com LLM, teste primeiro congelar o modelo base ao ensinar vocabulário novo e meça se a linguagem geral do modelo se manteve.",
+    "Ao usar um LLM como juiz, passe a ele o perfil do usuário e exemplos de comportamento passado e compare a concordância com avaliadores humanos antes de confiar na nota.",
+    "Separe a avaliação de casos ambíguos do resto do conjunto de teste, porque foi ali que o grounding trouxe o maior ganho segundo o talk.",
+    "Ao comprar ou avaliar um recurso de personalização com IA, peça a base de comparação e o tamanho do teste por trás de afirmações como ganhos sizable."
+  ],
+  "numeros": [
+    {
+      "valor": "760 milhões",
+      "contexto": "usuários ativos mensais do Spotify em 184 mercados",
+      "t": 47
+    },
+    {
+      "valor": "1 em 4",
+      "contexto": "assinantes Premium nos EUA usam o sistema por dia",
+      "t": 447
+    },
+    {
+      "valor": "98%",
+      "contexto": "semantic IDs válidos sem constrained decoding",
+      "t": 850
+    },
+    {
+      "valor": "91%",
+      "contexto": "ganho de concordância do juiz em buscas ambíguas",
+      "t": 1085
+    }
+  ]
+}

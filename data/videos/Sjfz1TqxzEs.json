@@ -1,0 +1,203 @@
+{
+  "id": "Sjfz1TqxzEs",
+  "titulo": "Robot Demos Are Easy. Reliability Is Hard — Jason Ma, Dyna Robotics",
+  "titulo_curto": "Robot Demos Are Easy. Reliability Is Hard",
+  "palestrante": "Jason Ma, Dyna Robotics",
+  "url": "https://www.youtube.com/watch?v=Sjfz1TqxzEs",
+  "duracao": 1601,
+  "publicado_ts": 1790260212,
+  "edicao": "2026-09-24",
+  "tese": "Robô que acerta 80% rende bom vídeo e produto ruim. Um modelo de recompensa achou os erros e levou o Dyna-1 a 99,4%.",
+  "tldr": [
+    "Jason Ma, da Dyna Robotics, diz que robôs generalistas hoje acertam de 80 a 90% das tentativas, o que basta para vídeo de demonstração e não basta para uso comercial.",
+    "A Dyna treinou um reward model (modelo de recompensa) que assiste ao robô e dá uma nota de progresso. Quando a nota cai, há um erro, e a equipe coleta dados de recuperação só para aquele caso e refaz o fine-tuning (ajuste fino).",
+    "Com esse ciclo, o Dyna-1 dobrou guardanapos de restaurante com 99,4% de sucesso em 24 horas, e a mesma receita já roda em restaurantes, numa lavanderia e num evento com 3 dias de camisetas sem dados do local."
+  ],
+  "tema": "modelos",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Pirâmide de dados de pré-treino",
+      "texto": "Dados de robô são raros, então a Dyna mistura três camadas. Na base, dados sem robô, como vídeos de humanos com câmera, bases públicas e simulação. No meio, tarefas variadas feitas no robô. No topo, dados de implantação real, que reduzem a diferença entre o laboratório e o cliente. O pipeline soma mais de 200 mil horas.",
+      "t": 200,
+      "legenda": "As três fontes de dado que sustentam o pré-treino do modelo.",
+      "print": "img/Sjfz1TqxzEs/0.jpg"
+    },
+    {
+      "titulo": "A nota de progresso cai quando o robô erra",
+      "texto": "O reward model olha o vídeo e dá uma nota de 0 a 1 para o avanço da tarefa. Enquanto o robô dobra bem, a curva sobe de forma constante. Quando ele erra, como no nono guardanapo, a curva mostra uma queda. Essa queda vira o sinal automático de falha.",
+      "t": 752,
+      "legenda": "A queda na curva marca o instante exato do erro do robô.",
+      "print": "img/Sjfz1TqxzEs/1.jpg"
+    },
+    {
+      "titulo": "Supervisão escalável e active learning",
+      "texto": "Acima de 90% de acerto, vigiar o robô à mão fica ineficiente. O reward model roda em segundo plano e sinaliza os vídeos em que o modelo falha. A equipe grava dados de recuperação só para esses casos, refaz o fine-tuning e repete. Depois de alguns ciclos, o modelo se recupera de erros variados.",
+      "t": 812,
+      "legenda": "O ciclo que sai de 80% e chega perto de 100% de sucesso.",
+      "print": "img/Sjfz1TqxzEs/2.jpg"
+    },
+    {
+      "titulo": "Recuperação de erro que ninguém gravou",
+      "texto": "Um guardanapo é um objeto deformável, com estados quase infinitos, e não dá para coletar dado de todo erro possível. Mesmo assim, o robô derrubou a pilha inteira e se recuperou puxando e esticando os guardanapos. Ma atribui isso à generalização de comportamentos de recuperação aprendidos em outras tarefas.",
+      "t": 905,
+      "legenda": "O robô se recupera de um erro grande que não aparece nos dados de treino.",
+      "print": "img/Sjfz1TqxzEs/3.jpg"
+    },
+    {
+      "titulo": "Três dias de camisetas num local novo",
+      "texto": "Até aqui a Dyna coletava dados no próprio cliente. No CoRL 2025, na Coreia, o robô foi posto no estande e dobrou camisetas por 3 dias sem dados do local, mesmo com visitantes tentando atrapalhar e cobrindo a câmera. A meta de mercado é ligar o robô no cliente e ele funcionar.",
+      "t": 1035,
+      "legenda": "A demonstração mostra generalização para um ambiente que o robô nunca viu.",
+      "print": "img/Sjfz1TqxzEs/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Reward model",
+      "traducao": "modelo de recompensa",
+      "nivel": "intermediario",
+      "chave": "reward model",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Foundation model de robótica",
+      "traducao": "modelo de base para robôs",
+      "nivel": "intermediario",
+      "chave": "foundation model de robótica",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Pre-training data pyramid",
+      "traducao": "pirâmide de dados de pré-treino",
+      "nivel": "intermediario",
+      "chave": "pre-training data pyramid",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "World action model",
+      "traducao": "modelo de mundo e ação",
+      "nivel": "avancado",
+      "chave": "world action model",
+      "analogia": "Um world action model é como as mãos de um cozinheiro experiente, que ajustam o corte a cada segundo prevendo como o alimento vai ceder, enquanto o chefe só decide qual prato sai agora.",
+      "explicacao": [
+        "Para fazer uma tarefa física, o robô precisa entender o que fazer e também mover braços e dedos com precisão. A Dyna separa esses dois trabalhos em duas partes do modelo.",
+        "A parte de cima é um modelo de raciocínio (reasoning model). Ela olha a cena, entende a tarefa e decide o próximo passo, como pegar o guardanapo de cima da pilha.",
+        "A parte de baixo é o world action model (modelo de mundo e ação). Ela recebe esse objetivo e gera os movimentos finos das mãos, muitas vezes por segundo.",
+        "Em geral, o nome junta duas ideias. Um world model (modelo de mundo) aprende a prever como as coisas mudam após um gesto, e o lado de ação transforma essa previsão em comandos para os motores.",
+        "A alta frequência importa porque um tecido muda de forma a cada toque. O robô corrige o gesto em frações de segundo, e o modelo de raciocínio seria lento demais para esse ajuste."
+      ],
+      "pre_requisitos": [
+        "Foundation model de robótica",
+        "World model (modelo de mundo)",
+        "Política de controle de robô"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "CÂMERA E SENSORES",
+            "nota": "Imagem da cena e pedido da tarefa"
+          },
+          {
+            "rotulo": "MODELO DE RACIOCÍNIO",
+            "nota": "Entende a cena e escolhe o passo"
+          },
+          {
+            "rotulo": "WORLD ACTION MODEL",
+            "nota": "Prevê o efeito e calcula o gesto"
+          },
+          {
+            "rotulo": "MÃOS EM MOVIMENTO",
+            "nota": "Gestos precisos em alta frequência"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Post-training",
+      "traducao": "pós-treino",
+      "nivel": "intermediario",
+      "chave": "post-training",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Out of distribution",
+      "traducao": "fora da distribuição de treino",
+      "nivel": "intermediario",
+      "chave": "out of distribution",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Active learning",
+      "traducao": "aprendizado ativo",
+      "nivel": "intermediario",
+      "chave": "active learning",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Deformable object manipulation",
+      "traducao": "manipulação de objetos deformáveis",
+      "nivel": "basico",
+      "chave": "deformable object manipulation",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É a apresentação da própria empresa, que está captando investimento e contratando. Os vídeos são escolhidos por quem os mostra, e os 99,4% vêm de uma tarefa só, com quatro testes de 24 horas no escritório. O talk não dá número de erros nem custo de coleta. A conta do 80 a 90% também não fecha: 0,8 elevado a 10 dá cerca de 11%, e 0,9 elevado a 10 dá cerca de 35%, bem acima dos 0,1% citados. Não há dados sobre o reward model errar ao dar a nota.",
+  "acoes": [
+    "Ao avaliar um agente ou automação, meça a taxa de sucesso em muitas repetições da mesma tarefa. Uma demo que funciona uma vez esconde a confiabilidade real.",
+    "Crie um sinal automático de falha, como um avaliador ou uma checagem de resultado, para achar os casos que dão errado sem ler cada execução.",
+    "Use os erros achados para montar exemplos novos e dirigidos, e refaça o teste. Repita o ciclo em vez de coletar dado em volume sem foco.",
+    "Ao ler vídeo de robô ou de agente, peça a taxa de acerto e o número de tentativas por trás da cena mostrada."
+  ],
+  "numeros": [
+    {
+      "valor": "99,4%",
+      "contexto": "sucesso do Dyna-1 dobrando guardanapos em 24 horas",
+      "t": 531
+    },
+    {
+      "valor": "200 mil h",
+      "contexto": "horas de dados no pipeline de treino",
+      "t": 251
+    },
+    {
+      "valor": "80 a 90%",
+      "contexto": "sucesso típico de modelos generalistas em implantação",
+      "t": 374
+    },
+    {
+      "valor": "3 dias",
+      "contexto": "dobra de camisetas seguidos no CoRL, sem dados do local",
+      "t": 1060
+    }
+  ]
+}

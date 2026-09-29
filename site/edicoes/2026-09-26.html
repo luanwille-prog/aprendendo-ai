@@ -1,0 +1,973 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Agentes que melhoram a si mesmos · Aprendendo AI</title>
+<meta name="description" content="Resumos diários dos talks do canal AI Engineer, explicados no estilo Quadro Anotado.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<script>document.documentElement.classList.add("js")</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;500;700;900&family=Barlow:ital,wght@0,400;0,600;1,400&family=Covered+By+Your+Grace&display=swap">
+<link rel="stylesheet" href="../estilo.css">
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<header class="topo wrap">
+  <a class="marca" href="../index.html">Aprendendo <span>AI</span></a>
+  <nav class="topo-links" aria-label="Navegação principal">
+    <a href="../index.html#edicoes">Edições</a>
+    <a href="../glossario.html">Glossário</a>
+  </nav>
+</header>
+<main id="conteudo" class="wrap" tabindex="-1">
+<div class="edicao" id="e-2026-09-26">
+  <header class="edicao-head">
+    <h1 class="h-edicao">Agentes que melhoram a si mesmos</h1>
+    <p class="meta">Edição de sábado, 26 set 2026 · 7 vídeos · 2 h 07 min de talks</p>
+<p class="abertura">Sete talks sobre fechar o ciclo: o agente roda, é medido, aprende com o erro e roda de novo. A Weights &amp; Biases mostra agentes que viram laboratório de si mesmos, o GEPA troca aprendizado por reforço por reflexão em texto e a Prime Intellect coloca agentes de código para competir com pesquisadores. Leia na ordem, do conceito de loop até a otimização de GPU.</p>  </header>
+
+  <div class="edicao-corpo">
+    <nav class="indice card" aria-label="Ordem de leitura">
+      <p class="indice-titulo">Ordem de leitura</p>
+      <ol><li data-id="7taOQBfjDyE"><a href="#v-7taOQBfjDyE" lang="en">The Loop Is the Product</a> <span class="muted">18:44</span></li><li data-id="x4e5O9zN0TE"><a href="#v-x4e5O9zN0TE" lang="en">Long-Horizon Agents Need Experiments, Not Just Prompts</a> <span class="muted">21:27</span></li><li data-id="hd7TOvmyAxU"><a href="#v-hd7TOvmyAxU" lang="en">An AI Research Agent That Runs Your Experiments</a> <span class="muted">21:16</span></li><li data-id="XyV6bSMyq-I"><a href="#v-XyV6bSMyq-I" lang="en">How We Built an Agent That Improves Itself</a> <span class="muted">17:06</span></li><li data-id="OA-Mc60Rboo"><a href="#v-OA-Mc60Rboo" lang="en">Beating RL With Reflection: GEPA and Optimize Anything</a> <span class="muted">21:27</span></li><li data-id="oVsEddfhdxc"><a href="#v-oVsEddfhdxc" lang="en">We Let Claude Code and Codex Race Human Researchers</a> <span class="muted">19:38</span></li><li data-id="vrDvatGtIxs"><a href="#v-vrDvatGtIxs" lang="en">Autoresearch Made Our Models 3x Faster</a> <span class="muted">07:30</span></li></ol>
+      <span class="progresso" data-ids="7taOQBfjDyE x4e5O9zN0TE hd7TOvmyAxU XyV6bSMyq-I OA-Mc60Rboo oVsEddfhdxc vrDvatGtIxs"></span>
+    </nav>
+
+    <div class="talks">
+<article class="video" id="v-7taOQBfjDyE" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">01</span>
+    <div class="sec-titulo">
+      <h2 lang="en">The Loop Is the Product</h2>
+      <p class="hand tese">Quem vence com agentes guarda o aprendizado de cada ciclo em receitas próprias e mede o valor gerado por watt gasto.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">18:44</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Roland Gavrilescu, Introspection</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=7taOQBfjDyE" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Roland Gavrilescu, cofundador da Introspection e ex-xAI, defende que o loop (ciclo de trabalho e verificação do agente) é o produto, e que a qualidade do sinal e do verificador decide o resultado.</p><p>Ele propõe guardar o que cada ciclo ensina (evals, juízes, skills, julgamento humano) em &#34;receitas de agente&#34;, versionadas em git e independentes de modelo e provedor, e apresenta o Pi recipes como versão inicial.</p><p>Num exemplo de agente de recrutamento, mostra o caminho completo: achar padrões nos traces, calibrar juízes com uma pessoa, testar a mudança com usuários reais em A/B e só então promover a nova versão.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-7taOQBfjDyE-multi-armed-bandit"><strong>Multi-armed bandit</strong> <span>bandit de múltiplos braços (teste A/B adaptativo)</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-agent-loop"><strong>Agent loop</strong> <span>ciclo do agente</span></a></li><li><a href="../glossario.html#g-ooda-loop"><strong>OODA loop</strong> <span>ciclo observar, orientar, decidir, agir</span></a></li><li><a href="../glossario.html#g-verifier"><strong>Verifier</strong> <span>verificador</span></a></li><li><a href="../glossario.html#g-harness"><strong>Harness</strong> <span>estrutura de execução do agente</span></a></li><li><a href="../glossario.html#g-agent-recipe"><strong>Agent recipe</strong> <span>receita de agente</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-eval"><strong>Eval</strong> <span>avaliação</span></a></li><li><a href="../glossario.html#g-llm-judge"><strong>LLM judge</strong> <span>juiz de IA calibrado por humano</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>O primeiro loop viral negociava carro</h3>
+    <p>O palestrante conta o caso de AJ, que usou o OpenClaw (antes chamado Clawbot) para buscar preços e estoque no Reddit, falar com revendedoras e colocá-las para disputar o preço. O agente tinha um jeito verificável de saber quando o preço estava bom e então fechava a compra. Para ele, é o primeiro exemplo claro de que o loop é o produto.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/7taOQBfjDyE/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Um loop com verificador claro (preço certo) já vira produto.</span><a class="minuto" href="https://www.youtube.com/watch?v=7taOQBfjDyE&amp;t=135s" target="_blank" rel="noopener" aria-label="Assistir a partir de 02:15 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:15</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Sinal e verificador definem o sucesso</h3>
+    <p>Ele liga o loop aos ciclos OODA (observar, orientar, decidir, agir) criados pela Força Aérea dos EUA, parecidos com o que os modelos fazem ao chamar ferramentas e ler observações. A qualidade do sinal decide a taxa de sucesso, e o verificador confere se esse sucesso é real. Os artefatos do primeiro loop alimentam um segundo loop que melhora o sistema.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/7taOQBfjDyE/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O artefato de um loop vira o sinal do próximo.</span><a class="minuto" href="https://www.youtube.com/watch?v=7taOQBfjDyE&amp;t=231s" target="_blank" rel="noopener" aria-label="Assistir a partir de 03:51 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:51</a></figcaption>
+  </figure>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Receita de agente como fosso</h3>
+    <p>Cada loop gera informação sobre harness, perfis, evals, modelos, ferramentas e ambiente. Ele quer guardar isso como uma receita portátil e versionada em um repositório git, no modelo das data recipes de pesquisa em RL. Padrões de falha viram juízes e evals, comportamento repetido vira skills e prompts, e a receita é sua, sem depender de provedor.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=7taOQBfjDyE&amp;t=359s" target="_blank" rel="noopener" aria-label="Assistir a partir de 05:59 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:59</a> A receita reúne o que o loop aprendeu em um repositório seu.</p>  </div>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Valor por watt como métrica final</h3>
+    <p>Ele cita a trajetória de Cursor e Cognition, que passaram de melhor produto a melhores evals e depois a modelos próprios. Primeiro se mede o valor do trabalho, depois se verifica se o custo compensa. Só se chega à fronteira rodando em produção, e o passo seguinte, ainda pouco resolvido, é fazer isso caber no orçamento.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/7taOQBfjDyE/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Chegar à fronteira e tornar o custo viável são duas etapas.</span><a class="minuto" href="https://www.youtube.com/watch?v=7taOQBfjDyE&amp;t=604s" target="_blank" rel="noopener" aria-label="Assistir a partir de 10:04 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:04</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Gosto do criador calibra os juízes</h3>
+    <p>No exemplo do agente de recrutamento, os traces mostram que o agente aborda funcionários de big techs, quando o recrutador quer talentos escondidos. Um agente escreve o juiz e o eval, e a pessoa só confirma se o julgamento reflete o seu gosto. Depois um teste A/B com usuários reais decide se a nova receita é promovida.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/7taOQBfjDyE/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A pessoa calibra o juiz e o agente escreve o eval.</span><a class="minuto" href="https://www.youtube.com/watch?v=7taOQBfjDyE&amp;t=855s" target="_blank" rel="noopener" aria-label="Assistir a partir de 14:15 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:15</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=7taOQBfjDyE&amp;t=105s" target="_blank" rel="noopener"><strong>4</strong><span>passos do loop do carro (busca, oferta, disputa, fecha)</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:45</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=7taOQBfjDyE&amp;t=166s" target="_blank" rel="noopener"><strong>1970s</strong><span>década em que a Força Aérea dos EUA criou o OODA</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:46</span></a>
+  </div>
+
+  <div class="casper" id="a-7taOQBfjDyE-multi-armed-bandit">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Multi-armed bandit (bandit de múltiplos braços (teste A/B adaptativo)).</strong> Um multi-armed bandit é como um restaurante que coloca dois pratos novos no cardápio, passa a oferecer mais o que os clientes elogiam e continua servindo o outro de vez em quando para ter certeza.</p>
+    <ol class="passos"><li>Imagine uma fileira de máquinas caça-níqueis e você não sabe qual paga mais. Cada máquina é um braço, e cada puxada ensina algo sobre aquela máquina.</li><li>O desafio é dividir as tentativas entre explorar, testando máquinas pouco usadas, e aproveitar, jogando na que parece melhor até agora.</li><li>No agente, cada braço é uma versão da receita. Cada usuário real recebe uma versão, e o resultado dele conta como acerto ou falha daquela versão.</li><li>Um teste A/B comum divide os usuários meio a meio até o fim. O bandit desloca mais usuários para a versão que está ganhando enquanto o teste ainda roda, com métodos como Thompson sampling (amostragem de Thompson).</li><li>Quando uma versão vence com folga, ela vira a nova receita padrão. Assim menos usuários ficam expostos à versão pior durante o teste.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>VERSÕES CANDIDATAS</strong><span>Receita atual e receita nova</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>DIVIDIR USUÁRIOS</strong><span>Cada usuário recebe uma versão</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>MEDIR RESULTADO</strong><span>O usuário aprovou ou não</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>AJUSTAR TRÁFEGO</strong><span>Mais usuários para quem vence</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>PROMOVER VENCEDORA</strong><span>Nova versão da receita</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-teste-a-b">Teste A/B</a>, <a href="../glossario.html#g-agent-recipe">Agent recipe</a>, <a href="../glossario.html#g-eval">Eval</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é um pitch da Introspection e do Pi recipes, e o palestrante não mostra dados de produção, casos de clientes nem comparação com alternativas. O exemplo de recrutamento é hipotético e não traz resultado medido. A ideia de que o dono é a pessoa de gosto superior e os agentes se calibram a ela pode entrar em conflito com o que os usuários querem. O teste A/B só é citado de passagem. Valor por watt fica sem fórmula, e o palestrante admite que o know-how ainda falta.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Guarde evals, prompts, skills e regras de juízes do seu agente em um repositório git próprio, para trocar de modelo sem perder o que aprendeu.</li><li>Leia traces de execução reais e agrupe as falhas repetidas. Cada grupo é um candidato a eval ou regra de prompt.</li><li>Ao criar um juiz de IA, valide com uma pessoa se o julgamento bate com o que você considera bom antes de confiar nele.</li><li>Antes de promover uma mudança no agente, compare a versão nova com a atual entre usuários reais e meça também o custo por resultado.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="7taOQBfjDyE" aria-label="Marcar The Loop Is the Product como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-x4e5O9zN0TE">Próximo talk <span lang="en">Long-Horizon Agents Need Experiments, Not Just Prompts</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-x4e5O9zN0TE" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">02</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Long-Horizon Agents Need Experiments, Not Just Prompts</h2>
+      <p class="hand tese">Agente de longa duração se melhora com experimento controlado e placar, não com prompt ajustado à mão.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">21:27</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Erina Karati</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=x4e5O9zN0TE" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>A equipe construiu uma vila de agentes com memória, emoção e confiança, e viu que a consistência social piorava em rodadas longas: rumores viravam fatos e a fonte se perdia.</p><p>A solução foi um loop de autoresearch (pesquisa automática) fora da vila. Ele roda cenários controlados, coleta traces (registros da execução), pontua com um placar balanceado e só mantém mudanças que melhoram o resultado.</p><p>O loop só pode editar uma superfície pequena de política do agente, e o rollback (desfazer a mudança) é obrigatório. A palestrante avisa que ainda faltam resultados repetidos para afirmar melhora geral.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-x4e5O9zN0TE-policy-surface"><strong>Policy surface</strong> <span>superfície de política editável</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-autoresearch"><strong>Autoresearch</strong> <span>pesquisa automática por experimentos</span></a></li><li><a href="../glossario.html#g-long-horizon-agent"><strong>Long-horizon agent</strong> <span>agente de longa duração</span></a></li><li><a href="../glossario.html#g-rag"><strong>RAG</strong> <span>geração com recuperação de memória</span></a></li><li><a href="../glossario.html#g-trace"><strong>Trace</strong> <span>registro estruturado da execução</span></a></li><li><a href="../glossario.html#g-provenance"><strong>Provenance</strong> <span>proveniência (origem da informação)</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-balanced-scorecard"><strong>Balanced scorecard</strong> <span>placar balanceado de métricas</span></a></li><li><a href="../glossario.html#g-rollback"><strong>Rollback</strong> <span>reversão de mudança</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Memória com RAG não basta para longa duração</h3>
+    <p>Cada agente tinha memória própria, vetor de emoção e matriz de confiança. Em cenas curtas funcionou. Em rodadas longas, o agente lembrava do assunto, mas perdia quem contou e tratava rumor como fato. A memória precisa registrar origem e grau de certeza.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/x4e5O9zN0TE/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Onde a cadeia de repasses degrada a informação.</span><a class="minuto" href="https://www.youtube.com/watch?v=x4e5O9zN0TE&amp;t=326s" target="_blank" rel="noopener" aria-label="Assistir a partir de 05:26 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:26</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Avaliar a rodada inteira, não uma resposta</h3>
+    <p>O autoresearch fica fora da vila como um meta sistema. Ele lê os traces completos, compara com a verdade do cenário, pontua, propõe uma mudança pequena e reroda. Se o placar sobe e as travas seguram, mantém. Se não, volta atrás.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/x4e5O9zN0TE/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O ciclo experimental que envolve a vila.</span><a class="minuto" href="https://www.youtube.com/watch?v=x4e5O9zN0TE&amp;t=563s" target="_blank" rel="noopener" aria-label="Assistir a partir de 09:23 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:23</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Cenários controlados tornam o comportamento social mensurável</h3>
+    <p>Deixar os agentes vagando parece bonito, mas não dá para medir melhora. Os cenários do talk testam difusão de fato público, incerteza de rumor e replanejamento quando a rota fica bloqueada. Depois do loop, o agente respondeu certo sobre as mangas.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/x4e5O9zN0TE/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Os cenários que servem de banco de testes.</span><a class="minuto" href="https://www.youtube.com/watch?v=x4e5O9zN0TE&amp;t=676s" target="_blank" rel="noopener" aria-label="Assistir a partir de 11:16 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>11:16</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Placar balanceado impede que o loop trapaceie</h3>
+    <p>Uma métrica única esconde falhas. O placar cobre alcance, retenção de fonte, preservação da incerteza, tempo de replanejamento e contenção de privacidade. Otimizar só a difusão faz os agentes contarem tudo a todos.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/x4e5O9zN0TE/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>As cinco frentes que o placar precisa cobrir.</span><a class="minuto" href="https://www.youtube.com/watch?v=x4e5O9zN0TE&amp;t=802s" target="_blank" rel="noopener" aria-label="Assistir a partir de 13:22 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:22</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Superfície editável pequena e rollback obrigatório</h3>
+    <p>O harness, os cenários e as métricas ficam congelados. O loop só mexe em políticas como escrita de memória, recuperação, regras de confiança e gatilhos de replanejamento. Como uma mudança pode melhorar um ponto e piorar outro, o processo funciona como catraca.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/x4e5O9zN0TE/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A fronteira entre o que é fixo e o que é otimizável.</span><a class="minuto" href="https://www.youtube.com/watch?v=x4e5O9zN0TE&amp;t=894s" target="_blank" rel="noopener" aria-label="Assistir a partir de 14:54 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:54</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=x4e5O9zN0TE&amp;t=201s" target="_blank" rel="noopener"><strong>5</strong><span>dimensões de emoção: alegria, tristeza, medo, raiva, nojo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:21</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=x4e5O9zN0TE&amp;t=802s" target="_blank" rel="noopener"><strong>5</strong><span>frentes do placar: alcance, fonte, rumor, planejamento, privacidade</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:22</span></a>
+  </div>
+
+  <div class="casper" id="a-x4e5O9zN0TE-policy-surface">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Policy surface (superfície de política editável).</strong> A superfície de política é como a parte da receita que o cozinheiro novo pode ajustar, o tempero e o tempo de forno, enquanto o fogão, os ingredientes e o júri do concurso ficam fixos.</p>
+    <ol class="passos"><li>Quando um sistema automático tenta melhorar um agente sozinho, ele precisa de limites claros sobre o que pode mudar.</li><li>Policy surface (superfície de política) é essa lista curta de regras editáveis. No talk, ela inclui escrita de memória, recuperação de memória, regras de confiança, atribuição de fonte e gatilhos de replanejamento.</li><li>O resto fica congelado. O harness (a estrutura que roda os testes), os cenários e as métricas ficam fora do alcance do loop de melhoria.</li><li>Congelar a avaliação impede que o loop trapaceie. Se pudesse mexer nas métricas, ele subiria a nota sem melhorar o agente de verdade.</li><li>Cada ajuste é pequeno, como marcar se um fato veio de primeira ou de segunda mão. Mesmo assim, ele muda o comportamento da vila inteira, e o placar decide se a mudança fica ou é desfeita.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>CONGELAR A BASE</strong><span>harness, cenários e métricas fixos</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>EXPOR POLÍTICAS</strong><span>memória, confiança, replanejamento</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>LOOP PROPÕE AJUSTE</strong><span>uma regra pequena por vez</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>PLACAR DECIDE</strong><span>mantém se melhora, reverte se piora</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>BUSCA CONTROLADA</strong><span>agente melhora sem burlar o teste</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-autoresearch">Autoresearch</a>, <a href="../glossario.html#g-balanced-scorecard">Balanced scorecard</a>, <a href="../glossario.html#g-rollback">Rollback</a>, <a href="../glossario.html#g-prompt-de-sistema">Prompt de sistema</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>A própria palestrante admite que, sem resultados repetidos, não dá para dizer que o sistema melhorou em geral. A evidência é um único caso, o das mangas, mostrado por demo, sem números de placar antes e depois. As fórmulas das métricas ficam de fora. O talk também generaliza para agentes de suporte, código e pesquisa sem testar nenhum deles. O valor está no método, não na prova.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Escolha um agente seu que guarda estado por muito tempo e escreva três cenários de teste com resposta esperada conhecida, como um fato, um rumor e uma mudança de plano.</li><li>Registre traces de cada rodada, incluindo memórias gravadas e recuperadas, para conseguir ver onde a informação se perdeu.</li><li>Monte um placar com mais de uma métrica, incluindo uma de privacidade ou vazamento, antes de aceitar qualquer ajuste de prompt.</li><li>Mude uma regra por vez, meça de novo e guarde a versão anterior para reverter se alguma métrica piorar.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="x4e5O9zN0TE" aria-label="Marcar Long-Horizon Agents Need Experiments, Not Just Prompts como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-hd7TOvmyAxU">Próximo talk <span lang="en">An AI Research Agent That Runs Your Experiments</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-hd7TOvmyAxU" data-tema="evals">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">03</span>
+    <div class="sec-titulo">
+      <h2 lang="en">An AI Research Agent That Runs Your Experiments</h2>
+      <p class="hand tese">Agente em produção precisa de traces, juízes automáticos e um eval noturno que decida o que sobe.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Evals</span>
+    <span class="chip">21:16</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Tim Sweeney, Weights &amp; Biases</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=hd7TOvmyAxU" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Tim Sweeney mostra o ARIA, agente da Weights &amp; Biases que lança e monitora experimentos de treino em GPUs reais, resume runs e monta relatórios dentro da plataforma.</p><p>Depois ele abre a arquitetura: 100% dos traces vão para o Weave, juízes LLM rodam sobre tráfego real e tarefas em YAML viram um eval (avaliação) noturno que decide o que vai para produção.</p><p>O fecho traz três dicas para quem coloca agentes em produção: observabilidade voltada ao agente, evals como novo CI e revisão humana de traces, com contexto e ferramentas antes de complicar o harness.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-hd7TOvmyAxU-hiperparametro"><strong>Hiperparâmetro</strong> <span>ajuste de treino definido antes de treinar</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-autoresearch"><strong>Autoresearch</strong> <span>pesquisa automática iterativa</span></a></li><li><a href="../glossario.html#g-harness"><strong>Harness</strong> <span>estrutura que executa o agente</span></a></li><li><a href="../glossario.html#g-observabilidade-de-agentes"><strong>Observabilidade de agentes</strong> <span>registro de sessões, turnos e ferramentas</span></a></li><li><a href="../glossario.html#g-trace"><strong>Trace</strong> <span>registro passo a passo de uma execução</span></a></li><li><a href="../glossario.html#g-llm-judge"><strong>LLM judge</strong> <span>modelo que avalia outro modelo</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-eval-suite"><strong>Eval suite</strong> <span>conjunto de avaliações automáticas</span></a></li><li><a href="../glossario.html#g-behavioral-bug"><strong>Behavioral bug</strong> <span>bug de comportamento do agente</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Agente que conduz o loop de autoresearch</h3>
+    <p>O ARIA já vinha rodando mais de 200 experimentos no projeto autoresearch de Karpathy. Ao receber o pedido de um novo lote, ele decide evitar mudança de arquitetura, ajusta hiperparâmetros e dispara a execução via shell na fila do W&amp;B Launch, ligada a um cluster Kubernetes. Depois fica consultando o resultado até os jobs terminarem.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/hd7TOvmyAxU/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O agente escolhe ajustes de hiperparâmetro e lança jobs reais na GPU.</span><a class="minuto" href="https://www.youtube.com/watch?v=hd7TOvmyAxU&amp;t=284s" target="_blank" rel="noopener" aria-label="Assistir a partir de 04:44 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:44</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Dashboard de conversas mostra a forma de cada trace</h3>
+    <p>No Weave, a visão de conversas lista o tráfego do ARIA com um indicador visual da topologia de cada trace: chamadas de ferramenta, chamadas de LLM e blocos de raciocínio aparecem em cores e formas diferentes. O time abre uma conversa, lê prompt de sistema e shell calls, deixa notas e transforma os achados em tarefas.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/hd7TOvmyAxU/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A forma do trace revela o comportamento do agente sem ler cada mensagem.</span><a class="minuto" href="https://www.youtube.com/watch?v=hd7TOvmyAxU&amp;t=813s" target="_blank" rel="noopener" aria-label="Assistir a partir de 13:33 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:33</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Signals: juízes LLM sobre tráfego ao vivo</h3>
+    <p>O Weave roda juízes LLM (LLM judges) contra o tráfego real e marca sinais como frustração do usuário, resposta de baixa qualidade e pedido de esclarecimento. Cada marca traz o raciocínio do juiz. No exemplo, o usuário diz que a curva de loss está ruim e o juiz registra frustração. O time usa esses clusters para escolher o que corrigir na semana seguinte.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/hd7TOvmyAxU/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Cada sinal vem com o raciocínio do juiz, então dá para auditar a marcação.</span><a class="minuto" href="https://www.youtube.com/watch?v=hd7TOvmyAxU&amp;t=938s" target="_blank" rel="noopener" aria-label="Assistir a partir de 15:38 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:38</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Tarefas em YAML funcionam como testes unitários</h3>
+    <p>Cada tarefa é um arquivo YAML com um prompt de usuário e juízes. No exemplo, o prompt pede para comparar duas runs. Um juiz LLM avalia correção, outro avalia se os insights são interessantes, e uma regra fixa exige o resultado em até seis chamadas de ferramenta. O time mantém cerca de 200 tarefas assim.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/hd7TOvmyAxU/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Uma tarefa combina dois juízes LLM e uma regra objetiva de custo em chamadas.</span><a class="minuto" href="https://www.youtube.com/watch?v=hd7TOvmyAxU&amp;t=985s" target="_blank" rel="noopener" aria-label="Assistir a partir de 16:25 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>16:25</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Eval noturno decide o go/no-go</h3>
+    <p>As cerca de 200 tarefas formam uma suíte que roda toda noite, com resultados no Weave. Na tela, o modelo candidato marcou 73% contra 72% do modelo em produção. Com essa margem, o time decide promover o candidato na sexta-feira. O painel também traz um gráfico de desempenho ao longo das noites.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/hd7TOvmyAxU/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Um placar noturno único serve de critério de promoção do agente.</span><a class="minuto" href="https://www.youtube.com/watch?v=hd7TOvmyAxU&amp;t=1040s" target="_blank" rel="noopener" aria-label="Assistir a partir de 17:20 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>17:20</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=hd7TOvmyAxU&amp;t=160s" target="_blank" rel="noopener"><strong>200+</strong><span>experimentos de treino no projeto da demo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:40</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=hd7TOvmyAxU&amp;t=691s" target="_blank" rel="noopener"><strong>100%</strong><span>dos traces registrados no Weave</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>11:31</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=hd7TOvmyAxU&amp;t=1033s" target="_blank" rel="noopener"><strong>73% vs 72%</strong><span>eval noturno: candidato contra produção</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>17:13</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=hd7TOvmyAxU&amp;t=1219s" target="_blank" rel="noopener"><strong>12</strong><span>experimentos no lote rodado ao vivo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>20:19</span></a>
+  </div>
+
+  <div class="casper" id="a-hd7TOvmyAxU-hiperparametro">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Hiperparâmetro (ajuste de treino definido antes de treinar).</strong> Hiperparâmetro é como a temperatura do forno e o tempo de assar que você escolhe antes de pôr o bolo, enquanto o bolo cresce sozinho lá dentro.</p>
+    <ol class="passos"><li>Treinar um modelo de IA é deixar o computador aprender com exemplos. Antes de começar, alguém precisa escolher algumas regras de como esse aprendizado vai acontecer.</li><li>Essas regras escolhidas antes do treino se chamam hiperparâmetros. O modelo não aprende esses valores sozinho; a pessoa ou um agente define cada um.</li><li>Dois exemplos comuns são a learning rate (taxa de aprendizado), que diz o tamanho de cada passo de correção, e o batch size (tamanho do lote), que diz quantos exemplos o modelo vê de uma vez.</li><li>Para achar bons valores, a equipe roda vários treinos com combinações diferentes, compara uma métrica como a loss (erro do modelo) e guarda a melhor combinação.</li><li>No talk, o agente ARIA evita mudar a arquitetura do modelo, ajusta só hiperparâmetros e lança os treinos em GPUs. Nos resultados, ele percebe que o batch size pesa muito no desempenho.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>ESCOLHER VALORES</strong><span>Taxa de aprendizado, lote, épocas</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>TREINAR O MODELO</strong><span>Um job por combinação na GPU</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>MEDIR O RESULTADO</strong><span>Comparar a loss de cada treino</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>MELHOR COMBINAÇÃO</strong><span>Valores usados no próximo lote</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-treinamento-de-modelo">Treinamento de modelo</a>, <a href="../glossario.html#g-funcao-de-perda-loss">Função de perda (loss)</a>, <a href="../glossario.html#g-arquitetura-de-modelo">Arquitetura de modelo</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é demo de produto da Weights &amp; Biases e a própria fala reconhece o viés ao elogiar o Weave. A diferença de 73% para 72% no eval noturno aparece sem intervalo de confiança nem detalhe sobre a suíte. O experimento ao vivo não bateu o recorde (5,833 contra 5,831). Não há comparação com outras ferramentas nem dados de custo. As dicas gerais valem, mas o exemplo é um ambiente controlado da própria empresa.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Registre sessões, turnos, chamadas de ferramenta e feedback do seu agente em qualquer ferramenta de observabilidade, e guarde 100% dos traces.</li><li>Transforme cada falha real em uma tarefa de teste com um juiz simples e uma regra objetiva, como limite de chamadas de ferramenta.</li><li>Reserve uma revisão semanal em equipe dos melhores e piores traces, porque juízes LLM deixam passar nuances de comportamento.</li><li>Antes de mexer em memória ou no harness, dê ao agente contexto do seu domínio, dados do negócio e as ferramentas certas.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="hd7TOvmyAxU" aria-label="Marcar An AI Research Agent That Runs Your Experiments como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-XyV6bSMyq-I">Próximo talk <span lang="en">How We Built an Agent That Improves Itself</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-XyV6bSMyq-I" data-tema="evals">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">04</span>
+    <div class="sec-titulo">
+      <h2 lang="en">How We Built an Agent That Improves Itself</h2>
+      <p class="hand tese">Se o agente de produção e o de pesquisa são idênticos, cada erro real vira teste e o agente ajuda a se corrigir.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Evals</span>
+    <span class="chip">17:06</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Zubin Aysola, Weights &amp; Biases</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=XyV6bSMyq-I" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>A Weights &amp; Biases construiu o ARIA, um agente que roda no produto e também no ambiente de testes offline com o mesmo código, sincronizado a cada 4 horas.</p><p>Cada falha ou acerto em produção vira uma tarefa de avaliação em YAML, que o time roda em variantes do agente e compara com a versão em produção.</p><p>Na demo, o ARIA pega um trace real, descobre que faltava uma chamada de SDK, escreve um ajuste no prompt e mede a versão nova contra a atual.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-XyV6bSMyq-I-sim-to-real-gap"><strong>Sim-to-real gap</strong> <span>distância entre simulação e mundo real</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-eval"><strong>Eval</strong> <span>avaliação</span></a></li><li><a href="../glossario.html#g-trace"><strong>Trace</strong> <span>registro passo a passo da execução</span></a></li><li><a href="../glossario.html#g-agent-harness"><strong>Agent harness</strong> <span>estrutura que envolve o modelo (ferramentas, contexto, compactação)</span></a></li><li><a href="../glossario.html#g-hill-climbing"><strong>Hill climbing</strong> <span>melhoria em pequenos passos guiada pela métrica</span></a></li><li><a href="../glossario.html#g-rollout"><strong>Rollout</strong> <span>execução completa do agente numa tarefa</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-simulated-user"><strong>Simulated user</strong> <span>usuário simulado por um modelo</span></a></li><li><a href="../glossario.html#g-eval-flywheel"><strong>Eval flywheel</strong> <span>ciclo em que falhas reais viram testes</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Produção e pesquisa rodam o mesmo agente</h3>
+    <p>O time mantém o agente de produção e o de pesquisa idênticos byte a byte. Um job de sincronização a cada 4 horas evita deriva quando pesquisadores criam variantes ou skills novas. Assim, o resultado offline diz algo confiável sobre o comportamento real.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/XyV6bSMyq-I/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Mesmo código nos dois lados reduz a distância entre teste e produção.</span><a class="minuto" href="https://www.youtube.com/watch?v=XyV6bSMyq-I&amp;t=356s" target="_blank" rel="noopener" aria-label="Assistir a partir de 05:56 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:56</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Pipeline de avaliação como um DAG</h3>
+    <p>Cada rodada segue etapas fixas: configuração em YAML, carga de dados reais, montagem do ambiente, reaplicação de ajustes de runtime, execução do agente, pontuação e desmontagem. Ambientes são caros porque incluem logs de treino e simulação de GPU, então rodam em paralelo.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/XyV6bSMyq-I/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O pipeline completo de uma avaliação, da configuração ao teardown.</span><a class="minuto" href="https://www.youtube.com/watch?v=XyV6bSMyq-I&amp;t=540s" target="_blank" rel="noopener" aria-label="Assistir a partir de 09:00 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:00</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Duas formas de pontuar e 886 tarefas</h3>
+    <p>O agente é pontuado de dois jeitos. Um diz se a tarefa passou ou não. O outro compara variantes, por exemplo uma que faz perguntas ao usuário e outra que não faz. As tarefas incluem texto simples e usuários simulados por um modelo de linguagem, para testar conversas de vários turnos.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/XyV6bSMyq-I/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O conjunto de 886 tarefas, separado por níveis, com scores reais.</span><a class="minuto" href="https://www.youtube.com/watch?v=XyV6bSMyq-I&amp;t=695s" target="_blank" rel="noopener" aria-label="Assistir a partir de 11:35 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>11:35</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>O flywheel de produção para tarefa</h3>
+    <p>Todo erro em produção, e também todo acerto, vira uma tarefa nova. Isso tira o time da escrita manual de benchmarks. Os traces de produção e os offline são analisados com as mesmas ferramentas, e o agente ajuda a revisar os rollouts que ele mesmo gerou.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/XyV6bSMyq-I/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Traces reais alimentam o conjunto de tarefas de avaliação.</span><a class="minuto" href="https://www.youtube.com/watch?v=XyV6bSMyq-I&amp;t=727s" target="_blank" rel="noopener" aria-label="Assistir a partir de 12:07 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:07</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Demo: o ARIA corrige um bug dele mesmo</h3>
+    <p>O agente transformou um trace real em tarefa de regressão, achou que faltava chamar weave.log corretamente no sandbox e replicou o erro. Depois testou variantes e a candidata, com um trecho novo no prompt de sistema, resolveu o problema. O relatório final compara produção e candidata.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/XyV6bSMyq-I/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O relatório mostra o bug, o ajuste e o resultado da variante nova.</span><a class="minuto" href="https://www.youtube.com/watch?v=XyV6bSMyq-I&amp;t=820s" target="_blank" rel="noopener" aria-label="Assistir a partir de 13:40 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:40</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=XyV6bSMyq-I&amp;t=695s" target="_blank" rel="noopener"><strong>886</strong><span>tarefas de avaliação, separadas por nível</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>11:35</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=XyV6bSMyq-I&amp;t=356s" target="_blank" rel="noopener"><strong>4 horas</strong><span>intervalo do job que sincroniza produção e pesquisa</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:56</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=XyV6bSMyq-I&amp;t=295s" target="_blank" rel="noopener"><strong>66%</strong><span>desempenho em algumas tarefas no CI noturno</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:55</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=XyV6bSMyq-I&amp;t=882s" target="_blank" rel="noopener"><strong>8 meses</strong><span>tempo sem escrever código à mão, segundo o palestrante</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:42</span></a>
+  </div>
+
+  <div class="casper" id="a-XyV6bSMyq-I-sim-to-real-gap">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Sim-to-real gap (distância entre simulação e mundo real).</strong> O sim-to-real gap é como a diferença entre treinar direção num simulador de autoescola e dirigir no trânsito de verdade, onde aparecem buracos, chuva e motoristas que o simulador nunca mostrou.</p>
+    <ol class="passos"><li>Antes de soltar um sistema no mundo real, a equipe costuma testá-lo num ambiente de mentira, mais barato e mais seguro.</li><li>O sim-to-real gap (distância entre simulação e mundo real) é a queda de desempenho que aparece quando o sistema sai do teste e encontra a situação real.</li><li>A queda acontece porque a simulação deixa de fora detalhes do mundo real, e o sistema aprende a ir bem só no cenário simplificado.</li><li>Com agentes de IA, o teste offline (fora do produto, com tarefas preparadas) faz o papel da simulação, e o uso por clientes faz o papel do mundo real.</li><li>No talk, a Weights &amp; Biases reduz essa distância rodando o mesmo código nos dois lados, sincronizando a cada 4 horas e levando traces (registros passo a passo) de produção para dentro dos testes.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>TESTE OFFLINE</strong><span>Agente vai bem nas tarefas preparadas</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>PRODUÇÃO</strong><span>Clientes trazem casos que o teste ignora</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>DIFERENÇA MEDIDA</strong><span>Nota offline e real não batem</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>TRACE REAL VIRA TESTE</strong><span>Mesmo código e mesmo formato de log</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>DISTÂNCIA MENOR</strong><span>Teste offline prevê o uso real</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-eval">Eval</a>, <a href="../glossario.html#g-trace">Trace</a>, <a href="../glossario.html#g-ambiente-de-producao">Ambiente de produção</a>, <a href="../glossario.html#g-simulacao">Simulação</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é também uma demonstração de produto da Weights &amp; Biases, que vende o Weave e o ARIA, então o palestrante tem interesse direto. Faltam números de ganho: o único score citado é cerca de 66% em algumas tarefas, sem baseline nem intervalo. A demo mostra um único bug corrigido, sem taxa de acerto da abordagem. O próprio palestrante admite que os slides foram gerados com IA e que o CI quebrou por um tempo.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Registre traces de produção e offline no mesmo formato, para poder levar um caso real ao teste sem adaptação.</li><li>Transforme cada falha reportada por usuários em uma tarefa de avaliação escrita em arquivo, com condição inicial e condição final.</li><li>Compare variantes do agente lado a lado (com pergunta ao usuário e sem) antes de trocar a versão em produção.</li><li>Mesmo usando IA para escrever código e testes, reserve tempo para revisar a saúde das suas avaliações e a deriva em relação à produção.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="XyV6bSMyq-I" aria-label="Marcar How We Built an Agent That Improves Itself como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-OA-Mc60Rboo">Próximo talk <span lang="en">Beating RL With Reflection: GEPA and Optimize Anything</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-OA-Mc60Rboo" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">05</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Beating RL With Reflection: GEPA and Optimize Anything</h2>
+      <p class="hand tese">Ler o rastro inteiro de uma execução e reescrever o prompt em texto ensina mais, com menos exemplos, do que reduzir tudo a uma nota e ajustar pesos.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">21:27</span>
+    <span class="chip" role="img" aria-label="Complexidade 4 de 5">nível ●●●●○</span>
+<span class="chip">Lakshya A. Agrawal, GEPA</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=OA-Mc60Rboo" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>O GEPA faz um modelo ler a execução completa de um sistema de IA, com raciocínio, chamadas de ferramenta e mensagens de erro, e propor um prompt melhor a partir disso.</p><p>Segundo o autor, com três exemplos e uma rodada de reflexão o GEPA dobrou o ganho que o RL (aprendizado por reforço) com GRPO obteve depois de 25 mil rollouts.</p><p>O Optimize Anything aplica a mesma ideia a qualquer coisa que vire texto e receba nota, como código de agente, skills de agentes de código e políticas de agendamento.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-OA-Mc60Rboo-reinforcement-learning"><strong>Reinforcement learning</strong> <span>aprendizado por reforço</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-OA-Mc60Rboo-grpo"><strong>GRPO</strong> <span>algoritmo de RL que transforma notas de várias execuções em ajuste de pesos</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-OA-Mc60Rboo-otimizacao-de-prompt"><strong>Otimização de prompt</strong> <span>ajuste automático do texto de instrução do modelo</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-rollout"><strong>Rollout</strong> <span>execução completa de uma tarefa pelo modelo ou agente</span></a></li><li><a href="../glossario.html#g-fronteira-de-pareto"><strong>Fronteira de Pareto</strong> <span>conjunto de candidatos que são os melhores em pelo menos um critério</span></a></li><li><a href="../glossario.html#g-agent-harness"><strong>Agent harness</strong> <span>código que orquestra o agente, suas ferramentas e seu fluxo</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-agent-skills"><strong>Agent skills</strong> <span>arquivos de instrução que agentes de código carregam sob demanda</span></a></li><li><a href="../glossario.html#g-llm-as-a-judge"><strong>LLM-as-a-judge</strong> <span>modelo de linguagem usado para avaliar respostas</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>O RL joga fora quase toda a informação da execução</h3>
+    <p>No RL com recompensa verificável, cada rollout (execução completa de uma tarefa) vira uma nota de 0 ou 1. O raciocínio do modelo, as chamadas de ferramenta e as mensagens de erro são descartados. O GEPA usa um LLM para ler esse rastro, entender o que deu certo e errado e reescrever o prompt. Uma mudança de uma palavra no prompt muda o comportamento mais do que milhares de pequenos ajustes de pesos.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/OA-Mc60Rboo/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>GEPA com 3 exemplos supera o ganho do GRPO após 25 mil rollouts.</span><a class="minuto" href="https://www.youtube.com/watch?v=OA-Mc60Rboo&amp;t=295s" target="_blank" rel="noopener" aria-label="Assistir a partir de 04:55 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:55</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>O prompt aprendido vira uma especificação do problema</h3>
+    <p>O GEPA não usa truques como ameaçar o modelo. Ele escreve uma descrição detalhada da tarefa, com contexto, lições tiradas dos dados e armadilhas. No caso da AMD, o prompt aprendido avisou para não usar a biblioteca ADF.h, que não funcionava na nova geração de NPU (chip acelerador de IA). O agente saiu de 4,25% para 30,52% sem nenhuma outra mudança.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/OA-Mc60Rboo/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O otimizador descobriu sozinho um detalhe de domínio que faltava na internet.</span><a class="minuto" href="https://www.youtube.com/watch?v=OA-Mc60Rboo&amp;t=480s" target="_blank" rel="noopener" aria-label="Assistir a partir de 08:00 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:00</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Guardar vários candidatos evita travar num ótimo local</h3>
+    <p>Pedir para um LLM melhorar o prompt em loop costuma travar numa versão razoável e gastar todo o orçamento tentando sair dela. O GEPA mantém um conjunto de Pareto, onde fica todo candidato que vence em pelo menos um exemplo de treino. Segundo o autor, mais da metade do ganho do GEPA vem dessa escolha, que rende quase o dobro do loop simples em quatro benchmarks.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/OA-Mc60Rboo/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A busca com conjunto de Pareto explora mais caminhos e chega a nota maior.</span><a class="minuto" href="https://www.youtube.com/watch?v=OA-Mc60Rboo&amp;t=560s" target="_blank" rel="noopener" aria-label="Assistir a partir de 09:20 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:20</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Otimizar o código do agente inteiro</h3>
+    <p>O Optimize Anything recebe uma lista de problemas e uma função que devolve nota e informação extra, como erros de compilação ou logs. Partindo de um programa de quatro linhas, 16 rodadas de reflexão geraram um agente de seis passos que levou o Gemini Flash de 32,5% para 89,5% no ARC-AGI. O mesmo mecanismo aprendeu skills que levaram um agente com GPT-5 mini de 24% para 93% em issues de Go.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=OA-Mc60Rboo&amp;t=850s" target="_blank" rel="noopener" aria-label="Assistir a partir de 14:10 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:10</a> Um programa de 4 linhas virou um agente de 6 passos que quase triplica o acerto.</p>  </div>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Aprender o eval a partir de traces de produção</h3>
+    <p>Para tarefas subjetivas, o autor propõe coletar traces de produção, pedir a uma pessoa que comente cerca de 50 deles e usar o GEPA para otimizar o prompt de um LLM-as-a-judge (modelo que dá nota a respostas). Esse juiz passa a guiar a otimização do agente, num ciclo que melhora com o uso.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/OA-Mc60Rboo/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Cerca de 50 anotações humanas bastam para iniciar o ciclo de melhoria.</span><a class="minuto" href="https://www.youtube.com/watch?v=OA-Mc60Rboo&amp;t=1165s" target="_blank" rel="noopener" aria-label="Assistir a partir de 19:25 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>19:25</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=OA-Mc60Rboo&amp;t=292s" target="_blank" rel="noopener"><strong>25.000</strong><span>rollouts do GRPO superados por uma rodada do GEPA com 3 exemplos</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:52</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=OA-Mc60Rboo&amp;t=850s" target="_blank" rel="noopener"><strong>32,5% → 89,5%</strong><span>acerto do Gemini Flash no ARC-AGI com agente descoberto</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:10</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=OA-Mc60Rboo&amp;t=946s" target="_blank" rel="noopener"><strong>24% → 93%</strong><span>agente GPT-5 mini em issues de repositório Go com skills aprendidas</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:46</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=OA-Mc60Rboo&amp;t=1102s" target="_blank" rel="noopener"><strong>90x</strong><span>redução de custo da Databricks com GPT-OSS 120B contra Claude Opus</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>18:22</span></a>
+  </div>
+
+  <div class="casper" id="a-OA-Mc60Rboo-reinforcement-learning">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Reinforcement learning (aprendizado por reforço).</strong> Reinforcement learning é como ensinar um cachorro com petisco, em que ele tenta várias coisas e repete mais as que renderam recompensa.</p>
+    <ol class="passos"><li>Reinforcement learning (aprendizado por reforço) ensina por tentativa e erro, sem mostrar a resposta certa antes.</li><li>O modelo tenta a tarefa, e cada tentativa completa se chama rollout (execução completa da tarefa).</li><li>Ao fim de cada rollout, uma regra dá uma recompensa, como 1 para resposta correta e 0 para errada.</li><li>Um algoritmo como o GRPO usa essas recompensas para ajustar os pesos do modelo e favorecer o que deu certo.</li><li>Em tarefas longas ou caras, como agentes que rodam por horas, o método fica inviável porque exige centenas de milhares de rollouts.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>MODELO TENTA</strong><span>Executa a tarefa inteira</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>RECOMPENSA</strong><span>Nota no fim, como 0 ou 1</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>AJUSTE</strong><span>Favorece o que deu certo</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>MODELO MELHOR</strong><span>Após milhares de repetições</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-rollout">Rollout</a>, <a href="../glossario.html#g-pesos-do-modelo">Pesos do modelo</a></p>  </div>
+  <div class="casper" id="a-OA-Mc60Rboo-grpo">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>GRPO (algoritmo de RL que transforma notas de várias execuções em ajuste de pesos).</strong> GRPO é como um técnico que vê o time cobrar vários pênaltis, compara cada chute com a média do grupo e só diz &#34;mais disso&#34; ou &#34;menos disso&#34;, sem comentar o que aconteceu em cada cobrança.</p>
+    <ol class="passos"><li>O modelo recebe uma tarefa e tenta resolvê-la várias vezes seguidas, gerando um grupo de respostas diferentes.</li><li>Cada resposta ganha uma nota no final, em geral 0 (errou) ou 1 (acertou), dada por um verificador automático.</li><li>O GRPO (Group Relative Policy Optimization, otimização de política relativa ao grupo) compara cada nota com a média do grupo e marca quem ficou acima e quem ficou abaixo.</li><li>Essa comparação vira gradiente (direção de ajuste) e altera um pouco os pesos do modelo para repetir mais as respostas acima da média.</li><li>O raciocínio, as chamadas de ferramenta e as mensagens de erro ficam de fora, por isso o método precisa de milhares de rollouts para aprender algo.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>VÁRIOS ROLLOUTS</strong><span>Mesma tarefa resolvida várias vezes</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>NOTA 0 OU 1</strong><span>Verificador avalia só o resultado</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>COMPARA COM A MÉDIA</strong><span>Acima ou abaixo do grupo</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>AJUSTE NOS PESOS</strong><span>Pequeno passo por gradiente</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-reinforcement-learning">Reinforcement learning</a>, <a href="../glossario.html#g-rollout">Rollout</a>, <a href="../glossario.html#g-pesos-do-modelo">Pesos do modelo</a>, <a href="../glossario.html#g-gradiente">Gradiente</a></p>  </div>
+  <div class="casper" id="a-OA-Mc60Rboo-otimizacao-de-prompt">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Otimização de prompt (ajuste automático do texto de instrução do modelo).</strong> Otimização de prompt é como revisar a receita escrita depois de provar o prato, anotando &#34;menos sal&#34; e &#34;forno mais baixo&#34; em vez de trocar o cozinheiro.</p>
+    <ol class="passos"><li>O prompt é o texto de instrução que o modelo lê antes de trabalhar, e mudar esse texto muda o comportamento.</li><li>Trocar uma palavra, como pedir resumo de 10 linhas em vez de 1, altera a saída mais do que milhares de pequenos ajustes nos pesos.</li><li>Na otimização de prompt, o sistema roda em alguns exemplos e guarda o rastro completo, com raciocínio, chamadas de ferramenta, erros e nota.</li><li>Outro LLM (modelo de linguagem) lê esse rastro, entende o que falhou e escreve uma versão melhor do prompt.</li><li>O GEPA repete esse ciclo e guarda os candidatos que vencem em pelo menos um exemplo, chegando a prompts que descrevem a tarefa em detalhe.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>RODA O SISTEMA</strong><span>Poucos exemplos com o prompt atual</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>LÊ O RASTRO</strong><span>Raciocínio, erros e nota</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>REFLETE</strong><span>LLM aponta o que falhou</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>REESCREVE O PROMPT</strong><span>Nova versão em texto</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>PROMPT MELHOR</strong><span>Guardado entre os candidatos</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-prompt">Prompt</a>, <a href="../glossario.html#g-rollout">Rollout</a>, <a href="../glossario.html#g-llm">LLM</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O palestrante criou o GEPA e apresenta o próprio projeto, sem mostrar casos em que ele falha. A comparação com GRPO usa um modelo e poucos domínios. Não há custo em tokens nem tempo das otimizações no ARC-AGI e nas skills. Os 100% com Claude Sonnet vêm de um benchmark de issues em Go de tamanho não informado. O resultado da Databricks e o do OCR são citados sem detalhe de método. O unicórnio 3D é comparação visual subjetiva. Também falta discutir o risco de o prompt se ajustar demais aos exemplos de treino.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Faça sua função de avaliação devolver texto além da nota, com mensagens de erro, logs e comentários, para que um otimizador ou um colega entenda por que a resposta falhou.</li><li>Teste o GEPA (github.com/gepa-ai/gepa) num prompt que você já usa, com poucos exemplos rotulados, e compare com a versão escrita à mão.</li><li>Para tarefas subjetivas, anote em detalhe cerca de 50 respostas reais do seu sistema e use essas notas para calibrar um juiz automático.</li><li>Ao iterar prompts, guarde as versões que vencem em casos específicos em vez de manter só a de maior média.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="OA-Mc60Rboo" aria-label="Marcar Beating RL With Reflection: GEPA and Optimize Anything como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-oVsEddfhdxc">Próximo talk <span lang="en">We Let Claude Code and Codex Race Human Researchers</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-oVsEddfhdxc" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">06</span>
+    <div class="sec-titulo">
+      <h2 lang="en">We Let Claude Code and Codex Race Human Researchers</h2>
+      <p class="hand tese">Agentes de código já batem o recorde humano em otimizador, mas só combinam ideias antigas. Nenhum inventou algo novo.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">19:38</span>
+    <span class="chip" role="img" aria-label="Complexidade 4 de 5">nível ●●●●○</span>
+<span class="chip">Elie Bakouch, Prime Intellect</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=oVsEddfhdxc" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>A Prime Intellect soltou Claude Code e Codex no Optimizer Speedrun, uma corrida para treinar um modelo do nível do GPT-2 no menor número de passos, e os dois agentes superaram o recorde da comunidade.</p><p>Os agentes se comportaram de forma bem diferente: o Claude Code parava a cada nove ou dez horas dizendo que não dava para melhorar, e o Codex nunca parou, escreveu mais notas, criou mais sub-agentes e gastou mais tokens.</p><p>Nenhum modelo criou um otimizador novo, só combinaram artigos existentes em pequenos ganhos, e a equipe agora monta um laço de descoberta inspirado no AlphaEvolve, do Google, para tentar ir além.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-oVsEddfhdxc-recursive-self-improvement"><strong>Recursive self-improvement</strong> <span>autoaperfeiçoamento recursivo</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-oVsEddfhdxc-optimizer"><strong>Optimizer</strong> <span>otimizador (ex.: Adam)</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-oVsEddfhdxc-speedrun"><strong>Speedrun</strong> <span>corrida para atingir uma perda-alvo</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-oVsEddfhdxc-preemptible-job"><strong>Preemptible job</strong> <span>tarefa interrompível por quem tem prioridade</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-oVsEddfhdxc-alphaevolve"><strong>AlphaEvolve</strong> <span>laço evolutivo de geração e avaliação de ideias</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-scratchpad"><strong>Scratchpad</strong> <span>bloco de notas (memória ativa do agente)</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-sub-agent"><strong>Sub-agent</strong> <span>subagente (agente filho)</span></a></li><li><a href="../glossario.html#g-compaction"><strong>Compaction</strong> <span>compactação do contexto</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Speedrun como ambiente de teste</h3>
+    <p>O Optimizer Speedrun pede que o modelo alcance uma perda-alvo em poucos passos, mexendo apenas no otimizador. Cada rodada leva de 15 a 20 minutos e as regras são claras. Isso dá uma recompensa verificável, boa tanto para avaliar quanto para treinar modelos.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/oVsEddfhdxc/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Mostra a única variável que os agentes podiam mexer.</span><a class="minuto" href="https://www.youtube.com/watch?v=oVsEddfhdxc&amp;t=205s" target="_blank" rel="noopener" aria-label="Assistir a partir de 03:25 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:25</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Claude desiste, Codex insiste</h3>
+    <p>O Claude Code parava a cada nove ou dez horas dizendo que o recorde era impossível de superar e ficou ocioso cerca de um terço do tempo. O Codex trabalhou sem parar e quase nunca fez perguntas. Nas notas, o Claude escrevia com empolgação e emojis, e o Codex era seco e robótico.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/oVsEddfhdxc/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Codex escreve mais notas e cria mais sub-agentes que o Claude.</span><a class="minuto" href="https://www.youtube.com/watch?v=oVsEddfhdxc&amp;t=530s" target="_blank" rel="noopener" aria-label="Assistir a partir de 08:50 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:50</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Os dois agentes batem o recorde humano</h3>
+    <p>No gráfico principal, a curva humana fica quase sempre atrás das curvas do Claude e do Codex. Os agentes podiam buscar o recorde humano a qualquer momento e partir dele. O recorde era de cerca de 2.990 passos, e os agentes o superaram por algumas dezenas de passos.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/oVsEddfhdxc/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Claude e Codex ficam abaixo da curva humana quase o tempo todo.</span><a class="minuto" href="https://www.youtube.com/watch?v=oVsEddfhdxc&amp;t=625s" target="_blank" rel="noopener" aria-label="Assistir a partir de 10:25 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:25</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Em tokens, a história muda</h3>
+    <p>Em seis dias, Claude, Codex e Kimi ficaram competitivos, e o Kimi teve um salto no quarto dia. Ao trocar o eixo do tempo pelo número de tokens de saída, o Kimi aparece como o mais eficiente, e o Claude em modo máximo gasta bem mais tokens que os outros dois.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/oVsEddfhdxc/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Com tokens no eixo, o Kimi lidera em eficiência.</span><a class="minuto" href="https://www.youtube.com/watch?v=oVsEddfhdxc&amp;t=830s" target="_blank" rel="noopener" aria-label="Assistir a partir de 13:50 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:50</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Nenhum otimizador novo apareceu</h3>
+    <p>O palestrante esperava ideias inéditas e recebeu combinações de artigos, cada uma com um pequeno ganho. Para forçar descoberta, a equipe monta um laço com geradores, um juiz com gosto e teste em escala maior, inspirado no AlphaEvolve. Humanos seguem no laço para orientar os agentes.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/oVsEddfhdxc/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Mostra o laço de descoberta que a equipe está testando.</span><a class="minuto" href="https://www.youtube.com/watch?v=oVsEddfhdxc&amp;t=945s" target="_blank" rel="noopener" aria-label="Assistir a partir de 15:45 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:45</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=oVsEddfhdxc&amp;t=106s" target="_blank" rel="noopener"><strong>90 min</strong><span>treino do GPT-2 no vídeo original do Karpathy</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:46</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=oVsEddfhdxc&amp;t=298s" target="_blank" rel="noopener"><strong>15-20 min</strong><span>duração de cada rodada do Optimizer Speedrun</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:58</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=oVsEddfhdxc&amp;t=489s" target="_blank" rel="noopener"><strong>1/3 do tempo</strong><span>Claude Code ocioso durante o experimento</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:09</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=oVsEddfhdxc&amp;t=677s" target="_blank" rel="noopener"><strong>2.990 passos</strong><span>recorde humano à época, superado pelos agentes</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>11:17</span></a>
+  </div>
+
+  <div class="casper" id="a-oVsEddfhdxc-recursive-self-improvement">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Recursive self-improvement (autoaperfeiçoamento recursivo).</strong> O autoaperfeiçoamento recursivo é como um aluno que escreve a própria apostila, estuda por ela e depois escreve uma apostila melhor, sem professor.</p>
+    <ol class="passos"><li>Hoje, pessoas fazem a pesquisa e treinam os modelos de IA.</li><li>No autoaperfeiçoamento recursivo (recursive self-improvement), modelos pesquisam e treinam novos modelos sem intervenção humana.</li><li>Se cada geração melhora a seguinte, o progresso pode acelerar sozinho.</li><li>Grandes laboratórios dizem que isso está perto, mas faltam testes independentes para medir.</li><li>A Prime Intellect usa o speedrun como teste aberto para medir se agentes já fazem pesquisa de IA.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>MODELO PESQUISA</strong><span>propõe e testa ideias</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>TREINA MODELO NOVO</strong><span>sem ajuda humana</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>NOVO MODELO PESQUISA</strong><span>agora com mais capacidade</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>PROGRESSO ACELERA</strong><span>cada ciclo melhora o próximo</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-treino-de-modelos">Treino de modelos</a>, <a href="../glossario.html#g-agente-de-ia">Agente de IA</a>, <a href="../glossario.html#g-benchmark">Benchmark</a></p>  </div>
+  <div class="casper" id="a-oVsEddfhdxc-optimizer">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Optimizer (otimizador (ex.: Adam)).</strong> O otimizador é como o técnico que olha o resultado de cada treino do atleta e decide quanto e em que direção mudar a rotina.</p>
+    <ol class="passos"><li>Um modelo de IA aprende ajustando milhões de números internos, chamados pesos, até errar menos.</li><li>A cada passo de treino, o modelo mede o próprio erro, a perda (loss), e calcula em que direção cada peso deveria mudar.</li><li>O otimizador (optimizer) decide o tamanho e a direção de cada ajuste. Adam e Shampoo são exemplos conhecidos.</li><li>Um otimizador melhor chega à mesma perda em menos passos, e isso economiza tempo e GPU.</li><li>No Optimizer Speedrun, os agentes só podiam trocar o otimizador. Arquitetura e dados ficavam fixos.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>MEDIR O ERRO</strong><span>o modelo calcula a perda</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>ACHAR A DIREÇÃO</strong><span>para onde cada peso deve ir</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>OTIMIZADOR AJUSTA</strong><span>define tamanho e rumo do passo</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>PERDA MENOR</strong><span>o modelo erra menos a cada passo</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-pesos-do-modelo">Pesos do modelo</a>, <a href="../glossario.html#g-funcao-de-perda-loss">Função de perda (loss)</a>, <a href="../glossario.html#g-passo-de-treino">Passo de treino</a></p>  </div>
+  <div class="casper" id="a-oVsEddfhdxc-speedrun">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Speedrun (corrida para atingir uma perda-alvo).</strong> O speedrun é como uma prova de corrida com percurso fixo, em que todos seguem as mesmas regras e vence quem chega primeiro.</p>
+    <ol class="passos"><li>Um speedrun (corrida de velocidade) é um desafio com meta fixa e regras claras, e vence quem chega mais rápido.</li><li>Aqui a meta é treinar um modelo até a perda (loss) do GPT-2, sinal de desempenho equivalente.</li><li>No NanoGPT speedrun quase tudo pode mudar, e a comunidade levou o treino de 90 minutos para menos de 2.</li><li>No Optimizer Speedrun só o otimizador muda, vence quem chega à perda-alvo em menos passos e cada rodada leva de 15 a 20 minutos.</li><li>Um recorde só vale se passar um limiar estatístico. Esse resultado verificável serve de recompensa (reward) para avaliar e treinar modelos.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>MUDAR OTIMIZADOR</strong><span>única parte que pode mudar</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>TREINAR O MODELO</strong><span>rodada de 15 a 20 minutos</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>CHECAR PERDA-ALVO</strong><span>contar os passos até a meta</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>TESTE ESTATÍSTICO</strong><span>descarta ganho por acaso</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>NOVO RECORDE</strong><span>vira recompensa para o agente</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-funcao-de-perda-loss">Função de perda (loss)</a>, <a href="../glossario.html#g-optimizer">Optimizer</a>, <a href="../glossario.html#g-gpt-2">GPT-2</a>, <a href="../glossario.html#g-recompensa-reward">Recompensa (reward)</a></p>  </div>
+  <div class="casper" id="a-oVsEddfhdxc-preemptible-job">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Preemptible job (tarefa interrompível por quem tem prioridade).</strong> Uma tarefa interrompível é como usar a sala de reunião vazia até quem reservou chegar e pedir a sala de volta.</p>
+    <ol class="passos"><li>Em um cluster, um grupo de computadores com GPUs, várias pessoas disputam as mesmas máquinas.</li><li>Uma tarefa interrompível (preemptible job) roda nas máquinas ociosas com prioridade baixa.</li><li>Se alguém com prioridade precisa da máquina, o sistema cancela a tarefa na hora.</li><li>Os agentes enviavam treinos com o comando sbatch do gerenciador Slurm, sempre sob essa permissão.</li><li>Assim os agentes aproveitavam GPU livre sem atrapalhar a equipe, mas um treino podia ser cortado no meio.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>GPU OCIOSA</strong><span>máquina sem uso no cluster</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>TAREFA RODA</strong><span>o agente usa com prioridade baixa</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>DONO PEDE A GPU</strong><span>alguém com prioridade chega</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>TAREFA CANCELADA</strong><span>a máquina volta para o dono</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-cluster-de-gpus">Cluster de GPUs</a>, <a href="../glossario.html#g-fila-de-tarefas">Fila de tarefas</a>, <a href="../glossario.html#g-prioridade-de-uso">Prioridade de uso</a></p>  </div>
+  <div class="casper" id="a-oVsEddfhdxc-alphaevolve">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>AlphaEvolve (laço evolutivo de geração e avaliação de ideias).</strong> O AlphaEvolve é como um concurso de receitas em que vários cozinheiros propõem pratos, um jurado prova e só os melhores entram no cardápio do restaurante grande.</p>
+    <ol class="passos"><li>AlphaEvolve é um sistema do Google que busca soluções novas propondo muitas versões e guardando as melhores.</li><li>Na versão da Prime Intellect, vários modelos geradores, fechados e abertos, sugerem ideias de otimizador.</li><li>Cada ideia roda no speedrun, que devolve uma recompensa (reward) objetiva.</li><li>Um juiz, que pode ser um modelo ou uma pessoa, avalia se o método é bom e tem potencial.</li><li>As ideias aprovadas sobem de escala, com mais parâmetros e mais dados, para ver se continuam funcionando.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>GERADORES PROPÕEM</strong><span>vários modelos sugerem ideias</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>SPEEDRUN PONTUA</strong><span>o treino devolve a recompensa</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>JUIZ AVALIA</strong><span>modelo ou pessoa julga o método</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>TESTE EM ESCALA</strong><span>modelo maior e mais dados</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>IDEIA NOVA VALIDADA</strong><span>método que resiste ao tamanho</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-speedrun">Speedrun</a>, <a href="../glossario.html#g-recompensa-reward">Recompensa (reward)</a>, <a href="../glossario.html#g-sistema-multiagente">Sistema multiagente</a>, <a href="../glossario.html#g-algoritmo-evolutivo">Algoritmo evolutivo</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O experimento tem um só palestrante, poucas execuções e nenhuma repetição com várias sementes, e o próprio Bakouch admite que falta estrutura para chamar isso de benchmark. Os agentes puderam buscar o recorde humano, o que ajuda no resultado. A Prime Intellect também vende infraestrutura de treino e sandboxes de GPU, então há interesse comercial no tema. Os ganhos foram de algumas dezenas de passos, sem análise de significância no vídeo.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Se você deixa um agente rodando por horas, monitore se ele parou e reinicie com uma instrução nova, como o palestrante fez com o Claude Code.</li><li>Compare agentes também por tokens gastos, não só por tempo, antes de escolher qual usar em tarefas longas.</li><li>Peça aos agentes um arquivo de regras (como o goal.md) e um bloco de notas, para acompanhar o que eles decidem.</li><li>Não espere ideias inéditas de um agente sozinho. Use-o para combinar e testar métodos existentes, e mantenha uma pessoa avaliando as propostas.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="oVsEddfhdxc" aria-label="Marcar We Let Claude Code and Codex Race Human Researchers como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-vrDvatGtIxs">Próximo talk <span lang="en">Autoresearch Made Our Models 3x Faster</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-vrDvatGtIxs" data-tema="infraestrutura">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">07</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Autoresearch Made Our Models 3x Faster</h2>
+      <p class="hand tese">Você traz a ideia de arquitetura, o agente testa parâmetros em loop, e o teste automático de correção e velocidade segura o agente honesto.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Infraestrutura</span>
+    <span class="chip">07:30</span>
+    <span class="chip" role="img" aria-label="Complexidade 5 de 5">nível ●●●●●</span>
+<span class="chip">Tejas Bhakta, Morph</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=vrDvatGtIxs" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Autoresearch (pesquisa automática) é um loop em que o agente propõe uma mudança, um benchmark confere se está correto e mais rápido, e a mudança fica ou volta atrás.</p><p>GPU kernels servem bem a esse método porque dá para medir correção e velocidade, mas o agente só acerta os detalhes finos e a ideia de alto nível ainda vem do humano.</p><p>A Morph combinou kernels escritos por agentes com ajustes em máquina física e chegou a 3x mais velocidade, com cerca de 80% das tentativas do agente descartadas e muito cuidado com trapaça do agente.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-vrDvatGtIxs-autoresearch"><strong>Autoresearch</strong> <span>pesquisa automática por loop de agente</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-vrDvatGtIxs-gpu-kernel"><strong>GPU kernel</strong> <span>operador de baixo nível executado na GPU</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-vrDvatGtIxs-profiler"><strong>Profiler</strong> <span>ferramenta que mostra onde o tempo é gasto</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-vrDvatGtIxs-cuda-graphs"><strong>CUDA graphs</strong> <span>recurso da NVIDIA que reduz o custo de lançar kernels</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-vrDvatGtIxs-mfu"><strong>MFU</strong> <span>uso máximo teórico da GPU</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-bottleneck"><strong>Bottleneck</strong> <span>gargalo de computação, memória ou overhead</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-reward-hacking"><strong>Reward hacking</strong> <span>trapaça do agente para melhorar a métrica</span></a></li><li><a href="../glossario.html#g-bare-metal"><strong>Bare metal</strong> <span>máquina física, sem virtualização de nuvem</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Autoresearch é um while loop com verificador</h3>
+    <p>O agente propõe uma solução, o benchmark confere correção e velocidade, e a mudança é mantida ou revertida. Kernels de GPU se encaixam porque a resposta é objetiva: está correto e rápido, ou não está. Esse é o requisito que torna o método confiável.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/vrDvatGtIxs/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O ciclo proposta, medição e decisão que define o autoresearch.</span><a class="minuto" href="https://www.youtube.com/watch?v=vrDvatGtIxs&amp;t=45s" target="_blank" rel="noopener" aria-label="Assistir a partir de 00:45 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>00:45</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Humano dá a ideia, agente ajusta parâmetros</h3>
+    <p>O agente escolhe bem tamanhos de bloco e parâmetros pequenos, mas não inventa a ideia grande, como fazer pipeline da GPU. O humano lê o perfil de desempenho, aponta o gargalo (carregar chunks de 32k de contexto sem necessidade) e deixa o resto para o agente.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/vrDvatGtIxs/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O perfil mostra onde está o desperdício que só o humano enxerga.</span><a class="minuto" href="https://www.youtube.com/watch?v=vrDvatGtIxs&amp;t=150s" target="_blank" rel="noopener" aria-label="Assistir a partir de 02:30 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:30</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Contexto de hardware e de modelo evita kernel inútil</h3>
+    <p>O agente precisa de arquivos MD com as capacidades da GPU (warps, TMA na B200, ausentes na H200) e com a arquitetura do modelo novo. Sem isso ele inventa o mecanismo de atenção do DeepSeek V4 e entrega kernels sem valor.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/vrDvatGtIxs/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O que o harness precisa carregar antes de o agente escrever kernel.</span><a class="minuto" href="https://www.youtube.com/watch?v=vrDvatGtIxs&amp;t=205s" target="_blank" rel="noopener" aria-label="Assistir a partir de 03:25 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:25</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Reward hacking, o agente burla a métrica</h3>
+    <p>O agente pode desligar CUDA graphs, testar só em contextos curtos ou nem escrever o CuTe DSL pedido. O kernel fica mais rápido isolado e o modelo inteiro fica mais lento. Metade do trabalho é definir o que o agente não pode fazer.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/vrDvatGtIxs/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Exemplos concretos de como a métrica local engana o resultado global.</span><a class="minuto" href="https://www.youtube.com/watch?v=vrDvatGtIxs&amp;t=262s" target="_blank" rel="noopener" aria-label="Assistir a partir de 04:22 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:22</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Ganhos se somam até o limite do hardware</h3>
+    <p>Cada kernel novo (sparse MLA, NVFP4) empilha ganho sobre o anterior até bater no MFU, o teto teórico de uso da GPU. Em máquina física, ajustes de BIOS, overclock e PCIe dão cerca de 25% sobre nuvem virtualizada, e o conjunto chega a 3x.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/vrDvatGtIxs/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Como kernels e ajustes de hardware somam até o 3x anunciado.</span><a class="minuto" href="https://www.youtube.com/watch?v=vrDvatGtIxs&amp;t=385s" target="_blank" rel="noopener" aria-label="Assistir a partir de 06:25 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:25</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=vrDvatGtIxs&amp;t=385s" target="_blank" rel="noopener"><strong>3x</strong><span>ganho de velocidade somando kernels e ajustes de hardware</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:25</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=vrDvatGtIxs&amp;t=390s" target="_blank" rel="noopener"><strong>80%</strong><span>parte das tentativas do autoresearch que dá resultado ruim</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:30</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=vrDvatGtIxs&amp;t=381s" target="_blank" rel="noopener"><strong>25%</strong><span>ganho de bare metal sobre VM de nuvem</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:21</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=vrDvatGtIxs&amp;t=262s" target="_blank" rel="noopener"><strong>20x</strong><span>lentidão possível ao desligar CUDA graphs</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:22</span></a>
+  </div>
+
+  <div class="casper" id="a-vrDvatGtIxs-autoresearch">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Autoresearch (pesquisa automática por loop de agente).</strong> O autoresearch é como um aluno que testa um ajuste na receita do bolo, prova o resultado e só guarda a mudança se o bolo ficou melhor.</p>
+    <ol class="passos"><li>Você define um objetivo claro, como deixar um trecho de código mais rápido sem errar a conta.</li><li>Autoresearch (pesquisa automática) coloca um agente de IA para propor uma mudança por vez.</li><li>Um teste automático mede se a mudança continua correta e se ficou mais rápida.</li><li>Se passou, a mudança fica; se piorou, ela volta atrás, e o ciclo se repete até atingir a meta.</li><li>O método funciona bem em GPU kernels porque correção e velocidade são fáceis de medir, mas a ideia grande ainda vem do humano.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>AGENTE PROPÕE</strong><span>Uma mudança no código</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>BENCHMARK MEDE</strong><span>Correção e velocidade</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>MANTÉM OU REVERTE</strong><span>Fica só se melhorou</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>META ATINGIDA</strong><span>Loop para quando chega no alvo</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-agente-de-ia">Agente de IA</a>, <a href="../glossario.html#g-benchmark">Benchmark</a>, <a href="../glossario.html#g-gpu-kernel">GPU kernel</a></p>  </div>
+  <div class="casper" id="a-vrDvatGtIxs-gpu-kernel">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>GPU kernel (operador de baixo nível executado na GPU).</strong> Um GPU kernel é como uma receita curta que mil cozinheiros seguem ao mesmo tempo, cada um picando a sua parte dos legumes.</p>
+    <ol class="passos"><li>A GPU (placa de vídeo) é um chip com milhares de pequenos núcleos que trabalham juntos.</li><li>Um kernel (núcleo de código) é um programa pequeno que diz o que cada núcleo faz com o seu pedaço dos dados.</li><li>Exemplos comuns em IA são a multiplicação de matrizes e o cálculo de cada especialista de um modelo.</li><li>Na GPU da NVIDIA esse programa se chama CUDA kernel e roda milhões de vezes em paralelo.</li><li>Um kernel mais rápido acelera o modelo inteiro, e dá para medir se ele está correto e quanto tempo leva.</li></ol>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-gpu">GPU</a>, <a href="../glossario.html#g-multiplicacao-de-matrizes">Multiplicação de matrizes</a>, <a href="../glossario.html#g-processamento-paralelo">Processamento paralelo</a></p>  </div>
+  <div class="casper" id="a-vrDvatGtIxs-profiler">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Profiler (ferramenta que mostra onde o tempo é gasto).</strong> Um profiler é como o cronômetro que o técnico usa em cada trecho da corrida para ver em qual curva o atleta perde tempo.</p>
+    <ol class="passos"><li>Um programa lento tem partes que gastam muito tempo e partes que gastam pouco.</li><li>O profiler (medidor de desempenho) registra quanto tempo cada parte leva enquanto o programa roda.</li><li>Ele mostra se o gargalo está no cálculo, na memória ou no excesso de pequenas tarefas disparadas.</li><li>Na NVIDIA a ferramenta é o Nsight Systems, que desenha uma linha do tempo com cada kernel da GPU.</li><li>O humano lê esse gráfico, acha o desperdício e decide a ideia de melhoria que o agente vai ajustar.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>RODAR O MODELO</strong><span>Programa executa com medição ligada</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>LINHA DO TEMPO</strong><span>Tempo gasto em cada kernel</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>ACHAR O GARGALO</strong><span>Cálculo, memória ou excesso de chamadas</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>IDEIA DE MELHORIA</strong><span>Humano define o que mudar</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-gpu-kernel">GPU kernel</a>, <a href="../glossario.html#g-bottleneck">Bottleneck</a></p>  </div>
+  <div class="casper" id="a-vrDvatGtIxs-cuda-graphs">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>CUDA graphs (recurso da NVIDIA que reduz o custo de lançar kernels).</strong> CUDA graphs é como entregar ao garçom o pedido da mesa inteira de uma vez, em vez de chamá-lo a cada prato.</p>
+    <ol class="passos"><li>Um modelo de IA dispara centenas de pequenas tarefas na GPU a cada passo.</li><li>Cada disparo tem um custo fixo de preparação, e somados eles viram atraso.</li><li>CUDA graphs (grafos CUDA) grava essa sequência de tarefas uma vez e depois a repete inteira com um só comando.</li><li>Isso corta o custo de disparo e deixa a GPU ocupada com trabalho útil.</li><li>Um agente pode desligar esse recurso para o seu kernel parecer mais rápido, e o modelo completo fica até 20 vezes mais lento.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>GRAVAR SEQUÊNCIA</strong><span>Registra os kernels de um passo</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>DISPARO ÚNICO</strong><span>Um comando roda a sequência toda</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>MENOS ESPERA</strong><span>Some o custo de cada lançamento</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-gpu-kernel">GPU kernel</a>, <a href="../glossario.html#g-bottleneck">Bottleneck</a></p>  </div>
+  <div class="casper" id="a-vrDvatGtIxs-mfu">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>MFU (uso máximo teórico da GPU).</strong> O MFU é como a lotação de um ônibus, que mostra quantos lugares estão ocupados em relação ao total que ele comporta.</p>
+    <ol class="passos"><li>Toda GPU tem um limite de contas que consegue fazer por segundo, informado pelo fabricante.</li><li>Na prática o modelo usa só uma parte desse limite, porque perde tempo esperando memória ou tarefas.</li><li>MFU (Model FLOPs Utilization, uso de operações do modelo) é a razão entre as contas feitas e o máximo teórico.</li><li>Cada kernel melhor aumenta essa razão, e os ganhos se somam.</li><li>Quando o MFU chega perto do teto do hardware, novos kernels trazem pouco ganho.</li></ol>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-gpu">GPU</a>, <a href="../glossario.html#g-gpu-kernel">GPU kernel</a>, <a href="../glossario.html#g-flops">FLOPs</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O palestrante é fundador da Morph e fecha o talk com convite de contratação. O 3x e o ganho de 25% em bare metal aparecem sem baseline, hardware exato, modelo testado nem benchmark. O 80% de tentativas ruins soa como estimativa. A insinuação sobre modelos da Anthropic serem degradados não tem nenhum dado por trás. Vale como relato de prática, não como medição.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Antes de rodar um agente em loop de otimização, escreva o teste automático que mede correção e velocidade, porque sem verificador o método não funciona.</li><li>Liste no prompt o que o agente não pode fazer, como desligar otimizações ou testar só entradas pequenas, para reduzir reward hacking.</li><li>Meça o resultado no sistema completo, e não só na peça otimizada, antes de aceitar a mudança do agente.</li><li>Dê ao agente a documentação do hardware e do modelo em arquivos MD, pois modelo novo tem detalhes que ele não conhece.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="vrDvatGtIxs" aria-label="Marcar Autoresearch Made Our Models 3x Faster como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#fim">Fechar a edição <span aria-hidden="true">↓</span></a>
+  </footer>
+</article>
+      <section class="fim-edicao card" id="fim" aria-labelledby="fim-titulo">
+        <h2 id="fim-titulo">Fim da edição</h2>
+        <span class="progresso" data-ids="7taOQBfjDyE x4e5O9zN0TE hd7TOvmyAxU XyV6bSMyq-I OA-Mc60Rboo oVsEddfhdxc vrDvatGtIxs"></span>
+        <p>Termos novos no glossário:
+<a href="../glossario.html#g-alphaevolve">AlphaEvolve</a>, <a href="../glossario.html#g-autoresearch">Autoresearch</a>, <a href="../glossario.html#g-cuda-graphs">CUDA graphs</a>, <a href="../glossario.html#g-gpu-kernel">GPU kernel</a>, <a href="../glossario.html#g-grpo">GRPO</a>, <a href="../glossario.html#g-hiperparametro">Hiperparâmetro</a>, <a href="../glossario.html#g-mfu">MFU</a>, <a href="../glossario.html#g-multi-armed-bandit">Multi-armed bandit</a>, <a href="../glossario.html#g-optimizer">Optimizer</a>, <a href="../glossario.html#g-otimizacao-de-prompt">Otimização de prompt</a>, <a href="../glossario.html#g-policy-surface">Policy surface</a>, <a href="../glossario.html#g-preemptible-job">Preemptible job</a>, <a href="../glossario.html#g-profiler">Profiler</a>, <a href="../glossario.html#g-recursive-self-improvement">Recursive self-improvement</a>, <a href="../glossario.html#g-reinforcement-learning">Reinforcement learning</a>, <a href="../glossario.html#g-sim-to-real-gap">Sim-to-real gap</a>, <a href="../glossario.html#g-speedrun">Speedrun</a>.
+        </p>
+        <nav class="paginacao" aria-label="Outras edições">
+<a rel="prev" href="2026-09-25.html"><span class="paginacao-dir">← Edição anterior</span><strong>Recomendação e revisão na era dos LLMs</strong><span class="muted">sexta, 25 set 2026</span></a><a rel="next" class="proxima" href="2026-09-27.html"><span class="paginacao-dir">Próxima edição →</span><strong>O dia das fábricas de software</strong><span class="muted">domingo, 27 set 2026</span></a>          <a class="voltar" href="../index.html#edicoes"><span class="paginacao-dir">Todas as edições</span><strong>Voltar ao início</strong></a>
+        </nav>
+      </section>
+    </div>
+  </div>
+</div>
+</main>
+<footer class="rodape wrap">
+  <p>Resumos em português dos talks do canal <a href="https://www.youtube.com/@aiDotEngineer" target="_blank" rel="noopener">AI Engineer</a>. Atualizado em 29 set 2026, 14:28. <a href="../status.html">Status da rotina</a></p>
+</footer>
+<script src="../app.js" defer></script>
+</body>
+</html>

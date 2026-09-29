@@ -1,0 +1,208 @@
+{
+  "id": "XyV6bSMyq-I",
+  "titulo": "How We Built an Agent That Improves Itself — Zubin Aysola, Weights & Biases",
+  "titulo_curto": "How We Built an Agent That Improves Itself",
+  "palestrante": "Zubin Aysola, Weights & Biases",
+  "url": "https://www.youtube.com/watch?v=XyV6bSMyq-I",
+  "duracao": 1026,
+  "publicado_ts": 1790438408,
+  "edicao": "2026-09-26",
+  "tese": "Se o agente de produção e o de pesquisa são idênticos, cada erro real vira teste e o agente ajuda a se corrigir.",
+  "tldr": [
+    "A Weights & Biases construiu o ARIA, um agente que roda no produto e também no ambiente de testes offline com o mesmo código, sincronizado a cada 4 horas.",
+    "Cada falha ou acerto em produção vira uma tarefa de avaliação em YAML, que o time roda em variantes do agente e compara com a versão em produção.",
+    "Na demo, o ARIA pega um trace real, descobre que faltava uma chamada de SDK, escreve um ajuste no prompt e mede a versão nova contra a atual."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Produção e pesquisa rodam o mesmo agente",
+      "texto": "O time mantém o agente de produção e o de pesquisa idênticos byte a byte. Um job de sincronização a cada 4 horas evita deriva quando pesquisadores criam variantes ou skills novas. Assim, o resultado offline diz algo confiável sobre o comportamento real.",
+      "t": 356,
+      "legenda": "Mesmo código nos dois lados reduz a distância entre teste e produção.",
+      "print": "img/XyV6bSMyq-I/0.jpg"
+    },
+    {
+      "titulo": "Pipeline de avaliação como um DAG",
+      "texto": "Cada rodada segue etapas fixas: configuração em YAML, carga de dados reais, montagem do ambiente, reaplicação de ajustes de runtime, execução do agente, pontuação e desmontagem. Ambientes são caros porque incluem logs de treino e simulação de GPU, então rodam em paralelo.",
+      "t": 540,
+      "legenda": "O pipeline completo de uma avaliação, da configuração ao teardown.",
+      "print": "img/XyV6bSMyq-I/1.jpg"
+    },
+    {
+      "titulo": "Duas formas de pontuar e 886 tarefas",
+      "texto": "O agente é pontuado de dois jeitos. Um diz se a tarefa passou ou não. O outro compara variantes, por exemplo uma que faz perguntas ao usuário e outra que não faz. As tarefas incluem texto simples e usuários simulados por um modelo de linguagem, para testar conversas de vários turnos.",
+      "t": 695,
+      "legenda": "O conjunto de 886 tarefas, separado por níveis, com scores reais.",
+      "print": "img/XyV6bSMyq-I/2.jpg"
+    },
+    {
+      "titulo": "O flywheel de produção para tarefa",
+      "texto": "Todo erro em produção, e também todo acerto, vira uma tarefa nova. Isso tira o time da escrita manual de benchmarks. Os traces de produção e os offline são analisados com as mesmas ferramentas, e o agente ajuda a revisar os rollouts que ele mesmo gerou.",
+      "t": 727,
+      "legenda": "Traces reais alimentam o conjunto de tarefas de avaliação.",
+      "print": "img/XyV6bSMyq-I/3.jpg"
+    },
+    {
+      "titulo": "Demo: o ARIA corrige um bug dele mesmo",
+      "texto": "O agente transformou um trace real em tarefa de regressão, achou que faltava chamar weave.log corretamente no sandbox e replicou o erro. Depois testou variantes e a candidata, com um trecho novo no prompt de sistema, resolveu o problema. O relatório final compara produção e candidata.",
+      "t": 820,
+      "legenda": "O relatório mostra o bug, o ajuste e o resultado da variante nova.",
+      "print": "img/XyV6bSMyq-I/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Eval",
+      "traducao": "avaliação",
+      "nivel": "basico",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Trace",
+      "traducao": "registro passo a passo da execução",
+      "nivel": "intermediario",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Agent harness",
+      "traducao": "estrutura que envolve o modelo (ferramentas, contexto, compactação)",
+      "nivel": "intermediario",
+      "chave": "agent harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sim-to-real gap",
+      "traducao": "distância entre simulação e mundo real",
+      "nivel": "avancado",
+      "chave": "sim-to-real gap",
+      "analogia": "O sim-to-real gap é como a diferença entre treinar direção num simulador de autoescola e dirigir no trânsito de verdade, onde aparecem buracos, chuva e motoristas que o simulador nunca mostrou.",
+      "explicacao": [
+        "Antes de soltar um sistema no mundo real, a equipe costuma testá-lo num ambiente de mentira, mais barato e mais seguro.",
+        "O sim-to-real gap (distância entre simulação e mundo real) é a queda de desempenho que aparece quando o sistema sai do teste e encontra a situação real.",
+        "A queda acontece porque a simulação deixa de fora detalhes do mundo real, e o sistema aprende a ir bem só no cenário simplificado.",
+        "Com agentes de IA, o teste offline (fora do produto, com tarefas preparadas) faz o papel da simulação, e o uso por clientes faz o papel do mundo real.",
+        "No talk, a Weights & Biases reduz essa distância rodando o mesmo código nos dois lados, sincronizando a cada 4 horas e levando traces (registros passo a passo) de produção para dentro dos testes."
+      ],
+      "pre_requisitos": [
+        "Eval",
+        "Trace",
+        "Ambiente de produção",
+        "Simulação"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "TESTE OFFLINE",
+            "nota": "Agente vai bem nas tarefas preparadas"
+          },
+          {
+            "rotulo": "PRODUÇÃO",
+            "nota": "Clientes trazem casos que o teste ignora"
+          },
+          {
+            "rotulo": "DIFERENÇA MEDIDA",
+            "nota": "Nota offline e real não batem"
+          },
+          {
+            "rotulo": "TRACE REAL VIRA TESTE",
+            "nota": "Mesmo código e mesmo formato de log"
+          },
+          {
+            "rotulo": "DISTÂNCIA MENOR",
+            "nota": "Teste offline prevê o uso real"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Hill climbing",
+      "traducao": "melhoria em pequenos passos guiada pela métrica",
+      "nivel": "intermediario",
+      "chave": "hill climbing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Rollout",
+      "traducao": "execução completa do agente numa tarefa",
+      "nivel": "intermediario",
+      "chave": "rollout",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Simulated user",
+      "traducao": "usuário simulado por um modelo",
+      "nivel": "intermediario",
+      "chave": "simulated user",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval flywheel",
+      "traducao": "ciclo em que falhas reais viram testes",
+      "nivel": "intermediario",
+      "chave": "eval flywheel",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é também uma demonstração de produto da Weights & Biases, que vende o Weave e o ARIA, então o palestrante tem interesse direto. Faltam números de ganho: o único score citado é cerca de 66% em algumas tarefas, sem baseline nem intervalo. A demo mostra um único bug corrigido, sem taxa de acerto da abordagem. O próprio palestrante admite que os slides foram gerados com IA e que o CI quebrou por um tempo.",
+  "acoes": [
+    "Registre traces de produção e offline no mesmo formato, para poder levar um caso real ao teste sem adaptação.",
+    "Transforme cada falha reportada por usuários em uma tarefa de avaliação escrita em arquivo, com condição inicial e condição final.",
+    "Compare variantes do agente lado a lado (com pergunta ao usuário e sem) antes de trocar a versão em produção.",
+    "Mesmo usando IA para escrever código e testes, reserve tempo para revisar a saúde das suas avaliações e a deriva em relação à produção."
+  ],
+  "numeros": [
+    {
+      "valor": "886",
+      "contexto": "tarefas de avaliação, separadas por nível",
+      "t": 695
+    },
+    {
+      "valor": "4 horas",
+      "contexto": "intervalo do job que sincroniza produção e pesquisa",
+      "t": 356
+    },
+    {
+      "valor": "66%",
+      "contexto": "desempenho em algumas tarefas no CI noturno",
+      "t": 295
+    },
+    {
+      "valor": "8 meses",
+      "contexto": "tempo sem escrever código à mão, segundo o palestrante",
+      "t": 882
+    }
+  ]
+}

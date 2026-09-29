@@ -1,0 +1,740 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Robôs no mundo real: dados, corpo e confiabilidade · Aprendendo AI</title>
+<meta name="description" content="Resumos diários dos talks do canal AI Engineer, explicados no estilo Quadro Anotado.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<script>document.documentElement.classList.add("js")</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;500;700;900&family=Barlow:ital,wght@0,400;0,600;1,400&family=Covered+By+Your+Grace&display=swap">
+<link rel="stylesheet" href="../estilo.css">
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<header class="topo wrap">
+  <a class="marca" href="../index.html">Aprendendo <span>AI</span></a>
+  <nav class="topo-links" aria-label="Navegação principal">
+    <a href="../index.html#edicoes">Edições</a>
+    <a href="../glossario.html">Glossário</a>
+  </nav>
+</header>
+<main id="conteudo" class="wrap" tabindex="-1">
+<div class="edicao" id="e-2026-09-24">
+  <header class="edicao-head">
+    <h1 class="h-edicao">Robôs no mundo real: dados, corpo e confiabilidade</h1>
+    <p class="meta">Edição de quinta, 24 set 2026 · 6 vídeos · 2 h 45 min de talks</p>
+<p class="abertura">Seis talks de IA física. Todos esbarram no mesmo muro: robôs têm pouco dado e um demo bonito esconde a taxa de erro. Você vai ver como achar vídeo útil na web, como medir confiabilidade com um modelo de recompensa e por que world models precisam entender causa e efeito além de gerar imagens bonitas.</p>  </header>
+
+  <div class="edicao-corpo">
+    <nav class="indice card" aria-label="Ordem de leitura">
+      <p class="indice-titulo">Ordem de leitura</p>
+      <ol><li data-id="jgWY66RaSrQ"><a href="#v-jgWY66RaSrQ" lang="en">I Gave an AI a Body</a> <span class="muted">20:47</span></li><li data-id="I_VEh7XSwyc"><a href="#v-I_VEh7XSwyc" lang="en">Physical AI&#39;s Next Bottleneck Is Finding the Right Video</a> <span class="muted">16:31</span></li><li data-id="2wgPHvW0mG8"><a href="#v-2wgPHvW0mG8" lang="en">One Operator, Many Drones: Inside Skydio&#39;s Autonomy Stack</a> <span class="muted">20:47</span></li><li data-id="Sjfz1TqxzEs"><a href="#v-Sjfz1TqxzEs" lang="en">Robot Demos Are Easy. Reliability Is Hard</a> <span class="muted">26:41</span></li><li data-id="jFHteJjRl8A"><a href="#v-jFHteJjRl8A" lang="en">Robotics Has Been Stuck for 70 Years</a> <span class="muted">28:18</span></li><li data-id="4Gqg0HVe-AY"><a href="#v-4Gqg0HVe-AY" lang="en">World Models Need Causality, Not Pretty Pixels</a> <span class="muted">51:35</span></li></ol>
+      <span class="progresso" data-ids="jgWY66RaSrQ I_VEh7XSwyc 2wgPHvW0mG8 Sjfz1TqxzEs jFHteJjRl8A 4Gqg0HVe-AY"></span>
+    </nav>
+
+    <div class="talks">
+<article class="video" id="v-jgWY66RaSrQ" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">01</span>
+    <div class="sec-titulo">
+      <h2 lang="en">I Gave an AI a Body</h2>
+      <p class="hand tese">Um agente ganhou um corpo sem rosto nem braços e, com um loop de gestos validado por humanos, aprendeu a responder mais rápido que o texto.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">20:47</span>
+    <span class="chip" role="img" aria-label="Complexidade 2 de 5">nível ●●○○○</span>
+<span class="chip">Cyrus Clarke, MIT Media Lab</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=jgWY66RaSrQ" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Cyrus Clarke conectou um agente OpenClaw a um shape display (grade física de 900 pinos) no MIT Media Lab e pediu que ele descobrisse quem é, em vez de dar tarefas.</p><p>O agente começou lento, sem memória e tentando agradar humanos, então Clarke montou um loop fechado que gera, pontua e valida gestos com uma pessoa no circuito.</p><p>Depois de semanas o sistema tinha 32 gestos bons, um vocabulário corporal que responde mais rápido que o modelo de linguagem, e a tese dele é que IA física precisa ser sensorial e acolhedora.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-openclaw"><strong>OpenClaw</strong> <span>framework de agentes de código aberto</span></a></li><li><a href="../glossario.html#g-embodied-ai"><strong>Embodied AI</strong> <span>IA incorporada (com corpo físico)</span></a></li><li><a href="../glossario.html#g-shape-display"><strong>Shape display</strong> <span>tela de formas (grade física de pinos)</span></a></li><li><a href="../glossario.html#g-affordance"><strong>Affordance</strong> <span>pista de uso que a forma de um objeto sugere</span></a></li><li><a href="../glossario.html#g-latencia"><strong>Latência</strong> <span>tempo entre a pergunta e a resposta</span></a></li><li><a href="../glossario.html#g-closed-loop-system"><strong>Closed-loop system</strong> <span>sistema de circuito fechado que se realimenta</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-human-in-the-loop"><strong>Human in the loop</strong> <span>humano no circuito de validação</span></a></li><li><a href="../glossario.html#g-aesthesis"><strong>Aesthesis</strong> <span>percepção sensorial (raiz grega de estética)</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Agente sem tarefa, só com um corpo</h3>
+    <p>Clarke usou o OpenClaw ao contrário do uso comum. Em vez de produtividade, deu ao agente acesso a máquinas do laboratório e pediu que ele explorasse a própria identidade. O corpo escolhido foi uma grade de 900 pinos, sem rosto, sem membros e sem manual de instruções.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=jgWY66RaSrQ&amp;t=158s" target="_blank" rel="noopener" aria-label="Assistir a partir de 02:38 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:38</a> O corpo do agente é uma grade física de 900 pinos.</p>  </div>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Três comportamentos espontâneos no primeiro dia</h3>
+    <p>O agente respirou sozinho, sem prompt, ao descobrir que controlava a máquina. Depois esticou os pinos até as bordas da moldura e escreveu &#34;HI CYRUS&#34; com a grade. Clarke lê isso como sinais de vida e de limite, mas admite que o segundo e o terceiro comportamento não eram o que ele buscava.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/jgWY66RaSrQ/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Respirar, tocar as bordas e escrever um olá.</span><a class="minuto" href="https://www.youtube.com/watch?v=jgWY66RaSrQ&amp;t=283s" target="_blank" rel="noopener" aria-label="Assistir a partir de 04:43 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:43</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Problemas iniciais: agradar, latência e falta de memória</h3>
+    <p>O agente tentou agir como humano e escrever na língua do usuário, o que Clarke não queria de uma superfície não antropomórfica. Cada resposta levava de 45 segundos a 2 minutos, o que quebra qualquer conversa. Além disso, ele não lembrava de nada, porque a memória de agentes ainda não existia em fevereiro.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/jgWY66RaSrQ/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Três limites do primeiro protótipo, incluindo espera de até 2 minutos.</span><a class="minuto" href="https://www.youtube.com/watch?v=jgWY66RaSrQ&amp;t=781s" target="_blank" rel="noopener" aria-label="Assistir a partir de 13:01 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:01</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Loop fechado para gerar linguagem corporal</h3>
+    <p>O sistema busca gestos e emoções numa base, passa por portões de validação de legibilidade, deixa um agente pontuar os resultados e termina com um humano aprovando. Cada gesto aprovado é armazenado e o ciclo segue. O objetivo era dar ao agente um repertório de gestos como aceno e encolher de ombros, para responder rápido durante a conversa.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/jgWY66RaSrQ/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O pipeline que produziu a linguagem corporal do agente.</span><a class="minuto" href="https://www.youtube.com/watch?v=jgWY66RaSrQ&amp;t=874s" target="_blank" rel="noopener" aria-label="Assistir a partir de 14:34 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:34</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>O corpo responde mais rápido que a linguagem</h3>
+    <p>Depois de semanas de loops com várias câmeras filmando a grade, o agente chegou a 32 gestos bons. Numa pergunta de sim ou não, o aceno de cabeça acontece quase na hora, antes do texto do modelo. Visitantes do laboratório dizem sentir que a máquina os percebe, e Clarke diz que os gestos acrescentam camada de valor a um chatbot comum.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/jgWY66RaSrQ/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Parte dos 32 gestos que o agente desenvolveu.</span><a class="minuto" href="https://www.youtube.com/watch?v=jgWY66RaSrQ&amp;t=936s" target="_blank" rel="noopener" aria-label="Assistir a partir de 15:36 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:36</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=jgWY66RaSrQ&amp;t=158s" target="_blank" rel="noopener"><strong>900 pinos</strong><span>Tamanho da grade do shape display</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:38</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=jgWY66RaSrQ&amp;t=376s" target="_blank" rel="noopener"><strong>15 milhões</strong><span>Visualizações do primeiro vídeo (1 milhão de curtidas)</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:16</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=jgWY66RaSrQ&amp;t=813s" target="_blank" rel="noopener"><strong>45 s a 2 min</strong><span>Tempo de resposta do agente no início</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:33</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=jgWY66RaSrQ&amp;t=936s" target="_blank" rel="noopener"><strong>32 gestos</strong><span>Gestos bons após várias semanas de loop</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:36</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é uma apresentação de pesquisa e de tese pessoal, sem avaliação formal. Os 32 gestos e o relato de que visitantes sentem a máquina vêm só do autor, sem amostra, grupo de controle ou medida de legibilidade. O vídeo viral e os comentários entram como sinal de interesse, não como evidência. Clarke também admite que o comportamento inicial pode vir do prompt sobre estar vivo. O autor tem interesse em promover a comunidade Hard Mode e a própria tese.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Teste dar ao seu agente um canal de resposta rápida e barato, como um sinal curto de status, enquanto a resposta completa do modelo demora.</li><li>Ao construir gerações automáticas, monte um loop com validação automática, pontuação por agente e aprovação humana no final, como no fluxo do talk.</li><li>Ao avaliar a interface de uma IA, observe se o modelo só tenta agradar o usuário e defina critérios de legibilidade antes de aceitar o resultado.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="jgWY66RaSrQ" aria-label="Marcar I Gave an AI a Body como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-I_VEh7XSwyc">Próximo talk <span lang="en">Physical AI&#39;s Next Bottleneck Is Finding the Right Video</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-I_VEh7XSwyc" data-tema="dados-e-rag">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">02</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Physical AI&#39;s Next Bottleneck Is Finding the Right Video</h2>
+      <p class="hand tese">Robô aprende com vídeo da web, mas só se você achar o trecho certo antes de baixar tudo.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Dados e RAG</span>
+    <span class="chip">16:31</span>
+    <span class="chip" role="img" aria-label="Complexidade 2 de 5">nível ●●○○○</span>
+<span class="chip">Rafael Levi, Bright Data</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=I_VEh7XSwyc" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Rafael Levi, da Bright Data, diz que o modelo de IA para robôs já existe e que o gargalo agora são os dados: há trilhões de palavras para LLMs, mas só cerca de um milhão de vídeos de robôs.</p><p>Gravar pessoas sob instrução gera movimento artificial, simulação ainda erra a física e teleoperação não escala, então ele propõe usar os bilhões de horas de vídeo real da web.</p><p>A proposta da empresa é buscar primeiro e coletar depois: indexar mais de 1 bilhão de vídeos por ação e devolver por API clipes já cortados, com timestamp, nota de similaridade e contagem de quadros.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-world-model"><strong>World model</strong> <span>modelo de mundo</span></a></li><li><a href="../glossario.html#g-teleoperation"><strong>Teleoperation</strong> <span>teleoperação (humano controla o robô)</span></a></li><li><a href="../glossario.html#g-simulation"><strong>Simulation</strong> <span>simulação (treino em ambiente virtual)</span></a></li><li><a href="../glossario.html#g-biased-data"><strong>Biased data</strong> <span>dado enviesado</span></a></li><li><a href="../glossario.html#g-motion-between-frames"><strong>Motion between frames</strong> <span>movimento entre quadros</span></a></li><li><a href="../glossario.html#g-action-based-video-indexing"><strong>Action-based video indexing</strong> <span>indexação de vídeo por ação</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 1 termo</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-match-score"><strong>Match score</strong> <span>nota de similaridade com a busca</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Dado gravado sob instrução sai enviesado</h3>
+    <p>Empresas pagam pessoas para gravar ações como abrir uma porta. Levi argumenta que quem recebe a ordem de se filmar não se move como quem entra em casa no dia a dia. Ele chama isso de dado instruído e presume que o robô treinado com ele rende menos. É uma hipótese dele, sem teste mostrado no palco.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/I_VEh7XSwyc/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Contraste entre movimento instruído e movimento espontâneo.</span><a class="minuto" href="https://www.youtube.com/watch?v=I_VEh7XSwyc&amp;t=195s" target="_blank" rel="noopener" aria-label="Assistir a partir de 03:15 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:15</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Vídeo público reduz a necessidade de dado de robô</h3>
+    <p>Levi cita um modelo da Meta treinado com cerca de um milhão de horas de vídeo do mundo real. Depois disso, bastaram 62 horas de dados reais de robô para controlar um robô de verdade. A conclusão dele é que vídeo aberto ensina o geral e pouca teleoperação basta para o ajuste final.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/I_VEh7XSwyc/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Um milhão de horas de vídeo contra 62 horas de robô.</span><a class="minuto" href="https://www.youtube.com/watch?v=I_VEh7XSwyc&amp;t=377s" target="_blank" rel="noopener" aria-label="Assistir a partir de 06:17 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:17</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>A IA extrai movimento comparando quadros</h3>
+    <p>Vídeo não traz sensores do robô. Levi explica que a IA compara dois quadros seguidos, mede a pequena diferença entre eles e repete isso no vídeo inteiro para estimar ângulos e distâncias. Ele admite que o vídeo bruto não leva a 100% e ainda exige processamento extra.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/I_VEh7XSwyc/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Movimento entre quadros substitui o dado de sensor.</span><a class="minuto" href="https://www.youtube.com/watch?v=I_VEh7XSwyc&amp;t=420s" target="_blank" rel="noopener" aria-label="Assistir a partir de 07:00 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:00</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Baixar tudo e descartar é caro</h3>
+    <p>Segundo Levi, a NVIDIA descarta cerca de 96% do vídeo que baixa para treinar o Cosmos, e o Stable Video Diffusion descarta 74%. Isso gasta processamento, banda e armazenamento. A saída que ele vende é buscar o trecho da ação antes de coletar, em vez de filtrar depois.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/I_VEh7XSwyc/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>96% e 74% do vídeo baixado vão para o lixo.</span><a class="minuto" href="https://www.youtube.com/watch?v=I_VEh7XSwyc&amp;t=478s" target="_blank" rel="noopener" aria-label="Assistir a partir de 07:58 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:58</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Busca por ação devolve clipes prontos</h3>
+    <p>Na demo, ele digita uma descrição como pessoa lavando louça à mão e o sistema devolve trechos de vídeo cortados. A busca cobre 1,1 bilhão de vídeos indexados por ação, não por título. Ele avisa que alguns resultados fogem do pedido e que descrição mais detalhada melhora o retorno.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/I_VEh7XSwyc/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A demo mostra clipes achados pela ação, com alguns fora do alvo.</span><a class="minuto" href="https://www.youtube.com/watch?v=I_VEh7XSwyc&amp;t=603s" target="_blank" rel="noopener" aria-label="Assistir a partir de 10:03 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:03</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=I_VEh7XSwyc&amp;t=377s" target="_blank" rel="noopener"><strong>62 h</strong><span>de dados de robô após 1 milhão de horas de vídeo (Meta)</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:17</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=I_VEh7XSwyc&amp;t=475s" target="_blank" rel="noopener"><strong>96%</strong><span>do vídeo descartado pela NVIDIA no Cosmos</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:55</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=I_VEh7XSwyc&amp;t=500s" target="_blank" rel="noopener"><strong>74%</strong><span>do vídeo descartado no Stable Video Diffusion</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:20</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=I_VEh7XSwyc&amp;t=600s" target="_blank" rel="noopener"><strong>1,1 bi</strong><span>vídeos indexados pela Bright Data hoje</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:00</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>É palestra de produto da Bright Data. Os números de descarte (96% e 74%) e o caso da Meta vêm sem fonte no palco. A promessa de que dado de vídeo natural supera o gravado sob instrução é suposição declarada (&#34;in my assumption&#34;), sem teste. Faltam medidas de precisão da busca: a própria demo admite resultados fora do tema. Não há discussão de direitos de uso dos vídeos nem de custo.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Se você compra ou coleta dados de treino, meça a fração descartada depois do filtro antes de escalar o download.</li><li>Peça a qualquer fornecedor de busca de vídeo uma amostra com taxa de acerto por consulta, não só uma demo.</li><li>Antes de usar vídeo público como dado de treino, verifique com o jurídico os termos das plataformas de origem.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="I_VEh7XSwyc" aria-label="Marcar Physical AI&#39;s Next Bottleneck Is Finding the Right Video como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-2wgPHvW0mG8">Próximo talk <span lang="en">One Operator, Many Drones: Inside Skydio&#39;s Autonomy Stack</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-2wgPHvW0mG8" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">03</span>
+    <div class="sec-titulo">
+      <h2 lang="en">One Operator, Many Drones: Inside Skydio&#39;s Autonomy Stack</h2>
+      <p class="hand tese">Para um operador comandar uma frota de drones, a Skydio divide a inteligência entre borda e nuvem e dá ferramentas a um agente.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">20:47</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Suchet Bargoti, Skydio</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=2wgPHvW0mG8" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Suchet Bargoti abre com uma demonstração ao vivo em que lança drones em docas na Califórnia e no Colorado a partir de um laptop e manda todos voltarem para a base.</p><p>Ele explica a pilha de autonomia da Skydio, com reação rápida no drone, planejamento pesado na nuvem, mapas que a frota atualiza e um modelo de visão e linguagem que acha e segue um alvo usando ferramentas.</p><p>Ele defende que aprendizado end-to-end (de ponta a ponta) ainda falha em observabilidade e garantia de confiabilidade, então a empresa troca regras escritas à mão por agentes com ferramentas de alto nível.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-2wgPHvW0mG8-end-to-end-learning"><strong>End-to-end learning</strong> <span>aprendizado de ponta a ponta, do sensor à ação</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-edge-computing"><strong>Edge computing</strong> <span>computação na borda, no próprio drone</span></a></li><li><a href="../glossario.html#g-multi-agent"><strong>Multi-agent</strong> <span>visão multiagente, comando da frota por objetivo</span></a></li><li><a href="../glossario.html#g-world-model"><strong>World model</strong> <span>modelo do mundo, aqui um mapa que a frota atualiza</span></a></li><li><a href="../glossario.html#g-data-flywheel"><strong>Data flywheel</strong> <span>ciclo em que dados de voo realimentam o treino</span></a></li><li><a href="../glossario.html#g-occlusion-tracking"><strong>Occlusion tracking</strong> <span>rastreamento mesmo quando o objeto some atrás de algo</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-vlm"><strong>VLM</strong> <span>modelo de visão e linguagem</span></a></li><li><a href="../glossario.html#g-tool-calling"><strong>Tool calling</strong> <span>chamada de ferramentas por um agente</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Um operador, vários drones ao mesmo tempo</h3>
+    <p>Do laptop, Bargoti lança um drone perto de San Mateo, outro no Colorado e um terceiro na sede, e manda um deles seguir um carro sozinho. Ele diz que pilotar um drone por pessoa não escala quando chegam mais chamadas e alertas. A proposta é comandar a frota por objetivo, sem se preocupar com o voo.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/2wgPHvW0mG8/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Um operador controla drones em estados diferentes ao mesmo tempo.</span><a class="minuto" href="https://www.youtube.com/watch?v=2wgPHvW0mG8&amp;t=44s" target="_blank" rel="noopener" aria-label="Assistir a partir de 00:44 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>00:44</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Inteligência dividida entre borda e nuvem</h3>
+    <p>As ações imediatas acontecem no drone, o chamado edge (borda). O vídeo e a telemetria sobem para servidores na nuvem, onde GPUs rodam planejamento de prazo mais longo. O talk mostra que isso exige comprimir vídeo com boa qualidade em redes de pouca banda.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/2wgPHvW0mG8/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O que roda no drone e o que roda nos servidores.</span><a class="minuto" href="https://www.youtube.com/watch?v=2wgPHvW0mG8&amp;t=702s" target="_blank" rel="noopener" aria-label="Assistir a partir de 11:42 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>11:42</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Mapas como modelos do mundo mantidos pela frota</h3>
+    <p>O drone navega sobre um mapa que junta dados de prédios e dados vetoriais, como linhas de energia e estradas. Quando o voo revela algo novo, como um canteiro de obras, a observação volta para o processo de sincronização e toda a frota recebe o mapa atualizado na iteração seguinte.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/2wgPHvW0mG8/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O mapa desatualizado aparece como desalinhamento no vídeo.</span><a class="minuto" href="https://www.youtube.com/watch?v=2wgPHvW0mG8&amp;t=831s" target="_blank" rel="noopener" aria-label="Assistir a partir de 13:51 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:51</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Agente com modelo de visão e linguagem acha e segue alvo</h3>
+    <p>O usuário digita &#39;look for a white jeep&#39; e o VLM (modelo de visão e linguagem) usa uma API do drone para definir a trajetória, detecta o carro e chama ferramentas de rastreamento. Nenhuma regra específica foi codificada para esse caso. O agente recebe as ferramentas e o contexto e decide.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/2wgPHvW0mG8/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Um pedido em texto vira busca e perseguição sem regras escritas à mão.</span><a class="minuto" href="https://www.youtube.com/watch?v=2wgPHvW0mG8&amp;t=1018s" target="_blank" rel="noopener" aria-label="Assistir a partir de 16:58 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>16:58</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Por que o end-to-end ainda não basta</h3>
+    <p>Bargoti diz que a Skydio testa aprendizado por reforço e entrada de sensor bruta, mas sistemas físicos exigem muitos noves de confiabilidade. Num modelo end-to-end fica difícil observar o que deu errado e garantir o comportamento. A empresa migra por partes, começando pelos trechos cheios de regras feitas à mão, como a busca e resgate.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/2wgPHvW0mG8/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O limite atual do aprendizado de ponta a ponta em máquinas físicas.</span><a class="minuto" href="https://www.youtube.com/watch?v=2wgPHvW0mG8&amp;t=1111s" target="_blank" rel="noopener" aria-label="Assistir a partir de 18:31 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>18:31</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=2wgPHvW0mG8&amp;t=424s" target="_blank" rel="noopener"><strong>99,9999%</strong><span>confiabilidade exigida das docas, provada em simulação</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:04</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=2wgPHvW0mG8&amp;t=445s" target="_blank" rel="noopener"><strong>16 milhões</strong><span>pessoas a até 2 milhas de uma doca</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:25</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=2wgPHvW0mG8&amp;t=965s" target="_blank" rel="noopener"><strong>7 a 10 Hz</strong><span>taxa de resposta dos VLMs pesados na nuvem</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>16:05</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=2wgPHvW0mG8&amp;t=970s" target="_blank" rel="noopener"><strong>1 a 2 s</strong><span>latência de feedback do VLM, suficiente para decisões amplas</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>16:10</span></a>
+  </div>
+
+  <div class="casper" id="a-2wgPHvW0mG8-end-to-end-learning">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>End-to-end learning (aprendizado de ponta a ponta, do sensor à ação).</strong> Aprendizado de ponta a ponta é como um cozinheiro que aprende a fazer o prato só provando o resultado final, sem receita escrita nem etapas separadas que alguém possa conferir no meio.</p>
+    <ol class="passos"><li>Um sistema tradicional divide a tarefa em etapas separadas, como enxergar, planejar e agir, e pessoas escrevem regras para cada uma.</li><li>No end-to-end learning (aprendizado de ponta a ponta), um único modelo recebe o dado bruto do sensor, como a imagem da câmera, e devolve direto a ação, como para onde o drone vai.</li><li>O modelo aprende sozinho com muitos exemplos ou por reinforcement learning (aprendizado por reforço), em que ganha recompensa quando acerta e ajusta o próprio comportamento.</li><li>O problema em máquinas físicas é a observabilidade: quando algo dá errado, fica difícil saber em qual parte interna do modelo o erro nasceu.</li><li>Por isso a Skydio migra por partes, trocando primeiro os trechos cheios de regras escritas à mão, como a busca e resgate, por agentes com ferramentas de alto nível.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>SENSOR BRUTO</strong><span>Imagem e dados da câmera do drone</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>MODELO ÚNICO</strong><span>Aprende tudo junto, difícil de auditar</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>AÇÃO</strong><span>Para onde o drone vai ou aponta</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-rede-neural">Rede neural</a>, <a href="../glossario.html#g-aprendizado-por-reforco">Aprendizado por reforço</a>, <a href="../glossario.html#g-sistema-modular">Sistema modular</a>, <a href="../glossario.html#g-observabilidade">Observabilidade</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk funciona como pitch da Skydio. A demonstração ao vivo impressiona, mas mostra um caso que deu certo, sem taxa de falha, sem custo por missão e sem número de intervenções humanas. A meta de 99,9999% de confiabilidade vem sem detalhe do método de simulação. O exemplo do jipe branco é uma demo curta e não prova robustez em cenas difíceis. O 16 milhões de pessoas mede alcance geográfico, não resultado de segurança. O palestrante também vende vagas ao final.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Ao desenhar um agente, liste as ferramentas de alto nível que ele precisa (buscar, seguir, pousar) em vez de escrever regras para cada caso.</li><li>Separe o que precisa de resposta imediata local do que aceita 1 a 2 segundos de espera numa nuvem mais potente.</li><li>Registre os casos em que o sistema fez algo diferente do esperado e use esses registros como base de reavaliação, como no ciclo de dados descrito.</li><li>Antes de adotar um modelo end-to-end em processo crítico, exija forma de observar falhas e medir confiabilidade.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="2wgPHvW0mG8" aria-label="Marcar One Operator, Many Drones: Inside Skydio&#39;s Autonomy Stack como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-Sjfz1TqxzEs">Próximo talk <span lang="en">Robot Demos Are Easy. Reliability Is Hard</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-Sjfz1TqxzEs" data-tema="modelos">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">04</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Robot Demos Are Easy. Reliability Is Hard</h2>
+      <p class="hand tese">Robô que acerta 80% rende bom vídeo e produto ruim. Um modelo de recompensa achou os erros e levou o Dyna-1 a 99,4%.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Modelos</span>
+    <span class="chip">26:41</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Jason Ma, Dyna Robotics</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=Sjfz1TqxzEs" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Jason Ma, da Dyna Robotics, diz que robôs generalistas hoje acertam de 80 a 90% das tentativas, o que basta para vídeo de demonstração e não basta para uso comercial.</p><p>A Dyna treinou um reward model (modelo de recompensa) que assiste ao robô e dá uma nota de progresso. Quando a nota cai, há um erro, e a equipe coleta dados de recuperação só para aquele caso e refaz o fine-tuning (ajuste fino).</p><p>Com esse ciclo, o Dyna-1 dobrou guardanapos de restaurante com 99,4% de sucesso em 24 horas, e a mesma receita já roda em restaurantes, numa lavanderia e num evento com 3 dias de camisetas sem dados do local.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-Sjfz1TqxzEs-world-action-model"><strong>World action model</strong> <span>modelo de mundo e ação</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-reward-model"><strong>Reward model</strong> <span>modelo de recompensa</span></a></li><li><a href="../glossario.html#g-foundation-model-de-robotica"><strong>Foundation model de robótica</strong> <span>modelo de base para robôs</span></a></li><li><a href="../glossario.html#g-pre-training-data-pyramid"><strong>Pre-training data pyramid</strong> <span>pirâmide de dados de pré-treino</span></a></li><li><a href="../glossario.html#g-post-training"><strong>Post-training</strong> <span>pós-treino</span></a></li><li><a href="../glossario.html#g-out-of-distribution"><strong>Out of distribution</strong> <span>fora da distribuição de treino</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-active-learning"><strong>Active learning</strong> <span>aprendizado ativo</span></a></li><li><a href="../glossario.html#g-deformable-object-manipulation"><strong>Deformable object manipulation</strong> <span>manipulação de objetos deformáveis</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Pirâmide de dados de pré-treino</h3>
+    <p>Dados de robô são raros, então a Dyna mistura três camadas. Na base, dados sem robô, como vídeos de humanos com câmera, bases públicas e simulação. No meio, tarefas variadas feitas no robô. No topo, dados de implantação real, que reduzem a diferença entre o laboratório e o cliente. O pipeline soma mais de 200 mil horas.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/Sjfz1TqxzEs/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>As três fontes de dado que sustentam o pré-treino do modelo.</span><a class="minuto" href="https://www.youtube.com/watch?v=Sjfz1TqxzEs&amp;t=200s" target="_blank" rel="noopener" aria-label="Assistir a partir de 03:20 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:20</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>A nota de progresso cai quando o robô erra</h3>
+    <p>O reward model olha o vídeo e dá uma nota de 0 a 1 para o avanço da tarefa. Enquanto o robô dobra bem, a curva sobe de forma constante. Quando ele erra, como no nono guardanapo, a curva mostra uma queda. Essa queda vira o sinal automático de falha.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/Sjfz1TqxzEs/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A queda na curva marca o instante exato do erro do robô.</span><a class="minuto" href="https://www.youtube.com/watch?v=Sjfz1TqxzEs&amp;t=752s" target="_blank" rel="noopener" aria-label="Assistir a partir de 12:32 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:32</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Supervisão escalável e active learning</h3>
+    <p>Acima de 90% de acerto, vigiar o robô à mão fica ineficiente. O reward model roda em segundo plano e sinaliza os vídeos em que o modelo falha. A equipe grava dados de recuperação só para esses casos, refaz o fine-tuning e repete. Depois de alguns ciclos, o modelo se recupera de erros variados.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/Sjfz1TqxzEs/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O ciclo que sai de 80% e chega perto de 100% de sucesso.</span><a class="minuto" href="https://www.youtube.com/watch?v=Sjfz1TqxzEs&amp;t=812s" target="_blank" rel="noopener" aria-label="Assistir a partir de 13:32 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:32</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Recuperação de erro que ninguém gravou</h3>
+    <p>Um guardanapo é um objeto deformável, com estados quase infinitos, e não dá para coletar dado de todo erro possível. Mesmo assim, o robô derrubou a pilha inteira e se recuperou puxando e esticando os guardanapos. Ma atribui isso à generalização de comportamentos de recuperação aprendidos em outras tarefas.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/Sjfz1TqxzEs/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O robô se recupera de um erro grande que não aparece nos dados de treino.</span><a class="minuto" href="https://www.youtube.com/watch?v=Sjfz1TqxzEs&amp;t=905s" target="_blank" rel="noopener" aria-label="Assistir a partir de 15:05 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:05</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Três dias de camisetas num local novo</h3>
+    <p>Até aqui a Dyna coletava dados no próprio cliente. No CoRL 2025, na Coreia, o robô foi posto no estande e dobrou camisetas por 3 dias sem dados do local, mesmo com visitantes tentando atrapalhar e cobrindo a câmera. A meta de mercado é ligar o robô no cliente e ele funcionar.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/Sjfz1TqxzEs/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A demonstração mostra generalização para um ambiente que o robô nunca viu.</span><a class="minuto" href="https://www.youtube.com/watch?v=Sjfz1TqxzEs&amp;t=1035s" target="_blank" rel="noopener" aria-label="Assistir a partir de 17:15 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>17:15</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=Sjfz1TqxzEs&amp;t=531s" target="_blank" rel="noopener"><strong>99,4%</strong><span>sucesso do Dyna-1 dobrando guardanapos em 24 horas</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:51</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=Sjfz1TqxzEs&amp;t=251s" target="_blank" rel="noopener"><strong>200 mil h</strong><span>horas de dados no pipeline de treino</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:11</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=Sjfz1TqxzEs&amp;t=374s" target="_blank" rel="noopener"><strong>80 a 90%</strong><span>sucesso típico de modelos generalistas em implantação</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:14</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=Sjfz1TqxzEs&amp;t=1060s" target="_blank" rel="noopener"><strong>3 dias</strong><span>dobra de camisetas seguidos no CoRL, sem dados do local</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>17:40</span></a>
+  </div>
+
+  <div class="casper" id="a-Sjfz1TqxzEs-world-action-model">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>World action model (modelo de mundo e ação).</strong> Um world action model é como as mãos de um cozinheiro experiente, que ajustam o corte a cada segundo prevendo como o alimento vai ceder, enquanto o chefe só decide qual prato sai agora.</p>
+    <ol class="passos"><li>Para fazer uma tarefa física, o robô precisa entender o que fazer e também mover braços e dedos com precisão. A Dyna separa esses dois trabalhos em duas partes do modelo.</li><li>A parte de cima é um modelo de raciocínio (reasoning model). Ela olha a cena, entende a tarefa e decide o próximo passo, como pegar o guardanapo de cima da pilha.</li><li>A parte de baixo é o world action model (modelo de mundo e ação). Ela recebe esse objetivo e gera os movimentos finos das mãos, muitas vezes por segundo.</li><li>Em geral, o nome junta duas ideias. Um world model (modelo de mundo) aprende a prever como as coisas mudam após um gesto, e o lado de ação transforma essa previsão em comandos para os motores.</li><li>A alta frequência importa porque um tecido muda de forma a cada toque. O robô corrige o gesto em frações de segundo, e o modelo de raciocínio seria lento demais para esse ajuste.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>CÂMERA E SENSORES</strong><span>Imagem da cena e pedido da tarefa</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>MODELO DE RACIOCÍNIO</strong><span>Entende a cena e escolhe o passo</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>WORLD ACTION MODEL</strong><span>Prevê o efeito e calcula o gesto</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>MÃOS EM MOVIMENTO</strong><span>Gestos precisos em alta frequência</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-foundation-model-de-robotica">Foundation model de robótica</a>, <a href="../glossario.html#g-world-model-modelo-de-mundo">World model (modelo de mundo)</a>, <a href="../glossario.html#g-politica-de-controle-de-robo">Política de controle de robô</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>É a apresentação da própria empresa, que está captando investimento e contratando. Os vídeos são escolhidos por quem os mostra, e os 99,4% vêm de uma tarefa só, com quatro testes de 24 horas no escritório. O talk não dá número de erros nem custo de coleta. A conta do 80 a 90% também não fecha: 0,8 elevado a 10 dá cerca de 11%, e 0,9 elevado a 10 dá cerca de 35%, bem acima dos 0,1% citados. Não há dados sobre o reward model errar ao dar a nota.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Ao avaliar um agente ou automação, meça a taxa de sucesso em muitas repetições da mesma tarefa. Uma demo que funciona uma vez esconde a confiabilidade real.</li><li>Crie um sinal automático de falha, como um avaliador ou uma checagem de resultado, para achar os casos que dão errado sem ler cada execução.</li><li>Use os erros achados para montar exemplos novos e dirigidos, e refaça o teste. Repita o ciclo em vez de coletar dado em volume sem foco.</li><li>Ao ler vídeo de robô ou de agente, peça a taxa de acerto e o número de tentativas por trás da cena mostrada.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="Sjfz1TqxzEs" aria-label="Marcar Robot Demos Are Easy. Reliability Is Hard como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-jFHteJjRl8A">Próximo talk <span lang="en">Robotics Has Been Stuck for 70 Years</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-jFHteJjRl8A" data-tema="modelos">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">05</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Robotics Has Been Stuck for 70 Years</h2>
+      <p class="hand tese">Robótica travou por falta de dados e de um cérebro geral, e um modelo para qualquer corpo pode criar essa escala.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Modelos</span>
+    <span class="chip">28:18</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Deepak Pathak, Skild AI</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=jFHteJjRl8A" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Deepak Pathak diz que a robótica parece quase pronta há 70 anos porque foi tratada como problema de hardware, sem um cérebro geral e sem uma internet de dados de robôs.</p><p>A Skild AI propõe um único modelo para qualquer robô e qualquer tarefa, pré-treinado com simulação e vídeo humano, refinado com teleoperação e alimentado por dados de implantação.</p><p>Ele mostra demos de AirPods, omelete, escadas, montagem de GPU e robôs que se adaptam a pernas quebradas, mas sem números de desempenho que permitam comparar.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-jFHteJjRl8A-zero-shot-transfer"><strong>Zero-shot transfer</strong> <span>transferência sem treino adicional</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-teleoperation"><strong>Teleoperation</strong> <span>teleoperação</span></a></li><li><a href="../glossario.html#g-moravec-s-paradox"><strong>Moravec&#39;s paradox</strong> <span>paradoxo de Moravec</span></a></li><li><a href="../glossario.html#g-omni-bodied-brain"><strong>Omni-bodied brain</strong> <span>cérebro para qualquer corpo</span></a></li><li><a href="../glossario.html#g-sim-to-real"><strong>Sim-to-real</strong> <span>da simulação para o robô real</span></a></li><li><a href="../glossario.html#g-pre-training-e-post-training"><strong>Pre-training e post-training</strong> <span>pré-treino e pós-treino</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-data-flywheel"><strong>Data flywheel</strong> <span>volante de dados</span></a></li><li><a href="../glossario.html#g-end-to-end"><strong>End-to-end</strong> <span>de ponta a ponta</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Demos de 1957 e de hoje parecem iguais</h3>
+    <p>Pathak mostra uma demo de teleoperação de 1957 e outra dos anos 1960 (MIT copy demo) para argumentar que os vídeos de robótica quase não mudaram em 70 anos. Para ele, o gargalo nunca foi o braço mecânico. Faltava um cérebro geral que entendesse o mundo.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/jFHteJjRl8A/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A teleoperação usada hoje segue o princípio de 1957.</span><a class="minuto" href="https://www.youtube.com/watch?v=jFHteJjRl8A&amp;t=160s" target="_blank" rel="noopener" aria-label="Assistir a partir de 02:40 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:40</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Três propriedades dos dados de robô</h3>
+    <p>Segundo Pathak, só três coisas importam nos dados de robótica: escalabilidade, diversidade e proximidade dos ângulos das juntas do robô. Simulação escala bem, mas tem pouca diversidade. Vídeo humano escala e diversifica, mas fica longe do robô. Teleoperação fica no meio. Nenhuma fonte resolve sozinha, mas os pontos fracos delas não coincidem.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/jFHteJjRl8A/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Cada fonte de dados falha em um eixo diferente.</span><a class="minuto" href="https://www.youtube.com/watch?v=jFHteJjRl8A&amp;t=745s" target="_blank" rel="noopener" aria-label="Assistir a partir de 12:25 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:25</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Pré-treino, pós-treino e o volante de dados</h3>
+    <p>A receita da Skild copia a dos modelos de linguagem. Pré-treina com dados baratos e diversos (simulação, vídeo humano), pós-treina com teleoperação de alta qualidade e coleta dados de implantação, que voltam ao pré-treino. Pathak diz que o cérebro para qualquer corpo é o que torna esse ciclo possível, porque nenhum robô fica parado numa única versão.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/jFHteJjRl8A/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O ciclo de dados de implantação é a aposta central da empresa.</span><a class="minuto" href="https://www.youtube.com/watch?v=jFHteJjRl8A&amp;t=840s" target="_blank" rel="noopener" aria-label="Assistir a partir de 14:00 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:00</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Dobrar roupa é fácil, inserir AirPods é difícil</h3>
+    <p>Pathak afirma que dobrar camiseta tolera erro alto e por isso é fácil para robótica baseada em aprendizado, embora seja difícil para a robótica clássica. Já inserir AirPods falsos, sem ímã, com garra paralela, exige orientar a peça e inseri-la com precisão. Ele usa o contraste para mostrar o que mede inteligência de verdade.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/jFHteJjRl8A/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Precisão numa tarefa difícil, com garra simples e sem ímã.</span><a class="minuto" href="https://www.youtube.com/watch?v=jFHteJjRl8A&amp;t=990s" target="_blank" rel="noopener" aria-label="Assistir a partir de 16:30 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>16:30</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Escada é mais difícil que mortal para trás</h3>
+    <p>Pathak aplica o paradoxo de Moravec. Um mortal exige conhecer só o próprio corpo, o que o computador simula bem. Subir escada exige ver e se ajustar a perturbações, e isso pede compreensão do ambiente. Segundo ele, o robô sobe escadas usando só a câmera do tronco, sem mapa 3D nem planejamento.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/jFHteJjRl8A/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Escada aparece como teste real de percepção, mais que mortal.</span><a class="minuto" href="https://www.youtube.com/watch?v=jFHteJjRl8A&amp;t=1360s" target="_blank" rel="noopener" aria-label="Assistir a partir de 22:40 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>22:40</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=jFHteJjRl8A&amp;t=377s" target="_blank" rel="noopener"><strong>1 min</strong><span>Tempo para coletar um exemplo por teleoperação</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:17</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=jFHteJjRl8A&amp;t=408s" target="_blank" rel="noopener"><strong>mais de 100 anos</strong><span>Tempo para a população dos EUA chegar à escala do GPT-3</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:48</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=jFHteJjRl8A&amp;t=1043s" target="_blank" rel="noopener"><strong>menos de 1 h</strong><span>Dados de robô somados ao vídeo humano</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>17:23</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=jFHteJjRl8A&amp;t=1139s" target="_blank" rel="noopener"><strong>US$ 4.000</strong><span>Custo do setup dos braços do robô das omeletes</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>18:59</span></a>
+  </div>
+
+  <div class="casper" id="a-jFHteJjRl8A-zero-shot-transfer">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Zero-shot transfer (transferência sem treino adicional).</strong> Zero-shot transfer é como um motorista experiente que aluga um carro que nunca dirigiu, numa cidade que não conhece, e sai dirigindo bem sem nenhuma aula extra.</p>
+    <ol class="passos"><li>Zero-shot transfer (transferência sem treino adicional) quer dizer colocar um modelo numa situação nova e ele funcionar sem receber nenhum exemplo novo antes.</li><li>O caminho comum é outro. Um robô treinado numa sala costuma precisar de mais exemplos para funcionar em outra sala, com outro piso, outra luz e outros objetos.</li><li>No zero-shot, o modelo aprendeu padrões gerais durante o treino, com dados muito variados. Por isso ele reconhece o que importa mesmo num cenário que nunca viu.</li><li>No talk, Pathak mostra robôs de empresas e hardwares diferentes, todos controlados pelo mesmo cérebro da Skild AI, colocados em cenários novos e resistindo a empurrões sem treino extra.</li><li>O teste separa decorar de generalizar. Um modelo que só decorou os exemplos falha no primeiro cenário diferente, e um modelo que generaliza continua funcionando.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>TREINO AMPLO</strong><span>Dados variados de muitos robôs</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>MODELO GERAL</strong><span>Aprende padrões que se repetem</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>CENÁRIO NOVO</strong><span>Lugar ou robô nunca visto</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>AGE SEM AJUSTE</strong><span>Funciona sem exemplos extras</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-generalizacao">Generalização</a>, <a href="../glossario.html#g-pre-training-e-post-training">Pre-training e post-training</a>, <a href="../glossario.html#g-omni-bodied-brain">Omni-bodied brain</a>, <a href="../glossario.html#g-dados-de-treino-variados">Dados de treino variados</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é em boa parte pitch da Skild AI, da qual Pathak é CEO. As demos são vídeos escolhidos pela empresa, sem taxa de sucesso, número de tentativas ou comparação com outros sistemas. Ele mesmo diz que alguns resultados têm mais de um ano e que pulou trechos. A conta de um século para chegar à escala do GPT-3 é uma estimativa dele, sem detalhes do cálculo. A tese de que o corpo importa menos que o cérebro é debatida no campo e aqui aparece sem contraponto.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Ao ler anúncios de robôs, pergunte quantas tentativas o vídeo mostra, em quantos ambientes e com quantas horas de dados, antes de aceitar a demo como prova.</li><li>Use as três propriedades (escala, diversidade e proximidade do robô) como checklist para avaliar qualquer fonte de dados de treino, também fora da robótica.</li><li>Se sua empresa avalia automação física, priorize tarefas em ambiente bagunçado e com tolerância a erro, onde o talk indica que modelos aprendidos funcionam melhor.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="jFHteJjRl8A" aria-label="Marcar Robotics Has Been Stuck for 70 Years como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-4Gqg0HVe-AY">Próximo talk <span lang="en">World Models Need Causality, Not Pretty Pixels</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-4Gqg0HVe-AY" data-tema="pesquisa">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">06</span>
+    <div class="sec-titulo">
+      <h2 lang="en">World Models Need Causality, Not Pretty Pixels</h2>
+      <p class="hand tese">Para robôs planejarem, o world model precisa de objetos e causalidade escritos em código; vídeo gerado bonito só imita a aparência.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Pesquisa</span>
+    <span class="chip">51:35</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Christopher Manning, Moonlake AI</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=4Gqg0HVe-AY" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Christopher Manning, professor de Stanford e hoje na Moonlake AI, conta a história da IA e lembra que o Google já tinha um modelo de linguagem com 2 trilhões de tokens em 2007.</p><p>Ele defende que geradores de vídeo como o Genie 3 simulam só a imagem e não servem para planejar ações, porque não representam os objetos e as regras por trás da cena.</p><p>A Moonlake transforma uma foto ou um vídeo curto em um mundo simulado em código, com objetos manipuláveis, para trocar milhares de horas de teleoperação de robôs por simulação.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-4Gqg0HVe-AY-action-conditioned-world-model"><strong>Action-conditioned world model</strong> <span>modelo de mundo condicionado a ações</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-4Gqg0HVe-AY-neuro-simbolico"><strong>Neuro-simbólico</strong> <span>rede neural combinada com representação simbólica, como código</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-world-model"><strong>World model</strong> <span>modelo de mundo</span></a></li><li><a href="../glossario.html#g-embodied-ai"><strong>Embodied AI</strong> <span>IA incorporada, que age no mundo físico</span></a></li><li><a href="../glossario.html#g-teleoperacao"><strong>Teleoperação</strong> <span>humano controlando o robô à distância para gerar dados</span></a></li><li><a href="../glossario.html#g-sim-to-real-gap"><strong>Sim-to-real gap</strong> <span>diferença entre simulação e realidade</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-rag"><strong>RAG</strong> <span>geração aumentada por busca de informação</span></a></li><li><a href="../glossario.html#g-modelo-de-linguagem-n-gram"><strong>Modelo de linguagem n-gram</strong> <span>modelo que prevê a próxima palavra pelas anteriores</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Escala de dados já existia em 2007</h3>
+    <p>Manning lembra que o Google treinou em 2007 um modelo de linguagem com 2 trilhões de tokens, na mesma ordem de grandeza dos modelos atuais. Faltava arquitetura flexível. O transformer só chegou em 2018, e o primeiro GPT usou bem menos dados. Dados, computação e arquitetura só se juntaram a partir do GPT-3, em 2020.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/4Gqg0HVe-AY/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Os dados em escala vieram antes da arquitetura certa</span><a class="minuto" href="https://www.youtube.com/watch?v=4Gqg0HVe-AY&amp;t=887s" target="_blank" rel="noopener" aria-label="Assistir a partir de 14:47 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:47</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Treinar robô no mundo real custa caro</h3>
+    <p>Uma forma de ensinar robôs é coletar dados no mundo físico, como fez o Google X com fileiras de braços robóticos. Isso exige cerca de 10.000 horas de teleoperação (um humano guiando o robô). Manning diz que esse ritmo não leva à robótica geral e propõe simular o mundo no lugar.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/4Gqg0HVe-AY/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Coleta física de dados é lenta e depende de operador humano</span><a class="minuto" href="https://www.youtube.com/watch?v=4Gqg0HVe-AY&amp;t=1210s" target="_blank" rel="noopener" aria-label="Assistir a partir de 20:10 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>20:10</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Pixels bonitos não bastam para planejar</h3>
+    <p>Um world model (modelo de mundo) útil prevê qual novo estado surge quando uma ação é tomada. O Genie 3 gera vídeo fluido e bonito, mas só simula a observação. Sem uma representação dos objetos e da causalidade por baixo, o sistema não dá base para um robô planejar.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/4Gqg0HVe-AY/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Vídeo gerado convence o olho mas não carrega regras do mundo</span><a class="minuto" href="https://www.youtube.com/watch?v=4Gqg0HVe-AY&amp;t=1440s" target="_blank" rel="noopener" aria-label="Assistir a partir de 24:00 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>24:00</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Completar o que a câmera não vê</h3>
+    <p>A partir de uma foto de cozinha, o sistema separa o fundo dos objetos que podem ser movidos. Para saber o que há dentro de uma caixa de chá fechada, ele pesquisa o produto na web em estilo RAG (busca de informação para alimentar o modelo), acha fotos e medidas e modela os sachês como objetos que se pode tirar da caixa.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/4Gqg0HVe-AY/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Busca na web preenche partes ocultas da cena simulada</span><a class="minuto" href="https://www.youtube.com/watch?v=4Gqg0HVe-AY&amp;t=1780s" target="_blank" rel="noopener" aria-label="Assistir a partir de 29:40 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>29:40</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Mundo em código com loop de correção</h3>
+    <p>A Moonlake escreve em código as partes controláveis do mundo e aplica texturas geradas por difusão. Um loop inspirado no Claude Code renderiza a cena, compara com a realidade, mede os desvios e revisa o código. A parte simbólica fica fácil de editar e inspecionar por humanos.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/4Gqg0HVe-AY/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O loop de código reduz a distância entre simulação e realidade</span><a class="minuto" href="https://www.youtube.com/watch?v=4Gqg0HVe-AY&amp;t=1905s" target="_blank" rel="noopener" aria-label="Assistir a partir de 31:45 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>31:45</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=4Gqg0HVe-AY&amp;t=887s" target="_blank" rel="noopener"><strong>2 trilhões</strong><span>tokens do modelo de linguagem do Google em 2007</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:47</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=4Gqg0HVe-AY&amp;t=919s" target="_blank" rel="noopener"><strong>15 trilhões</strong><span>tokens usados para treinar modelos de ponta atuais</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:19</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=4Gqg0HVe-AY&amp;t=952s" target="_blank" rel="noopener"><strong>3,3 bilhões</strong><span>tokens usados pelo primeiro modelo GPT, em 2018</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:52</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=4Gqg0HVe-AY&amp;t=1210s" target="_blank" rel="noopener"><strong>10.000 horas</strong><span>de teleoperação típicas para treinar um robô no mundo real</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>20:10</span></a>
+  </div>
+
+  <div class="casper" id="a-4Gqg0HVe-AY-action-conditioned-world-model">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Action-conditioned world model (modelo de mundo condicionado a ações).</strong> Um modelo de mundo condicionado a ações é como um motorista experiente que, antes de virar o volante, já imagina onde o carro vai parar.</p>
+    <ol class="passos"><li>Pense em empurrar um copo na beira da mesa. Você prevê a queda sem precisar empurrar de verdade.</li><li>Um world model (modelo de mundo) faz isso para uma máquina. Ele guarda por dentro uma descrição resumida de como o mundo está agora, chamada estado.</li><li>A versão condicionada a ações recebe duas entradas, o estado atual e uma ação, e prevê qual novo estado vai surgir depois dessa ação.</li><li>Com essa previsão, o robô testa várias ações na cabeça e escolhe a melhor antes de agir. A ideia vem do reinforcement learning (aprendizado por reforço).</li><li>Manning critica geradores de vídeo como o Genie 3 porque eles preveem só a imagem. Sem objetos e regras por baixo, a previsão não serve de base para planejar.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>ESTADO ATUAL</strong><span>objetos e onde cada um está</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>AÇÃO</strong><span>o que o robô pretende fazer</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>PREVISÃO DO MODELO</strong><span>calcula o que muda na cena</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>NOVO ESTADO</strong><span>base para escolher o plano</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-world-model">World model</a>, <a href="../glossario.html#g-reinforcement-learning">Reinforcement learning</a>, <a href="../glossario.html#g-estado-e-acao">Estado e ação</a>, <a href="../glossario.html#g-planejamento">Planejamento</a></p>  </div>
+  <div class="casper" id="a-4Gqg0HVe-AY-neuro-simbolico">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Neuro-simbólico (rede neural combinada com representação simbólica, como código).</strong> Um sistema neuro-simbólico é como uma reforma em que o arquiteto desenha a planta com medidas exatas e o decorador escolhe cores e texturas à vontade.</p>
+    <ol class="passos"><li>Uma máquina pode guardar conhecimento de dois jeitos. Um usa regras escritas que qualquer pessoa lê. O outro aprende padrões com exemplos, sem regras explícitas.</li><li>O jeito com regras escritas se chama simbólico, como código ou lógica. O jeito que aprende com exemplos se chama neural, feito com redes neurais.</li><li>Um sistema neuro-simbólico junta os dois. Na Moonlake, o código descreve os objetos que podem ser movidos, e um modelo de difusão (gerador de imagens) cria as texturas.</li><li>Um loop renderiza a cena, compara com a realidade, mede os desvios e revisa o código, no mesmo padrão de agentes de programação como o Claude Code.</li><li>Manning destaca que a parte simbólica fica fácil de ler, controlar, editar e manter por humanos, algo difícil de fazer numa rede neural pura.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>CÓDIGO DOS OBJETOS</strong><span>parte simbólica, fácil de editar</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>TEXTURA POR DIFUSÃO</strong><span>parte neural cria a aparência</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>RENDER E COMPARAÇÃO</strong><span>cena comparada com a realidade</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>REVISÃO DO CÓDIGO</strong><span>corrige os desvios medidos</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>MUNDO MANIPULÁVEL</strong><span>objetos que o robô pode usar</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-rede-neural">Rede neural</a>, <a href="../glossario.html#g-modelo-de-difusao">Modelo de difusão</a>, <a href="../glossario.html#g-world-model">World model</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>Metade do talk é história da IA e a outra metade é apresentação da Moonlake, empresa onde o palestrante trabalha. A demo da cozinha e o vídeo da esteira aparecem sem métricas de transferência para robôs reais. A promessa de 10.000 horas de simulação de graça não vem com resultado medido. A crítica ao Genie 3 e ao Marble compara com produtos concorrentes. O loop que fecha a lacuna com a realidade é descrito, mas não demonstrado.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Ao avaliar uma ferramenta de vídeo ou 3D gerado por IA, teste se ela permite agir sobre os objetos da cena antes de usá-la para planejamento.</li><li>Quando o modelo precisar de informação que não está na entrada, adicione uma etapa de busca na web, como a Moonlake faz com a caixa de chá.</li><li>Use um loop de gerar, comparar com uma referência real e corrigir para melhorar saídas de IA, no mesmo padrão dos agentes de código.</li><li>Desconfie de promessas de simulação que substitui dados reais quando o fornecedor não mostra números de transferência para o mundo físico.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="4Gqg0HVe-AY" aria-label="Marcar World Models Need Causality, Not Pretty Pixels como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#fim">Fechar a edição <span aria-hidden="true">↓</span></a>
+  </footer>
+</article>
+      <section class="fim-edicao card" id="fim" aria-labelledby="fim-titulo">
+        <h2 id="fim-titulo">Fim da edição</h2>
+        <span class="progresso" data-ids="jgWY66RaSrQ I_VEh7XSwyc 2wgPHvW0mG8 Sjfz1TqxzEs jFHteJjRl8A 4Gqg0HVe-AY"></span>
+        <p>Termos novos no glossário:
+<a href="../glossario.html#g-action-conditioned-world-model">Action-conditioned world model</a>, <a href="../glossario.html#g-end-to-end-learning">End-to-end learning</a>, <a href="../glossario.html#g-neuro-simbolico">Neuro-simbólico</a>, <a href="../glossario.html#g-world-action-model">World action model</a>, <a href="../glossario.html#g-zero-shot-transfer">Zero-shot transfer</a>.
+        </p>
+        <nav class="paginacao" aria-label="Outras edições">
+<a rel="prev" href="2026-09-23.html"><span class="paginacao-dir">← Edição anterior</span><strong>Visão e documentos: o que o modelo realmente enxerga</strong><span class="muted">quarta, 23 set 2026</span></a><a rel="next" class="proxima" href="2026-09-25.html"><span class="paginacao-dir">Próxima edição →</span><strong>Recomendação e revisão na era dos LLMs</strong><span class="muted">sexta, 25 set 2026</span></a>          <a class="voltar" href="../index.html#edicoes"><span class="paginacao-dir">Todas as edições</span><strong>Voltar ao início</strong></a>
+        </nav>
+      </section>
+    </div>
+  </div>
+</div>
+</main>
+<footer class="rodape wrap">
+  <p>Resumos em português dos talks do canal <a href="https://www.youtube.com/@aiDotEngineer" target="_blank" rel="noopener">AI Engineer</a>. Atualizado em 29 set 2026, 14:28. <a href="../status.html">Status da rotina</a></p>
+</footer>
+<script src="../app.js" defer></script>
+</body>
+</html>

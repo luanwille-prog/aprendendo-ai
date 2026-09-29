@@ -1,0 +1,265 @@
+{
+  "id": "OA-Mc60Rboo",
+  "titulo": "Beating RL With Reflection: GEPA and Optimize Anything — Lakshya A. Agrawal, GEPA",
+  "titulo_curto": "Beating RL With Reflection: GEPA and Optimize Anything",
+  "palestrante": "Lakshya A. Agrawal, GEPA",
+  "url": "https://www.youtube.com/watch?v=OA-Mc60Rboo",
+  "duracao": 1287,
+  "publicado_ts": 1790442006,
+  "edicao": "2026-09-26",
+  "tese": "Ler o rastro inteiro de uma execução e reescrever o prompt em texto ensina mais, com menos exemplos, do que reduzir tudo a uma nota e ajustar pesos.",
+  "tldr": [
+    "O GEPA faz um modelo ler a execução completa de um sistema de IA, com raciocínio, chamadas de ferramenta e mensagens de erro, e propor um prompt melhor a partir disso.",
+    "Segundo o autor, com três exemplos e uma rodada de reflexão o GEPA dobrou o ganho que o RL (aprendizado por reforço) com GRPO obteve depois de 25 mil rollouts.",
+    "O Optimize Anything aplica a mesma ideia a qualquer coisa que vire texto e receba nota, como código de agente, skills de agentes de código e políticas de agendamento."
+  ],
+  "tema": "agentes",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "O RL joga fora quase toda a informação da execução",
+      "texto": "No RL com recompensa verificável, cada rollout (execução completa de uma tarefa) vira uma nota de 0 ou 1. O raciocínio do modelo, as chamadas de ferramenta e as mensagens de erro são descartados. O GEPA usa um LLM para ler esse rastro, entender o que deu certo e errado e reescrever o prompt. Uma mudança de uma palavra no prompt muda o comportamento mais do que milhares de pequenos ajustes de pesos.",
+      "t": 295,
+      "legenda": "GEPA com 3 exemplos supera o ganho do GRPO após 25 mil rollouts.",
+      "print": "img/OA-Mc60Rboo/0.jpg"
+    },
+    {
+      "titulo": "O prompt aprendido vira uma especificação do problema",
+      "texto": "O GEPA não usa truques como ameaçar o modelo. Ele escreve uma descrição detalhada da tarefa, com contexto, lições tiradas dos dados e armadilhas. No caso da AMD, o prompt aprendido avisou para não usar a biblioteca ADF.h, que não funcionava na nova geração de NPU (chip acelerador de IA). O agente saiu de 4,25% para 30,52% sem nenhuma outra mudança.",
+      "t": 480,
+      "legenda": "O otimizador descobriu sozinho um detalhe de domínio que faltava na internet.",
+      "print": "img/OA-Mc60Rboo/1.jpg"
+    },
+    {
+      "titulo": "Guardar vários candidatos evita travar num ótimo local",
+      "texto": "Pedir para um LLM melhorar o prompt em loop costuma travar numa versão razoável e gastar todo o orçamento tentando sair dela. O GEPA mantém um conjunto de Pareto, onde fica todo candidato que vence em pelo menos um exemplo de treino. Segundo o autor, mais da metade do ganho do GEPA vem dessa escolha, que rende quase o dobro do loop simples em quatro benchmarks.",
+      "t": 560,
+      "legenda": "A busca com conjunto de Pareto explora mais caminhos e chega a nota maior.",
+      "print": "img/OA-Mc60Rboo/2.jpg"
+    },
+    {
+      "titulo": "Otimizar o código do agente inteiro",
+      "texto": "O Optimize Anything recebe uma lista de problemas e uma função que devolve nota e informação extra, como erros de compilação ou logs. Partindo de um programa de quatro linhas, 16 rodadas de reflexão geraram um agente de seis passos que levou o Gemini Flash de 32,5% para 89,5% no ARC-AGI. O mesmo mecanismo aprendeu skills que levaram um agente com GPT-5 mini de 24% para 93% em issues de Go.",
+      "t": 850,
+      "legenda": "Um programa de 4 linhas virou um agente de 6 passos que quase triplica o acerto.",
+      "print": null
+    },
+    {
+      "titulo": "Aprender o eval a partir de traces de produção",
+      "texto": "Para tarefas subjetivas, o autor propõe coletar traces de produção, pedir a uma pessoa que comente cerca de 50 deles e usar o GEPA para otimizar o prompt de um LLM-as-a-judge (modelo que dá nota a respostas). Esse juiz passa a guiar a otimização do agente, num ciclo que melhora com o uso.",
+      "t": 1165,
+      "legenda": "Cerca de 50 anotações humanas bastam para iniciar o ciclo de melhoria.",
+      "print": "img/OA-Mc60Rboo/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Reinforcement learning",
+      "traducao": "aprendizado por reforço",
+      "nivel": "intermediario",
+      "chave": "reinforcement learning",
+      "analogia": "Reinforcement learning é como ensinar um cachorro com petisco, em que ele tenta várias coisas e repete mais as que renderam recompensa.",
+      "explicacao": [
+        "Reinforcement learning (aprendizado por reforço) ensina por tentativa e erro, sem mostrar a resposta certa antes.",
+        "O modelo tenta a tarefa, e cada tentativa completa se chama rollout (execução completa da tarefa).",
+        "Ao fim de cada rollout, uma regra dá uma recompensa, como 1 para resposta correta e 0 para errada.",
+        "Um algoritmo como o GRPO usa essas recompensas para ajustar os pesos do modelo e favorecer o que deu certo.",
+        "Em tarefas longas ou caras, como agentes que rodam por horas, o método fica inviável porque exige centenas de milhares de rollouts."
+      ],
+      "pre_requisitos": [
+        "Rollout",
+        "Pesos do modelo"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "MODELO TENTA",
+            "nota": "Executa a tarefa inteira"
+          },
+          {
+            "rotulo": "RECOMPENSA",
+            "nota": "Nota no fim, como 0 ou 1"
+          },
+          {
+            "rotulo": "AJUSTE",
+            "nota": "Favorece o que deu certo"
+          },
+          {
+            "rotulo": "MODELO MELHOR",
+            "nota": "Após milhares de repetições"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "GRPO",
+      "traducao": "algoritmo de RL que transforma notas de várias execuções em ajuste de pesos",
+      "nivel": "avancado",
+      "chave": "grpo",
+      "analogia": "GRPO é como um técnico que vê o time cobrar vários pênaltis, compara cada chute com a média do grupo e só diz \"mais disso\" ou \"menos disso\", sem comentar o que aconteceu em cada cobrança.",
+      "explicacao": [
+        "O modelo recebe uma tarefa e tenta resolvê-la várias vezes seguidas, gerando um grupo de respostas diferentes.",
+        "Cada resposta ganha uma nota no final, em geral 0 (errou) ou 1 (acertou), dada por um verificador automático.",
+        "O GRPO (Group Relative Policy Optimization, otimização de política relativa ao grupo) compara cada nota com a média do grupo e marca quem ficou acima e quem ficou abaixo.",
+        "Essa comparação vira gradiente (direção de ajuste) e altera um pouco os pesos do modelo para repetir mais as respostas acima da média.",
+        "O raciocínio, as chamadas de ferramenta e as mensagens de erro ficam de fora, por isso o método precisa de milhares de rollouts para aprender algo."
+      ],
+      "pre_requisitos": [
+        "Reinforcement learning",
+        "Rollout",
+        "Pesos do modelo",
+        "Gradiente"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "VÁRIOS ROLLOUTS",
+            "nota": "Mesma tarefa resolvida várias vezes"
+          },
+          {
+            "rotulo": "NOTA 0 OU 1",
+            "nota": "Verificador avalia só o resultado"
+          },
+          {
+            "rotulo": "COMPARA COM A MÉDIA",
+            "nota": "Acima ou abaixo do grupo"
+          },
+          {
+            "rotulo": "AJUSTE NOS PESOS",
+            "nota": "Pequeno passo por gradiente"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Rollout",
+      "traducao": "execução completa de uma tarefa pelo modelo ou agente",
+      "nivel": "intermediario",
+      "chave": "rollout",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Otimização de prompt",
+      "traducao": "ajuste automático do texto de instrução do modelo",
+      "nivel": "intermediario",
+      "chave": "otimização de prompt",
+      "analogia": "Otimização de prompt é como revisar a receita escrita depois de provar o prato, anotando \"menos sal\" e \"forno mais baixo\" em vez de trocar o cozinheiro.",
+      "explicacao": [
+        "O prompt é o texto de instrução que o modelo lê antes de trabalhar, e mudar esse texto muda o comportamento.",
+        "Trocar uma palavra, como pedir resumo de 10 linhas em vez de 1, altera a saída mais do que milhares de pequenos ajustes nos pesos.",
+        "Na otimização de prompt, o sistema roda em alguns exemplos e guarda o rastro completo, com raciocínio, chamadas de ferramenta, erros e nota.",
+        "Outro LLM (modelo de linguagem) lê esse rastro, entende o que falhou e escreve uma versão melhor do prompt.",
+        "O GEPA repete esse ciclo e guarda os candidatos que vencem em pelo menos um exemplo, chegando a prompts que descrevem a tarefa em detalhe."
+      ],
+      "pre_requisitos": [
+        "Prompt",
+        "Rollout",
+        "LLM"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "RODA O SISTEMA",
+            "nota": "Poucos exemplos com o prompt atual"
+          },
+          {
+            "rotulo": "LÊ O RASTRO",
+            "nota": "Raciocínio, erros e nota"
+          },
+          {
+            "rotulo": "REFLETE",
+            "nota": "LLM aponta o que falhou"
+          },
+          {
+            "rotulo": "REESCREVE O PROMPT",
+            "nota": "Nova versão em texto"
+          },
+          {
+            "rotulo": "PROMPT MELHOR",
+            "nota": "Guardado entre os candidatos"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Fronteira de Pareto",
+      "traducao": "conjunto de candidatos que são os melhores em pelo menos um critério",
+      "nivel": "avancado",
+      "chave": "fronteira de pareto",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Agent harness",
+      "traducao": "código que orquestra o agente, suas ferramentas e seu fluxo",
+      "nivel": "intermediario",
+      "chave": "agent harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Agent skills",
+      "traducao": "arquivos de instrução que agentes de código carregam sob demanda",
+      "nivel": "intermediario",
+      "chave": "agent skills",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo de linguagem usado para avaliar respostas",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O palestrante criou o GEPA e apresenta o próprio projeto, sem mostrar casos em que ele falha. A comparação com GRPO usa um modelo e poucos domínios. Não há custo em tokens nem tempo das otimizações no ARC-AGI e nas skills. Os 100% com Claude Sonnet vêm de um benchmark de issues em Go de tamanho não informado. O resultado da Databricks e o do OCR são citados sem detalhe de método. O unicórnio 3D é comparação visual subjetiva. Também falta discutir o risco de o prompt se ajustar demais aos exemplos de treino.",
+  "acoes": [
+    "Faça sua função de avaliação devolver texto além da nota, com mensagens de erro, logs e comentários, para que um otimizador ou um colega entenda por que a resposta falhou.",
+    "Teste o GEPA (github.com/gepa-ai/gepa) num prompt que você já usa, com poucos exemplos rotulados, e compare com a versão escrita à mão.",
+    "Para tarefas subjetivas, anote em detalhe cerca de 50 respostas reais do seu sistema e use essas notas para calibrar um juiz automático.",
+    "Ao iterar prompts, guarde as versões que vencem em casos específicos em vez de manter só a de maior média."
+  ],
+  "numeros": [
+    {
+      "valor": "25.000",
+      "contexto": "rollouts do GRPO superados por uma rodada do GEPA com 3 exemplos",
+      "t": 292
+    },
+    {
+      "valor": "32,5% → 89,5%",
+      "contexto": "acerto do Gemini Flash no ARC-AGI com agente descoberto",
+      "t": 850
+    },
+    {
+      "valor": "24% → 93%",
+      "contexto": "agente GPT-5 mini em issues de repositório Go com skills aprendidas",
+      "t": 946
+    },
+    {
+      "valor": "90x",
+      "contexto": "redução de custo da Databricks com GPT-OSS 120B contra Claude Opus",
+      "t": 1102
+    }
+  ]
+}

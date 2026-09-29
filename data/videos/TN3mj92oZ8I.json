@@ -1,0 +1,198 @@
+{
+  "id": "TN3mj92oZ8I",
+  "titulo": "Building Self-Improving Agent Software Factories — Suraj Gupta, Warp",
+  "titulo_curto": "Building Self-Improving Agent Software Factories",
+  "palestrante": "Suraj Gupta, Warp",
+  "url": "https://www.youtube.com/watch?v=TN3mj92oZ8I",
+  "duracao": 772,
+  "publicado_ts": 1790517640,
+  "edicao": "2026-09-27",
+  "tese": "Uma fábrica de software melhora sozinha se skills, memória e roteamento de modelo forem atualizados por agentes e revisados por humanos.",
+  "tldr": [
+    "Suraj Gupta, do Warp, mostra três formas de uma software factory (fábrica de software feita de agentes) melhorar com o tempo: skills que se atualizam, memória persistente e roteamento de modelos.",
+    "Um agente de laço externo observa as execuções do agente de triagem, junta feedback e abre um pull request para atualizar a skill, e um humano revisa a mudança no Git.",
+    "A memória guarda fatos de execuções passadas, e o roteamento manda tarefas simples para modelos baratos em vez de usar o Opus em tudo."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Skills ficam velhas e precisam de um agente de laço externo",
+      "texto": "Uma skill descreve um procedimento que o agente repete, como reproduzir issues. Com o tempo ela fica desatualizada, porque humanos dão feedback e o agente aprende em suas execuções. O agente de laço externo (outer loop) observa o agente que aplica a skill (inner loop), procura erros e feedback e propõe a atualização.",
+      "t": 165,
+      "legenda": "Mostra os dois laços, o interno que executa e o externo que melhora a skill.",
+      "print": "img/TN3mj92oZ8I/0.jpg"
+    },
+    {
+      "titulo": "Demo real com o agente de triagem do Warp",
+      "texto": "O Warp roda o repositório de cliente open source como uma fábrica. Toda issue nova no GitHub dispara o agente de triagem, que descobre que informação o usuário não deu e se a issue duplica outra. O agente externo lê as decisões dele, coleta polegar para cima ou para baixo e comentários, sintetiza e atualiza a skill.",
+      "t": 259,
+      "legenda": "Prova que o ciclo de melhoria da skill roda em um repositório real.",
+      "print": "img/TN3mj92oZ8I/1.jpg"
+    },
+    {
+      "titulo": "Toda mudança de skill passa por pull request",
+      "texto": "O agente externo abre um pull request para alterar a skill. Isso dá rastreio completo no Git de como a skill mudou e obriga um humano a revisar. A revisão evita que o agente externo cause um erro e deixe o agente de triagem pior.",
+      "t": 290,
+      "legenda": "Mostra o controle humano no fim do laço de melhoria.",
+      "print": "img/TN3mj92oZ8I/2.jpg"
+    },
+    {
+      "titulo": "Memória persistente como repositório de fatos do agente",
+      "texto": "Skills guardam procedimentos, mas não fatos. Um agente do Sentry que já achou a causa raiz de um problema não deveria gastar tokens para descobrir tudo de novo. No Oz, plataforma de agentes na nuvem do Warp, cada agente recebe um memory store com versões, edição humana e origem de cada memória.",
+      "t": 415,
+      "legenda": "Mostra memórias versionadas com link para a execução que as gerou.",
+      "print": "img/TN3mj92oZ8I/3.jpg"
+    },
+    {
+      "titulo": "Roteamento de modelo por classe de tarefa",
+      "texto": "Rodar triagem e correções simples de CI com o Opus fica caro. O Warp oferece modelos auto e permite regras próprias, como migrações de banco com GLM e documentação de API com Qwen. Um sidecar de eval roda a mesma tarefa em vários modelos e o Warp viu que tarefas de UI funcionam bem com GLM.",
+      "t": 601,
+      "legenda": "Mostra regras que ligam cada classe de tarefa a um modelo.",
+      "print": "img/TN3mj92oZ8I/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Software factory",
+      "traducao": "fábrica de software",
+      "nivel": "intermediario",
+      "chave": "software factory",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Skill",
+      "traducao": "habilidade de agente (memória procedural)",
+      "nivel": "basico",
+      "chave": "skill",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Outer-loop agent",
+      "traducao": "agente de laço externo",
+      "nivel": "intermediario",
+      "chave": "outer-loop agent",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Persistent memory",
+      "traducao": "memória persistente",
+      "nivel": "intermediario",
+      "chave": "persistent memory",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Harness",
+      "traducao": "arcabouço que executa o agente",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Model routing",
+      "traducao": "roteamento de modelos",
+      "nivel": "intermediario",
+      "chave": "model routing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Pareto efficiency",
+      "traducao": "eficiência de Pareto (melhor custo por qualidade)",
+      "nivel": "avancado",
+      "chave": "pareto efficiency",
+      "analogia": "Pareto efficiency é como escolher o restaurante do almoço da firma, onde você descarta todo lugar que tem outro mais barato e mais gostoso ao mesmo tempo, e fica só com os que valem o preço.",
+      "explicacao": [
+        "Toda escolha de modelo de IA mexe com duas coisas ao mesmo tempo, o custo de cada execução e a qualidade da resposta.",
+        "Uma opção é dominada quando existe outra que custa menos e entrega igual ou melhor. Opção dominada nunca vale a pena.",
+        "Pareto efficiency (eficiência de Pareto) descreve as opções que sobram. Nelas, para ganhar qualidade você precisa pagar mais, e para pagar menos você perde qualidade.",
+        "Essas opções formam a fronteira de Pareto (Pareto frontier), uma curva de melhor custo para cada nível de qualidade.",
+        "No Warp, os modelos auto são reavaliados a cada modelo novo e ficam só os que estão nessa fronteira. Tarefas simples, como triagem e CI, vão para modelos baratos da fronteira em vez do Opus."
+      ],
+      "pre_requisitos": [
+        "Model routing",
+        "Custo por token",
+        "Avaliação de modelos (evals)"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "MEDIR CUSTO E QUALIDADE",
+            "nota": "Rodar evals em cada modelo"
+          },
+          {
+            "rotulo": "DESCARTAR DOMINADOS",
+            "nota": "Tirar quem perde em custo e qualidade"
+          },
+          {
+            "rotulo": "FRONTEIRA DE PARETO",
+            "nota": "Sobra o melhor custo por qualidade"
+          },
+          {
+            "rotulo": "MODELO POR TAREFA",
+            "nota": "Tarefa simples usa modelo barato"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Sidecar",
+      "traducao": "processo auxiliar ao lado do sistema principal",
+      "nivel": "avancado",
+      "chave": "sidecar",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O talk é pitch do Warp e do Oz, e o palestrante lidera o desenvolvimento do produto que vende. Não há métrica de quanto as skills ou a memória melhoraram os agentes. A afirmação de que UI vai bem com GLM vem de evals internos sem dados, amostra ou critério de nota. O próprio palestrante diz que a escolha de modelo ainda é mais arte do que ciência, e os evals para clientes só chegam no futuro.",
+  "acoes": [
+    "Se você mantém um agente com skill, registre feedback humano sobre as execuções e revise a skill com base nele em vez de deixar o texto parado.",
+    "Exija que qualquer mudança automática de skill ou prompt passe por pull request com revisão humana e histórico no Git.",
+    "Guarde causas raiz de problemas já resolvidos em um repositório de fatos que o agente consulte, e revise essas memórias de tempos em tempos.",
+    "Liste suas tarefas de agente por tipo e teste modelos mais baratos nas simples, como triagem e CI, antes de usar o modelo mais caro em tudo."
+  ],
+  "numeros": [
+    {
+      "valor": "1 milhão",
+      "contexto": "usuários ativos do Warp, segundo o palestrante",
+      "t": 12
+    },
+    {
+      "valor": "3",
+      "contexto": "formas de a fábrica melhorar: skills, memória e roteamento",
+      "t": 105
+    },
+    {
+      "valor": "5",
+      "contexto": "memórias usadas pelo agente Sentry na execução da demo",
+      "t": 477
+    }
+  ]
+}

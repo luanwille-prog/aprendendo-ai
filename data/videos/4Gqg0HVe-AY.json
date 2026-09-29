@@ -1,0 +1,237 @@
+{
+  "id": "4Gqg0HVe-AY",
+  "titulo": "World Models Need Causality, Not Pretty Pixels — Christopher Manning, Moonlake AI",
+  "titulo_curto": "World Models Need Causality, Not Pretty Pixels",
+  "palestrante": "Christopher Manning, Moonlake AI",
+  "url": "https://www.youtube.com/watch?v=4Gqg0HVe-AY",
+  "duracao": 3095,
+  "publicado_ts": 1790256623,
+  "edicao": "2026-09-24",
+  "tese": "Para robôs planejarem, o world model precisa de objetos e causalidade escritos em código; vídeo gerado bonito só imita a aparência.",
+  "tldr": [
+    "Christopher Manning, professor de Stanford e hoje na Moonlake AI, conta a história da IA e lembra que o Google já tinha um modelo de linguagem com 2 trilhões de tokens em 2007.",
+    "Ele defende que geradores de vídeo como o Genie 3 simulam só a imagem e não servem para planejar ações, porque não representam os objetos e as regras por trás da cena.",
+    "A Moonlake transforma uma foto ou um vídeo curto em um mundo simulado em código, com objetos manipuláveis, para trocar milhares de horas de teleoperação de robôs por simulação."
+  ],
+  "tema": "pesquisa",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Escala de dados já existia em 2007",
+      "texto": "Manning lembra que o Google treinou em 2007 um modelo de linguagem com 2 trilhões de tokens, na mesma ordem de grandeza dos modelos atuais. Faltava arquitetura flexível. O transformer só chegou em 2018, e o primeiro GPT usou bem menos dados. Dados, computação e arquitetura só se juntaram a partir do GPT-3, em 2020.",
+      "t": 887,
+      "legenda": "Os dados em escala vieram antes da arquitetura certa",
+      "print": "img/4Gqg0HVe-AY/0.jpg"
+    },
+    {
+      "titulo": "Treinar robô no mundo real custa caro",
+      "texto": "Uma forma de ensinar robôs é coletar dados no mundo físico, como fez o Google X com fileiras de braços robóticos. Isso exige cerca de 10.000 horas de teleoperação (um humano guiando o robô). Manning diz que esse ritmo não leva à robótica geral e propõe simular o mundo no lugar.",
+      "t": 1210,
+      "legenda": "Coleta física de dados é lenta e depende de operador humano",
+      "print": "img/4Gqg0HVe-AY/1.jpg"
+    },
+    {
+      "titulo": "Pixels bonitos não bastam para planejar",
+      "texto": "Um world model (modelo de mundo) útil prevê qual novo estado surge quando uma ação é tomada. O Genie 3 gera vídeo fluido e bonito, mas só simula a observação. Sem uma representação dos objetos e da causalidade por baixo, o sistema não dá base para um robô planejar.",
+      "t": 1440,
+      "legenda": "Vídeo gerado convence o olho mas não carrega regras do mundo",
+      "print": "img/4Gqg0HVe-AY/2.jpg"
+    },
+    {
+      "titulo": "Completar o que a câmera não vê",
+      "texto": "A partir de uma foto de cozinha, o sistema separa o fundo dos objetos que podem ser movidos. Para saber o que há dentro de uma caixa de chá fechada, ele pesquisa o produto na web em estilo RAG (busca de informação para alimentar o modelo), acha fotos e medidas e modela os sachês como objetos que se pode tirar da caixa.",
+      "t": 1780,
+      "legenda": "Busca na web preenche partes ocultas da cena simulada",
+      "print": "img/4Gqg0HVe-AY/3.jpg"
+    },
+    {
+      "titulo": "Mundo em código com loop de correção",
+      "texto": "A Moonlake escreve em código as partes controláveis do mundo e aplica texturas geradas por difusão. Um loop inspirado no Claude Code renderiza a cena, compara com a realidade, mede os desvios e revisa o código. A parte simbólica fica fácil de editar e inspecionar por humanos.",
+      "t": 1905,
+      "legenda": "O loop de código reduz a distância entre simulação e realidade",
+      "print": "img/4Gqg0HVe-AY/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "World model",
+      "traducao": "modelo de mundo",
+      "nivel": "intermediario",
+      "chave": "world model",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Action-conditioned world model",
+      "traducao": "modelo de mundo condicionado a ações",
+      "nivel": "avancado",
+      "chave": "action-conditioned world model",
+      "analogia": "Um modelo de mundo condicionado a ações é como um motorista experiente que, antes de virar o volante, já imagina onde o carro vai parar.",
+      "explicacao": [
+        "Pense em empurrar um copo na beira da mesa. Você prevê a queda sem precisar empurrar de verdade.",
+        "Um world model (modelo de mundo) faz isso para uma máquina. Ele guarda por dentro uma descrição resumida de como o mundo está agora, chamada estado.",
+        "A versão condicionada a ações recebe duas entradas, o estado atual e uma ação, e prevê qual novo estado vai surgir depois dessa ação.",
+        "Com essa previsão, o robô testa várias ações na cabeça e escolhe a melhor antes de agir. A ideia vem do reinforcement learning (aprendizado por reforço).",
+        "Manning critica geradores de vídeo como o Genie 3 porque eles preveem só a imagem. Sem objetos e regras por baixo, a previsão não serve de base para planejar."
+      ],
+      "pre_requisitos": [
+        "World model",
+        "Reinforcement learning",
+        "Estado e ação",
+        "Planejamento"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "ESTADO ATUAL",
+            "nota": "objetos e onde cada um está"
+          },
+          {
+            "rotulo": "AÇÃO",
+            "nota": "o que o robô pretende fazer"
+          },
+          {
+            "rotulo": "PREVISÃO DO MODELO",
+            "nota": "calcula o que muda na cena"
+          },
+          {
+            "rotulo": "NOVO ESTADO",
+            "nota": "base para escolher o plano"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Embodied AI",
+      "traducao": "IA incorporada, que age no mundo físico",
+      "nivel": "intermediario",
+      "chave": "embodied ai",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Teleoperação",
+      "traducao": "humano controlando o robô à distância para gerar dados",
+      "nivel": "basico",
+      "chave": "teleoperação",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sim-to-real gap",
+      "traducao": "diferença entre simulação e realidade",
+      "nivel": "intermediario",
+      "chave": "sim-to-real gap",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Neuro-simbólico",
+      "traducao": "rede neural combinada com representação simbólica, como código",
+      "nivel": "avancado",
+      "chave": "neuro-simbólico",
+      "analogia": "Um sistema neuro-simbólico é como uma reforma em que o arquiteto desenha a planta com medidas exatas e o decorador escolhe cores e texturas à vontade.",
+      "explicacao": [
+        "Uma máquina pode guardar conhecimento de dois jeitos. Um usa regras escritas que qualquer pessoa lê. O outro aprende padrões com exemplos, sem regras explícitas.",
+        "O jeito com regras escritas se chama simbólico, como código ou lógica. O jeito que aprende com exemplos se chama neural, feito com redes neurais.",
+        "Um sistema neuro-simbólico junta os dois. Na Moonlake, o código descreve os objetos que podem ser movidos, e um modelo de difusão (gerador de imagens) cria as texturas.",
+        "Um loop renderiza a cena, compara com a realidade, mede os desvios e revisa o código, no mesmo padrão de agentes de programação como o Claude Code.",
+        "Manning destaca que a parte simbólica fica fácil de ler, controlar, editar e manter por humanos, algo difícil de fazer numa rede neural pura."
+      ],
+      "pre_requisitos": [
+        "Rede neural",
+        "Modelo de difusão",
+        "World model"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "CÓDIGO DOS OBJETOS",
+            "nota": "parte simbólica, fácil de editar"
+          },
+          {
+            "rotulo": "TEXTURA POR DIFUSÃO",
+            "nota": "parte neural cria a aparência"
+          },
+          {
+            "rotulo": "RENDER E COMPARAÇÃO",
+            "nota": "cena comparada com a realidade"
+          },
+          {
+            "rotulo": "REVISÃO DO CÓDIGO",
+            "nota": "corrige os desvios medidos"
+          },
+          {
+            "rotulo": "MUNDO MANIPULÁVEL",
+            "nota": "objetos que o robô pode usar"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "RAG",
+      "traducao": "geração aumentada por busca de informação",
+      "nivel": "intermediario",
+      "chave": "rag",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Modelo de linguagem n-gram",
+      "traducao": "modelo que prevê a próxima palavra pelas anteriores",
+      "nivel": "basico",
+      "chave": "modelo de linguagem n-gram",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "Metade do talk é história da IA e a outra metade é apresentação da Moonlake, empresa onde o palestrante trabalha. A demo da cozinha e o vídeo da esteira aparecem sem métricas de transferência para robôs reais. A promessa de 10.000 horas de simulação de graça não vem com resultado medido. A crítica ao Genie 3 e ao Marble compara com produtos concorrentes. O loop que fecha a lacuna com a realidade é descrito, mas não demonstrado.",
+  "acoes": [
+    "Ao avaliar uma ferramenta de vídeo ou 3D gerado por IA, teste se ela permite agir sobre os objetos da cena antes de usá-la para planejamento.",
+    "Quando o modelo precisar de informação que não está na entrada, adicione uma etapa de busca na web, como a Moonlake faz com a caixa de chá.",
+    "Use um loop de gerar, comparar com uma referência real e corrigir para melhorar saídas de IA, no mesmo padrão dos agentes de código.",
+    "Desconfie de promessas de simulação que substitui dados reais quando o fornecedor não mostra números de transferência para o mundo físico."
+  ],
+  "numeros": [
+    {
+      "valor": "2 trilhões",
+      "contexto": "tokens do modelo de linguagem do Google em 2007",
+      "t": 887
+    },
+    {
+      "valor": "15 trilhões",
+      "contexto": "tokens usados para treinar modelos de ponta atuais",
+      "t": 919
+    },
+    {
+      "valor": "3,3 bilhões",
+      "contexto": "tokens usados pelo primeiro modelo GPT, em 2018",
+      "t": 952
+    },
+    {
+      "valor": "10.000 horas",
+      "contexto": "de teleoperação típicas para treinar um robô no mundo real",
+      "t": 1210
+    }
+  ]
+}

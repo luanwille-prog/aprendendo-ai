@@ -63,13 +63,18 @@ def consolidar_video(pasta: Path, edicao: str, pasta_data: Path, pasta_site: Pat
         e = explicados.get(k)
         item = {"nome": c["nome"], "traducao": c["traducao"], "nivel": c["nivel"], "chave": k,
                 "analogia": None, "explicacao": [], "pre_requisitos": [], "desenho": None}
+        origem = {"video_id": vid, "video_titulo": meta["titulo_curto"], "edicao": edicao}
+        entrada = glossario.setdefault(k, {"chave": k, "nome": c["nome"], "traducao": c["traducao"], "analogia": None,
+                                           "explicacao": [], **origem, "aparicoes": []})
         if e:
             item.update(analogia=e["analogia"], explicacao=e["explicacao"], pre_requisitos=e["pre_requisitos"],
                         desenho=e.get("desenho"))
-            glossario.setdefault(k, {"chave": k, "nome": c["nome"], "traducao": c["traducao"],
-                                     "analogia": e["analogia"], "explicacao": e["explicacao"], "video_id": vid,
-                                     "video_titulo": meta["titulo_curto"], "edicao": edicao})
-        item["no_glossario"] = k in glossario and glossario[k]["video_id"] != vid
+            if not entrada.get("analogia"):  # termo que só tinha tradução ganha a explicação e a origem
+                entrada.update(analogia=e["analogia"], explicacao=e["explicacao"], **origem)
+        aparicoes = entrada.setdefault("aparicoes", [])
+        if vid not in {a["video_id"] for a in aparicoes}:
+            aparicoes.append(origem)
+        item["no_glossario"] = bool(entrada.get("analogia")) and entrada["video_id"] != vid
         conceitos.append(item)
 
     video = {

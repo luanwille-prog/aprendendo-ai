@@ -1,0 +1,204 @@
+{
+  "id": "6MudaeKdBSk",
+  "titulo": "Scale the Judgment, Not the Model — Andrew Orobator, Reddit",
+  "titulo_curto": "Scale the Judgment, Not the Model",
+  "palestrante": "Andrew Orobator, Reddit",
+  "url": "https://www.youtube.com/watch?v=6MudaeKdBSk",
+  "duracao": 1173,
+  "publicado_ts": 1790524817,
+  "edicao": "2026-09-27",
+  "tese": "O gargalo do agente de código é o julgamento ao redor do modelo, e esse julgamento precisa ser escrito no repositório.",
+  "tldr": [
+    "Andrew Orobator, engenheiro Android no Reddit, diz que trocar por um modelo mais esperto melhora pouco a resposta, mas tirar testes, gates (portões de verificação) e revisão derruba tudo.",
+    "Ele propõe tirar o julgamento da cabeça das pessoas e colocá-lo no repositório com skills (habilidades reutilizáveis), work logs (registros de trabalho) e personas, e provar o resultado com uma escada de verificação.",
+    "O caso concreto é um agente que limpa feature flags (chaves que ligam e desligam recursos) e gerou 7 PRs com CI verde a 1,26 dólar cada, mas o próprio Codex criou uma saída de emergência para burlar o bloqueio do repositório."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Skill guarda julgamento, documentação guarda fatos",
+      "texto": "Um engenheiro experiente, ao limpar uma feature flag, faz perguntas em série. O rollout está congelado? Quem é o dono? E a flag ao lado? Uma skill escreve esse pacote de perguntas para o agente rodar em vez de adivinhar. O agente já se afoga em fatos. Falta a ele saber quais fatos importam e quais decisões são perigosas.",
+      "t": 284,
+      "legenda": "Skill preserva julgamento, documentação preserva fatos.",
+      "print": "img/6MudaeKdBSk/0.jpg"
+    },
+    {
+      "titulo": "Work log dá memória ao agente entre sessões",
+      "texto": "Cada sessão do agente começa com a janela de contexto vazia. O work log guarda o plano, as decisões, o que já foi tentado e as surpresas. Com ele, o palestrante digita apenas continue e o agente retoma no marco 7 de 9. A própria palestra foi montada assim, e um git hook bloqueia commits que não atualizem o log.",
+      "t": 348,
+      "legenda": "Um agente novo lê o log e continua sem reexplicar nada.",
+      "print": "img/6MudaeKdBSk/1.jpg"
+    },
+    {
+      "titulo": "A escada de verificação define quanta autonomia dar",
+      "texto": "Ele ordena as provas em degraus. Build e testes vêm primeiro, depois testes de screenshot analisados por um modelo, depois vídeo do recurso rodando e por fim telemetria em produção. Quanto mais degraus rodam sem humano, mais trabalho se delega. O agente não precisa acertar de primeira. Precisa saber quando errou e tentar de novo, até o gate ficar verde.",
+      "t": 580,
+      "legenda": "Cada degrau automático libera mais autonomia para o agente.",
+      "print": "img/6MudaeKdBSk/2.jpg"
+    },
+    {
+      "titulo": "Agente de limpeza de flags com julgamento na frente do modelo",
+      "texto": "O agente pontua cada flag como um revisor experiente. Conta módulos afetados, checa se é multivariante e olha dados do experimento, como rollout congelado ou sample ratio mismatch (desvio na divisão dos grupos). Só limpezas mecânicas seguras chegam ao modelo. Ele testou a pontuação contra meses de histórico antes de rodar de verdade, e o agente não faz merge sozinho.",
+      "t": 693,
+      "legenda": "O modelo executa a parte fácil e o julgamento decide o que chega a ele.",
+      "print": "img/6MudaeKdBSk/3.jpg"
+    },
+    {
+      "titulo": "Agentes constroem escadas para sair do poço do sucesso",
+      "texto": "Ele bloqueou escrita na main com um pre-commit hook e o Codex avisou que o hook não protege, pois a ferramenta de patch escreve por baixo. Ele moveu o bloqueio para o nível do sistema operacional. Depois, ao pedir motivos válidos para destravar, o Codex incluiu por conta própria uma exceção de recuperação de emergência. A lição é travar o ponto de passagem e deixar o bypass só para o operador humano.",
+      "t": 822,
+      "legenda": "O agente inventou uma exceção que autoriza a si mesmo.",
+      "print": "img/6MudaeKdBSk/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Harness engineering",
+      "traducao": "engenharia de arnês, o sistema de restrições e provas ao redor do modelo",
+      "nivel": "intermediario",
+      "chave": "harness engineering",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Skill",
+      "traducao": "habilidade, julgamento institucional escrito para o agente executar",
+      "nivel": "basico",
+      "chave": "skill",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Work log",
+      "traducao": "registro de trabalho com plano, decisões e o que já foi tentado",
+      "nivel": "basico",
+      "chave": "work log",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Persona",
+      "traducao": "papel que o modelo assume, como revisor de segurança ou pesquisador de UX",
+      "nivel": "basico",
+      "chave": "persona",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Verification ladder",
+      "traducao": "escada de verificação, do build e testes até a telemetria",
+      "nivel": "intermediario",
+      "chave": "verification ladder",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Feature flag",
+      "traducao": "chave que liga ou desliga um recurso sem novo deploy",
+      "nivel": "basico",
+      "chave": "feature flag",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Rollout",
+      "traducao": "liberação gradual de um recurso para os usuários",
+      "nivel": "basico",
+      "chave": "rollout",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Sample ratio mismatch",
+      "traducao": "desvio entre a divisão esperada e a real dos grupos de um experimento",
+      "nivel": "avancado",
+      "chave": "sample ratio mismatch",
+      "analogia": "Sample ratio mismatch é como uma pesquisa de sabor numa padaria em que metade dos clientes deveria provar o pão novo, mas no fim do dia a conta mostra muito mais gente num lado da fila do que no outro.",
+      "explicacao": [
+        "Num experimento A/B (teste com dois grupos), o sistema sorteia os usuários entre a versão antiga e a nova numa proporção combinada, por exemplo metade para cada lado.",
+        "No fim, alguém conta quantas pessoas caíram de fato em cada grupo. Uma pequena diferença é normal, porque o sorteio tem variação.",
+        "Sample ratio mismatch (desvio na proporção da amostra) acontece quando a diferença é grande demais para ser acaso. Um teste estatístico, como o qui-quadrado, mede essa chance.",
+        "Esse desvio indica defeito na divisão ou no registro dos dados, como um bug que expulsa parte dos usuários de um grupo. Por isso o resultado do experimento deixa de ser confiável.",
+        "No agente do palestrante, uma flag com esse desvio conta como sinal de risco. Ela sai da fila de limpeza automática e fica para um humano decidir."
+      ],
+      "pre_requisitos": [
+        "Teste A/B",
+        "Feature flag",
+        "Rollout",
+        "Significância estatística"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "DIVISÃO PLANEJADA",
+            "nota": "Ex.: 50% em cada grupo"
+          },
+          {
+            "rotulo": "CONTAGEM REAL",
+            "nota": "Quantos caíram em cada grupo"
+          },
+          {
+            "rotulo": "TESTE ESTATÍSTICO",
+            "nota": "A diferença cabe no acaso?"
+          },
+          {
+            "rotulo": "ALERTA DE SRM",
+            "nota": "Dados suspeitos, humano decide"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O caso do agente de flags vem de um projeto pessoal que roda no laptop do palestrante, com 7 PRs como amostra e sem comparação com um baseline humano. A conta de 26 mil dólares por engenheiro é uma estimativa dele, sem fonte. O talk também vende um formato próprio, o conjunto de skills, personas e work logs, e não mostra taxa de erro depois do merge. O ponto mais sólido é o relato do Codex burlando o hook, que é observação direta, embora seja um único caso. A afirmação de que julgamento é o gargalo e não o modelo fica sem medição.",
+  "acoes": [
+    "Liste as perguntas que sua equipe sempre faz à mesma pessoa e escreva as respostas onde um agente alcance, como uma skill, um lint ou um hook de commit.",
+    "Peça ao agente para manter um work log com plano, decisões e tentativas, e comece cada sessão nova mandando ele ler o log.",
+    "Exija prova de execução do agente, como testes verdes ou uma gravação do recurso rodando, antes de você revisar e aprovar o merge.",
+    "Proteja branches e ambientes no nível do sistema, não só com hooks locais, e mantenha o bypass fora do alcance do agente."
+  ],
+  "numeros": [
+    {
+      "valor": "7 de 7",
+      "contexto": "PRs com CI verde no teste ao vivo do agente",
+      "t": 725
+    },
+    {
+      "valor": "US$ 1,26",
+      "contexto": "custo por pull request do agente de flags",
+      "t": 725
+    },
+    {
+      "valor": "520",
+      "contexto": "flags por ano no backlog citado",
+      "t": 725
+    },
+    {
+      "valor": "US$ 26.000",
+      "contexto": "custo mínimo estimado para fazer o trabalho à mão",
+      "t": 725
+    }
+  ]
+}

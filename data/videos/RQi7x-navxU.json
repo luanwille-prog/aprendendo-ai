@@ -1,0 +1,174 @@
+{
+  "id": "RQi7x-navxU",
+  "titulo": "Building the Document Context Layer for AI Agents — Jerry Liu, LlamaIndex",
+  "titulo_curto": "Building the Document Context Layer for AI Agents",
+  "palestrante": "Jerry Liu, LlamaIndex",
+  "url": "https://www.youtube.com/watch?v=RQi7x-navxU",
+  "duracao": 1263,
+  "publicado_ts": 1790168407,
+  "edicao": "2026-09-23",
+  "tese": "Agente bom lê contexto ruim mal; o gargalo virou transformar PDFs em texto confiável, barato e rápido.",
+  "tldr": [
+    "Jerry Liu, do LlamaIndex, diz que o RAG (geração aumentada por recuperação) de 2026 se divide em duas peças: um agente que raciocina sobre a busca e uma camada de contexto que entrega os documentos já legíveis.",
+    "Ele explica que PDF guarda letras com coordenadas e tabelas como linhas desenhadas, então ler documentos exige parsing especializado, e defende um híbrido entre pipelines clássicos e modelos de visão (VLMs).",
+    "A empresa apresenta o ParseBench, um benchmark público, e o LightParse, um parser gratuito em Rust para a primeira leitura rápida, com um parser mais caro chamado só quando a página pede."
+  ],
+  "tema": "dados-e-rag",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "A busca migrou para dentro do agente",
+      "texto": "No RAG de 2023 tudo era fixo: quebrar em pedaços, gerar embeddings, buscar os top K e responder. Hoje o agente escolhe o termo de busca, tenta de novo e refina. Por isso a ferramenta de recuperação pode ser simples, e o trabalho pesado fica no raciocínio do agente.",
+      "t": 93,
+      "legenda": "O fluxo fixo de 2023 que os agentes atuais substituíram por buscas iterativas.",
+      "print": null
+    },
+    {
+      "titulo": "PDF é desenhado, não escrito",
+      "texto": "Um PDF foi feito para imprimir. O texto vira glifos com coordenadas, a tabela vira segmentos de linha com caracteres em posições de célula, e a ordem de leitura de várias colunas não está guardada em lugar nenhum. Um agente que recebe o binário cru não consegue montar o sentido.",
+      "t": 530,
+      "legenda": "Mostra por que o arquivo bruto não serve como contexto para o agente.",
+      "print": "img/RQi7x-navxU/1.jpg"
+    },
+    {
+      "titulo": "O híbrido busca a fronteira de Pareto",
+      "texto": "Pipelines heurísticos são baratos, mas rígidos. Ler a página inteira com um VLM funciona razoavelmente, porém custa caro e alucina em páginas só de texto. Liu propõe combinar os dois, com roteamento entre modelos baratos e de ponta, e diz que um fluxo ajustado ao tipo de dado sempre supera o modelo geral em custo e precisão.",
+      "t": 716,
+      "legenda": "Posiciona a abordagem híbrida como a que equilibra custo e acerto.",
+      "print": "img/RQi7x-navxU/2.jpg"
+    },
+    {
+      "titulo": "ParseBench mede o que o agente entende",
+      "texto": "O benchmark reúne 2.000 páginas verificadas por humanos e avalia tabelas, gráficos, fidelidade de conteúdo e formatação semântica. Ele compara cerca de 50 modelos em uma curva de custo contra precisão e mostra que entender documentos está longe de resolvido.",
+      "t": 841,
+      "legenda": "A curva mostra quanta precisão ainda falta a cada faixa de custo.",
+      "print": "img/RQi7x-navxU/3.jpg"
+    },
+    {
+      "titulo": "Leitura rápida primeiro, VLM só quando precisa",
+      "texto": "Em uploads em tempo real, VLMs são lentos demais para mil PDFs em um minuto. O LightParse faz a passada inicial sem modelo, e o agente chama um parser com VLM apenas nas páginas com tabelas ou gráficos que exigem leitura dos valores.",
+      "t": 1063,
+      "legenda": "Desenha o fluxo em duas etapas que a empresa recomenda para agentes.",
+      "print": "img/RQi7x-navxU/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "RAG",
+      "traducao": "geração aumentada por recuperação",
+      "nivel": "basico",
+      "chave": "rag",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Top-k retrieval",
+      "traducao": "recuperação dos k trechos mais parecidos",
+      "nivel": "intermediario",
+      "chave": "top-k retrieval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Agent harness",
+      "traducao": "estrutura que executa o agente",
+      "nivel": "intermediario",
+      "chave": "agent harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP",
+      "traducao": "protocolo que conecta ferramentas ao agente",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Document OCR",
+      "traducao": "reconhecimento de texto em documentos",
+      "nivel": "basico",
+      "chave": "document ocr",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "VLM",
+      "traducao": "modelo de linguagem com visão",
+      "nivel": "intermediario",
+      "chave": "vlm",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Pareto frontier",
+      "traducao": "fronteira de Pareto (melhor troca entre custo e precisão)",
+      "nivel": "avancado",
+      "chave": "pareto frontier",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Benchmark",
+      "traducao": "teste padronizado de comparação",
+      "nivel": "basico",
+      "chave": "benchmark",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é pitch de produto do LlamaIndex, que vende o LlamaParse e o LightParse. O ParseBench é da própria empresa, que também aparece nele, e o palestrante não mostra números de ranking. Afirmações como fastest e most accurate open source parser não vêm com medição no vídeo. A parte de extração, busca e workflows foi pulada por falta de tempo.",
+  "acoes": [
+    "Teste seus PDFs mais difíceis (tabelas, várias colunas) em dois parsers diferentes antes de indexar, e compare o texto resultante com o original.",
+    "Separe seus documentos por regime, com alta precisão para casos regulados, baixo custo para indexação em massa e baixa latência para upload em tempo real, e escolha o parser por regime.",
+    "Ao montar um agente sobre documentos, dê a ele uma leitura rápida por padrão e uma ferramenta de leitura por visão para as páginas com tabelas e gráficos.",
+    "Peça citações até a página de origem em toda extração, para conferir valores antes de gravá-los em um sistema."
+  ],
+  "numeros": [
+    {
+      "valor": "10 tri+ páginas",
+      "contexto": "conhecimento humano preso em PDFs, PPTs, Word e Excel",
+      "t": 372
+    },
+    {
+      "valor": "2.000 páginas",
+      "contexto": "tamanho do ParseBench, verificadas por humanos",
+      "t": 811
+    },
+    {
+      "valor": "cerca de 50",
+      "contexto": "modelos comparados no ParseBench",
+      "t": 841
+    },
+    {
+      "valor": "99 a ~100%",
+      "contexto": "precisão exigida em finanças e seguros",
+      "t": 908
+    }
+  ]
+}

@@ -1,0 +1,241 @@
+{
+  "id": "ACPEpji5NV4",
+  "titulo": "Distill the LLM, Don't Serve It: Search & Personalization at DoorDash — Raghav Saboo, DoorDash",
+  "titulo_curto": "Distill the LLM, Don't Serve It: Search & Personalization at DoorDash",
+  "palestrante": "Raghav Saboo, DoorDash",
+  "url": "https://www.youtube.com/watch?v=ACPEpji5NV4",
+  "duracao": 1330,
+  "publicado_ts": 1790343037,
+  "edicao": "2026-09-25",
+  "tese": "Rode o raciocínio caro do LLM uma vez, offline, e destile o resultado em modelos pequenos que servem busca e recomendação em produção.",
+  "tldr": [
+    "O DoorDash defende que o gargalo da busca em marketplace é entender o significado dos itens e a intenção do comprador, e não só otimizar engajamento.",
+    "A empresa usa quatro blocos com LLM: rótulos de relevância, semantic IDs (códigos semânticos do catálogo), memória do consumidor e coleções personalizadas geradas offline.",
+    "Os ganhos citados são 2,3% de NDCG na recuperação, 4 a 5% de MRR no ranking e perto de 1% de taxa de pedidos na categoria pets."
+  ],
+  "tema": "dados-e-rag",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Engajamento ranqueia a massa errada",
+      "texto": "Quem busca macarrão sem glúten pode receber espaguete comum, porque ele vende muito. O talk propõe relevância graduada em três níveis (0, 1 e 2): macarrão sem glúten de verdade no topo, substituto como o de grão-de-bico no meio, espaguete comum embaixo. Cliques e conversões sofrem viés de posição, preço e promoção, então não servem sozinhos como régua.",
+      "t": 207,
+      "legenda": "Mostra por que popularidade não substitui relevância graduada",
+      "print": "img/ACPEpji5NV4/0.jpg"
+    },
+    {
+      "titulo": "Rotulador LLM offline alimenta retrieval e ranking",
+      "texto": "O time monta um conjunto semente com rótulos humanos, audita casos suspeitos com um LLM mais forte e reconcilia com modelos de taxonomia. Esse conjunto ouro ajusta um LLM leve (o exemplo dado foi um GPT-4o mini), que rotula o catálogo inteiro offline. Os rótulos viram alvo comum para retrieval (busca de candidatos) e ranking.",
+      "t": 295,
+      "legenda": "Mostra o pipeline que transforma poucos rótulos humanos em rótulos para todo o catálogo",
+      "print": "img/ACPEpji5NV4/1.jpg"
+    },
+    {
+      "titulo": "Destilar em vez de substituir o ranker",
+      "texto": "No retrieval, um treino contrastivo em dois estágios usa hard negatives (itens que o modelo confunde) e elevou o NDCG de relevância em 2,3%. No ranking, uma nova torre ordinal de relevância divide as camadas de baixo com as torres de clique, add to cart e conversão. Uma função de valor mistura relevância e engajamento por superfície.",
+      "t": 515,
+      "legenda": "Mostra onde o sinal do LLM entra no ranker sem trocar a arquitetura",
+      "print": "img/ACPEpji5NV4/2.jpg"
+    },
+    {
+      "titulo": "Semantic IDs como taxonomia aprendida",
+      "texto": "Cada item recebe um código hierárquico: o prefixo marca a vizinhança ampla e os tokens finais marcam distinções finas, como molhos de pimenta mexicanos, caribenhos e coreanos. O código ajuda em comparações entre categorias, itens novos (cold start) e itens raros. Também alimentou a reformulação de queries, com ganho de 4 a 5% de MRR no ranking.",
+      "t": 671,
+      "legenda": "Mostra a estrutura hierárquica surgindo dos dados sem rótulos humanos",
+      "print": "img/ACPEpji5NV4/3.jpg"
+    },
+    {
+      "titulo": "Memória do consumidor em três escalas de tempo",
+      "texto": "A memória tem três camadas: longo prazo (pedidos, buscas, suporte), contexto em tempo real (carrinho e buscas ativas) e preferências declaradas (como no Ask DoorDash). Cada consumidor vira blocos de memória em texto, vetores e grafos, que modelos de ML e LLMs usam sem reinterpretar. Coleções geradas offline usam isso e elevaram a taxa de pedidos em perto de 1% em pets.",
+      "t": 1024,
+      "legenda": "Mostra como texto, vetores e grafo formam um objeto de memória reutilizável",
+      "print": "img/ACPEpji5NV4/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Destilação",
+      "traducao": "Distillation (destilação de modelo)",
+      "nivel": "intermediario",
+      "chave": "destilação",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM como rotulador",
+      "traducao": "LLM labeling (rotulagem por LLM)",
+      "nivel": "intermediario",
+      "chave": "llm como rotulador",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Aprendizado contrastivo de duas torres",
+      "traducao": "Two-tower contrastive learning",
+      "nivel": "avancado",
+      "chave": "aprendizado contrastivo de duas torres",
+      "analogia": "Aprendizado contrastivo de duas torres é como dois tradutores de um mercado, um para os pedidos dos clientes e outro para as etiquetas dos produtos, que treinam juntos até cada pedido cair ao lado do produto certo.",
+      "explicacao": [
+        "O sistema transforma cada busca e cada produto em uma lista de números, chamada vetor (embedding, representação numérica). Vetores próximos indicam coisas parecidas.",
+        "Duas torres (two towers) são dois modelos separados. Uma torre lê a busca do cliente, a outra lê o produto, e as duas geram vetores no mesmo espaço.",
+        "O treino contrastivo (contrastive learning, aprendizado por comparação) mostra pares certos e errados. Ele aproxima a busca dos itens relevantes e afasta a busca dos irrelevantes.",
+        "No DoorDash, os rótulos de 0 a 2 gerados pelo LLM guiam uma perda em vários níveis (multi-level supervised contrastive loss). Assim, um substituto fica mais perto que um item sem relação e mais longe que o item exato.",
+        "Os vetores dos produtos são calculados antes, em lote. Em produção, o sistema só calcula o vetor da busca e procura os vizinhos mais próximos, o que mantém a resposta rápida e barata."
+      ],
+      "pre_requisitos": [
+        "Embeddings",
+        "Similaridade entre vetores",
+        "LLM como rotulador",
+        "Relevância graduada"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "DUAS ENTRADAS",
+            "nota": "busca e produto chegam separados"
+          },
+          {
+            "rotulo": "DUAS TORRES",
+            "nota": "cada uma gera um vetor"
+          },
+          {
+            "rotulo": "COMPARAÇÃO",
+            "nota": "rótulos de 0 a 2 julgam cada par"
+          },
+          {
+            "rotulo": "AJUSTE DE DISTÂNCIA",
+            "nota": "aproxima relevantes, afasta o resto"
+          },
+          {
+            "rotulo": "MAPA DE VETORES",
+            "nota": "busca cai perto do item certo"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Hard negatives",
+      "traducao": "Negativos difíceis",
+      "nivel": "avancado",
+      "chave": "hard negatives",
+      "analogia": "Hard negatives é como ensinar um aprendiz de cozinha a separar salsinha de coentro, porque separar salsinha de cenoura ele já sabe.",
+      "explicacao": [
+        "Para aprender, o modelo precisa ver exemplos errados, chamados negativos. Um negativo é um item que não serve para aquela busca.",
+        "Negativos fáceis, como ração de cachorro para quem busca macarrão, ensinam pouco. O modelo já acerta esses casos.",
+        "Hard negatives (negativos difíceis) são os itens que o modelo confunde. Por exemplo, um espaguete comum no alto da lista para quem pediu macarrão sem glúten, ou um item certo jogado lá para baixo.",
+        "No DoorDash, o primeiro estágio treina um modelo base. Esse modelo então garimpa (mining) os casos confusos, e esses itens recebem um novo rótulo.",
+        "O segundo estágio faz um treino em currículo (curriculum training) com esses exemplos. Depois dele, itens relevantes e moderadamente relevantes deixam de se sobrepor, e o NDCG de relevância subiu 2,3%."
+      ],
+      "pre_requisitos": [
+        "Aprendizado contrastivo de duas torres",
+        "Relevância graduada",
+        "NDCG"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "MODELO BASE",
+            "nota": "primeiro treino com os rótulos"
+          },
+          {
+            "rotulo": "GARIMPO",
+            "nota": "acha os itens que ele confunde"
+          },
+          {
+            "rotulo": "NOVO RÓTULO",
+            "nota": "revisa os casos confusos"
+          },
+          {
+            "rotulo": "TREINO EM CURRÍCULO",
+            "nota": "foca nos exemplos difíceis"
+          },
+          {
+            "rotulo": "SEPARAÇÃO NÍTIDA",
+            "nota": "exato, substituto e irrelevante"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "NDCG e MRR",
+      "traducao": "Métricas de qualidade de ranking",
+      "nivel": "intermediario",
+      "chave": "ndcg e mrr",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Semantic ID",
+      "traducao": "Código semântico hierárquico de item",
+      "nivel": "avancado",
+      "chave": "semantic id",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Cold start",
+      "traducao": "Partida a frio (itens sem histórico)",
+      "nivel": "basico",
+      "chave": "cold start",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Memory blocks",
+      "traducao": "Blocos de memória do consumidor",
+      "nivel": "intermediario",
+      "chave": "memory blocks",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é um relato interno do DoorDash e não traz metodologia de teste A/B, tamanho de amostra nem intervalos de confiança. Os ganhos vêm como percentuais soltos: 2,3% de NDCG, 4 a 5% de MRR e perto de 1% de pedidos em pets, sem a base de comparação. Métricas offline como NDCG e MRR nem sempre viram receita. Faltam custos do rotulador, do pipeline offline e da manutenção da memória, além de riscos de privacidade ao guardar preferências em texto.",
+  "acoes": [
+    "Se você mantém busca ou recomendação, teste um LLM como rotulador offline em uma amostra de pares consulta e item, com escala de 0 a 2, e compare com rótulos humanos antes de escalar.",
+    "Ao adotar um LLM, prefira gerar rótulos, códigos e resumos em lote e servir modelos menores, em vez de chamar o LLM em cada requisição do usuário.",
+    "Audite casos em que o rótulo humano diz irrelevante mas a conversão é alta, pois são bons candidatos para revisão com um modelo mais forte.",
+    "Ao guardar preferências de clientes, estruture em blocos separados (dieta, substituições) e em texto legível, para que qualquer sistema use sem reinterpretar."
+  ],
+  "numeros": [
+    {
+      "valor": "2,3%",
+      "contexto": "Ganho de NDCG de relevância na recuperação",
+      "t": 453
+    },
+    {
+      "valor": "4 a 5%",
+      "contexto": "Ganho de MRR no ranking com semantic IDs",
+      "t": 763
+    },
+    {
+      "valor": "~1%",
+      "contexto": "Aumento na taxa de pedidos em pets",
+      "t": 1228
+    },
+    {
+      "valor": "6%",
+      "contexto": "Aumento de usuários ativos em pets",
+      "t": 1228
+    }
+  ]
+}

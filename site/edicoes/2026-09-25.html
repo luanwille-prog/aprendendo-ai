@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Recomendação e revisão na era dos LLMs · Aprendendo AI</title>
+<meta name="description" content="Resumos diários dos talks do canal AI Engineer, explicados no estilo Quadro Anotado.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<script>document.documentElement.classList.add("js")</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;500;700;900&family=Barlow:ital,wght@0,400;0,600;1,400&family=Covered+By+Your+Grace&display=swap">
+<link rel="stylesheet" href="../estilo.css">
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<header class="topo wrap">
+  <a class="marca" href="../index.html">Aprendendo <span>AI</span></a>
+  <nav class="topo-links" aria-label="Navegação principal">
+    <a href="../index.html#edicoes">Edições</a>
+    <a href="../glossario.html">Glossário</a>
+  </nav>
+</header>
+<main id="conteudo" class="wrap" tabindex="-1">
+<div class="edicao" id="e-2026-09-25">
+  <header class="edicao-head">
+    <h1 class="h-edicao">Recomendação e revisão na era dos LLMs</h1>
+    <p class="meta">Edição de sexta, 25 set 2026 · 4 vídeos · 1 h 22 min de talks</p>
+<p class="abertura">Quatro talks sobre levar LLMs para produto sem quebrar o custo. Três mostram como Spotify, Meta e DoorDash usam LLMs para recomendar e buscar, quase sempre destilando o modelo grande em algo pequeno e barato. O quarto trata do gargalo que os agentes criaram: pull requests demais para revisar.</p>  </header>
+
+  <div class="edicao-corpo">
+    <nav class="indice card" aria-label="Ordem de leitura">
+      <p class="indice-titulo">Ordem de leitura</p>
+      <ol><li data-id="LlgiOCmFG_w"><a href="#v-LlgiOCmFG_w" lang="en">Fixing the PR Bottleneck</a> <span class="muted">22:34</span></li><li data-id="ACPEpji5NV4"><a href="#v-ACPEpji5NV4" lang="en">Distill the LLM, Don&#39;t Serve It: Search &amp; Personalization at DoorDash</a> <span class="muted">22:10</span></li><li data-id="lIgdnF0s0kQ"><a href="#v-lIgdnF0s0kQ" lang="en">Why LLM Recommenders Will Be AI&#39;s Biggest Consumer App</a> <span class="muted">18:00</span></li><li data-id="2LRIAfng7eA"><a href="#v-2LRIAfng7eA" lang="en">Teaching LLMs to Speak Spotify</a> <span class="muted">19:40</span></li></ol>
+      <span class="progresso" data-ids="LlgiOCmFG_w ACPEpji5NV4 lIgdnF0s0kQ 2LRIAfng7eA"></span>
+    </nav>
+
+    <div class="talks">
+<article class="video" id="v-LlgiOCmFG_w" data-tema="engenharia-de-software">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">01</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Fixing the PR Bottleneck</h2>
+      <p class="hand tese">Para destravar o PR, ponha freios antes do revisor humano: checagens, revisão por agente e um PR que se explica sozinho.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Engenharia de software</span>
+    <span class="chip">22:34</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Matt Pocock, AIHero</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=LlgiOCmFG_w" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Agentes abrem PRs em massa, mas não abrem PRs que valem a revisão, e o gargalo continua na revisão humana.</p><p>Matt Pocock propõe três freios em camadas: checagens automáticas, revisão automática feita por um agente separado do implementador e revisão humana focada no que importa.</p><p>Cada revisão humana deve alimentar uma retrospectiva que atualiza checagens e padrões de código, para que o mesmo comentário nunca seja escrito duas vezes.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-LlgiOCmFG_w-deep-module"><strong>Deep module</strong> <span>módulo profundo</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-software-factory"><strong>Software factory</strong> <span>fábrica de software</span></a></li><li><a href="../glossario.html#g-tautological-test"><strong>Tautological test</strong> <span>teste tautológico</span></a></li><li><a href="../glossario.html#g-subagent"><strong>Subagent</strong> <span>subagente</span></a></li><li><a href="../glossario.html#g-red-green-refactor"><strong>Red-green-refactor</strong> <span>vermelho, verde, refatorar</span></a></li><li><a href="../glossario.html#g-one-way-door-two-way-door"><strong>One-way door / two-way door</strong> <span>porta de mão única / de mão dupla</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-blast-radius"><strong>Blast radius</strong> <span>raio de impacto</span></a></li><li><a href="../glossario.html#g-retrospective"><strong>Retrospective</strong> <span>retrospectiva (skill retro)</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Testes podem mentir</h3>
+    <p>CI verde não prova que o código está pronto. O agente escreve testes tautológicos (que repetem a implementação), testes presos à estrutura do código e testes com mocks que não conseguem falhar. Por isso a revisão automática e a humana servem como detectores de mentira das checagens.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=LlgiOCmFG_w&amp;t=327s" target="_blank" rel="noopener" aria-label="Assistir a partir de 05:27 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:27</a> Exemplo real de teste tautológico escrito por agente.</p>  </div>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Módulos profundos geram testes melhores</h3>
+    <p>Um módulo profundo esconde muita implementação atrás de uma interface pequena. Se o agente testa só pela interface, os testes dependem menos da estrutura interna. Desenhar bem o código reduz a chance de testes ruins.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/LlgiOCmFG_w/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A forma do módulo define a qualidade dos testes que o agente consegue escrever.</span><a class="minuto" href="https://www.youtube.com/watch?v=LlgiOCmFG_w&amp;t=515s" target="_blank" rel="noopener" aria-label="Assistir a partir de 08:35 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:35</a></figcaption>
+  </figure>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Implementar sobrecarrega, revisar não</h3>
+    <p>Na janela de contexto do implementador já cabem explorar, editar e depurar. Colocar padrões de código ali piora o resultado. O revisor roda em subagente com contexto próprio, lê um arquivo coding-standards.md e aplica os padrões. É um red-green-refactor com duas janelas de contexto.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=LlgiOCmFG_w&amp;t=703s" target="_blank" rel="noopener" aria-label="Assistir a partir de 11:43 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>11:43</a> O implementador já está cheio, então os padrões vão para o revisor.</p>  </div>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>O revisor comita, não comenta</h3>
+    <p>Um agente que só comenta no PR cria mais trabalho para o humano. Pocock defende que o revisor automático faça commits com as correções e comente apenas quando tiver dúvida. Ele também recomenda montar a própria revisão em vez de terceirizar tudo, porque revisores genéricos geram falsos positivos.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/LlgiOCmFG_w/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O humano recebe um artefato já corrigido, não uma lista de comentários.</span><a class="minuto" href="https://www.youtube.com/watch?v=LlgiOCmFG_w&amp;t=922s" target="_blank" rel="noopener" aria-label="Assistir a partir de 15:22 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:22</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>PR bom mostra o perigo do merge e vira retro</h3>
+    <p>O corpo do PR classifica a mudança como porta de mão única ou de mão dupla e indica o raio de impacto. Diagramas e pseudocódigo explicam o que muda. Depois, a skill retro analisa PRs e sessões e sugere novas checagens e padrões, para o processo melhorar a cada revisão.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/LlgiOCmFG_w/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O resumo diz quanta atenção humana o PR exige.</span><a class="minuto" href="https://www.youtube.com/watch?v=LlgiOCmFG_w&amp;t=1107s" target="_blank" rel="noopener" aria-label="Assistir a partir de 18:27 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>18:27</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=LlgiOCmFG_w&amp;t=327s" target="_blank" rel="noopener"><strong>280</strong><span>Limite de caracteres do X usado no teste tautológico</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:27</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=LlgiOCmFG_w&amp;t=1076s" target="_blank" rel="noopener"><strong>60.000</strong><span>Pessoas atingidas por e-mail disparado por engano (exemplo)</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>17:56</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=LlgiOCmFG_w&amp;t=609s" target="_blank" rel="noopener"><strong>20</strong><span>Abordagens de estruturar código, todas chamadas de DDD</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:09</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=LlgiOCmFG_w&amp;t=1324s" target="_blank" rel="noopener"><strong>1.3</strong><span>Versão das skills lançada na semana do talk</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>22:04</span></a>
+  </div>
+
+  <div class="casper" id="a-LlgiOCmFG_w-deep-module">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Deep module (módulo profundo).</strong> Um módulo profundo é como um micro-ondas: você aperta um botão só, e toda a parte elétrica complicada fica escondida dentro da caixa.</p>
+    <ol class="passos"><li>Todo programa é dividido em partes. Cada parte tem uma porta de entrada, a interface, que diz o que você pode pedir a ela.</li><li>Um módulo profundo (deep module) tem uma interface pequena, com poucas funções, e muito trabalho escondido atrás dela. Um módulo raso tem muitas funções, e cada uma faz pouco.</li><li>A ideia vem de John Ousterhout, no livro A Philosophy of Software Design. Quem usa o módulo recebe muito valor com uma chamada simples, o que Pocock chama de alavancagem (leverage).</li><li>Quando o agente testa só pela interface pequena, o teste confere o resultado e ignora os detalhes internos. Assim ele quebra menos quando alguém reorganiza o código por dentro.</li><li>Por isso Pocock obriga o agente a testar pela interface e usa uma skill que aponta onde aprofundar módulos, juntando funções rasas e duplicadas num módulo só, fácil de testar.</li></ol>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-modulo-e-interface">Módulo e interface</a>, <a href="../glossario.html#g-teste-automatizado">Teste automatizado</a>, <a href="../glossario.html#g-teste-preso-a-estrutura-do-codigo">Teste preso à estrutura do código</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk apresenta as skills do próprio Pocock e anuncia a versão 1.3, então há conflito de interesse e tom de pitch. Não há dados sobre quanto tempo de revisão as práticas economizam, só a experiência pessoal e exemplos escolhidos a dedo. A afirmação de que o modelo Opus 5 ficou viciado em testes tautológicos vem de observação informal. A classificação porta de mão única ou dupla depende do julgamento do autor do PR, e o talk não mostra como evitar erros nela.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Crie um arquivo coding-standards.md no seu repositório e faça um agente de revisão em subagente aplicá-lo, em vez de colocar tudo no arquivo global de instruções do implementador.</li><li>Peça ao agente revisor que faça commits com as correções e comente só quando houver dúvida real.</li><li>Inclua no corpo dos PRs uma linha de merge danger: porta de mão única ou dupla, mais o raio de impacto.</li><li>Depois de cada revisão humana, anote o comentário repetido e transforme em checagem automática ou regra de padrão de código.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="LlgiOCmFG_w" aria-label="Marcar Fixing the PR Bottleneck como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-ACPEpji5NV4">Próximo talk <span lang="en">Distill the LLM, Don&#39;t Serve It: Search &amp; Personalization at DoorDash</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-ACPEpji5NV4" data-tema="dados-e-rag">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">02</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Distill the LLM, Don&#39;t Serve It: Search &amp; Personalization at DoorDash</h2>
+      <p class="hand tese">Rode o raciocínio caro do LLM uma vez, offline, e destile o resultado em modelos pequenos que servem busca e recomendação em produção.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Dados e RAG</span>
+    <span class="chip">22:10</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Raghav Saboo, DoorDash</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=ACPEpji5NV4" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>O DoorDash defende que o gargalo da busca em marketplace é entender o significado dos itens e a intenção do comprador, e não só otimizar engajamento.</p><p>A empresa usa quatro blocos com LLM: rótulos de relevância, semantic IDs (códigos semânticos do catálogo), memória do consumidor e coleções personalizadas geradas offline.</p><p>Os ganhos citados são 2,3% de NDCG na recuperação, 4 a 5% de MRR no ranking e perto de 1% de taxa de pedidos na categoria pets.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-ACPEpji5NV4-aprendizado-contrastivo-de-duas-torres"><strong>Aprendizado contrastivo de duas torres</strong> <span>Two-tower contrastive learning</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-ACPEpji5NV4-hard-negatives"><strong>Hard negatives</strong> <span>Negativos difíceis</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-destilacao"><strong>Destilação</strong> <span>Distillation (destilação de modelo)</span></a></li><li><a href="../glossario.html#g-llm-como-rotulador"><strong>LLM como rotulador</strong> <span>LLM labeling (rotulagem por LLM)</span></a></li><li><a href="../glossario.html#g-ndcg-e-mrr"><strong>NDCG e MRR</strong> <span>Métricas de qualidade de ranking</span></a></li><li><a href="../glossario.html#g-semantic-id"><strong>Semantic ID</strong> <span>Código semântico hierárquico de item</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-cold-start"><strong>Cold start</strong> <span>Partida a frio (itens sem histórico)</span></a></li><li><a href="../glossario.html#g-memory-blocks"><strong>Memory blocks</strong> <span>Blocos de memória do consumidor</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Engajamento ranqueia a massa errada</h3>
+    <p>Quem busca macarrão sem glúten pode receber espaguete comum, porque ele vende muito. O talk propõe relevância graduada em três níveis (0, 1 e 2): macarrão sem glúten de verdade no topo, substituto como o de grão-de-bico no meio, espaguete comum embaixo. Cliques e conversões sofrem viés de posição, preço e promoção, então não servem sozinhos como régua.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/ACPEpji5NV4/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Mostra por que popularidade não substitui relevância graduada</span><a class="minuto" href="https://www.youtube.com/watch?v=ACPEpji5NV4&amp;t=207s" target="_blank" rel="noopener" aria-label="Assistir a partir de 03:27 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:27</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Rotulador LLM offline alimenta retrieval e ranking</h3>
+    <p>O time monta um conjunto semente com rótulos humanos, audita casos suspeitos com um LLM mais forte e reconcilia com modelos de taxonomia. Esse conjunto ouro ajusta um LLM leve (o exemplo dado foi um GPT-4o mini), que rotula o catálogo inteiro offline. Os rótulos viram alvo comum para retrieval (busca de candidatos) e ranking.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/ACPEpji5NV4/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Mostra o pipeline que transforma poucos rótulos humanos em rótulos para todo o catálogo</span><a class="minuto" href="https://www.youtube.com/watch?v=ACPEpji5NV4&amp;t=295s" target="_blank" rel="noopener" aria-label="Assistir a partir de 04:55 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:55</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Destilar em vez de substituir o ranker</h3>
+    <p>No retrieval, um treino contrastivo em dois estágios usa hard negatives (itens que o modelo confunde) e elevou o NDCG de relevância em 2,3%. No ranking, uma nova torre ordinal de relevância divide as camadas de baixo com as torres de clique, add to cart e conversão. Uma função de valor mistura relevância e engajamento por superfície.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/ACPEpji5NV4/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Mostra onde o sinal do LLM entra no ranker sem trocar a arquitetura</span><a class="minuto" href="https://www.youtube.com/watch?v=ACPEpji5NV4&amp;t=515s" target="_blank" rel="noopener" aria-label="Assistir a partir de 08:35 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:35</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Semantic IDs como taxonomia aprendida</h3>
+    <p>Cada item recebe um código hierárquico: o prefixo marca a vizinhança ampla e os tokens finais marcam distinções finas, como molhos de pimenta mexicanos, caribenhos e coreanos. O código ajuda em comparações entre categorias, itens novos (cold start) e itens raros. Também alimentou a reformulação de queries, com ganho de 4 a 5% de MRR no ranking.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/ACPEpji5NV4/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Mostra a estrutura hierárquica surgindo dos dados sem rótulos humanos</span><a class="minuto" href="https://www.youtube.com/watch?v=ACPEpji5NV4&amp;t=671s" target="_blank" rel="noopener" aria-label="Assistir a partir de 11:11 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>11:11</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Memória do consumidor em três escalas de tempo</h3>
+    <p>A memória tem três camadas: longo prazo (pedidos, buscas, suporte), contexto em tempo real (carrinho e buscas ativas) e preferências declaradas (como no Ask DoorDash). Cada consumidor vira blocos de memória em texto, vetores e grafos, que modelos de ML e LLMs usam sem reinterpretar. Coleções geradas offline usam isso e elevaram a taxa de pedidos em perto de 1% em pets.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/ACPEpji5NV4/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Mostra como texto, vetores e grafo formam um objeto de memória reutilizável</span><a class="minuto" href="https://www.youtube.com/watch?v=ACPEpji5NV4&amp;t=1024s" target="_blank" rel="noopener" aria-label="Assistir a partir de 17:04 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>17:04</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=ACPEpji5NV4&amp;t=453s" target="_blank" rel="noopener"><strong>2,3%</strong><span>Ganho de NDCG de relevância na recuperação</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:33</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=ACPEpji5NV4&amp;t=763s" target="_blank" rel="noopener"><strong>4 a 5%</strong><span>Ganho de MRR no ranking com semantic IDs</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:43</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=ACPEpji5NV4&amp;t=1228s" target="_blank" rel="noopener"><strong>~1%</strong><span>Aumento na taxa de pedidos em pets</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>20:28</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=ACPEpji5NV4&amp;t=1228s" target="_blank" rel="noopener"><strong>6%</strong><span>Aumento de usuários ativos em pets</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>20:28</span></a>
+  </div>
+
+  <div class="casper" id="a-ACPEpji5NV4-aprendizado-contrastivo-de-duas-torres">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Aprendizado contrastivo de duas torres (Two-tower contrastive learning).</strong> Aprendizado contrastivo de duas torres é como dois tradutores de um mercado, um para os pedidos dos clientes e outro para as etiquetas dos produtos, que treinam juntos até cada pedido cair ao lado do produto certo.</p>
+    <ol class="passos"><li>O sistema transforma cada busca e cada produto em uma lista de números, chamada vetor (embedding, representação numérica). Vetores próximos indicam coisas parecidas.</li><li>Duas torres (two towers) são dois modelos separados. Uma torre lê a busca do cliente, a outra lê o produto, e as duas geram vetores no mesmo espaço.</li><li>O treino contrastivo (contrastive learning, aprendizado por comparação) mostra pares certos e errados. Ele aproxima a busca dos itens relevantes e afasta a busca dos irrelevantes.</li><li>No DoorDash, os rótulos de 0 a 2 gerados pelo LLM guiam uma perda em vários níveis (multi-level supervised contrastive loss). Assim, um substituto fica mais perto que um item sem relação e mais longe que o item exato.</li><li>Os vetores dos produtos são calculados antes, em lote. Em produção, o sistema só calcula o vetor da busca e procura os vizinhos mais próximos, o que mantém a resposta rápida e barata.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>DUAS ENTRADAS</strong><span>busca e produto chegam separados</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>DUAS TORRES</strong><span>cada uma gera um vetor</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>COMPARAÇÃO</strong><span>rótulos de 0 a 2 julgam cada par</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>AJUSTE DE DISTÂNCIA</strong><span>aproxima relevantes, afasta o resto</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>MAPA DE VETORES</strong><span>busca cai perto do item certo</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-embeddings">Embeddings</a>, <a href="../glossario.html#g-similaridade-entre-vetores">Similaridade entre vetores</a>, <a href="../glossario.html#g-llm-como-rotulador">LLM como rotulador</a>, <a href="../glossario.html#g-relevancia-graduada">Relevância graduada</a></p>  </div>
+  <div class="casper" id="a-ACPEpji5NV4-hard-negatives">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Hard negatives (Negativos difíceis).</strong> Hard negatives é como ensinar um aprendiz de cozinha a separar salsinha de coentro, porque separar salsinha de cenoura ele já sabe.</p>
+    <ol class="passos"><li>Para aprender, o modelo precisa ver exemplos errados, chamados negativos. Um negativo é um item que não serve para aquela busca.</li><li>Negativos fáceis, como ração de cachorro para quem busca macarrão, ensinam pouco. O modelo já acerta esses casos.</li><li>Hard negatives (negativos difíceis) são os itens que o modelo confunde. Por exemplo, um espaguete comum no alto da lista para quem pediu macarrão sem glúten, ou um item certo jogado lá para baixo.</li><li>No DoorDash, o primeiro estágio treina um modelo base. Esse modelo então garimpa (mining) os casos confusos, e esses itens recebem um novo rótulo.</li><li>O segundo estágio faz um treino em currículo (curriculum training) com esses exemplos. Depois dele, itens relevantes e moderadamente relevantes deixam de se sobrepor, e o NDCG de relevância subiu 2,3%.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>MODELO BASE</strong><span>primeiro treino com os rótulos</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>GARIMPO</strong><span>acha os itens que ele confunde</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>NOVO RÓTULO</strong><span>revisa os casos confusos</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>TREINO EM CURRÍCULO</strong><span>foca nos exemplos difíceis</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>SEPARAÇÃO NÍTIDA</strong><span>exato, substituto e irrelevante</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-aprendizado-contrastivo-de-duas-torres">Aprendizado contrastivo de duas torres</a>, <a href="../glossario.html#g-relevancia-graduada">Relevância graduada</a>, <a href="../glossario.html#g-ndcg">NDCG</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é um relato interno do DoorDash e não traz metodologia de teste A/B, tamanho de amostra nem intervalos de confiança. Os ganhos vêm como percentuais soltos: 2,3% de NDCG, 4 a 5% de MRR e perto de 1% de pedidos em pets, sem a base de comparação. Métricas offline como NDCG e MRR nem sempre viram receita. Faltam custos do rotulador, do pipeline offline e da manutenção da memória, além de riscos de privacidade ao guardar preferências em texto.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Se você mantém busca ou recomendação, teste um LLM como rotulador offline em uma amostra de pares consulta e item, com escala de 0 a 2, e compare com rótulos humanos antes de escalar.</li><li>Ao adotar um LLM, prefira gerar rótulos, códigos e resumos em lote e servir modelos menores, em vez de chamar o LLM em cada requisição do usuário.</li><li>Audite casos em que o rótulo humano diz irrelevante mas a conversão é alta, pois são bons candidatos para revisão com um modelo mais forte.</li><li>Ao guardar preferências de clientes, estruture em blocos separados (dieta, substituições) e em texto legível, para que qualquer sistema use sem reinterpretar.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="ACPEpji5NV4" aria-label="Marcar Distill the LLM, Don&#39;t Serve It: Search &amp; Personalization at DoorDash como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-lIgdnF0s0kQ">Próximo talk <span lang="en">Why LLM Recommenders Will Be AI&#39;s Biggest Consumer App</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-lIgdnF0s0kQ" data-tema="modelos">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">03</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Why LLM Recommenders Will Be AI&#39;s Biggest Consumer App</h2>
+      <p class="hand tese">Feeds de recomendação escalam como LLMs e gastam muito menos por hora de uso, porque decodificam ponteiros para conteúdo que já existe.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Modelos</span>
+    <span class="chip">18:00</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Devansh Tandon, Meta</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=lIgdnF0s0kQ" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Devansh Tandon, que lidera pesquisa de recomendação no Meta, argumenta que sistemas de recomendação seguem as mesmas leis de escala dos LLMs e ainda estão no começo dessa curva.</p><p>A receita para um recomendador baseado em LLM tem três passos: transformar o conteúdo em tokens (semantic IDs), ensinar o modelo a falar inglês e o idioma do catálogo, e pós-treiná-lo para ranquear com raciocínio legível.</p><p>Ele sustenta que feeds custam até 100 vezes menos que apps de chat por hora de engajamento, e que isso torna o recomendador com LLM uma das maiores aplicações de IA para o consumidor.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-sistema-de-recomendacao"><strong>Sistema de recomendação</strong> <span>recsys, o modelo que escolhe o que aparece no seu feed</span></a></li><li><a href="../glossario.html#g-scaling-law"><strong>Scaling law</strong> <span>lei de escala: mais dados e computação reduzem a perda</span></a></li><li><a href="../glossario.html#g-semantic-id"><strong>Semantic ID</strong> <span>ID semântico: código curto de tokens para um conteúdo</span></a></li><li><a href="../glossario.html#g-modelo-bilingue"><strong>Modelo bilíngue</strong> <span>LLM que entende inglês e a linguagem do catálogo</span></a></li><li><a href="../glossario.html#g-pre-training-e-post-training"><strong>Pre-training e post-training</strong> <span>pré-treino (aprender a língua) e pós-treino (aprender a tarefa)</span></a></li><li><a href="../glossario.html#g-chain-of-thought"><strong>Chain of thought</strong> <span>cadeia de raciocínio escrita passo a passo pelo modelo</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-re-ranker"><strong>Re-ranker</strong> <span>modelo que reordena candidatos e escolhe os melhores</span></a></li><li><a href="../glossario.html#g-flywheel-de-tokens"><strong>Flywheel de tokens</strong> <span>ciclo em que engajamento e receita pagam o próximo treino</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Recomendadores seguem a mesma lei de escala dos LLMs</h3>
+    <p>Tandon mostra que a perda do modelo cai de forma previsível quando crescem dados, computação e tamanho, exatamente como no paper de scaling laws de 2020. Ele cita os papers HSTU (2024 e a continuação deste ano) do Meta como evidência offline. No produto, Instagram Reels teve 30% de alta anual em tempo assistido, com modelos maiores e históricos de interação mais longos.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/lIgdnF0s0kQ/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A qualidade da recomendação melhora de forma previsível com escala.</span><a class="minuto" href="https://www.youtube.com/watch?v=lIgdnF0s0kQ&amp;t=191s" target="_blank" rel="noopener" aria-label="Assistir a partir de 03:11 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:11</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Quatro curvas em S da recomendação</h3>
+    <p>O setor sobe quatro curvas em paralelo. A primeira é a recsys tradicional, com engenharia de features e redes two tower. A segunda é a inspirada em LLM (HSTU, OneRec). A terceira é a nativa de LLM (TIGER, PLUM), que adapta um modelo base que já raciocina. A quarta é a agêntica, em que LLMs orquestram planejamento, busca, ranqueamento e crítica em loop.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/lIgdnF0s0kQ/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A maior parte da indústria está na curva 2 e tenta chegar à 3.</span><a class="minuto" href="https://www.youtube.com/watch?v=lIgdnF0s0kQ&amp;t=382s" target="_blank" rel="noopener" aria-label="Assistir a partir de 06:22 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:22</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Semantic IDs comprimem um Reel em cerca de 10 tokens</h3>
+    <p>Um vídeo de três minutos viraria uns 10.000 tokens e estouraria a janela de contexto. Com semantic IDs, ele vira cerca de 10. Vídeos parecidos compartilham o prefixo: os primeiros tokens indicam esporte e tênis, e o último distingue o vídeo. Isso dá ao modelo uma representação estável, em vez de um hash que ele só decora.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/lIgdnF0s0kQ/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Conteúdo parecido gera IDs com prefixo em comum.</span><a class="minuto" href="https://www.youtube.com/watch?v=lIgdnF0s0kQ&amp;t=610s" target="_blank" rel="noopener" aria-label="Assistir a partir de 10:10 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:10</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Re-ranker com chain of thought que dá para ler</h3>
+    <p>No pós-treino, o modelo recebe dados do usuário e 30 vídeos candidatos e devolve os 5 melhores. Como ele entende inglês e recomendação, escreve o raciocínio: interesses do usuário, estilo de engajamento e afinidade com criadores. Isso permite inspecionar por que o feed decidiu algo e abre espaço para feeds que o usuário controla com linguagem natural, como o Your Algorithm do Instagram.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/lIgdnF0s0kQ/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O raciocínio do ranqueador aparece em texto e pode ser auditado.</span><a class="minuto" href="https://www.youtube.com/watch?v=lIgdnF0s0kQ&amp;t=700s" target="_blank" rel="noopener" aria-label="Assistir a partir de 11:40 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>11:40</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Por que feed custa até 100x menos que chat</h3>
+    <p>Feeds usam modelos de 1 a 10 bilhões de parâmetros ativos e produzem um semantic ID, que aponta para conteúdo enviado por criadores. Apps de chat usam 10 a 100 bilhões e geram milhares de tokens por turno, todos fabricados na hora. Por hora de engajamento, Tandon estima que o feed gasta até 100 vezes menos computação.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/lIgdnF0s0kQ/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A saída de um feed é um ponteiro, a de um chat é texto gerado.</span><a class="minuto" href="https://www.youtube.com/watch?v=lIgdnF0s0kQ&amp;t=925s" target="_blank" rel="noopener" aria-label="Assistir a partir de 15:25 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:25</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=lIgdnF0s0kQ&amp;t=255s" target="_blank" rel="noopener"><strong>30%</strong><span>alta anual no tempo assistido de Instagram Reels</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:15</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=lIgdnF0s0kQ&amp;t=601s" target="_blank" rel="noopener"><strong>10.000 a 10</strong><span>tokens de um Reel de 3 min antes e depois do semantic ID</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:01</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=lIgdnF0s0kQ&amp;t=949s" target="_blank" rel="noopener"><strong>até 100x</strong><span>feed mais barato que chat por hora de engajamento</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:49</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=lIgdnF0s0kQ&amp;t=980s" target="_blank" rel="noopener"><strong>4 de 10</strong><span>apps mais usados do mundo que são feeds de conteúdo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>16:20</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O palestrante lidera pesquisa de recomendação no Meta e vende a tese de que esse é o maior app de IA, o que é um conflito de interesse claro. O número de até 100x menos custo por hora de engajamento vem sem método, sem fonte e sem números de custo reais. A comparação ignora que feeds dependem de um catálogo enorme de conteúdo de criadores e de anos de infraestrutura. Os ganhos de 30% em Reels vêm de earnings calls e misturam várias mudanças, sem isolar o efeito do LLM.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Ao avaliar um projeto de IA de consumo, use o flywheel do talk (treino, inferência, engajamento, monetização) para checar se cada token gasto vira receita.</li><li>Se sua empresa tem catálogo de produtos ou conteúdos, estude semantic IDs como alternativa a IDs em hash para representar itens em modelos.</li><li>Peça a fornecedores de recomendação que mostrem o raciocínio do ranqueamento em texto, para auditar por que um item foi promovido.</li><li>Trate a comparação de 100x de custo como hipótese e peça o custo por hora de engajamento medido antes de basear decisões nela.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="lIgdnF0s0kQ" aria-label="Marcar Why LLM Recommenders Will Be AI&#39;s Biggest Consumer App como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-2LRIAfng7eA">Próximo talk <span lang="en">Teaching LLMs to Speak Spotify</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-2LRIAfng7eA" data-tema="modelos">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">04</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Teaching LLMs to Speak Spotify</h2>
+      <p class="hand tese">Para o LLM recomendar catálogo próprio, ensine tokens novos ao modelo com o corpo congelado e avalie com juízes ancorados no perfil do usuário.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Modelos</span>
+    <span class="chip">19:40</span>
+    <span class="chip" role="img" aria-label="Complexidade 4 de 5">nível ●●●●○</span>
+<span class="chip">Yves Raimond &amp; Jacqueline Wood, Spotify</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=2LRIAfng7eA" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>O Spotify reconstruiu seu sistema de recomendação em torno de um LLM, chamado internamente de Large Taste Model, que recomenda, explica e gera experiências que o usuário pode conduzir em linguagem natural.</p><p>Jacqueline Wood mostra a receita NEO, em quatro etapas, que adiciona semantic IDs (identificadores semânticos) ao vocabulário de um LLM aberto como o Qwen e congela o modelo base para ele não esquecer como falar.</p><p>Ela também defende avaliar com LLMs como juízes, desde que eles recebam perfis e comportamento reais dos usuários, o que aumentou a concordância com humanos, principalmente em buscas ambíguas.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-2LRIAfng7eA-semantic-id"><strong>Semantic ID</strong> <span>identificador semântico</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-2LRIAfng7eA-domain-grounding"><strong>Domain grounding</strong> <span>ancoragem de domínio</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-2LRIAfng7eA-catastrophic-forgetting"><strong>Catastrophic forgetting</strong> <span>esquecimento catastrófico</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-2LRIAfng7eA-beam-search"><strong>Beam search</strong> <span>busca em feixe</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-2LRIAfng7eA-constrained-decoding"><strong>Constrained decoding</strong> <span>decodificação restrita</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-instruction-tuning-multitarefa"><strong>Instruction tuning multitarefa</strong> <span>ajuste por instruções em várias tarefas</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-cold-start"><strong>Cold start</strong> <span>partida a frio (item sem histórico)</span></a></li><li><a href="../glossario.html#g-llm-as-a-judge"><strong>LLM as a judge</strong> <span>LLM como juiz de avaliação</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Recomendação que vira conversa</h3>
+    <p>O Spotify passou de curadoria manual para recomendação em escala e agora para personalização generativa. O usuário conduz o DJ, escreve prompts para montar playlists e edita o próprio perfil de gosto em linguagem natural. A promessa é trocar o palpite de uma caixa-preta por raciocínio que o usuário enxerga e corrige.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/2LRIAfng7eA/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Prompts livres controlam o algoritmo de recomendação inteiro.</span><a class="minuto" href="https://www.youtube.com/watch?v=2LRIAfng7eA&amp;t=281s" target="_blank" rel="noopener" aria-label="Assistir a partir de 04:41 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:41</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Taste profile editável</h3>
+    <p>O taste profile mostra em texto o que o sistema entendeu sobre você. Yves Raimond dá o exemplo de pedir que músicas da Disney, ouvidas pelos filhos em aparelhos compartilhados, não entrem no gosto dele. O perfil vira um ponto de controle direto do usuário, além de aceitar metas, como aprender um idioma.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/2LRIAfng7eA/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O usuário corrige o que o modelo pensa dele, em texto.</span><a class="minuto" href="https://www.youtube.com/watch?v=2LRIAfng7eA&amp;t=342s" target="_blank" rel="noopener" aria-label="Assistir a partir de 05:42 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:42</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>NEO em quatro etapas</h3>
+    <p>A receita começa criando semantic IDs a partir de embeddings de conteúdo e adicionando esses tokens ao vocabulário de um LLM aberto. Depois vem o domain grounding com o modelo congelado, em que só os novos tokens aprendem. A terceira etapa descongela tudo e faz instruction tuning em várias tarefas do Spotify. A quarta, opcional, é pós-treino como RL.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/2LRIAfng7eA/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>As quatro etapas do treino e o que fica congelado em cada uma.</span><a class="minuto" href="https://www.youtube.com/watch?v=2LRIAfng7eA&amp;t=592s" target="_blank" rel="noopener" aria-label="Assistir a partir de 09:52 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:52</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Congelar preserva a linguagem</h3>
+    <p>Nas ablações, fazer continued pre-training (pré-treino continuado) no lugar do domain grounding mal mudou o desempenho nas tarefas do Spotify. Mas a capacidade de linguagem natural e conhecimento de mundo do modelo caiu para perto de zero. Congelar o backbone manteve essas habilidades. Segundo Jacqueline, o resultado se repetiu com Llama.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/2LRIAfng7eA/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O pré-treino continuado zera a habilidade de linguagem, o congelamento a mantém.</span><a class="minuto" href="https://www.youtube.com/watch?v=2LRIAfng7eA&amp;t=800s" target="_blank" rel="noopener" aria-label="Assistir a partir de 13:20 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:20</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Juízes LLM precisam de contexto</h3>
+    <p>Métricas offline clássicas dizem se o usuário interagiu, mas não se a recomendação ou a explicação faz sentido. O time usa LLMs como juízes e os ancora em perfis textuais e em comportamento passado do usuário. Em buscas ambíguas, a concordância com humanos subiu 91%, contra 5% no geral.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/2LRIAfng7eA/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O ganho do grounding aparece sobretudo nos casos ambíguos.</span><a class="minuto" href="https://www.youtube.com/watch?v=2LRIAfng7eA&amp;t=1067s" target="_blank" rel="noopener" aria-label="Assistir a partir de 17:47 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>17:47</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=2LRIAfng7eA&amp;t=47s" target="_blank" rel="noopener"><strong>760 milhões</strong><span>usuários ativos mensais do Spotify em 184 mercados</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>00:47</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=2LRIAfng7eA&amp;t=447s" target="_blank" rel="noopener"><strong>1 em 4</strong><span>assinantes Premium nos EUA usam o sistema por dia</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:27</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=2LRIAfng7eA&amp;t=850s" target="_blank" rel="noopener"><strong>98%</strong><span>semantic IDs válidos sem constrained decoding</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:10</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=2LRIAfng7eA&amp;t=1085s" target="_blank" rel="noopener"><strong>91%</strong><span>ganho de concordância do juiz em buscas ambíguas</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>18:05</span></a>
+  </div>
+
+  <div class="casper" id="a-2LRIAfng7eA-semantic-id">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Semantic ID (identificador semântico).</strong> Um semantic ID é como o código de localização de um livro na biblioteca, em que livros de assuntos parecidos recebem códigos parecidos e ficam na mesma estante.</p>
+    <ol class="passos"><li>O modelo de linguagem conhece palavras, mas não conhece cada música ou podcast do catálogo. Ele precisa de um nome curto para cada item.</li><li>O Spotify já tem um embedding (vetor de números que resume o conteúdo) para cada episódio ou faixa. Itens parecidos têm vetores próximos.</li><li>Um algoritmo de quantization (quantização, que arredonda valores contínuos para poucas opções) transforma cada vetor em uma sequência curta de códigos fixos.</li><li>Esses códigos viram tokens (pedaços que o modelo lê e escreve) especiais, adicionados ao vocabulário de um LLM aberto como o Qwen.</li><li>Depois do treino, o modelo recebe o histórico do usuário nesses códigos e responde com o código do item recomendado junto de uma explicação em texto.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>EMBEDDING DO ITEM</strong><span>Vetor que resume o conteúdo</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>QUANTIZAÇÃO</strong><span>Vetor vira poucos códigos fixos</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>NOVOS TOKENS</strong><span>Códigos entram no vocabulário do LLM</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>LLM FALA O CATÁLOGO</strong><span>Recomenda item e explica em texto</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-embedding">Embedding</a>, <a href="../glossario.html#g-token">Token</a>, <a href="../glossario.html#g-vocabulario-de-um-llm">Vocabulário de um LLM</a>, <a href="../glossario.html#g-quantizacao">Quantização</a></p>  </div>
+  <div class="casper" id="a-2LRIAfng7eA-domain-grounding">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Domain grounding (ancoragem de domínio).</strong> O domain grounding é como um funcionário experiente que só decora o nome dos produtos novos da loja, sem mudar o jeito de atender o cliente.</p>
+    <ol class="passos"><li>Os tokens novos chegam ao modelo sem significado. O modelo precisa aprender o que cada um quer dizer.</li><li>Nesta etapa, o modelo treina em pares que ligam semantic ID a texto e texto a semantic ID, nos dois sentidos e em combinações.</li><li>O backbone (corpo principal do modelo, com seus pesos originais) fica congelado. Só os embeddings dos tokens novos mudam.</li><li>Assim, cada token novo passa a ocupar um lugar coerente no mesmo espaço onde o modelo já guarda o significado das palavras.</li><li>No talk, essa é a segunda etapa do NEO. Ela vem antes do ajuste por instruções, quando o modelo inteiro é descongelado.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>TOKENS SEM SENTIDO</strong><span>Semantic IDs recém-adicionados</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>CONGELA O BACKBONE</strong><span>Pesos originais não mudam</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>TREINO ID E TEXTO</strong><span>Pares nos dois sentidos</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>TOKENS ALINHADOS</strong><span>IDs no espaço das palavras</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-semantic-id">Semantic ID</a>, <a href="../glossario.html#g-embedding">Embedding</a>, <a href="../glossario.html#g-fine-tuning">Fine-tuning</a>, <a href="../glossario.html#g-pesos-de-um-modelo">Pesos de um modelo</a></p>  </div>
+  <div class="casper" id="a-2LRIAfng7eA-catastrophic-forgetting">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Catastrophic forgetting (esquecimento catastrófico).</strong> O catastrophic forgetting é como um estudante que passa o mês só decorando fórmulas de química e volta sem conseguir escrever uma redação.</p>
+    <ol class="passos"><li>Quando você treina um modelo em um assunto novo, ele pode perder o que já sabia fazer bem.</li><li>Isso acontece porque o treino novo ajusta os mesmos pesos que guardavam as habilidades antigas, como gramática e conhecimento geral.</li><li>No teste do Spotify, o continued pre-training (pré-treino continuado em dados do domínio) levou a habilidade de linguagem do modelo para perto de zero.</li><li>Congelar o backbone e treinar só os tokens novos manteve a linguagem intacta. O time repetiu o resultado com Qwen e com Llama.</li></ol>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-pesos-de-um-modelo">Pesos de um modelo</a>, <a href="../glossario.html#g-fine-tuning">Fine-tuning</a>, <a href="../glossario.html#g-pre-treino">Pré-treino</a></p>  </div>
+  <div class="casper" id="a-2LRIAfng7eA-beam-search">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Beam search (busca em feixe).</strong> O beam search é como planejar uma viagem guardando as três melhores rotas a cada cidade, em vez de seguir sempre a estrada que parece melhor na primeira placa.</p>
+    <ol class="passos"><li>O modelo gera a resposta um token por vez, e em cada passo existem muitas opções possíveis.</li><li>A escolha gulosa pega só a opção mais provável em cada passo e pode terminar em um caminho ruim no total.</li><li>O beam search mantém um número fixo de sequências candidatas, o feixe, e a cada passo estende todas e guarda as melhores.</li><li>No fim, ele entrega a sequência com a maior probabilidade somada. Isso custa mais tempo de resposta.</li><li>O Spotify comparou com top-p sampling (sorteio entre as opções mais prováveis) e viu queda clara de acerto, então aceitou a latência maior do beam search.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>PRIMEIRO TOKEN</strong><span>Várias opções prováveis</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>GUARDA AS K MELHORES</strong><span>Feixe de sequências candidatas</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>ESTENDE E PODA</strong><span>Repete a cada novo token</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>MELHOR SEQUÊNCIA</strong><span>Maior probabilidade total</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-token">Token</a>, <a href="../glossario.html#g-probabilidade-do-proximo-token">Probabilidade do próximo token</a>, <a href="../glossario.html#g-latencia">Latência</a></p>  </div>
+  <div class="casper" id="a-2LRIAfng7eA-constrained-decoding">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Constrained decoding (decodificação restrita).</strong> O constrained decoding é como um cardápio de restaurante, em que o cliente escolhe à vontade, mas só entre os pratos que a cozinha sabe fazer.</p>
+    <ol class="passos"><li>Um modelo pode inventar um código que não corresponde a nenhum item real do catálogo.</li><li>O constrained decoding (decodificação restrita) bloqueia, a cada passo, os tokens que levariam a um código inexistente.</li><li>Para isso, o sistema consulta a lista de semantic IDs válidos e só deixa o modelo escolher continuações que existem nela.</li><li>No Spotify, o modelo acertou códigos válidos em 98% dos casos sem essa trava. A restrição adiciona um pouco de latência.</li><li>Ela ajuda quando você quer limitar o tipo de item, por exemplo recomendar só conteúdo novo para o usuário.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>MODELO PROPÕE TOKENS</strong><span>Várias continuações possíveis</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>FILTRO DE VÁLIDOS</strong><span>Consulta a lista de IDs reais</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>BLOQUEIA OS INVÁLIDOS</strong><span>Probabilidade vai a zero</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>ID REAL GARANTIDO</strong><span>Item existe no catálogo</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-semantic-id">Semantic ID</a>, <a href="../glossario.html#g-token">Token</a>, <a href="../glossario.html#g-beam-search">Beam search</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é em boa parte vitrine de produto do Spotify. Os ganhos de autoplay, descoberta de podcasts e mensagens do DJ são descritos como sizable ou huge, sem números, base de comparação ou tamanho de teste. O dado de um em cada quatro assinantes usar o sistema não separa curiosidade de retenção. As ablações têm métricas só em slides e a alegação de ser o primeiro sistema a reunir todas essas capacidades vem da própria equipe.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Se você constrói recomendação ou busca com LLM, teste primeiro congelar o modelo base ao ensinar vocabulário novo e meça se a linguagem geral do modelo se manteve.</li><li>Ao usar um LLM como juiz, passe a ele o perfil do usuário e exemplos de comportamento passado e compare a concordância com avaliadores humanos antes de confiar na nota.</li><li>Separe a avaliação de casos ambíguos do resto do conjunto de teste, porque foi ali que o grounding trouxe o maior ganho segundo o talk.</li><li>Ao comprar ou avaliar um recurso de personalização com IA, peça a base de comparação e o tamanho do teste por trás de afirmações como ganhos sizable.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="2LRIAfng7eA" aria-label="Marcar Teaching LLMs to Speak Spotify como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#fim">Fechar a edição <span aria-hidden="true">↓</span></a>
+  </footer>
+</article>
+      <section class="fim-edicao card" id="fim" aria-labelledby="fim-titulo">
+        <h2 id="fim-titulo">Fim da edição</h2>
+        <span class="progresso" data-ids="LlgiOCmFG_w ACPEpji5NV4 lIgdnF0s0kQ 2LRIAfng7eA"></span>
+        <p>Termos novos no glossário:
+<a href="../glossario.html#g-aprendizado-contrastivo-de-duas-torres">Aprendizado contrastivo de duas torres</a>, <a href="../glossario.html#g-beam-search">Beam search</a>, <a href="../glossario.html#g-catastrophic-forgetting">Catastrophic forgetting</a>, <a href="../glossario.html#g-constrained-decoding">Constrained decoding</a>, <a href="../glossario.html#g-deep-module">Deep module</a>, <a href="../glossario.html#g-domain-grounding">Domain grounding</a>, <a href="../glossario.html#g-hard-negatives">Hard negatives</a>, <a href="../glossario.html#g-semantic-id">Semantic ID</a>.
+        </p>
+        <nav class="paginacao" aria-label="Outras edições">
+<a rel="prev" href="2026-09-24.html"><span class="paginacao-dir">← Edição anterior</span><strong>Robôs no mundo real: dados, corpo e confiabilidade</strong><span class="muted">quinta, 24 set 2026</span></a><a rel="next" class="proxima" href="2026-09-26.html"><span class="paginacao-dir">Próxima edição →</span><strong>Agentes que melhoram a si mesmos</strong><span class="muted">sábado, 26 set 2026</span></a>          <a class="voltar" href="../index.html#edicoes"><span class="paginacao-dir">Todas as edições</span><strong>Voltar ao início</strong></a>
+        </nav>
+      </section>
+    </div>
+  </div>
+</div>
+</main>
+<footer class="rodape wrap">
+  <p>Resumos em português dos talks do canal <a href="https://www.youtube.com/@aiDotEngineer" target="_blank" rel="noopener">AI Engineer</a>. Atualizado em 29 set 2026, 14:28. <a href="../status.html">Status da rotina</a></p>
+</footer>
+<script src="../app.js" defer></script>
+</body>
+</html>

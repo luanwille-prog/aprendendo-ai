@@ -39,6 +39,9 @@ def test_consolidar_video(tmp_path):
         assert im.width <= 960
     eval_, judge = v["conceitos"]
     assert eval_["analogia"] is None and eval_["no_glossario"] is False
+    # todo termo entra no glossário, mesmo sem analogia, com as aparições
+    assert glossario["eval"]["analogia"] is None and glossario["eval"]["traducao"] == "avaliação"
+    assert [a["video_id"] for a in glossario["eval"]["aparicoes"]] == [VID]
     assert judge["analogia"].startswith("Um LLM como juiz")
     assert judge["desenho"]["nos"][0]["rotulo"] == "CRITÉRIOS"
     assert glossario["llm-as-judge"]["video_id"] == VID
@@ -48,11 +51,25 @@ def test_consolidar_video(tmp_path):
 
 def test_conceito_ja_no_glossario_nao_e_sobrescrito(tmp_path):
     pasta = _pasta(tmp_path)
-    glossario = {"eval": {"chave": "eval", "nome": "eval", "video_id": "outro000001"},
-                 "llm-as-judge": {"chave": "llm-as-judge", "nome": "LLM-as-judge", "video_id": "outro000001"}}
+    glossario = {"eval": {"chave": "eval", "nome": "eval", "analogia": "Uma prova.", "video_id": "outro000001"},
+                 "llm-as-judge": {"chave": "llm-as-judge", "nome": "LLM-as-judge", "analogia": "Um juiz.",
+                                  "video_id": "outro000001"}}
     v = consolidar.consolidar_video(pasta, "2026-09-28", tmp_path / "data", tmp_path / "site", glossario)
-    assert v["conceitos"][0]["no_glossario"] is True
+    assert v["conceitos"][0]["no_glossario"] is True  # explicado em outro vídeo
     assert glossario["llm-as-judge"]["video_id"] == "outro000001"
+    assert glossario["llm-as-judge"]["analogia"] == "Um juiz."
+    assert [a["video_id"] for a in glossario["eval"]["aparicoes"]] == [VID]
+
+
+def test_termo_basico_ganha_explicacao_depois(tmp_path):
+    pasta = _pasta(tmp_path)
+    glossario = {"llm-as-judge": {"chave": "llm-as-judge", "nome": "LLM-as-judge", "traducao": "juiz", "analogia": None,
+                                  "explicacao": [], "video_id": "outro000001", "video_titulo": "Outro", "edicao": "2026-09-20",
+                                  "aparicoes": [{"video_id": "outro000001", "video_titulo": "Outro", "edicao": "2026-09-20"}]}}
+    consolidar.consolidar_video(pasta, "2026-09-28", tmp_path / "data", tmp_path / "site", glossario)
+    g = glossario["llm-as-judge"]
+    assert g["analogia"].startswith("Um LLM como juiz") and g["video_id"] == VID
+    assert [a["video_id"] for a in g["aparicoes"]] == ["outro000001", VID]
 
 
 def test_sem_curadoria_usa_frame_do_meio(tmp_path):

@@ -1,0 +1,23 @@
+{% extends "_base.html.j2" %}
+{% block titulo %}Status da rotina · Aprendendo AI{% endblock %}
+{% block conteudo %}
+<header class="hero hero-curto">
+  <h1>Status da rotina</h1>
+  <p class="hand">o que a automação fez e o que ficou para trás</p>
+</header>
+<div class="status card">
+  <h2>Última execução</h2>
+  {% if execucao %}<p>{{ execucao.em_fmt }} · {{ execucao.videos }} {{ "vídeo publicado" if execucao.videos == 1 else "vídeos publicados" }}</p>{% else %}<p>Nenhuma execução registrada.</p>{% endif %}
+  <p>{{ total_videos }} talks resumidos em {{ total_edicoes }} {{ "edição" if total_edicoes == 1 else "edições" }}.</p>
+
+  <h2>Tentando de novo</h2>
+  {% if pendentes %}
+  <ul class="acoes">{% for p in pendentes %}<li><a href="https://www.youtube.com/watch?v={{ p.id }}" target="_blank" rel="noopener" lang="en">{{ p.titulo }}</a> ({{ p.tentativas }}/{{ MAX_TENTATIVAS }})</li>{% endfor %}</ul>
+  {% else %}<p>Nenhum vídeo pendente.</p>{% endif %}
+
+  <h2>Não processados</h2>
+  {% if abandonados %}
+  <ul class="acoes">{% for p in abandonados %}<li><a href="https://www.youtube.com/watch?v={{ p.id }}" target="_blank" rel="noopener" lang="en">{{ p.titulo }}</a></li>{% endfor %}</ul>
+  {% else %}<p>Nenhum vídeo desistido.</p>{% endif %}
+</div>
+{% endblock %}

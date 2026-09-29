@@ -2,31 +2,38 @@
 {% from "_video.html.j2" import bloco with context %}
 {% block titulo %}{{ titulo }} · Aprendendo AI{% endblock %}
 {% block conteudo %}
-<section class="edicao" id="e-{{ edicao }}">
-  <div class="edicao-head">
-    <span class="label">Edição · {{ data_fmt }} · {{ videos|length }} {{ "vídeo" if videos|length == 1 else "vídeos" }}</span>
+<div class="edicao" id="e-{{ edicao }}">
+  <header class="edicao-head">
     <h1 class="h-edicao">{{ titulo }}</h1>
+    <p class="meta">Edição de {{ data_fmt }} · {{ videos|length }} {{ "vídeo" if videos|length == 1 else "vídeos" }} · {{ duracao_fmt }} de talks</p>
     {% if dia %}<p class="abertura">{{ dia.abertura }}</p>{% endif %}
+  </header>
+
+  <div class="edicao-corpo">
+    <nav class="indice card" aria-label="Ordem de leitura">
+      <p class="indice-titulo">Ordem de leitura</p>
+      <ol>{% for v in videos %}<li data-id="{{ v.id }}"><a href="#v-{{ v.id }}" lang="en">{{ v.titulo_curto }}</a> <span class="muted">{{ v.duracao|tempo }}</span></li>{% endfor %}</ol>
+      <span class="progresso" data-ids="{{ videos|map(attribute='id')|join(' ') }}"></span>
+    </nav>
+
+    <div class="talks">
+      {% for v in videos %}{{ bloco(v, loop.index, loop.nextitem) }}{% endfor %}
+
+      <section class="fim-edicao card" id="fim" aria-labelledby="fim-titulo">
+        <h2 id="fim-titulo">Fim da edição</h2>
+        <span class="progresso" data-ids="{{ videos|map(attribute='id')|join(' ') }}"></span>
+        {% if dia and dia.conceitos_novos %}
+        <p>Termos novos no glossário:
+          {% for c in dia.conceitos_novos %}<a href="{{ raiz }}glossario.html#g-{{ c|lower|slug }}">{{ c }}</a>{% if not loop.last %}, {% endif %}{% endfor %}.
+        </p>
+        {% endif %}
+        <nav class="paginacao" aria-label="Outras edições">
+          {% if anterior %}<a rel="prev" href="{{ anterior.edicao }}.html"><span class="paginacao-dir">← Edição anterior</span><strong>{{ anterior.titulo }}</strong><span class="muted">{{ anterior.data_fmt }}</span></a>{% endif %}
+          {% if proxima %}<a rel="next" class="proxima" href="{{ proxima.edicao }}.html"><span class="paginacao-dir">Próxima edição →</span><strong>{{ proxima.titulo }}</strong><span class="muted">{{ proxima.data_fmt }}</span></a>{% endif %}
+          <a class="voltar" href="{{ raiz }}index.html#edicoes"><span class="paginacao-dir">Todas as edições</span><strong>Voltar ao início</strong></a>
+        </nav>
+      </section>
+    </div>
   </div>
-
-  {% if temas|length > 1 %}
-  <div class="filtro" role="group" aria-label="Filtrar por tema">
-    <button type="button" data-tema="" aria-pressed="true">Todos</button>
-    {% for t in temas %}<button type="button" data-tema="{{ t }}" aria-pressed="false">{{ TEMAS.get(t, t) }}</button>{% endfor %}
-  </div>
-  {% endif %}
-
-  <nav class="card ordem" aria-label="Ordem de leitura">
-    <span class="label">Ordem de leitura</span>
-    <ol>{% for v in videos %}<li><a href="#v-{{ v.id }}">{{ v.titulo_curto }}</a> <span class="muted">· {{ v.duracao|tempo }}</span></li>{% endfor %}</ol>
-    <span class="progresso" data-ids="{{ videos|map(attribute='id')|join(' ') }}"></span>
-  </nav>
-
-  {% for v in videos %}{{ bloco(v, loop.index) }}{% endfor %}
-
-  <nav class="paginacao" aria-label="Outras edições">
-    {% if anterior %}<a rel="prev" href="{{ anterior.edicao }}.html"><span class="label">← Edição anterior</span><strong>{{ anterior.titulo }}</strong><span class="muted">{{ anterior.data_fmt }}</span></a>{% else %}<span></span>{% endif %}
-    {% if proxima %}<a rel="next" class="proxima" href="{{ proxima.edicao }}.html"><span class="label">Próxima edição →</span><strong>{{ proxima.titulo }}</strong><span class="muted">{{ proxima.data_fmt }}</span></a>{% endif %}
-  </nav>
-</section>
+</div>
 {% endblock %}

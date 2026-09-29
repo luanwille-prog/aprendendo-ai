@@ -8,37 +8,50 @@
 
 {% if atual %}
 <section class="destaque card" aria-labelledby="destaque-titulo">
-  <span class="label">Última edição · {{ atual.data_fmt }} · {{ atual.videos|length }} {{ "vídeo" if atual.videos|length == 1 else "vídeos" }}</span>
   <h2 id="destaque-titulo">{{ atual.titulo }}</h2>
+  <p class="meta">Última edição · {{ atual.data_fmt }} · {{ atual.videos|length }} {{ "vídeo" if atual.videos|length == 1 else "vídeos" }} · {{ atual.duracao_fmt }} de talks</p>
   {% if atual.dia %}<p class="abertura">{{ atual.dia.abertura }}</p>{% endif %}
   <ol class="lista-talks">
     {% for v in atual.videos %}
-    <li><a href="edicoes/{{ atual.edicao }}.html#v-{{ v.id }}">{{ v.titulo_curto }}</a> <span class="muted">· {{ TEMAS.get(v.tema, v.tema) }} · {{ v.duracao|tempo }}</span></li>
+    <li><a href="edicoes/{{ atual.edicao }}.html#v-{{ v.id }}" lang="en">{{ v.titulo_curto }}</a> <span class="muted">· {{ TEMAS.get(v.tema, v.tema) }} · {{ v.duracao|tempo }}</span></li>
     {% endfor %}
   </ol>
   <div class="destaque-rodape">
-    <a class="botao" href="edicoes/{{ atual.edicao }}.html">Ler a edição →</a>
+    <a class="botao" href="edicoes/{{ atual.edicao }}.html">Ler a edição</a>
+    <a id="continuar" class="continuar js-only" hidden href="edicoes/{{ atual.edicao }}.html#v-{{ atual.videos[0].id }}" data-talks='{{ talks|tojson }}'>Continuar de onde parei</a>
     <span class="progresso" data-ids="{{ atual.videos|map(attribute='id')|join(' ') }}"></span>
   </div>
 </section>
 {% else %}
-<p class="card">Nenhuma edição publicada ainda.</p>
+<p class="card vazio">Nenhuma edição publicada ainda. A rotina roda todo dia às 7h.</p>
 {% endif %}
 
-{% if edicoes %}
-<section id="edicoes" class="secao">
-  <h2>Todas as edições</h2>
+{% if semanas %}
+<section id="edicoes" class="secao" aria-labelledby="edicoes-titulo">
+  <h2 id="edicoes-titulo">Edições anteriores</h2>
   <p class="hand">cada dia de talks vira uma aula</p>
-  <div class="cartoes">
-    {% for e in edicoes %}
-    <a class="cartao" href="edicoes/{{ e.edicao }}.html">
-      <span class="label">{{ e.data_fmt }}</span>
-      <h3>{{ e.titulo }}</h3>
-      <span class="cartao-info">{{ e.videos|length }} {{ "vídeo" if e.videos|length == 1 else "vídeos" }} · {{ e.temas|join(", ") }}</span>
-      <span class="progresso" data-ids="{{ e.videos|map(attribute='id')|join(' ') }}"></span>
-    </a>
-    {% endfor %}
+  {% if temas_todos|length > 1 %}
+  <div class="filtro js-only" role="group" aria-label="Filtrar edições por tema">
+    <button type="button" data-tema="" aria-pressed="true">Todos os temas</button>
+    {% for t in temas_todos %}<button type="button" data-tema="{{ t }}" aria-pressed="false">{{ TEMAS.get(t, t) }}</button>{% endfor %}
   </div>
+  <p class="filtro-status" role="status" aria-live="polite"></p>
+  {% endif %}
+  {% for semana in semanas %}
+  <div class="semana">
+    <h3 class="semana-titulo">{{ semana.rotulo }}</h3>
+    <div class="cartoes">
+      {% for e in semana.edicoes %}
+      <a class="cartao" href="edicoes/{{ e.edicao }}.html" data-temas="{{ e.temas_ids|join(' ') }}">
+        <span class="cartao-data">{{ e.data_fmt }}</span>
+        <span class="cartao-titulo">{{ e.titulo }}</span>
+        <span class="cartao-info">{{ e.videos|length }} {{ "vídeo" if e.videos|length == 1 else "vídeos" }} · {{ e.temas|join(", ") }}</span>
+        <span class="progresso" data-ids="{{ e.videos|map(attribute='id')|join(' ') }}"></span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
 </section>
 {% endif %}
 {% endblock %}

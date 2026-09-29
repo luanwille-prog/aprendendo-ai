@@ -3,50 +3,1159 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
 <title>Glossário · Aprendendo AI</title>
 <meta name="description" content="Resumos diários dos talks do canal AI Engineer, explicados no estilo Quadro Anotado.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<script>document.documentElement.classList.add("js")</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;500;700;900&family=Barlow:ital,wght@0,400;0,600;1,400&family=Covered+By+Your+Grace&display=swap">
 <link rel="stylesheet" href="estilo.css">
 </head>
 <body>
-<main class="wrap">
-  <nav class="topo" aria-label="Navegação principal">
-    <a class="marca" href="index.html">Aprendendo <span>AI</span></a>
-    <span class="topo-links">
-      <a href="index.html#edicoes">Edições</a>
-      <a href="glossario.html" aria-current="page">Glossário</a>
-    </span>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<header class="topo wrap">
+  <a class="marca" href="index.html">Aprendendo <span>AI</span></a>
+  <nav class="topo-links" aria-label="Navegação principal">
+    <a href="index.html#edicoes">Edições</a>
+    <a href="glossario.html" aria-current="page">Glossário</a>
   </nav>
-<header class="hero hero-curto">
-  <span class="label">3 conceitos explicados</span>
-  <h1>Glossário</h1>
-  <p class="hand">tudo que você já estudou, em ordem alfabética</p>
 </header>
-<div class="glossario">
-  <div class="casper" id="g-n-1-query">
-    <span class="tag">N+1 query</span>
-    <p><em>consulta repetida ao banco em laço.</em> Uma N+1 query é como um garçom que anota a mesa inteira, mas vai à cozinha buscar um prato por vez, fazendo dez viagens quando uma bandeja resolveria.</p>
-    <ol class="passos"><li>Um programa guarda dados num banco de dados (database) e busca esses dados fazendo perguntas chamadas consultas (queries). Cada consulta é uma ida e volta que custa tempo.</li><li>O problema aparece quando o código faz 1 consulta para pegar uma lista e depois faz mais 1 consulta para cada item dessa lista. Com N itens, o total vira N+1 consultas.</li><li>Exemplo: mostrar 100 pedidos e buscar o cliente de cada pedido um por um gera 101 consultas, quando 2 bastariam.</li><li>Com poucos dados de teste o atraso passa despercebido. Em produção, com milhares de linhas, a página fica lenta e o banco fica sobrecarregado.</li><li>A correção junta as buscas num lote só, com um JOIN (junção de tabelas) ou com carregamento antecipado (eager loading) do ORM. O talk usou esse termo para medir padrões de erro por agente.</li></ol>
-    <p class="pre">Apareceu em <a href="edicoes/2026-09-27.html#v-474j-n1Ltxc">AI-Generated Code Is Already Competing With Human Code</a></p>
+<main id="conteudo" class="wrap" tabindex="-1">
+<header class="hero hero-curto">
+  <h1>Glossário</h1>
+  <p class="meta">218 termos · 66 com analogia</p>
+  <p class="hand">tudo que apareceu nos talks, em ordem alfabética</p>
+</header>
+
+<div class="glossario-ferramentas">
+  <div class="busca js-only">
+    <label for="busca">Buscar termo</label>
+    <input id="busca" type="search" placeholder="ex.: harness, eval, world model" autocomplete="off" spellcheck="false">
+    <p class="busca-status" role="status" aria-live="polite"></p>
   </div>
-  <div class="casper" id="g-rollout">
-    <span class="tag">Rollout</span>
-    <p><em>execução de um modelo sobre uma tarefa de avaliação.</em> Um rollout é como uma rodada de prova em que o aluno resolve a lista inteira de exercícios e entrega a folha para correção.</p>
-    <ol class="passos"><li>Para saber se um modelo de IA melhorou, a equipe entrega a ele uma lista fixa de tarefas de teste.</li><li>Cada vez que o modelo tenta resolver essas tarefas do começo ao fim, temos um rollout (execução completa sobre a tarefa).</li><li>Os pesquisadores rodam vários rollouts da versão atual (controle) e da versão nova (experimento) e guardam os resultados em duas tabelas.</li><li>Na eval side-by-side (avaliação lado a lado), eles comparam as tabelas para achar a diferença de desempenho e o motivo dela.</li><li>No exemplo do talk, o agente calcula essa diferença, propõe 100 hipóteses e cria um subagente para investigar cada uma em paralelo.</li></ol>
-    <p class="pre">Apareceu em <a href="edicoes/2026-09-27.html#v-buHC7bQE1X4">Get Out of the Model&#39;s Way</a></p>
-  </div>
-  <div class="casper" id="g-sidecar">
-    <span class="tag">Sidecar</span>
-    <p><em>processo auxiliar que escuta eventos externos.</em> Um sidecar é como o porteiro de um prédio, que passa o dia na portaria atento a entregas e visitas e avisa o morador assim que algo chega.</p>
-    <ol class="passos"><li>Um agente de IA costuma agir só quando alguém manda uma mensagem para ele.</li><li>O sidecar (processo auxiliar) é um programa que fica ligado o tempo todo ao lado do agente, apenas escutando.</li><li>Ele observa o mundo externo, como mensagens SMS, webhooks (avisos automáticos enviados por outros sistemas), horários agendados (cron) e pull requests no GitHub.</li><li>O próprio modelo configura gatilhos nesse sidecar, por exemplo pedir para revisar o código sempre que chegar um pull request novo.</li><li>No Antigravity, as tarefas agendadas já rodam sobre sidecars, e o Google promete publicar a especificação desse protocolo de plug-in para outros desenvolvedores.</li></ol>
-    <p class="pre">Apareceu em <a href="edicoes/2026-09-27.html#v-buHC7bQE1X4">Get Out of the Model&#39;s Way</a></p>
-  </div>
+  <nav class="letras" aria-label="Ir para a letra">
+<a href="#letra-A">A</a><a href="#letra-B">B</a><a href="#letra-C">C</a><a href="#letra-D">D</a><a href="#letra-E">E</a><a href="#letra-F">F</a><a href="#letra-G">G</a><a href="#letra-H">H</a><a href="#letra-I">I</a><a href="#letra-K">K</a><a href="#letra-L">L</a><a href="#letra-M">M</a><a href="#letra-N">N</a><a href="#letra-O">O</a><a href="#letra-P">P</a><a href="#letra-Q">Q</a><a href="#letra-R">R</a><a href="#letra-S">S</a><a href="#letra-T">T</a><a href="#letra-V">V</a><a href="#letra-W">W</a><a href="#letra-Z">Z</a>  </nav>
 </div>
-  <footer class="rodape">
-<p>Última execução: 29 set 2026, 12:13 · 2 vídeos</p>  </footer>
+<section class="letra" id="letra-A" aria-label="Letra A">
+  <p class="letra-titulo" aria-hidden="true">A</p>
+  <div class="glossario">
+    <article class="termo-card casper" id="g-acordo-minimo-versus-consenso" data-busca="acordo mínimo versus consenso aceitar se ao menos um juiz aprovar, ou só se todos aprovarem">
+      <h2 class="termo">Acordo mínimo versus consenso</h2>
+<p class="traducao">aceitar se ao menos um juiz aprovar, ou só se todos aprovarem</p>      <p class="analogia">Acordo mínimo é como uma banca de dois professores em que basta um deles aprovar o trabalho, e consenso é como exigir a assinatura dos dois.</p>
+      <ol class="passos"><li>Quando dois avaliadores olham o mesmo item, alguém precisa decidir o que fazer quando eles discordam.</li><li>No acordo mínimo (minimum agreement), o item entra se pelo menos um avaliador aprovar. No consenso (consensus), o item só entra se todos aprovarem.</li><li>No pipeline da Merve, dois VLMs juízes olham cada rótulo gerado. Um deles, o LFM, rejeita muito mais que o outro.</li><li>Com consenso, o juiz mais rígido derrubaria quase tudo e sobrariam poucos exemplos para treinar. Com poucos exemplos, o detector generaliza mal.</li><li>Por isso ela usou acordo mínimo, que guarda mais dados e aceita mais erro. Com um conjunto grande, o consenso passa a ser uma opção, porque ainda sobram exemplos depois do filtro.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-dKcTBQzR7jI" lang="en">Skill issue: stop deploying vision language models, use them with Skills</a></p>
+    </article>
+    <article class="termo-card card" id="g-action-based-video-indexing" data-busca="action-based video indexing indexação de vídeo por ação">
+      <h2 class="termo">Action-based video indexing</h2>
+<p class="traducao">indexação de vídeo por ação</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-I_VEh7XSwyc" lang="en">Physical AI&#39;s Next Bottleneck Is Finding the Right Video</a></p>
+    </article>
+    <article class="termo-card casper" id="g-action-conditioned-world-model" data-busca="action-conditioned world model modelo de mundo condicionado a ações">
+      <h2 class="termo">Action-conditioned world model</h2>
+<p class="traducao">modelo de mundo condicionado a ações</p>      <p class="analogia">Um modelo de mundo condicionado a ações é como um motorista experiente que, antes de virar o volante, já imagina onde o carro vai parar.</p>
+      <ol class="passos"><li>Pense em empurrar um copo na beira da mesa. Você prevê a queda sem precisar empurrar de verdade.</li><li>Um world model (modelo de mundo) faz isso para uma máquina. Ele guarda por dentro uma descrição resumida de como o mundo está agora, chamada estado.</li><li>A versão condicionada a ações recebe duas entradas, o estado atual e uma ação, e prevê qual novo estado vai surgir depois dessa ação.</li><li>Com essa previsão, o robô testa várias ações na cabeça e escolhe a melhor antes de agir. A ideia vem do reinforcement learning (aprendizado por reforço).</li><li>Manning critica geradores de vídeo como o Genie 3 porque eles preveem só a imagem. Sem objetos e regras por baixo, a previsão não serve de base para planejar.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-4Gqg0HVe-AY" lang="en">World Models Need Causality, Not Pretty Pixels</a></p>
+    </article>
+    <article class="termo-card card" id="g-active-learning" data-busca="active learning aprendizado ativo">
+      <h2 class="termo">Active learning</h2>
+<p class="traducao">aprendizado ativo</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-Sjfz1TqxzEs" lang="en">Robot Demos Are Easy. Reliability Is Hard</a></p>
+    </article>
+    <article class="termo-card card" id="g-aesthesis" data-busca="aesthesis percepção sensorial (raiz grega de estética)">
+      <h2 class="termo">Aesthesis</h2>
+<p class="traducao">percepção sensorial (raiz grega de estética)</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-jgWY66RaSrQ" lang="en">I Gave an AI a Body</a></p>
+    </article>
+    <article class="termo-card card" id="g-affordance" data-busca="affordance pista de uso que a forma de um objeto sugere">
+      <h2 class="termo">Affordance</h2>
+<p class="traducao">pista de uso que a forma de um objeto sugere</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-jgWY66RaSrQ" lang="en">I Gave an AI a Body</a></p>
+    </article>
+    <article class="termo-card card" id="g-agent-harness" data-busca="agent harness código que orquestra o agente, suas ferramentas e seu fluxo">
+      <h2 class="termo">Agent harness</h2>
+<p class="traducao">código que orquestra o agente, suas ferramentas e seu fluxo</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-OA-Mc60Rboo" lang="en">Beating RL With Reflection: GEPA and Optimize Anything</a>; <a href="edicoes/2026-09-26.html#v-XyV6bSMyq-I" lang="en">How We Built an Agent That Improves Itself</a>; <a href="edicoes/2026-09-23.html#v-0I07YAuF8xA" lang="en">From Ingestion to Agents: How AI Teams Build on Document Intelligence</a>; <a href="edicoes/2026-09-23.html#v-RQi7x-navxU" lang="en">Building the Document Context Layer for AI Agents</a></p>
+    </article>
+    <article class="termo-card card" id="g-agent-loop" data-busca="agent loop ciclo do agente">
+      <h2 class="termo">Agent loop</h2>
+<p class="traducao">ciclo do agente</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-7taOQBfjDyE" lang="en">The Loop Is the Product</a></p>
+    </article>
+    <article class="termo-card card" id="g-agent-manager" data-busca="agent manager painel para gerenciar vários agentes">
+      <h2 class="termo">Agent manager</h2>
+<p class="traducao">painel para gerenciar vários agentes</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-buHC7bQE1X4" lang="en">Get Out of the Model&#39;s Way</a></p>
+    </article>
+    <article class="termo-card card" id="g-agent-readiness" data-busca="agent readiness prontidão da base de código para agentes">
+      <h2 class="termo">Agent readiness</h2>
+<p class="traducao">prontidão da base de código para agentes</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-vGCJ7diEtrw" lang="en">What It Actually Takes to Build a Software Factory</a></p>
+    </article>
+    <article class="termo-card card" id="g-agent-recipe" data-busca="agent recipe receita de agente">
+      <h2 class="termo">Agent recipe</h2>
+<p class="traducao">receita de agente</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-7taOQBfjDyE" lang="en">The Loop Is the Product</a></p>
+    </article>
+    <article class="termo-card card" id="g-agent-skills" data-busca="agent skills arquivos de instrução que agentes de código carregam sob demanda">
+      <h2 class="termo">Agent skills</h2>
+<p class="traducao">arquivos de instrução que agentes de código carregam sob demanda</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-OA-Mc60Rboo" lang="en">Beating RL With Reflection: GEPA and Optimize Anything</a></p>
+    </article>
+    <article class="termo-card card" id="g-agent-teams" data-busca="agent teams times de agentes">
+      <h2 class="termo">Agent teams</h2>
+<p class="traducao">times de agentes</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-buHC7bQE1X4" lang="en">Get Out of the Model&#39;s Way</a></p>
+    </article>
+    <article class="termo-card card" id="g-agente-de-codigo-autonomo" data-busca="agente de código autônomo ia que recebe uma tarefa e abre o pr sozinha">
+      <h2 class="termo">Agente de código autônomo</h2>
+<p class="traducao">IA que recebe uma tarefa e abre o PR sozinha</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-474j-n1Ltxc" lang="en">AI-Generated Code Is Already Competing With Human Code</a></p>
+    </article>
+    <article class="termo-card casper" id="g-agentic-ocr" data-busca="agentic ocr ocr agêntico com correção por token">
+      <h2 class="termo">Agentic OCR</h2>
+<p class="traducao">OCR agêntico com correção por token</p>      <p class="analogia">Agentic OCR é como um revisor de prova que só troca a letra errada com caneta vermelha, sem reescrever a redação do aluno nem corrigir as contas dele.</p>
+      <ol class="passos"><li>Um programa lê a imagem de um documento e transforma em texto, mas às vezes confunde símbolos parecidos, como a letra O e o número zero.</li><li>Antes, uma equipe humana revisava esse texto e corrigia os erros. No Agentic OCR (OCR agêntico), um modelo de visão faz esse papel de revisor dentro do fluxo.</li><li>Primeiro, detectores pequenos marcam onde estão texto, tabela e letra de mão, e o VLM (modelo de linguagem com visão) lê as partes difíceis.</li><li>Depois, uma camada de verificação compara o texto com a imagem e aplica só correções pontuais por token (pedaço de texto), como ponto no lugar de vírgula.</li><li>Pedir ao modelo que reescreva tudo cria erros novos, porque ele tende a consertar o documento, por exemplo somando uma coluna e trocando um total que estava errado no original.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-0I07YAuF8xA" lang="en">From Ingestion to Agents: How AI Teams Build on Document Intelligence</a></p>
+    </article>
+    <article class="termo-card casper" id="g-alphaevolve" data-busca="alphaevolve laço evolutivo de geração e avaliação de ideias">
+      <h2 class="termo">AlphaEvolve</h2>
+<p class="traducao">laço evolutivo de geração e avaliação de ideias</p>      <p class="analogia">O AlphaEvolve é como um concurso de receitas em que vários cozinheiros propõem pratos, um jurado prova e só os melhores entram no cardápio do restaurante grande.</p>
+      <ol class="passos"><li>AlphaEvolve é um sistema do Google que busca soluções novas propondo muitas versões e guardando as melhores.</li><li>Na versão da Prime Intellect, vários modelos geradores, fechados e abertos, sugerem ideias de otimizador.</li><li>Cada ideia roda no speedrun, que devolve uma recompensa (reward) objetiva.</li><li>Um juiz, que pode ser um modelo ou uma pessoa, avalia se o método é bom e tem potencial.</li><li>As ideias aprovadas sobem de escala, com mais parâmetros e mais dados, para ver se continuam funcionando.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-oVsEddfhdxc" lang="en">We Let Claude Code and Codex Race Human Researchers</a></p>
+    </article>
+    <article class="termo-card card" id="g-analise-multivariada" data-busca="análise multivariada multivariate analysis">
+      <h2 class="termo">Análise multivariada</h2>
+<p class="traducao">multivariate analysis</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-ztlXKfPCT3Q" lang="en">You’re Not Thinking Big Enough: Rebuilding Food Systems with AI Agents</a></p>
+    </article>
+    <article class="termo-card casper" id="g-aprendizado-contrastivo-de-duas-torres" data-busca="aprendizado contrastivo de duas torres two-tower contrastive learning">
+      <h2 class="termo">Aprendizado contrastivo de duas torres</h2>
+<p class="traducao">Two-tower contrastive learning</p>      <p class="analogia">Aprendizado contrastivo de duas torres é como dois tradutores de um mercado, um para os pedidos dos clientes e outro para as etiquetas dos produtos, que treinam juntos até cada pedido cair ao lado do produto certo.</p>
+      <ol class="passos"><li>O sistema transforma cada busca e cada produto em uma lista de números, chamada vetor (embedding, representação numérica). Vetores próximos indicam coisas parecidas.</li><li>Duas torres (two towers) são dois modelos separados. Uma torre lê a busca do cliente, a outra lê o produto, e as duas geram vetores no mesmo espaço.</li><li>O treino contrastivo (contrastive learning, aprendizado por comparação) mostra pares certos e errados. Ele aproxima a busca dos itens relevantes e afasta a busca dos irrelevantes.</li><li>No DoorDash, os rótulos de 0 a 2 gerados pelo LLM guiam uma perda em vários níveis (multi-level supervised contrastive loss). Assim, um substituto fica mais perto que um item sem relação e mais longe que o item exato.</li><li>Os vetores dos produtos são calculados antes, em lote. Em produção, o sistema só calcula o vetor da busca e procura os vizinhos mais próximos, o que mantém a resposta rápida e barata.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-ACPEpji5NV4" lang="en">Distill the LLM, Don&#39;t Serve It: Search &amp; Personalization at DoorDash</a></p>
+    </article>
+    <article class="termo-card casper" id="g-autoresearch" data-busca="autoresearch pesquisa automática por experimentos">
+      <h2 class="termo">Autoresearch</h2>
+<p class="traducao">pesquisa automática por experimentos</p>      <p class="analogia">O autoresearch é como um aluno que testa um ajuste na receita do bolo, prova o resultado e só guarda a mudança se o bolo ficou melhor.</p>
+      <ol class="passos"><li>Você define um objetivo claro, como deixar um trecho de código mais rápido sem errar a conta.</li><li>Autoresearch (pesquisa automática) coloca um agente de IA para propor uma mudança por vez.</li><li>Um teste automático mede se a mudança continua correta e se ficou mais rápida.</li><li>Se passou, a mudança fica; se piorou, ela volta atrás, e o ciclo se repete até atingir a meta.</li><li>O método funciona bem em GPU kernels porque correção e velocidade são fáceis de medir, mas a ideia grande ainda vem do humano.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-x4e5O9zN0TE" lang="en">Long-Horizon Agents Need Experiments, Not Just Prompts</a>; <a href="edicoes/2026-09-26.html#v-vrDvatGtIxs" lang="en">Autoresearch Made Our Models 3x Faster</a>; <a href="edicoes/2026-09-26.html#v-hd7TOvmyAxU" lang="en">An AI Research Agent That Runs Your Experiments</a></p>
+    </article>
+  </div>
+</section>
+<section class="letra" id="letra-B" aria-label="Letra B">
+  <p class="letra-titulo" aria-hidden="true">B</p>
+  <div class="glossario">
+    <article class="termo-card card" id="g-balanced-scorecard" data-busca="balanced scorecard placar balanceado de métricas">
+      <h2 class="termo">Balanced scorecard</h2>
+<p class="traducao">placar balanceado de métricas</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-x4e5O9zN0TE" lang="en">Long-Horizon Agents Need Experiments, Not Just Prompts</a></p>
+    </article>
+    <article class="termo-card card" id="g-bare-metal" data-busca="bare metal máquina física, sem virtualização de nuvem">
+      <h2 class="termo">Bare metal</h2>
+<p class="traducao">máquina física, sem virtualização de nuvem</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-vrDvatGtIxs" lang="en">Autoresearch Made Our Models 3x Faster</a></p>
+    </article>
+    <article class="termo-card card" id="g-base-de-conhecimento" data-busca="base de conhecimento knowledge base">
+      <h2 class="termo">Base de conhecimento</h2>
+<p class="traducao">knowledge base</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-ztlXKfPCT3Q" lang="en">You’re Not Thinking Big Enough: Rebuilding Food Systems with AI Agents</a></p>
+    </article>
+    <article class="termo-card casper" id="g-beam-search" data-busca="beam search busca em feixe">
+      <h2 class="termo">Beam search</h2>
+<p class="traducao">busca em feixe</p>      <p class="analogia">O beam search é como planejar uma viagem guardando as três melhores rotas a cada cidade, em vez de seguir sempre a estrada que parece melhor na primeira placa.</p>
+      <ol class="passos"><li>O modelo gera a resposta um token por vez, e em cada passo existem muitas opções possíveis.</li><li>A escolha gulosa pega só a opção mais provável em cada passo e pode terminar em um caminho ruim no total.</li><li>O beam search mantém um número fixo de sequências candidatas, o feixe, e a cada passo estende todas e guarda as melhores.</li><li>No fim, ele entrega a sequência com a maior probabilidade somada. Isso custa mais tempo de resposta.</li><li>O Spotify comparou com top-p sampling (sorteio entre as opções mais prováveis) e viu queda clara de acerto, então aceitou a latência maior do beam search.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-2LRIAfng7eA" lang="en">Teaching LLMs to Speak Spotify</a></p>
+    </article>
+    <article class="termo-card card" id="g-behavioral-bug" data-busca="behavioral bug bug de comportamento do agente">
+      <h2 class="termo">Behavioral bug</h2>
+<p class="traducao">bug de comportamento do agente</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-hd7TOvmyAxU" lang="en">An AI Research Agent That Runs Your Experiments</a></p>
+    </article>
+    <article class="termo-card card" id="g-benchmark" data-busca="benchmark teste padronizado de desempenho">
+      <h2 class="termo">Benchmark</h2>
+<p class="traducao">teste padronizado de desempenho</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-9JFGohx4E7U" lang="en">GLM-5.2: Open Weights, Near-Frontier Intelligence</a>; <a href="edicoes/2026-09-23.html#v-A_I8mw8yfns" lang="en">The Best Models Still Reason Like Toddlers</a>; <a href="edicoes/2026-09-23.html#v-RQi7x-navxU" lang="en">Building the Document Context Layer for AI Agents</a></p>
+    </article>
+    <article class="termo-card card" id="g-biased-data" data-busca="biased data dado enviesado">
+      <h2 class="termo">Biased data</h2>
+<p class="traducao">dado enviesado</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-I_VEh7XSwyc" lang="en">Physical AI&#39;s Next Bottleneck Is Finding the Right Video</a></p>
+    </article>
+    <article class="termo-card card" id="g-biomassa" data-busca="biomassa biomass (quantidade de folhagem disponível para comer)">
+      <h2 class="termo">Biomassa</h2>
+<p class="traducao">biomass (quantidade de folhagem disponível para comer)</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-ztlXKfPCT3Q" lang="en">You’re Not Thinking Big Enough: Rebuilding Food Systems with AI Agents</a></p>
+    </article>
+    <article class="termo-card card" id="g-blast-radius" data-busca="blast radius raio de impacto">
+      <h2 class="termo">Blast radius</h2>
+<p class="traducao">raio de impacto</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-LlgiOCmFG_w" lang="en">Fixing the PR Bottleneck</a></p>
+    </article>
+    <article class="termo-card card" id="g-bottleneck" data-busca="bottleneck gargalo de computação, memória ou overhead">
+      <h2 class="termo">Bottleneck</h2>
+<p class="traducao">gargalo de computação, memória ou overhead</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-vrDvatGtIxs" lang="en">Autoresearch Made Our Models 3x Faster</a></p>
+    </article>
+  </div>
+</section>
+<section class="letra" id="letra-C" aria-label="Letra C">
+  <p class="letra-titulo" aria-hidden="true">C</p>
+  <div class="glossario">
+    <article class="termo-card casper" id="g-catastrophic-forgetting" data-busca="catastrophic forgetting esquecimento catastrófico">
+      <h2 class="termo">Catastrophic forgetting</h2>
+<p class="traducao">esquecimento catastrófico</p>      <p class="analogia">O catastrophic forgetting é como um estudante que passa o mês só decorando fórmulas de química e volta sem conseguir escrever uma redação.</p>
+      <ol class="passos"><li>Quando você treina um modelo em um assunto novo, ele pode perder o que já sabia fazer bem.</li><li>Isso acontece porque o treino novo ajusta os mesmos pesos que guardavam as habilidades antigas, como gramática e conhecimento geral.</li><li>No teste do Spotify, o continued pre-training (pré-treino continuado em dados do domínio) levou a habilidade de linguagem do modelo para perto de zero.</li><li>Congelar o backbone e treinar só os tokens novos manteve a linguagem intacta. O time repetiu o resultado com Qwen e com Llama.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-2LRIAfng7eA" lang="en">Teaching LLMs to Speak Spotify</a></p>
+    </article>
+    <article class="termo-card card" id="g-cerca-virtual" data-busca="cerca virtual virtual fence (limite desenhado por gps)">
+      <h2 class="termo">Cerca virtual</h2>
+<p class="traducao">virtual fence (limite desenhado por GPS)</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-ztlXKfPCT3Q" lang="en">You’re Not Thinking Big Enough: Rebuilding Food Systems with AI Agents</a></p>
+    </article>
+    <article class="termo-card card" id="g-chain-of-thought" data-busca="chain of thought cadeia de raciocínio escrita passo a passo pelo modelo">
+      <h2 class="termo">Chain of thought</h2>
+<p class="traducao">cadeia de raciocínio escrita passo a passo pelo modelo</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-lIgdnF0s0kQ" lang="en">Why LLM Recommenders Will Be AI&#39;s Biggest Consumer App</a></p>
+    </article>
+    <article class="termo-card card" id="g-classificacao-e-divisao-de-documentos" data-busca="classificação e divisão de documentos classify and split">
+      <h2 class="termo">Classificação e divisão de documentos</h2>
+<p class="traducao">classify and split</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-0I07YAuF8xA" lang="en">From Ingestion to Agents: How AI Teams Build on Document Intelligence</a></p>
+    </article>
+    <article class="termo-card card" id="g-claude-md-agents-md" data-busca="claude.md / agents.md arquivo de instruções carregado no contexto do agente">
+      <h2 class="termo">CLAUDE.md / AGENTS.md</h2>
+<p class="traducao">arquivo de instruções carregado no contexto do agente</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-TRfzFJCJ7ZE" lang="en">Orchestras, Not Factories: How the Fastest Builders Work</a></p>
+    </article>
+    <article class="termo-card card" id="g-closed-loop-system" data-busca="closed-loop system sistema de circuito fechado que se realimenta">
+      <h2 class="termo">Closed-loop system</h2>
+<p class="traducao">sistema de circuito fechado que se realimenta</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-jgWY66RaSrQ" lang="en">I Gave an AI a Body</a></p>
+    </article>
+    <article class="termo-card card" id="g-coding-agent" data-busca="coding agent agente de código">
+      <h2 class="termo">Coding agent</h2>
+<p class="traducao">agente de código</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-YIVkERhy8xo" lang="en">I Turned Coding Agents Into a Strategy Game</a></p>
+    </article>
+    <article class="termo-card card" id="g-cold-start" data-busca="cold start partida a frio (item sem histórico)">
+      <h2 class="termo">Cold start</h2>
+<p class="traducao">partida a frio (item sem histórico)</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-2LRIAfng7eA" lang="en">Teaching LLMs to Speak Spotify</a>; <a href="edicoes/2026-09-25.html#v-ACPEpji5NV4" lang="en">Distill the LLM, Don&#39;t Serve It: Search &amp; Personalization at DoorDash</a></p>
+    </article>
+    <article class="termo-card casper" id="g-compactacao-de-contexto" data-busca="compactação de contexto resumir o histórico para caber na janela do modelo">
+      <h2 class="termo">Compactação de contexto</h2>
+<p class="traducao">resumir o histórico para caber na janela do modelo</p>      <p class="analogia">Compactação de contexto é como a ata de uma reunião longa, que guarda as decisões e os pendentes para quem chega depois e joga fora a conversa inteira.</p>
+      <ol class="passos"><li>O modelo só consegue ler um volume limitado de texto de cada vez. Numa conversa ou tarefa longa, esse espaço enche.</li><li>Esse espaço se chama janela de contexto (context window) e é medido em tokens, os pedaços de texto que o modelo processa.</li><li>Quando a janela está quase cheia, o harness (software que conduz o modelo) pede ao próprio modelo um resumo do histórico até ali.</li><li>O resumo entra no lugar das mensagens antigas. Ele guarda objetivo, decisões, arquivos mexidos e próximos passos, e libera espaço para o trabalho seguir.</li><li>O risco é perder detalhes que ficaram fora do resumo. Por isso ferramentas como Claude Code e Codex compactam de forma automática ou por comando, e o Z Code segue a mesma ideia.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-9JFGohx4E7U" lang="en">GLM-5.2: Open Weights, Near-Frontier Intelligence</a></p>
+    </article>
+    <article class="termo-card card" id="g-compaction" data-busca="compaction compactação do contexto">
+      <h2 class="termo">Compaction</h2>
+<p class="traducao">compactação do contexto</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-oVsEddfhdxc" lang="en">We Let Claude Code and Codex Race Human Researchers</a></p>
+    </article>
+    <article class="termo-card casper" id="g-complexidade-quadratica-da-atencao" data-busca="complexidade quadrática da atenção custo que cresce com o quadrado do tamanho do texto">
+      <h2 class="termo">Complexidade quadrática da atenção</h2>
+<p class="traducao">custo que cresce com o quadrado do tamanho do texto</p>      <p class="analogia">A complexidade quadrática é como uma festa em que cada convidado precisa cumprimentar todos os outros, e dobrar o número de convidados quadruplica o número de apertos de mão.</p>
+      <ol class="passos"><li>Quanto maior o texto que um modelo lê, mais trabalho ele tem para processar.</li><li>No transformer, o mecanismo de atenção (attention) faz cada token olhar para todos os outros tokens da sequência.</li><li>Com L tokens, isso gera L vezes L comparações, então o custo cresce com o quadrado do tamanho.</li><li>Uma página de documento pode virar de 5 a 10 mil tokens visuais, o que deixa a inferência (uso do modelo pronto) cara em processamento e memória.</li><li>Por isso a Sarvam trocou o transformer por um SSM, cujo custo cresce de forma linear.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-T72nqdC92PM" lang="en">From Scratch to SOTA: Training a 3B State-Space Vision Model</a></p>
+    </article>
+    <article class="termo-card card" id="g-computer-use" data-busca="computer use agente que usa a interface do computador">
+      <h2 class="termo">Computer use</h2>
+<p class="traducao">agente que usa a interface do computador</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-tUPPVhBBcoM" lang="en">Software Engineering Is Becoming Factory Engineering</a></p>
+    </article>
+    <article class="termo-card casper" id="g-constrained-decoding" data-busca="constrained decoding decodificação restrita">
+      <h2 class="termo">Constrained decoding</h2>
+<p class="traducao">decodificação restrita</p>      <p class="analogia">O constrained decoding é como um cardápio de restaurante, em que o cliente escolhe à vontade, mas só entre os pratos que a cozinha sabe fazer.</p>
+      <ol class="passos"><li>Um modelo pode inventar um código que não corresponde a nenhum item real do catálogo.</li><li>O constrained decoding (decodificação restrita) bloqueia, a cada passo, os tokens que levariam a um código inexistente.</li><li>Para isso, o sistema consulta a lista de semantic IDs válidos e só deixa o modelo escolher continuações que existem nela.</li><li>No Spotify, o modelo acertou códigos válidos em 98% dos casos sem essa trava. A restrição adiciona um pouco de latência.</li><li>Ela ajuda quando você quer limitar o tipo de item, por exemplo recomendar só conteúdo novo para o usuário.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-2LRIAfng7eA" lang="en">Teaching LLMs to Speak Spotify</a></p>
+    </article>
+    <article class="termo-card card" id="g-contexto-do-agente" data-busca="contexto do agente informação disponível ao agente a cada tarefa">
+      <h2 class="termo">Contexto do agente</h2>
+<p class="traducao">informação disponível ao agente a cada tarefa</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-TRfzFJCJ7ZE" lang="en">Orchestras, Not Factories: How the Fastest Builders Work</a></p>
+    </article>
+    <article class="termo-card casper" id="g-control-plane" data-busca="control plane plano de controle">
+      <h2 class="termo">Control plane</h2>
+<p class="traducao">plano de controle</p>      <p class="analogia">O control plane é como o gerente de uma cozinha de restaurante, que recebe os pedidos e decide qual cozinheiro prepara cada prato e em que fogão.</p>
+      <ol class="passos"><li>Numa fábrica de software, chegam muitos pedidos de trabalho ao mesmo tempo, como bugs, ideias e melhorias.</li><li>Alguém precisa decidir qual tarefa vai para qual agente e em que ordem, senão o trabalho trava ou se repete.</li><li>O control plane (plano de controle) é a camada que faz essa distribuição. Ele recebe as tarefas das entradas e as manda para o chão de fábrica.</li><li>Ele também acompanha o estado de cada tarefa, sabe quais ambientes estão livres e aciona o agente certo em cada sandbox (ambiente isolado na nuvem).</li><li>Lloyd separa essa camada do lugar onde o trabalho acontece e do plano de dados, que guarda a memória dos agentes.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-tUPPVhBBcoM" lang="en">Software Engineering Is Becoming Factory Engineering</a></p>
+    </article>
+    <article class="termo-card casper" id="g-cuda-graphs" data-busca="cuda graphs recurso da nvidia que reduz o custo de lançar kernels">
+      <h2 class="termo">CUDA graphs</h2>
+<p class="traducao">recurso da NVIDIA que reduz o custo de lançar kernels</p>      <p class="analogia">CUDA graphs é como entregar ao garçom o pedido da mesa inteira de uma vez, em vez de chamá-lo a cada prato.</p>
+      <ol class="passos"><li>Um modelo de IA dispara centenas de pequenas tarefas na GPU a cada passo.</li><li>Cada disparo tem um custo fixo de preparação, e somados eles viram atraso.</li><li>CUDA graphs (grafos CUDA) grava essa sequência de tarefas uma vez e depois a repete inteira com um só comando.</li><li>Isso corta o custo de disparo e deixa a GPU ocupada com trabalho útil.</li><li>Um agente pode desligar esse recurso para o seu kernel parecer mais rápido, e o modelo completo fica até 20 vezes mais lento.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-vrDvatGtIxs" lang="en">Autoresearch Made Our Models 3x Faster</a></p>
+    </article>
+    <article class="termo-card casper" id="g-curriculo-de-treino" data-busca="currículo de treino treino em etapas que se somam">
+      <h2 class="termo">Currículo de treino</h2>
+<p class="traducao">treino em etapas que se somam</p>      <p class="analogia">Um currículo de treino é como a escola, onde a criança primeiro aprende a falar, depois a reconhecer letras, depois a ler textos e só no fim faz provas corrigidas.</p>
+      <ol class="passos"><li>Em vez de ensinar tudo de uma vez, o modelo aprende em etapas, e cada etapa se apoia na anterior.</li><li>Na etapa 1, o modelo lê só texto, 13 trilhões de tokens em inglês, línguas indianas, matemática e código, e ganha uma base forte de língua.</li><li>Na etapa 2, ele vê 300 milhões de pares de imagem e texto e aprende a interpretar pixels.</li><li>Na etapa 3, o ajuste supervisionado (supervised fine-tuning) usa 100 milhões de exemplos de OCR com tabelas, equações e escrita à mão.</li><li>Na etapa 4, o aprendizado por reforço (reinforcement learning) empurra o modelo além do limite que a etapa 3 alcança.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-T72nqdC92PM" lang="en">From Scratch to SOTA: Training a 3B State-Space Vision Model</a></p>
+    </article>
+  </div>
+</section>
+<section class="letra" id="letra-D" aria-label="Letra D">
+  <p class="letra-titulo" aria-hidden="true">D</p>
+  <div class="glossario">
+    <article class="termo-card card" id="g-dados-sinteticos" data-busca="dados sintéticos dados gerados artificialmente para treino">
+      <h2 class="termo">Dados sintéticos</h2>
+<p class="traducao">dados gerados artificialmente para treino</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-T72nqdC92PM" lang="en">From Scratch to SOTA: Training a 3B State-Space Vision Model</a></p>
+    </article>
+    <article class="termo-card card" id="g-data-flywheel" data-busca="data flywheel ciclo em que dados de voo realimentam o treino">
+      <h2 class="termo">Data flywheel</h2>
+<p class="traducao">ciclo em que dados de voo realimentam o treino</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-2wgPHvW0mG8" lang="en">One Operator, Many Drones: Inside Skydio&#39;s Autonomy Stack</a>; <a href="edicoes/2026-09-24.html#v-jFHteJjRl8A" lang="en">Robotics Has Been Stuck for 70 Years</a></p>
+    </article>
+    <article class="termo-card casper" id="g-deep-module" data-busca="deep module módulo profundo">
+      <h2 class="termo">Deep module</h2>
+<p class="traducao">módulo profundo</p>      <p class="analogia">Um módulo profundo é como um micro-ondas: você aperta um botão só, e toda a parte elétrica complicada fica escondida dentro da caixa.</p>
+      <ol class="passos"><li>Todo programa é dividido em partes. Cada parte tem uma porta de entrada, a interface, que diz o que você pode pedir a ela.</li><li>Um módulo profundo (deep module) tem uma interface pequena, com poucas funções, e muito trabalho escondido atrás dela. Um módulo raso tem muitas funções, e cada uma faz pouco.</li><li>A ideia vem de John Ousterhout, no livro A Philosophy of Software Design. Quem usa o módulo recebe muito valor com uma chamada simples, o que Pocock chama de alavancagem (leverage).</li><li>Quando o agente testa só pela interface pequena, o teste confere o resultado e ignora os detalhes internos. Assim ele quebra menos quando alguém reorganiza o código por dentro.</li><li>Por isso Pocock obriga o agente a testar pela interface e usa uma skill que aponta onde aprofundar módulos, juntando funções rasas e duplicadas num módulo só, fácil de testar.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-LlgiOCmFG_w" lang="en">Fixing the PR Bottleneck</a></p>
+    </article>
+    <article class="termo-card casper" id="g-deferred-context" data-busca="deferred context contexto adiado (divulgação progressiva)">
+      <h2 class="termo">Deferred context</h2>
+<p class="traducao">contexto adiado (divulgação progressiva)</p>      <p class="analogia">Contexto adiado é como o cardápio de um restaurante, que mostra só o nome e uma linha sobre cada prato, e a cozinha só separa a receita completa quando alguém faz o pedido.</p>
+      <ol class="passos"><li>Um agente de IA só enxerga o que cabe na sua memória de trabalho, chamada janela de contexto (context window), e esse espaço tem limite.</li><li>Empresas conectam centenas de ferramentas, como Slack, Gmail e Figma, e cada uma chega com descrição, parâmetros e formato de dados que ocupam esse espaço.</li><li>Com tudo carregado de uma vez, o agente gasta mais tokens, confunde ferramentas de nome parecido e precisa resumir o contexto, perdendo detalhes.</li><li>O contexto adiado (deferred context) mostra primeiro só uma lista curta com o nome e uma descrição breve de cada ferramenta, técnica chamada divulgação progressiva (progressive disclosure).</li><li>Quando o agente decide usar uma ferramenta, o sistema carrega a definição completa dela. Nada é apagado, só fica escondido, e a Factory relata economia de 50% ou mais de tokens quando há muitas ferramentas.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-vGCJ7diEtrw" lang="en">What It Actually Takes to Build a Software Factory</a></p>
+    </article>
+    <article class="termo-card card" id="g-deformable-object-manipulation" data-busca="deformable object manipulation manipulação de objetos deformáveis">
+      <h2 class="termo">Deformable object manipulation</h2>
+<p class="traducao">manipulação de objetos deformáveis</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-Sjfz1TqxzEs" lang="en">Robot Demos Are Easy. Reliability Is Hard</a></p>
+    </article>
+    <article class="termo-card card" id="g-destilacao" data-busca="destilação distillation (destilação de modelo)">
+      <h2 class="termo">Destilação</h2>
+<p class="traducao">Distillation (destilação de modelo)</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-ACPEpji5NV4" lang="en">Distill the LLM, Don&#39;t Serve It: Search &amp; Personalization at DoorDash</a></p>
+    </article>
+    <article class="termo-card card" id="g-document-ocr" data-busca="document ocr reconhecimento de texto em documentos">
+      <h2 class="termo">Document OCR</h2>
+<p class="traducao">reconhecimento de texto em documentos</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-RQi7x-navxU" lang="en">Building the Document Context Layer for AI Agents</a></p>
+    </article>
+    <article class="termo-card casper" id="g-domain-grounding" data-busca="domain grounding ancoragem de domínio">
+      <h2 class="termo">Domain grounding</h2>
+<p class="traducao">ancoragem de domínio</p>      <p class="analogia">O domain grounding é como um funcionário experiente que só decora o nome dos produtos novos da loja, sem mudar o jeito de atender o cliente.</p>
+      <ol class="passos"><li>Os tokens novos chegam ao modelo sem significado. O modelo precisa aprender o que cada um quer dizer.</li><li>Nesta etapa, o modelo treina em pares que ligam semantic ID a texto e texto a semantic ID, nos dois sentidos e em combinações.</li><li>O backbone (corpo principal do modelo, com seus pesos originais) fica congelado. Só os embeddings dos tokens novos mudam.</li><li>Assim, cada token novo passa a ocupar um lugar coerente no mesmo espaço onde o modelo já guarda o significado das palavras.</li><li>No talk, essa é a segunda etapa do NEO. Ela vem antes do ajuste por instruções, quando o modelo inteiro é descongelado.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-2LRIAfng7eA" lang="en">Teaching LLMs to Speak Spotify</a></p>
+    </article>
+    <article class="termo-card casper" id="g-dpo" data-busca="dpo otimização direta de preferências">
+      <h2 class="termo">DPO</h2>
+<p class="traducao">otimização direta de preferências</p>      <p class="analogia">DPO é como um treinador que mostra ao atleta dois lances lado a lado, um bom e um ruim, e pede para ele repetir mais o primeiro e menos o segundo.</p>
+      <ol class="passos"><li>O modelo já funciona, mas erra em alguns casos. A ideia é corrigir esses erros mostrando exemplos de acerto e de erro.</li><li>Para cada caso, o time monta um par com uma resposta boa (positiva) e uma resposta ruim (negativa) para a mesma pergunta.</li><li>DPO (Direct Preference Optimization, otimização direta de preferências) ajusta o modelo para aumentar a chance da resposta boa e diminuir a chance da ruim.</li><li>O ajuste é comparado com uma cópia congelada do modelo original. Isso evita que ele mude demais e esqueça o que já sabia.</li><li>No talk, os pares vêm de falhas de produção achadas por um LLM juiz e por revisores humanos, e o retreino acontece em ciclo contínuo.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-jNE8No-wvok" lang="en">Modality Misalignment and Originality Attribution in Short-Form Video</a></p>
+    </article>
+  </div>
+</section>
+<section class="letra" id="letra-E" aria-label="Letra E">
+  <p class="letra-titulo" aria-hidden="true">E</p>
+  <div class="glossario">
+    <article class="termo-card casper" id="g-early-fusion" data-busca="early fusion fusão precoce de modalidades">
+      <h2 class="termo">Early fusion</h2>
+<p class="traducao">fusão precoce de modalidades</p>      <p class="analogia">Early fusion é como uma cozinheira que mistura todos os ingredientes na mesma panela desde o início, em vez de cozinhar cada um separado e juntar só no prato.</p>
+      <ol class="passos"><li>Um modelo multimodal trabalha com vários tipos de dado ao mesmo tempo, como texto, imagem, vídeo e som.</li><li>Na late fusion (fusão tardia), cada tipo passa por um sistema próprio, e os resultados só se encontram no final.</li><li>Na early fusion (fusão precoce), todos os tipos viram tokens logo na entrada e seguem juntos pela mesma rede.</li><li>Assim, o modelo aprende relações entre palavras e pixels desde as primeiras camadas, e também pode responder em mais de um formato.</li><li>O ponto difícil é escolher como representar cada tipo de dado, porque vídeo gera muito mais tokens do que texto para a mesma informação.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-ZZcE0HeO-Hc" lang="en">From VLM/VLA&#39;s to Embodied Agents</a></p>
+    </article>
+    <article class="termo-card card" id="g-edge-computing" data-busca="edge computing computação na borda, no próprio drone">
+      <h2 class="termo">Edge computing</h2>
+<p class="traducao">computação na borda, no próprio drone</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-2wgPHvW0mG8" lang="en">One Operator, Many Drones: Inside Skydio&#39;s Autonomy Stack</a></p>
+    </article>
+    <article class="termo-card card" id="g-embedding" data-busca="embedding vetor que representa o sentido do texto">
+      <h2 class="termo">Embedding</h2>
+<p class="traducao">vetor que representa o sentido do texto</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-0I07YAuF8xA" lang="en">From Ingestion to Agents: How AI Teams Build on Document Intelligence</a></p>
+    </article>
+    <article class="termo-card card" id="g-embodied-ai" data-busca="embodied ai ia incorporada (com corpo físico)">
+      <h2 class="termo">Embodied AI</h2>
+<p class="traducao">IA incorporada (com corpo físico)</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-jgWY66RaSrQ" lang="en">I Gave an AI a Body</a>; <a href="edicoes/2026-09-24.html#v-4Gqg0HVe-AY" lang="en">World Models Need Causality, Not Pretty Pixels</a></p>
+    </article>
+    <article class="termo-card casper" id="g-embodied-reasoning" data-busca="embodied reasoning raciocínio espacial e físico">
+      <h2 class="termo">Embodied reasoning</h2>
+<p class="traducao">raciocínio espacial e físico</p>      <p class="analogia">Embodied reasoning é como o chefe de cozinha que olha a bancada, entende onde está cada coisa e divide o preparo do café em etapas para o ajudante executar.</p>
+      <ol class="passos"><li>Embodied reasoning (raciocínio incorporado) é a capacidade de pensar sobre o mundo físico, como posição, distância e ordem das tarefas.</li><li>Um modelo com esse raciocínio responde perguntas como o que está à esquerda de quê, ou marca pontos exatos numa imagem.</li><li>Em robótica, um modelo de embodied reasoning pode agir como orquestrador, quebrando uma tarefa longa em subtarefas menores.</li><li>Cada subtarefa vai para uma política de controle, o modelo que de fato move o robô, e existe um espectro entre separar esses papéis ou juntá-los num só modelo.</li><li>O palestrante diz que dados da internet raramente descrevem esquerda, direita ou abaixo, e que por isso é preciso planejar esses dados desde o pré-treino.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-ZZcE0HeO-Hc" lang="en">From VLM/VLA&#39;s to Embodied Agents</a></p>
+    </article>
+    <article class="termo-card card" id="g-end-to-end" data-busca="end-to-end de ponta a ponta">
+      <h2 class="termo">End-to-end</h2>
+<p class="traducao">de ponta a ponta</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-jFHteJjRl8A" lang="en">Robotics Has Been Stuck for 70 Years</a></p>
+    </article>
+    <article class="termo-card casper" id="g-end-to-end-learning" data-busca="end-to-end learning aprendizado de ponta a ponta, do sensor à ação">
+      <h2 class="termo">End-to-end learning</h2>
+<p class="traducao">aprendizado de ponta a ponta, do sensor à ação</p>      <p class="analogia">Aprendizado de ponta a ponta é como um cozinheiro que aprende a fazer o prato só provando o resultado final, sem receita escrita nem etapas separadas que alguém possa conferir no meio.</p>
+      <ol class="passos"><li>Um sistema tradicional divide a tarefa em etapas separadas, como enxergar, planejar e agir, e pessoas escrevem regras para cada uma.</li><li>No end-to-end learning (aprendizado de ponta a ponta), um único modelo recebe o dado bruto do sensor, como a imagem da câmera, e devolve direto a ação, como para onde o drone vai.</li><li>O modelo aprende sozinho com muitos exemplos ou por reinforcement learning (aprendizado por reforço), em que ganha recompensa quando acerta e ajusta o próprio comportamento.</li><li>O problema em máquinas físicas é a observabilidade: quando algo dá errado, fica difícil saber em qual parte interna do modelo o erro nasceu.</li><li>Por isso a Skydio migra por partes, trocando primeiro os trechos cheios de regras escritas à mão, como a busca e resgate, por agentes com ferramentas de alto nível.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-2wgPHvW0mG8" lang="en">One Operator, Many Drones: Inside Skydio&#39;s Autonomy Stack</a></p>
+    </article>
+    <article class="termo-card card" id="g-eval" data-busca="eval avaliação">
+      <h2 class="termo">Eval</h2>
+<p class="traducao">avaliação</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-XyV6bSMyq-I" lang="en">How We Built an Agent That Improves Itself</a>; <a href="edicoes/2026-09-26.html#v-7taOQBfjDyE" lang="en">The Loop Is the Product</a>; <a href="edicoes/2026-09-23.html#v-0I07YAuF8xA" lang="en">From Ingestion to Agents: How AI Teams Build on Document Intelligence</a></p>
+    </article>
+    <article class="termo-card card" id="g-eval-flywheel" data-busca="eval flywheel ciclo em que falhas reais viram testes">
+      <h2 class="termo">Eval flywheel</h2>
+<p class="traducao">ciclo em que falhas reais viram testes</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-XyV6bSMyq-I" lang="en">How We Built an Agent That Improves Itself</a></p>
+    </article>
+    <article class="termo-card card" id="g-eval-suite" data-busca="eval suite conjunto de avaliações automáticas">
+      <h2 class="termo">Eval suite</h2>
+<p class="traducao">conjunto de avaliações automáticas</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-hd7TOvmyAxU" lang="en">An AI Research Agent That Runs Your Experiments</a></p>
+    </article>
+  </div>
+</section>
+<section class="letra" id="letra-F" aria-label="Letra F">
+  <p class="letra-titulo" aria-hidden="true">F</p>
+  <div class="glossario">
+    <article class="termo-card card" id="g-feature-flag" data-busca="feature flag chave que liga ou desliga um recurso sem novo deploy">
+      <h2 class="termo">Feature flag</h2>
+<p class="traducao">chave que liga ou desliga um recurso sem novo deploy</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-6MudaeKdBSk" lang="en">Scale the Judgment, Not the Model</a></p>
+    </article>
+    <article class="termo-card card" id="g-fine-tuning" data-busca="fine-tuning ajuste fino de um modelo">
+      <h2 class="termo">Fine-tuning</h2>
+<p class="traducao">ajuste fino de um modelo</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-9JFGohx4E7U" lang="en">GLM-5.2: Open Weights, Near-Frontier Intelligence</a></p>
+    </article>
+    <article class="termo-card card" id="g-flywheel-de-tokens" data-busca="flywheel de tokens ciclo em que engajamento e receita pagam o próximo treino">
+      <h2 class="termo">Flywheel de tokens</h2>
+<p class="traducao">ciclo em que engajamento e receita pagam o próximo treino</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-lIgdnF0s0kQ" lang="en">Why LLM Recommenders Will Be AI&#39;s Biggest Consumer App</a></p>
+    </article>
+    <article class="termo-card card" id="g-foundation-model-de-robotica" data-busca="foundation model de robótica modelo de base para robôs">
+      <h2 class="termo">Foundation model de robótica</h2>
+<p class="traducao">modelo de base para robôs</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-Sjfz1TqxzEs" lang="en">Robot Demos Are Easy. Reliability Is Hard</a></p>
+    </article>
+    <article class="termo-card card" id="g-fronteira-de-pareto" data-busca="fronteira de pareto conjunto de candidatos que são os melhores em pelo menos um critério">
+      <h2 class="termo">Fronteira de Pareto</h2>
+<p class="traducao">conjunto de candidatos que são os melhores em pelo menos um critério</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-OA-Mc60Rboo" lang="en">Beating RL With Reflection: GEPA and Optimize Anything</a></p>
+    </article>
+  </div>
+</section>
+<section class="letra" id="letra-G" aria-label="Letra G">
+  <p class="letra-titulo" aria-hidden="true">G</p>
+  <div class="glossario">
+    <article class="termo-card card" id="g-generative-ui" data-busca="generative ui interface gerada pelo modelo sob demanda">
+      <h2 class="termo">Generative UI</h2>
+<p class="traducao">interface gerada pelo modelo sob demanda</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-buHC7bQE1X4" lang="en">Get Out of the Model&#39;s Way</a></p>
+    </article>
+    <article class="termo-card card" id="g-git-worktree" data-busca="git worktree cópia de trabalho paralela do repositório">
+      <h2 class="termo">Git worktree</h2>
+<p class="traducao">cópia de trabalho paralela do repositório</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-TRfzFJCJ7ZE" lang="en">Orchestras, Not Factories: How the Fastest Builders Work</a></p>
+    </article>
+    <article class="termo-card casper" id="g-gpu-kernel" data-busca="gpu kernel operador de baixo nível executado na gpu">
+      <h2 class="termo">GPU kernel</h2>
+<p class="traducao">operador de baixo nível executado na GPU</p>      <p class="analogia">Um GPU kernel é como uma receita curta que mil cozinheiros seguem ao mesmo tempo, cada um picando a sua parte dos legumes.</p>
+      <ol class="passos"><li>A GPU (placa de vídeo) é um chip com milhares de pequenos núcleos que trabalham juntos.</li><li>Um kernel (núcleo de código) é um programa pequeno que diz o que cada núcleo faz com o seu pedaço dos dados.</li><li>Exemplos comuns em IA são a multiplicação de matrizes e o cálculo de cada especialista de um modelo.</li><li>Na GPU da NVIDIA esse programa se chama CUDA kernel e roda milhões de vezes em paralelo.</li><li>Um kernel mais rápido acelera o modelo inteiro, e dá para medir se ele está correto e quanto tempo leva.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-vrDvatGtIxs" lang="en">Autoresearch Made Our Models 3x Faster</a></p>
+    </article>
+    <article class="termo-card casper" id="g-grpo" data-busca="grpo algoritmo de rl que transforma notas de várias execuções em ajuste de pesos">
+      <h2 class="termo">GRPO</h2>
+<p class="traducao">algoritmo de RL que transforma notas de várias execuções em ajuste de pesos</p>      <p class="analogia">GRPO é como um técnico que vê o time cobrar vários pênaltis, compara cada chute com a média do grupo e só diz &#34;mais disso&#34; ou &#34;menos disso&#34;, sem comentar o que aconteceu em cada cobrança.</p>
+      <ol class="passos"><li>O modelo recebe uma tarefa e tenta resolvê-la várias vezes seguidas, gerando um grupo de respostas diferentes.</li><li>Cada resposta ganha uma nota no final, em geral 0 (errou) ou 1 (acertou), dada por um verificador automático.</li><li>O GRPO (Group Relative Policy Optimization, otimização de política relativa ao grupo) compara cada nota com a média do grupo e marca quem ficou acima e quem ficou abaixo.</li><li>Essa comparação vira gradiente (direção de ajuste) e altera um pouco os pesos do modelo para repetir mais as respostas acima da média.</li><li>O raciocínio, as chamadas de ferramenta e as mensagens de erro ficam de fora, por isso o método precisa de milhares de rollouts para aprender algo.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-OA-Mc60Rboo" lang="en">Beating RL With Reflection: GEPA and Optimize Anything</a></p>
+    </article>
+  </div>
+</section>
+<section class="letra" id="letra-H" aria-label="Letra H">
+  <p class="letra-titulo" aria-hidden="true">H</p>
+  <div class="glossario">
+    <article class="termo-card card" id="g-hallucination" data-busca="hallucination alucinação">
+      <h2 class="termo">Hallucination</h2>
+<p class="traducao">alucinação</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-A_I8mw8yfns" lang="en">The Best Models Still Reason Like Toddlers</a></p>
+    </article>
+    <article class="termo-card casper" id="g-hard-negatives" data-busca="hard negatives negativos difíceis">
+      <h2 class="termo">Hard negatives</h2>
+<p class="traducao">Negativos difíceis</p>      <p class="analogia">Hard negatives é como ensinar um aprendiz de cozinha a separar salsinha de coentro, porque separar salsinha de cenoura ele já sabe.</p>
+      <ol class="passos"><li>Para aprender, o modelo precisa ver exemplos errados, chamados negativos. Um negativo é um item que não serve para aquela busca.</li><li>Negativos fáceis, como ração de cachorro para quem busca macarrão, ensinam pouco. O modelo já acerta esses casos.</li><li>Hard negatives (negativos difíceis) são os itens que o modelo confunde. Por exemplo, um espaguete comum no alto da lista para quem pediu macarrão sem glúten, ou um item certo jogado lá para baixo.</li><li>No DoorDash, o primeiro estágio treina um modelo base. Esse modelo então garimpa (mining) os casos confusos, e esses itens recebem um novo rótulo.</li><li>O segundo estágio faz um treino em currículo (curriculum training) com esses exemplos. Depois dele, itens relevantes e moderadamente relevantes deixam de se sobrepor, e o NDCG de relevância subiu 2,3%.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-ACPEpji5NV4" lang="en">Distill the LLM, Don&#39;t Serve It: Search &amp; Personalization at DoorDash</a></p>
+    </article>
+    <article class="termo-card casper" id="g-harness" data-busca="harness estrutura que roda o agente">
+      <h2 class="termo">Harness</h2>
+<p class="traducao">estrutura que roda o agente</p>      <p class="analogia">O harness é como o carro em volta do motor, com volante, freio e painel, que transforma a força do motor em uma viagem controlada.</p>
+      <ol class="passos"><li>Um modelo de IA sozinho só recebe texto e devolve texto. Ele não abre arquivos nem roda comandos.</li><li>O harness (estrutura que roda o agente) é o programa em volta do modelo que dá a ele ferramentas, instruções e um lugar para agir.</li><li>Ele monta o pedido para o modelo, executa as ações que o modelo escolhe, devolve o resultado e repete até a tarefa acabar.</li><li>Claude Code e o agente da Warp são exemplos de harness. O mesmo modelo pode render bem ou mal dependendo do harness em volta.</li><li>Na fábrica de Lloyd, cada tarefa exige duas escolhas dentro da sandbox, qual harness usar e qual modelo colocar dentro dele.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-tUPPVhBBcoM" lang="en">Software Engineering Is Becoming Factory Engineering</a>; <a href="edicoes/2026-09-27.html#v-9JFGohx4E7U" lang="en">GLM-5.2: Open Weights, Near-Frontier Intelligence</a>; <a href="edicoes/2026-09-27.html#v-TRfzFJCJ7ZE" lang="en">Orchestras, Not Factories: How the Fastest Builders Work</a>; <a href="edicoes/2026-09-27.html#v-TN3mj92oZ8I" lang="en">Building Self-Improving Agent Software Factories</a>; <a href="edicoes/2026-09-26.html#v-hd7TOvmyAxU" lang="en">An AI Research Agent That Runs Your Experiments</a>; <a href="edicoes/2026-09-26.html#v-7taOQBfjDyE" lang="en">The Loop Is the Product</a>; <a href="edicoes/2026-09-23.html#v-T72nqdC92PM" lang="en">From Scratch to SOTA: Training a 3B State-Space Vision Model</a></p>
+    </article>
+    <article class="termo-card card" id="g-harness-engineering" data-busca="harness engineering engenharia de arnês, o sistema de restrições e provas ao redor do modelo">
+      <h2 class="termo">Harness engineering</h2>
+<p class="traducao">engenharia de arnês, o sistema de restrições e provas ao redor do modelo</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-6MudaeKdBSk" lang="en">Scale the Judgment, Not the Model</a></p>
+    </article>
+    <article class="termo-card card" id="g-hill-climbing" data-busca="hill climbing melhoria em pequenos passos guiada pela métrica">
+      <h2 class="termo">Hill climbing</h2>
+<p class="traducao">melhoria em pequenos passos guiada pela métrica</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-XyV6bSMyq-I" lang="en">How We Built an Agent That Improves Itself</a></p>
+    </article>
+    <article class="termo-card casper" id="g-hiperparametro" data-busca="hiperparâmetro ajuste de treino definido antes de treinar">
+      <h2 class="termo">Hiperparâmetro</h2>
+<p class="traducao">ajuste de treino definido antes de treinar</p>      <p class="analogia">Hiperparâmetro é como a temperatura do forno e o tempo de assar que você escolhe antes de pôr o bolo, enquanto o bolo cresce sozinho lá dentro.</p>
+      <ol class="passos"><li>Treinar um modelo de IA é deixar o computador aprender com exemplos. Antes de começar, alguém precisa escolher algumas regras de como esse aprendizado vai acontecer.</li><li>Essas regras escolhidas antes do treino se chamam hiperparâmetros. O modelo não aprende esses valores sozinho; a pessoa ou um agente define cada um.</li><li>Dois exemplos comuns são a learning rate (taxa de aprendizado), que diz o tamanho de cada passo de correção, e o batch size (tamanho do lote), que diz quantos exemplos o modelo vê de uma vez.</li><li>Para achar bons valores, a equipe roda vários treinos com combinações diferentes, compara uma métrica como a loss (erro do modelo) e guarda a melhor combinação.</li><li>No talk, o agente ARIA evita mudar a arquitetura do modelo, ajusta só hiperparâmetros e lança os treinos em GPUs. Nos resultados, ele percebe que o batch size pesa muito no desempenho.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-hd7TOvmyAxU" lang="en">An AI Research Agent That Runs Your Experiments</a></p>
+    </article>
+    <article class="termo-card card" id="g-human-in-the-loop" data-busca="human in the loop humano no circuito de validação">
+      <h2 class="termo">Human in the loop</h2>
+<p class="traducao">humano no circuito de validação</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-jgWY66RaSrQ" lang="en">I Gave an AI a Body</a></p>
+    </article>
+    <article class="termo-card card" id="g-humano-no-loop" data-busca="humano no loop human in the loop">
+      <h2 class="termo">Humano no loop</h2>
+<p class="traducao">human in the loop</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-ztlXKfPCT3Q" lang="en">You’re Not Thinking Big Enough: Rebuilding Food Systems with AI Agents</a></p>
+    </article>
+  </div>
+</section>
+<section class="letra" id="letra-I" aria-label="Letra I">
+  <p class="letra-titulo" aria-hidden="true">I</p>
+  <div class="glossario">
+    <article class="termo-card casper" id="g-image-guided-detection" data-busca="image-guided detection detecção guiada por imagem de exemplo">
+      <h2 class="termo">Image-guided detection</h2>
+<p class="traducao">detecção guiada por imagem de exemplo</p>      <p class="analogia">A detecção guiada por imagem é como mostrar a foto de uma peça ao balconista da loja de ferragens e pedir todas as iguais, em vez de tentar descrever a peça com palavras.</p>
+      <ol class="passos"><li>Às vezes fica difícil descrever em palavras o objeto que você quer achar numa foto.</li><li>Na detecção guiada por imagem (image-guided detection), você entrega ao modelo uma imagem de exemplo do objeto em vez de uma descrição em texto.</li><li>O modelo compara esse exemplo com as outras imagens e marca com caixas os objetos parecidos.</li><li>Merve cita isso como plano futuro para a indústria, onde há peças e defeitos sem nome claro, e a linguagem natural não serve bem como porta de entrada.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-dKcTBQzR7jI" lang="en">Skill issue: stop deploying vision language models, use them with Skills</a></p>
+    </article>
+    <article class="termo-card card" id="g-instruction-tuning" data-busca="instruction tuning ajuste por instruções">
+      <h2 class="termo">Instruction tuning</h2>
+<p class="traducao">ajuste por instruções</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-jNE8No-wvok" lang="en">Modality Misalignment and Originality Attribution in Short-Form Video</a></p>
+    </article>
+    <article class="termo-card card" id="g-instruction-tuning-multitarefa" data-busca="instruction tuning multitarefa ajuste por instruções em várias tarefas">
+      <h2 class="termo">Instruction tuning multitarefa</h2>
+<p class="traducao">ajuste por instruções em várias tarefas</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-2LRIAfng7eA" lang="en">Teaching LLMs to Speak Spotify</a></p>
+    </article>
+  </div>
+</section>
+<section class="letra" id="letra-K" aria-label="Letra K">
+  <p class="letra-titulo" aria-hidden="true">K</p>
+  <div class="glossario">
+    <article class="termo-card casper" id="g-knowledge-distillation" data-busca="knowledge distillation destilação de conhecimento">
+      <h2 class="termo">Knowledge distillation</h2>
+<p class="traducao">destilação de conhecimento</p>      <p class="analogia">Destilação de conhecimento é como um chef experiente que ensina um cozinheiro novo a fazer só os pratos do cardápio da casa, sem passar por toda a gastronomia.</p>
+      <ol class="passos"><li>Existe um modelo grande que acerta bastante, mas custa caro para rodar em milhões de vídeos.</li><li>Knowledge distillation (destilação de conhecimento) treina um modelo menor, o aluno, para imitar as respostas do modelo grande, o professor.</li><li>O aluno aprende com as probabilidades que o professor dá a cada resposta. Esse sinal carrega mais informação do que um simples certo ou errado.</li><li>Na versão off-policy, o aluno imita respostas já geradas pelo professor. Na versão on-policy, o aluno gera as próprias respostas e o professor corrige.</li><li>O palestrante usa as duas versões porque só precisa do modelo bom no domínio dele, e aceita que o aluno não saiba programar, por exemplo.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-jNE8No-wvok" lang="en">Modality Misalignment and Originality Attribution in Short-Form Video</a></p>
+    </article>
+  </div>
+</section>
+<section class="letra" id="letra-L" aria-label="Letra L">
+  <p class="letra-titulo" aria-hidden="true">L</p>
+  <div class="glossario">
+    <article class="termo-card card" id="g-latencia" data-busca="latência tempo entre a pergunta e a resposta">
+      <h2 class="termo">Latência</h2>
+<p class="traducao">tempo entre a pergunta e a resposta</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-jgWY66RaSrQ" lang="en">I Gave an AI a Body</a></p>
+    </article>
+    <article class="termo-card card" id="g-licenca-apache-2-0" data-busca="licença apache 2.0 licença permissiva; contrasta com a agpl do yolo">
+      <h2 class="termo">Licença Apache 2.0</h2>
+<p class="traducao">licença permissiva; contrasta com a AGPL do YOLO</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-dKcTBQzR7jI" lang="en">Skill issue: stop deploying vision language models, use them with Skills</a></p>
+    </article>
+    <article class="termo-card card" id="g-llm-as-a-judge" data-busca="llm as a judge llm como juiz de avaliação">
+      <h2 class="termo">LLM as a judge</h2>
+<p class="traducao">LLM como juiz de avaliação</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-2LRIAfng7eA" lang="en">Teaching LLMs to Speak Spotify</a>; <a href="edicoes/2026-09-23.html#v-jNE8No-wvok" lang="en">Modality Misalignment and Originality Attribution in Short-Form Video</a></p>
+    </article>
+    <article class="termo-card card" id="g-llm-como-rotulador" data-busca="llm como rotulador llm labeling (rotulagem por llm)">
+      <h2 class="termo">LLM como rotulador</h2>
+<p class="traducao">LLM labeling (rotulagem por LLM)</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-ACPEpji5NV4" lang="en">Distill the LLM, Don&#39;t Serve It: Search &amp; Personalization at DoorDash</a></p>
+    </article>
+    <article class="termo-card card" id="g-llm-judge" data-busca="llm judge modelo que avalia outro modelo">
+      <h2 class="termo">LLM judge</h2>
+<p class="traducao">modelo que avalia outro modelo</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-hd7TOvmyAxU" lang="en">An AI Research Agent That Runs Your Experiments</a>; <a href="edicoes/2026-09-26.html#v-7taOQBfjDyE" lang="en">The Loop Is the Product</a></p>
+    </article>
+    <article class="termo-card casper" id="g-llm-as-a-judge" data-busca="llm-as-a-judge modelo de linguagem usado para avaliar respostas">
+      <h2 class="termo">LLM-as-a-judge</h2>
+<p class="traducao">modelo de linguagem usado para avaliar respostas</p>      <p class="analogia">Usar um modelo como juiz é como pedir a um colega de escritório que revise a planilha de outro antes de ela seguir para o chefe.</p>
+      <ol class="passos"><li>Um modelo de IA pode revisar o trabalho de outro modelo e dizer se está bom.</li><li>No LLM-as-a-judge (modelo como juiz), você entrega a saída de um modelo a outro, junto com critérios, e pede um veredito.</li><li>No talk, um VLM rotula imagens e dois VLMs menores julgam cada rótulo. Merve desenha a caixa sobre a imagem e pergunta ao juiz se ela corresponde à descrição do rótulo.</li><li>Ela pede aprova ou rejeita em vez de uma nota, porque notas numéricas funcionam mal, sobretudo com juízes de tamanhos diferentes.</li><li>Os prompts dos juízes são gerados pelo agente de código, mas um humano ainda precisa aprovar esses prompts antes de rodar.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-OA-Mc60Rboo" lang="en">Beating RL With Reflection: GEPA and Optimize Anything</a>; <a href="edicoes/2026-09-23.html#v-dKcTBQzR7jI" lang="en">Skill issue: stop deploying vision language models, use them with Skills</a></p>
+    </article>
+    <article class="termo-card card" id="g-long-horizon-agent" data-busca="long-horizon agent agente de longa duração">
+      <h2 class="termo">Long-horizon agent</h2>
+<p class="traducao">agente de longa duração</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-x4e5O9zN0TE" lang="en">Long-Horizon Agents Need Experiments, Not Just Prompts</a></p>
+    </article>
+    <article class="termo-card card" id="g-loop" data-busca="loop tarefa recorrente do agente">
+      <h2 class="termo">Loop</h2>
+<p class="traducao">tarefa recorrente do agente</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-YIVkERhy8xo" lang="en">I Turned Coding Agents Into a Strategy Game</a></p>
+    </article>
+  </div>
+</section>
+<section class="letra" id="letra-M" aria-label="Letra M">
+  <p class="letra-titulo" aria-hidden="true">M</p>
+  <div class="glossario">
+    <article class="termo-card casper" id="g-map" data-busca="map precisão média em detecção, nota de qualidade do detector">
+      <h2 class="termo">mAP</h2>
+<p class="traducao">precisão média em detecção, nota de qualidade do detector</p>      <p class="analogia">O mAP é como a média geral do boletim de um aluno, que junta a nota de cada matéria e a nota de cada prova num número só.</p>
+      <ol class="passos"><li>O mAP (mean Average Precision, precisão média) é uma nota que diz quão bem um detector acha e localiza objetos numa imagem.</li><li>Para cada caixa prevista, o cálculo verifica se ela se sobrepõe o bastante à caixa verdadeira. Essa sobreposição se chama IoU (intersection over union, interseção sobre união).</li><li>Com isso o cálculo mede a precisão, quantas caixas previstas estavam certas, e o recall, quantos objetos reais o detector achou.</li><li>A precisão média resume essa troca entre precisão e recall para uma classe, como placa de pare. O mAP tira a média de todas as classes.</li><li>No talk, o detector treinado com rótulos gerados passou de 50 de mAP numa escala de 0 a 100, contra rótulos reais de um conjunto de teste.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-dKcTBQzR7jI" lang="en">Skill issue: stop deploying vision language models, use them with Skills</a></p>
+    </article>
+    <article class="termo-card card" id="g-mapa-de-calor" data-busca="mapa de calor heat map">
+      <h2 class="termo">Mapa de calor</h2>
+<p class="traducao">heat map</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-YIVkERhy8xo" lang="en">I Turned Coding Agents Into a Strategy Game</a></p>
+    </article>
+    <article class="termo-card card" id="g-match-score" data-busca="match score nota de similaridade com a busca">
+      <h2 class="termo">Match score</h2>
+<p class="traducao">nota de similaridade com a busca</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-I_VEh7XSwyc" lang="en">Physical AI&#39;s Next Bottleneck Is Finding the Right Video</a></p>
+    </article>
+    <article class="termo-card card" id="g-mcp" data-busca="mcp protocolo para conectar ferramentas a agentes">
+      <h2 class="termo">MCP</h2>
+<p class="traducao">protocolo para conectar ferramentas a agentes</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-buHC7bQE1X4" lang="en">Get Out of the Model&#39;s Way</a>; <a href="edicoes/2026-09-23.html#v-RQi7x-navxU" lang="en">Building the Document Context Layer for AI Agents</a></p>
+    </article>
+    <article class="termo-card card" id="g-mcp-gateway" data-busca="mcp gateway porta única que liga o agente às ferramentas">
+      <h2 class="termo">MCP gateway</h2>
+<p class="traducao">porta única que liga o agente às ferramentas</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-HvboD89DyQ8" lang="en">No, That&#39;s Not a Software Factory</a></p>
+    </article>
+    <article class="termo-card card" id="g-memory-blocks" data-busca="memory blocks blocos de memória do consumidor">
+      <h2 class="termo">Memory blocks</h2>
+<p class="traducao">Blocos de memória do consumidor</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-ACPEpji5NV4" lang="en">Distill the LLM, Don&#39;t Serve It: Search &amp; Personalization at DoorDash</a></p>
+    </article>
+    <article class="termo-card casper" id="g-memory-layer" data-busca="memory layer camada de memória de longo prazo">
+      <h2 class="termo">Memory layer</h2>
+<p class="traducao">camada de memória de longo prazo</p>      <p class="analogia">A camada de memória é como a pasta de boas-vindas que o RH entrega a cada funcionário novo e atualiza toda semana, dizendo quem faz o quê, em qual equipe e como a empresa trabalha.</p>
+      <ol class="passos"><li>Um modelo de IA esquece tudo quando a conversa acaba. Cada pedido novo começa do zero, como se ele nunca tivesse visto a empresa.</li><li>A camada de memória (memory layer) é um arquivo de longo prazo guardado fora do modelo. Ela registra fatos duráveis, como no que cada pessoa trabalha, em qual time está e por quais produtos responde.</li><li>Ela também guarda o nível da organização, ou seja, os termos da empresa e o jeito como o trabalho é feito ali.</li><li>Quando o agente recebe uma tarefa, o sistema busca nessa memória só o que importa e coloca no contexto (o texto que o modelo lê junto com o pedido).</li><li>A WorkOS quer essa memória sempre atualizada (evergreen) e separada da fábrica de software, para ligá-la também às outras ferramentas de IA da empresa.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-HvboD89DyQ8" lang="en">No, That&#39;s Not a Software Factory</a></p>
+    </article>
+    <article class="termo-card casper" id="g-mfu" data-busca="mfu uso máximo teórico da gpu">
+      <h2 class="termo">MFU</h2>
+<p class="traducao">uso máximo teórico da GPU</p>      <p class="analogia">O MFU é como a lotação de um ônibus, que mostra quantos lugares estão ocupados em relação ao total que ele comporta.</p>
+      <ol class="passos"><li>Toda GPU tem um limite de contas que consegue fazer por segundo, informado pelo fabricante.</li><li>Na prática o modelo usa só uma parte desse limite, porque perde tempo esperando memória ou tarefas.</li><li>MFU (Model FLOPs Utilization, uso de operações do modelo) é a razão entre as contas feitas e o máximo teórico.</li><li>Cada kernel melhor aumenta essa razão, e os ganhos se somam.</li><li>Quando o MFU chega perto do teto do hardware, novos kernels trazem pouco ganho.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-vrDvatGtIxs" lang="en">Autoresearch Made Our Models 3x Faster</a></p>
+    </article>
+    <article class="termo-card card" id="g-migration" data-busca="migration mudança versionada na estrutura do banco de dados">
+      <h2 class="termo">Migration</h2>
+<p class="traducao">mudança versionada na estrutura do banco de dados</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-TRfzFJCJ7ZE" lang="en">Orchestras, Not Factories: How the Fastest Builders Work</a></p>
+    </article>
+    <article class="termo-card casper" id="g-mixture-of-experts" data-busca="mixture of experts mistura de especialistas com roteador">
+      <h2 class="termo">Mixture of experts</h2>
+<p class="traducao">mistura de especialistas com roteador</p>      <p class="analogia">Mixture of experts é como a recepção de um hospital que olha cada paciente e manda só para o especialista certo, deixando os outros médicos livres.</p>
+      <ol class="passos"><li>Um modelo de IA grande gasta muito cálculo se toda parte dele processar toda informação que chega.</li><li>Na mixture of experts (mistura de especialistas), o modelo tem vários blocos menores, chamados experts, e cada um se especializa em um tipo de padrão.</li><li>Um router (roteador) olha cada token e decide quais experts vão trabalhar nele, e os outros ficam parados.</li><li>A versão da Perceptron, chamada data sparse mixture of experts, usa o roteador para decidir em cada camada que tokens processar e quais pular.</li><li>Sem regra fixa, o modelo aprende sozinho a gastar mais cálculo no que importa para a tarefa, como as frutas de uma foto quando o pedido é achar frutas.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-ZZcE0HeO-Hc" lang="en">From VLM/VLA&#39;s to Embodied Agents</a></p>
+    </article>
+    <article class="termo-card casper" id="g-modality-misalignment" data-busca="modality misalignment desalinhamento de modalidades">
+      <h2 class="termo">Modality misalignment</h2>
+<p class="traducao">desalinhamento de modalidades</p>      <p class="analogia">Desalinhamento de modalidades é como um jogo de futebol na TV que de repente mostra meio segundo de propaganda política no meio do lance.</p>
+      <ol class="passos"><li>Um vídeo mistura vários tipos de informação, como imagem, áudio e texto na tela. Cada tipo é uma modalidade.</li><li>Modality misalignment (desalinhamento de modalidades) acontece quando uma parte do vídeo não combina com o resto ou com o que o vídeo promete.</li><li>Comparar imagem com texto já tem solução pronta, com modelos como o CLIP que medem a semelhança entre embeddings (vetores numéricos).</li><li>O caso difícil é achar um trecho curto fora do tema dentro do próprio vídeo, o que exige olhar clipe por clipe ao longo do tempo.</li><li>No exemplo do talk, o vídeo fala de esportes até os 6 segundos e vira política até 6,5 segundos. O reviewer acha isso lendo só os metadados de cada clipe.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-jNE8No-wvok" lang="en">Modality Misalignment and Originality Attribution in Short-Form Video</a></p>
+    </article>
+    <article class="termo-card card" id="g-model-routing" data-busca="model routing roteamento de modelos">
+      <h2 class="termo">Model routing</h2>
+<p class="traducao">roteamento de modelos</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-vGCJ7diEtrw" lang="en">What It Actually Takes to Build a Software Factory</a>; <a href="edicoes/2026-09-27.html#v-TN3mj92oZ8I" lang="en">Building Self-Improving Agent Software Factories</a></p>
+    </article>
+    <article class="termo-card card" id="g-modelo-bilingue" data-busca="modelo bilíngue llm que entende inglês e a linguagem do catálogo">
+      <h2 class="termo">Modelo bilíngue</h2>
+<p class="traducao">LLM que entende inglês e a linguagem do catálogo</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-lIgdnF0s0kQ" lang="en">Why LLM Recommenders Will Be AI&#39;s Biggest Consumer App</a></p>
+    </article>
+    <article class="termo-card card" id="g-modelo-de-linguagem-n-gram" data-busca="modelo de linguagem n-gram modelo que prevê a próxima palavra pelas anteriores">
+      <h2 class="termo">Modelo de linguagem n-gram</h2>
+<p class="traducao">modelo que prevê a próxima palavra pelas anteriores</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-4Gqg0HVe-AY" lang="en">World Models Need Causality, Not Pretty Pixels</a></p>
+    </article>
+    <article class="termo-card card" id="g-moravec-s-paradox" data-busca="moravec&#39;s paradox paradoxo de moravec">
+      <h2 class="termo">Moravec&#39;s paradox</h2>
+<p class="traducao">paradoxo de Moravec</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-jFHteJjRl8A" lang="en">Robotics Has Been Stuck for 70 Years</a></p>
+    </article>
+    <article class="termo-card card" id="g-motion-between-frames" data-busca="motion between frames movimento entre quadros">
+      <h2 class="termo">Motion between frames</h2>
+<p class="traducao">movimento entre quadros</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-I_VEh7XSwyc" lang="en">Physical AI&#39;s Next Bottleneck Is Finding the Right Video</a></p>
+    </article>
+    <article class="termo-card card" id="g-multi-agent" data-busca="multi-agent visão multiagente, comando da frota por objetivo">
+      <h2 class="termo">Multi-agent</h2>
+<p class="traducao">visão multiagente, comando da frota por objetivo</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-2wgPHvW0mG8" lang="en">One Operator, Many Drones: Inside Skydio&#39;s Autonomy Stack</a></p>
+    </article>
+    <article class="termo-card casper" id="g-multi-agent-system" data-busca="multi-agent system sistema multiagente">
+      <h2 class="termo">Multi-agent system</h2>
+<p class="traducao">sistema multiagente</p>      <p class="analogia">Um sistema multiagente é como uma redação de jornal, com um editor que coordena, um repórter que apura o fato e um arquivista que busca matérias parecidas no acervo.</p>
+      <ol class="passos"><li>Em vez de um único programa fazer tudo, o trabalho é dividido entre vários ajudantes, cada um com uma tarefa.</li><li>Cada ajudante é um agente, um modelo de IA com ferramentas próprias que decide o que fazer dentro do seu papel.</li><li>No talk, o reviewer (revisor) orquestra, o perceiver (percebedor) quebra o vídeo em clipes e descreve cada um, e o retriever (recuperador) busca clipes e autores parecidos.</li><li>O reviewer junta tudo, analisa e pode pedir mais dados ao retriever antes de decidir.</li><li>O palestrante defende dividir só quando um único modelo não resolve, porque cada agente a mais traz custo e mais pontos de falha.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-jNE8No-wvok" lang="en">Modality Misalignment and Originality Attribution in Short-Form Video</a></p>
+    </article>
+    <article class="termo-card casper" id="g-multi-armed-bandit" data-busca="multi-armed bandit bandit de múltiplos braços (teste a/b adaptativo)">
+      <h2 class="termo">Multi-armed bandit</h2>
+<p class="traducao">bandit de múltiplos braços (teste A/B adaptativo)</p>      <p class="analogia">Um multi-armed bandit é como um restaurante que coloca dois pratos novos no cardápio, passa a oferecer mais o que os clientes elogiam e continua servindo o outro de vez em quando para ter certeza.</p>
+      <ol class="passos"><li>Imagine uma fileira de máquinas caça-níqueis e você não sabe qual paga mais. Cada máquina é um braço, e cada puxada ensina algo sobre aquela máquina.</li><li>O desafio é dividir as tentativas entre explorar, testando máquinas pouco usadas, e aproveitar, jogando na que parece melhor até agora.</li><li>No agente, cada braço é uma versão da receita. Cada usuário real recebe uma versão, e o resultado dele conta como acerto ou falha daquela versão.</li><li>Um teste A/B comum divide os usuários meio a meio até o fim. O bandit desloca mais usuários para a versão que está ganhando enquanto o teste ainda roda, com métodos como Thompson sampling (amostragem de Thompson).</li><li>Quando uma versão vence com folga, ela vira a nova receita padrão. Assim menos usuários ficam expostos à versão pior durante o teste.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-7taOQBfjDyE" lang="en">The Loop Is the Product</a></p>
+    </article>
+  </div>
+</section>
+<section class="letra" id="letra-N" aria-label="Letra N">
+  <p class="letra-titulo" aria-hidden="true">N</p>
+  <div class="glossario">
+    <article class="termo-card casper" id="g-n-1-query" data-busca="n+1 query consulta repetida ao banco em laço">
+      <h2 class="termo">N+1 query</h2>
+<p class="traducao">consulta repetida ao banco em laço</p>      <p class="analogia">Uma N+1 query é como um garçom que anota a mesa inteira, mas vai à cozinha buscar um prato por vez, fazendo dez viagens quando uma bandeja resolveria.</p>
+      <ol class="passos"><li>Um programa guarda dados num banco de dados (database) e busca esses dados fazendo perguntas chamadas consultas (queries). Cada consulta é uma ida e volta que custa tempo.</li><li>O problema aparece quando o código faz 1 consulta para pegar uma lista e depois faz mais 1 consulta para cada item dessa lista. Com N itens, o total vira N+1 consultas.</li><li>Exemplo: mostrar 100 pedidos e buscar o cliente de cada pedido um por um gera 101 consultas, quando 2 bastariam.</li><li>Com poucos dados de teste o atraso passa despercebido. Em produção, com milhares de linhas, a página fica lenta e o banco fica sobrecarregado.</li><li>A correção junta as buscas num lote só, com um JOIN (junção de tabelas) ou com carregamento antecipado (eager loading) do ORM. O talk usou esse termo para medir padrões de erro por agente.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-474j-n1Ltxc" lang="en">AI-Generated Code Is Already Competing With Human Code</a></p>
+    </article>
+    <article class="termo-card card" id="g-ndcg-e-mrr" data-busca="ndcg e mrr métricas de qualidade de ranking">
+      <h2 class="termo">NDCG e MRR</h2>
+<p class="traducao">Métricas de qualidade de ranking</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-ACPEpji5NV4" lang="en">Distill the LLM, Don&#39;t Serve It: Search &amp; Personalization at DoorDash</a></p>
+    </article>
+    <article class="termo-card casper" id="g-neuro-simbolico" data-busca="neuro-simbólico rede neural combinada com representação simbólica, como código">
+      <h2 class="termo">Neuro-simbólico</h2>
+<p class="traducao">rede neural combinada com representação simbólica, como código</p>      <p class="analogia">Um sistema neuro-simbólico é como uma reforma em que o arquiteto desenha a planta com medidas exatas e o decorador escolhe cores e texturas à vontade.</p>
+      <ol class="passos"><li>Uma máquina pode guardar conhecimento de dois jeitos. Um usa regras escritas que qualquer pessoa lê. O outro aprende padrões com exemplos, sem regras explícitas.</li><li>O jeito com regras escritas se chama simbólico, como código ou lógica. O jeito que aprende com exemplos se chama neural, feito com redes neurais.</li><li>Um sistema neuro-simbólico junta os dois. Na Moonlake, o código descreve os objetos que podem ser movidos, e um modelo de difusão (gerador de imagens) cria as texturas.</li><li>Um loop renderiza a cena, compara com a realidade, mede os desvios e revisa o código, no mesmo padrão de agentes de programação como o Claude Code.</li><li>Manning destaca que a parte simbólica fica fácil de ler, controlar, editar e manter por humanos, algo difícil de fazer numa rede neural pura.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-4Gqg0HVe-AY" lang="en">World Models Need Causality, Not Pretty Pixels</a></p>
+    </article>
+  </div>
+</section>
+<section class="letra" id="letra-O" aria-label="Letra O">
+  <p class="letra-titulo" aria-hidden="true">O</p>
+  <div class="glossario">
+    <article class="termo-card casper" id="g-object-detection" data-busca="object detection detecção de objetos">
+      <h2 class="termo">Object detection</h2>
+<p class="traducao">detecção de objetos</p>      <p class="analogia">A detecção de objetos é como um fiscal de trânsito que olha a rua, aponta cada placa e cada carro e diz o nome de cada um.</p>
+      <ol class="passos"><li>A detecção de objetos (object detection) responde a duas perguntas sobre uma imagem. O que aparece nela e onde está.</li><li>Para cada objeto, o modelo desenha um retângulo em volta, chamado caixa delimitadora (bounding box), e dá um nome de classe, como placa ou assinatura.</li><li>Um detector pequeno, como o RF-DETR, aprende só as classes da sua tarefa a partir de imagens rotuladas.</li><li>Por ser pequeno e focado, ele roda de 30 a 40 quadros por segundo em hardware simples. Um VLM grande chamado a cada quadro não chega a esse tempo real.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-dKcTBQzR7jI" lang="en">Skill issue: stop deploying vision language models, use them with Skills</a></p>
+    </article>
+    <article class="termo-card card" id="g-observabilidade-de-agentes" data-busca="observabilidade de agentes registro de sessões, turnos e ferramentas">
+      <h2 class="termo">Observabilidade de agentes</h2>
+<p class="traducao">registro de sessões, turnos e ferramentas</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-hd7TOvmyAxU" lang="en">An AI Research Agent That Runs Your Experiments</a></p>
+    </article>
+    <article class="termo-card card" id="g-occlusion-tracking" data-busca="occlusion tracking rastreamento mesmo quando o objeto some atrás de algo">
+      <h2 class="termo">Occlusion tracking</h2>
+<p class="traducao">rastreamento mesmo quando o objeto some atrás de algo</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-2wgPHvW0mG8" lang="en">One Operator, Many Drones: Inside Skydio&#39;s Autonomy Stack</a></p>
+    </article>
+    <article class="termo-card card" id="g-ocr" data-busca="ocr reconhecimento óptico de caracteres">
+      <h2 class="termo">OCR</h2>
+<p class="traducao">reconhecimento óptico de caracteres</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-0I07YAuF8xA" lang="en">From Ingestion to Agents: How AI Teams Build on Document Intelligence</a></p>
+    </article>
+    <article class="termo-card card" id="g-ocr-em-nivel-de-bloco" data-busca="ocr em nível de bloco leitura de texto por trechos da página">
+      <h2 class="termo">OCR em nível de bloco</h2>
+<p class="traducao">leitura de texto por trechos da página</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-T72nqdC92PM" lang="en">From Scratch to SOTA: Training a 3B State-Space Vision Model</a></p>
+    </article>
+    <article class="termo-card card" id="g-omni-bodied-brain" data-busca="omni-bodied brain cérebro para qualquer corpo">
+      <h2 class="termo">Omni-bodied brain</h2>
+<p class="traducao">cérebro para qualquer corpo</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-jFHteJjRl8A" lang="en">Robotics Has Been Stuck for 70 Years</a></p>
+    </article>
+    <article class="termo-card card" id="g-on-premise" data-busca="on premise rodar nos próprios servidores">
+      <h2 class="termo">On premise</h2>
+<p class="traducao">rodar nos próprios servidores</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-9JFGohx4E7U" lang="en">GLM-5.2: Open Weights, Near-Frontier Intelligence</a></p>
+    </article>
+    <article class="termo-card card" id="g-one-way-door-two-way-door" data-busca="one-way door / two-way door porta de mão única / de mão dupla">
+      <h2 class="termo">One-way door / two-way door</h2>
+<p class="traducao">porta de mão única / de mão dupla</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-LlgiOCmFG_w" lang="en">Fixing the PR Bottleneck</a></p>
+    </article>
+    <article class="termo-card card" id="g-ooda-loop" data-busca="ooda loop ciclo observar, orientar, decidir, agir">
+      <h2 class="termo">OODA loop</h2>
+<p class="traducao">ciclo observar, orientar, decidir, agir</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-7taOQBfjDyE" lang="en">The Loop Is the Product</a></p>
+    </article>
+    <article class="termo-card card" id="g-open-weights" data-busca="open weights pesos abertos">
+      <h2 class="termo">Open weights</h2>
+<p class="traducao">pesos abertos</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-9JFGohx4E7U" lang="en">GLM-5.2: Open Weights, Near-Frontier Intelligence</a></p>
+    </article>
+    <article class="termo-card card" id="g-openclaw" data-busca="openclaw framework de agentes de código aberto">
+      <h2 class="termo">OpenClaw</h2>
+<p class="traducao">framework de agentes de código aberto</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-jgWY66RaSrQ" lang="en">I Gave an AI a Body</a></p>
+    </article>
+    <article class="termo-card casper" id="g-optimizer" data-busca="optimizer otimizador (ex.: adam)">
+      <h2 class="termo">Optimizer</h2>
+<p class="traducao">otimizador (ex.: Adam)</p>      <p class="analogia">O otimizador é como o técnico que olha o resultado de cada treino do atleta e decide quanto e em que direção mudar a rotina.</p>
+      <ol class="passos"><li>Um modelo de IA aprende ajustando milhões de números internos, chamados pesos, até errar menos.</li><li>A cada passo de treino, o modelo mede o próprio erro, a perda (loss), e calcula em que direção cada peso deveria mudar.</li><li>O otimizador (optimizer) decide o tamanho e a direção de cada ajuste. Adam e Shampoo são exemplos conhecidos.</li><li>Um otimizador melhor chega à mesma perda em menos passos, e isso economiza tempo e GPU.</li><li>No Optimizer Speedrun, os agentes só podiam trocar o otimizador. Arquitetura e dados ficavam fixos.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-oVsEddfhdxc" lang="en">We Let Claude Code and Codex Race Human Researchers</a></p>
+    </article>
+    <article class="termo-card card" id="g-orchestrator-e-workers" data-busca="orchestrator e workers orquestrador e agentes executores">
+      <h2 class="termo">Orchestrator e workers</h2>
+<p class="traducao">orquestrador e agentes executores</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-vGCJ7diEtrw" lang="en">What It Actually Takes to Build a Software Factory</a></p>
+    </article>
+    <article class="termo-card card" id="g-orquestrador-de-agentes" data-busca="orquestrador de agentes orchestrator">
+      <h2 class="termo">Orquestrador de agentes</h2>
+<p class="traducao">orchestrator</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-YIVkERhy8xo" lang="en">I Turned Coding Agents Into a Strategy Game</a></p>
+    </article>
+    <article class="termo-card card" id="g-orquestracao" data-busca="orquestração camada que coordena agentes e infraestrutura">
+      <h2 class="termo">Orquestração</h2>
+<p class="traducao">camada que coordena agentes e infraestrutura</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-HvboD89DyQ8" lang="en">No, That&#39;s Not a Software Factory</a></p>
+    </article>
+    <article class="termo-card casper" id="g-ortomosaico-de-drone" data-busca="ortomosaico de drone drone orthomosaic map (mapa montado com fotos aéreas)">
+      <h2 class="termo">Ortomosaico de drone</h2>
+<p class="traducao">drone orthomosaic map (mapa montado com fotos aéreas)</p>      <p class="analogia">Um ortomosaico de drone é como montar um quebra-cabeça com várias fotos tiradas de cima de uma mesa, até formar uma única imagem da mesa inteira vista de cima.</p>
+      <ol class="passos"><li>Um drone voa sobre o pasto e tira centenas de fotos, uma ao lado da outra, com uma parte de cada foto repetida na seguinte.</li><li>Um programa acha os pontos repetidos entre as fotos e costura todas elas numa única imagem grande da área.</li><li>O programa também corrige a inclinação da câmera e o relevo do terreno, para que cada ponto apareça como se fosse visto bem de cima. Essa correção se chama ortorretificação (orthorectification).</li><li>O resultado funciona como um mapa (orthomosaic map, ou mapa ortomosaico) com escala uniforme, em que dá para medir distâncias e áreas com precisão.</li><li>No pasto, esse mapa de alta resolução mostra onde o capim está alto ou baixo. O obstáculo citado no talk é que o voo exige piloto treinado e nenhuma jurisdição aprova drones autônomos para esse uso.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-ztlXKfPCT3Q" lang="en">You’re Not Thinking Big Enough: Rebuilding Food Systems with AI Agents</a></p>
+    </article>
+    <article class="termo-card casper" id="g-otimizacao-de-prompt" data-busca="otimização de prompt ajuste automático do texto de instrução do modelo">
+      <h2 class="termo">Otimização de prompt</h2>
+<p class="traducao">ajuste automático do texto de instrução do modelo</p>      <p class="analogia">Otimização de prompt é como revisar a receita escrita depois de provar o prato, anotando &#34;menos sal&#34; e &#34;forno mais baixo&#34; em vez de trocar o cozinheiro.</p>
+      <ol class="passos"><li>O prompt é o texto de instrução que o modelo lê antes de trabalhar, e mudar esse texto muda o comportamento.</li><li>Trocar uma palavra, como pedir resumo de 10 linhas em vez de 1, altera a saída mais do que milhares de pequenos ajustes nos pesos.</li><li>Na otimização de prompt, o sistema roda em alguns exemplos e guarda o rastro completo, com raciocínio, chamadas de ferramenta, erros e nota.</li><li>Outro LLM (modelo de linguagem) lê esse rastro, entende o que falhou e escreve uma versão melhor do prompt.</li><li>O GEPA repete esse ciclo e guarda os candidatos que vencem em pelo menos um exemplo, chegando a prompts que descrevem a tarefa em detalhe.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-OA-Mc60Rboo" lang="en">Beating RL With Reflection: GEPA and Optimize Anything</a></p>
+    </article>
+    <article class="termo-card card" id="g-out-of-distribution" data-busca="out of distribution fora da distribuição de treino">
+      <h2 class="termo">Out of distribution</h2>
+<p class="traducao">fora da distribuição de treino</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-Sjfz1TqxzEs" lang="en">Robot Demos Are Easy. Reliability Is Hard</a></p>
+    </article>
+    <article class="termo-card card" id="g-outer-loop-agent" data-busca="outer-loop agent agente de laço externo">
+      <h2 class="termo">Outer-loop agent</h2>
+<p class="traducao">agente de laço externo</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-TN3mj92oZ8I" lang="en">Building Self-Improving Agent Software Factories</a></p>
+    </article>
+  </div>
+</section>
+<section class="letra" id="letra-P" aria-label="Letra P">
+  <p class="letra-titulo" aria-hidden="true">P</p>
+  <div class="glossario">
+    <article class="termo-card casper" id="g-pareto-efficiency" data-busca="pareto efficiency eficiência de pareto (melhor custo por qualidade)">
+      <h2 class="termo">Pareto efficiency</h2>
+<p class="traducao">eficiência de Pareto (melhor custo por qualidade)</p>      <p class="analogia">Pareto efficiency é como escolher o restaurante do almoço da firma, onde você descarta todo lugar que tem outro mais barato e mais gostoso ao mesmo tempo, e fica só com os que valem o preço.</p>
+      <ol class="passos"><li>Toda escolha de modelo de IA mexe com duas coisas ao mesmo tempo, o custo de cada execução e a qualidade da resposta.</li><li>Uma opção é dominada quando existe outra que custa menos e entrega igual ou melhor. Opção dominada nunca vale a pena.</li><li>Pareto efficiency (eficiência de Pareto) descreve as opções que sobram. Nelas, para ganhar qualidade você precisa pagar mais, e para pagar menos você perde qualidade.</li><li>Essas opções formam a fronteira de Pareto (Pareto frontier), uma curva de melhor custo para cada nível de qualidade.</li><li>No Warp, os modelos auto são reavaliados a cada modelo novo e ficam só os que estão nessa fronteira. Tarefas simples, como triagem e CI, vão para modelos baratos da fronteira em vez do Opus.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-TN3mj92oZ8I" lang="en">Building Self-Improving Agent Software Factories</a></p>
+    </article>
+    <article class="termo-card card" id="g-pareto-frontier" data-busca="pareto frontier fronteira de pareto (melhor troca entre custo e precisão)">
+      <h2 class="termo">Pareto frontier</h2>
+<p class="traducao">fronteira de Pareto (melhor troca entre custo e precisão)</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-RQi7x-navxU" lang="en">Building the Document Context Layer for AI Agents</a></p>
+    </article>
+    <article class="termo-card card" id="g-pastejo-rotacionado" data-busca="pastejo rotacionado rotational grazing">
+      <h2 class="termo">Pastejo rotacionado</h2>
+<p class="traducao">rotational grazing</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-ztlXKfPCT3Q" lang="en">You’re Not Thinking Big Enough: Rebuilding Food Systems with AI Agents</a></p>
+    </article>
+    <article class="termo-card card" id="g-pattern-matching" data-busca="pattern matching reconhecimento de padrões">
+      <h2 class="termo">Pattern matching</h2>
+<p class="traducao">reconhecimento de padrões</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-A_I8mw8yfns" lang="en">The Best Models Still Reason Like Toddlers</a></p>
+    </article>
+    <article class="termo-card card" id="g-persistent-memory" data-busca="persistent memory memória persistente">
+      <h2 class="termo">Persistent memory</h2>
+<p class="traducao">memória persistente</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-TN3mj92oZ8I" lang="en">Building Self-Improving Agent Software Factories</a></p>
+    </article>
+    <article class="termo-card card" id="g-persona" data-busca="persona papel que o modelo assume, como revisor de segurança ou pesquisador de ux">
+      <h2 class="termo">Persona</h2>
+<p class="traducao">papel que o modelo assume, como revisor de segurança ou pesquisador de UX</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-6MudaeKdBSk" lang="en">Scale the Judgment, Not the Model</a></p>
+    </article>
+    <article class="termo-card casper" id="g-policy-surface" data-busca="policy surface superfície de política editável">
+      <h2 class="termo">Policy surface</h2>
+<p class="traducao">superfície de política editável</p>      <p class="analogia">A superfície de política é como a parte da receita que o cozinheiro novo pode ajustar, o tempero e o tempo de forno, enquanto o fogão, os ingredientes e o júri do concurso ficam fixos.</p>
+      <ol class="passos"><li>Quando um sistema automático tenta melhorar um agente sozinho, ele precisa de limites claros sobre o que pode mudar.</li><li>Policy surface (superfície de política) é essa lista curta de regras editáveis. No talk, ela inclui escrita de memória, recuperação de memória, regras de confiança, atribuição de fonte e gatilhos de replanejamento.</li><li>O resto fica congelado. O harness (a estrutura que roda os testes), os cenários e as métricas ficam fora do alcance do loop de melhoria.</li><li>Congelar a avaliação impede que o loop trapaceie. Se pudesse mexer nas métricas, ele subiria a nota sem melhorar o agente de verdade.</li><li>Cada ajuste é pequeno, como marcar se um fato veio de primeira ou de segunda mão. Mesmo assim, ele muda o comportamento da vila inteira, e o placar decide se a mudança fica ou é desfeita.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-x4e5O9zN0TE" lang="en">Long-Horizon Agents Need Experiments, Not Just Prompts</a></p>
+    </article>
+    <article class="termo-card card" id="g-post-training" data-busca="post-training pós-treino">
+      <h2 class="termo">Post-training</h2>
+<p class="traducao">pós-treino</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-Sjfz1TqxzEs" lang="en">Robot Demos Are Easy. Reliability Is Hard</a></p>
+    </article>
+    <article class="termo-card card" id="g-prd" data-busca="prd documento de requisitos do produto">
+      <h2 class="termo">PRD</h2>
+<p class="traducao">documento de requisitos do produto</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-HvboD89DyQ8" lang="en">No, That&#39;s Not a Software Factory</a></p>
+    </article>
+    <article class="termo-card card" id="g-pre-training-data-pyramid" data-busca="pre-training data pyramid pirâmide de dados de pré-treino">
+      <h2 class="termo">Pre-training data pyramid</h2>
+<p class="traducao">pirâmide de dados de pré-treino</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-Sjfz1TqxzEs" lang="en">Robot Demos Are Easy. Reliability Is Hard</a></p>
+    </article>
+    <article class="termo-card card" id="g-pre-training-e-post-training" data-busca="pre-training e post-training pré-treino (aprender a língua) e pós-treino (aprender a tarefa)">
+      <h2 class="termo">Pre-training e post-training</h2>
+<p class="traducao">pré-treino (aprender a língua) e pós-treino (aprender a tarefa)</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-lIgdnF0s0kQ" lang="en">Why LLM Recommenders Will Be AI&#39;s Biggest Consumer App</a>; <a href="edicoes/2026-09-24.html#v-jFHteJjRl8A" lang="en">Robotics Has Been Stuck for 70 Years</a></p>
+    </article>
+    <article class="termo-card casper" id="g-preemptible-job" data-busca="preemptible job tarefa interrompível por quem tem prioridade">
+      <h2 class="termo">Preemptible job</h2>
+<p class="traducao">tarefa interrompível por quem tem prioridade</p>      <p class="analogia">Uma tarefa interrompível é como usar a sala de reunião vazia até quem reservou chegar e pedir a sala de volta.</p>
+      <ol class="passos"><li>Em um cluster, um grupo de computadores com GPUs, várias pessoas disputam as mesmas máquinas.</li><li>Uma tarefa interrompível (preemptible job) roda nas máquinas ociosas com prioridade baixa.</li><li>Se alguém com prioridade precisa da máquina, o sistema cancela a tarefa na hora.</li><li>Os agentes enviavam treinos com o comando sbatch do gerenciador Slurm, sempre sob essa permissão.</li><li>Assim os agentes aproveitavam GPU livre sem atrapalhar a equipe, mas um treino podia ser cortado no meio.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-oVsEddfhdxc" lang="en">We Let Claude Code and Codex Race Human Researchers</a></p>
+    </article>
+    <article class="termo-card casper" id="g-profiler" data-busca="profiler ferramenta que mostra onde o tempo é gasto">
+      <h2 class="termo">Profiler</h2>
+<p class="traducao">ferramenta que mostra onde o tempo é gasto</p>      <p class="analogia">Um profiler é como o cronômetro que o técnico usa em cada trecho da corrida para ver em qual curva o atleta perde tempo.</p>
+      <ol class="passos"><li>Um programa lento tem partes que gastam muito tempo e partes que gastam pouco.</li><li>O profiler (medidor de desempenho) registra quanto tempo cada parte leva enquanto o programa roda.</li><li>Ele mostra se o gargalo está no cálculo, na memória ou no excesso de pequenas tarefas disparadas.</li><li>Na NVIDIA a ferramenta é o Nsight Systems, que desenha uma linha do tempo com cada kernel da GPU.</li><li>O humano lê esse gráfico, acha o desperdício e decide a ideia de melhoria que o agente vai ajustar.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-vrDvatGtIxs" lang="en">Autoresearch Made Our Models 3x Faster</a></p>
+    </article>
+    <article class="termo-card card" id="g-prompt-caching" data-busca="prompt caching cache de prompt">
+      <h2 class="termo">Prompt caching</h2>
+<p class="traducao">cache de prompt</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-vGCJ7diEtrw" lang="en">What It Actually Takes to Build a Software Factory</a></p>
+    </article>
+    <article class="termo-card card" id="g-provenance" data-busca="provenance proveniência (origem da informação)">
+      <h2 class="termo">Provenance</h2>
+<p class="traducao">proveniência (origem da informação)</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-x4e5O9zN0TE" lang="en">Long-Horizon Agents Need Experiments, Not Just Prompts</a></p>
+    </article>
+    <article class="termo-card card" id="g-pseudo-labeling" data-busca="pseudo-labeling rótulos gerados por modelo, não por humanos">
+      <h2 class="termo">Pseudo-labeling</h2>
+<p class="traducao">rótulos gerados por modelo, não por humanos</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-dKcTBQzR7jI" lang="en">Skill issue: stop deploying vision language models, use them with Skills</a></p>
+    </article>
+    <article class="termo-card card" id="g-pull-request" data-busca="pull request pedido de integração de código">
+      <h2 class="termo">Pull request</h2>
+<p class="traducao">pedido de integração de código</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-474j-n1Ltxc" lang="en">AI-Generated Code Is Already Competing With Human Code</a></p>
+    </article>
+  </div>
+</section>
+<section class="letra" id="letra-Q" aria-label="Letra Q">
+  <p class="letra-titulo" aria-hidden="true">Q</p>
+  <div class="glossario">
+    <article class="termo-card casper" id="g-quantization" data-busca="quantization quantização">
+      <h2 class="termo">Quantization</h2>
+<p class="traducao">quantização</p>      <p class="analogia">Quantização é como arredondar os preços da lista de compras para o real mais próximo, o que deixa a conta mais rápida e quase não muda o total.</p>
+      <ol class="passos"><li>Um modelo de IA guarda bilhões de números. Cada número ocupa espaço na memória e tempo de cálculo.</li><li>Quantization (quantização) guarda esses números com menos precisão, usando menos bits por número.</li><li>Formatos comuns são bfloat16 (16 bits) e 4 bits. Menos bits significa modelo menor, mais rápido e mais barato de servir.</li><li>O arredondamento pode derrubar a qualidade, então o time testa cada formato e compara o desempenho.</li><li>No talk, o time monta uma tabela cruzando tamanhos de destilação e níveis de quantização para achar o ponto de equilíbrio entre acerto e custo.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-jNE8No-wvok" lang="en">Modality Misalignment and Originality Attribution in Short-Form Video</a></p>
+    </article>
+  </div>
+</section>
+<section class="letra" id="letra-R" aria-label="Letra R">
+  <p class="letra-titulo" aria-hidden="true">R</p>
+  <div class="glossario">
+    <article class="termo-card card" id="g-rag" data-busca="rag geração com recuperação de memória">
+      <h2 class="termo">RAG</h2>
+<p class="traducao">geração com recuperação de memória</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-x4e5O9zN0TE" lang="en">Long-Horizon Agents Need Experiments, Not Just Prompts</a>; <a href="edicoes/2026-09-24.html#v-4Gqg0HVe-AY" lang="en">World Models Need Causality, Not Pretty Pixels</a>; <a href="edicoes/2026-09-23.html#v-0I07YAuF8xA" lang="en">From Ingestion to Agents: How AI Teams Build on Document Intelligence</a>; <a href="edicoes/2026-09-23.html#v-RQi7x-navxU" lang="en">Building the Document Context Layer for AI Agents</a></p>
+    </article>
+    <article class="termo-card card" id="g-ralph-loop" data-busca="ralph loop laço que reexecuta o agente até a tarefa terminar">
+      <h2 class="termo">Ralph loop</h2>
+<p class="traducao">laço que reexecuta o agente até a tarefa terminar</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-TRfzFJCJ7ZE" lang="en">Orchestras, Not Factories: How the Fastest Builders Work</a>; <a href="edicoes/2026-09-27.html#v-vGCJ7diEtrw" lang="en">What It Actually Takes to Build a Software Factory</a></p>
+    </article>
+    <article class="termo-card card" id="g-re-ranker" data-busca="re-ranker modelo que reordena candidatos e escolhe os melhores">
+      <h2 class="termo">Re-ranker</h2>
+<p class="traducao">modelo que reordena candidatos e escolhe os melhores</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-lIgdnF0s0kQ" lang="en">Why LLM Recommenders Will Be AI&#39;s Biggest Consumer App</a></p>
+    </article>
+    <article class="termo-card casper" id="g-recursive-self-improvement" data-busca="recursive self-improvement autoaperfeiçoamento recursivo">
+      <h2 class="termo">Recursive self-improvement</h2>
+<p class="traducao">autoaperfeiçoamento recursivo</p>      <p class="analogia">O autoaperfeiçoamento recursivo é como um aluno que escreve a própria apostila, estuda por ela e depois escreve uma apostila melhor, sem professor.</p>
+      <ol class="passos"><li>Hoje, pessoas fazem a pesquisa e treinam os modelos de IA.</li><li>No autoaperfeiçoamento recursivo (recursive self-improvement), modelos pesquisam e treinam novos modelos sem intervenção humana.</li><li>Se cada geração melhora a seguinte, o progresso pode acelerar sozinho.</li><li>Grandes laboratórios dizem que isso está perto, mas faltam testes independentes para medir.</li><li>A Prime Intellect usa o speedrun como teste aberto para medir se agentes já fazem pesquisa de IA.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-oVsEddfhdxc" lang="en">We Let Claude Code and Codex Race Human Researchers</a></p>
+    </article>
+    <article class="termo-card card" id="g-red-green-refactor" data-busca="red-green-refactor vermelho, verde, refatorar">
+      <h2 class="termo">Red-green-refactor</h2>
+<p class="traducao">vermelho, verde, refatorar</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-LlgiOCmFG_w" lang="en">Fixing the PR Bottleneck</a></p>
+    </article>
+    <article class="termo-card casper" id="g-reinforcement-learning" data-busca="reinforcement learning aprendizado por reforço">
+      <h2 class="termo">Reinforcement learning</h2>
+<p class="traducao">aprendizado por reforço</p>      <p class="analogia">Reinforcement learning é como ensinar um cachorro com petisco, em que ele tenta várias coisas e repete mais as que renderam recompensa.</p>
+      <ol class="passos"><li>Reinforcement learning (aprendizado por reforço) ensina por tentativa e erro, sem mostrar a resposta certa antes.</li><li>O modelo tenta a tarefa, e cada tentativa completa se chama rollout (execução completa da tarefa).</li><li>Ao fim de cada rollout, uma regra dá uma recompensa, como 1 para resposta correta e 0 para errada.</li><li>Um algoritmo como o GRPO usa essas recompensas para ajustar os pesos do modelo e favorecer o que deu certo.</li><li>Em tarefas longas ou caras, como agentes que rodam por horas, o método fica inviável porque exige centenas de milhares de rollouts.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-OA-Mc60Rboo" lang="en">Beating RL With Reflection: GEPA and Optimize Anything</a></p>
+    </article>
+    <article class="termo-card card" id="g-retrospective" data-busca="retrospective retrospectiva (skill retro)">
+      <h2 class="termo">Retrospective</h2>
+<p class="traducao">retrospectiva (skill retro)</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-LlgiOCmFG_w" lang="en">Fixing the PR Bottleneck</a></p>
+    </article>
+    <article class="termo-card card" id="g-revert" data-busca="revert reversão de um pr já mergeado">
+      <h2 class="termo">Revert</h2>
+<p class="traducao">reversão de um PR já mergeado</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-474j-n1Ltxc" lang="en">AI-Generated Code Is Already Competing With Human Code</a></p>
+    </article>
+    <article class="termo-card card" id="g-review-kit" data-busca="review kit kit de revisão">
+      <h2 class="termo">Review kit</h2>
+<p class="traducao">kit de revisão</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-YIVkERhy8xo" lang="en">I Turned Coding Agents Into a Strategy Game</a></p>
+    </article>
+    <article class="termo-card card" id="g-reward-hacking" data-busca="reward hacking trapaça do agente para melhorar a métrica">
+      <h2 class="termo">Reward hacking</h2>
+<p class="traducao">trapaça do agente para melhorar a métrica</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-vrDvatGtIxs" lang="en">Autoresearch Made Our Models 3x Faster</a></p>
+    </article>
+    <article class="termo-card card" id="g-reward-model" data-busca="reward model modelo de recompensa">
+      <h2 class="termo">Reward model</h2>
+<p class="traducao">modelo de recompensa</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-Sjfz1TqxzEs" lang="en">Robot Demos Are Easy. Reliability Is Hard</a></p>
+    </article>
+    <article class="termo-card casper" id="g-rlvr" data-busca="rlvr aprendizado por reforço com recompensas verificáveis">
+      <h2 class="termo">RLVR</h2>
+<p class="traducao">aprendizado por reforço com recompensas verificáveis</p>      <p class="analogia">O RLVR é como um treino de tabuada com gabarito, em que o aluno responde várias vezes, o professor confere cada resposta na hora e elogia as tentativas melhores que a média da turma.</p>
+      <ol class="passos"><li>No aprendizado por reforço (reinforcement learning), o modelo tenta, recebe uma nota e passa a repetir mais o que deu nota alta.</li><li>O RLVR (reinforcement learning with verifiable rewards, aprendizado por reforço com recompensas verificáveis) usa notas que um programa calcula sozinho, sem um humano julgar.</li><li>Em OCR isso funciona bem, porque dá para medir a taxa de erro por caractere, conferir a estrutura de uma tabela ou checar regras de gramática.</li><li>O modelo gera um grupo de respostas para a mesma imagem, os testes dão nota a cada uma e o treino reforça as que ficam acima da média do grupo.</li><li>Como a nota sai de testes automáticos, o processo fica barato de repetir em escala.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-T72nqdC92PM" lang="en">From Scratch to SOTA: Training a 3B State-Space Vision Model</a></p>
+    </article>
+    <article class="termo-card card" id="g-rodada-de-revisao" data-busca="rodada de revisão ciclo de comentar, corrigir e reenviar o pr">
+      <h2 class="termo">Rodada de revisão</h2>
+<p class="traducao">ciclo de comentar, corrigir e reenviar o PR</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-474j-n1Ltxc" lang="en">AI-Generated Code Is Already Competing With Human Code</a></p>
+    </article>
+    <article class="termo-card card" id="g-rollback" data-busca="rollback reversão de mudança">
+      <h2 class="termo">Rollback</h2>
+<p class="traducao">reversão de mudança</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-x4e5O9zN0TE" lang="en">Long-Horizon Agents Need Experiments, Not Just Prompts</a></p>
+    </article>
+    <article class="termo-card casper" id="g-rollout" data-busca="rollout execução de um modelo sobre uma tarefa de avaliação">
+      <h2 class="termo">Rollout</h2>
+<p class="traducao">execução de um modelo sobre uma tarefa de avaliação</p>      <p class="analogia">Um rollout é como uma rodada de prova em que o aluno resolve a lista inteira de exercícios e entrega a folha para correção.</p>
+      <ol class="passos"><li>Para saber se um modelo de IA melhorou, a equipe entrega a ele uma lista fixa de tarefas de teste.</li><li>Cada vez que o modelo tenta resolver essas tarefas do começo ao fim, temos um rollout (execução completa sobre a tarefa).</li><li>Os pesquisadores rodam vários rollouts da versão atual (controle) e da versão nova (experimento) e guardam os resultados em duas tabelas.</li><li>Na eval side-by-side (avaliação lado a lado), eles comparam as tabelas para achar a diferença de desempenho e o motivo dela.</li><li>No exemplo do talk, o agente calcula essa diferença, propõe 100 hipóteses e cria um subagente para investigar cada uma em paralelo.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-buHC7bQE1X4" lang="en">Get Out of the Model&#39;s Way</a>; <a href="edicoes/2026-09-27.html#v-6MudaeKdBSk" lang="en">Scale the Judgment, Not the Model</a>; <a href="edicoes/2026-09-26.html#v-OA-Mc60Rboo" lang="en">Beating RL With Reflection: GEPA and Optimize Anything</a>; <a href="edicoes/2026-09-26.html#v-XyV6bSMyq-I" lang="en">How We Built an Agent That Improves Itself</a></p>
+    </article>
+  </div>
+</section>
+<section class="letra" id="letra-S" aria-label="Letra S">
+  <p class="letra-titulo" aria-hidden="true">S</p>
+  <div class="glossario">
+    <article class="termo-card card" id="g-sala-compartilhada" data-busca="sala compartilhada shared room">
+      <h2 class="termo">Sala compartilhada</h2>
+<p class="traducao">shared room</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-YIVkERhy8xo" lang="en">I Turned Coding Agents Into a Strategy Game</a></p>
+    </article>
+    <article class="termo-card casper" id="g-sample-ratio-mismatch" data-busca="sample ratio mismatch desvio entre a divisão esperada e a real dos grupos de um experimento">
+      <h2 class="termo">Sample ratio mismatch</h2>
+<p class="traducao">desvio entre a divisão esperada e a real dos grupos de um experimento</p>      <p class="analogia">Sample ratio mismatch é como uma pesquisa de sabor numa padaria em que metade dos clientes deveria provar o pão novo, mas no fim do dia a conta mostra muito mais gente num lado da fila do que no outro.</p>
+      <ol class="passos"><li>Num experimento A/B (teste com dois grupos), o sistema sorteia os usuários entre a versão antiga e a nova numa proporção combinada, por exemplo metade para cada lado.</li><li>No fim, alguém conta quantas pessoas caíram de fato em cada grupo. Uma pequena diferença é normal, porque o sorteio tem variação.</li><li>Sample ratio mismatch (desvio na proporção da amostra) acontece quando a diferença é grande demais para ser acaso. Um teste estatístico, como o qui-quadrado, mede essa chance.</li><li>Esse desvio indica defeito na divisão ou no registro dos dados, como um bug que expulsa parte dos usuários de um grupo. Por isso o resultado do experimento deixa de ser confiável.</li><li>No agente do palestrante, uma flag com esse desvio conta como sinal de risco. Ela sai da fila de limpeza automática e fica para um humano decidir.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-6MudaeKdBSk" lang="en">Scale the Judgment, Not the Model</a></p>
+    </article>
+    <article class="termo-card card" id="g-sandbox" data-busca="sandbox ambiente isolado para rodar o código">
+      <h2 class="termo">Sandbox</h2>
+<p class="traducao">ambiente isolado para rodar o código</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-474j-n1Ltxc" lang="en">AI-Generated Code Is Already Competing With Human Code</a>; <a href="edicoes/2026-09-27.html#v-tUPPVhBBcoM" lang="en">Software Engineering Is Becoming Factory Engineering</a>; <a href="edicoes/2026-09-27.html#v-TRfzFJCJ7ZE" lang="en">Orchestras, Not Factories: How the Fastest Builders Work</a>; <a href="edicoes/2026-09-27.html#v-HvboD89DyQ8" lang="en">No, That&#39;s Not a Software Factory</a></p>
+    </article>
+    <article class="termo-card card" id="g-scaling-law" data-busca="scaling law lei de escala: mais dados e computação reduzem a perda">
+      <h2 class="termo">Scaling law</h2>
+<p class="traducao">lei de escala: mais dados e computação reduzem a perda</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-lIgdnF0s0kQ" lang="en">Why LLM Recommenders Will Be AI&#39;s Biggest Consumer App</a>; <a href="edicoes/2026-09-23.html#v-ZZcE0HeO-Hc" lang="en">From VLM/VLA&#39;s to Embodied Agents</a></p>
+    </article>
+    <article class="termo-card card" id="g-scaling-with-intelligence" data-busca="scaling with intelligence produto que melhora junto com o modelo">
+      <h2 class="termo">Scaling with intelligence</h2>
+<p class="traducao">produto que melhora junto com o modelo</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-buHC7bQE1X4" lang="en">Get Out of the Model&#39;s Way</a></p>
+    </article>
+    <article class="termo-card card" id="g-scratchpad" data-busca="scratchpad bloco de notas (memória ativa do agente)">
+      <h2 class="termo">Scratchpad</h2>
+<p class="traducao">bloco de notas (memória ativa do agente)</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-oVsEddfhdxc" lang="en">We Let Claude Code and Codex Race Human Researchers</a></p>
+    </article>
+    <article class="termo-card casper" id="g-semantic-id" data-busca="semantic id identificador semântico">
+      <h2 class="termo">Semantic ID</h2>
+<p class="traducao">identificador semântico</p>      <p class="analogia">Um semantic ID é como o código de localização de um livro na biblioteca, em que livros de assuntos parecidos recebem códigos parecidos e ficam na mesma estante.</p>
+      <ol class="passos"><li>O modelo de linguagem conhece palavras, mas não conhece cada música ou podcast do catálogo. Ele precisa de um nome curto para cada item.</li><li>O Spotify já tem um embedding (vetor de números que resume o conteúdo) para cada episódio ou faixa. Itens parecidos têm vetores próximos.</li><li>Um algoritmo de quantization (quantização, que arredonda valores contínuos para poucas opções) transforma cada vetor em uma sequência curta de códigos fixos.</li><li>Esses códigos viram tokens (pedaços que o modelo lê e escreve) especiais, adicionados ao vocabulário de um LLM aberto como o Qwen.</li><li>Depois do treino, o modelo recebe o histórico do usuário nesses códigos e responde com o código do item recomendado junto de uma explicação em texto.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-2LRIAfng7eA" lang="en">Teaching LLMs to Speak Spotify</a>; <a href="edicoes/2026-09-25.html#v-lIgdnF0s0kQ" lang="en">Why LLM Recommenders Will Be AI&#39;s Biggest Consumer App</a>; <a href="edicoes/2026-09-25.html#v-ACPEpji5NV4" lang="en">Distill the LLM, Don&#39;t Serve It: Search &amp; Personalization at DoorDash</a></p>
+    </article>
+    <article class="termo-card card" id="g-severidade-p0-p1-p2" data-busca="severidade p0/p1/p2 níveis de gravidade de um bug">
+      <h2 class="termo">Severidade P0/P1/P2</h2>
+<p class="traducao">níveis de gravidade de um bug</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-474j-n1Ltxc" lang="en">AI-Generated Code Is Already Competing With Human Code</a></p>
+    </article>
+    <article class="termo-card casper" id="g-sft-e-rl" data-busca="sft e rl ajuste fino supervisionado e aprendizado por reforço">
+      <h2 class="termo">SFT e RL</h2>
+<p class="traducao">ajuste fino supervisionado e aprendizado por reforço</p>      <p class="analogia">SFT e RL são como aprender a cozinhar primeiro copiando receitas prontas e depois ajustando os pratos conforme a nota que os clientes dão.</p>
+      <ol class="passos"><li>Depois que um modelo aprende o básico, ele passa por treinos extras para ficar bom numa tarefa específica.</li><li>SFT, supervised fine-tuning (ajuste fino supervisionado), mostra ao modelo pares de pergunta e resposta certa. Ele aprende a imitar essas respostas.</li><li>RL, reinforcement learning (aprendizado por reforço), deixa o modelo tentar sozinho e dá uma nota para cada tentativa. As tentativas com nota alta ficam mais prováveis.</li><li>O SFT ensina o formato e o jeito de responder. O RL empurra o modelo a acertar mais, inclusive em casos que não estavam nos exemplos.</li><li>O RL funciona melhor quando existe um jeito automático de conferir a resposta, como contar itens numa imagem gerada ou rodar um simulador.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-A_I8mw8yfns" lang="en">The Best Models Still Reason Like Toddlers</a></p>
+    </article>
+    <article class="termo-card card" id="g-shape-display" data-busca="shape display tela de formas (grade física de pinos)">
+      <h2 class="termo">Shape display</h2>
+<p class="traducao">tela de formas (grade física de pinos)</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-jgWY66RaSrQ" lang="en">I Gave an AI a Body</a></p>
+    </article>
+    <article class="termo-card casper" id="g-sidecar" data-busca="sidecar processo auxiliar que escuta eventos externos">
+      <h2 class="termo">Sidecar</h2>
+<p class="traducao">processo auxiliar que escuta eventos externos</p>      <p class="analogia">Um sidecar é como o porteiro de um prédio, que passa o dia na portaria atento a entregas e visitas e avisa o morador assim que algo chega.</p>
+      <ol class="passos"><li>Um agente de IA costuma agir só quando alguém manda uma mensagem para ele.</li><li>O sidecar (processo auxiliar) é um programa que fica ligado o tempo todo ao lado do agente, apenas escutando.</li><li>Ele observa o mundo externo, como mensagens SMS, webhooks (avisos automáticos enviados por outros sistemas), horários agendados (cron) e pull requests no GitHub.</li><li>O próprio modelo configura gatilhos nesse sidecar, por exemplo pedir para revisar o código sempre que chegar um pull request novo.</li><li>No Antigravity, as tarefas agendadas já rodam sobre sidecars, e o Google promete publicar a especificação desse protocolo de plug-in para outros desenvolvedores.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-buHC7bQE1X4" lang="en">Get Out of the Model&#39;s Way</a>; <a href="edicoes/2026-09-27.html#v-TN3mj92oZ8I" lang="en">Building Self-Improving Agent Software Factories</a></p>
+    </article>
+    <article class="termo-card card" id="g-sim-to-real" data-busca="sim-to-real da simulação para o robô real">
+      <h2 class="termo">Sim-to-real</h2>
+<p class="traducao">da simulação para o robô real</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-jFHteJjRl8A" lang="en">Robotics Has Been Stuck for 70 Years</a></p>
+    </article>
+    <article class="termo-card casper" id="g-sim-to-real-gap" data-busca="sim-to-real gap distância entre simulação e mundo real">
+      <h2 class="termo">Sim-to-real gap</h2>
+<p class="traducao">distância entre simulação e mundo real</p>      <p class="analogia">O sim-to-real gap é como a diferença entre treinar direção num simulador de autoescola e dirigir no trânsito de verdade, onde aparecem buracos, chuva e motoristas que o simulador nunca mostrou.</p>
+      <ol class="passos"><li>Antes de soltar um sistema no mundo real, a equipe costuma testá-lo num ambiente de mentira, mais barato e mais seguro.</li><li>O sim-to-real gap (distância entre simulação e mundo real) é a queda de desempenho que aparece quando o sistema sai do teste e encontra a situação real.</li><li>A queda acontece porque a simulação deixa de fora detalhes do mundo real, e o sistema aprende a ir bem só no cenário simplificado.</li><li>Com agentes de IA, o teste offline (fora do produto, com tarefas preparadas) faz o papel da simulação, e o uso por clientes faz o papel do mundo real.</li><li>No talk, a Weights &amp; Biases reduz essa distância rodando o mesmo código nos dois lados, sincronizando a cada 4 horas e levando traces (registros passo a passo) de produção para dentro dos testes.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-XyV6bSMyq-I" lang="en">How We Built an Agent That Improves Itself</a>; <a href="edicoes/2026-09-24.html#v-4Gqg0HVe-AY" lang="en">World Models Need Causality, Not Pretty Pixels</a></p>
+    </article>
+    <article class="termo-card card" id="g-simulated-user" data-busca="simulated user usuário simulado por um modelo">
+      <h2 class="termo">Simulated user</h2>
+<p class="traducao">usuário simulado por um modelo</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-XyV6bSMyq-I" lang="en">How We Built an Agent That Improves Itself</a></p>
+    </article>
+    <article class="termo-card card" id="g-simulation" data-busca="simulation simulação (treino em ambiente virtual)">
+      <h2 class="termo">Simulation</h2>
+<p class="traducao">simulação (treino em ambiente virtual)</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-I_VEh7XSwyc" lang="en">Physical AI&#39;s Next Bottleneck Is Finding the Right Video</a></p>
+    </article>
+    <article class="termo-card card" id="g-sistema-de-recomendacao" data-busca="sistema de recomendação recsys, o modelo que escolhe o que aparece no seu feed">
+      <h2 class="termo">Sistema de recomendação</h2>
+<p class="traducao">recsys, o modelo que escolhe o que aparece no seu feed</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-lIgdnF0s0kQ" lang="en">Why LLM Recommenders Will Be AI&#39;s Biggest Consumer App</a></p>
+    </article>
+    <article class="termo-card card" id="g-sistema-deterministico" data-busca="sistema determinístico deterministic system (mesma entrada, mesma saída)">
+      <h2 class="termo">Sistema determinístico</h2>
+<p class="traducao">deterministic system (mesma entrada, mesma saída)</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-ztlXKfPCT3Q" lang="en">You’re Not Thinking Big Enough: Rebuilding Food Systems with AI Agents</a></p>
+    </article>
+    <article class="termo-card card" id="g-skill" data-busca="skill habilidade, julgamento institucional escrito para o agente executar">
+      <h2 class="termo">Skill</h2>
+<p class="traducao">habilidade, julgamento institucional escrito para o agente executar</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-6MudaeKdBSk" lang="en">Scale the Judgment, Not the Model</a>; <a href="edicoes/2026-09-27.html#v-HvboD89DyQ8" lang="en">No, That&#39;s Not a Software Factory</a>; <a href="edicoes/2026-09-27.html#v-TN3mj92oZ8I" lang="en">Building Self-Improving Agent Software Factories</a></p>
+    </article>
+    <article class="termo-card casper" id="g-skill-loop" data-busca="skill loop loop de melhoria de habilidades">
+      <h2 class="termo">Skill loop</h2>
+<p class="traducao">loop de melhoria de habilidades</p>      <p class="analogia">O skill loop é como um técnico de futebol que assiste ao jogo, anota os erros dos jogadores e ajusta o treino da semana seguinte.</p>
+      <ol class="passos"><li>Um agente repete a mesma tarefa muitas vezes, como revisar código, e às vezes erra do mesmo jeito.</li><li>Uma skill (habilidade) é o conjunto de instruções que ensina o agente a fazer essa tarefa.</li><li>No skill loop (loop de melhoria de habilidades), um segundo agente, o observador, acompanha como a skill foi usada e onde falhou.</li><li>Exemplo de Lloyd. Um engenheiro sênior corrige os comentários do agente de code review, e o observador usa essas correções para reescrever a skill.</li><li>Na rodada seguinte, o agente já trabalha com a skill melhorada, e a fábrica fica melhor a cada volta sem alguém reescrever tudo à mão.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-tUPPVhBBcoM" lang="en">Software Engineering Is Becoming Factory Engineering</a></p>
+    </article>
+    <article class="termo-card card" id="g-software-factory" data-busca="software factory fábrica de software">
+      <h2 class="termo">Software factory</h2>
+<p class="traducao">fábrica de software</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-tUPPVhBBcoM" lang="en">Software Engineering Is Becoming Factory Engineering</a>; <a href="edicoes/2026-09-27.html#v-HvboD89DyQ8" lang="en">No, That&#39;s Not a Software Factory</a>; <a href="edicoes/2026-09-27.html#v-vGCJ7diEtrw" lang="en">What It Actually Takes to Build a Software Factory</a>; <a href="edicoes/2026-09-27.html#v-YIVkERhy8xo" lang="en">I Turned Coding Agents Into a Strategy Game</a>; <a href="edicoes/2026-09-27.html#v-TN3mj92oZ8I" lang="en">Building Self-Improving Agent Software Factories</a>; <a href="edicoes/2026-09-25.html#v-LlgiOCmFG_w" lang="en">Fixing the PR Bottleneck</a></p>
+    </article>
+    <article class="termo-card card" id="g-spec-driven-development" data-busca="spec-driven development desenvolvimento guiado por especificação">
+      <h2 class="termo">Spec-driven development</h2>
+<p class="traducao">desenvolvimento guiado por especificação</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-tUPPVhBBcoM" lang="en">Software Engineering Is Becoming Factory Engineering</a></p>
+    </article>
+    <article class="termo-card casper" id="g-speedrun" data-busca="speedrun corrida para atingir uma perda-alvo">
+      <h2 class="termo">Speedrun</h2>
+<p class="traducao">corrida para atingir uma perda-alvo</p>      <p class="analogia">O speedrun é como uma prova de corrida com percurso fixo, em que todos seguem as mesmas regras e vence quem chega primeiro.</p>
+      <ol class="passos"><li>Um speedrun (corrida de velocidade) é um desafio com meta fixa e regras claras, e vence quem chega mais rápido.</li><li>Aqui a meta é treinar um modelo até a perda (loss) do GPT-2, sinal de desempenho equivalente.</li><li>No NanoGPT speedrun quase tudo pode mudar, e a comunidade levou o treino de 90 minutos para menos de 2.</li><li>No Optimizer Speedrun só o otimizador muda, vence quem chega à perda-alvo em menos passos e cada rodada leva de 15 a 20 minutos.</li><li>Um recorde só vale se passar um limiar estatístico. Esse resultado verificável serve de recompensa (reward) para avaliar e treinar modelos.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-oVsEddfhdxc" lang="en">We Let Claude Code and Codex Race Human Researchers</a></p>
+    </article>
+    <article class="termo-card card" id="g-sql-injection" data-busca="sql injection injeção de comandos sql por entrada maliciosa">
+      <h2 class="termo">SQL injection</h2>
+<p class="traducao">injeção de comandos SQL por entrada maliciosa</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-474j-n1Ltxc" lang="en">AI-Generated Code Is Already Competing With Human Code</a></p>
+    </article>
+    <article class="termo-card casper" id="g-state-space-model-ssm" data-busca="state space model (ssm) modelo de espaço de estados">
+      <h2 class="termo">State Space Model (SSM)</h2>
+<p class="traducao">modelo de espaço de estados</p>      <p class="analogia">Um SSM é como um aluno que lê um livro longo e anota só um resumo num caderninho, atualizando esse resumo a cada página em vez de reler tudo desde o começo.</p>
+      <ol class="passos"><li>Um modelo de linguagem lê o texto em pedaços pequenos chamados tokens (fichas), um depois do outro.</li><li>O SSM (State Space Model, modelo de espaço de estados) guarda um único estado, uma espécie de memória resumida do que já leu.</li><li>A cada novo token, o modelo mistura a informação nova com esse estado e produz um estado atualizado.</li><li>Como o tamanho do estado nunca muda, a memória fica constante e o custo cresce só em linha reta com o tamanho do texto.</li><li>O preço é uma memória com alguma perda de detalhe, e a Sarvam compensa isso lendo a página em blocos curtos.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-T72nqdC92PM" lang="en">From Scratch to SOTA: Training a 3B State-Space Vision Model</a></p>
+    </article>
+    <article class="termo-card card" id="g-sub-agent" data-busca="sub-agent subagente (agente filho)">
+      <h2 class="termo">Sub-agent</h2>
+<p class="traducao">subagente (agente filho)</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-oVsEddfhdxc" lang="en">We Let Claude Code and Codex Race Human Researchers</a></p>
+    </article>
+    <article class="termo-card card" id="g-subagent" data-busca="subagent subagente">
+      <h2 class="termo">Subagent</h2>
+<p class="traducao">subagente</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-LlgiOCmFG_w" lang="en">Fixing the PR Bottleneck</a></p>
+    </article>
+    <article class="termo-card card" id="g-subagente" data-busca="subagente agente auxiliar criado por outro agente">
+      <h2 class="termo">Subagente</h2>
+<p class="traducao">agente auxiliar criado por outro agente</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-buHC7bQE1X4" lang="en">Get Out of the Model&#39;s Way</a></p>
+    </article>
+    <article class="termo-card casper" id="g-synthetic-data-flywheel" data-busca="synthetic data flywheel ciclo de dados sintéticos">
+      <h2 class="termo">Synthetic data flywheel</h2>
+<p class="traducao">ciclo de dados sintéticos</p>      <p class="analogia">O ciclo de dados sintéticos é como um professor que cria exercícios, corrige as provas e usa os erros da turma para montar a próxima lista de exercícios.</p>
+      <ol class="passos"><li>Para aprender, um modelo precisa de muitos exemplos. Dai diz que exemplos de raciocínio visual quase não existem na internet.</li><li>Dados sintéticos são exemplos gerados por computador, em vez de coletados do mundo real. Por exemplo, imagens com perguntas e respostas criadas por um programa.</li><li>Flywheel (volante de inércia) é um ciclo que ganha velocidade a cada volta. Aqui, o modelo treinado ajuda a gerar e filtrar os próximos dados.</li><li>Na Elorian, agents (agentes) produzem exemplos, evals (avaliações) apontam onde o modelo erra, e o treino com SFT e RL corrige esses pontos.</li><li>A cada volta, o modelo melhor gera dados melhores, e os dados melhores treinam um modelo ainda melhor.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-A_I8mw8yfns" lang="en">The Best Models Still Reason Like Toddlers</a></p>
+    </article>
+    <article class="termo-card card" id="g-system-2-thinking" data-busca="system 2 thinking pensamento lento e deliberado">
+      <h2 class="termo">System 2 thinking</h2>
+<p class="traducao">pensamento lento e deliberado</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-A_I8mw8yfns" lang="en">The Best Models Still Reason Like Toddlers</a></p>
+    </article>
+  </div>
+</section>
+<section class="letra" id="letra-T" aria-label="Letra T">
+  <p class="letra-titulo" aria-hidden="true">T</p>
+  <div class="glossario">
+    <article class="termo-card card" id="g-tautological-test" data-busca="tautological test teste tautológico">
+      <h2 class="termo">Tautological test</h2>
+<p class="traducao">teste tautológico</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-25.html#v-LlgiOCmFG_w" lang="en">Fixing the PR Bottleneck</a></p>
+    </article>
+    <article class="termo-card card" id="g-teleop" data-busca="teleop teleoperação humana de robô">
+      <h2 class="termo">Teleop</h2>
+<p class="traducao">teleoperação humana de robô</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-ZZcE0HeO-Hc" lang="en">From VLM/VLA&#39;s to Embodied Agents</a></p>
+    </article>
+    <article class="termo-card card" id="g-teleoperation" data-busca="teleoperation teleoperação (humano controla o robô)">
+      <h2 class="termo">Teleoperation</h2>
+<p class="traducao">teleoperação (humano controla o robô)</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-I_VEh7XSwyc" lang="en">Physical AI&#39;s Next Bottleneck Is Finding the Right Video</a>; <a href="edicoes/2026-09-24.html#v-jFHteJjRl8A" lang="en">Robotics Has Been Stuck for 70 Years</a></p>
+    </article>
+    <article class="termo-card card" id="g-teleoperacao" data-busca="teleoperação humano controlando o robô à distância para gerar dados">
+      <h2 class="termo">Teleoperação</h2>
+<p class="traducao">humano controlando o robô à distância para gerar dados</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-4Gqg0HVe-AY" lang="en">World Models Need Causality, Not Pretty Pixels</a></p>
+    </article>
+    <article class="termo-card card" id="g-thinking-budget" data-busca="thinking budget orçamento de raciocínio">
+      <h2 class="termo">Thinking budget</h2>
+<p class="traducao">orçamento de raciocínio</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-9JFGohx4E7U" lang="en">GLM-5.2: Open Weights, Near-Frontier Intelligence</a></p>
+    </article>
+    <article class="termo-card card" id="g-tool-calling" data-busca="tool calling chamada de ferramentas por um agente">
+      <h2 class="termo">Tool calling</h2>
+<p class="traducao">chamada de ferramentas por um agente</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-2wgPHvW0mG8" lang="en">One Operator, Many Drones: Inside Skydio&#39;s Autonomy Stack</a></p>
+    </article>
+    <article class="termo-card card" id="g-top-k-retrieval" data-busca="top-k retrieval recuperação dos k trechos mais parecidos">
+      <h2 class="termo">Top-k retrieval</h2>
+<p class="traducao">recuperação dos k trechos mais parecidos</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-RQi7x-navxU" lang="en">Building the Document Context Layer for AI Agents</a></p>
+    </article>
+    <article class="termo-card card" id="g-trace" data-busca="trace registro estruturado da execução">
+      <h2 class="termo">Trace</h2>
+<p class="traducao">registro estruturado da execução</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-x4e5O9zN0TE" lang="en">Long-Horizon Agents Need Experiments, Not Just Prompts</a>; <a href="edicoes/2026-09-26.html#v-XyV6bSMyq-I" lang="en">How We Built an Agent That Improves Itself</a>; <a href="edicoes/2026-09-26.html#v-hd7TOvmyAxU" lang="en">An AI Research Agent That Runs Your Experiments</a></p>
+    </article>
+    <article class="termo-card card" id="g-triage" data-busca="triage triagem de tarefas">
+      <h2 class="termo">Triage</h2>
+<p class="traducao">triagem de tarefas</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-tUPPVhBBcoM" lang="en">Software Engineering Is Becoming Factory Engineering</a></p>
+    </article>
+  </div>
+</section>
+<section class="letra" id="letra-V" aria-label="Letra V">
+  <p class="letra-titulo" aria-hidden="true">V</p>
+  <div class="glossario">
+    <article class="termo-card card" id="g-validator" data-busca="validator validador independente">
+      <h2 class="termo">Validator</h2>
+<p class="traducao">validador independente</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-vGCJ7diEtrw" lang="en">What It Actually Takes to Build a Software Factory</a></p>
+    </article>
+    <article class="termo-card card" id="g-verification-ladder" data-busca="verification ladder escada de verificação, do build e testes até a telemetria">
+      <h2 class="termo">Verification ladder</h2>
+<p class="traducao">escada de verificação, do build e testes até a telemetria</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-6MudaeKdBSk" lang="en">Scale the Judgment, Not the Model</a></p>
+    </article>
+    <article class="termo-card card" id="g-verifier" data-busca="verifier verificador">
+      <h2 class="termo">Verifier</h2>
+<p class="traducao">verificador</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-26.html#v-7taOQBfjDyE" lang="en">The Loop Is the Product</a></p>
+    </article>
+    <article class="termo-card casper" id="g-visual-chain-of-thought" data-busca="visual chain of thought cadeia de raciocínio visual">
+      <h2 class="termo">Visual chain of thought</h2>
+<p class="traducao">cadeia de raciocínio visual</p>      <p class="analogia">Cadeia de raciocínio visual é como contar os carros vermelhos de um estacionamento marcando cada carro com o dedo na foto antes de dar o número.</p>
+      <ol class="passos"><li>Quando uma pergunta sobre uma imagem é difícil, uma pessoa marca, circula e risca partes da figura até chegar à resposta.</li><li>Chain of thought (cadeia de raciocínio) é quando o modelo escreve etapas intermediárias antes de responder, em vez de responder direto.</li><li>Os modelos de ponta atuais fazem essas etapas só em texto. Eles olham a imagem uma vez e passam a pensar em palavras.</li><li>Na versão visual, cada etapa acontece dentro da própria imagem. Para achar hotéis vermelhos, o modelo desenha caixas em todos os hotéis e depois fica só com os vermelhos.</li><li>Segundo Dai, isso reduz o erro de completar a cena de memória, porque o modelo passa a conferir cada item marcado na figura.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-A_I8mw8yfns" lang="en">The Best Models Still Reason Like Toddlers</a></p>
+    </article>
+    <article class="termo-card card" id="g-visual-reasoning" data-busca="visual reasoning raciocínio visual">
+      <h2 class="termo">Visual reasoning</h2>
+<p class="traducao">raciocínio visual</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-A_I8mw8yfns" lang="en">The Best Models Still Reason Like Toddlers</a></p>
+    </article>
+    <article class="termo-card casper" id="g-vla" data-busca="vla modelo de visão, linguagem e ação">
+      <h2 class="termo">VLA</h2>
+<p class="traducao">modelo de visão, linguagem e ação</p>      <p class="analogia">Um VLA é como um garçom que ouve o pedido, olha a mesa e já estende a mão para pegar o prato certo, sem precisar que alguém traduza o pedido em movimentos.</p>
+      <ol class="passos"><li>Um VLM (modelo de visão e linguagem) recebe imagem e texto e responde em texto, como um chat que enxerga fotos.</li><li>Um VLA (vision-language-action, modelo de visão, linguagem e ação) usa a mesma base, mas responde também com ações.</li><li>Essas ações são comandos para um robô, como posição do braço ou abrir e fechar a garra, escritos como tokens de controle.</li><li>Para aprender, o VLA costuma usar dados de teleop (robô guiado por um humano), que custam caro, na ordem de US$ 100 por hora.</li><li>O palestrante diz que um VLA puro também melhora com mais dados, mas ganha menos do que um modelo que treina percepção, raciocínio e controle juntos.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-23.html#v-ZZcE0HeO-Hc" lang="en">From VLM/VLA&#39;s to Embodied Agents</a></p>
+    </article>
+    <article class="termo-card casper" id="g-vlm" data-busca="vlm modelo de visão e linguagem">
+      <h2 class="termo">VLM</h2>
+<p class="traducao">modelo de visão e linguagem</p>      <p class="analogia">Um VLM é como um secretário que olha a foto de um recibo e já digita o que está escrito nele, juntando olhos e leitura no mesmo trabalho.</p>
+      <ol class="passos"><li>Um VLM (vision language model, modelo de visão e linguagem) recebe uma imagem e responde em texto.</li><li>Uma parte do modelo transforma a imagem em tokens visuais, pedaços que representam regiões da figura.</li><li>Esses tokens visuais entram no modelo de linguagem junto com o texto, e ele gera a resposta palavra por palavra.</li><li>O VLM da Sarvam tem 3 bilhões de parâmetros, cabe em uma GPU e usa um SSM no lugar do transformer como modelo de linguagem.</li><li>Ele lê a página bloco por bloco, guiado por um módulo que detecta o layout e outro que define a ordem de leitura.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-2wgPHvW0mG8" lang="en">One Operator, Many Drones: Inside Skydio&#39;s Autonomy Stack</a>; <a href="edicoes/2026-09-23.html#v-T72nqdC92PM" lang="en">From Scratch to SOTA: Training a 3B State-Space Vision Model</a>; <a href="edicoes/2026-09-23.html#v-ZZcE0HeO-Hc" lang="en">From VLM/VLA&#39;s to Embodied Agents</a>; <a href="edicoes/2026-09-23.html#v-0I07YAuF8xA" lang="en">From Ingestion to Agents: How AI Teams Build on Document Intelligence</a>; <a href="edicoes/2026-09-23.html#v-jNE8No-wvok" lang="en">Modality Misalignment and Originality Attribution in Short-Form Video</a>; <a href="edicoes/2026-09-23.html#v-dKcTBQzR7jI" lang="en">Skill issue: stop deploying vision language models, use them with Skills</a>; <a href="edicoes/2026-09-23.html#v-RQi7x-navxU" lang="en">Building the Document Context Layer for AI Agents</a></p>
+    </article>
+  </div>
+</section>
+<section class="letra" id="letra-W" aria-label="Letra W">
+  <p class="letra-titulo" aria-hidden="true">W</p>
+  <div class="glossario">
+    <article class="termo-card card" id="g-webhook" data-busca="webhook aviso automático de evento entre sistemas">
+      <h2 class="termo">Webhook</h2>
+<p class="traducao">aviso automático de evento entre sistemas</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-HvboD89DyQ8" lang="en">No, That&#39;s Not a Software Factory</a></p>
+    </article>
+    <article class="termo-card card" id="g-work-log" data-busca="work log registro de trabalho com plano, decisões e o que já foi tentado">
+      <h2 class="termo">Work log</h2>
+<p class="traducao">registro de trabalho com plano, decisões e o que já foi tentado</p>      <p class="pre">Aparece em <a href="edicoes/2026-09-27.html#v-6MudaeKdBSk" lang="en">Scale the Judgment, Not the Model</a></p>
+    </article>
+    <article class="termo-card casper" id="g-world-action-model" data-busca="world action model modelo de mundo e ação">
+      <h2 class="termo">World action model</h2>
+<p class="traducao">modelo de mundo e ação</p>      <p class="analogia">Um world action model é como as mãos de um cozinheiro experiente, que ajustam o corte a cada segundo prevendo como o alimento vai ceder, enquanto o chefe só decide qual prato sai agora.</p>
+      <ol class="passos"><li>Para fazer uma tarefa física, o robô precisa entender o que fazer e também mover braços e dedos com precisão. A Dyna separa esses dois trabalhos em duas partes do modelo.</li><li>A parte de cima é um modelo de raciocínio (reasoning model). Ela olha a cena, entende a tarefa e decide o próximo passo, como pegar o guardanapo de cima da pilha.</li><li>A parte de baixo é o world action model (modelo de mundo e ação). Ela recebe esse objetivo e gera os movimentos finos das mãos, muitas vezes por segundo.</li><li>Em geral, o nome junta duas ideias. Um world model (modelo de mundo) aprende a prever como as coisas mudam após um gesto, e o lado de ação transforma essa previsão em comandos para os motores.</li><li>A alta frequência importa porque um tecido muda de forma a cada toque. O robô corrige o gesto em frações de segundo, e o modelo de raciocínio seria lento demais para esse ajuste.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-Sjfz1TqxzEs" lang="en">Robot Demos Are Easy. Reliability Is Hard</a></p>
+    </article>
+    <article class="termo-card casper" id="g-world-model" data-busca="world model modelo do mundo, aqui um mapa que a frota atualiza">
+      <h2 class="termo">World model</h2>
+<p class="traducao">modelo do mundo, aqui um mapa que a frota atualiza</p>      <p class="analogia">Um world model é como o motorista que, antes de frear, já imagina onde o carro da frente vai estar daqui a dois segundos.</p>
+      <ol class="passos"><li>Um world model (modelo de mundo) é um programa que tenta prever o que vai acontecer em seguida numa cena.</li><li>Ele recebe imagens ou vídeo do momento atual e, às vezes, a ação que alguém vai fazer, como mover um braço robótico.</li><li>Com isso, ele gera os próximos quadros do vídeo, mostrando como a cena deve mudar depois daquela ação.</li><li>Para acertar a previsão, o modelo precisa aprender regras físicas, como gravidade, contato e objetos que ficam escondidos atrás de outros.</li><li>A variante chamada semantic world model (modelo de mundo semântico) pula o vídeo e guarda só uma representação interna útil para prever o futuro.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-2wgPHvW0mG8" lang="en">One Operator, Many Drones: Inside Skydio&#39;s Autonomy Stack</a>; <a href="edicoes/2026-09-24.html#v-I_VEh7XSwyc" lang="en">Physical AI&#39;s Next Bottleneck Is Finding the Right Video</a>; <a href="edicoes/2026-09-24.html#v-4Gqg0HVe-AY" lang="en">World Models Need Causality, Not Pretty Pixels</a>; <a href="edicoes/2026-09-23.html#v-ZZcE0HeO-Hc" lang="en">From VLM/VLA&#39;s to Embodied Agents</a></p>
+    </article>
+  </div>
+</section>
+<section class="letra" id="letra-Z" aria-label="Letra Z">
+  <p class="letra-titulo" aria-hidden="true">Z</p>
+  <div class="glossario">
+    <article class="termo-card casper" id="g-zero-shot-transfer" data-busca="zero-shot transfer transferência sem treino adicional">
+      <h2 class="termo">Zero-shot transfer</h2>
+<p class="traducao">transferência sem treino adicional</p>      <p class="analogia">Zero-shot transfer é como um motorista experiente que aluga um carro que nunca dirigiu, numa cidade que não conhece, e sai dirigindo bem sem nenhuma aula extra.</p>
+      <ol class="passos"><li>Zero-shot transfer (transferência sem treino adicional) quer dizer colocar um modelo numa situação nova e ele funcionar sem receber nenhum exemplo novo antes.</li><li>O caminho comum é outro. Um robô treinado numa sala costuma precisar de mais exemplos para funcionar em outra sala, com outro piso, outra luz e outros objetos.</li><li>No zero-shot, o modelo aprendeu padrões gerais durante o treino, com dados muito variados. Por isso ele reconhece o que importa mesmo num cenário que nunca viu.</li><li>No talk, Pathak mostra robôs de empresas e hardwares diferentes, todos controlados pelo mesmo cérebro da Skild AI, colocados em cenários novos e resistindo a empurrões sem treino extra.</li><li>O teste separa decorar de generalizar. Um modelo que só decorou os exemplos falha no primeiro cenário diferente, e um modelo que generaliza continua funcionando.</li></ol>
+      <p class="pre">Aparece em <a href="edicoes/2026-09-24.html#v-jFHteJjRl8A" lang="en">Robotics Has Been Stuck for 70 Years</a></p>
+    </article>
+  </div>
+</section>
 </main>
+<footer class="rodape wrap">
+  <p>Resumos em português dos talks do canal <a href="https://www.youtube.com/@aiDotEngineer" target="_blank" rel="noopener">AI Engineer</a>. Atualizado em 29 set 2026, 14:28. <a href="status.html">Status da rotina</a></p>
+</footer>
 <script src="app.js" defer></script>
 </body>
 </html>

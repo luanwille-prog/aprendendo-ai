@@ -1,0 +1,207 @@
+{
+  "id": "0I07YAuF8xA",
+  "titulo": "From Ingestion to Agents: How AI Teams Build on Document Intelligence — Adit Abraham, Reducto",
+  "titulo_curto": "From Ingestion to Agents: How AI Teams Build on Document Intelligence",
+  "palestrante": "Adit Abraham, Reducto",
+  "url": "https://www.youtube.com/watch?v=0I07YAuF8xA",
+  "duracao": 1349,
+  "publicado_ts": 1790173811,
+  "edicao": "2026-09-23",
+  "tese": "Agente só decide bem com entrada boa: parse estruturado, formato certo para cada consumidor e eval (avaliação) em cada etapa.",
+  "tldr": [
+    "Adit Abraham, da Reducto, diz que PDF nasceu para imprimir e não para ser lido por modelo, e que um erro de leitura se acumula a cada passo de um agente.",
+    "Ele defende usar cada ferramenta onde ela rende: detectores pequenos para layout, modelo de visão para o texto difícil, correção em nível de token, formato diferente para o modelo e para a busca, e um agente com ferramentas para gráficos e extração pesada.",
+    "Na visão dele, o que sustenta tudo isso é medir cada etapa do pipeline e deixar o agente navegar por arquivos em vez de seguir um fluxo fixo."
+  ],
+  "tema": "dados-e-rag",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Com agentes, entrada ruim se acumula",
+      "texto": "Em RAG (busca de trechos para responder perguntas), um parse ruim custava uma resposta errada. Um agente toma várias decisões em cadeia sobre vários arquivos, então o erro da leitura inicial contamina tudo que vem depois. Por isso o palestrante trata o dado não estruturado como o gargalo real.",
+      "t": 252,
+      "legenda": "Mostra por que o erro de entrada pesa mais em agentes do que em RAG.",
+      "print": "img/0I07YAuF8xA/0.jpg"
+    },
+    {
+      "titulo": "OCR agêntico corrige token, não reescreve a página",
+      "texto": "Pedir a um modelo de visão que refaça o texto do OCR faz ele consertar o documento por conta própria. Um exemplo dado é somar uma coluna e trocar o total que o humano tinha errado. A Reducto aplica só correções pontuais, como zero no lugar de O, depois de um parse que combina visão computacional e modelo de visão.",
+      "t": 620,
+      "legenda": "Mostra o passo de verificação que gera a saída de alta confiança.",
+      "print": "img/0I07YAuF8xA/1.jpg"
+    },
+    {
+      "titulo": "Uma tabela, três representações",
+      "texto": "Tabela simples vai bem em markdown. Tabela com células mescladas pede HTML, que o modelo lê bem mas custa mais tokens. Para a busca, o HTML atrapalha, porque o embedding (vetor que representa o sentido do texto) não casa uma pergunta como 'como a receita mudou' com um monte de tags. A solução é indexar uma descrição em linguagem natural e entregar o HTML ao modelo.",
+      "t": 714,
+      "legenda": "Compara a tabela em HTML com a versão escrita para o embedding.",
+      "print": "img/0I07YAuF8xA/2.jpg"
+    },
+    {
+      "titulo": "Entrada estruturada eleva modelos e gasta menos raciocínio",
+      "texto": "No benchmark GDP PDF, o modelo de fronteira mais novo fica perto de 30%. Ao dar aos outros modelos o PDF mais o resultado do parse, dois deles passaram esse modelo sem qualquer ajuste. Eles também usaram menos tokens de raciocínio, o que baixa a latência.",
+      "t": 811,
+      "legenda": "Mostra o ganho de acurácia vindo só da qualidade da entrada.",
+      "print": "img/0I07YAuF8xA/3.jpg"
+    },
+    {
+      "titulo": "Harness de agente resolve gráfico de linha e o dilema precisão versus recall",
+      "texto": "Nenhum modelo transforma um gráfico de linha em tabela numa tentativa só. Um agente com interpretador de código, que visualiza o próprio resultado e se corrige várias vezes, chega lá. O mesmo desenho reduz o vício dos modelos de fronteira, que acertam as linhas que extraem mas deixam linhas de fora sem avisar.",
+      "t": 1028,
+      "legenda": "Mostra a tabela de dados recuperada a partir da imagem do gráfico.",
+      "print": "img/0I07YAuF8xA/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "RAG",
+      "traducao": "geração com busca de contexto",
+      "nivel": "basico",
+      "chave": "rag",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "OCR",
+      "traducao": "reconhecimento óptico de caracteres",
+      "nivel": "basico",
+      "chave": "ocr",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "VLM",
+      "traducao": "modelo de linguagem com visão",
+      "nivel": "intermediario",
+      "chave": "vlm",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Agentic OCR",
+      "traducao": "OCR agêntico com correção por token",
+      "nivel": "avancado",
+      "chave": "agentic ocr",
+      "analogia": "Agentic OCR é como um revisor de prova que só troca a letra errada com caneta vermelha, sem reescrever a redação do aluno nem corrigir as contas dele.",
+      "explicacao": [
+        "Um programa lê a imagem de um documento e transforma em texto, mas às vezes confunde símbolos parecidos, como a letra O e o número zero.",
+        "Antes, uma equipe humana revisava esse texto e corrigia os erros. No Agentic OCR (OCR agêntico), um modelo de visão faz esse papel de revisor dentro do fluxo.",
+        "Primeiro, detectores pequenos marcam onde estão texto, tabela e letra de mão, e o VLM (modelo de linguagem com visão) lê as partes difíceis.",
+        "Depois, uma camada de verificação compara o texto com a imagem e aplica só correções pontuais por token (pedaço de texto), como ponto no lugar de vírgula.",
+        "Pedir ao modelo que reescreva tudo cria erros novos, porque ele tende a consertar o documento, por exemplo somando uma coluna e trocando um total que estava errado no original."
+      ],
+      "pre_requisitos": [
+        "OCR",
+        "VLM",
+        "Token"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "DETECÇÃO DE LAYOUT",
+            "nota": "Modelos pequenos acham texto e tabela"
+          },
+          {
+            "rotulo": "LEITURA COM VLM",
+            "nota": "Modelo de visão lê trechos difíceis"
+          },
+          {
+            "rotulo": "VERIFICAÇÃO",
+            "nota": "Compara o texto com a imagem"
+          },
+          {
+            "rotulo": "CORREÇÃO POR TOKEN",
+            "nota": "Troca só o símbolo errado"
+          },
+          {
+            "rotulo": "SAÍDA CONFIÁVEL",
+            "nota": "Texto fiel ao documento original"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Embedding",
+      "traducao": "vetor que representa o sentido do texto",
+      "nivel": "intermediario",
+      "chave": "embedding",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Classificação e divisão de documentos",
+      "traducao": "classify and split",
+      "nivel": "intermediario",
+      "chave": "classificação e divisão de documentos",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Agent harness",
+      "traducao": "estrutura de ferramentas ao redor do agente",
+      "nivel": "avancado",
+      "chave": "agent harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação",
+      "nivel": "intermediario",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O palestrante é o fundador de uma empresa de processamento de documentos, então o talk tem viés de produto, embora ele diga que foca nas lições. Os ganhos no GDP PDF e o benchmark de precisão e recall são citados sem tabela, tamanho da amostra ou método, e um deles foi lançado por terceiros na manhã do talk. Ele reconhece que não testou o modelo mais novo porque perdeu o acesso. Falta comparar custo e latência do harness com uma chamada única.",
+  "acoes": [
+    "Se você alimenta um agente com PDFs, teste o mesmo documento com e sem parse estruturado e compare acurácia e tokens gastos.",
+    "Guarde tabelas complexas em HTML para o modelo e crie uma descrição em linguagem natural para indexar na busca.",
+    "Separe os documentos por tipo e divida pacotes longos antes de mandar tudo ao modelo.",
+    "Meça cada etapa (parse, busca, formatação, resposta) com um conjunto de testes seu, e monitore também os dados reais de produção."
+  ],
+  "numeros": [
+    {
+      "valor": "30%",
+      "contexto": "acerto do modelo mais novo no GDP PDF",
+      "t": 346
+    },
+    {
+      "valor": "bilhões",
+      "contexto": "documentos já processados pela Reducto",
+      "t": 95
+    },
+    {
+      "valor": "2023",
+      "contexto": "ano em que a empresa foi fundada",
+      "t": 437
+    },
+    {
+      "valor": "dezenas de mil",
+      "contexto": "campos em um formulário CBP citado",
+      "t": 1089
+    }
+  ]
+}

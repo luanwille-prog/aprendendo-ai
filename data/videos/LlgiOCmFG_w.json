@@ -1,0 +1,184 @@
+{
+  "id": "LlgiOCmFG_w",
+  "titulo": "Fixing the PR Bottleneck — Matt Pocock, AIHero",
+  "titulo_curto": "Fixing the PR Bottleneck",
+  "palestrante": "Matt Pocock, AIHero",
+  "url": "https://www.youtube.com/watch?v=LlgiOCmFG_w",
+  "duracao": 1354,
+  "publicado_ts": 1790381274,
+  "edicao": "2026-09-25",
+  "tese": "Para destravar o PR, ponha freios antes do revisor humano: checagens, revisão por agente e um PR que se explica sozinho.",
+  "tldr": [
+    "Agentes abrem PRs em massa, mas não abrem PRs que valem a revisão, e o gargalo continua na revisão humana.",
+    "Matt Pocock propõe três freios em camadas: checagens automáticas, revisão automática feita por um agente separado do implementador e revisão humana focada no que importa.",
+    "Cada revisão humana deve alimentar uma retrospectiva que atualiza checagens e padrões de código, para que o mesmo comentário nunca seja escrito duas vezes."
+  ],
+  "tema": "engenharia-de-software",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Testes podem mentir",
+      "texto": "CI verde não prova que o código está pronto. O agente escreve testes tautológicos (que repetem a implementação), testes presos à estrutura do código e testes com mocks que não conseguem falhar. Por isso a revisão automática e a humana servem como detectores de mentira das checagens.",
+      "t": 327,
+      "legenda": "Exemplo real de teste tautológico escrito por agente.",
+      "print": null
+    },
+    {
+      "titulo": "Módulos profundos geram testes melhores",
+      "texto": "Um módulo profundo esconde muita implementação atrás de uma interface pequena. Se o agente testa só pela interface, os testes dependem menos da estrutura interna. Desenhar bem o código reduz a chance de testes ruins.",
+      "t": 515,
+      "legenda": "A forma do módulo define a qualidade dos testes que o agente consegue escrever.",
+      "print": "img/LlgiOCmFG_w/1.jpg"
+    },
+    {
+      "titulo": "Implementar sobrecarrega, revisar não",
+      "texto": "Na janela de contexto do implementador já cabem explorar, editar e depurar. Colocar padrões de código ali piora o resultado. O revisor roda em subagente com contexto próprio, lê um arquivo coding-standards.md e aplica os padrões. É um red-green-refactor com duas janelas de contexto.",
+      "t": 703,
+      "legenda": "O implementador já está cheio, então os padrões vão para o revisor.",
+      "print": null
+    },
+    {
+      "titulo": "O revisor comita, não comenta",
+      "texto": "Um agente que só comenta no PR cria mais trabalho para o humano. Pocock defende que o revisor automático faça commits com as correções e comente apenas quando tiver dúvida. Ele também recomenda montar a própria revisão em vez de terceirizar tudo, porque revisores genéricos geram falsos positivos.",
+      "t": 922,
+      "legenda": "O humano recebe um artefato já corrigido, não uma lista de comentários.",
+      "print": "img/LlgiOCmFG_w/3.jpg"
+    },
+    {
+      "titulo": "PR bom mostra o perigo do merge e vira retro",
+      "texto": "O corpo do PR classifica a mudança como porta de mão única ou de mão dupla e indica o raio de impacto. Diagramas e pseudocódigo explicam o que muda. Depois, a skill retro analisa PRs e sessões e sugere novas checagens e padrões, para o processo melhorar a cada revisão.",
+      "t": 1107,
+      "legenda": "O resumo diz quanta atenção humana o PR exige.",
+      "print": "img/LlgiOCmFG_w/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Software factory",
+      "traducao": "fábrica de software",
+      "nivel": "intermediario",
+      "chave": "software factory",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Tautological test",
+      "traducao": "teste tautológico",
+      "nivel": "intermediario",
+      "chave": "tautological test",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Deep module",
+      "traducao": "módulo profundo",
+      "nivel": "avancado",
+      "chave": "deep module",
+      "analogia": "Um módulo profundo é como um micro-ondas: você aperta um botão só, e toda a parte elétrica complicada fica escondida dentro da caixa.",
+      "explicacao": [
+        "Todo programa é dividido em partes. Cada parte tem uma porta de entrada, a interface, que diz o que você pode pedir a ela.",
+        "Um módulo profundo (deep module) tem uma interface pequena, com poucas funções, e muito trabalho escondido atrás dela. Um módulo raso tem muitas funções, e cada uma faz pouco.",
+        "A ideia vem de John Ousterhout, no livro A Philosophy of Software Design. Quem usa o módulo recebe muito valor com uma chamada simples, o que Pocock chama de alavancagem (leverage).",
+        "Quando o agente testa só pela interface pequena, o teste confere o resultado e ignora os detalhes internos. Assim ele quebra menos quando alguém reorganiza o código por dentro.",
+        "Por isso Pocock obriga o agente a testar pela interface e usa uma skill que aponta onde aprofundar módulos, juntando funções rasas e duplicadas num módulo só, fácil de testar."
+      ],
+      "pre_requisitos": [
+        "Módulo e interface",
+        "Teste automatizado",
+        "Teste preso à estrutura do código"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Subagent",
+      "traducao": "subagente",
+      "nivel": "intermediario",
+      "chave": "subagent",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Red-green-refactor",
+      "traducao": "vermelho, verde, refatorar",
+      "nivel": "intermediario",
+      "chave": "red-green-refactor",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "One-way door / two-way door",
+      "traducao": "porta de mão única / de mão dupla",
+      "nivel": "basico",
+      "chave": "one-way door / two-way door",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Blast radius",
+      "traducao": "raio de impacto",
+      "nivel": "basico",
+      "chave": "blast radius",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Retrospective",
+      "traducao": "retrospectiva (skill retro)",
+      "nivel": "basico",
+      "chave": "retrospective",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk apresenta as skills do próprio Pocock e anuncia a versão 1.3, então há conflito de interesse e tom de pitch. Não há dados sobre quanto tempo de revisão as práticas economizam, só a experiência pessoal e exemplos escolhidos a dedo. A afirmação de que o modelo Opus 5 ficou viciado em testes tautológicos vem de observação informal. A classificação porta de mão única ou dupla depende do julgamento do autor do PR, e o talk não mostra como evitar erros nela.",
+  "acoes": [
+    "Crie um arquivo coding-standards.md no seu repositório e faça um agente de revisão em subagente aplicá-lo, em vez de colocar tudo no arquivo global de instruções do implementador.",
+    "Peça ao agente revisor que faça commits com as correções e comente só quando houver dúvida real.",
+    "Inclua no corpo dos PRs uma linha de merge danger: porta de mão única ou dupla, mais o raio de impacto.",
+    "Depois de cada revisão humana, anote o comentário repetido e transforme em checagem automática ou regra de padrão de código."
+  ],
+  "numeros": [
+    {
+      "valor": "280",
+      "contexto": "Limite de caracteres do X usado no teste tautológico",
+      "t": 327
+    },
+    {
+      "valor": "60.000",
+      "contexto": "Pessoas atingidas por e-mail disparado por engano (exemplo)",
+      "t": 1076
+    },
+    {
+      "valor": "20",
+      "contexto": "Abordagens de estruturar código, todas chamadas de DDD",
+      "t": 609
+    },
+    {
+      "valor": "1.3",
+      "contexto": "Versão das skills lançada na semana do talk",
+      "t": 1324
+    }
+  ]
+}

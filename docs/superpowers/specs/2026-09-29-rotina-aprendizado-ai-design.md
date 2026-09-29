@@ -150,24 +150,25 @@ Responsável por triagem, disparo, retentativas, edição do dia e controle de q
 
 ### 6.1 Estrutura
 
-- **Home (`index.html`):** a última edição em destaque (título do dia, abertura, lista dos talks, botão "Ler a edição" e progresso de estudo) e, abaixo, cartões de todas as edições com data, título, temas e "x de n estudados".
-- **Uma página por edição (`edicoes/<data>.html`):** abertura, filtro por tema, ordem de leitura com progresso, os blocos de vídeo e navegação para a edição anterior e a próxima.
-- **Glossário (`glossario.html`):** todos os conceitos explicados em ordem alfabética, cada um com link para o vídeo de origem.
-- **Checkbox "estudei"** por bloco, salvo em `localStorage` com try/catch (a página funciona igual sem ele); alimenta as barras de progresso.
-- **Rodapé em todas as páginas:** data e hora da última execução, pendentes e não processados.
+- **Home (`index.html`):** a última edição em destaque (título do dia, abertura, lista dos talks, duração total, botão "Ler a edição", "Continuar de onde parei" e progresso). Abaixo, as edições anteriores em cartões agrupados por semana, com filtro por tema e progresso "x de n estudados".
+- **Uma página por edição (`edicoes/<data>.html`):** abertura, índice de leitura fixo na lateral em telas largas (no topo no celular) com progresso, os blocos de talk, e o fechamento da edição com progresso, termos novos no glossário e navegação para a edição anterior e a próxima.
+- **Glossário (`glossario.html`):** todos os termos que apareceram nos talks, com tradução, analogia quando houver, índice A–Z, busca e todas as aparições.
+- **Status (`status.html`):** última execução, pendentes e não processados. O rodapé das páginas só mostra a data de atualização e o link para o status.
+- **Checkbox "estudei"** no fim de cada talk, salvo em `localStorage` com try/catch; alimenta o selo "estudado ✓", o índice e as barras de progresso.
 
-### 6.2 Bloco de vídeo (ritmo do guia)
+### 6.2 Bloco de vídeo
 
-1. Cabeçalho de seção: número vazado laranja, título em Barlow Condensed 900 caixa alta, tese em Covered By Your Grace laranja.
-2. Chips: tema, duração, nível (●○○ a ●●●), palestrante e empresa, link do vídeo.
-3. TL;DR em 3 frases.
-4. Grid de 2 colunas: ideias-chave à esquerda, prints em moldura polaroide à direita (inclinação alternada até 0,6°), legenda e link `youtu.be/<id>?t=<s>` com o minuto.
-5. Caixas tracejadas: `analogia` (quando houver explicação) e `leitura crítica` (sempre).
-6. Painel de ação: lista com marcador →.
+1. Cabeçalho: número vazado, título do talk (h2, `lang="en"`) e a tese em letra manuscrita.
+2. Chips: tema, duração, nível de complexidade (com nome acessível), palestrante e link do YouTube.
+3. "Em 3 frases".
+4. "Antes de ler": os termos do talk com tradução, antes das ideias; os explicados no próprio talk apontam para a analogia abaixo, os demais para o glossário (no máximo 6 visíveis, o resto recolhido).
+5. Ideias: as 3 primeiras abertas e as demais recolhidas em "Mais N ideias"; cada uma com o print em polaroide, legenda e link do minuto.
+6. Números com o minuto, caixas de analogia (passos, fluxo e pré-requisitos com link), leitura crítica e "O que fazer com isso".
+7. Rodapé do talk: "Marquei como estudado" e o link para o próximo talk.
 
 ### 6.3 Regras visuais aplicadas
 
-Tokens de cor, tipografia, papel pontilhado, componentes e checklist conforme o guia Quadro Anotado (páginas 2 a 11): tema claro padrão e escuro via tokens; laranja só em anotação; numeração só em sequência verdadeira; funciona em 400px sem rolagem lateral; foco visível e `prefers-reduced-motion` respeitado; imagens com `loading="lazy"`.
+Tokens de cor, tipografia, papel pontilhado, componentes e checklist conforme o guia Quadro Anotado (páginas 2 a 11), com `--orange-ink` claro escurecido para `#9F4A12` (contraste AA sobre o papel) e texto corrido limitado a 68 caracteres por linha: tema claro padrão e escuro via tokens; laranja só em anotação; numeração só em sequência verdadeira; funciona em 400px sem rolagem lateral; foco visível e `prefers-reduced-motion` respeitado; imagens com `loading="lazy"`.
 
 ## 7. Regras de escrita (entram nos arquivos de agente)
 

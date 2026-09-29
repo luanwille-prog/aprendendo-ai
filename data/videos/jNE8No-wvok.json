@@ -1,0 +1,296 @@
+{
+  "id": "jNE8No-wvok",
+  "titulo": "Modality Misalignment and Originality Attribution in Short-Form Video — Aditya Gautam, Meta",
+  "titulo_curto": "Modality Misalignment and Originality Attribution in Short-Form Video",
+  "palestrante": "Aditya Gautam, Meta",
+  "url": "https://www.youtube.com/watch?v=jNE8No-wvok",
+  "duracao": 1292,
+  "publicado_ts": 1790172034,
+  "edicao": "2026-09-23",
+  "tese": "Em vídeo curto em escala enorme, três agentes pequenos e especializados, com avaliação em cada nó, superam um modelo grande generalista.",
+  "tldr": [
+    "O talk trata de dois problemas em vídeos curtos na Meta, o desalinhamento de modalidades dentro de um mesmo vídeo e o conteúdo não original, ambos em escala de mais de 100 milhões de vídeos.",
+    "A solução divide o trabalho entre três agentes (perceiver, reviewer e retriever), cada um movido por um VLM (modelo de visão e linguagem) pequeno, treinado com pré-treino, instruction tuning, DPO, destilação e quantização.",
+    "Para caber em produção, o time mede cada nó do pipeline, ajusta o orçamento de raciocínio e mantém a maioria dos vídeos fora do fluxo com compressão de quadros, cache e poda por metadados."
+  ],
+  "tema": "agentes",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "Três agentes dividem o problema",
+      "texto": "O reviewer orquestra, o perceiver quebra o vídeo em clipes e devolve embeddings, tags, OCR e descrição, e o retriever busca clipes e autores parecidos. O palestrante diz que só faz sentido usar vários agentes porque um único LLM não resolve o problema.",
+      "t": 262,
+      "legenda": "O fluxo entre os três agentes e o que cada um entrega.",
+      "print": "img/jNE8No-wvok/0.jpg"
+    },
+    {
+      "titulo": "A análise temporal acha o trecho fora do tema",
+      "texto": "O reviewer lê o JSON do perceiver sem ver o vídeo. Ele percebe que o vídeo fala de esportes até os 6 segundos e vira política por meio segundo. Essa checagem dentro de uma única modalidade ao longo do tempo é o problema que embeddings de imagem e texto não resolvem sozinhos.",
+      "t": 343,
+      "legenda": "Como uma mudança de assunto curta aparece nos metadados.",
+      "print": null
+    },
+    {
+      "titulo": "Índice certo para cada tipo de sinal",
+      "texto": "O retriever guarda tópicos em índice invertido, embeddings em banco vetorial e entidades em banco de grafos. Assim, na hora da inferência, ele recupera clipes, autores e entidades similares, reordena os candidatos e usa um classificador de spam para filtrar.",
+      "t": 405,
+      "legenda": "Cada sinal extraído vai para o armazenamento que melhor o consulta.",
+      "print": "img/jNE8No-wvok/2.jpg"
+    },
+    {
+      "titulo": "VLM pequeno treinado no dado sujo da casa",
+      "texto": "Modelos de fronteira aprendem com dados web limpos, mas vídeo de usuário é bagunçado. Por isso o time pré-treina o vision encoder com imagens internas e faz instruction tuning com saída em JSON e rótulos próprios. O palestrante diz que não se importa se o modelo sabe programar.",
+      "t": 746,
+      "legenda": "O projector liga o encoder de visão ao LLM, e é aí que entra o ajuste.",
+      "print": "img/jNE8No-wvok/3.jpg"
+    },
+    {
+      "titulo": "Laço diário de DPO com humanos na fila",
+      "texto": "Todo dia uma amostra da produção passa por um LLM juiz treinado em rótulos humanos e por uma fila de revisão. Quando a métrica fica abaixo do limite, humanos rastreiam se a falha veio do raciocínio, de uma ferramenta errada ou da recuperação. Esses casos viram pares positivo e negativo para retreinar o modelo.",
+      "t": 839,
+      "legenda": "O ciclo contínuo que transforma falhas de produção em dado de treino.",
+      "print": "img/jNE8No-wvok/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Multi-agent system",
+      "traducao": "sistema multiagente",
+      "nivel": "intermediario",
+      "chave": "multi-agent system",
+      "analogia": "Um sistema multiagente é como uma redação de jornal, com um editor que coordena, um repórter que apura o fato e um arquivista que busca matérias parecidas no acervo.",
+      "explicacao": [
+        "Em vez de um único programa fazer tudo, o trabalho é dividido entre vários ajudantes, cada um com uma tarefa.",
+        "Cada ajudante é um agente, um modelo de IA com ferramentas próprias que decide o que fazer dentro do seu papel.",
+        "No talk, o reviewer (revisor) orquestra, o perceiver (percebedor) quebra o vídeo em clipes e descreve cada um, e o retriever (recuperador) busca clipes e autores parecidos.",
+        "O reviewer junta tudo, analisa e pode pedir mais dados ao retriever antes de decidir.",
+        "O palestrante defende dividir só quando um único modelo não resolve, porque cada agente a mais traz custo e mais pontos de falha."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "VLM",
+        "Embeddings",
+        "Orquestração"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "REVIEWER RECEBE VÍDEO",
+            "nota": "Coordena o trabalho"
+          },
+          {
+            "rotulo": "PERCEIVER DESCREVE",
+            "nota": "Clipes, tags, OCR e descrição"
+          },
+          {
+            "rotulo": "RETRIEVER BUSCA",
+            "nota": "Clipes e autores parecidos"
+          },
+          {
+            "rotulo": "DECISÃO DO REVIEWER",
+            "nota": "Anomalia ou conteúdo copiado"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Modality misalignment",
+      "traducao": "desalinhamento de modalidades",
+      "nivel": "intermediario",
+      "chave": "modality misalignment",
+      "analogia": "Desalinhamento de modalidades é como um jogo de futebol na TV que de repente mostra meio segundo de propaganda política no meio do lance.",
+      "explicacao": [
+        "Um vídeo mistura vários tipos de informação, como imagem, áudio e texto na tela. Cada tipo é uma modalidade.",
+        "Modality misalignment (desalinhamento de modalidades) acontece quando uma parte do vídeo não combina com o resto ou com o que o vídeo promete.",
+        "Comparar imagem com texto já tem solução pronta, com modelos como o CLIP que medem a semelhança entre embeddings (vetores numéricos).",
+        "O caso difícil é achar um trecho curto fora do tema dentro do próprio vídeo, o que exige olhar clipe por clipe ao longo do tempo.",
+        "No exemplo do talk, o vídeo fala de esportes até os 6 segundos e vira política até 6,5 segundos. O reviewer acha isso lendo só os metadados de cada clipe."
+      ],
+      "pre_requisitos": [
+        "Modalidade",
+        "Embeddings",
+        "Similaridade de cosseno"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "VÍDEO COMPLETO",
+            "nota": "Imagem, áudio e texto"
+          },
+          {
+            "rotulo": "CORTE EM CLIPES",
+            "nota": "Onde o conteúdo muda"
+          },
+          {
+            "rotulo": "METADADOS POR CLIPE",
+            "nota": "Tema, tags, OCR e tempo"
+          },
+          {
+            "rotulo": "TRECHO ANÔMALO",
+            "nota": "Ex.: política de 6 a 6,5 s"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "VLM",
+      "traducao": "modelo de visão e linguagem",
+      "nivel": "intermediario",
+      "chave": "vlm",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Instruction tuning",
+      "traducao": "ajuste por instruções",
+      "nivel": "intermediario",
+      "chave": "instruction tuning",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "DPO",
+      "traducao": "otimização direta de preferências",
+      "nivel": "avancado",
+      "chave": "dpo",
+      "analogia": "DPO é como um treinador que mostra ao atleta dois lances lado a lado, um bom e um ruim, e pede para ele repetir mais o primeiro e menos o segundo.",
+      "explicacao": [
+        "O modelo já funciona, mas erra em alguns casos. A ideia é corrigir esses erros mostrando exemplos de acerto e de erro.",
+        "Para cada caso, o time monta um par com uma resposta boa (positiva) e uma resposta ruim (negativa) para a mesma pergunta.",
+        "DPO (Direct Preference Optimization, otimização direta de preferências) ajusta o modelo para aumentar a chance da resposta boa e diminuir a chance da ruim.",
+        "O ajuste é comparado com uma cópia congelada do modelo original. Isso evita que ele mude demais e esqueça o que já sabia.",
+        "No talk, os pares vêm de falhas de produção achadas por um LLM juiz e por revisores humanos, e o retreino acontece em ciclo contínuo."
+      ],
+      "pre_requisitos": [
+        "Fine-tuning",
+        "LLM as a judge",
+        "Human in the loop"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "AMOSTRA DA PRODUÇÃO",
+            "nota": "Parte das respostas do dia"
+          },
+          {
+            "rotulo": "LLM JUIZ E HUMANOS",
+            "nota": "Apontam onde o modelo errou"
+          },
+          {
+            "rotulo": "PARES BOM E RUIM",
+            "nota": "Mesma entrada, duas respostas"
+          },
+          {
+            "rotulo": "MODELO RETREINADO",
+            "nota": "Prefere a resposta boa"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Knowledge distillation",
+      "traducao": "destilação de conhecimento",
+      "nivel": "avancado",
+      "chave": "knowledge distillation",
+      "analogia": "Destilação de conhecimento é como um chef experiente que ensina um cozinheiro novo a fazer só os pratos do cardápio da casa, sem passar por toda a gastronomia.",
+      "explicacao": [
+        "Existe um modelo grande que acerta bastante, mas custa caro para rodar em milhões de vídeos.",
+        "Knowledge distillation (destilação de conhecimento) treina um modelo menor, o aluno, para imitar as respostas do modelo grande, o professor.",
+        "O aluno aprende com as probabilidades que o professor dá a cada resposta. Esse sinal carrega mais informação do que um simples certo ou errado.",
+        "Na versão off-policy, o aluno imita respostas já geradas pelo professor. Na versão on-policy, o aluno gera as próprias respostas e o professor corrige.",
+        "O palestrante usa as duas versões porque só precisa do modelo bom no domínio dele, e aceita que o aluno não saiba programar, por exemplo."
+      ],
+      "pre_requisitos": [
+        "VLM",
+        "Inferência",
+        "Fine-tuning"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "MODELO PROFESSOR",
+            "nota": "Grande, preciso e caro"
+          },
+          {
+            "rotulo": "RESPOSTAS DO PROFESSOR",
+            "nota": "Servem de gabarito detalhado"
+          },
+          {
+            "rotulo": "MODELO ALUNO TREINA",
+            "nota": "Imita o professor no domínio"
+          },
+          {
+            "rotulo": "MODELO PEQUENO",
+            "nota": "Mais barato e rápido em produção"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Quantization",
+      "traducao": "quantização",
+      "nivel": "avancado",
+      "chave": "quantization",
+      "analogia": "Quantização é como arredondar os preços da lista de compras para o real mais próximo, o que deixa a conta mais rápida e quase não muda o total.",
+      "explicacao": [
+        "Um modelo de IA guarda bilhões de números. Cada número ocupa espaço na memória e tempo de cálculo.",
+        "Quantization (quantização) guarda esses números com menos precisão, usando menos bits por número.",
+        "Formatos comuns são bfloat16 (16 bits) e 4 bits. Menos bits significa modelo menor, mais rápido e mais barato de servir.",
+        "O arredondamento pode derrubar a qualidade, então o time testa cada formato e compara o desempenho.",
+        "No talk, o time monta uma tabela cruzando tamanhos de destilação e níveis de quantização para achar o ponto de equilíbrio entre acerto e custo."
+      ],
+      "pre_requisitos": [
+        "Parâmetros de um modelo",
+        "Inferência",
+        "Knowledge distillation"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM as a judge",
+      "traducao": "LLM como juiz",
+      "nivel": "intermediario",
+      "chave": "llm as a judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk descreve a arquitetura sem mostrar resultados. Não aparecem métricas de precisão, recall, custo ou latência, nem comparação com um modelo grande único. O único número de desempenho é um limite de 95% dado como exemplo. A escolha por modelos pequenos é justificada por custo e escala, sem dados de apoio. A fala é de um funcionário da Meta sobre sistema interno, então não dá para reproduzir nem auditar.",
+  "acoes": [
+    "Ao desenhar um fluxo com IA, divida em etapas com papéis claros (perceber, decidir, recuperar) apenas se um único prompt não resolver o problema.",
+    "Meça cada etapa do pipeline, com latência, custo de tokens e taxa de erro por ferramenta, além da métrica final.",
+    "Coloque filtros baratos antes do modelo caro, como cache para conteúdo repetido e regras por metadados para fontes confiáveis.",
+    "Se usar um LLM como juiz, compare-o com amostras rotuladas por humanos com regularidade para detectar drift (deriva)."
+  ],
+  "numeros": [
+    {
+      "valor": "100 mi+",
+      "contexto": "escala de vídeos tratados na plataforma",
+      "t": 95
+    },
+    {
+      "valor": "6 a 6,5 s",
+      "contexto": "trecho político em vídeo de esportes",
+      "t": 343
+    },
+    {
+      "valor": "95%",
+      "contexto": "limite de desempenho citado como exemplo",
+      "t": 869
+    }
+  ]
+}

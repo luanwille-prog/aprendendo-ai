@@ -1,0 +1,203 @@
+{
+  "id": "hd7TOvmyAxU",
+  "titulo": "An AI Research Agent That Runs Your Experiments — Tim Sweeney, Weights & Biases",
+  "titulo_curto": "An AI Research Agent That Runs Your Experiments",
+  "palestrante": "Tim Sweeney, Weights & Biases",
+  "url": "https://www.youtube.com/watch?v=hd7TOvmyAxU",
+  "duracao": 1276,
+  "publicado_ts": 1790433038,
+  "edicao": "2026-09-26",
+  "tese": "Agente em produção precisa de traces, juízes automáticos e um eval noturno que decida o que sobe.",
+  "tldr": [
+    "Tim Sweeney mostra o ARIA, agente da Weights & Biases que lança e monitora experimentos de treino em GPUs reais, resume runs e monta relatórios dentro da plataforma.",
+    "Depois ele abre a arquitetura: 100% dos traces vão para o Weave, juízes LLM rodam sobre tráfego real e tarefas em YAML viram um eval (avaliação) noturno que decide o que vai para produção.",
+    "O fecho traz três dicas para quem coloca agentes em produção: observabilidade voltada ao agente, evals como novo CI e revisão humana de traces, com contexto e ferramentas antes de complicar o harness."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Agente que conduz o loop de autoresearch",
+      "texto": "O ARIA já vinha rodando mais de 200 experimentos no projeto autoresearch de Karpathy. Ao receber o pedido de um novo lote, ele decide evitar mudança de arquitetura, ajusta hiperparâmetros e dispara a execução via shell na fila do W&B Launch, ligada a um cluster Kubernetes. Depois fica consultando o resultado até os jobs terminarem.",
+      "t": 284,
+      "legenda": "O agente escolhe ajustes de hiperparâmetro e lança jobs reais na GPU.",
+      "print": "img/hd7TOvmyAxU/0.jpg"
+    },
+    {
+      "titulo": "Dashboard de conversas mostra a forma de cada trace",
+      "texto": "No Weave, a visão de conversas lista o tráfego do ARIA com um indicador visual da topologia de cada trace: chamadas de ferramenta, chamadas de LLM e blocos de raciocínio aparecem em cores e formas diferentes. O time abre uma conversa, lê prompt de sistema e shell calls, deixa notas e transforma os achados em tarefas.",
+      "t": 813,
+      "legenda": "A forma do trace revela o comportamento do agente sem ler cada mensagem.",
+      "print": "img/hd7TOvmyAxU/1.jpg"
+    },
+    {
+      "titulo": "Signals: juízes LLM sobre tráfego ao vivo",
+      "texto": "O Weave roda juízes LLM (LLM judges) contra o tráfego real e marca sinais como frustração do usuário, resposta de baixa qualidade e pedido de esclarecimento. Cada marca traz o raciocínio do juiz. No exemplo, o usuário diz que a curva de loss está ruim e o juiz registra frustração. O time usa esses clusters para escolher o que corrigir na semana seguinte.",
+      "t": 938,
+      "legenda": "Cada sinal vem com o raciocínio do juiz, então dá para auditar a marcação.",
+      "print": "img/hd7TOvmyAxU/2.jpg"
+    },
+    {
+      "titulo": "Tarefas em YAML funcionam como testes unitários",
+      "texto": "Cada tarefa é um arquivo YAML com um prompt de usuário e juízes. No exemplo, o prompt pede para comparar duas runs. Um juiz LLM avalia correção, outro avalia se os insights são interessantes, e uma regra fixa exige o resultado em até seis chamadas de ferramenta. O time mantém cerca de 200 tarefas assim.",
+      "t": 985,
+      "legenda": "Uma tarefa combina dois juízes LLM e uma regra objetiva de custo em chamadas.",
+      "print": "img/hd7TOvmyAxU/3.jpg"
+    },
+    {
+      "titulo": "Eval noturno decide o go/no-go",
+      "texto": "As cerca de 200 tarefas formam uma suíte que roda toda noite, com resultados no Weave. Na tela, o modelo candidato marcou 73% contra 72% do modelo em produção. Com essa margem, o time decide promover o candidato na sexta-feira. O painel também traz um gráfico de desempenho ao longo das noites.",
+      "t": 1040,
+      "legenda": "Um placar noturno único serve de critério de promoção do agente.",
+      "print": "img/hd7TOvmyAxU/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Autoresearch",
+      "traducao": "pesquisa automática iterativa",
+      "nivel": "intermediario",
+      "chave": "autoresearch",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Harness",
+      "traducao": "estrutura que executa o agente",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Observabilidade de agentes",
+      "traducao": "registro de sessões, turnos e ferramentas",
+      "nivel": "intermediario",
+      "chave": "observabilidade de agentes",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Trace",
+      "traducao": "registro passo a passo de uma execução",
+      "nivel": "intermediario",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM judge",
+      "traducao": "modelo que avalia outro modelo",
+      "nivel": "intermediario",
+      "chave": "llm judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval suite",
+      "traducao": "conjunto de avaliações automáticas",
+      "nivel": "intermediario",
+      "chave": "eval suite",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Behavioral bug",
+      "traducao": "bug de comportamento do agente",
+      "nivel": "basico",
+      "chave": "behavioral bug",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Hiperparâmetro",
+      "traducao": "ajuste de treino definido antes de treinar",
+      "nivel": "avancado",
+      "chave": "hiperparâmetro",
+      "analogia": "Hiperparâmetro é como a temperatura do forno e o tempo de assar que você escolhe antes de pôr o bolo, enquanto o bolo cresce sozinho lá dentro.",
+      "explicacao": [
+        "Treinar um modelo de IA é deixar o computador aprender com exemplos. Antes de começar, alguém precisa escolher algumas regras de como esse aprendizado vai acontecer.",
+        "Essas regras escolhidas antes do treino se chamam hiperparâmetros. O modelo não aprende esses valores sozinho; a pessoa ou um agente define cada um.",
+        "Dois exemplos comuns são a learning rate (taxa de aprendizado), que diz o tamanho de cada passo de correção, e o batch size (tamanho do lote), que diz quantos exemplos o modelo vê de uma vez.",
+        "Para achar bons valores, a equipe roda vários treinos com combinações diferentes, compara uma métrica como a loss (erro do modelo) e guarda a melhor combinação.",
+        "No talk, o agente ARIA evita mudar a arquitetura do modelo, ajusta só hiperparâmetros e lança os treinos em GPUs. Nos resultados, ele percebe que o batch size pesa muito no desempenho."
+      ],
+      "pre_requisitos": [
+        "Treinamento de modelo",
+        "Função de perda (loss)",
+        "Arquitetura de modelo"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "ESCOLHER VALORES",
+            "nota": "Taxa de aprendizado, lote, épocas"
+          },
+          {
+            "rotulo": "TREINAR O MODELO",
+            "nota": "Um job por combinação na GPU"
+          },
+          {
+            "rotulo": "MEDIR O RESULTADO",
+            "nota": "Comparar a loss de cada treino"
+          },
+          {
+            "rotulo": "MELHOR COMBINAÇÃO",
+            "nota": "Valores usados no próximo lote"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é demo de produto da Weights & Biases e a própria fala reconhece o viés ao elogiar o Weave. A diferença de 73% para 72% no eval noturno aparece sem intervalo de confiança nem detalhe sobre a suíte. O experimento ao vivo não bateu o recorde (5,833 contra 5,831). Não há comparação com outras ferramentas nem dados de custo. As dicas gerais valem, mas o exemplo é um ambiente controlado da própria empresa.",
+  "acoes": [
+    "Registre sessões, turnos, chamadas de ferramenta e feedback do seu agente em qualquer ferramenta de observabilidade, e guarde 100% dos traces.",
+    "Transforme cada falha real em uma tarefa de teste com um juiz simples e uma regra objetiva, como limite de chamadas de ferramenta.",
+    "Reserve uma revisão semanal em equipe dos melhores e piores traces, porque juízes LLM deixam passar nuances de comportamento.",
+    "Antes de mexer em memória ou no harness, dê ao agente contexto do seu domínio, dados do negócio e as ferramentas certas."
+  ],
+  "numeros": [
+    {
+      "valor": "200+",
+      "contexto": "experimentos de treino no projeto da demo",
+      "t": 160
+    },
+    {
+      "valor": "100%",
+      "contexto": "dos traces registrados no Weave",
+      "t": 691
+    },
+    {
+      "valor": "73% vs 72%",
+      "contexto": "eval noturno: candidato contra produção",
+      "t": 1033
+    },
+    {
+      "valor": "12",
+      "contexto": "experimentos no lote rodado ao vivo",
+      "t": 1219
+    }
+  ]
+}

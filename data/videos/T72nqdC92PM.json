@@ -1,0 +1,305 @@
+{
+  "id": "T72nqdC92PM",
+  "titulo": "From Scratch to SOTA: Training a 3B State-Space Vision Model — Krishna Prasad Srinivasan, Sarvam",
+  "titulo_curto": "From Scratch to SOTA: Training a 3B State-Space Vision Model",
+  "palestrante": "Krishna Prasad Srinivasan, Sarvam",
+  "url": "https://www.youtube.com/watch?v=T72nqdC92PM",
+  "duracao": 1269,
+  "publicado_ts": 1790181019,
+  "edicao": "2026-09-23",
+  "tese": "Um modelo pequeno, treinado com curadoria de dados e recompensas verificáveis, supera modelos gigantes em OCR de línguas pouco digitalizadas.",
+  "tldr": [
+    "A Sarvam treinou do zero um VLM (modelo de visão e linguagem) de 3 bilhões de parâmetros que roda em uma GPU e lidera OCR em 22 línguas indianas.",
+    "O modelo usa uma arquitetura de state space (espaço de estados) no lugar do transformer e lê a página por blocos, guiado por módulos externos de layout e ordem de leitura.",
+    "Segundo o palestrante, a vantagem competitiva está no motor de dados sintéticos e nos evals (avaliações) próprios, e o modelo já digitaliza 35 milhões de páginas."
+  ],
+  "tema": "modelos",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "OCR por blocos dentro de um harness",
+      "texto": "Em 2025 a maioria dos modelos de OCR (reconhecimento de texto em imagem) lia a página inteira de uma vez. A Sarvam apostou em ler bloco por bloco, com dois módulos em volta do modelo. Um detecta o layout da página e outro define a ordem de leitura. O palestrante diz que vários lançamentos de 2026 adotaram o mesmo desenho de modelo pequeno com harness (estrutura de apoio).",
+      "t": 250,
+      "legenda": "O modelo trabalha dentro de uma estrutura que recorta e ordena a página",
+      "print": "img/T72nqdC92PM/0.jpg"
+    },
+    {
+      "titulo": "Por que trocar o transformer por um SSM",
+      "texto": "No transformer, cada token olha para todos os outros, e o custo cresce com o quadrado do tamanho da sequência. Um SSM guarda um único estado e o atualiza token a token, com custo linear e memória constante. Uma página pode gerar de 5 a 10 mil tokens visuais, então o SSM reduz o custo de inferência. O preço é uma memória com alguma perda, que a leitura por blocos ajuda a compensar.",
+      "t": 300,
+      "legenda": "Custo quadrático do transformer contra custo linear do SSM",
+      "print": "img/T72nqdC92PM/1.jpg"
+    },
+    {
+      "titulo": "Primeiro a língua, depois os pixels",
+      "texto": "O treino segue quatro etapas. Primeiro vem pré-treino só com texto, 13 trilhões de tokens em inglês, línguas indianas, matemática e código. Depois 300 milhões de pares imagem e texto, 100 milhões de exemplos de OCR em ajuste supervisionado e, por fim, aprendizado por reforço. A base de língua forte ajuda o modelo a adivinhar uma palavra borrada, como uma pessoa faz ao ler.",
+      "t": 370,
+      "legenda": "Sequência de treino do texto puro até o aprendizado por reforço",
+      "print": "img/T72nqdC92PM/2.jpg"
+    },
+    {
+      "titulo": "Recompensas que o computador confere sozinho",
+      "texto": "Em OCR dá para checar a resposta de forma automática. A equipe cria testes como taxa de erro por caractere, estrutura de tabela ou regras de gramática. O modelo gera várias respostas, os testes dão nota, e o treino reforça as que ficam acima da média do grupo. Isso torna o RLVR (aprendizado por reforço com recompensas verificáveis) barato de escalar.",
+      "t": 583,
+      "legenda": "Loop de reforço com testes automáticos como recompensa",
+      "print": "img/T72nqdC92PM/3.jpg"
+    },
+    {
+      "titulo": "Resultados em inglês e em línguas indianas",
+      "texto": "No lançamento, o modelo marcou 93,2 no OmniDocBench e 84,3 em outro benchmark global de OCR em inglês. O palestrante admite que modelos mais novos já avançaram nesses rankings. Em 22 línguas indianas, ele afirma que a Sarvam segue à frente de Gemini, ChatGPT e Claude Opus.",
+      "t": 616,
+      "legenda": "Comparação de desempenho em benchmarks de documentos",
+      "print": "img/T72nqdC92PM/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "State Space Model (SSM)",
+      "traducao": "modelo de espaço de estados",
+      "nivel": "avancado",
+      "chave": "state space model (ssm)",
+      "analogia": "Um SSM é como um aluno que lê um livro longo e anota só um resumo num caderninho, atualizando esse resumo a cada página em vez de reler tudo desde o começo.",
+      "explicacao": [
+        "Um modelo de linguagem lê o texto em pedaços pequenos chamados tokens (fichas), um depois do outro.",
+        "O SSM (State Space Model, modelo de espaço de estados) guarda um único estado, uma espécie de memória resumida do que já leu.",
+        "A cada novo token, o modelo mistura a informação nova com esse estado e produz um estado atualizado.",
+        "Como o tamanho do estado nunca muda, a memória fica constante e o custo cresce só em linha reta com o tamanho do texto.",
+        "O preço é uma memória com alguma perda de detalhe, e a Sarvam compensa isso lendo a página em blocos curtos."
+      ],
+      "pre_requisitos": [
+        "Token",
+        "Transformer",
+        "Complexidade quadrática da atenção"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "TOKEN NOVO",
+            "nota": "Chega o próximo pedaço do texto"
+          },
+          {
+            "rotulo": "ESTADO ATUAL",
+            "nota": "Resumo fixo do que já foi lido"
+          },
+          {
+            "rotulo": "ATUALIZAÇÃO",
+            "nota": "Mistura o token novo ao resumo"
+          },
+          {
+            "rotulo": "ESTADO NOVO",
+            "nota": "Memória de tamanho constante"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Complexidade quadrática da atenção",
+      "traducao": "custo que cresce com o quadrado do tamanho do texto",
+      "nivel": "avancado",
+      "chave": "complexidade quadrática da atenção",
+      "analogia": "A complexidade quadrática é como uma festa em que cada convidado precisa cumprimentar todos os outros, e dobrar o número de convidados quadruplica o número de apertos de mão.",
+      "explicacao": [
+        "Quanto maior o texto que um modelo lê, mais trabalho ele tem para processar.",
+        "No transformer, o mecanismo de atenção (attention) faz cada token olhar para todos os outros tokens da sequência.",
+        "Com L tokens, isso gera L vezes L comparações, então o custo cresce com o quadrado do tamanho.",
+        "Uma página de documento pode virar de 5 a 10 mil tokens visuais, o que deixa a inferência (uso do modelo pronto) cara em processamento e memória.",
+        "Por isso a Sarvam trocou o transformer por um SSM, cujo custo cresce de forma linear."
+      ],
+      "pre_requisitos": [
+        "Token",
+        "Transformer",
+        "Inferência"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "VLM",
+      "traducao": "modelo de visão e linguagem",
+      "nivel": "intermediario",
+      "chave": "vlm",
+      "analogia": "Um VLM é como um secretário que olha a foto de um recibo e já digita o que está escrito nele, juntando olhos e leitura no mesmo trabalho.",
+      "explicacao": [
+        "Um VLM (vision language model, modelo de visão e linguagem) recebe uma imagem e responde em texto.",
+        "Uma parte do modelo transforma a imagem em tokens visuais, pedaços que representam regiões da figura.",
+        "Esses tokens visuais entram no modelo de linguagem junto com o texto, e ele gera a resposta palavra por palavra.",
+        "O VLM da Sarvam tem 3 bilhões de parâmetros, cabe em uma GPU e usa um SSM no lugar do transformer como modelo de linguagem.",
+        "Ele lê a página bloco por bloco, guiado por um módulo que detecta o layout e outro que define a ordem de leitura."
+      ],
+      "pre_requisitos": [
+        "Modelo de linguagem",
+        "Token",
+        "OCR"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "IMAGEM DO BLOCO",
+            "nota": "Trecho recortado da página"
+          },
+          {
+            "rotulo": "TOKENS VISUAIS",
+            "nota": "A imagem vira pedaços numéricos"
+          },
+          {
+            "rotulo": "MODELO DE LINGUAGEM",
+            "nota": "Interpreta imagem e contexto"
+          },
+          {
+            "rotulo": "TEXTO EXTRAÍDO",
+            "nota": "Conteúdo do bloco em texto"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "OCR em nível de bloco",
+      "traducao": "leitura de texto por trechos da página",
+      "nivel": "intermediario",
+      "chave": "ocr em nível de bloco",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Harness",
+      "traducao": "estrutura de apoio em volta do modelo",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Currículo de treino",
+      "traducao": "treino em etapas que se somam",
+      "nivel": "avancado",
+      "chave": "currículo de treino",
+      "analogia": "Um currículo de treino é como a escola, onde a criança primeiro aprende a falar, depois a reconhecer letras, depois a ler textos e só no fim faz provas corrigidas.",
+      "explicacao": [
+        "Em vez de ensinar tudo de uma vez, o modelo aprende em etapas, e cada etapa se apoia na anterior.",
+        "Na etapa 1, o modelo lê só texto, 13 trilhões de tokens em inglês, línguas indianas, matemática e código, e ganha uma base forte de língua.",
+        "Na etapa 2, ele vê 300 milhões de pares de imagem e texto e aprende a interpretar pixels.",
+        "Na etapa 3, o ajuste supervisionado (supervised fine-tuning) usa 100 milhões de exemplos de OCR com tabelas, equações e escrita à mão.",
+        "Na etapa 4, o aprendizado por reforço (reinforcement learning) empurra o modelo além do limite que a etapa 3 alcança."
+      ],
+      "pre_requisitos": [
+        "Pré-treino",
+        "Ajuste supervisionado",
+        "Aprendizado por reforço",
+        "VLM"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "SÓ TEXTO",
+            "nota": "13 tri de tokens criam a base de língua"
+          },
+          {
+            "rotulo": "IMAGEM E TEXTO",
+            "nota": "300 mi de pares ensinam a ver"
+          },
+          {
+            "rotulo": "AJUSTE PARA OCR",
+            "nota": "100 mi de exemplos de documentos"
+          },
+          {
+            "rotulo": "REFORÇO",
+            "nota": "Testes automáticos dão a nota"
+          },
+          {
+            "rotulo": "MODELO DE OCR",
+            "nota": "Lê documentos em 22 línguas"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "RLVR",
+      "traducao": "aprendizado por reforço com recompensas verificáveis",
+      "nivel": "avancado",
+      "chave": "rlvr",
+      "analogia": "O RLVR é como um treino de tabuada com gabarito, em que o aluno responde várias vezes, o professor confere cada resposta na hora e elogia as tentativas melhores que a média da turma.",
+      "explicacao": [
+        "No aprendizado por reforço (reinforcement learning), o modelo tenta, recebe uma nota e passa a repetir mais o que deu nota alta.",
+        "O RLVR (reinforcement learning with verifiable rewards, aprendizado por reforço com recompensas verificáveis) usa notas que um programa calcula sozinho, sem um humano julgar.",
+        "Em OCR isso funciona bem, porque dá para medir a taxa de erro por caractere, conferir a estrutura de uma tabela ou checar regras de gramática.",
+        "O modelo gera um grupo de respostas para a mesma imagem, os testes dão nota a cada uma e o treino reforça as que ficam acima da média do grupo.",
+        "Como a nota sai de testes automáticos, o processo fica barato de repetir em escala."
+      ],
+      "pre_requisitos": [
+        "Aprendizado por reforço",
+        "OCR",
+        "Taxa de erro por caractere"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "GERA UM GRUPO",
+            "nota": "Várias respostas para a mesma imagem"
+          },
+          {
+            "rotulo": "TESTES DÃO NOTA",
+            "nota": "Erro por caractere, tabela, gramática"
+          },
+          {
+            "rotulo": "COMPARA COM A MÉDIA",
+            "nota": "Separa as respostas acima da média"
+          },
+          {
+            "rotulo": "MODELO REFORÇADO",
+            "nota": "Repete mais o que acertou"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Dados sintéticos",
+      "traducao": "dados gerados artificialmente para treino",
+      "nivel": "intermediario",
+      "chave": "dados sintéticos",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é apresentação comercial da Sarvam, feita pelo próprio gerente geral. A liderança em línguas indianas vem de avaliações internas, e o benchmark público ainda não saiu. Não há números de comparação com Gemini ou ChatGPT, só a afirmação. Os 35 milhões de páginas e o preço competitivo aparecem sem clientes nomeados nem custo por página. O ganho do SSM sobre o transformer é argumentado em teoria, sem medição de custo mostrada.",
+  "acoes": [
+    "Ao escolher uma ferramenta de OCR para documentos em português ou línguas regionais, teste com uma amostra dos seus próprios documentos antes de confiar em rankings.",
+    "Para extrair dados de documentos longos, divida a página em blocos e defina a ordem de leitura antes de mandar para o modelo.",
+    "Quando a resposta puder ser checada por regra, como total de uma tabela ou formato de CPF, crie verificações automáticas para medir a qualidade da extração.",
+    "Se o documento contém dados sensíveis, pergunte ao fornecedor onde o modelo roda e se existe opção local."
+  ],
+  "numeros": [
+    {
+      "valor": "3 bilhões",
+      "contexto": "parâmetros do modelo, que roda em uma única GPU",
+      "t": 16
+    },
+    {
+      "valor": "13 trilhões",
+      "contexto": "tokens de texto no primeiro estágio de pré-treino",
+      "t": 360
+    },
+    {
+      "valor": "93,2",
+      "contexto": "pontuação no OmniDocBench no lançamento",
+      "t": 616
+    },
+    {
+      "valor": "35 milhões",
+      "contexto": "páginas em digitalização por clientes em produção",
+      "t": 678
+    }
+  ]
+}

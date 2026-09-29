@@ -1,0 +1,308 @@
+{
+  "id": "dKcTBQzR7jI",
+  "titulo": "Skill issue: stop deploying vision language models, use them with Skills — Merve Noyan, Hugging Face",
+  "titulo_curto": "Skill issue: stop deploying vision language models, use them with Skills",
+  "palestrante": "Merve Noyan, Hugging Face",
+  "url": "https://www.youtube.com/watch?v=dKcTBQzR7jI",
+  "duracao": 1153,
+  "publicado_ts": 1790170216,
+  "edicao": "2026-09-23",
+  "tese": "Para visão computacional, use o VLM para rotular e julgar dados, treine um detector pequeno e ponha esse detector para rodar em produção.",
+  "tldr": [
+    "Merve Noyan diz que modelos de visão e linguagem (VLMs) são lentos demais para tempo real e que um detector pequeno como o RF-DETR, treinado para a tarefa, rende mais.",
+    "Ela montou um kit para agentes de código que rotula imagens com um VLM, filtra os rótulos com dois VLMs juízes e treina o detector, a um custo de três a quatro dólares.",
+    "Os testes com placas de trânsito e leitura de documentos funcionaram, mas o agente ainda erra o senso comum da área, como espelhar placas, e um humano precisa aprovar os prompts dos juízes."
+  ],
+  "tema": "modelos",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "VLM no runtime perde para detector treinado",
+      "texto": "Merve afirma que quem usa VLM para tudo nunca chega a tempo real. Um detector treinado para a tarefa roda a 30 a 40 quadros por segundo em hardware simples e, segundo ela, supera o VLM. O VLM serve melhor como ferramenta de preparação, não de execução.",
+      "t": 76,
+      "legenda": "O detector pequeno roda em tempo real; o VLM não.",
+      "print": "img/dKcTBQzR7jI/0.jpg"
+    },
+    {
+      "titulo": "Vibe training: VLM rotula, dois VLMs julgam, depois treina",
+      "texto": "O pipeline pega um conjunto de imagens sem rótulos e rotula com um VLM de 9 bilhões de parâmetros. Dois VLMs menores julgam cada rótulo. Só os exemplos aprovados vão para o treino do RF-DETR. O agente de código conduz as etapas longas, e o processo pode rodar local ou na infraestrutura da Hugging Face.",
+      "t": 327,
+      "legenda": "Todo o fluxo, do dado sem rótulo ao detector treinado.",
+      "print": "img/dKcTBQzR7jI/1.jpg"
+    },
+    {
+      "titulo": "Caixas desenhadas na imagem em vez de tokens de coordenadas",
+      "texto": "O modelo rotulador devolve as caixas como tokens de texto. Merve não passa esses tokens aos juízes. Ela desenha as caixas sobre a imagem e pergunta, com a descrição do rótulo, se a caixa está correta. Os vereditos são unidos por acordo mínimo: basta um juiz aprovar para o exemplo entrar.",
+      "t": 419,
+      "legenda": "O juiz vê a caixa desenhada e responde aprova ou rejeita.",
+      "print": "img/dKcTBQzR7jI/2.jpg"
+    },
+    {
+      "titulo": "Resultados em placas de trânsito e em documentos",
+      "texto": "Nas placas, ela comparou o detector treinado com os rótulos reais e obteve bom mAP acima de 50, com uma diferença esperada por ter aprendido com rótulos gerados. Em documentos, o detector achou uma assinatura que o modelo rotulador tinha deixado passar, sinal de que generalizou.",
+      "t": 637,
+      "legenda": "O detector achou a assinatura que o rotulador perdeu.",
+      "print": "img/dKcTBQzR7jI/3.jpg"
+    },
+    {
+      "titulo": "Três achados sobre juízes, prompts e agentes",
+      "texto": "Um juiz rejeita muito mais que o outro, então exigir consenso deixaria poucos exemplos. Os prompts dos juízes ainda precisam de aprovação humana. E o agente de código, mesmo bom, espelhou placas na horizontal e mexeu na cor de semáforos, o que corrompe o conjunto de dados até ser instruído a não fazer isso.",
+      "t": 733,
+      "legenda": "Onde o pipeline ainda depende de julgamento humano.",
+      "print": "img/dKcTBQzR7jI/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "VLM",
+      "traducao": "modelo de visão e linguagem",
+      "nivel": "basico",
+      "chave": "vlm",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Object detection",
+      "traducao": "detecção de objetos",
+      "nivel": "intermediario",
+      "chave": "object detection",
+      "analogia": "A detecção de objetos é como um fiscal de trânsito que olha a rua, aponta cada placa e cada carro e diz o nome de cada um.",
+      "explicacao": [
+        "A detecção de objetos (object detection) responde a duas perguntas sobre uma imagem. O que aparece nela e onde está.",
+        "Para cada objeto, o modelo desenha um retângulo em volta, chamado caixa delimitadora (bounding box), e dá um nome de classe, como placa ou assinatura.",
+        "Um detector pequeno, como o RF-DETR, aprende só as classes da sua tarefa a partir de imagens rotuladas.",
+        "Por ser pequeno e focado, ele roda de 30 a 40 quadros por segundo em hardware simples. Um VLM grande chamado a cada quadro não chega a esse tempo real."
+      ],
+      "pre_requisitos": [
+        "Bounding box",
+        "VLM",
+        "Treino de modelo"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "IMAGEM",
+            "nota": "Quadro de vídeo ou foto"
+          },
+          {
+            "rotulo": "DETECTOR",
+            "nota": "Modelo pequeno treinado"
+          },
+          {
+            "rotulo": "CAIXAS E CLASSES",
+            "nota": "Onde está e o que é cada objeto"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Licença Apache 2.0",
+      "traducao": "licença permissiva; contrasta com a AGPL do YOLO",
+      "nivel": "basico",
+      "chave": "licença apache 2.0",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo que avalia a saída de outro modelo",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": "Usar um modelo como juiz é como pedir a um colega de escritório que revise a planilha de outro antes de ela seguir para o chefe.",
+      "explicacao": [
+        "Um modelo de IA pode revisar o trabalho de outro modelo e dizer se está bom.",
+        "No LLM-as-a-judge (modelo como juiz), você entrega a saída de um modelo a outro, junto com critérios, e pede um veredito.",
+        "No talk, um VLM rotula imagens e dois VLMs menores julgam cada rótulo. Merve desenha a caixa sobre a imagem e pergunta ao juiz se ela corresponde à descrição do rótulo.",
+        "Ela pede aprova ou rejeita em vez de uma nota, porque notas numéricas funcionam mal, sobretudo com juízes de tamanhos diferentes.",
+        "Os prompts dos juízes são gerados pelo agente de código, mas um humano ainda precisa aprovar esses prompts antes de rodar."
+      ],
+      "pre_requisitos": [
+        "VLM",
+        "Pseudo-labeling",
+        "Prompt"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "SAÍDA DO ROTULADOR",
+            "nota": "Caixa e classe propostas"
+          },
+          {
+            "rotulo": "CAIXA NA IMAGEM",
+            "nota": "Desenhada sobre a foto"
+          },
+          {
+            "rotulo": "JUIZ AVALIA",
+            "nota": "Compara com a descrição do rótulo"
+          },
+          {
+            "rotulo": "VEREDITO",
+            "nota": "Aprova ou rejeita o exemplo"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Pseudo-labeling",
+      "traducao": "rótulos gerados por modelo, não por humanos",
+      "nivel": "intermediario",
+      "chave": "pseudo-labeling",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Acordo mínimo versus consenso",
+      "traducao": "aceitar se ao menos um juiz aprovar, ou só se todos aprovarem",
+      "nivel": "avancado",
+      "chave": "acordo mínimo versus consenso",
+      "analogia": "Acordo mínimo é como uma banca de dois professores em que basta um deles aprovar o trabalho, e consenso é como exigir a assinatura dos dois.",
+      "explicacao": [
+        "Quando dois avaliadores olham o mesmo item, alguém precisa decidir o que fazer quando eles discordam.",
+        "No acordo mínimo (minimum agreement), o item entra se pelo menos um avaliador aprovar. No consenso (consensus), o item só entra se todos aprovarem.",
+        "No pipeline da Merve, dois VLMs juízes olham cada rótulo gerado. Um deles, o LFM, rejeita muito mais que o outro.",
+        "Com consenso, o juiz mais rígido derrubaria quase tudo e sobrariam poucos exemplos para treinar. Com poucos exemplos, o detector generaliza mal.",
+        "Por isso ela usou acordo mínimo, que guarda mais dados e aceita mais erro. Com um conjunto grande, o consenso passa a ser uma opção, porque ainda sobram exemplos depois do filtro."
+      ],
+      "pre_requisitos": [
+        "LLM-as-a-judge",
+        "Pseudo-labeling",
+        "Precisão e recall"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "RÓTULO GERADO",
+            "nota": "Caixa proposta pelo VLM rotulador"
+          },
+          {
+            "rotulo": "DOIS JUÍZES",
+            "nota": "Cada um aprova ou rejeita"
+          },
+          {
+            "rotulo": "REGRA DE UNIÃO",
+            "nota": "Um aprova basta, ou todos precisam"
+          },
+          {
+            "rotulo": "CONJUNTO DE TREINO",
+            "nota": "Maior com acordo mínimo"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "mAP",
+      "traducao": "precisão média em detecção, nota de qualidade do detector",
+      "nivel": "avancado",
+      "chave": "map",
+      "analogia": "O mAP é como a média geral do boletim de um aluno, que junta a nota de cada matéria e a nota de cada prova num número só.",
+      "explicacao": [
+        "O mAP (mean Average Precision, precisão média) é uma nota que diz quão bem um detector acha e localiza objetos numa imagem.",
+        "Para cada caixa prevista, o cálculo verifica se ela se sobrepõe o bastante à caixa verdadeira. Essa sobreposição se chama IoU (intersection over union, interseção sobre união).",
+        "Com isso o cálculo mede a precisão, quantas caixas previstas estavam certas, e o recall, quantos objetos reais o detector achou.",
+        "A precisão média resume essa troca entre precisão e recall para uma classe, como placa de pare. O mAP tira a média de todas as classes.",
+        "No talk, o detector treinado com rótulos gerados passou de 50 de mAP numa escala de 0 a 100, contra rótulos reais de um conjunto de teste."
+      ],
+      "pre_requisitos": [
+        "Object detection",
+        "Bounding box",
+        "Precisão e recall"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "CAIXAS PREVISTAS",
+            "nota": "Saída do detector no teste"
+          },
+          {
+            "rotulo": "COMPARA COM A VERDADE",
+            "nota": "Sobreposição medida por IoU"
+          },
+          {
+            "rotulo": "PRECISÃO POR CLASSE",
+            "nota": "Resume acertos e objetos achados"
+          },
+          {
+            "rotulo": "MAP",
+            "nota": "Média das classes, de 0 a 100"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Image-guided detection",
+      "traducao": "detecção guiada por imagem de exemplo",
+      "nivel": "avancado",
+      "chave": "image-guided detection",
+      "analogia": "A detecção guiada por imagem é como mostrar a foto de uma peça ao balconista da loja de ferragens e pedir todas as iguais, em vez de tentar descrever a peça com palavras.",
+      "explicacao": [
+        "Às vezes fica difícil descrever em palavras o objeto que você quer achar numa foto.",
+        "Na detecção guiada por imagem (image-guided detection), você entrega ao modelo uma imagem de exemplo do objeto em vez de uma descrição em texto.",
+        "O modelo compara esse exemplo com as outras imagens e marca com caixas os objetos parecidos.",
+        "Merve cita isso como plano futuro para a indústria, onde há peças e defeitos sem nome claro, e a linguagem natural não serve bem como porta de entrada."
+      ],
+      "pre_requisitos": [
+        "Object detection",
+        "VLM"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "IMAGEM DE EXEMPLO",
+            "nota": "Recorte do objeto procurado"
+          },
+          {
+            "rotulo": "BUSCA NAS IMAGENS",
+            "nota": "Modelo compara com cada foto"
+          },
+          {
+            "rotulo": "CAIXAS MARCADAS",
+            "nota": "Objetos parecidos localizados"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é a demonstração de um kit da própria palestrante, que trabalha na Hugging Face e roda o pipeline com créditos de computação da empresa, então o custo de três a quatro dólares vem de um cenário favorável. Só há dois testes, sem número exato de mAP no áudio, e o de documentos não tem rótulos reais para comparar. O rotulador acabou sendo a própria referência do teste em placas, e o modelo de juiz de menor porte tem licença própria com limite de receita.",
+  "acoes": [
+    "Antes de escolher um modelo de visão para produção, confira a licença. YOLO, por exemplo, usa AGPL, e alternativas com Apache 2.0 evitam surpresa jurídica.",
+    "Se precisa de visão em tempo real, teste um detector pequeno treinado para a sua tarefa em vez de chamar um VLM a cada quadro.",
+    "Ao usar um VLM para rotular dados, faça um juiz revisar os rótulos e revise você mesmo os prompts do juiz antes de treinar.",
+    "Se pedir a um agente de código para treinar um modelo de visão, diga explicitamente quais aumentos de dados são proibidos, como espelhar placas ou alterar cor de semáforos."
+  ],
+  "numeros": [
+    {
+      "valor": "30 a 40 fps",
+      "contexto": "velocidade de um detector treinado em hardware simples",
+      "t": 76
+    },
+    {
+      "valor": "3 a 4 dólares",
+      "contexto": "custo do pipeline completo de rotular e treinar",
+      "t": 513
+    },
+    {
+      "valor": "600 milhões",
+      "contexto": "parâmetros do Falcon Perception, segmentação por descrição",
+      "t": 859
+    },
+    {
+      "valor": "2 juízes",
+      "contexto": "VLMs que aprovam ou rejeitam os rótulos",
+      "t": 357
+    }
+  ]
+}
