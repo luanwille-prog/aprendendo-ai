@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Saída do analista-video",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "tese", "tldr", "tema", "complexidade", "ideias", "conceitos", "leitura_critica", "acoes", "numeros"],
+  "properties": {
+    "id": {"type": "string", "minLength": 11, "maxLength": 11},
+    "tese": {"type": "string", "minLength": 10, "maxLength": 160},
+    "tldr": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"type": "string", "minLength": 10, "maxLength": 280}},
+    "tema": {"enum": ["agentes", "evals", "infraestrutura", "produto", "modelos", "engenharia-de-software", "dados-e-rag", "pesquisa", "carreira-e-equipes"]},
+    "complexidade": {"type": "integer", "minimum": 1, "maximum": 5},
+    "ideias": {
+      "type": "array", "minItems": 3, "maxItems": 5,
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["titulo", "texto", "momento"],
+        "properties": {
+          "titulo": {"type": "string", "minLength": 3, "maxLength": 80},
+          "texto": {"type": "string", "minLength": 20, "maxLength": 600},
+          "momento": {
+            "type": "object", "additionalProperties": false, "required": ["t", "descricao", "legenda"],
+            "properties": {
+              "t": {"type": "integer", "minimum": 0},
+              "descricao": {"type": "string", "minLength": 3, "maxLength": 200},
+              "legenda": {"type": "string", "minLength": 3, "maxLength": 120}
+            }
+          }
+        }
+      }
+    },
+    "conceitos": {
+      "type": "array", "maxItems": 8,
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["nome", "traducao", "nivel", "trecho_t"],
+        "properties": {
+          "nome": {"type": "string", "minLength": 2, "maxLength": 60},
+          "traducao": {"type": "string", "maxLength": 80},
+          "nivel": {"enum": ["basico", "intermediario", "avancado"]},
+          "trecho_t": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "integer", "minimum": 0}}
+        }
+      }
+    },
+    "leitura_critica": {"type": "string", "minLength": 20, "maxLength": 600},
+    "acoes": {"type": "array", "minItems": 1, "maxItems": 4, "items": {"type": "string", "minLength": 10, "maxLength": 240}},
+    "numeros": {
+      "type": "array", "maxItems": 4,
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["valor", "contexto", "t"],
+        "properties": {
+          "valor": {"type": "string", "minLength": 1, "maxLength": 16},
+          "contexto": {"type": "string", "minLength": 3, "maxLength": 80},
+          "t": {"type": "integer", "minimum": 0}
+        }
+      }
+    }
+  }
+}

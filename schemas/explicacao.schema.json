@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Saída do explicador",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "conceitos"],
+  "properties": {
+    "id": {"type": "string", "minLength": 11, "maxLength": 11},
+    "conceitos": {
+      "type": "array", "minItems": 1, "maxItems": 5,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["nome", "analogia", "explicacao", "pre_requisitos", "desenho"],
+        "properties": {
+          "nome": {"type": "string", "minLength": 2, "maxLength": 60},
+          "analogia": {"type": "string", "minLength": 20, "maxLength": 300},
+          "explicacao": {"type": "array", "minItems": 3, "maxItems": 5, "items": {"type": "string", "minLength": 10, "maxLength": 300}},
+          "pre_requisitos": {"type": "array", "maxItems": 4, "items": {"type": "string", "minLength": 2, "maxLength": 60}},
+          "desenho": {
+            "type": ["object", "null"], "additionalProperties": false, "required": ["nos"],
+            "properties": {
+              "nos": {
+                "type": "array", "minItems": 2, "maxItems": 5,
+                "items": {
+                  "type": "object", "additionalProperties": false, "required": ["rotulo", "nota"],
+                  "properties": {
+                    "rotulo": {"type": "string", "minLength": 2, "maxLength": 24},
+                    "nota": {"type": "string", "minLength": 2, "maxLength": 40}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
