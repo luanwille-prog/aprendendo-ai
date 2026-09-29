@@ -115,8 +115,10 @@ def formatar_transcricao(segs: list[tuple[float, str]], janela: int = 30) -> str
 def transcricao_apify(vid: str, token: str) -> dict:
     url = f"https://api.apify.com/v2/acts/{APIFY_ACTOR}/run-sync-get-dataset-items"
     corpo = json.dumps({"youtube_url": f"https://www.youtube.com/watch?v={vid}", "language": "en"}).encode()
-    req = urllib.request.Request(url, data=corpo, method="POST", headers={
-        "Content-Type": "application/json", "Authorization": f"Bearer {token}"})
+    headers = {"Content-Type": "application/json"}
+    if token:  # sem token na sessão, o proxy da nuvem injeta a credencial do ambiente
+        headers["Authorization"] = f"Bearer {token}"
+    req = urllib.request.Request(url, data=corpo, method="POST", headers=headers)
     with urllib.request.urlopen(req, timeout=180) as r:
         itens = json.load(r)
     if not itens or itens[0].get("status") != "success":
@@ -126,6 +128,7 @@ def transcricao_apify(vid: str, token: str) -> dict:
 
 
 def extrair_video(vid: str, pasta: Path, token: str | None) -> dict:
+    """token None desliga a Apify; "" tenta a Apify sem header (a credencial vem do proxy da nuvem)."""
     pasta = Path(pasta)
     item_apify, info = None, None
     try:
@@ -134,7 +137,7 @@ def extrair_video(vid: str, pasta: Path, token: str | None) -> dict:
     except Exception as erro_info:
         if AINDA_NAO_COMECOU.search(str(erro_info)):
             return {"id": vid, "status": "adiado", "motivo": "is_upcoming"}
-        if not token:
+        if token is None:
             return {"id": vid, "status": "falha", "etapa": "extracao", "erro": f"yt-dlp: {erro_info}"}
         try:
             item_apify = transcricao_apify(vid, token)
@@ -158,7 +161,7 @@ def extrair_video(vid: str, pasta: Path, token: str | None) -> dict:
                 erros.append(f"json3: {e}")
         else:
             erros.append("json3: vídeo sem legenda em inglês")
-    if not segs and token:
+    if not segs and token is not None:
         try:
             item_apify = item_apify or transcricao_apify(vid, token)
             segs = segmentos_apify(item_apify)
@@ -181,7 +184,8 @@ def main(argv=None) -> int:
 
     fila = ler_json(a.fila)
     pasta_dia = a.fila.parent
-    token = os.environ.get("APIFY_TOKEN")
+    # "" = tenta a Apify sem header (credencial do ambiente injetada pelo proxy); None desliga a Apify
+    token = os.environ.get("APIFY_TOKEN", "")
 
     def seguro(v: dict) -> dict:
         try:

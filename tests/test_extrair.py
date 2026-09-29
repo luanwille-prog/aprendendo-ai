@@ -1,3 +1,5 @@
+import json
+
 import extrair
 from comum import ler_json, gravar_json
 from estado import Estado
@@ -157,3 +159,43 @@ def test_obter_info_ignora_erro_de_formatos(monkeypatch):
     monkeypatch.setattr(extrair.subprocess, "run", falso_run)
     extrair.obter_info("abcdefghijk")
     assert "--ignore-no-formats-error" in capturado["cmd"]
+
+
+def test_sem_token_na_sessao_ainda_tenta_apify_pelo_proxy(tmp_path, monkeypatch):
+    # na nuvem o token fica numa credencial do ambiente: o proxy injeta o header, a sessão não vê o valor
+    monkeypatch.setattr(extrair, "obter_info", lambda vid: INFO)
+    monkeypatch.setattr(extrair, "baixar_json3", _falha)
+    chamadas = []
+    monkeypatch.setattr(extrair, "transcricao_apify", lambda vid, token: chamadas.append(token) or APIFY)
+    assert extrair.extrair_video(VID, tmp_path / VID, token="")["status"] == "ok"
+    assert chamadas == [""]
+
+
+def test_apify_sem_token_nao_envia_authorization(monkeypatch):
+    enviados = {}
+
+    class Resp:
+        def __enter__(self): return self
+        def __exit__(self, *a): return False
+        def read(self): return json.dumps([APIFY]).encode()
+
+    def falso_urlopen(req, timeout=0):
+        enviados["headers"] = dict(req.header_items())
+        return Resp()
+
+    monkeypatch.setattr(extrair.urllib.request, "urlopen", falso_urlopen)
+    assert extrair.transcricao_apify(VID, "")["status"] == "success"
+    assert "Authorization" not in enviados["headers"]
+    extrair.transcricao_apify(VID, "abc")
+    assert enviados["headers"]["Authorization"] == "Bearer abc"
+
+
+def test_main_usa_string_vazia_quando_nao_ha_token(tmp_path, monkeypatch):
+    dia = tmp_path / "trab" / "2026-09-29"
+    gravar_json(dia / "fila.json", {"hoje": "2026-09-29", "modo": "diario", "videos": [
+        {"id": VID, "titulo": "A", "publicado_ts": 1.0, "edicao": "2026-09-28"}]})
+    recebido = []
+    monkeypatch.delenv("APIFY_TOKEN", raising=False)
+    monkeypatch.setattr(extrair, "extrair_video", lambda vid, pasta, token: recebido.append(token) or {"id": vid, "status": "ok"})
+    extrair.main(["--fila", str(dia / "fila.json"), "--data", str(tmp_path / "data")])
+    assert recebido == [""]
