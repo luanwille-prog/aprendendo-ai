@@ -78,3 +78,19 @@ def test_main_valida_e_grava_publicados(tmp_path):
     assert ler_json(dia / "publicados.json") == {VID: "2026-09-28"}
     assert "llm-as-judge" in ler_json(tmp_path / "data" / "glossario.json")
     assert Estado(tmp_path / "data").pendentes["ruim0000001"]["ultima_etapa"] == "consolidacao"
+
+
+def test_imagem_corrompida_nao_derruba_o_video(tmp_path):
+    pasta = _pasta(tmp_path)
+    (pasta / "frames" / "m0_1.jpg").write_bytes(b"isto nao e uma imagem")
+    v = consolidar.consolidar_video(pasta, "2026-09-28", tmp_path / "data", tmp_path / "site", {})
+    assert v["ideias"][0]["print"] is None
+    assert v["ideias"][2]["print"] == f"img/{VID}/2.jpg"
+
+
+def test_curadoria_so_aceita_frames_do_manifesto(tmp_path):
+    pasta = _pasta(tmp_path)
+    curadoria = ler_json(pasta / "curadoria.json")
+    curadoria["momentos"][0]["frame"] = "meta.json"  # existe, mas não é frame do manifesto
+    manifesto = ler_json(pasta / "frames" / "manifesto.json")
+    assert consolidar.escolher_frame(pasta, 0, manifesto, curadoria) == pasta / "frames" / "m0_1.jpg"

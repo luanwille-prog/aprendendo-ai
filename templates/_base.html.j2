@@ -22,7 +22,7 @@
   {% block conteudo %}{% endblock %}
   <footer class="rodape">
     {% if execucao %}<p>Última execução: {{ execucao.em_fmt }} · {{ execucao.videos }} {{ "vídeo" if execucao.videos == 1 else "vídeos" }}</p>{% endif %}
-    {% if pendentes %}<p>Tentando de novo: {% for p in pendentes %}<a href="https://www.youtube.com/watch?v={{ p.id }}" target="_blank" rel="noopener">{{ p.titulo }}</a> ({{ p.tentativas }}/3){% if not loop.last %}; {% endif %}{% endfor %}</p>{% endif %}
+    {% if pendentes %}<p>Tentando de novo: {% for p in pendentes %}<a href="https://www.youtube.com/watch?v={{ p.id }}" target="_blank" rel="noopener">{{ p.titulo }}</a> ({{ p.tentativas }}/{{ MAX_TENTATIVAS }}){% if not loop.last %}; {% endif %}{% endfor %}</p>{% endif %}
     {% if abandonados %}<p>Não processados: {% for p in abandonados %}<a href="https://www.youtube.com/watch?v={{ p.id }}" target="_blank" rel="noopener">{{ p.titulo }}</a>{% if not loop.last %}; {% endif %}{% endfor %}</p>{% endif %}
   </footer>
 </main>

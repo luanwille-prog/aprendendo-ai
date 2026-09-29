@@ -103,6 +103,11 @@ def main(argv=None) -> int:
         if estado.inicio is None:
             estado.definir_inicio(hoje - timedelta(days=1))
         candidatos = parse_rss(baixar_rss())
+        corte = estado.config.get("ultimo_corte")
+        if corte is not None and candidatos and min(v["publicado_ts"] for v in candidatos) > corte:
+            # o RSS só traz os 15 mais recentes: completa a lacuna desde a última execução
+            vistos = {v["id"] for v in candidatos}
+            candidatos += [v for v in listar_canal(corte) if v["id"] not in vistos]
 
     fila, ignorados = selecionar(candidatos, estado, hoje, backfill=bool(a.backfill))
     fila.sort(key=lambda v: v["publicado_ts"], reverse=True)
@@ -110,6 +115,7 @@ def main(argv=None) -> int:
         fila = fila[: a.limite]
     for v in ignorados:
         estado.marcar_processado(v["id"], v["edicao"], ignorado="short")
+    estado.config["ultimo_corte"] = inicio_do_dia_utc(hoje).timestamp()
     estado.salvar()
 
     saida = a.trabalho / hoje.isoformat() / "fila.json"

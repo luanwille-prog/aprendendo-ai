@@ -120,8 +120,15 @@ def main(argv=None) -> int:
     ap.add_argument("--workers", type=int, default=4)
     a = ap.parse_args(argv)
     ids = [vid for vid in ler_json(a.dia / "extracao.json")["ok"] if (a.dia / vid / "analise.json").exists()]
+    def seguro(vid: str) -> dict:
+        try:
+            return capturar_momentos(a.dia / vid)
+        except Exception as e:
+            print(f"{vid}: captura falhou ({e}); o vídeo sai sem prints")
+            return {"id": vid, "momentos": []}
+
     with ThreadPoolExecutor(a.workers) as ex:
-        manifestos = list(ex.map(lambda vid: capturar_momentos(a.dia / vid), ids))
+        manifestos = list(ex.map(seguro, ids))
     fontes = Counter(m["fonte"] for man in manifestos for m in man["momentos"])
     print(f"{len(ids)} vídeo(s): " + " ".join(f"{k or 'sem_imagem'}={n}" for k, n in fontes.items()))
     return 0

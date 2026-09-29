@@ -12,16 +12,17 @@ from validar import erros_de
 
 
 def escolher_frame(pasta: Path, i: int, manifesto: dict | None, curadoria: dict | None) -> Path | None:
+    candidatos = next((m["frames"] for m in (manifesto or {}).get("momentos", []) if m["i"] == i), [])
     if curadoria:
         for m in curadoria["momentos"]:
             if m["i"] == i:
                 if m["frame"] is None:
                     return None
-                if (pasta / m["frame"]).exists():
+                # só vale um frame que o próprio manifesto listou para este momento
+                if m["frame"] in candidatos and (pasta / m["frame"]).exists():
                     return pasta / m["frame"]
-    for m in (manifesto or {}).get("momentos", []):
-        if m["i"] == i and m["frames"]:
-            return pasta / m["frames"][len(m["frames"]) // 2]
+    if candidatos:
+        return pasta / candidatos[len(candidatos) // 2]
     return None
 
 
@@ -47,8 +48,11 @@ def consolidar_video(pasta: Path, edicao: str, pasta_data: Path, pasta_site: Pat
         frame = escolher_frame(pasta, i, manifesto, curadoria)
         caminho_print = None
         if frame is not None and frame.exists():
-            caminho_print = f"img/{vid}/{i}.jpg"
-            salvar_imagem(frame, Path(pasta_site) / caminho_print)
+            try:
+                salvar_imagem(frame, Path(pasta_site) / f"img/{vid}/{i}.jpg")
+                caminho_print = f"img/{vid}/{i}.jpg"
+            except Exception as e:
+                print(f"{vid}: frame {frame.name} ilegível ({e}), ideia {i} sai sem print")
         ideias.append({"titulo": ideia["titulo"], "texto": ideia["texto"], "t": ideia["momento"]["t"],
                        "legenda": ideia["momento"]["legenda"], "print": caminho_print})
 

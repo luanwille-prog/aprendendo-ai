@@ -67,3 +67,20 @@ def test_cli_modo(tmp_path, capsys):
     mod.main(["--data", str(tmp_path), "backfill-concluido"])
     mod.main(["--data", str(tmp_path), "modo"])
     assert capsys.readouterr().out.strip() == "diario"
+
+
+def test_cli_falha_por_pasta_le_meta_e_tira_analise_das_etapas_seguintes(tmp_path):
+    import shutil
+    from pathlib import Path
+    fix = Path(__file__).parent / "fixtures" / "video"
+    pasta = tmp_path / "trab" / "abcdefghijk"
+    pasta.mkdir(parents=True)
+    shutil.copy(fix / "meta.json", pasta / "meta.json")
+    shutil.copy(fix / "analise.json", pasta / "analise.json")
+    (pasta / "erros.txt").write_text('tema: "x" is not one of [...]\n$(rm -rf /)')
+    assert mod.main(["--data", str(tmp_path / "data"), "falha", "--pasta", str(pasta), "--etapa", "analise"]) == 0
+    p = Estado(tmp_path / "data").pendentes["abcdefghijk"]
+    assert p["titulo"] == "Scale the Judgment, Not the Model — Andrew Orobator, Reddit"
+    assert p["publicado_ts"] == 1790524817
+    assert p["ultimo_erro"].startswith('tema: "x"')
+    assert not (pasta / "analise.json").exists() and (pasta / "analise.invalido.json").exists()

@@ -14,7 +14,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from comum import (DATA, SITE, TEMAS, TEMPLATES, chave, fmt_data, fmt_datahora, fmt_tempo, ler_json,
                    listar_json, slug)
-from estado import Estado
+from estado import MAX_TENTATIVAS, Estado
 
 
 def _ambiente() -> Environment:
@@ -23,6 +23,7 @@ def _ambiente() -> Environment:
     env.filters["tempo"] = fmt_tempo
     env.filters["slug"] = slug
     env.globals["TEMAS"] = TEMAS
+    env.globals["MAX_TENTATIVAS"] = MAX_TENTATIVAS
     return env
 
 

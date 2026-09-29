@@ -130,3 +130,30 @@ def test_main_registra_estado(tmp_path, monkeypatch):
     e = Estado(tmp_path / "data")
     assert e.processados["curto000001"]["ignorado"] == "curto"
     assert e.pendentes["quebrado001"]["tentativas"] == 1
+
+
+def test_premiere_que_faz_ytdlp_falhar_e_adiada_sem_gastar_tentativa(tmp_path, monkeypatch):
+    def premiere(vid):
+        raise RuntimeError("ERROR: [youtube] abcdefghijk: Premieres in 3 days")
+    chamou_apify = []
+    monkeypatch.setattr(extrair, "obter_info", premiere)
+    monkeypatch.setattr(extrair, "transcricao_apify", lambda vid, token: chamou_apify.append(vid))
+    assert extrair.extrair_video(VID, tmp_path / VID, token="t") == {"id": VID, "status": "adiado", "motivo": "is_upcoming"}
+    assert chamou_apify == []
+    monkeypatch.setattr(extrair, "obter_info", lambda vid: (_ for _ in ()).throw(RuntimeError("This live event will begin in a few moments")))
+    assert extrair.extrair_video(VID, tmp_path / VID, token=None)["status"] == "adiado"
+
+
+def test_obter_info_ignora_erro_de_formatos(monkeypatch):
+    capturado = {}
+
+    class R:
+        returncode, stdout, stderr = 0, '{"id": "x"}', ""
+
+    def falso_run(cmd, **kw):
+        capturado["cmd"] = cmd
+        return R()
+
+    monkeypatch.setattr(extrair.subprocess, "run", falso_run)
+    extrair.obter_info("abcdefghijk")
+    assert "--ignore-no-formats-error" in capturado["cmd"]

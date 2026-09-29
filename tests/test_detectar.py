@@ -79,3 +79,37 @@ def test_main_diario_grava_fila_e_ignora_short(tmp_path, monkeypatch):
     e = Estado(tmp_path / "data")
     assert e.processados["short000001"]["ignorado"] == "short"
     assert e.inicio == date(2026, 9, 28)
+
+
+def test_diario_completa_com_listagem_quando_rss_nao_cobre_o_ultimo_corte(tmp_path, monkeypatch):
+    # RSS sem o vídeo antigo: o mais velho do feed é de 28/09 e o corte anterior foi 26/09
+    import re
+    sem_antigo = re.sub(r"<entry>\s*<id>yt:video:antigo00001</id>.*?</entry>", "", FIXTURE.read_text(encoding="utf-8"), flags=re.S)
+    monkeypatch.setattr(detectar, "baixar_rss", lambda: sem_antigo)
+    e = Estado(tmp_path / "data")
+    e.definir_inicio(date(2026, 9, 20))
+    e.config["ultimo_corte"] = datetime(2026, 9, 26, 3, 0, tzinfo=timezone.utc).timestamp()
+    e.salvar()
+    pedidos = []
+    extra = {"id": "perdido0001", "titulo": "Saiu do RSS — X, Y", "short": False,
+             "publicado_ts": datetime(2026, 9, 27, 12, 0, tzinfo=timezone.utc).timestamp()}
+
+    def listar(desde_ts, maximo=150):
+        pedidos.append(desde_ts)
+        return [extra]
+
+    monkeypatch.setattr(detectar, "listar_canal", listar)
+    detectar.main(["--hoje", "2026-09-29", "--data", str(tmp_path / "data"), "--trabalho", str(tmp_path / "trab")])
+    fila = ler_json(tmp_path / "trab" / "2026-09-29" / "fila.json")
+    assert "perdido0001" in [v["id"] for v in fila["videos"]]
+    assert pedidos == [e.config["ultimo_corte"]]
+    assert Estado(tmp_path / "data").config["ultimo_corte"] == datetime(2026, 9, 29, 3, 0, tzinfo=timezone.utc).timestamp()
+
+
+def test_diario_sem_lacuna_nao_chama_listagem(tmp_path, monkeypatch):
+    monkeypatch.setattr(detectar, "baixar_rss", lambda: FIXTURE.read_text(encoding="utf-8"))
+    e = Estado(tmp_path / "data")
+    e.config["ultimo_corte"] = datetime(2026, 9, 28, 3, 0, tzinfo=timezone.utc).timestamp()
+    e.salvar()
+    monkeypatch.setattr(detectar, "listar_canal", lambda *a, **k: (_ for _ in ()).throw(AssertionError("não devia listar")))
+    assert detectar.main(["--hoje", "2026-09-29", "--data", str(tmp_path / "data"), "--trabalho", str(tmp_path / "trab")]) == 0

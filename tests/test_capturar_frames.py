@@ -71,3 +71,15 @@ def test_nada_funciona(tmp_path):
     pasta = _pasta(tmp_path, storyboard=SB)
     m = cf.capturar_momentos(pasta, video_fn=_falha, storyboard_fn=_falha, thumb_fn=_falha)
     assert all(x["fonte"] is None and x["frames"] == [] for x in m["momentos"])
+
+
+def test_main_isola_falha_por_video(tmp_path, monkeypatch):
+    dia = tmp_path / "dia"
+    dia.mkdir()
+    bom = _pasta(dia)
+    (dia / "quebrado0001").mkdir()
+    gravar_json(dia / "quebrado0001" / "analise.json", {"id": "quebrado0001"})
+    gravar_json(dia / "extracao.json", {"ok": ["quebrado0001", bom.name], "resultados": []})
+    monkeypatch.setattr(cf, "capturar_momentos", lambda pasta, **k: (_ for _ in ()).throw(KeyError("ideias"))
+                        if pasta.name == "quebrado0001" else {"id": pasta.name, "momentos": [{"fonte": "video"}]})
+    assert cf.main(["--dia", str(dia)]) == 0

@@ -76,11 +76,12 @@ def main(argv=None) -> int:
     p = sub.add_parser("processado", help="marca como publicados os vídeos de publicados.json")
     p.add_argument("--arquivo", type=Path, required=True)
     f = sub.add_parser("falha", help="registra uma tentativa que falhou")
-    f.add_argument("--id", required=True)
-    f.add_argument("--titulo", required=True)
-    f.add_argument("--publicado-ts", type=float, required=True)
+    f.add_argument("--pasta", type=Path, help="pasta do vídeo: lê meta.json e erros.txt e tira a análise das próximas etapas")
+    f.add_argument("--id")
+    f.add_argument("--titulo")
+    f.add_argument("--publicado-ts", type=float)
     f.add_argument("--etapa", required=True)
-    f.add_argument("--erro", required=True)
+    f.add_argument("--erro", default="")
     x = sub.add_parser("execucao", help="registra a execução para o rodapé")
     x.add_argument("--videos", type=int, required=True)
     sub.add_parser("modo", help="imprime backfill ou diario")
@@ -99,7 +100,18 @@ def main(argv=None) -> int:
         for vid, edicao in ler_json(a.arquivo, {}).items():
             e.marcar_processado(vid, edicao)
     elif a.cmd == "falha":
-        e.registrar_falha(a.id, a.titulo, a.publicado_ts, a.etapa, a.erro)
+        if a.pasta:
+            meta = ler_json(a.pasta / "meta.json")
+            erros = a.pasta / "erros.txt"
+            erro = a.erro or (erros.read_text(encoding="utf-8") if erros.exists() else "sem detalhe")
+            e.registrar_falha(meta["id"], meta["titulo"], meta["publicado_ts"], a.etapa, erro)
+            analise = a.pasta / "analise.json"
+            if analise.exists():
+                analise.rename(a.pasta / "analise.invalido.json")
+        elif a.id and a.titulo and a.publicado_ts is not None:
+            e.registrar_falha(a.id, a.titulo, a.publicado_ts, a.etapa, a.erro or "sem detalhe")
+        else:
+            ap.error("falha: use --pasta, ou --id, --titulo e --publicado-ts")
     elif a.cmd == "execucao":
         e.registrar_execucao(a.videos)
     elif a.cmd == "backfill-concluido":

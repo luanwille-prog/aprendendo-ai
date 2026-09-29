@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import subprocess
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
@@ -15,10 +16,12 @@ from estado import Estado
 
 DURACAO_MINIMA = 180
 APIFY_ACTOR = "starvibe~youtube-video-transcript"
+# mensagens do yt-dlp para premieres e lives que ainda não começaram
+AINDA_NAO_COMECOU = re.compile(r"premieres? in|live event will begin|will begin in|scheduled to start", re.I)
 
 
 def obter_info(vid: str) -> dict:
-    cmd = [*ytdlp_base(), "-J", "--skip-download", f"https://www.youtube.com/watch?v={vid}"]
+    cmd = [*ytdlp_base(), "-J", "--skip-download", "--ignore-no-formats-error", f"https://www.youtube.com/watch?v={vid}"]
     r = subprocess.run(cmd, capture_output=True, text=True, timeout=180)
     if r.returncode != 0:
         raise RuntimeError(r.stderr.strip()[-300:] or f"código {r.returncode}")
@@ -129,6 +132,8 @@ def extrair_video(vid: str, pasta: Path, token: str | None) -> dict:
         info = obter_info(vid)
         meta = meta_de_info(info)
     except Exception as erro_info:
+        if AINDA_NAO_COMECOU.search(str(erro_info)):
+            return {"id": vid, "status": "adiado", "motivo": "is_upcoming"}
         if not token:
             return {"id": vid, "status": "falha", "etapa": "extracao", "erro": f"yt-dlp: {erro_info}"}
         try:
