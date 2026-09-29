@@ -36,7 +36,7 @@ def video(vid, edicao, **extra):
 def preparar(tmp_path):
     data = tmp_path / "data"
     gravar_json(data / "videos" / "aaaaaaaaaaa.json", video("aaaaaaaaaaa", "2026-09-28"))
-    gravar_json(data / "videos" / "bbbbbbbbbbb.json", video("bbbbbbbbbbb", "2026-09-28",
+    gravar_json(data / "videos" / "bbbbbbbbbbb.json", video("bbbbbbbbbbb", "2026-09-28", tema="agentes",
                 titulo_curto='Agents <script>alert("x")</script> & Co'))
     gravar_json(data / "videos" / "ccccccccccc.json", video("ccccccccccc", "2026-09-27"))
     gravar_json(data / "dias" / "2026-09-28.json", {"edicao": "2026-09-28", "titulo": "O dia dos juízes",
@@ -54,16 +54,82 @@ def preparar(tmp_path):
     return data
 
 
-def test_monta_index_e_fragmentos(tmp_path):
+def ler(p: Path) -> str:
+    return p.read_text(encoding="utf-8")
+
+
+def test_home_com_destaque_e_cartoes(tmp_path):
     data, site = preparar(tmp_path), tmp_path / "site"
     assert montar_site.montar(data, site) == ["2026-09-28", "2026-09-27"]
-    html = (site / "index.html").read_text(encoding="utf-8")
-    assert "O dia dos juízes" in html
-    assert 'data-src="dias/2026-09-27.html"' in html
-    assert (site / "dias" / "2026-09-27.html").exists()
-    assert "<html" not in (site / "dias" / "2026-09-27.html").read_text(encoding="utf-8")
+    html = ler(site / "index.html")
+    assert "O dia dos juízes" in html and "Hoje dois talks falam de avaliação." in html
+    assert 'href="edicoes/2026-09-28.html"' in html and 'href="edicoes/2026-09-27.html"' in html
+    assert 'data-ids="bbbbbbbbbbb aaaaaaaaaaa"' in html  # progresso do cartão segue a ordem de leitura
+    assert 'href="glossario.html"' in html
+    assert 'class="video"' not in html  # a home não carrega os blocos completos
     for arq in ("estilo.css", "app.js", ".nojekyll"):
         assert (site / arq).exists()
+
+
+def test_pagina_de_edicao_com_navegacao(tmp_path):
+    data, site = preparar(tmp_path), tmp_path / "site"
+    montar_site.montar(data, site)
+    nova, antiga = ler(site / "edicoes" / "2026-09-28.html"), ler(site / "edicoes" / "2026-09-27.html")
+    assert nova.lower().startswith("<!doctype html>")
+    assert 'href="../estilo.css"' in nova and 'src="../app.js"' in nova and 'href="../index.html"' in nova
+    assert 'href="2026-09-27.html"' in nova  # anterior
+    assert 'href="2026-09-28.html"' in antiga  # próxima
+    assert 'rel="prev"' not in antiga  # a primeira edição não tem anterior
+    assert 'data-tema="agentes"' in nova  # filtro por tema dentro da edição
+
+
+def test_ordem_de_leitura_e_escape(tmp_path):
+    data, site = preparar(tmp_path), tmp_path / "site"
+    montar_site.montar(data, site)
+    for html in (ler(site / "edicoes" / "2026-09-28.html"), ler(site / "index.html")):
+        assert "<script>alert" not in html
+        assert "Agents &lt;script&gt;alert(&#34;x&#34;)&lt;/script&gt; &amp; Co" in html
+    ed = ler(site / "edicoes" / "2026-09-28.html")
+    assert ed.index('id="v-bbbbbbbbbbb"') < ed.index('id="v-aaaaaaaaaaa"')
+    assert "Weights &amp; Biases" in ed
+
+
+def test_links_de_minuto_prints_e_conceitos(tmp_path):
+    data, site = preparar(tmp_path), tmp_path / "site"
+    montar_site.montar(data, site)
+    html = ler(site / "edicoes" / "2026-09-28.html")
+    assert 'href="https://www.youtube.com/watch?v=aaaaaaaaaaa&amp;t=312s"' in html
+    assert 'src="../img/aaaaaaaaaaa/0.jpg"' in html
+    assert "▶ 06:40" in html  # ideia sem print mostra o link do minuto em texto
+    assert "É como um corretor com gabarito." in html
+    assert 'href="../glossario.html#g-eval"' in html  # conceito já no glossário vira link
+    assert "token (pedaço de texto)" in html  # termo básico aparece com tradução
+    assert "●●●●○" in html
+
+
+def test_glossario_em_pagina_propria(tmp_path):
+    data, site = preparar(tmp_path), tmp_path / "site"
+    montar_site.montar(data, site)
+    html = ler(site / "glossario.html")
+    assert 'id="g-eval"' in html
+    assert 'href="edicoes/2026-09-27.html#v-ccccccccccc"' in html
+    assert 'href="index.html"' in html
+
+
+def test_rodape(tmp_path):
+    data, site = preparar(tmp_path), tmp_path / "site"
+    montar_site.montar(data, site)
+    html = ler(site / "index.html")
+    assert "Pendente &amp; cia" in html and "(1/3)" in html
+    assert "Desistido" in html
+
+
+def test_remove_fragmentos_da_versao_antiga(tmp_path):
+    data, site = preparar(tmp_path), tmp_path / "site"
+    (site / "dias").mkdir(parents=True)
+    (site / "dias" / "2026-09-27.html").write_text("velho")
+    montar_site.montar(data, site)
+    assert not (site / "dias").exists()
 
 
 def test_ignora_arquivos_ocultos_do_macos(tmp_path):
@@ -73,39 +139,8 @@ def test_ignora_arquivos_ocultos_do_macos(tmp_path):
     assert montar_site.montar(data, site) == ["2026-09-28", "2026-09-27"]
 
 
-def test_ordem_de_leitura_e_escape(tmp_path):
-    data, site = preparar(tmp_path), tmp_path / "site"
-    montar_site.montar(data, site)
-    html = (site / "index.html").read_text(encoding="utf-8")
-    assert html.index('id="v-bbbbbbbbbbb"') < html.index('id="v-aaaaaaaaaaa"')
-    assert "<script>alert" not in html
-    assert "Agents &lt;script&gt;alert(&#34;x&#34;)&lt;/script&gt; &amp; Co" in html
-    assert "Weights &amp; Biases" in html
-
-
-def test_links_de_minuto_prints_e_conceitos(tmp_path):
-    data, site = preparar(tmp_path), tmp_path / "site"
-    montar_site.montar(data, site)
-    html = (site / "index.html").read_text(encoding="utf-8")
-    assert 'href="https://www.youtube.com/watch?v=aaaaaaaaaaa&amp;t=312s"' in html
-    assert 'src="img/aaaaaaaaaaa/0.jpg"' in html
-    assert "▶ 06:40" in html  # ideia sem print mostra o link do minuto em texto
-    assert "É como um corretor com gabarito." in html
-    assert 'href="#g-eval"' in html  # conceito já no glossário vira link
-    assert "token (pedaço de texto)" in html  # termo básico aparece com tradução
-    assert 'id="g-eval"' in html
-    assert "●●●●○" in html
-
-
-def test_rodape(tmp_path):
-    data, site = preparar(tmp_path), tmp_path / "site"
-    montar_site.montar(data, site)
-    html = (site / "index.html").read_text(encoding="utf-8")
-    assert "Pendente &amp; cia" in html and "(1/3)" in html
-    assert "Desistido" in html
-
-
 def test_site_vazio(tmp_path):
     site = tmp_path / "site"
     assert montar_site.montar(tmp_path / "data", site) == []
-    assert "Nenhuma edição publicada ainda." in (site / "index.html").read_text(encoding="utf-8")
+    assert "Nenhuma edição publicada ainda." in ler(site / "index.html")
+    assert (site / "glossario.html").exists()

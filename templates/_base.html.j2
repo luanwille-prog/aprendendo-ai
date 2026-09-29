@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block titulo %}Aprendendo AI{% endblock %}</title>
+<meta name="description" content="Resumos diários dos talks do canal AI Engineer, explicados no estilo Quadro Anotado.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;500;700;900&family=Barlow:ital,wght@0,400;0,600;1,400&family=Covered+By+Your+Grace&display=swap">
+<link rel="stylesheet" href="{{ raiz }}estilo.css">
+</head>
+<body>
+<main class="wrap">
+  <nav class="topo" aria-label="Navegação principal">
+    <a class="marca" href="{{ raiz }}index.html">Aprendendo <span>AI</span></a>
+    <span class="topo-links">
+      <a href="{{ raiz }}index.html#edicoes"{% if pagina == "home" %} aria-current="page"{% endif %}>Edições</a>
+      <a href="{{ raiz }}glossario.html"{% if pagina == "glossario" %} aria-current="page"{% endif %}>Glossário</a>
+    </span>
+  </nav>
+  {% block conteudo %}{% endblock %}
+  <footer class="rodape">
+    {% if execucao %}<p>Última execução: {{ execucao.em_fmt }} · {{ execucao.videos }} {{ "vídeo" if execucao.videos == 1 else "vídeos" }}</p>{% endif %}
+    {% if pendentes %}<p>Tentando de novo: {% for p in pendentes %}<a href="https://www.youtube.com/watch?v={{ p.id }}" target="_blank" rel="noopener">{{ p.titulo }}</a> ({{ p.tentativas }}/3){% if not loop.last %}; {% endif %}{% endfor %}</p>{% endif %}
+    {% if abandonados %}<p>Não processados: {% for p in abandonados %}<a href="https://www.youtube.com/watch?v={{ p.id }}" target="_blank" rel="noopener">{{ p.titulo }}</a>{% if not loop.last %}; {% endif %}{% endfor %}</p>{% endif %}
+  </footer>
+</main>
+<script src="{{ raiz }}app.js" defer></script>
+</body>
+</html>

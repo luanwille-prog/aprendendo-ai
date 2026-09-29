@@ -150,11 +150,11 @@ Responsável por triagem, disparo, retentativas, edição do dia e controle de q
 
 ### 6.1 Estrutura
 
-- **Topo:** dia mais recente aberto, com a abertura do editor e a ordem de leitura.
-- **Dias anteriores:** recolhidos, com título e contagem de vídeos. O conteúdo de cada dia fica em `site/dias/<data>.html` e é carregado sob demanda ao abrir.
-- **Aba Glossário:** todos os conceitos explicados, com analogia e link para o vídeo de origem.
-- **Filtro por tema** e **checkbox "estudei"** por bloco, salvo em `localStorage` com try/catch (a página funciona igual sem ele).
-- **Rodapé:** data e hora da última execução e lista de pendentes.
+- **Home (`index.html`):** a última edição em destaque (título do dia, abertura, lista dos talks, botão "Ler a edição" e progresso de estudo) e, abaixo, cartões de todas as edições com data, título, temas e "x de n estudados".
+- **Uma página por edição (`edicoes/<data>.html`):** abertura, filtro por tema, ordem de leitura com progresso, os blocos de vídeo e navegação para a edição anterior e a próxima.
+- **Glossário (`glossario.html`):** todos os conceitos explicados em ordem alfabética, cada um com link para o vídeo de origem.
+- **Checkbox "estudei"** por bloco, salvo em `localStorage` com try/catch (a página funciona igual sem ele); alimenta as barras de progresso.
+- **Rodapé em todas as páginas:** data e hora da última execução, pendentes e não processados.
 
 ### 6.2 Bloco de vídeo (ritmo do guia)
 
@@ -206,7 +206,7 @@ Do guia, página 9:
 | Subagentes não suportados dentro da rotina (não documentado) | Plano B sequencial descrito na etapa 12 do fluxo |
 | Push para `claude/biblioteca` recusado | Branch com prefixo `claude/` tem push garantido pela documentação das rotinas |
 | Consumo do plano em dias de muitos vídeos (pós-conferência) | Ondas de 8 vídeos; explicador só acima do limiar de complexidade; glossário evita reexplicação |
-| Crescimento da página ao longo do ano | Dias anteriores em arquivos separados carregados sob demanda |
+| Crescimento da página ao longo do ano | Cada edição tem página própria; a home só lista cartões |
 
 ## 11. Fora do escopo
 

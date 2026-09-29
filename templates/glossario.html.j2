@@ -1,0 +1,21 @@
+{% extends "_base.html.j2" %}
+{% block titulo %}Glossário · Aprendendo AI{% endblock %}
+{% block conteudo %}
+<header class="hero hero-curto">
+  <span class="label">{{ glossario|length }} {{ "conceito" if glossario|length == 1 else "conceitos" }} explicados</span>
+  <h1>Glossário</h1>
+  <p class="hand">tudo que você já estudou, em ordem alfabética</p>
+</header>
+<div class="glossario">
+  {% for g in glossario %}
+  <div class="casper" id="g-{{ g.chave|slug }}">
+    <span class="tag">{{ g.nome }}</span>
+    <p>{% if g.traducao %}<em>{{ g.traducao }}.</em> {% endif %}{{ g.analogia }}</p>
+    <ol class="passos">{% for p in g.explicacao %}<li>{{ p }}</li>{% endfor %}</ol>
+    <p class="pre">Apareceu em <a href="edicoes/{{ g.edicao }}.html#v-{{ g.video_id }}">{{ g.video_titulo }}</a></p>
+  </div>
+  {% else %}
+  <p class="muted">Os conceitos explicados vão aparecer aqui.</p>
+  {% endfor %}
+</div>
+{% endblock %}
