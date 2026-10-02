@@ -169,3 +169,13 @@ def test_site_vazio(tmp_path):
     assert montar_site.montar(tmp_path / "data", site) == []
     assert "Nenhuma edição publicada ainda." in ler(site / "index.html")
     assert (site / "glossario.html").exists()
+
+
+def test_letra_de_mao_legivel_e_tese_em_fonte_de_texto(tmp_path):
+    data, site = preparar(tmp_path), tmp_path / "site"
+    montar_site.montar(data, site)
+    html = ler(site / "edicoes" / "2026-09-28.html")
+    assert "family=Kalam:wght@400;700" in html and "Covered+By+Your+Grace" not in html
+    assert '<p class="tese">' in html  # tese longa sai da letra de mão
+    css = ler(site / "estilo.css")
+    assert '--hand:"Kalam"' in css and "Covered By Your Grace" not in css
