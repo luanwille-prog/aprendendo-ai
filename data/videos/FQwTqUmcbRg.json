@@ -1,0 +1,306 @@
+{
+  "id": "FQwTqUmcbRg",
+  "titulo": "Lessons from Generating 12 Trillion Synthetic Tokens — Bogdan Gaza, DatologyAI",
+  "titulo_curto": "Lessons from Generating 12 Trillion Synthetic Tokens",
+  "palestrante": "Bogdan Gaza, DatologyAI",
+  "url": "https://www.youtube.com/watch?v=FQwTqUmcbRg",
+  "duracao": 1231,
+  "publicado_ts": 1790983827,
+  "edicao": "2026-10-02",
+  "tese": "Gerar trilhões de tokens sintéticos depende mais de engenharia de dados e GPUs do que do prompt; os gargalos ficam no S3, nas falhas e no agendamento.",
+  "tldr": [
+    "A web tem cerca de 30 trilhões de tokens úteis, e a DatologyAI completa o que falta reescrevendo documentos de alta qualidade com LLMs (receita BeyondWeb).",
+    "A empresa saiu de um cluster Slurm separado para um pipeline único com Ray, KubeRay e vLLM em Kubernetes na AWS (EKS on HyperPod).",
+    "Quatro gargalos apareceram em escala: metadados no S3, GPUs que falham, agendamento entre clusters e ajuste do vLLM, e cada um tem uma solução simples de engenharia."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "Reescrever documentos reais em vez de gerar do zero",
+      "texto": "Se você só pede ao modelo um exemplo sintético, ele repete os padrões mais comuns dos dados em que foi treinado. A DatologyAI parte de documentos de alta qualidade do próprio cliente e pede ao modelo para reescrever ou reestruturar cada um. O documento original funciona como semente e mantém a variedade do conjunto. Na prática, o pipeline junta um prompt a cada documento e distribui o trabalho por várias GPUs.",
+      "t": 300,
+      "legenda": "O dado sintético nasce de um documento real usado como semente.",
+      "print": "img/FQwTqUmcbRg/0.jpg"
+    },
+    {
+      "titulo": "BeyondWeb promete o mesmo resultado com menos tokens",
+      "texto": "Nos gráficos do paper BeyondWeb, modelos de 1B, 3B e 8B parâmetros treinados com a receita da empresa superam conjuntos como Nemotron-Synth, Cosmopedia, WRAP e RedPajama. O modelo de 3B chega perto do de 8B treinado com Nemotron-Synth. A empresa diz que alcança a mesma acurácia com 2,7 vezes menos tokens que o Nemotron-Synth e 5,3 vezes menos que o Cosmopedia (3:40).",
+      "t": 165,
+      "legenda": "Comparação da própria DatologyAI entre BeyondWeb e outros conjuntos sintéticos.",
+      "print": "img/FQwTqUmcbRg/1.jpg"
+    },
+    {
+      "titulo": "Um pipeline só para pesquisa e produto",
+      "texto": "No começo, a pesquisa gerava dados sintéticos num cluster Slurm (agendador de jobs comum em computação científica), longe do pipeline de produto em Kubernetes. Mover dados entre os dois era manual e as GPUs ficavam ociosas. Hoje tudo roda em Kubernetes, com Spark para curadoria, Ray para jobs distribuídos e vLLM para inferência. Um agendador interno encadeia curadoria, geração, treino e eval (avaliação) num único fluxo.",
+      "t": 470,
+      "legenda": "A mesma infraestrutura atende pesquisa e produto.",
+      "print": "img/FQwTqUmcbRg/2.jpg"
+    },
+    {
+      "titulo": "Metadados e falhas de GPU travam a escala",
+      "texto": "Buscar metadados de milhões de partições no S3, uma requisição por vez, levaria de 9 a 11 dias e esbarraria no limite de taxa da AWS. Com requisições em lote de até mil itens, o tempo caiu para cerca de 2 horas (11:40). Para as GPUs que falham, a equipe reduziu o tamanho das partições e passou a salvar checkpoints periódicos no S3. Assim, uma falha custa minutos em vez de um job de oito horas.",
+      "t": 700,
+      "legenda": "Requisições em lote derrubaram a busca de metadados de dias para horas.",
+      "print": "img/FQwTqUmcbRg/3.jpg"
+    },
+    {
+      "titulo": "Agendar CPU e GPU juntas e calibrar o vLLM",
+      "texto": "Um job Ray precisa de CPU num cluster e de GPU em outro. Se só um dos recursos estiver livre, o job trava. A equipe criou pools dedicados por tipo de recurso e passou a agendar CPU e GPU de forma atômica, como um problema de bin packing (encaixe de caixas). Na inferência, uma varredura dos parâmetros do vLLM, como tamanho de lote e speculative decoding, rendeu cerca de 40% mais vazão (18:10).",
+      "t": 1095,
+      "legenda": "Só ajustar flags do vLLM deu cerca de 40% mais vazão.",
+      "print": "img/FQwTqUmcbRg/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Dados sintéticos",
+      "traducao": "dados gerados por modelo para treinar outros modelos",
+      "nivel": "intermediario",
+      "chave": "dados sintéticos",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Scaling law",
+      "traducao": "lei de escala entre dados, computação e qualidade",
+      "nivel": "intermediario",
+      "chave": "scaling law",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Rephrasing",
+      "traducao": "reescrita de documentos reais por um LLM",
+      "nivel": "intermediario",
+      "chave": "rephrasing",
+      "analogia": "Rephrasing é como pedir a um professor que reescreva uma boa redação de aluno com outras palavras, mantendo as ideias originais.",
+      "explicacao": [
+        "Rephrasing (reescrita) é pedir a um modelo de linguagem que reescreva um texto existente de outra forma.",
+        "Quando você pede ao modelo um exemplo inventado do zero, ele tende a repetir os padrões mais comuns do que já aprendeu.",
+        "Usar um documento real como semente mantém a variedade de temas e estilos do conjunto original.",
+        "A DatologyAI escolhe os documentos de maior qualidade do cliente e pede ao LLM para reescrever ou reestruturar cada um.",
+        "Na prática, o pipeline junta um prompt a cada documento e distribui milhões desses pares por várias GPUs."
+      ],
+      "pre_requisitos": [
+        "Dados sintéticos",
+        "LLM (modelo de linguagem)",
+        "Prompt"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "DOCUMENTO REAL",
+            "nota": "Texto de alta qualidade do cliente"
+          },
+          {
+            "rotulo": "PROMPT + DOCUMENTO",
+            "nota": "Instrução de reescrita na frente"
+          },
+          {
+            "rotulo": "LLM NAS GPUS",
+            "nota": "Modelo reescreve em larga escala"
+          },
+          {
+            "rotulo": "DADO SINTÉTICO",
+            "nota": "Texto novo com a variedade original"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Pre-training e post-training",
+      "traducao": "pré-treino e pós-treino de modelos",
+      "nivel": "intermediario",
+      "chave": "pre-training e post-training",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Checkpointing",
+      "traducao": "salvar o progresso para retomar após falha",
+      "nivel": "intermediario",
+      "chave": "checkpointing",
+      "analogia": "Checkpointing é como salvar o videogame antes de cada fase difícil, para não voltar ao começo quando você perde.",
+      "explicacao": [
+        "Checkpointing é salvar o progresso de uma tarefa longa de tempos em tempos.",
+        "Se a máquina cai, a tarefa recomeça do último ponto salvo e não do início.",
+        "Em geração de dados sintéticos, uma GPU com defeito pode derrubar um job de oito horas nos últimos minutos.",
+        "A DatologyAI salva checkpoints periódicos no S3 e também diminuiu o tamanho de cada partição (pedaço) dos dados.",
+        "Com as duas medidas, uma falha custa poucos minutos e o retry automático termina o trabalho."
+      ],
+      "pre_requisitos": [
+        "GPU",
+        "Partição de dados",
+        "Armazenamento em S3"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PARTIÇÃO PEQUENA",
+            "nota": "Dados divididos em pedaços curtos"
+          },
+          {
+            "rotulo": "PROCESSA UM TRECHO",
+            "nota": "GPU gera parte do resultado"
+          },
+          {
+            "rotulo": "SALVA NO S3",
+            "nota": "Progresso gravado periodicamente"
+          },
+          {
+            "rotulo": "FALHA E RETOMA",
+            "nota": "Retry parte do último ponto salvo"
+          },
+          {
+            "rotulo": "PERDA DE MINUTOS",
+            "nota": "Em vez de horas de trabalho perdido"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Idempotência",
+      "traducao": "repetir a operação sem mudar o resultado final",
+      "nivel": "avancado",
+      "chave": "idempotência",
+      "analogia": "Idempotência é como apertar várias vezes o botão do elevador, que mesmo assim vem uma vez só.",
+      "explicacao": [
+        "Uma operação idempotente dá o mesmo resultado final se você fizer uma vez ou dez vezes.",
+        "Isso importa quando uma tarefa falha no meio e o sistema precisa tentar de novo sem saber o que já foi feito.",
+        "No pipeline da DatologyAI, cada checkpoint grava sempre no mesmo arquivo no S3 e substitui a versão anterior.",
+        "Assim, uma nova tentativa (retry) depois de uma falha não duplica dados nem deixa arquivos pela metade.",
+        "Idempotência, checkpoints e retentativa automática juntos permitem retomar um job longo sem intervenção manual."
+      ],
+      "pre_requisitos": [
+        "Checkpointing",
+        "Retry automático",
+        "Armazenamento em S3"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Bin packing",
+      "traducao": "encaixar jobs nos recursos disponíveis",
+      "nivel": "avancado",
+      "chave": "bin packing",
+      "analogia": "Bin packing é como arrumar o porta-malas antes de uma viagem, encaixando malas de tamanhos diferentes para caber tudo sem sobrar espaço vazio.",
+      "explicacao": [
+        "Bin packing (encaixe de caixas) é o problema de colocar itens de tamanhos diferentes no menor número de espaços possível.",
+        "Em computação, os itens são os jobs e os espaços são as máquinas com CPU e GPU livres.",
+        "Um job de geração com Ray precisa de CPU num cluster e de GPU em outro cluster ao mesmo tempo.",
+        "Se o agendador reserva só a CPU e a GPU está ocupada, o job trava e segura recursos que outros poderiam usar.",
+        "A DatologyAI criou pools dedicados por tipo de recurso e passou a reservar CPU e GPU juntas, de forma atômica (tudo ou nada)."
+      ],
+      "pre_requisitos": [
+        "Cluster de computadores",
+        "CPU e GPU",
+        "Agendador de jobs",
+        "Ray"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "JOB CHEGA",
+            "nota": "Pede CPU e GPU ao mesmo tempo"
+          },
+          {
+            "rotulo": "CONFERE OS POOLS",
+            "nota": "Olha CPU e GPU livres nos clusters"
+          },
+          {
+            "rotulo": "RESERVA ATÔMICA",
+            "nota": "Reserva os dois juntos ou nenhum"
+          },
+          {
+            "rotulo": "JOB RODA SEM TRAVAR",
+            "nota": "Recursos usados sem ficar ociosos"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Batch inference",
+      "traducao": "inferência em lote, fora do uso em tempo real",
+      "nivel": "intermediario",
+      "chave": "batch inference",
+      "analogia": "Batch inference é como uma cozinha industrial que prepara mil marmitas de uma vez, em vez de cozinhar cada prato só quando o cliente pede.",
+      "explicacao": [
+        "Inferência é o momento em que um modelo já treinado recebe uma entrada e produz uma resposta.",
+        "No uso comum, como num chat, cada pedido chega sozinho e precisa de resposta rápida, o que se chama inferência online.",
+        "Batch inference (inferência em lote) processa uma pilha enorme de entradas de uma vez, sem ninguém esperando na tela.",
+        "O objetivo passa a ser vazão (throughput), ou seja, quantos tokens a GPU gera por hora.",
+        "A DatologyAI ajustou parâmetros do vLLM, como tamanho do lote e speculative decoding (decodificação especulativa), e ganhou cerca de 40% de vazão."
+      ],
+      "pre_requisitos": [
+        "Inferência",
+        "GPU",
+        "vLLM",
+        "Token"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "FILA DE DOCUMENTOS",
+            "nota": "Milhões de entradas esperando"
+          },
+          {
+            "rotulo": "MONTA LOTES",
+            "nota": "Agrupa entradas no tamanho certo"
+          },
+          {
+            "rotulo": "GPU PROCESSA JUNTO",
+            "nota": "vLLM gera vários textos em paralelo"
+          },
+          {
+            "rotulo": "MAIS TOKENS POR HORA",
+            "nota": "Vazão alta com as mesmas GPUs"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O palestrante é cofundador e CTO da DatologyAI e fecha o talk recrutando, então os resultados do BeyondWeb são comparações feitas pela própria empresa. Ele admite que os gráficos são antigos e diz que hoje a receita é melhor, sem mostrar dados. Os ganhos de infraestrutura (11 dias para 2 horas, 40% de vazão) vêm sem detalhe de método ou de custo. O talk também não discute riscos de treinar com dados sintéticos, como perda de diversidade, nem como a qualidade muda entre domínios.",
+  "acoes": [
+    "Ao pedir exemplos sintéticos a um LLM, forneça um documento real como base para reescrita em vez de pedir que ele invente do zero.",
+    "Em jobs longos de processamento com IA, divida a entrada em partes pequenas e salve o progresso de cada parte para não perder horas numa falha.",
+    "Antes de processar milhares de arquivos na nuvem, calcule quanto tempo a listagem e a leitura vão levar e use as APIs de lote do provedor.",
+    "Se você roda modelos próprios com vLLM, teste combinações de tamanho de lote e outros parâmetros antes de comprar mais GPU."
+  ],
+  "numeros": [
+    {
+      "valor": "30 trilhões",
+      "contexto": "tokens de texto utilizáveis na web, segundo o palestrante",
+      "t": 585
+    },
+    {
+      "valor": "11 dias → 2 h",
+      "contexto": "tempo para buscar metadados no S3 antes e depois do lote",
+      "t": 716
+    },
+    {
+      "valor": "40%",
+      "contexto": "ganho de vazão ao ajustar parâmetros do vLLM",
+      "t": 1090
+    },
+    {
+      "valor": "12 trilhões",
+      "contexto": "tokens sintéticos gerados: 7 tri de web e 5 tri de math e código",
+      "t": 1170
+    }
+  ]
+}

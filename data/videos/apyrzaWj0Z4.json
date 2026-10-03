@@ -1,0 +1,203 @@
+{
+  "id": "apyrzaWj0Z4",
+  "titulo": "Stop Renting Your AI's Memory — Dylan Couzon, Qdrant",
+  "titulo_curto": "Stop Renting Your AI's Memory",
+  "palestrante": "Dylan Couzon, Qdrant",
+  "url": "https://www.youtube.com/watch?v=apyrzaWj0Z4",
+  "duracao": 917,
+  "publicado_ts": 1790924414,
+  "edicao": "2026-10-02",
+  "tese": "Rodar o modelo em casa dá autonomia, mas só ser dono da memória dá continuidade. Por isso a memória deve ficar local.",
+  "tldr": [
+    "Dylan Couzon, da Qdrant, diz que modelos quase de ponta já rodam em hardware próprio, mas a memória que torna o assistente seu continua na nuvem de terceiros.",
+    "Ele define memória como três verbos (escrever, recuperar e esquecer) e defende busca vetorial no lugar de uma pasta cheia de markdown.",
+    "Numa demo offline, um drone indexa o que vê e recupera objetos em menos de 1 ms, com 15 MB de motor, usando o Qdrant Edge, produto da própria empresa."
+  ],
+  "tema": "dados-e-rag",
+  "complexidade": 2,
+  "ideias": [
+    {
+      "titulo": "Autonomia e continuidade são coisas separadas",
+      "texto": "Ser dono dos pesos do modelo impede que alguém desligue ou piore o seu assistente. Isso é autonomia. Continuidade é o assistente lembrar de você entre sessões. O palestrante diz que os laboratórios lançaram recursos de memória justamente porque os modelos não carregam nada de uma conversa para outra, e que essa lacuna virou produto.",
+      "t": 169,
+      "legenda": "Os quatro andares da pilha, todos alugados, inclusive a memória.",
+      "print": "img/apyrzaWj0Z4/0.jpg"
+    },
+    {
+      "titulo": "Memória são três verbos: escrever, recuperar, esquecer",
+      "texto": "Para o palestrante, memória não é um prompt maior. É um sistema que escreve, recupera e esquece. A recuperação dá controle que o prompt não dá: filtrar por tema, reduzir o peso do que é antigo ou raro e deixar a relevância mudar com o tempo. Ele usa isso para argumentar contra jogar tudo numa pasta de markdown.",
+      "t": 329,
+      "legenda": "A definição de memória em três verbos.",
+      "print": "img/apyrzaWj0Z4/1.jpg"
+    },
+    {
+      "titulo": "Modelo é CPU, contexto é RAM, memória é disco",
+      "texto": "A analogia, atribuída a Karpathy, ajuda a ver onde cada peça vive. A janela de contexto é rápida, mas esquece quando a sessão acaba. O disco guarda você entre conversas. Hoje, diz o palestrante, esse disco fica no datacenter de outra empresa.",
+      "t": 401,
+      "legenda": "O mapa que localiza a memória como a camada de armazenamento.",
+      "print": null
+    },
+    {
+      "titulo": "Demo offline: um drone que lembra o que viu",
+      "texto": "Um modelo YOLO detecta objetos num vídeo. Imagem e rótulo viram embeddings e entram numa memória vetorial local. A tela mostra um gráfico 2D onde itens parecidos ficam próximos, com 92 objetos reconhecidos e mais de 300 vetores, em 15 MB de motor.",
+      "t": 550,
+      "legenda": "Memória vetorial viva, rodando offline no laptop.",
+      "print": "img/apyrzaWj0Z4/3.jpg"
+    },
+    {
+      "titulo": "Busca semântica sobre a memória em menos de 1 ms",
+      "texto": "Ao clicar em coffee table, a demo traz todas as vezes que o drone viu uma mesa de centro. Mostra a imagem, a primeira e a última vez vista, uma descrição e a contagem de aparições. Nada disso usa rede. O mesmo mecanismo pode sincronizar com a nuvem, se o dono escolher, para formar uma memória coletiva.",
+      "t": 582,
+      "legenda": "Consulta local com resposta em menos de 1 ms.",
+      "print": "img/apyrzaWj0Z4/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Memory layer",
+      "traducao": "camada de memória",
+      "nivel": "intermediario",
+      "chave": "memory layer",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Embedding",
+      "traducao": "vetor numérico que representa o significado",
+      "nivel": "intermediario",
+      "chave": "embedding",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Busca vetorial",
+      "traducao": "busca por proximidade de significado entre vetores",
+      "nivel": "intermediario",
+      "chave": "busca vetorial",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "HNSW",
+      "traducao": "índice em grafo para busca vetorial aproximada",
+      "nivel": "avancado",
+      "chave": "hnsw",
+      "analogia": "HNSW é como chegar a um endereço numa cidade grande, em que você pega primeiro a rodovia, depois a avenida do bairro e só no fim entra nas ruas pequenas até a porta certa.",
+      "explicacao": [
+        "Uma memória de IA guarda milhares de itens. Para achar os mais parecidos com uma pergunta, comparar a pergunta com cada item, um por um, fica lento demais.",
+        "HNSW (Hierarchical Navigable Small World, ou mundo pequeno navegável em camadas) organiza os itens como uma rede, em que cada item fica ligado aos vizinhos mais parecidos com ele.",
+        "Essa rede tem andares. O andar de cima tem poucos itens com ligações longas, e os de baixo têm todos os itens com ligações curtas.",
+        "A busca começa no topo, pula para o vizinho mais próximo da pergunta e desce de andar a cada etapa, refinando até chegar aos itens mais parecidos.",
+        "O resultado é aproximado, porque pode deixar passar algum vizinho, mas sai em frações de milissegundo. O palestrante cita o HNSW, de 2016, como prova de que a tecnologia de memória já existia havia anos."
+      ],
+      "pre_requisitos": [
+        "Embedding",
+        "Busca vetorial",
+        "Grafo"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PERGUNTA VIRA VETOR",
+            "nota": "o texto vira uma lista de números"
+          },
+          {
+            "rotulo": "ANDAR DE CIMA",
+            "nota": "poucos itens, saltos longos"
+          },
+          {
+            "rotulo": "ANDARES DE BAIXO",
+            "nota": "mais itens, passos curtos"
+          },
+          {
+            "rotulo": "VIZINHOS MAIS PRÓXIMOS",
+            "nota": "itens parecidos em menos de 1 ms"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Open weights",
+      "traducao": "modelo com pesos abertos",
+      "nivel": "basico",
+      "chave": "open weights",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Quantization",
+      "traducao": "quantização, compressão dos números do vetor",
+      "nivel": "avancado",
+      "chave": "quantization",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Object detection",
+      "traducao": "detecção de objetos",
+      "nivel": "intermediario",
+      "chave": "object detection",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Edge computing",
+      "traducao": "computação na borda, no próprio dispositivo",
+      "nivel": "intermediario",
+      "chave": "edge computing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O palestrante trabalha na Qdrant e a demo usa o produto da empresa, então o talk também é pitch. Ele admite que não vai comparar arquiteturas de memória. A afirmação de que uma máquina de menos de US$ 2.500 roda o que foi a ponta do ano passado vem sem modelo, benchmark ou fonte. Faltam medições de qualidade da recuperação, a demo tem poucas centenas de vetores e a retirada de dois modelos por ordem governamental é citada sem detalhes. A defesa de recuperação contra markdown também não traz comparação.",
+  "acoes": [
+    "Liste onde a memória do seu assistente mora hoje (recursos de memória do provedor, arquivos soltos, notas) e avalie se você consegue exportá-la.",
+    "Teste uma memória vetorial local pequena, com poucas centenas de notas suas, e compare com colar o texto inteiro no prompt.",
+    "Se for guardar memória de pessoas ou de uma equipe, defina antes quem pode sincronizar o quê e deixe o compartilhamento desligado por padrão.",
+    "Guarde o nome do modelo de embedding usado. Para trocar de modelo mantendo a memória, o palestrante diz que é preciso manter o mesmo embedding."
+  ],
+  "numeros": [
+    {
+      "valor": "US$ 2.500",
+      "contexto": "Máquina que roda o que foi a ponta do ano passado",
+      "t": 107
+    },
+    {
+      "valor": "US$ 5.000",
+      "contexto": "Computação gasta por mês em plano de US$ 200",
+      "t": 231
+    },
+    {
+      "valor": "1 GB",
+      "contexto": "Cabem 1 milhão de memórias com quantização",
+      "t": 455
+    },
+    {
+      "valor": "15 MB",
+      "contexto": "Tamanho do motor na demo, com 92 objetos e 300 vetores",
+      "t": 550
+    }
+  ]
+}

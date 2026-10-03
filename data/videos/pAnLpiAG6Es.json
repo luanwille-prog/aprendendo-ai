@@ -1,0 +1,204 @@
+{
+  "id": "pAnLpiAG6Es",
+  "titulo": "MCP Doesn't Suck. Your Agent Does. — Jan Čurn, Apify",
+  "titulo_curto": "MCP Doesn't Suck. Your Agent Does.",
+  "palestrante": "Jan Čurn, Apify",
+  "url": "https://www.youtube.com/watch?v=pAnLpiAG6Es",
+  "duracao": 1123,
+  "publicado_ts": 1790949605,
+  "edicao": "2026-10-02",
+  "tese": "O inchaço de contexto vem de clientes MCP ingênuos. Com descoberta progressiva e execução como código, MCP e CLI se somam.",
+  "tldr": [
+    "Jan Čurn, CEO da Apify, diz que as críticas ao MCP (Model Context Protocol, o padrão que liga agentes a ferramentas) miram o alvo errado. O consumo excessivo de contexto vem de agentes que carregam todas as ferramentas de uma vez.",
+    "Ele apresenta três correções do mercado (subagentes, descoberta progressiva de ferramentas e Code Mode) e explica por que agentes se dão bem com CLIs (programas de linha de comando): já conhecem o shell e usam os comandos aos poucos.",
+    "A proposta é usar MCP para acesso remoto e autenticado, e uma CLI para o uso local. Ele demonstra o mcpc, cliente CLI de código aberto da Apify, e mostra testes iniciais em que mcpc e CLI ficam parecidos e o MCP puro gasta mais tokens."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "O inchaço de contexto é bug do harness",
+      "texto": "Quem registra todas as ferramentas de dez servidores MCP no início da conversa perde cerca de um terço da janela de contexto antes da primeira pergunta. Čurn lembra que a especificação do MCP não diz nada sobre como montar o harness (a estrutura que roda o agente). Quem constrói o agente decide como usar o protocolo.",
+      "t": 167,
+      "legenda": "Carregar 100 ferramentas de uma vez consome o contexto antes do trabalho começar.",
+      "print": "img/pAnLpiAG6Es/0.jpg"
+    },
+    {
+      "titulo": "Três correções: subagentes, descoberta progressiva e Code Mode",
+      "texto": "Subagentes isolam o contexto, mas o custo em tokens continua e dados sensíveis ainda circulam. A descoberta progressiva (a ferramenta tool search da Anthropic) carrega só as ferramentas necessárias. O Code Mode, da Cloudflare, transforma ferramentas MCP em código que o modelo navega com grep. Segundo Čurn, modelos escrevem código melhor do que chamam ferramentas, porque tool calling é uma construção artificial.",
+      "t": 351,
+      "legenda": "No Code Mode, as ferramentas viram código que o modelo consulta sob demanda.",
+      "print": "img/pAnLpiAG6Es/1.jpg"
+    },
+    {
+      "titulo": "Por que agentes preferem CLIs",
+      "texto": "O agente nunca carrega uma CLI inteira no contexto. Ele chama o comando só quando precisa, lê o help se for preciso e já conhece o shell dos dados de treino. Rodar CLI é Code Mode por padrão. O ponto fraco é a falta de protocolo padrão de transporte, de autenticação e de observação, o que complica o uso em empresas e o acesso remoto.",
+      "t": 507,
+      "legenda": "O shell aparece muito nos dados de treino, e os modelos o usam bem.",
+      "print": "img/pAnLpiAG6Es/2.jpg"
+    },
+    {
+      "titulo": "mcpc: MCP escondido atrás de um comando bash",
+      "texto": "O mcpc é um cliente CLI leve, sem LLM, que envolve o protocolo MCP. Na demo, Čurn conecta um servidor local por stdio e um servidor remoto com login OAuth, guarda credenciais no chaveiro do sistema e mantém sessões persistentes. O comando grep busca ferramentas, a flag de JSON permite encadear com jq e o suporte a tarefas assíncronas deixa o trabalho rodando no servidor.",
+      "t": 880,
+      "legenda": "A busca por grep faz a descoberta progressiva de ferramentas na linha de comando.",
+      "print": "img/pAnLpiAG6Es/3.jpg"
+    },
+    {
+      "titulo": "Connector Evals compara MCP, CLI e mcpc",
+      "texto": "A Apify criou um framework que compara conectores, não agentes. Nos gráficos de tempo contra custo em tokens, mcpc e CLI ficam parecidos e o MCP puro termina antes, mas gasta mais tokens. O próprio palestrante diz que os testes ainda são iniciais.",
+      "t": 1040,
+      "legenda": "No gráfico, mcpc e CLI ficam próximos e o MCP puro gasta mais tokens.",
+      "print": "img/pAnLpiAG6Es/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "MCP",
+      "traducao": "Model Context Protocol, padrão de acesso de agentes a ferramentas",
+      "nivel": "basico",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Harness",
+      "traducao": "estrutura que roda o agente e decide o que entra no contexto",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Subagente",
+      "traducao": "agente delegado com contexto próprio",
+      "nivel": "intermediario",
+      "chave": "subagente",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Progressive tool discovery",
+      "traducao": "descoberta progressiva de ferramentas",
+      "nivel": "intermediario",
+      "chave": "progressive tool discovery",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Code Mode",
+      "traducao": "tratar ferramentas MCP como código que o modelo escreve e navega",
+      "nivel": "avancado",
+      "chave": "code mode",
+      "analogia": "Code Mode é como dar ao cozinheiro um livro de receitas com índice para ele consultar quando precisar, em vez de ler todas as receitas em voz alta antes de ele começar a cozinhar.",
+      "explicacao": [
+        "Um agente de IA usa ferramentas para agir, como buscar dados ou mandar um e-mail. Em geral, ele recebe a descrição de todas as ferramentas antes de começar o trabalho.",
+        "No Code Mode, ideia lançada pela Cloudflare, as ferramentas MCP (Model Context Protocol, o padrão que liga agentes a ferramentas) viram código, organizado como os arquivos de um programa.",
+        "O modelo procura nesse código só o que precisa. Ele usa buscas como o grep (comando que acha texto em arquivos) e lê apenas a definição da ferramenta certa.",
+        "Depois o modelo escreve um pequeno programa que chama as ferramentas. Assim, a janela de contexto (a memória de trabalho do modelo) recebe menos texto e gasta menos tokens.",
+        "A ideia funciona porque os modelos viram muito código no treino. O tool calling (chamada de ferramentas) é uma habilidade artificial, ensinada com dados sintéticos."
+      ],
+      "pre_requisitos": [
+        "MCP",
+        "Tool calling",
+        "Janela de contexto",
+        "Progressive tool discovery"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "FERRAMENTAS VIRAM CÓDIGO",
+            "nota": "servidor MCP convertido em arquivos"
+          },
+          {
+            "rotulo": "MODELO BUSCA COM GREP",
+            "nota": "lê só a definição necessária"
+          },
+          {
+            "rotulo": "MODELO ESCREVE O SCRIPT",
+            "nota": "o código chama as ferramentas"
+          },
+          {
+            "rotulo": "CONTEXTO ENXUTO",
+            "nota": "menos tokens, mais precisão"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Tool calling",
+      "traducao": "chamada de ferramentas pelo modelo",
+      "nivel": "basico",
+      "chave": "tool calling",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "CLI",
+      "traducao": "interface de linha de comando",
+      "nivel": "basico",
+      "chave": "cli",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação",
+      "nivel": "intermediario",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "Čurn é fundador da Apify e vende o mcpc, então o talk funciona também como pitch de produto. Os tuítes citados como críticas ao MCP servem de espada de palha, sem dados. Os resultados do Connector Evals são da própria empresa, aparecem só em gráficos rápidos, sem número de tarefas, sem repetições e sem margem de erro, e o palestrante os chama de iniciais. Ele não explica por que o MCP puro termina antes. A afirmação de que modelos escrevem código melhor do que chamam ferramentas não vem com medição.",
+  "acoes": [
+    "Verifique se o seu cliente de agente carrega todas as ferramentas MCP no início. Se carregar, ative a busca de ferramentas sob demanda, se existir, ou reduza os servidores conectados.",
+    "Use MCP para serviços remotos que exigem login e permissões, e CLI para tarefas locais como arquivos e scripts.",
+    "Teste o mcpc com um servidor MCP que você já usa e compare tokens e tempo com a CLI equivalente, antes de confiar nos gráficos do fornecedor.",
+    "Evite devolver senhas e dados grandes de ferramentas direto ao contexto. Prefira JSON encadeado em script, como no uso do jq."
+  ],
+  "numeros": [
+    {
+      "valor": "10 a 15 mil",
+      "contexto": "servidores MCP existentes, segundo o palestrante",
+      "t": 43
+    },
+    {
+      "valor": "10 servidores",
+      "contexto": "exemplo que resulta em cerca de 100 ferramentas no contexto",
+      "t": 167
+    },
+    {
+      "valor": "1/3",
+      "contexto": "parcela do contexto que pode sumir antes do trabalho",
+      "t": 167
+    },
+    {
+      "valor": "1969",
+      "contexto": "ano de criação do Unix, citado como base do shell",
+      "t": 507
+    }
+  ]
+}

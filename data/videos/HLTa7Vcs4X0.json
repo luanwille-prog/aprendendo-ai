@@ -1,0 +1,174 @@
+{
+  "id": "HLTa7Vcs4X0",
+  "titulo": "Why AI Didn't Actually Make You Ship Faster — Gabriel Spencer-Harper, Meticulous",
+  "titulo_curto": "Why AI Didn't Actually Make You Ship Faster",
+  "palestrante": "Gabriel Spencer-Harper, Meticulous",
+  "url": "https://www.youtube.com/watch?v=HLTa7Vcs4X0",
+  "duracao": 675,
+  "publicado_ts": 1790976622,
+  "edicao": "2026-10-02",
+  "tese": "Se a IA escreve código mais rápido do que gente revisa, a verificação vira o gargalo. Gravar fluxos reais e comparar telas antes e depois seria a saída.",
+  "tldr": [
+    "O palestrante diz que agentes de código escrevem mais rápido do que as equipes conseguem revisar, então verificar passou a ser o gargalo do envio.",
+    "Testes com assertions (afirmações escritas à mão) não cobrem o espaço de regressões possíveis. A Meticulous grava fluxos de usuário, repete cada um antes e depois da mudança e mostra as diferenças em imagens.",
+    "A ferramenta se apoia em três peças: rede simulada, navegador determinístico e escolha de fluxos guiada por cobertura de código. O talk é demonstração de produto, sem dados independentes."
+  ],
+  "tema": "engenharia-de-software",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Verificar virou o gargalo",
+      "texto": "Quando o agente gera código em minutos, alguém na empresa ainda precisa conferir o que mudou. O palestrante afirma que sem verificação exaustiva você escolhe entre velocidade e bugs. A pergunta de teste é se você apertaria o botão de merge num pull request escrito por IA. Na maioria das empresas, a resposta seria não.",
+      "t": 124,
+      "legenda": "Define o problema central do talk, a revisão como gargalo.",
+      "print": "img/HLTa7Vcs4X0/0.jpg"
+    },
+    {
+      "titulo": "Assertions não cobrem tudo",
+      "texto": "Um teste com assertion exige que alguém defina de antemão o comportamento correto. O palestrante argumenta que o espaço de regressões possíveis é grande demais para isso. Ele cita combinações de feature flags, papéis, permissões e configurações que ninguém checa à mão. Também aponta tempo gasto em suítes de testes end-to-end, flakes e revisão manual.",
+      "t": 184,
+      "legenda": "Lista o custo de depender só de testes escritos à mão.",
+      "print": "img/HLTa7Vcs4X0/1.jpg"
+    },
+    {
+      "titulo": "Gravar, repetir e comparar telas",
+      "texto": "Um trecho de JavaScript roda em ambientes que não são de produção e grava fluxos de uso, como clicar em login ou abrir um painel. No pull request, a ferramenta repete um subconjunto desses fluxos e tira capturas de tela a cada passo, antes e depois do código novo. Ela compara as duas sequências. Quem revisa, pessoa ou agente, decide se cada diferença era esperada.",
+      "t": 341,
+      "legenda": "Mostra o formato do resultado, diferenças e não veredito de bug.",
+      "print": "img/HLTa7Vcs4X0/2.jpg"
+    },
+    {
+      "titulo": "Rede simulada e navegador determinístico",
+      "texto": "Na gravação, todas as requisições e respostas de rede são salvas e depois reaplicadas. Isso torna o teste repetível e isolado, e permite rodar em paralelo. A segunda peça é um navegador alterado para eliminar fontes de aleatoriedade, como relógio da CPU e a ordem de timers. O palestrante diz que isso reduz muito os testes flaky (que falham sem motivo), mas não mostra medições.",
+      "t": 434,
+      "legenda": "Explica por que as repetições devem dar o mesmo resultado.",
+      "print": "img/HLTa7Vcs4X0/3.jpg"
+    },
+    {
+      "titulo": "Cobertura de código que mede teste de verdade",
+      "texto": "A ferramenta repete cada fluxo gravado na branch principal e registra quais linhas rodam. Com esse mapa, escolhe o subconjunto de fluxos que cobre mais código. Segundo o palestrante, cobertura costuma enganar, porque um teste pode passar por todo o código com uma só assertion. Com captura de tela a cada passo, ele afirma que cobrir equivale a testar.",
+      "t": 528,
+      "legenda": "Mostra como a ferramenta escolhe quais fluxos repetir.",
+      "print": "img/HLTa7Vcs4X0/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Pull request",
+      "traducao": "pedido de integração de código",
+      "nivel": "basico",
+      "chave": "pull request",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Feature flag",
+      "traducao": "chave que liga ou desliga uma função",
+      "nivel": "intermediario",
+      "chave": "feature flag",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Teste com assertions",
+      "traducao": "teste que compara o resultado com um valor esperado escrito antes",
+      "nivel": "intermediario",
+      "chave": "teste com assertions",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Teste de regressão",
+      "traducao": "teste que detecta o que quebrou após uma mudança",
+      "nivel": "basico",
+      "chave": "teste de regressão",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Record and replay",
+      "traducao": "gravar e repetir fluxos de uso",
+      "nivel": "intermediario",
+      "chave": "record and replay",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Teste flaky",
+      "traducao": "teste instável, que falha ou passa sem mudança no código",
+      "nivel": "intermediario",
+      "chave": "teste flaky",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Mock de rede",
+      "traducao": "respostas de rede gravadas e reaplicadas no teste",
+      "nivel": "intermediario",
+      "chave": "mock de rede",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Cobertura de código",
+      "traducao": "percentual de linhas executadas pelos testes",
+      "nivel": "intermediario",
+      "chave": "cobertura de código",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É pitch de produto do CEO da Meticulous, feito em estande de conferência. As alegações de zero esforço do desenvolvedor, de ordens de grandeza menos flakes que Cypress e Playwright e de verificação exaustiva não têm dados, benchmark ou comparação independente. Os clientes citados aparecem como lista de logos. A ferramenta mostra diferenças visuais, então não detecta erros sem efeito na tela, como lógica de back-end. Alguém ainda precisa revisar cada diff.",
+  "acoes": [
+    "Meça quanto tempo da sua equipe vai para revisão manual e manutenção de testes antes de culpar a IA pela falta de velocidade.",
+    "Teste a pergunta do talk em casos reais. Você apertaria merge num pull request gerado por IA? Se não, liste o que você checaria à mão.",
+    "Ao avaliar ferramentas de teste visual, peça medição de testes flaky e de falsos alertas em seu próprio código, não só a demonstração do fornecedor.",
+    "Desconfie de cobertura de código como único indicador. Verifique se os testes têm assertions que realmente checam o resultado."
+  ],
+  "numeros": [
+    {
+      "valor": "1 linha",
+      "contexto": "de JavaScript para instrumentar ambientes de teste",
+      "t": 278
+    },
+    {
+      "valor": "1.000 vezes",
+      "contexto": "repetições seguidas com o mesmo resultado, segundo o palestrante",
+      "t": 434
+    },
+    {
+      "valor": "412",
+      "contexto": "passos de um fluxo em que um pixel diferente seria sinalizado",
+      "t": 590
+    },
+    {
+      "valor": "100%",
+      "contexto": "cobertura possível com uma única assertion em teste comum",
+      "t": 559
+    }
+  ]
+}

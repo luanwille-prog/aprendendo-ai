@@ -1,0 +1,174 @@
+{
+  "id": "rTojoVotlD8",
+  "titulo": "Your LLM App Returned 200 OK. It Was Still Wrong. — Marina Petzel, Datadog",
+  "titulo_curto": "Your LLM App Returned 200 OK. It Was Still Wrong.",
+  "palestrante": "Marina Petzel, Datadog",
+  "url": "https://www.youtube.com/watch?v=rTojoVotlD8",
+  "duracao": 1080,
+  "publicado_ts": 1790991033,
+  "edicao": "2026-10-02",
+  "tese": "Latência e taxa de erro dizem que o app está no ar. Para app de IA, acrescente custo, segurança e qualidade ao monitoramento.",
+  "tldr": [
+    "Marina Petzel, da Datadog, diz que os quatro sinais clássicos (latência, erros, tráfego e saturação) continuam necessários, mas não mostram se a resposta de um app de IA generativa está certa.",
+    "Ela propõe três camadas extras de monitoramento. Custo (token creep, troca de modelo, chamadas sem cache), segurança (prompt injection, vazamento de dados pessoais, toxicidade, jailbreak) e qualidade (alucinação, relevância, satisfação, completude, qualidade do RAG).",
+    "O final vira propaganda do produto Agent Observability da Datadog, e os alvos numéricos citados vêm sem fonte ou metodologia."
+  ],
+  "tema": "evals",
+  "complexidade": 2,
+  "ideias": [
+    {
+      "titulo": "Status 200 não garante resposta certa",
+      "texto": "Num app tradicional, a mesma entrada gera a mesma saída, então teste de regressão basta. Num app de IA, o mesmo prompt gera respostas diferentes. Um 200 OK do servidor só diz que a requisição funcionou, não que a resposta ajudou ou estava correta. Por isso a qualidade precisa ser avaliada continuamente em produção.",
+      "t": 158,
+      "legenda": "Mostra por que o status HTTP não mede a qualidade da resposta.",
+      "print": "img/rTojoVotlD8/0.jpg"
+    },
+    {
+      "titulo": "Três vazamentos silenciosos de custo",
+      "texto": "Token creep é aumentar o contexto aos poucos, sem revisão financeira. Troca de modelo para um mais caro mantém o volume e muda a conta. Chamadas repetidas sem cache pagam várias vezes pela mesma resposta. A palestrante sugere acompanhar as três camadas para achar o problema cedo.",
+      "t": 318,
+      "legenda": "Lista as três causas de custo e quanto cada uma pode pesar.",
+      "print": "img/rTojoVotlD8/1.jpg"
+    },
+    {
+      "titulo": "Etiquete tudo em quatro níveis",
+      "texto": "Sem tags, as interações com os agentes ficam indiferenciadas e ninguém sabe o que gera o gasto. A proposta tem quatro níveis. Funcionalidade (chat, resumo), usuário ou organização (cobrança interna e detecção de abuso), modelo e provedor, e endpoint (região, produção ou staging).",
+      "t": 446,
+      "legenda": "Mostra o esquema de tags que permite atribuir custo a cada parte.",
+      "print": "img/rTojoVotlD8/2.jpg"
+    },
+    {
+      "titulo": "Quatro métricas de segurança com meta rígida",
+      "texto": "Para injeção de prompt, a recomendação é usar casos de detecção por padrões ou classificadores. Para dados pessoais (PII), regex ou reconhecimento de entidades, com meta de 0% nas saídas de produção. Toxicidade pede classificador e limiares claros. Tentativas de jailbreak devem ser bloqueadas em 100% dos casos, segundo ela.",
+      "t": 637,
+      "legenda": "Resume o que medir em segurança e a meta proposta.",
+      "print": "img/rTojoVotlD8/3.jpg"
+    },
+    {
+      "titulo": "Cinco métricas de qualidade",
+      "texto": "Taxa de alucinação (respostas com afirmações sem base nos dados), relevância (por similaridade de embeddings), satisfação do usuário (joinha, estrelas, NPS), completude (avaliada por um LLM juiz) e qualidade da recuperação no RAG (top-k e NDCG). Juntas, dão uma visão multidimensional da qualidade.",
+      "t": 790,
+      "legenda": "Lista as cinco métricas de qualidade e como medir cada uma.",
+      "print": "img/rTojoVotlD8/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Observabilidade de agentes",
+      "traducao": "monitorar o comportamento de apps e agentes de IA",
+      "nivel": "intermediario",
+      "chave": "observabilidade de agentes",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Prompt injection",
+      "traducao": "injeção de prompt",
+      "nivel": "intermediario",
+      "chave": "prompt injection",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Prompt caching",
+      "traducao": "cache de prompt (reaproveitar respostas e contexto repetidos)",
+      "nivel": "intermediario",
+      "chave": "prompt caching",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Hallucination",
+      "traducao": "alucinação",
+      "nivel": "basico",
+      "chave": "hallucination",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Embedding",
+      "traducao": "vetor numérico que representa o sentido de um texto",
+      "nivel": "intermediario",
+      "chave": "embedding",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM as a judge",
+      "traducao": "modelo de linguagem como avaliador",
+      "nivel": "intermediario",
+      "chave": "llm as a judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "RAG",
+      "traducao": "geração aumentada por recuperação",
+      "nivel": "intermediario",
+      "chave": "rag",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "NDCG e MRR",
+      "traducao": "métricas que avaliam a ordem dos documentos recuperados",
+      "nivel": "avancado",
+      "chave": "ndcg e mrr",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "A palestra termina em pitch do Agent Observability da Datadog, com estande e teste grátis, então o enquadramento favorece vender monitoramento. Os alvos (0% de PII, 100% de bloqueio de jailbreak, mais de 80 a 85% de feedback positivo) saem sem fonte, e metas de 100% são irreais na prática. Os 70% de gasto redundante vêm de pesquisa interna sem amostra ou método. O multiplicador de 8x e o salto de 15x no preço dependem do caso e dos modelos citados, e a palestrante não mostra demo nem dados reais.",
+  "acoes": [
+    "Etiquete cada chamada ao modelo com funcionalidade, usuário ou organização, modelo e ambiente. Sem isso você não sabe o que gera o gasto.",
+    "Antes de ampliar o contexto ou trocar para um modelo mais caro, estime o impacto na conta mensal e peça revisão financeira.",
+    "Meça a taxa de respostas repetidas para a mesma consulta e avalie colocar cache nelas.",
+    "Escolha duas métricas de qualidade para começar, como joinha do usuário e taxa de alucinação por amostra revisada à mão, e acompanhe junto com latência e erros."
+  ],
+  "numeros": [
+    {
+      "valor": "até 8x",
+      "contexto": "aumento de custo ao ampliar muito a janela de contexto",
+      "t": 318
+    },
+    {
+      "valor": "15x",
+      "contexto": "custo por requisição do modelo maior frente ao menor",
+      "t": 350
+    },
+    {
+      "valor": "70%",
+      "contexto": "gasto redundante por falta de cache, segundo pesquisa da Datadog",
+      "t": 382
+    },
+    {
+      "valor": "80 a 85%",
+      "contexto": "meta mínima de feedback positivo dos usuários",
+      "t": 853
+    }
+  ]
+}

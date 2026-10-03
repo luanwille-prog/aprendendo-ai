@@ -1,0 +1,174 @@
+{
+  "id": "cKhpeEBnT1o",
+  "titulo": "Your Coding Agent Is 6 Months Out of Date — Jakub Hojsan, Exa",
+  "titulo_curto": "Your Coding Agent Is 6 Months Out of Date",
+  "palestrante": "Jakub Hojsan, Exa",
+  "url": "https://www.youtube.com/watch?v=cKhpeEBnT1o",
+  "duracao": 743,
+  "publicado_ts": 1790955031,
+  "edicao": "2026-10-02",
+  "tese": "Agente de código revisa mudanças que o modelo nunca viu. Busca na web só ajuda se houver regra de quando buscar e se o contexto vier enxuto.",
+  "tldr": [
+    "Todo modelo tem um corte de conhecimento (knowledge cutoff) e chega ao mercado cerca de seis meses depois dele, então não conhece PRs e versões recentes de bibliotecas.",
+    "O palestrante mostra um PR que parece uma limpeza de código, mas na verdade é uma migração por atualização de dependência, algo que só a busca no changelog revela.",
+    "Segundo a Exa, o agente precisa de uma regra explícita de quando pesquisar e de trechos curtos da página, cerca de 500 caracteres, em vez da página inteira."
+  ],
+  "tema": "agentes",
+  "complexidade": 2,
+  "ideias": [
+    {
+      "titulo": "O modelo tem um ponto cego de uns seis meses",
+      "texto": "O gráfico do palestrante compara a data de corte do conhecimento com a data de lançamento dos modelos. A diferença fica perto de seis meses. Tudo o que entra nos repositórios nesse intervalo fica fora do que o modelo aprendeu, e o agente revisa esse código sem conhecê-lo.",
+      "t": 40,
+      "legenda": "O intervalo entre corte e lançamento fica perto de seis meses.",
+      "print": "img/cKhpeEBnT1o/0.jpg"
+    },
+    {
+      "titulo": "Um PR que parece limpeza e é migração",
+      "texto": "No exemplo, um PR do repositório do vector store remove um parâmetro. Sem busca, o modelo acha que é uma limpeza consistente. Com busca no changelog, aparece que a remoção vem de uma atualização de dependência com breaking change, e a revisão passa a explicar a migração.",
+      "t": 95,
+      "legenda": "O mesmo diff recebe diagnósticos diferentes com e sem busca.",
+      "print": "img/cKhpeEBnT1o/1.jpg"
+    },
+    {
+      "titulo": "500 caracteres no lugar de 100.000",
+      "texto": "A Exa não devolve a página inteira. Um passo de interpretação reduz a página ao trecho que responde à consulta. O modelo recebe cerca de 500 caracteres, o que poupa tokens (unidades de texto cobradas pelo modelo) e deixa a resposta mais focada.",
+      "t": 165,
+      "legenda": "Só o trecho relevante da página segue para o modelo.",
+      "print": "img/cKhpeEBnT1o/2.jpg"
+    },
+    {
+      "titulo": "Ferramenta sozinha não basta, o agente precisa de regra",
+      "texto": "Mesmo com web search nativa no Claude Code, o modelo nega que exista uma versão nova de modelo, porque não sabe que deve verificar. A solução é dar uma regra ao agente, por exemplo, quando o diff atualiza uma dependência, consultar a fonte original e basear a revisão no que achar.",
+      "t": 225,
+      "legenda": "A regra de busca vem junto com a ferramenta, em duas etapas.",
+      "print": "img/cKhpeEBnT1o/3.jpg"
+    },
+    {
+      "titulo": "Highlights calculados na hora, sem LLM",
+      "texto": "O destaque depende da pergunta. Na mesma página pessoal, a consulta sobre biografia traz hobbies e a consulta sobre telefone traz outro trecho. O palestrante diz que o processo é computacional, sem modelo, e por isso não acrescenta latência à busca.",
+      "t": 395,
+      "legenda": "A consulta muda o trecho extraído da mesma página.",
+      "print": "img/cKhpeEBnT1o/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Knowledge cutoff",
+      "traducao": "data de corte do conhecimento",
+      "nivel": "basico",
+      "chave": "knowledge cutoff",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Highlights dependentes da consulta",
+      "traducao": "trechos extraídos conforme a pergunta",
+      "nivel": "intermediario",
+      "chave": "highlights dependentes da consulta",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Pull request",
+      "traducao": "pedido de integração de código",
+      "nivel": "basico",
+      "chave": "pull request",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Migration",
+      "traducao": "migração entre versões",
+      "nivel": "intermediario",
+      "chave": "migration",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Harness",
+      "traducao": "estrutura que cerca o modelo",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Trace",
+      "traducao": "rastro completo da execução",
+      "nivel": "intermediario",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP",
+      "traducao": "protocolo para conectar ferramentas ao agente",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Re-ranker",
+      "traducao": "reordenador de resultados",
+      "nivel": "avancado",
+      "chave": "re-ranker",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É um pitch de produto da Exa, fornecedora de busca. A comparação com a busca nativa de OpenAI e Anthropic em custo e qualidade vem sem número, benchmark ou metodologia. O exemplo do PR é um único caso escolhido a dedo. O problema do corte de conhecimento é real, mas outras ferramentas de busca também o resolvem. A frase sobre latência zero se refere só à extração dos trechos.",
+  "acoes": [
+    "Se você usa agente de código ou de revisão, escreva uma regra no prompt do sistema para consultar changelog ou docs oficiais quando o diff mexer em versão de dependência.",
+    "Teste o agente com um PR recente, posterior ao corte do modelo, com e sem busca, e compare os diagnósticos antes de confiar na revisão.",
+    "Ao escolher uma ferramenta de busca, verifique se ela devolve o trace (consultas, fontes e trechos) para você depurar quando a resposta sair errada.",
+    "Peça trechos curtos em vez de páginas inteiras ao alimentar o modelo, para gastar menos tokens."
+  ],
+  "numeros": [
+    {
+      "valor": "6 meses",
+      "contexto": "defasagem entre corte de conhecimento e lançamento do modelo",
+      "t": 40
+    },
+    {
+      "valor": "100.000 para 500",
+      "contexto": "caracteres da página inteira versus o trecho enviado ao modelo",
+      "t": 189
+    },
+    {
+      "valor": "10 segundos",
+      "contexto": "tempo que a busca nativa pode levar, segundo o palestrante",
+      "t": 284
+    },
+    {
+      "valor": "dezenas de bi",
+      "contexto": "tamanho do índice de documentos da Exa, em dezenas de bilhões",
+      "t": 658
+    }
+  ]
+}
