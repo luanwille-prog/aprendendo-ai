@@ -1,0 +1,314 @@
+{
+  "id": "bRGyYaE0lxI",
+  "titulo": "GPU Died. Training Didn't: Self-Healing Training at Scale — Crusoe",
+  "titulo_curto": "GPU Died. Training Didn't: Self-Healing Training at Scale",
+  "palestrante": "Crusoe",
+  "url": "https://www.youtube.com/watch?v=bRGyYaE0lxI",
+  "duracao": 1014,
+  "publicado_ts": 1791061239,
+  "edicao": "2026-10-03",
+  "tese": "Em milhares de GPUs a falha é rotina. Slurm sobre Kubernetes troca o plantão de madrugada por um fluxo automático de troca de nó e retomada.",
+  "tldr": [
+    "A Crusoe explica que, em treinos com milhares de GPUs, falhas de hardware são certas e o conserto manual não escala.",
+    "A solução deles roda o Slurm (agendador de jobs de treino) dentro do Kubernetes, e o sistema AutoClusters detecta a GPU com defeito, troca o nó e recoloca o job na fila.",
+    "Na demo, uma falha simulada de GPU (XID 79) derruba o treino, e ele volta a rodar a partir do checkpoint em menos de 15 minutos, sem ação humana."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "Slurm é bom em treino, fraco em dinamismo",
+      "texto": "O Slurm nasceu há mais de 20 anos para computação de alto desempenho. Ele traz gang scheduling (todos os nós do job começam juntos), consciência de topologia de rede e scripts familiares aos pesquisadores. Mas é estático em partições, deixa a detecção e o dreno de nós para o operador e diz que o job falhou sem explicar bem o porquê.",
+      "t": 191,
+      "legenda": "Onde o Slurm serve ao treino e onde deixa lacunas operacionais.",
+      "print": "img/bRGyYaE0lxI/0.jpg"
+    },
+    {
+      "titulo": "Duas pilhas custam o dobro",
+      "texto": "Times que já usam Kubernetes para inferência sofrem para operar um cluster Slurm, e times de treino em Slurm estranham o Kubernetes. O resultado são duas infraestruturas, com observabilidade, plantão e runbooks separados. A Crusoe propõe um operador que cria o cluster Slurm dentro do Kubernetes com um comando.",
+      "t": 455,
+      "legenda": "Arquitetura de Slurm como serviço dentro do Kubernetes.",
+      "print": "img/bRGyYaE0lxI/1.jpg"
+    },
+    {
+      "titulo": "GPUs migram entre treino e inferência",
+      "texto": "Como o nó de GPU é um nó Kubernetes primeiro e o Slurm é só uma carga de trabalho, dá para tirar hardware do treino quando a inferência dispara e devolver depois. Quando o job de treino acaba, o nó não fica ocioso esperando outro job.",
+      "t": 538,
+      "legenda": "Hardware compartilhado entre treino e inferência numa única pilha.",
+      "print": null
+    },
+    {
+      "titulo": "Fluxo automático após um XID 79",
+      "texto": "A sequência é notificar o usuário, marcar o nó como down no Slurm, enviar SIGTERM ao processo (com até 2 minutos para salvar checkpoint), reenfileirar o job, isolar e drenar o nó no Kubernetes, trocar por um nó saudável do estoque e registrar o alerta. Só então o job reinicia e carrega o checkpoint.",
+      "t": 603,
+      "legenda": "As etapas da remediação, da notificação ao reinício do job.",
+      "print": "img/bRGyYaE0lxI/3.jpg"
+    },
+    {
+      "titulo": "Demo: GPU cai, treino volta sozinho",
+      "texto": "Connor lança um treino PyTorch com sbatch em um pool de dois nós A100 e injeta um alerta de XID 79 no monitoramento. A utilização da GPU despenca, a troca de nó começa na hora e o treino retoma do checkpoint. A troca de hardware leva cerca de 5 minutos, e o resto do tempo é código da aplicação.",
+      "t": 727,
+      "legenda": "A queda e a recuperação da utilização de GPU na demo.",
+      "print": "img/bRGyYaE0lxI/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Slurm",
+      "traducao": "agendador de jobs para clusters de computação",
+      "nivel": "intermediario",
+      "chave": "slurm",
+      "analogia": "O Slurm é como o controlador de uma quadra esportiva que recebe os pedidos de horário, organiza a fila e libera a quadra para cada time na sua vez.",
+      "explicacao": [
+        "Laboratórios têm muitas máquinas potentes e muitas pessoas querendo usá-las. Alguém precisa organizar quem usa o quê e quando.",
+        "O Slurm é um agendador de jobs (tarefas de computação). O pesquisador escreve um script, envia com o comando sbatch, e o job entra numa fila.",
+        "Quando há máquinas livres, o Slurm reserva os nós, inicia o job e acompanha até o fim.",
+        "Ele nasceu há mais de 20 anos para supercomputação e traz gang scheduling, noção da topologia da rede e scripts de checagem antes e depois do job.",
+        "As limitações apontadas no talk são partições estáticas, detecção e dreno de nós ruins por conta do operador, e pouca explicação sobre por que um job falhou."
+      ],
+      "pre_requisitos": [
+        "Cluster de computação",
+        "Job",
+        "Fila de tarefas"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "SCRIPT SBATCH",
+            "nota": "Pesquisador descreve o job"
+          },
+          {
+            "rotulo": "FILA",
+            "nota": "Job espera recursos livres"
+          },
+          {
+            "rotulo": "ALOCA NÓS",
+            "nota": "Reserva as máquinas pedidas"
+          },
+          {
+            "rotulo": "JOB RODA",
+            "nota": "Treino executa até o fim"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Kubernetes",
+      "traducao": "orquestrador de contêineres e serviços",
+      "nivel": "intermediario",
+      "chave": "kubernetes",
+      "analogia": "O Kubernetes é como o gerente de um restaurante que garante sempre o número certo de cozinheiros nas bancadas e chama um substituto quando alguém sai.",
+      "explicacao": [
+        "Empresas rodam muitos programas ao mesmo tempo em muitas máquinas, e alguém precisa decidir onde cada um roda.",
+        "O Kubernetes é um orquestrador de contêineres (pacotes que levam o programa com tudo de que ele precisa). Você diz o que quer rodando, e ele distribui pelas máquinas.",
+        "Ele compara o tempo todo o estado desejado com o real. Se um programa cai, ele sobe outro sozinho, recurso chamado self-healing (autocura).",
+        "Também faz balanceamento de carga e autoscaling (ajuste automático de capacidade), e tem um ecossistema grande de extensões para rede, segurança e observabilidade.",
+        "No talk, o Slurm vira apenas mais uma carga dentro do Kubernetes. Assim treino e inferência dividem as mesmas GPUs e a mesma operação."
+      ],
+      "pre_requisitos": [
+        "Contêiner",
+        "Nó de computação",
+        "Cluster de computação"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "ESTADO DESEJADO",
+            "nota": "Você declara o que deve rodar"
+          },
+          {
+            "rotulo": "COMPARA COM O REAL",
+            "nota": "Verificação contínua"
+          },
+          {
+            "rotulo": "CORRIGE DIFERENÇAS",
+            "nota": "Sobe, move ou remove cargas"
+          },
+          {
+            "rotulo": "SERVIÇO ESTÁVEL",
+            "nota": "Sistema volta ao desejado"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Gang scheduling",
+      "traducao": "agendamento em grupo: todos os nós do job iniciam juntos",
+      "nivel": "avancado",
+      "chave": "gang scheduling",
+      "analogia": "Gang scheduling é como um time de remo que só sai da margem quando os oito remadores estão sentados no barco.",
+      "explicacao": [
+        "Um treino grande de IA usa vários computadores ao mesmo tempo, e cada um faz uma parte do trabalho.",
+        "Essas partes conversam o tempo todo. Se uma máquina começa e a outra ainda não chegou, a primeira fica parada esperando.",
+        "Gang scheduling (agendamento em grupo) resolve isso. O agendador só libera o job quando todos os nós pedidos estão livres, e então inicia todos juntos.",
+        "Sem isso, nós ficam reservados e ociosos à espera dos colegas, e dois jobs podem travar um ao outro segurando metade das máquinas cada um.",
+        "O Slurm traz esse recurso de fábrica, e por isso se encaixa bem em treinos com comunicação coletiva entre GPUs."
+      ],
+      "pre_requisitos": [
+        "Nó de computação",
+        "Job de treino distribuído",
+        "Agendador de jobs"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "JOB PEDE N NÓS",
+            "nota": "Ex.: 16 máquinas com GPU"
+          },
+          {
+            "rotulo": "AGENDADOR ESPERA",
+            "nota": "Só age com todos os N livres"
+          },
+          {
+            "rotulo": "INÍCIO SIMULTÂNEO",
+            "nota": "Todos os nós começam juntos"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "XID 79",
+      "traducao": "código de erro da NVIDIA para GPU que saiu do barramento e ficou inutilizável",
+      "nivel": "avancado",
+      "chave": "xid 79",
+      "analogia": "XID 79 é como a luz do painel do carro avisando que o motor parou de vez, sem chance de seguir viagem.",
+      "explicacao": [
+        "Placas de vídeo da NVIDIA (GPUs) registram problemas usando códigos numéricos, chamados XID.",
+        "Cada número indica um tipo de falha. Alguns são leves, outros são graves.",
+        "O XID 79 significa que a GPU \"caiu do barramento\": o computador perdeu a conexão com ela e a placa ficou inutilizável.",
+        "Esse erro não se resolve sozinho. O job que usava a GPU para, e a máquina precisa de reinício ou troca.",
+        "Na Crusoe, o sistema AutoClusters vigia esse código e, ao vê-lo, dispara a troca automática do nó e a retomada do treino."
+      ],
+      "pre_requisitos": [
+        "GPU",
+        "Nó de computação",
+        "Monitoramento"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "GPU SAI DO BARRAMENTO",
+            "nota": "Máquina perde contato com a placa"
+          },
+          {
+            "rotulo": "DRIVER REGISTRA XID 79",
+            "nota": "Código de erro grave da NVIDIA"
+          },
+          {
+            "rotulo": "MONITOR DISPARA ALERTA",
+            "nota": "AutoClusters detecta o erro"
+          },
+          {
+            "rotulo": "NÓ TROCADO",
+            "nota": "Treino retoma do checkpoint"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Cordon e drain de nó",
+      "traducao": "isolar o nó e remover dele as cargas de trabalho",
+      "nivel": "avancado",
+      "chave": "cordon e drain de nó",
+      "analogia": "Cordon e drain é como fechar um caixa do supermercado com a plaquinha \"caixa fechado\" e atender os últimos clientes da fila antes de desligar.",
+      "explicacao": [
+        "Num cluster, cada máquina (nó) recebe tarefas para executar. Às vezes uma máquina precisa sair de serviço.",
+        "Cordon (isolar) é o primeiro passo. O Kubernetes marca o nó para não receber nenhuma tarefa nova.",
+        "Drain (drenar) vem em seguida. O Kubernetes retira as tarefas que ainda rodam no nó e as recoloca em outras máquinas.",
+        "Com o nó vazio, dá para removê-lo e colocar outro no lugar sem pegar nenhuma tarefa no meio do caminho.",
+        "Na Crusoe, o AutoClusters faz isso sozinho após um XID 79, mas antes confere se algum pod tem um rótulo que proíbe a troca automática."
+      ],
+      "pre_requisitos": [
+        "Kubernetes",
+        "Nó de computação",
+        "Pod"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "CORDON",
+            "nota": "Nó para de receber tarefas novas"
+          },
+          {
+            "rotulo": "DRAIN",
+            "nota": "Tarefas atuais saem do nó"
+          },
+          {
+            "rotulo": "REMOVE DO POOL",
+            "nota": "Nó com defeito sai do grupo"
+          },
+          {
+            "rotulo": "NÓ SAUDÁVEL ENTRA",
+            "nota": "Reserva assume o lugar"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "SIGTERM",
+      "traducao": "sinal de término que dá tempo de salvar o estado antes de encerrar",
+      "nivel": "intermediario",
+      "chave": "sigterm",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Checkpointing",
+      "traducao": "salvar o estado do treino para retomar depois",
+      "nivel": "intermediario",
+      "chave": "checkpointing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Observability",
+      "traducao": "observabilidade: métricas e logs para explicar falhas",
+      "nivel": "intermediario",
+      "chave": "observability",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é pitch de produto da Crusoe, apresentado por três funcionários. A demo usa uma falha simulada por script no monitoramento interno, não uma GPU que realmente quebrou. Os 15 minutos valem para um caso com dois nós A100, e o palestrante diz que a maior parte do tempo vem do código da aplicação, que muda de job para job. Faltam taxa de sucesso em falhas reais, falhas parciais (rede degradada, GPU lenta) e custo do estoque de nós reserva.",
+  "acoes": [
+    "Cheque se seu código de treino salva checkpoint com frequência e trata o SIGTERM, pois o tempo de retomada depende mais disso do que da troca de hardware.",
+    "Se você opera treino e inferência em pilhas separadas, liste o custo de plantão, observabilidade e runbooks duplicados antes de decidir unificar.",
+    "Ao avaliar um provedor de GPU, pergunte qual fluxo automático existe para detectar, drenar e substituir nós, e quanto tempo ele leva em falhas reais."
+  ],
+  "numeros": [
+    {
+      "valor": "20 anos",
+      "contexto": "idade aproximada do Slurm",
+      "t": 127
+    },
+    {
+      "valor": "2 minutos",
+      "contexto": "prazo para tratar o SIGTERM e salvar checkpoint",
+      "t": 633
+    },
+    {
+      "valor": "5 minutos",
+      "contexto": "detecção até nó saudável no pool",
+      "t": 727
+    },
+    {
+      "valor": "15 minutos",
+      "contexto": "tempo total na demo até voltar a treinar",
+      "t": 757
+    }
+  ]
+}

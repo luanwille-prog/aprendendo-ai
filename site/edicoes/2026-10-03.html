@@ -1,0 +1,940 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Quando o usuário vira agente: interface, memória e infraestrutura · Aprendendo AI</title>
+<meta name="description" content="Resumos diários dos talks do canal AI Engineer, explicados no estilo Quadro Anotado.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<script>document.documentElement.classList.add("js")</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;500;700;900&family=Barlow:ital,wght@0,400;0,600;1,400&family=Kalam:wght@400;700&display=swap">
+<link rel="stylesheet" href="../estilo.css">
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<header class="topo wrap">
+  <a class="marca" href="../index.html">Aprendendo <span>AI</span></a>
+  <nav class="topo-links" aria-label="Navegação principal">
+    <a href="../index.html#edicoes">Edições</a>
+    <a href="../glossario.html">Glossário</a>
+  </nav>
+</header>
+<main id="conteudo" class="wrap" tabindex="-1">
+<div class="edicao" id="e-2026-10-03">
+  <header class="edicao-head">
+    <h1 class="h-edicao">Quando o usuário vira agente: interface, memória e infraestrutura</h1>
+    <p class="meta">Edição de sábado, 3 out 2026 · 7 vídeos · 2 h 05 min de talks</p>
+<p class="abertura">Sete talks sobre o que muda quando quem usa o software é um agente. A Composio decreta o fim do dashboard, e um Raspberry Pi pendurado no pescoço mostra um agente pessoal com memória em grafo. A Oracle ensina a decidir onde cada saber mora: prompt, memória ou pesos. O Google DeepMind redesenha a API para agentes com estado no servidor, e o VS Code conta como passou a lançar toda semana refazendo o sistema em volta dos agentes. No fim, a pilha de baixo: Nebius explica como servir modelos abertos rápido e barato, e a Crusoe mostra treino que se cura sozinho quando uma GPU morre.</p>  </header>
+
+  <div class="edicao-corpo">
+    <nav class="indice card" aria-label="Ordem de leitura">
+      <p class="indice-titulo">Ordem de leitura</p>
+      <ol><li data-id="YiFqcu9YA38"><a href="#v-YiFqcu9YA38" lang="en">Dashboards Are Dead</a> <span class="muted">10:41</span></li><li data-id="oUZEt4EiPbk"><a href="#v-oUZEt4EiPbk" lang="en">I Built a Personal AI Agent on a Raspberry Pi</a> <span class="muted">20:10</span></li><li data-id="qflLT3SoVbw"><a href="#v-qflLT3SoVbw" lang="en">Stop Fine-Tuning to Fix Retrieval Problems</a> <span class="muted">20:11</span></li><li data-id="8aVbXXvJUY4"><a href="#v-8aVbXXvJUY4" lang="en">An Interaction Is All You Need</a> <span class="muted">17:03</span></li><li data-id="I2LL_wd89-A"><a href="#v-I2LL_wd89-A" lang="en">How VS Code Went from Monthly to Weekly Releases with AI</a> <span class="muted">19:35</span></li><li data-id="TRe1u7dHYiA"><a href="#v-TRe1u7dHYiA" lang="en">What Makes Open Models Fast in Production</a> <span class="muted">20:32</span></li><li data-id="bRGyYaE0lxI"><a href="#v-bRGyYaE0lxI" lang="en">GPU Died. Training Didn&#39;t: Self-Healing Training at Scale</a> <span class="muted">16:54</span></li></ol>
+      <span class="progresso" data-ids="YiFqcu9YA38 oUZEt4EiPbk qflLT3SoVbw 8aVbXXvJUY4 I2LL_wd89-A TRe1u7dHYiA bRGyYaE0lxI"></span>
+    </nav>
+
+    <div class="talks">
+<article class="video" id="v-YiFqcu9YA38" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">01</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Dashboards Are Dead</h2>
+      <p class="tese">Se o usuário passa a ser o agente, o produto precisa de uma interface feita para ele, e só expor um servidor MCP não resolve.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">10:41</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Sarah Simionescu, Composio</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=YiFqcu9YA38" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Sarah Simionescu, da Composio, conta que usou o Datadog por seis meses sem abrir o dashboard, porque o agente consulta os dados por ela.</p><p>Ela diz que o MCP sozinho falha por três motivos: o agente não aprende, ferramentas demais afogam o modelo e cada app vive isolado dos outros.</p><p>A solução da Composio é busca de ferramentas com plano de execução e resultados guardados fora do contexto, mostrada em duas demos e em um gráfico de resultados ainda não publicado.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-mcp"><strong>MCP</strong> <span>Model Context Protocol, protocolo aberto para ligar agentes a dados e serviços</span></a></li><li><a href="../glossario.html#g-contexto-do-agente"><strong>Contexto do agente</strong> <span>janela de contexto, o texto que o modelo enxerga a cada passo</span></a></li><li><a href="../glossario.html#g-skill"><strong>Skill</strong> <span>instruções reutilizáveis que ensinam o agente a fazer uma tarefa</span></a></li><li><a href="../glossario.html#g-tool-calling"><strong>Tool calling</strong> <span>chamada de ferramentas pelo modelo</span></a></li><li><a href="../glossario.html#g-progressive-tool-discovery"><strong>Progressive tool discovery</strong> <span>descoberta gradual de ferramentas, buscando só as necessárias para a tarefa</span></a></li><li><a href="../glossario.html#g-execution-plan"><strong>Execution plan</strong> <span>plano de execução com a ordem de uso das ferramentas</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-geo-generative-engine-optimization"><strong>GEO (generative engine optimization)</strong> <span>otimização de sites para serem citados por motores de IA</span></a></li><li><a href="../glossario.html#g-cli"><strong>CLI</strong> <span>interface de linha de comando</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Dashboards e linguagens de consulta eram tradutores</h3>
+    <p>Em 2022, resolver um bug pedia cinco ferramentas, cinco interfaces e cinco linguagens de consulta, como a sintaxe do Datadog, o JQL do Jira e os filtros de busca do Slack. Para a palestrante, tudo isso existia porque a máquina não entendia o que a pessoa queria. O usuário sempre quis a resposta, não a tela.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=YiFqcu9YA38&amp;t=100s" target="_blank" rel="noopener" aria-label="Assistir a partir de 01:40 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:40</a> Cada ferramenta cobra uma interface e uma linguagem de consulta próprias.</p>  </div>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Três motivos para o MCP sozinho virar bagunça</h3>
+    <p>MCP é só um protocolo, um canal entre agente e serviço. Cabe ao serviço decidir como falar com o agente. Ligar uma dúzia de servidores gera três problemas. O agente começa cada conversa do zero. Centenas de definições de ferramentas lotam o contexto. Cada servidor só conhece a si mesmo, então tarefas que cruzam apps ficam com o humano.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=YiFqcu9YA38&amp;t=240s" target="_blank" rel="noopener" aria-label="Assistir a partir de 04:00 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:00</a> Os três motivos que a palestrante lista contra o MCP puro.</p>  </div>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Busca de ferramentas devolve também um plano de uso</h3>
+    <p>Na demo do bug vindo do Slack, o Claude chama a busca da Composio e declara três tarefas: ler mensagens do Slack, buscar issues no Sentry e buscar logs no Datadog. Para cada uma, a Composio devolve as ferramentas certas e um plano. Exemplo do plano: achar o ID do canal antes de consultar as mensagens. O PR com a correção sai em menos de cinco minutos.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=YiFqcu9YA38&amp;t=335s" target="_blank" rel="noopener" aria-label="Assistir a partir de 05:35 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:35</a> A busca retorna ferramentas e a ordem de uso, sem skill escrita à mão.</p>  </div>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Resultados grandes ficam fora do contexto</h3>
+    <p>Na análise entre PostHog e Metabase, o agente guarda a lista de IDs de usuários sem carregá-la no contexto. Depois gera uma consulta SQL com regex em um ambiente remoto (Remote Workbench) para cruzar os IDs com o banco. O contexto do modelo continua pequeno, e os dados vêm das duas fontes.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=YiFqcu9YA38&amp;t=490s" target="_blank" rel="noopener" aria-label="Assistir a partir de 08:10 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:10</a> O agente cruza duas fontes sem carregar o resultado completo no contexto.</p>  </div>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Projetar produto para um usuário sem olhos</h3>
+    <p>A conclusão é que startups preparam o site para GEO, mas poucas preparam o aplicativo para agentes. O agente chega com uma meta e um conjunto de ferramentas, não clica em botão de brilho e julga o produto por uma coisa só, se conseguiu terminar a tarefa. Segundo ela, clientes já pedem para usar os serviços por meio dos próprios agentes.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/YiFqcu9YA38/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Fecha a tese de que o agente é o próximo usuário a ser projetado.</span><a class="minuto" href="https://www.youtube.com/watch?v=YiFqcu9YA38&amp;t=584s" target="_blank" rel="noopener" aria-label="Assistir a partir de 09:44 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:44</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=YiFqcu9YA38&amp;t=12s" target="_blank" rel="noopener"><strong>6 meses</strong><span>Uso diário do Datadog sem abrir o dashboard</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>00:12</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=YiFqcu9YA38&amp;t=169s" target="_blank" rel="noopener"><strong>nov. 2024</strong><span>Anúncio do MCP pela Anthropic</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:49</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=YiFqcu9YA38&amp;t=250s" target="_blank" rel="noopener"><strong>200+</strong><span>Ferramentas só no toolkit de GitHub da Composio</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:10</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=YiFqcu9YA38&amp;t=358s" target="_blank" rel="noopener"><strong>&lt; 5 min</strong><span>Do relato de bug no Slack ao PR com correção, na demo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:58</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>Palestra de produto da Composio, que vende justamente a camada que ela propõe. Os resultados contra os MCPs nativos foram chamados de iniciais e não publicados, e o trecho não mostra tarefas, métricas nem número de execuções. As duas demos são curadas, uma delas descrita como mockup. A afirmação de que dashboards morreram vem de uma experiência pessoal e ignora casos em que humanos precisam ver gráficos e auditar dados. Cabe notar que a palestrante trabalha no dashboard da Composio.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Conte quantas ferramentas seus servidores MCP expõem ao agente. Se passarem de algumas dezenas, teste uma busca de ferramentas em vez de carregar todas.</li><li>Em tarefas que cruzam apps, deixe o agente guardar resultados grandes fora do contexto, por exemplo em arquivos ou em um ambiente de execução, e passar adiante só os IDs ou resumos.</li><li>Se você mantém um produto, teste uma tarefa real pedindo a um agente que a execute pela sua API ou MCP, e anote onde ele erra por falta de documentação.</li><li>Peça números ao avaliar fornecedores como esse. Compare o mesmo modelo e as mesmas tarefas nos seus próprios casos antes de adotar.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="YiFqcu9YA38" aria-label="Marcar Dashboards Are Dead como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-oUZEt4EiPbk">Próximo talk <span lang="en">I Built a Personal AI Agent on a Raspberry Pi</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-oUZEt4EiPbk" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">02</span>
+    <div class="sec-titulo">
+      <h2 lang="en">I Built a Personal AI Agent on a Raspberry Pi</h2>
+      <p class="tese">Um agente pessoal pequeno, num Raspberry Pi velho e com memória em grafo, ensina mais do que um agente cheio de recursos no notebook.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">20:10</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Jeremy Adams, Neo4j</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=oUZEt4EiPbk" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Jeremy Adams, da Neo4j, monta ao vivo um agente pessoal num Raspberry Pi 4B que ele usa pendurado no pescoço. O agente roda NanoClaw, recebe mensagens pelo WhatsApp e usa o Claude na nuvem para pensar.</p><p>Ele dá memória ao agente com um banco de grafos Neo4j, usando o esquema POLE (pessoa, objeto, local, evento). Depois adiciona voz com microfone USB, um botão físico e um Neo4j local para funcionar offline.</p><p>Na feira AI Engineer, ele grava notas de estandes, sobe tudo para a nuvem e descobre temas em comum entre as empresas. No fim, troca a memória caseira pelo serviço Neo4j Agent Memory.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-oUZEt4EiPbk-cypher"><strong>Cypher</strong> <span>linguagem de consulta do Neo4j</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-banco-de-dados-em-grafo"><strong>Banco de dados em grafo</strong> <span>banco que guarda nós e relações</span></a></li><li><a href="../glossario.html#g-openclaw"><strong>OpenClaw</strong> <span>agente pessoal de código aberto (uma claw)</span></a></li><li><a href="../glossario.html#g-mcp"><strong>MCP</strong> <span>protocolo que conecta agentes a ferramentas e dados</span></a></li><li><a href="../glossario.html#g-sandbox"><strong>Sandbox</strong> <span>ambiente isolado para rodar o agente</span></a></li><li><a href="../glossario.html#g-esquema-pole"><strong>Esquema POLE</strong> <span>pessoa, objeto, local, evento</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-edge-computing"><strong>Edge computing</strong> <span>processar no aparelho, perto de quem usa</span></a></li><li><a href="../glossario.html#g-memory-layer"><strong>Memory layer</strong> <span>camada de memória do agente</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Agente pequeno e hackeável</h3>
+    <p>Jeremy vem de sysadmin e DevOps e não quis um agente solto no notebook. Ele queria barato, aberto e fácil de entender. Escolheu o NanoClaw, com cerca de 15 arquivos de código, e o Docker isola cada processo do agente. Todo o raciocínio do modelo acontece na nuvem. O Pi só orquestra.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=oUZEt4EiPbk&amp;t=488s" target="_blank" rel="noopener" aria-label="Assistir a partir de 08:08 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:08</a> O hardware e o projeto escolhidos para o agente pequeno.</p>  </div>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Arquitetura: WhatsApp, NanoClaw, Claude</h3>
+    <p>A mensagem sai do iPhone ou do MacBook pelo WhatsApp, chega ao NanoClaw no Pi e segue para o Claude via Agent SDK. Não há inferência de modelo no aparelho. Um servidor MCP liga o agente ao Neo4j, e a resposta volta pelo mesmo canal.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/oUZEt4EiPbk/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O caminho de uma mensagem do celular até o modelo e de volta.</span><a class="minuto" href="https://www.youtube.com/watch?v=oUZEt4EiPbk&amp;t=549s" target="_blank" rel="noopener" aria-label="Assistir a partir de 09:09 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:09</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Grafo 101 e consulta via MCP</h3>
+    <p>Um grafo tem nós (círculos) e relações (arestas). No exemplo, Tom Hanks atuou em Forrest Gump, e Robert Zemeckis dirigiu o filme. Jeremy perguntou pelo WhatsApp quais filmes Tom Hanks fez. O agente consultou o banco pelo MCP e respondeu com os dados reais.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/oUZEt4EiPbk/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O que é nó e o que é relação num banco de grafos.</span><a class="minuto" href="https://www.youtube.com/watch?v=oUZEt4EiPbk&amp;t=581s" target="_blank" rel="noopener" aria-label="Assistir a partir de 09:41 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:41</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Memória em grafo com o esquema POLE</h3>
+    <p>Num voo, Jeremy pediu ao agente que criasse um sistema de memória no esquema POLE, que vem do trabalho policial europeu: pessoa, objeto, local e evento, mais organização. O agente criou a skill e guardou o banco num ponto de montagem que sobrevive a reinícios. No Neo4j Aura, os nós mostram reuniões, lugares e pessoas ligados entre si.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/oUZEt4EiPbk/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Memórias do agente guardadas como grafo navegável.</span><a class="minuto" href="https://www.youtube.com/watch?v=oUZEt4EiPbk&amp;t=768s" target="_blank" rel="noopener" aria-label="Assistir a partir de 12:48 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:48</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Notas de estandes viram grafo de temas</h3>
+    <p>Com microfone USB, botão físico e Neo4j local, Jeremy gravou notas nos estandes mesmo com o Wi-Fi ruim da feira. Depois subiu os dados para a nuvem e os enriqueceu. O grafo mostrou temas compartilhados, como avaliação e observabilidade, ligando várias empresas.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/oUZEt4EiPbk/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Expositores conectados por temas em comum no grafo da nuvem.</span><a class="minuto" href="https://www.youtube.com/watch?v=oUZEt4EiPbk&amp;t=1052s" target="_blank" rel="noopener" aria-label="Assistir a partir de 17:32 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>17:32</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=oUZEt4EiPbk&amp;t=488s" target="_blank" rel="noopener"><strong>15</strong><span>arquivos de código-fonte do NanoClaw</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:08</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=oUZEt4EiPbk&amp;t=394s" target="_blank" rel="noopener"><strong>600</strong><span>preço citado do Mac Mini, antes dos aumentos</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:34</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=oUZEt4EiPbk&amp;t=268s" target="_blank" rel="noopener"><strong>4B</strong><span>modelo do Raspberry Pi usado</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:28</span></a>
+  </div>
+
+  <div class="casper" id="a-oUZEt4EiPbk-cypher">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Cypher (linguagem de consulta do Neo4j).</strong> Cypher é como pedir ao bibliotecário um caminho desenhado num papel, do tipo &#34;autor escreveu livro&#34;, e receber de volta todos os livros que se encaixam nesse desenho.</p>
+    <ol class="passos"><li>Para tirar informação de um banco de dados, você precisa fazer uma pergunta numa língua que ele entende. Cypher é a língua usada para conversar com o Neo4j, um banco de dados em grafo.</li><li>Num grafo, os dados ficam guardados como pontos (nós) ligados por setas (relações). Uma pergunta em Cypher descreve o desenho que você procura, como &#34;pessoa atuou em filme&#34;.</li><li>O desenho vira texto com parênteses para os nós e setas para as relações. Por exemplo, MATCH (p:Pessoa)-[:ATUOU_EM]-&gt;(f:Filme) RETURN f busca todos os filmes ligados a uma pessoa pela relação ATUOU_EM.</li><li>Os comandos principais são MATCH (encontrar um padrão), CREATE (criar nós e relações) e RETURN (devolver o resultado). No talk, Jeremy usa um cypher-shell, um programa de linha de comando, para listar os expositores gravados no Neo4j que roda no Raspberry Pi.</li><li>Um agente de IA também pode escrever a query (consulta) em Cypher sozinho. Ele recebe a pergunta em linguagem comum, monta a consulta e envia ao banco por uma ferramenta como o MCP.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>PERGUNTA</strong><span>Quais filmes Tom Hanks fez?</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>PADRÃO EM CYPHER</strong><span>MATCH (pessoa)-[ATUOU]-&gt;(filme)</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>BUSCA NO GRAFO</strong><span>Neo4j segue as setas que batem</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>RESULTADO</strong><span>Lista de filmes encontrados</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-banco-de-dados-em-grafo">Banco de dados em grafo</a>, <a href="../glossario.html#g-nos-e-relacoes">Nós e relações</a>, <a href="../glossario.html#g-neo4j">Neo4j</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O palestrante é developer advocate da Neo4j e o talk termina com convite ao estande e ao curso gratuito da empresa, então é pitch de produto. Não há medição de qualidade da memória, de latência nem de custo. A descoberta de temas vem de poucos estandes e de notas pessoais, sem método comparável. Ele mesmo chama o banco de depósito bagunçado. O offline depende de regex e de um Neo4j local em hardware limitado, sem teste de falhas.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Teste um agente pessoal pequeno, em máquina isolada ou em Docker, antes de dar acesso ao seu notebook com arquivos e senhas.</li><li>Desenhe a memória do seu agente como entidades e relações (pessoa, local, evento) antes de escolher uma ferramenta.</li><li>Conecte uma base de consulta ao agente por MCP e peça respostas que citem os dados, para verificar se ele não inventa.</li><li>Se for avaliar o Neo4j Agent Memory, compare com guardar o histórico em arquivos de texto simples e meça se a recuperação melhora.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="oUZEt4EiPbk" aria-label="Marcar I Built a Personal AI Agent on a Raspberry Pi como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-qflLT3SoVbw">Próximo talk <span lang="en">Stop Fine-Tuning to Fix Retrieval Problems</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-qflLT3SoVbw" data-tema="dados-e-rag">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">03</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Stop Fine-Tuning to Fix Retrieval Problems</h2>
+      <p class="tese">Prompt guarda comportamento, memória guarda fatos, pesos guardam reflexos. Decida onde cada saber mora antes que o acaso decida por você.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Dados e RAG</span>
+    <span class="chip">20:11</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Anant Srivastava</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=qflLT3SoVbw" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Anant Srivastava, da Oracle, diz que times de IA decidem sem perceber onde o conhecimento mora, porque cada edição de prompt, documento indexado e amostra de treino é uma decisão de arquitetura.</p><p>Ele propõe uma pergunta de diagnóstico por camada: prompt para comportamento pequeno e estável, memória para conhecimento atual, grande, citável ou com controle de acesso, e pesos só para reflexos que pararam de mudar.</p><p>Fine-tuning para ensinar fatos gera respostas velhas e nomes de produto inventados. O ideal é um ciclo em que o conhecimento circula entre contexto, memória e pesos conforme o agente trabalha.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-qflLT3SoVbw-drift"><strong>Drift</strong> <span>deriva dos dados ao longo do tempo</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-fine-tuning"><strong>Fine-tuning</strong> <span>ajuste fino do modelo</span></a></li><li><a href="../glossario.html#g-rag"><strong>RAG</strong> <span>geração com recuperação de documentos</span></a></li><li><a href="../glossario.html#g-memory-layer"><strong>Memory layer</strong> <span>camada de memória</span></a></li><li><a href="../glossario.html#g-harness"><strong>Harness</strong> <span>estrutura ao redor do modelo</span></a></li><li><a href="../glossario.html#g-lost-in-the-middle"><strong>Lost in the middle</strong> <span>perda de informação no meio do contexto</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 1 termo</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-chunking"><strong>Chunking</strong> <span>divisão de documentos em trechos</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>A arquitetura se acumula por acidente</h3>
+    <p>No caso do assistente de suporte, o PM ajustou o tom no prompt, o suporte indexou políticas de reembolso, um engenheiro jogou o catálogo no prompt e o time de ML fez fine-tuning com tickets antigos. Cada passo parecia razoável. Juntos, o catálogo vazou para os pesos e o agente passou a citar produtos que não existem.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/qflLT3SoVbw/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Quatro decisões isoladas somam uma arquitetura que ninguém desenhou.</span><a class="minuto" href="https://www.youtube.com/watch?v=qflLT3SoVbw&amp;t=160s" target="_blank" rel="noopener" aria-label="Assistir a partir de 02:40 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:40</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Prompt é para comportamento, não para fatos</h3>
+    <p>O prompt serve para tom, persona e regras pequenas e estáveis, como escalar para um humano após três falhas. Colocar catálogo ali custa tokens e ainda causa o problema de lost in the middle (perda de informação no meio de contextos longos). Arquivos de instrução como MD também contam como prompt.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/qflLT3SoVbw/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Tom profissional e escalonamento humano pertencem ao prompt.</span><a class="minuto" href="https://www.youtube.com/watch?v=qflLT3SoVbw&amp;t=349s" target="_blank" rel="noopener" aria-label="Assistir a partir de 05:49 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:49</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Memória: atual, grande, citável e com acesso controlado</h3>
+    <p>Conhecimento que muda mais rápido que o retreino, não cabe no prompt, precisa de fonte ou tem escopo por usuário vai para a memória, seja externa (RAG) ou do agente. No exemplo do assistente de código, ele pede chunking (divisão em trechos) que entenda código e metadados como repositório e permissões, para não devolver uma papa de trechos.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/qflLT3SoVbw/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Metadados filtram o que o modelo recebe e respeitam quem pode ver o quê.</span><a class="minuto" href="https://www.youtube.com/watch?v=qflLT3SoVbw&amp;t=604s" target="_blank" rel="noopener" aria-label="Assistir a partir de 10:04 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:04</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Fine-tune de reflexo, não de fato</h3>
+    <p>Um assistente de documentos com fine-tuning em runbooks passa a responder com informação velha. O problema real era recuperar os trechos certos. Já em codificação médica, o modelo aprende o reflexo de entender formatos e escolher entre eles, e a lista de códigos fica na memória. Fine-tuning também faz sentido para baixar custo com um modelo menor.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/qflLT3SoVbw/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Documentação é fato e vai para a memória. Formato e seleção viram reflexo.</span><a class="minuto" href="https://www.youtube.com/watch?v=qflLT3SoVbw&amp;t=760s" target="_blank" rel="noopener" aria-label="Assistir a partir de 12:40 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:40</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Arquitetura circulante e o modelo como parte fácil</h3>
+    <p>Contexto gera sinais, parte deles vira memória durável, a memória volta ao contexto em novas sessões e padrões estáveis migram da memória para os pesos. Depois do fine-tuning, deixa de ser preciso recuperar exemplos de formato. O trabalho difícil é o harness (a estrutura ao redor do modelo) que move o saber entre as camadas.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/qflLT3SoVbw/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O agente melhora ao trabalhar porque o saber circula entre as três camadas.</span><a class="minuto" href="https://www.youtube.com/watch?v=qflLT3SoVbw&amp;t=1053s" target="_blank" rel="noopener" aria-label="Assistir a partir de 17:33 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>17:33</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=qflLT3SoVbw&amp;t=190s" target="_blank" rel="noopener"><strong>6 meses</strong><span>idade dos tickets usados no fine-tuning do suporte</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:10</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=qflLT3SoVbw&amp;t=381s" target="_blank" rel="noopener"><strong>3 falhas</strong><span>limite antes de escalar para humano no prompt</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:21</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=qflLT3SoVbw&amp;t=922s" target="_blank" rel="noopener"><strong>70.000</strong><span>códigos ICD-10 de codificação médica</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:22</span></a>
+  </div>
+
+  <div class="casper" id="a-qflLT3SoVbw-drift">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Drift (deriva dos dados ao longo do tempo).</strong> Drift é como um GPS com mapa antigo, que funcionou bem no começo mas erra mais a cada rua nova que a prefeitura abre.</p>
+    <ol class="passos"><li>Um modelo aprende com exemplos de uma época. O mundo continua mudando depois disso.</li><li>Drift (deriva) é a distância que cresce entre o que o modelo aprendeu e o que acontece hoje. As respostas pioram aos poucos, sem nenhum aviso.</li><li>No talk, o time usa fine-tuning (ajuste fino) no centro estável de um problema, como moderação de conteúdo, onde as correções humanas já pararam de mudar.</li><li>Esse centro também pode se mover. Novas regras, novos produtos ou novos casos fazem os humanos voltarem a corrigir o modelo.</li><li>Por isso o time monitora a taxa de correções humanas e a qualidade das respostas. Quando elas pioram, o time revisa os dados e treina o modelo de novo.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>PADRÃO ESTÁVEL</strong><span>Humanos param de corrigir o modelo</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>FINE-TUNING</strong><span>Modelo aprende o centro estável</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>MUNDO MUDA</strong><span>Regras e casos novos aparecem</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>MONITORAR</strong><span>Correções humanas voltam a subir</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>RETREINO</strong><span>Modelo volta a acertar o padrão</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-fine-tuning">Fine-tuning</a>, <a href="../glossario.html#g-dados-de-treino">Dados de treino</a>, <a href="../glossario.html#g-avaliacao-de-modelos">Avaliação de modelos</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é um framework conceitual, sem medições. Os casos (assistente de suporte, codificação médica) são ilustrações, e os números citados são poucos. A tabela de decisão é útil, mas o próprio palestrante admite exceções. A ideia de mover conhecimento da memória para os pesos tem pouco detalhe prático, como quando retreinar e como medir ganho. O palestrante trabalha na Oracle, que vende plataformas de dados e IA, o que favorece a tese de investir em camada de memória.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Liste o que está hoje no prompt, no índice de retrieval e nos dados de fine-tuning do seu assistente e classifique cada item como comportamento, fato ou reflexo.</li><li>Antes de pensar em fine-tuning para corrigir respostas erradas, meça se o retrieval traz os trechos certos.</li><li>Em RAG de código ou documentos internos, guarde metadados como repositório, dono e permissão em cada trecho e filtre por eles na busca.</li><li>Considere fine-tuning de um modelo menor só quando o padrão de trabalho estiver estável e o objetivo for reduzir custo, com monitoramento de drift.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="qflLT3SoVbw" aria-label="Marcar Stop Fine-Tuning to Fix Retrieval Problems como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-8aVbXXvJUY4">Próximo talk <span lang="en">An Interaction Is All You Need</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-8aVbXXvJUY4" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">04</span>
+    <div class="sec-titulo">
+      <h2 lang="en">An Interaction Is All You Need</h2>
+      <p class="tese">Agentes pedem uma API com estado no servidor e sandbox persistente. O Google guarda o contexto e o ambiente, e você só devolve dois IDs.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">17:03</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Ivan Leo, Google DeepMind</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=8aVbXXvJUY4" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Ivan Leo, do Google DeepMind, apresenta a Interactions API do Gemini, que guarda o estado da conversa no servidor e devolve um interaction ID a cada resposta.</p><p>Os Managed Agents rodam o harness Antigravity em um sandbox remoto persistente, que você retoma com um environment ID, e um proxy injeta credenciais para o modelo nunca ver o token.</p><p>O talk é uma apresentação de produto do Google, com demos curtas e sem comparação com concorrentes nem dados de custo ou desempenho.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-8aVbXXvJUY4-thought-signatures"><strong>Thought signatures</strong> <span>assinaturas de raciocínio</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-8aVbXXvJUY4-steps-data-model"><strong>Steps data model</strong> <span>modelo de dados em passos</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-8aVbXXvJUY4-proxy-man-in-the-middle"><strong>Proxy man-in-the-middle</strong> <span>proxy intermediário que injeta credenciais</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-interaction-id"><strong>Interaction ID</strong> <span>identificador de interação</span></a></li><li><a href="../glossario.html#g-function-calling"><strong>Function calling</strong> <span>chamada de função</span></a></li><li><a href="../glossario.html#g-harness"><strong>Harness</strong> <span>arcabouço que cerca o modelo</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-sandbox"><strong>Sandbox</strong> <span>ambiente isolado de execução</span></a></li><li><a href="../glossario.html#g-named-agent"><strong>Named agent</strong> <span>agente nomeado e congelado</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Estado no servidor com interaction ID</h3>
+    <p>Antes, quem usava o Gemini precisava reenviar o histórico e as thought signatures, códigos opacos do raciocínio do modelo. Um espaço em branco a mais podia quebrar o cache. Agora a resposta traz um interaction ID e você o devolve em previous_interaction_id no turno seguinte. O servidor preserva o contexto, e sem as signatures o desempenho cai.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/8aVbXXvJUY4/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O ID da primeira resposta carrega o contexto para o segundo turno.</span><a class="minuto" href="https://www.youtube.com/watch?v=8aVbXXvJUY4&amp;t=351s" target="_blank" rel="noopener" aria-label="Assistir a partir de 05:51 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:51</a></figcaption>
+  </figure>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Encadear imagem, vídeo e áudio com o mesmo contexto</h3>
+    <p>Com o mesmo interaction ID, uma imagem gerada em um modelo vira ponto de partida para um vídeo em outro. O exemplo gera uma foto em Veneza e passa o ID ao modelo Omni Flash. A saída de cada etapa vem com tipo explícito (image, audio), então o código só precisa tratar cada tipo.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=8aVbXXvJUY4&amp;t=412s" target="_blank" rel="noopener" aria-label="Assistir a partir de 06:52 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:52</a> Duas chamadas bastam para ir de imagem a vídeo no mesmo contexto.</p>  </div>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Ferramentas nativas e customizadas na mesma chamada</h3>
+    <p>O exemplo combina Google Search, leitura de páginas (URL context) e uma função própria chamada file_incident. O modelo decide sozinho quais usar e responde em uma única chamada de API. O formato de steps substitui o antigo array de outputs e marca cada passo: raciocínio, chamada de função e conteúdo.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/8aVbXXvJUY4/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Ferramentas nativas e custom convivem em uma só requisição.</span><a class="minuto" href="https://www.youtube.com/watch?v=8aVbXXvJUY4&amp;t=503s" target="_blank" rel="noopener" aria-label="Assistir a partir de 08:23 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:23</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Managed Agent: sandbox persistente em uma chamada</h3>
+    <p>O agente Antigravity sobe um sandbox remoto, lista arquivos, lê o repositório e gera um relatório sem intervenção. O interaction ID preserva o contexto e o environment ID devolve você ao mesmo sandbox, com pacotes e arquivos intactos. Fontes podem vir de GCS, GitHub ou arquivos inline.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/8aVbXXvJUY4/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Um agente investiga um repositório inteiro dentro de um sandbox remoto.</span><a class="minuto" href="https://www.youtube.com/watch?v=8aVbXXvJUY4&amp;t=636s" target="_blank" rel="noopener" aria-label="Assistir a partir de 10:36 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:36</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Proxy que injeta o token no lugar do modelo</h3>
+    <p>Um proxy man-in-the-middle fica entre o agente e as APIs externas e troca cabeçalhos nas chamadas de saída. O token do GitHub entra na requisição depois, fora do alcance do modelo. Se houver prompt injection, o agente não tem o segredo para vazar.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/8aVbXXvJUY4/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O token é injetado fora do modelo, então não há segredo para vazar.</span><a class="minuto" href="https://www.youtube.com/watch?v=8aVbXXvJUY4&amp;t=846s" target="_blank" rel="noopener" aria-label="Assistir a partir de 14:06 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:06</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=8aVbXXvJUY4&amp;t=258s" target="_blank" rel="noopener"><strong>3 min+</strong><span>Tempo que o agente de deep research pode rodar</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:18</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=8aVbXXvJUY4&amp;t=721s" target="_blank" rel="noopener"><strong>2 milhões</strong><span>Tokens gastos analisando um repositório de hackathon</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:01</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=8aVbXXvJUY4&amp;t=908s" target="_blank" rel="noopener"><strong>1.000</strong><span>Limite de agentes nomeados suportados</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:08</span></a>
+  </div>
+
+  <div class="casper" id="a-8aVbXXvJUY4-thought-signatures">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Thought signatures (assinaturas de raciocínio).</strong> Thought signatures são como o caderno de passagem de turno de um plantão, e se o colega perde uma folha ele recomeça sem saber o que já foi pensado.</p>
+    <ol class="passos"><li>Antes de responder, alguns modelos pensam em etapas, como quem faz contas num rascunho.</li><li>O Gemini resume esse rascunho num código fechado, a thought signature (assinatura de raciocínio), que nenhuma pessoa consegue ler.</li><li>A cada resposta ou chamada de função, o modelo devolve essas assinaturas junto com o texto.</li><li>No turno seguinte, o programa precisa reenviar as assinaturas intactas. Um espaço a mais já pode quebrar o cache, e sem elas o desempenho do modelo cai.</li><li>Com a Interactions API, o servidor guarda as assinaturas. Você só devolve o interaction ID no campo previous_interaction_id.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>MODELO PENSA</strong><span>Raciocina antes de responder</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>GERA ASSINATURA</strong><span>Código opaco do raciocínio</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>VOLTA NO PRÓXIMO TURNO</strong><span>Reenviada ou guardada no servidor</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>RACIOCÍNIO CONTINUA</strong><span>Modelo mantém o desempenho</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-modelo-de-raciocinio">Modelo de raciocínio</a>, <a href="../glossario.html#g-janela-de-contexto">Janela de contexto</a>, <a href="../glossario.html#g-cache-de-prompt">Cache de prompt</a>, <a href="../glossario.html#g-interaction-id">Interaction ID</a></p>  </div>
+  <div class="casper" id="a-8aVbXXvJUY4-steps-data-model">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Steps data model (modelo de dados em passos).</strong> O steps data model é como o extrato do banco, em que cada linha diz se foi depósito, saque ou tarifa, e você não precisa adivinhar o que aconteceu.</p>
+    <ol class="passos"><li>Quando você pede algo a um agente, ele faz várias coisas antes da resposta final.</li><li>Ele pode pensar, chamar ferramentas, consultar a internet e gerar texto, imagem ou áudio.</li><li>A API antiga juntava tudo num array (lista) de outputs, com objetos aninhados difíceis de ler.</li><li>O steps data model (modelo de dados em passos) registra cada etapa como um passo com tipo explícito, chamado discriminador. Os tipos incluem raciocínio, chamada de função e conteúdo.</li><li>O código só confere o tipo de cada passo e trata cada caso, o que facilita fluxos com ferramentas assíncronas e várias mídias.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>PEDIDO DO USUÁRIO</strong><span>Uma única chamada de API</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>PASSO DE RACIOCÍNIO</strong><span>Tipo marca o pensamento do modelo</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>PASSO DE FUNÇÃO</strong><span>Tipo marca a ferramenta chamada</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>PASSO DE CONTEÚDO</strong><span>Texto, imagem ou áudio com tipo</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>LISTA DE PASSOS</strong><span>Código trata cada tipo com clareza</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-function-calling">Function calling</a>, <a href="../glossario.html#g-json">JSON</a>, <a href="../glossario.html#g-thought-signatures">Thought signatures</a></p>  </div>
+  <div class="casper" id="a-8aVbXXvJUY4-proxy-man-in-the-middle">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Proxy man-in-the-middle (proxy intermediário que injeta credenciais).</strong> O proxy man-in-the-middle é como a portaria de um prédio que recebe a encomenda do estagiário e coloca a assinatura do chefe antes de entregar, sem que o estagiário veja a assinatura.</p>
+    <ol class="passos"><li>Um agente de IA às vezes precisa acessar serviços externos, como baixar um repositório privado do GitHub.</li><li>Para isso ele precisaria de um token, uma senha de acesso. Se o token fica com o agente, um ataque pode fazê-lo vazar a senha.</li><li>Um proxy (intermediário) fica no caminho entre o agente e a internet e vê toda chamada que sai.</li><li>Na técnica man-in-the-middle (homem no meio), o proxy lê o cabeçalho da chamada e insere o token ali, depois que ela sai do agente.</li><li>Mesmo sob prompt injection (instrução maliciosa escondida no texto), o modelo não tem o token para entregar. Ele ainda pode usar o acesso de forma indevida.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>AGENTE FAZ A CHAMADA</strong><span>Pedido sai sem nenhum token</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>PROXY INTERCEPTA</strong><span>Lê o cabeçalho da requisição</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>INJETA O TOKEN</strong><span>Credencial entra fora do modelo</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>API RESPONDE</strong><span>Acesso feito e segredo protegido</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-api">API</a>, <a href="../glossario.html#g-token-de-acesso">Token de acesso</a>, <a href="../glossario.html#g-prompt-injection">Prompt injection</a>, <a href="../glossario.html#g-sandbox">Sandbox</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>É um talk de lançamento feito por um funcionário do Google, então tudo é demo escolhida a dedo. Não há comparação com a API de outros provedores, nem dados de latência, custo por tarefa ou taxa de erro. O ganho de desempenho por preservar thought signatures é afirmado sem medição. A frase sobre pagar só pelo modelo e não pelo sandbox merece checagem na tabela de preços. O proxy reduz o risco de vazamento, mas não impede o agente de usar o token indevidamente contra a API.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Se você usa Gemini via API, teste o interaction ID em um fluxo multi-turno e compare com reenviar o histórico, medindo erros e custo.</li><li>Nunca coloque tokens no prompt ou no sandbox do agente. Use um proxy ou um cofre que injete a credencial fora do alcance do modelo.</li><li>Avalie se o seu agente de código precisa de um sandbox persistente. Se sim, compare o Managed Agent com montar o seu próprio.</li><li>Teste a skill da Interactions API em um agente de código para migrar um projeto, e revise o diff antes de aceitar.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="8aVbXXvJUY4" aria-label="Marcar An Interaction Is All You Need como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-I2LL_wd89-A">Próximo talk <span lang="en">How VS Code Went from Monthly to Weekly Releases with AI</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-I2LL_wd89-A" data-tema="engenharia-de-software">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">05</span>
+    <div class="sec-titulo">
+      <h2 lang="en">How VS Code Went from Monthly to Weekly Releases with AI</h2>
+      <p class="tese">Agente rápido só rende se você refaz o sistema em volta: CI, revisão, triagem, rollout e evals precisam acompanhar o ritmo.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Engenharia de software</span>
+    <span class="chip">19:35</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Harald Kirschner</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=I2LL_wd89-A" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>O time do VS Code saiu de releases mensais, que duraram 10 anos, para releases semanais, com uma equipe pequena atendendo mais de 50 milhões de usuários.</p><p>Para isso, o time deixou o código pronto para agentes, deixou os agentes usarem o app, tornou a revisão por IA obrigatória e automatizou a triagem de issues e de erros em PRs de correção.</p><p>Depois de escrever código mais rápido, o gargalo passou para qualidade e aprendizado. O time respondeu com rollout em etapas, evals próprios (VSC-Bench) e protótipos diários.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-claude-md-agents-md"><strong>CLAUDE.md / AGENTS.md</strong> <span>arquivo de instruções do repositório para agentes</span></a></li><li><a href="../glossario.html#g-skill"><strong>Skill</strong> <span>pacote de conhecimento de especialista que o agente carrega</span></a></li><li><a href="../glossario.html#g-bottleneck"><strong>Bottleneck</strong> <span>gargalo</span></a></li><li><a href="../glossario.html#g-mcp"><strong>MCP</strong> <span>protocolo para o agente usar ferramentas externas</span></a></li><li><a href="../glossario.html#g-triage"><strong>Triage</strong> <span>triagem de issues</span></a></li><li><a href="../glossario.html#g-rollout"><strong>Rollout</strong> <span>liberação gradual de uma versão</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-eval"><strong>Eval</strong> <span>avaliação automatizada do produto</span></a></li><li><a href="../glossario.html#g-hill-climbing"><strong>Hill climbing</strong> <span>melhoria iterativa contra um conjunto de cenários</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Code survival mede a confiança no agente</h3>
+    <p>O time acompanha a fatia do código escrito por agente que chega a ser commitado. Código jogado fora indica que o agente errou ou que ninguém confiou nele. A métrica subiu de 55% com o GPT 4.1 para 86% com o Claude Opus 4.6, segundo o palestrante. Ele atribui a alta ao modelo novo e a melhorias no harness (a estrutura em volta do modelo).</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/I2LL_wd89-A/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Mostra a evolução da taxa de código de agente que sobrevive ao commit.</span><a class="minuto" href="https://www.youtube.com/watch?v=I2LL_wd89-A&amp;t=75s" target="_blank" rel="noopener" aria-label="Assistir a partir de 01:15 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:15</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>CI lento se multiplica com vários agentes</h3>
+    <p>Com uma pessoa, build e testes lentos são incômodo contornável: ela revisa outro PR enquanto espera. Com 10 ou 20 agentes batendo no mesmo CI, cada lentidão se acumula. A migração para TypeScript Go deu builds 10 vezes mais rápidos, e o ciclo de feedback dos PRs automáticos depende disso.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/I2LL_wd89-A/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Ilustra por que o tempo de CI vira o gargalo quando há muitos agentes.</span><a class="minuto" href="https://www.youtube.com/watch?v=I2LL_wd89-A&amp;t=448s" target="_blank" rel="noopener" aria-label="Assistir a partir de 07:28 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:28</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Deixe o agente usar o app para se corrigir</h3>
+    <p>Agentes entregam UI desalinhada e dizem que está perfeita. O time criou um component browser, que tira screenshots de cada componente a cada mudança e aponta diferenças, e uma skill /launch com Playwright que abre o VS Code e percorre um cenário. O agente verifica o próprio trabalho antes de devolver a tarefa.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/I2LL_wd89-A/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Comparação automática de screenshots mostra o efeito colateral de cada PR.</span><a class="minuto" href="https://www.youtube.com/watch?v=I2LL_wd89-A&amp;t=546s" target="_blank" rel="noopener" aria-label="Assistir a partir de 09:06 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:06</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>De stack de erro a PR de correção</h3>
+    <p>O pipeline parte de 51 bilhões de eventos de telemetria por dia. Filtra os que têm stack completo, agrupa por fingerprint (impressão digital do erro) e chega a cerca de 10 issues atribuídas a donos de área. Um agente abre o PR com a correção, e um humano aprova. O exemplo mostrado era um cancelamento que faltava no protocolo RPC.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/I2LL_wd89-A/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Funil que reduz bilhões de eventos a poucas issues com PR automático.</span><a class="minuto" href="https://www.youtube.com/watch?v=I2LL_wd89-A&amp;t=828s" target="_blank" rel="noopener" aria-label="Assistir a partir de 13:48 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:48</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Entenda como cada modelo reage ao seu harness</h3>
+    <p>Um eval de uma linha, escrever um arquivo com hello world, serviu para testar o harness de ponta a ponta. O mesmo arquivo de cinco caracteres custou 70 vezes mais tokens no modelo mais caro, e não era o modelo de raciocínio alto. O resultado mostra que custo e comportamento variam por combinação de modelo e harness.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/I2LL_wd89-A/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Mostra a diferença de custo em tokens para a mesma tarefa trivial.</span><a class="minuto" href="https://www.youtube.com/watch?v=I2LL_wd89-A&amp;t=1018s" target="_blank" rel="noopener" aria-label="Assistir a partir de 16:58 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>16:58</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=I2LL_wd89-A&amp;t=75s" target="_blank" rel="noopener"><strong>55% → 86%</strong><span>code survival, de GPT 4.1 a Claude Opus 4.6</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:15</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=I2LL_wd89-A&amp;t=448s" target="_blank" rel="noopener"><strong>10x</strong><span>builds mais rápidos com TypeScript Go</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:28</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=I2LL_wd89-A&amp;t=828s" target="_blank" rel="noopener"><strong>51 bilhões</strong><span>eventos de telemetria por dia filtrados</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:48</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=I2LL_wd89-A&amp;t=1018s" target="_blank" rel="noopener"><strong>70x</strong><span>tokens a mais para um arquivo de 5 caracteres</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>16:58</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O palestrante é product manager da Microsoft e mostra o próprio produto, com stand na conferência, então o tom é de caso de sucesso. A subida de 55% para 86% mistura troca de modelo com melhoria de harness, e o talk não separa as duas causas nem define como mede o commit. Não há dados sobre bugs, regressões ou tempo de recuperação depois de passar para releases semanais. O contexto também pesa, porque o time é pequeno, mas tem telemetria de 51 bilhões de eventos por dia e acesso direto ao GitHub Copilot. Pouca coisa se transfere sem essa infraestrutura.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Crie ou revise o AGENTS.md do seu repositório com um mapa curto do código e atualize o arquivo sempre que o agente errar.</li><li>Meça quanto do código gerado por IA você realmente mantém e acompanhe o número ao longo do tempo, como o code survival.</li><li>Dê ao agente um jeito de rodar o app e conferir o resultado, como screenshots ou Playwright, antes de pedir sua revisão.</li><li>Teste seu harness com um eval mínimo em cada modelo que você usa e compare o gasto de tokens, antes de escolher o modelo padrão.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="I2LL_wd89-A" aria-label="Marcar How VS Code Went from Monthly to Weekly Releases with AI como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-TRe1u7dHYiA">Próximo talk <span lang="en">What Makes Open Models Fast in Production</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-TRe1u7dHYiA" data-tema="infraestrutura">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">06</span>
+    <div class="sec-titulo">
+      <h2 lang="en">What Makes Open Models Fast in Production</h2>
+      <p class="tese">Modelo aberto rápido e barato depende de uma pilha de truques de servir: roteamento, cache, decodificação especulativa e quantização.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Infraestrutura</span>
+    <span class="chip">20:32</span>
+    <span class="chip" role="img" aria-label="Complexidade 4 de 5">nível ●●●●○</span>
+<span class="chip">Sujee Maniyam, Nebius</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=TRe1u7dHYiA" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>A Nebius defende que modelos abertos já chegam perto dos fechados e que o difícil é servi-los rápido e barato em produção.</p><p>Sujee Maniyam percorre as camadas de otimização de inferência: hardware NVFP4, escolha de engine, roteamento ciente de cache, decodificação especulativa, KV cache com offload, separação de prefill e decode, e quantização.</p><p>O talk também vende a Token Factory, plataforma que une inferência, dados, pós-treino e deploy num ciclo só.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-TRe1u7dHYiA-kv-cache"><strong>KV cache</strong> <span>cache de chaves e valores da atenção</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-TRe1u7dHYiA-speculative-decoding"><strong>Speculative decoding</strong> <span>decodificação especulativa</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-TRe1u7dHYiA-draft-model"><strong>Draft model</strong> <span>modelo rascunho</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-TRe1u7dHYiA-prefill-e-decode"><strong>Prefill e decode</strong> <span>leitura do contexto e geração de tokens</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-TRe1u7dHYiA-nvfp4"><strong>NVFP4</strong> <span>formato de ponto flutuante de 4 bits da NVIDIA</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-cache-aware-routing"><strong>Cache-aware routing</strong> <span>roteamento ciente de cache</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-quantization"><strong>Quantization</strong> <span>quantização</span></a></li><li><a href="../glossario.html#g-teacher-e-student-models"><strong>Teacher e student models</strong> <span>modelo professor e modelo aluno</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Modelos abertos chegaram perto dos fechados</h3>
+    <p>Sujee mostra um benchmark da Artificial Analysis em que modelos abertos (azul) competem com os proprietários (preto), às vezes superando vários. Para o cliente, isso significa escolha de provedor, menos dependência de um fornecedor e custo menor por token.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/TRe1u7dHYiA/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Modelos abertos aparecem lado a lado com os fechados no ranking de inteligência.</span><a class="minuto" href="https://www.youtube.com/watch?v=TRe1u7dHYiA&amp;t=633s" target="_blank" rel="noopener" aria-label="Assistir a partir de 10:33 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:33</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Roteador que sabe onde está o cache</h3>
+    <p>Balanceador de carga aleatório espalha requisições parecidas por GPUs diferentes e desperdiça cache. O roteador ciente de cache manda pedidos com o mesmo prefixo para a GPU que já guarda aquele trecho. Isso importa mais quando os prompts são enormes, como bases de código inteiras enviadas por agentes.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/TRe1u7dHYiA/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Roteamento ciente de cache agrupa o cache em vez de fragmentá-lo.</span><a class="minuto" href="https://www.youtube.com/watch?v=TRe1u7dHYiA&amp;t=819s" target="_blank" rel="noopener" aria-label="Assistir a partir de 13:39 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:39</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Decodificação especulativa: júnior rascunha, sênior confere</h3>
+    <p>Um modelo pequeno gera os tokens rápido e o modelo grande só verifica. Se discordar, o grande regenera. A analogia é um engenheiro sênior que delega a um júnior e revisa. Treinar o modelo rascunho com o tráfego real do cliente melhora o resultado, e a empresa promete treino com um clique.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/TRe1u7dHYiA/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O modelo grande verifica o rascunho do pequeno em vez de gerar tudo sozinho.</span><a class="minuto" href="https://www.youtube.com/watch?v=TRe1u7dHYiA&amp;t=881s" target="_blank" rel="noopener" aria-label="Assistir a partir de 14:41 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:41</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>KV cache: não recalcule o que já foi calculado</h3>
+    <p>O KV cache guarda o trabalho já feito sobre o prompt, como em &#39;the cat sat on&#39;, para não recalcular. Como a memória da GPU é cara, a plataforma move o cache para a memória comum e o traz de volta quando precisa, sem o cliente gerenciar nada.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/TRe1u7dHYiA/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Tokens já processados ficam em cache e são consultados em vez de regenerados.</span><a class="minuto" href="https://www.youtube.com/watch?v=TRe1u7dHYiA&amp;t=975s" target="_blank" rel="noopener" aria-label="Assistir a partir de 16:15 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>16:15</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Prefill e decode em GPUs separadas</h3>
+    <p>A fase de prefill (ler o contexto) pesa em computação. A fase de decode (gerar tokens) pesa em memória. Na mesma GPU elas competem por recursos. A Nebius separa as duas em grupos de GPUs diferentes e transfere o KV cache entre eles.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/TRe1u7dHYiA/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Duas fases com gargalos diferentes rodam em hardware dedicado a cada uma.</span><a class="minuto" href="https://www.youtube.com/watch?v=TRe1u7dHYiA&amp;t=1068s" target="_blank" rel="noopener" aria-label="Assistir a partir de 17:48 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>17:48</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=TRe1u7dHYiA&amp;t=93s" target="_blank" rel="noopener"><strong>US$ 2 bi</strong><span>investimento da Nvidia na Nebius, dito por Dylan</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:33</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=TRe1u7dHYiA&amp;t=254s" target="_blank" rel="noopener"><strong>60+</strong><span>modelos disponíveis na plataforma Token Factory</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:14</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=TRe1u7dHYiA&amp;t=913s" target="_blank" rel="noopener"><strong>até 30%</strong><span>ganho com modelo rascunho treinado em dados genéricos</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:13</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=TRe1u7dHYiA&amp;t=1006s" target="_blank" rel="noopener"><strong>5 a 10x</strong><span>ganho de velocidade citado com KV cache</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>16:46</span></a>
+  </div>
+
+  <div class="casper" id="a-TRe1u7dHYiA-kv-cache">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>KV cache (cache de chaves e valores da atenção).</strong> O KV cache é como as anotações que um aluno faz na margem do livro para não precisar reler o capítulo inteiro toda vez que responde uma nova questão.</p>
+    <ol class="passos"><li>A IA escreve a resposta um token (pedaço de texto) por vez. Para escolher cada novo token, ela olha para todo o texto anterior.</li><li>Sem cache, o modelo refaria os cálculos de todo o texto anterior a cada novo token. Isso desperdiça tempo, porque o texto anterior não muda.</li><li>O KV cache (cache de chaves e valores) guarda o resultado desses cálculos para cada token já lido. No próximo passo, o modelo só consulta o que guardou.</li><li>No talk, a Nebius cita ganhos de 5 a 10 vezes em velocidade. O custo é memória, que cresce com o tamanho do prompt.</li><li>Como a memória da GPU é cara, a plataforma move o cache para a memória comum do servidor e o traz de volta quando o mesmo contexto aparece de novo.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>PROMPT</strong><span>ex. the cat sat on</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>CALCULA UMA VEZ</strong><span>chaves e valores de cada token</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>GUARDA NO CACHE</strong><span>na GPU ou na memória comum</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>PRÓXIMO TOKEN</strong><span>consulta em vez de recalcular</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>GERAÇÃO MAIS RÁPIDA</strong><span>5 a 10x segundo o talk</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-token">Token</a>, <a href="../glossario.html#g-mecanismo-de-atencao">Mecanismo de atenção</a>, <a href="../glossario.html#g-gpu">GPU</a></p>  </div>
+  <div class="casper" id="a-TRe1u7dHYiA-speculative-decoding">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Speculative decoding (decodificação especulativa).</strong> Speculative decoding é como um estagiário que escreve o rascunho de um e-mail e o chefe só lê e aprova, corrigindo apenas a primeira frase que estiver errada.</p>
+    <ol class="passos"><li>Um modelo de linguagem escreve a resposta um pedaço por vez. Cada pedaço se chama token (fragmento de palavra), e modelos grandes demoram para gerar cada um.</li><li>Speculative decoding (decodificação especulativa) coloca um modelo pequeno e rápido para chutar os próximos tokens, vários de uma vez.</li><li>O modelo grande confere todos esses chutes numa única passada. Conferir vários tokens juntos custa quase o mesmo que gerar um só.</li><li>O modelo grande aceita os chutes até o primeiro erro. No ponto do erro, ele coloca o token que ele mesmo escolheria e o ciclo recomeça dali.</li><li>A resposta final sai igual à que o modelo grande daria sozinho. O ganho de velocidade depende de quantos chutes o modelo pequeno acerta.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>RASCUNHO RÁPIDO</strong><span>modelo pequeno chuta vários tokens</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>CONFERÊNCIA EM LOTE</strong><span>grande checa todos numa passada</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>ACEITA OU CORRIGE</strong><span>corta no primeiro erro e corrige</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>RESPOSTA MAIS RÁPIDA</strong><span>mesmo texto, menos espera</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-token">Token</a>, <a href="../glossario.html#g-draft-model">Draft model</a>, <a href="../glossario.html#g-inferencia">Inferência</a></p>  </div>
+  <div class="casper" id="a-TRe1u7dHYiA-draft-model">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Draft model (modelo rascunho).</strong> O draft model é como o auxiliar de cozinha que já deixa os pratos montados para o chef só conferir e finalizar.</p>
+    <ol class="passos"><li>Draft model (modelo rascunho) é um modelo de IA pequeno que trabalha junto com um modelo grande.</li><li>A função dele é adivinhar os próximos tokens (pedaços de texto) bem rápido, para o modelo grande apenas conferir.</li><li>Ele precisa usar o mesmo vocabulário de tokens do modelo grande. Assim os dois falam a mesma língua na hora da conferência.</li><li>Quanto mais o rascunho acerta, mais tempo o sistema economiza. No talk, um rascunho treinado com dados genéricos rendeu até 30% de ganho.</li><li>Treinar o rascunho com o tráfego real do cliente aumenta a taxa de acerto, porque ele aprende o estilo de pedido daquele uso específico.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>TRÁFEGO REAL</strong><span>pedidos que o cliente já fez</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>TREINO DO RASCUNHO</strong><span>modelo pequeno imita o grande</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>MAIS ACERTOS</strong><span>grande aceita mais chutes</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>GERAÇÃO MAIS RÁPIDA</strong><span>menos trabalho para o grande</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-speculative-decoding">Speculative decoding</a>, <a href="../glossario.html#g-token">Token</a>, <a href="../glossario.html#g-fine-tuning">Fine-tuning</a></p>  </div>
+  <div class="casper" id="a-TRe1u7dHYiA-prefill-e-decode">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Prefill e decode (leitura do contexto e geração de tokens).</strong> Prefill e decode são como uma prova em que o aluno primeiro lê o enunciado inteiro de uma vez e depois escreve a resposta palavra por palavra.</p>
+    <ol class="passos"><li>Quando você manda uma pergunta para a IA, ela trabalha em duas etapas. Primeiro lê tudo o que você enviou e depois escreve a resposta.</li><li>A primeira etapa se chama prefill (pré-preenchimento). O modelo processa todos os tokens do prompt ao mesmo tempo, o que exige muito cálculo da GPU (placa de processamento).</li><li>A segunda etapa se chama decode (decodificação). O modelo gera um token por vez e, a cada passo, precisa reler muitos dados da memória. Aqui o gargalo é a memória.</li><li>Na mesma GPU, as duas etapas disputam recursos e uma atrasa a outra. Por isso a Nebius usa um grupo de GPUs só para prefill e outro só para decode.</li><li>O grupo de prefill entrega ao grupo de decode o KV cache, que guarda o que já foi calculado sobre o prompt. Assim o decode começa sem refazer a leitura.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>PROMPT CHEGA</strong><span>texto enviado pelo usuário</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>PREFILL</strong><span>lê tudo junto, pesa em cálculo</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>TRANSFERE O KV CACHE</strong><span>passa a leitura para outra GPU</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>DECODE</strong><span>um token por vez, pesa em memória</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>RESPOSTA</strong><span>fases sem disputar a mesma GPU</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-token">Token</a>, <a href="../glossario.html#g-gpu">GPU</a>, <a href="../glossario.html#g-kv-cache">KV cache</a></p>  </div>
+  <div class="casper" id="a-TRe1u7dHYiA-nvfp4">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>NVFP4 (formato de ponto flutuante de 4 bits da NVIDIA).</strong> NVFP4 é como anotar as medidas de uma receita com números arredondados e escrever no topo de cada grupo de ingredientes a escala certa para voltar ao tamanho real.</p>
+    <ol class="passos"><li>Um modelo de IA é feito de bilhões de números. Guardar cada número com muita precisão ocupa memória e deixa o modelo lento.</li><li>NVFP4 é um formato da NVIDIA que guarda cada número em só 4 bits, em ponto flutuante (número com vírgula). Isso reduz bastante o espaço ocupado.</li><li>Com 4 bits sobram poucos valores possíveis. Para compensar, o formato agrupa os números em blocos pequenos e cada bloco ganha um fator de escala próprio.</li><li>Os chips mais novos da NVIDIA, da linha Blackwell, calculam direto nesse formato. O modelo roda mais rápido e cabe em menos memória.</li><li>A troca é perder um pouco de precisão. Por isso vale testar a qualidade do modelo depois de converter para NVFP4.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>PESOS EM ALTA PRECISÃO</strong><span>números do modelo em 16 bits</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>BLOCOS PEQUENOS</strong><span>agrupa valores vizinhos</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>4 BITS + ESCALA</strong><span>cada bloco ganha seu fator</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>MODELO MENOR E RÁPIDO</strong><span>menos memória, roda no Blackwell</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-quantization">Quantization</a>, <a href="../glossario.html#g-gpu">GPU</a>, <a href="../glossario.html#g-bit">Bit</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é pitch da Nebius Token Factory, e os dois palestrantes são funcionários da empresa. Não há metodologia nem gráfico próprio de desempenho. A única medida concreta é o ganho de 5 a 10 vezes com cache e de até 30% com modelo rascunho, ditos sem carga de trabalho, modelo ou hardware de referência. O benchmark de modelos abertos vem da Artificial Analysis, mas o recorte de modelos não é detalhado. Também falta comparação de custo com concorrentes. O ponto sobre quantização sem perda de qualidade não traz dado.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Ao comparar provedores de modelo aberto, pergunte qual engine, qual chip e qual nível de quantização cada um usa, pois o mesmo modelo pode render custo e latência bem diferentes.</li><li>Se você envia prompts longos com prefixo repetido, como instruções fixas ou bases de código, estruture o início igual entre chamadas para aproveitar cache de prompt.</li><li>Antes de adotar um modelo quantizado, rode seu próprio eval (avaliação) comparando qualidade com a versão original.</li><li>Teste um modelo aberto em uma tarefa de baixo risco, medindo custo por token e qualidade contra o modelo fechado atual.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="TRe1u7dHYiA" aria-label="Marcar What Makes Open Models Fast in Production como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-bRGyYaE0lxI">Próximo talk <span lang="en">GPU Died. Training Didn&#39;t: Self-Healing Training at Scale</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-bRGyYaE0lxI" data-tema="infraestrutura">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">07</span>
+    <div class="sec-titulo">
+      <h2 lang="en">GPU Died. Training Didn&#39;t: Self-Healing Training at Scale</h2>
+      <p class="tese">Em milhares de GPUs a falha é rotina. Slurm sobre Kubernetes troca o plantão de madrugada por um fluxo automático de troca de nó e retomada.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Infraestrutura</span>
+    <span class="chip">16:54</span>
+    <span class="chip" role="img" aria-label="Complexidade 4 de 5">nível ●●●●○</span>
+<span class="chip">Crusoe</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=bRGyYaE0lxI" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>A Crusoe explica que, em treinos com milhares de GPUs, falhas de hardware são certas e o conserto manual não escala.</p><p>A solução deles roda o Slurm (agendador de jobs de treino) dentro do Kubernetes, e o sistema AutoClusters detecta a GPU com defeito, troca o nó e recoloca o job na fila.</p><p>Na demo, uma falha simulada de GPU (XID 79) derruba o treino, e ele volta a rodar a partir do checkpoint em menos de 15 minutos, sem ação humana.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-bRGyYaE0lxI-slurm"><strong>Slurm</strong> <span>agendador de jobs para clusters de computação</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-bRGyYaE0lxI-kubernetes"><strong>Kubernetes</strong> <span>orquestrador de contêineres e serviços</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-bRGyYaE0lxI-gang-scheduling"><strong>Gang scheduling</strong> <span>agendamento em grupo: todos os nós do job iniciam juntos</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-bRGyYaE0lxI-xid-79"><strong>XID 79</strong> <span>código de erro da NVIDIA para GPU que saiu do barramento e ficou inutilizável</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-bRGyYaE0lxI-cordon-e-drain-de-no"><strong>Cordon e drain de nó</strong> <span>isolar o nó e remover dele as cargas de trabalho</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-sigterm"><strong>SIGTERM</strong> <span>sinal de término que dá tempo de salvar o estado antes de encerrar</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-checkpointing"><strong>Checkpointing</strong> <span>salvar o estado do treino para retomar depois</span></a></li><li><a href="../glossario.html#g-observability"><strong>Observability</strong> <span>observabilidade: métricas e logs para explicar falhas</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Slurm é bom em treino, fraco em dinamismo</h3>
+    <p>O Slurm nasceu há mais de 20 anos para computação de alto desempenho. Ele traz gang scheduling (todos os nós do job começam juntos), consciência de topologia de rede e scripts familiares aos pesquisadores. Mas é estático em partições, deixa a detecção e o dreno de nós para o operador e diz que o job falhou sem explicar bem o porquê.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/bRGyYaE0lxI/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Onde o Slurm serve ao treino e onde deixa lacunas operacionais.</span><a class="minuto" href="https://www.youtube.com/watch?v=bRGyYaE0lxI&amp;t=191s" target="_blank" rel="noopener" aria-label="Assistir a partir de 03:11 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:11</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Duas pilhas custam o dobro</h3>
+    <p>Times que já usam Kubernetes para inferência sofrem para operar um cluster Slurm, e times de treino em Slurm estranham o Kubernetes. O resultado são duas infraestruturas, com observabilidade, plantão e runbooks separados. A Crusoe propõe um operador que cria o cluster Slurm dentro do Kubernetes com um comando.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/bRGyYaE0lxI/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Arquitetura de Slurm como serviço dentro do Kubernetes.</span><a class="minuto" href="https://www.youtube.com/watch?v=bRGyYaE0lxI&amp;t=455s" target="_blank" rel="noopener" aria-label="Assistir a partir de 07:35 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:35</a></figcaption>
+  </figure>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>GPUs migram entre treino e inferência</h3>
+    <p>Como o nó de GPU é um nó Kubernetes primeiro e o Slurm é só uma carga de trabalho, dá para tirar hardware do treino quando a inferência dispara e devolver depois. Quando o job de treino acaba, o nó não fica ocioso esperando outro job.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=bRGyYaE0lxI&amp;t=538s" target="_blank" rel="noopener" aria-label="Assistir a partir de 08:58 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:58</a> Hardware compartilhado entre treino e inferência numa única pilha.</p>  </div>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Fluxo automático após um XID 79</h3>
+    <p>A sequência é notificar o usuário, marcar o nó como down no Slurm, enviar SIGTERM ao processo (com até 2 minutos para salvar checkpoint), reenfileirar o job, isolar e drenar o nó no Kubernetes, trocar por um nó saudável do estoque e registrar o alerta. Só então o job reinicia e carrega o checkpoint.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/bRGyYaE0lxI/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>As etapas da remediação, da notificação ao reinício do job.</span><a class="minuto" href="https://www.youtube.com/watch?v=bRGyYaE0lxI&amp;t=603s" target="_blank" rel="noopener" aria-label="Assistir a partir de 10:03 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:03</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Demo: GPU cai, treino volta sozinho</h3>
+    <p>Connor lança um treino PyTorch com sbatch em um pool de dois nós A100 e injeta um alerta de XID 79 no monitoramento. A utilização da GPU despenca, a troca de nó começa na hora e o treino retoma do checkpoint. A troca de hardware leva cerca de 5 minutos, e o resto do tempo é código da aplicação.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/bRGyYaE0lxI/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A queda e a recuperação da utilização de GPU na demo.</span><a class="minuto" href="https://www.youtube.com/watch?v=bRGyYaE0lxI&amp;t=727s" target="_blank" rel="noopener" aria-label="Assistir a partir de 12:07 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:07</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=bRGyYaE0lxI&amp;t=127s" target="_blank" rel="noopener"><strong>20 anos</strong><span>idade aproximada do Slurm</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:07</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=bRGyYaE0lxI&amp;t=633s" target="_blank" rel="noopener"><strong>2 minutos</strong><span>prazo para tratar o SIGTERM e salvar checkpoint</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:33</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=bRGyYaE0lxI&amp;t=727s" target="_blank" rel="noopener"><strong>5 minutos</strong><span>detecção até nó saudável no pool</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:07</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=bRGyYaE0lxI&amp;t=757s" target="_blank" rel="noopener"><strong>15 minutos</strong><span>tempo total na demo até voltar a treinar</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:37</span></a>
+  </div>
+
+  <div class="casper" id="a-bRGyYaE0lxI-slurm">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Slurm (agendador de jobs para clusters de computação).</strong> O Slurm é como o controlador de uma quadra esportiva que recebe os pedidos de horário, organiza a fila e libera a quadra para cada time na sua vez.</p>
+    <ol class="passos"><li>Laboratórios têm muitas máquinas potentes e muitas pessoas querendo usá-las. Alguém precisa organizar quem usa o quê e quando.</li><li>O Slurm é um agendador de jobs (tarefas de computação). O pesquisador escreve um script, envia com o comando sbatch, e o job entra numa fila.</li><li>Quando há máquinas livres, o Slurm reserva os nós, inicia o job e acompanha até o fim.</li><li>Ele nasceu há mais de 20 anos para supercomputação e traz gang scheduling, noção da topologia da rede e scripts de checagem antes e depois do job.</li><li>As limitações apontadas no talk são partições estáticas, detecção e dreno de nós ruins por conta do operador, e pouca explicação sobre por que um job falhou.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>SCRIPT SBATCH</strong><span>Pesquisador descreve o job</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>FILA</strong><span>Job espera recursos livres</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>ALOCA NÓS</strong><span>Reserva as máquinas pedidas</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>JOB RODA</strong><span>Treino executa até o fim</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-cluster-de-computacao">Cluster de computação</a>, <a href="../glossario.html#g-job">Job</a>, <a href="../glossario.html#g-fila-de-tarefas">Fila de tarefas</a></p>  </div>
+  <div class="casper" id="a-bRGyYaE0lxI-kubernetes">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Kubernetes (orquestrador de contêineres e serviços).</strong> O Kubernetes é como o gerente de um restaurante que garante sempre o número certo de cozinheiros nas bancadas e chama um substituto quando alguém sai.</p>
+    <ol class="passos"><li>Empresas rodam muitos programas ao mesmo tempo em muitas máquinas, e alguém precisa decidir onde cada um roda.</li><li>O Kubernetes é um orquestrador de contêineres (pacotes que levam o programa com tudo de que ele precisa). Você diz o que quer rodando, e ele distribui pelas máquinas.</li><li>Ele compara o tempo todo o estado desejado com o real. Se um programa cai, ele sobe outro sozinho, recurso chamado self-healing (autocura).</li><li>Também faz balanceamento de carga e autoscaling (ajuste automático de capacidade), e tem um ecossistema grande de extensões para rede, segurança e observabilidade.</li><li>No talk, o Slurm vira apenas mais uma carga dentro do Kubernetes. Assim treino e inferência dividem as mesmas GPUs e a mesma operação.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>ESTADO DESEJADO</strong><span>Você declara o que deve rodar</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>COMPARA COM O REAL</strong><span>Verificação contínua</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>CORRIGE DIFERENÇAS</strong><span>Sobe, move ou remove cargas</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>SERVIÇO ESTÁVEL</strong><span>Sistema volta ao desejado</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-conteiner">Contêiner</a>, <a href="../glossario.html#g-no-de-computacao">Nó de computação</a>, <a href="../glossario.html#g-cluster-de-computacao">Cluster de computação</a></p>  </div>
+  <div class="casper" id="a-bRGyYaE0lxI-gang-scheduling">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Gang scheduling (agendamento em grupo: todos os nós do job iniciam juntos).</strong> Gang scheduling é como um time de remo que só sai da margem quando os oito remadores estão sentados no barco.</p>
+    <ol class="passos"><li>Um treino grande de IA usa vários computadores ao mesmo tempo, e cada um faz uma parte do trabalho.</li><li>Essas partes conversam o tempo todo. Se uma máquina começa e a outra ainda não chegou, a primeira fica parada esperando.</li><li>Gang scheduling (agendamento em grupo) resolve isso. O agendador só libera o job quando todos os nós pedidos estão livres, e então inicia todos juntos.</li><li>Sem isso, nós ficam reservados e ociosos à espera dos colegas, e dois jobs podem travar um ao outro segurando metade das máquinas cada um.</li><li>O Slurm traz esse recurso de fábrica, e por isso se encaixa bem em treinos com comunicação coletiva entre GPUs.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>JOB PEDE N NÓS</strong><span>Ex.: 16 máquinas com GPU</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>AGENDADOR ESPERA</strong><span>Só age com todos os N livres</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>INÍCIO SIMULTÂNEO</strong><span>Todos os nós começam juntos</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-no-de-computacao">Nó de computação</a>, <a href="../glossario.html#g-job-de-treino-distribuido">Job de treino distribuído</a>, <a href="../glossario.html#g-agendador-de-jobs">Agendador de jobs</a></p>  </div>
+  <div class="casper" id="a-bRGyYaE0lxI-xid-79">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>XID 79 (código de erro da NVIDIA para GPU que saiu do barramento e ficou inutilizável).</strong> XID 79 é como a luz do painel do carro avisando que o motor parou de vez, sem chance de seguir viagem.</p>
+    <ol class="passos"><li>Placas de vídeo da NVIDIA (GPUs) registram problemas usando códigos numéricos, chamados XID.</li><li>Cada número indica um tipo de falha. Alguns são leves, outros são graves.</li><li>O XID 79 significa que a GPU &#34;caiu do barramento&#34;: o computador perdeu a conexão com ela e a placa ficou inutilizável.</li><li>Esse erro não se resolve sozinho. O job que usava a GPU para, e a máquina precisa de reinício ou troca.</li><li>Na Crusoe, o sistema AutoClusters vigia esse código e, ao vê-lo, dispara a troca automática do nó e a retomada do treino.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>GPU SAI DO BARRAMENTO</strong><span>Máquina perde contato com a placa</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>DRIVER REGISTRA XID 79</strong><span>Código de erro grave da NVIDIA</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>MONITOR DISPARA ALERTA</strong><span>AutoClusters detecta o erro</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>NÓ TROCADO</strong><span>Treino retoma do checkpoint</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-gpu">GPU</a>, <a href="../glossario.html#g-no-de-computacao">Nó de computação</a>, <a href="../glossario.html#g-monitoramento">Monitoramento</a></p>  </div>
+  <div class="casper" id="a-bRGyYaE0lxI-cordon-e-drain-de-no">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Cordon e drain de nó (isolar o nó e remover dele as cargas de trabalho).</strong> Cordon e drain é como fechar um caixa do supermercado com a plaquinha &#34;caixa fechado&#34; e atender os últimos clientes da fila antes de desligar.</p>
+    <ol class="passos"><li>Num cluster, cada máquina (nó) recebe tarefas para executar. Às vezes uma máquina precisa sair de serviço.</li><li>Cordon (isolar) é o primeiro passo. O Kubernetes marca o nó para não receber nenhuma tarefa nova.</li><li>Drain (drenar) vem em seguida. O Kubernetes retira as tarefas que ainda rodam no nó e as recoloca em outras máquinas.</li><li>Com o nó vazio, dá para removê-lo e colocar outro no lugar sem pegar nenhuma tarefa no meio do caminho.</li><li>Na Crusoe, o AutoClusters faz isso sozinho após um XID 79, mas antes confere se algum pod tem um rótulo que proíbe a troca automática.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>CORDON</strong><span>Nó para de receber tarefas novas</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>DRAIN</strong><span>Tarefas atuais saem do nó</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>REMOVE DO POOL</strong><span>Nó com defeito sai do grupo</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>NÓ SAUDÁVEL ENTRA</strong><span>Reserva assume o lugar</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-kubernetes">Kubernetes</a>, <a href="../glossario.html#g-no-de-computacao">Nó de computação</a>, <a href="../glossario.html#g-pod">Pod</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é pitch de produto da Crusoe, apresentado por três funcionários. A demo usa uma falha simulada por script no monitoramento interno, não uma GPU que realmente quebrou. Os 15 minutos valem para um caso com dois nós A100, e o palestrante diz que a maior parte do tempo vem do código da aplicação, que muda de job para job. Faltam taxa de sucesso em falhas reais, falhas parciais (rede degradada, GPU lenta) e custo do estoque de nós reserva.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Cheque se seu código de treino salva checkpoint com frequência e trata o SIGTERM, pois o tempo de retomada depende mais disso do que da troca de hardware.</li><li>Se você opera treino e inferência em pilhas separadas, liste o custo de plantão, observabilidade e runbooks duplicados antes de decidir unificar.</li><li>Ao avaliar um provedor de GPU, pergunte qual fluxo automático existe para detectar, drenar e substituir nós, e quanto tempo ele leva em falhas reais.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="bRGyYaE0lxI" aria-label="Marcar GPU Died. Training Didn&#39;t: Self-Healing Training at Scale como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#fim">Fechar a edição <span aria-hidden="true">↓</span></a>
+  </footer>
+</article>
+      <section class="fim-edicao card" id="fim" aria-labelledby="fim-titulo">
+        <h2 id="fim-titulo">Fim da edição</h2>
+        <span class="progresso" data-ids="YiFqcu9YA38 oUZEt4EiPbk qflLT3SoVbw 8aVbXXvJUY4 I2LL_wd89-A TRe1u7dHYiA bRGyYaE0lxI"></span>
+        <p>Termos novos no glossário:
+<a href="../glossario.html#g-cypher">Cypher</a>, <a href="../glossario.html#g-drift">Drift</a>, <a href="../glossario.html#g-thought-signatures">Thought signatures</a>, <a href="../glossario.html#g-steps-data-model">Steps data model</a>, <a href="../glossario.html#g-proxy-man-in-the-middle">Proxy man-in-the-middle</a>, <a href="../glossario.html#g-speculative-decoding">Speculative decoding</a>, <a href="../glossario.html#g-draft-model">Draft model</a>, <a href="../glossario.html#g-prefill-e-decode">Prefill e decode</a>, <a href="../glossario.html#g-nvfp4">NVFP4</a>, <a href="../glossario.html#g-kv-cache">KV cache</a>, <a href="../glossario.html#g-gang-scheduling">Gang scheduling</a>, <a href="../glossario.html#g-xid-79">XID 79</a>, <a href="../glossario.html#g-cordon-e-drain-de-no">Cordon e drain de nó</a>, <a href="../glossario.html#g-slurm">Slurm</a>, <a href="../glossario.html#g-kubernetes">Kubernetes</a>.
+        </p>
+        <nav class="paginacao" aria-label="Outras edições">
+<a rel="prev" href="2026-10-02.html"><span class="paginacao-dir">← Edição anterior</span><strong>Agentes fora do demo: segurança, custo e verificação</strong><span class="muted">sexta, 2 out 2026</span></a>          <a class="voltar" href="../index.html#edicoes"><span class="paginacao-dir">Todas as edições</span><strong>Voltar ao início</strong></a>
+        </nav>
+      </section>
+    </div>
+  </div>
+</div>
+</main>
+<footer class="rodape wrap">
+  <p>Resumos em português dos talks do canal <a href="https://www.youtube.com/@aiDotEngineer" target="_blank" rel="noopener">AI Engineer</a>. Atualizado em 4 out 2026, 07:17. <a href="../status.html">Status da rotina</a></p>
+</footer>
+<script src="../app.js" defer></script>
+</body>
+</html>

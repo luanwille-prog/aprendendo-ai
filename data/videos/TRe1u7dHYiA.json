@@ -1,0 +1,327 @@
+{
+  "id": "TRe1u7dHYiA",
+  "titulo": "What Makes Open Models Fast in Production — Sujee Maniyam, Nebius",
+  "titulo_curto": "What Makes Open Models Fast in Production",
+  "palestrante": "Sujee Maniyam, Nebius",
+  "url": "https://www.youtube.com/watch?v=TRe1u7dHYiA",
+  "duracao": 1232,
+  "publicado_ts": 1791066628,
+  "edicao": "2026-10-03",
+  "tese": "Modelo aberto rápido e barato depende de uma pilha de truques de servir: roteamento, cache, decodificação especulativa e quantização.",
+  "tldr": [
+    "A Nebius defende que modelos abertos já chegam perto dos fechados e que o difícil é servi-los rápido e barato em produção.",
+    "Sujee Maniyam percorre as camadas de otimização de inferência: hardware NVFP4, escolha de engine, roteamento ciente de cache, decodificação especulativa, KV cache com offload, separação de prefill e decode, e quantização.",
+    "O talk também vende a Token Factory, plataforma que une inferência, dados, pós-treino e deploy num ciclo só."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "Modelos abertos chegaram perto dos fechados",
+      "texto": "Sujee mostra um benchmark da Artificial Analysis em que modelos abertos (azul) competem com os proprietários (preto), às vezes superando vários. Para o cliente, isso significa escolha de provedor, menos dependência de um fornecedor e custo menor por token.",
+      "t": 633,
+      "legenda": "Modelos abertos aparecem lado a lado com os fechados no ranking de inteligência.",
+      "print": "img/TRe1u7dHYiA/0.jpg"
+    },
+    {
+      "titulo": "Roteador que sabe onde está o cache",
+      "texto": "Balanceador de carga aleatório espalha requisições parecidas por GPUs diferentes e desperdiça cache. O roteador ciente de cache manda pedidos com o mesmo prefixo para a GPU que já guarda aquele trecho. Isso importa mais quando os prompts são enormes, como bases de código inteiras enviadas por agentes.",
+      "t": 819,
+      "legenda": "Roteamento ciente de cache agrupa o cache em vez de fragmentá-lo.",
+      "print": "img/TRe1u7dHYiA/1.jpg"
+    },
+    {
+      "titulo": "Decodificação especulativa: júnior rascunha, sênior confere",
+      "texto": "Um modelo pequeno gera os tokens rápido e o modelo grande só verifica. Se discordar, o grande regenera. A analogia é um engenheiro sênior que delega a um júnior e revisa. Treinar o modelo rascunho com o tráfego real do cliente melhora o resultado, e a empresa promete treino com um clique.",
+      "t": 881,
+      "legenda": "O modelo grande verifica o rascunho do pequeno em vez de gerar tudo sozinho.",
+      "print": "img/TRe1u7dHYiA/2.jpg"
+    },
+    {
+      "titulo": "KV cache: não recalcule o que já foi calculado",
+      "texto": "O KV cache guarda o trabalho já feito sobre o prompt, como em 'the cat sat on', para não recalcular. Como a memória da GPU é cara, a plataforma move o cache para a memória comum e o traz de volta quando precisa, sem o cliente gerenciar nada.",
+      "t": 975,
+      "legenda": "Tokens já processados ficam em cache e são consultados em vez de regenerados.",
+      "print": "img/TRe1u7dHYiA/3.jpg"
+    },
+    {
+      "titulo": "Prefill e decode em GPUs separadas",
+      "texto": "A fase de prefill (ler o contexto) pesa em computação. A fase de decode (gerar tokens) pesa em memória. Na mesma GPU elas competem por recursos. A Nebius separa as duas em grupos de GPUs diferentes e transfere o KV cache entre eles.",
+      "t": 1068,
+      "legenda": "Duas fases com gargalos diferentes rodam em hardware dedicado a cada uma.",
+      "print": "img/TRe1u7dHYiA/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "KV cache",
+      "traducao": "cache de chaves e valores da atenção",
+      "nivel": "intermediario",
+      "chave": "kv cache",
+      "analogia": "O KV cache é como as anotações que um aluno faz na margem do livro para não precisar reler o capítulo inteiro toda vez que responde uma nova questão.",
+      "explicacao": [
+        "A IA escreve a resposta um token (pedaço de texto) por vez. Para escolher cada novo token, ela olha para todo o texto anterior.",
+        "Sem cache, o modelo refaria os cálculos de todo o texto anterior a cada novo token. Isso desperdiça tempo, porque o texto anterior não muda.",
+        "O KV cache (cache de chaves e valores) guarda o resultado desses cálculos para cada token já lido. No próximo passo, o modelo só consulta o que guardou.",
+        "No talk, a Nebius cita ganhos de 5 a 10 vezes em velocidade. O custo é memória, que cresce com o tamanho do prompt.",
+        "Como a memória da GPU é cara, a plataforma move o cache para a memória comum do servidor e o traz de volta quando o mesmo contexto aparece de novo."
+      ],
+      "pre_requisitos": [
+        "Token",
+        "Mecanismo de atenção",
+        "GPU"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PROMPT",
+            "nota": "ex. the cat sat on"
+          },
+          {
+            "rotulo": "CALCULA UMA VEZ",
+            "nota": "chaves e valores de cada token"
+          },
+          {
+            "rotulo": "GUARDA NO CACHE",
+            "nota": "na GPU ou na memória comum"
+          },
+          {
+            "rotulo": "PRÓXIMO TOKEN",
+            "nota": "consulta em vez de recalcular"
+          },
+          {
+            "rotulo": "GERAÇÃO MAIS RÁPIDA",
+            "nota": "5 a 10x segundo o talk"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Speculative decoding",
+      "traducao": "decodificação especulativa",
+      "nivel": "avancado",
+      "chave": "speculative decoding",
+      "analogia": "Speculative decoding é como um estagiário que escreve o rascunho de um e-mail e o chefe só lê e aprova, corrigindo apenas a primeira frase que estiver errada.",
+      "explicacao": [
+        "Um modelo de linguagem escreve a resposta um pedaço por vez. Cada pedaço se chama token (fragmento de palavra), e modelos grandes demoram para gerar cada um.",
+        "Speculative decoding (decodificação especulativa) coloca um modelo pequeno e rápido para chutar os próximos tokens, vários de uma vez.",
+        "O modelo grande confere todos esses chutes numa única passada. Conferir vários tokens juntos custa quase o mesmo que gerar um só.",
+        "O modelo grande aceita os chutes até o primeiro erro. No ponto do erro, ele coloca o token que ele mesmo escolheria e o ciclo recomeça dali.",
+        "A resposta final sai igual à que o modelo grande daria sozinho. O ganho de velocidade depende de quantos chutes o modelo pequeno acerta."
+      ],
+      "pre_requisitos": [
+        "Token",
+        "Draft model",
+        "Inferência"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "RASCUNHO RÁPIDO",
+            "nota": "modelo pequeno chuta vários tokens"
+          },
+          {
+            "rotulo": "CONFERÊNCIA EM LOTE",
+            "nota": "grande checa todos numa passada"
+          },
+          {
+            "rotulo": "ACEITA OU CORRIGE",
+            "nota": "corta no primeiro erro e corrige"
+          },
+          {
+            "rotulo": "RESPOSTA MAIS RÁPIDA",
+            "nota": "mesmo texto, menos espera"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Draft model",
+      "traducao": "modelo rascunho",
+      "nivel": "avancado",
+      "chave": "draft model",
+      "analogia": "O draft model é como o auxiliar de cozinha que já deixa os pratos montados para o chef só conferir e finalizar.",
+      "explicacao": [
+        "Draft model (modelo rascunho) é um modelo de IA pequeno que trabalha junto com um modelo grande.",
+        "A função dele é adivinhar os próximos tokens (pedaços de texto) bem rápido, para o modelo grande apenas conferir.",
+        "Ele precisa usar o mesmo vocabulário de tokens do modelo grande. Assim os dois falam a mesma língua na hora da conferência.",
+        "Quanto mais o rascunho acerta, mais tempo o sistema economiza. No talk, um rascunho treinado com dados genéricos rendeu até 30% de ganho.",
+        "Treinar o rascunho com o tráfego real do cliente aumenta a taxa de acerto, porque ele aprende o estilo de pedido daquele uso específico."
+      ],
+      "pre_requisitos": [
+        "Speculative decoding",
+        "Token",
+        "Fine-tuning"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "TRÁFEGO REAL",
+            "nota": "pedidos que o cliente já fez"
+          },
+          {
+            "rotulo": "TREINO DO RASCUNHO",
+            "nota": "modelo pequeno imita o grande"
+          },
+          {
+            "rotulo": "MAIS ACERTOS",
+            "nota": "grande aceita mais chutes"
+          },
+          {
+            "rotulo": "GERAÇÃO MAIS RÁPIDA",
+            "nota": "menos trabalho para o grande"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Cache-aware routing",
+      "traducao": "roteamento ciente de cache",
+      "nivel": "intermediario",
+      "chave": "cache-aware routing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Prefill e decode",
+      "traducao": "leitura do contexto e geração de tokens",
+      "nivel": "avancado",
+      "chave": "prefill e decode",
+      "analogia": "Prefill e decode são como uma prova em que o aluno primeiro lê o enunciado inteiro de uma vez e depois escreve a resposta palavra por palavra.",
+      "explicacao": [
+        "Quando você manda uma pergunta para a IA, ela trabalha em duas etapas. Primeiro lê tudo o que você enviou e depois escreve a resposta.",
+        "A primeira etapa se chama prefill (pré-preenchimento). O modelo processa todos os tokens do prompt ao mesmo tempo, o que exige muito cálculo da GPU (placa de processamento).",
+        "A segunda etapa se chama decode (decodificação). O modelo gera um token por vez e, a cada passo, precisa reler muitos dados da memória. Aqui o gargalo é a memória.",
+        "Na mesma GPU, as duas etapas disputam recursos e uma atrasa a outra. Por isso a Nebius usa um grupo de GPUs só para prefill e outro só para decode.",
+        "O grupo de prefill entrega ao grupo de decode o KV cache, que guarda o que já foi calculado sobre o prompt. Assim o decode começa sem refazer a leitura."
+      ],
+      "pre_requisitos": [
+        "Token",
+        "GPU",
+        "KV cache"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PROMPT CHEGA",
+            "nota": "texto enviado pelo usuário"
+          },
+          {
+            "rotulo": "PREFILL",
+            "nota": "lê tudo junto, pesa em cálculo"
+          },
+          {
+            "rotulo": "TRANSFERE O KV CACHE",
+            "nota": "passa a leitura para outra GPU"
+          },
+          {
+            "rotulo": "DECODE",
+            "nota": "um token por vez, pesa em memória"
+          },
+          {
+            "rotulo": "RESPOSTA",
+            "nota": "fases sem disputar a mesma GPU"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "NVFP4",
+      "traducao": "formato de ponto flutuante de 4 bits da NVIDIA",
+      "nivel": "avancado",
+      "chave": "nvfp4",
+      "analogia": "NVFP4 é como anotar as medidas de uma receita com números arredondados e escrever no topo de cada grupo de ingredientes a escala certa para voltar ao tamanho real.",
+      "explicacao": [
+        "Um modelo de IA é feito de bilhões de números. Guardar cada número com muita precisão ocupa memória e deixa o modelo lento.",
+        "NVFP4 é um formato da NVIDIA que guarda cada número em só 4 bits, em ponto flutuante (número com vírgula). Isso reduz bastante o espaço ocupado.",
+        "Com 4 bits sobram poucos valores possíveis. Para compensar, o formato agrupa os números em blocos pequenos e cada bloco ganha um fator de escala próprio.",
+        "Os chips mais novos da NVIDIA, da linha Blackwell, calculam direto nesse formato. O modelo roda mais rápido e cabe em menos memória.",
+        "A troca é perder um pouco de precisão. Por isso vale testar a qualidade do modelo depois de converter para NVFP4."
+      ],
+      "pre_requisitos": [
+        "Quantization",
+        "GPU",
+        "Bit"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PESOS EM ALTA PRECISÃO",
+            "nota": "números do modelo em 16 bits"
+          },
+          {
+            "rotulo": "BLOCOS PEQUENOS",
+            "nota": "agrupa valores vizinhos"
+          },
+          {
+            "rotulo": "4 BITS + ESCALA",
+            "nota": "cada bloco ganha seu fator"
+          },
+          {
+            "rotulo": "MODELO MENOR E RÁPIDO",
+            "nota": "menos memória, roda no Blackwell"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Quantization",
+      "traducao": "quantização",
+      "nivel": "intermediario",
+      "chave": "quantization",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Teacher e student models",
+      "traducao": "modelo professor e modelo aluno",
+      "nivel": "intermediario",
+      "chave": "teacher e student models",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é pitch da Nebius Token Factory, e os dois palestrantes são funcionários da empresa. Não há metodologia nem gráfico próprio de desempenho. A única medida concreta é o ganho de 5 a 10 vezes com cache e de até 30% com modelo rascunho, ditos sem carga de trabalho, modelo ou hardware de referência. O benchmark de modelos abertos vem da Artificial Analysis, mas o recorte de modelos não é detalhado. Também falta comparação de custo com concorrentes. O ponto sobre quantização sem perda de qualidade não traz dado.",
+  "acoes": [
+    "Ao comparar provedores de modelo aberto, pergunte qual engine, qual chip e qual nível de quantização cada um usa, pois o mesmo modelo pode render custo e latência bem diferentes.",
+    "Se você envia prompts longos com prefixo repetido, como instruções fixas ou bases de código, estruture o início igual entre chamadas para aproveitar cache de prompt.",
+    "Antes de adotar um modelo quantizado, rode seu próprio eval (avaliação) comparando qualidade com a versão original.",
+    "Teste um modelo aberto em uma tarefa de baixo risco, medindo custo por token e qualidade contra o modelo fechado atual."
+  ],
+  "numeros": [
+    {
+      "valor": "US$ 2 bi",
+      "contexto": "investimento da Nvidia na Nebius, dito por Dylan",
+      "t": 93
+    },
+    {
+      "valor": "60+",
+      "contexto": "modelos disponíveis na plataforma Token Factory",
+      "t": 254
+    },
+    {
+      "valor": "até 30%",
+      "contexto": "ganho com modelo rascunho treinado em dados genéricos",
+      "t": 913
+    },
+    {
+      "valor": "5 a 10x",
+      "contexto": "ganho de velocidade citado com KV cache",
+      "t": 1006
+    }
+  ]
+}

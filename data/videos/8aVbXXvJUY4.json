@@ -1,0 +1,262 @@
+{
+  "id": "8aVbXXvJUY4",
+  "titulo": "An Interaction Is All You Need — Ivan Leo, Google DeepMind",
+  "titulo_curto": "An Interaction Is All You Need",
+  "palestrante": "Ivan Leo, Google DeepMind",
+  "url": "https://www.youtube.com/watch?v=8aVbXXvJUY4",
+  "duracao": 1023,
+  "publicado_ts": 1791055816,
+  "edicao": "2026-10-03",
+  "tese": "Agentes pedem uma API com estado no servidor e sandbox persistente. O Google guarda o contexto e o ambiente, e você só devolve dois IDs.",
+  "tldr": [
+    "Ivan Leo, do Google DeepMind, apresenta a Interactions API do Gemini, que guarda o estado da conversa no servidor e devolve um interaction ID a cada resposta.",
+    "Os Managed Agents rodam o harness Antigravity em um sandbox remoto persistente, que você retoma com um environment ID, e um proxy injeta credenciais para o modelo nunca ver o token.",
+    "O talk é uma apresentação de produto do Google, com demos curtas e sem comparação com concorrentes nem dados de custo ou desempenho."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Estado no servidor com interaction ID",
+      "texto": "Antes, quem usava o Gemini precisava reenviar o histórico e as thought signatures, códigos opacos do raciocínio do modelo. Um espaço em branco a mais podia quebrar o cache. Agora a resposta traz um interaction ID e você o devolve em previous_interaction_id no turno seguinte. O servidor preserva o contexto, e sem as signatures o desempenho cai.",
+      "t": 351,
+      "legenda": "O ID da primeira resposta carrega o contexto para o segundo turno.",
+      "print": "img/8aVbXXvJUY4/0.jpg"
+    },
+    {
+      "titulo": "Encadear imagem, vídeo e áudio com o mesmo contexto",
+      "texto": "Com o mesmo interaction ID, uma imagem gerada em um modelo vira ponto de partida para um vídeo em outro. O exemplo gera uma foto em Veneza e passa o ID ao modelo Omni Flash. A saída de cada etapa vem com tipo explícito (image, audio), então o código só precisa tratar cada tipo.",
+      "t": 412,
+      "legenda": "Duas chamadas bastam para ir de imagem a vídeo no mesmo contexto.",
+      "print": null
+    },
+    {
+      "titulo": "Ferramentas nativas e customizadas na mesma chamada",
+      "texto": "O exemplo combina Google Search, leitura de páginas (URL context) e uma função própria chamada file_incident. O modelo decide sozinho quais usar e responde em uma única chamada de API. O formato de steps substitui o antigo array de outputs e marca cada passo: raciocínio, chamada de função e conteúdo.",
+      "t": 503,
+      "legenda": "Ferramentas nativas e custom convivem em uma só requisição.",
+      "print": "img/8aVbXXvJUY4/2.jpg"
+    },
+    {
+      "titulo": "Managed Agent: sandbox persistente em uma chamada",
+      "texto": "O agente Antigravity sobe um sandbox remoto, lista arquivos, lê o repositório e gera um relatório sem intervenção. O interaction ID preserva o contexto e o environment ID devolve você ao mesmo sandbox, com pacotes e arquivos intactos. Fontes podem vir de GCS, GitHub ou arquivos inline.",
+      "t": 636,
+      "legenda": "Um agente investiga um repositório inteiro dentro de um sandbox remoto.",
+      "print": "img/8aVbXXvJUY4/3.jpg"
+    },
+    {
+      "titulo": "Proxy que injeta o token no lugar do modelo",
+      "texto": "Um proxy man-in-the-middle fica entre o agente e as APIs externas e troca cabeçalhos nas chamadas de saída. O token do GitHub entra na requisição depois, fora do alcance do modelo. Se houver prompt injection, o agente não tem o segredo para vazar.",
+      "t": 846,
+      "legenda": "O token é injetado fora do modelo, então não há segredo para vazar.",
+      "print": "img/8aVbXXvJUY4/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Interaction ID",
+      "traducao": "identificador de interação",
+      "nivel": "intermediario",
+      "chave": "interaction id",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Thought signatures",
+      "traducao": "assinaturas de raciocínio",
+      "nivel": "avancado",
+      "chave": "thought signatures",
+      "analogia": "Thought signatures são como o caderno de passagem de turno de um plantão, e se o colega perde uma folha ele recomeça sem saber o que já foi pensado.",
+      "explicacao": [
+        "Antes de responder, alguns modelos pensam em etapas, como quem faz contas num rascunho.",
+        "O Gemini resume esse rascunho num código fechado, a thought signature (assinatura de raciocínio), que nenhuma pessoa consegue ler.",
+        "A cada resposta ou chamada de função, o modelo devolve essas assinaturas junto com o texto.",
+        "No turno seguinte, o programa precisa reenviar as assinaturas intactas. Um espaço a mais já pode quebrar o cache, e sem elas o desempenho do modelo cai.",
+        "Com a Interactions API, o servidor guarda as assinaturas. Você só devolve o interaction ID no campo previous_interaction_id."
+      ],
+      "pre_requisitos": [
+        "Modelo de raciocínio",
+        "Janela de contexto",
+        "Cache de prompt",
+        "Interaction ID"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "MODELO PENSA",
+            "nota": "Raciocina antes de responder"
+          },
+          {
+            "rotulo": "GERA ASSINATURA",
+            "nota": "Código opaco do raciocínio"
+          },
+          {
+            "rotulo": "VOLTA NO PRÓXIMO TURNO",
+            "nota": "Reenviada ou guardada no servidor"
+          },
+          {
+            "rotulo": "RACIOCÍNIO CONTINUA",
+            "nota": "Modelo mantém o desempenho"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Function calling",
+      "traducao": "chamada de função",
+      "nivel": "basico",
+      "chave": "function calling",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Steps data model",
+      "traducao": "modelo de dados em passos",
+      "nivel": "avancado",
+      "chave": "steps data model",
+      "analogia": "O steps data model é como o extrato do banco, em que cada linha diz se foi depósito, saque ou tarifa, e você não precisa adivinhar o que aconteceu.",
+      "explicacao": [
+        "Quando você pede algo a um agente, ele faz várias coisas antes da resposta final.",
+        "Ele pode pensar, chamar ferramentas, consultar a internet e gerar texto, imagem ou áudio.",
+        "A API antiga juntava tudo num array (lista) de outputs, com objetos aninhados difíceis de ler.",
+        "O steps data model (modelo de dados em passos) registra cada etapa como um passo com tipo explícito, chamado discriminador. Os tipos incluem raciocínio, chamada de função e conteúdo.",
+        "O código só confere o tipo de cada passo e trata cada caso, o que facilita fluxos com ferramentas assíncronas e várias mídias."
+      ],
+      "pre_requisitos": [
+        "Function calling",
+        "JSON",
+        "Thought signatures"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PEDIDO DO USUÁRIO",
+            "nota": "Uma única chamada de API"
+          },
+          {
+            "rotulo": "PASSO DE RACIOCÍNIO",
+            "nota": "Tipo marca o pensamento do modelo"
+          },
+          {
+            "rotulo": "PASSO DE FUNÇÃO",
+            "nota": "Tipo marca a ferramenta chamada"
+          },
+          {
+            "rotulo": "PASSO DE CONTEÚDO",
+            "nota": "Texto, imagem ou áudio com tipo"
+          },
+          {
+            "rotulo": "LISTA DE PASSOS",
+            "nota": "Código trata cada tipo com clareza"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Harness",
+      "traducao": "arcabouço que cerca o modelo",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado de execução",
+      "nivel": "intermediario",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Proxy man-in-the-middle",
+      "traducao": "proxy intermediário que injeta credenciais",
+      "nivel": "avancado",
+      "chave": "proxy man-in-the-middle",
+      "analogia": "O proxy man-in-the-middle é como a portaria de um prédio que recebe a encomenda do estagiário e coloca a assinatura do chefe antes de entregar, sem que o estagiário veja a assinatura.",
+      "explicacao": [
+        "Um agente de IA às vezes precisa acessar serviços externos, como baixar um repositório privado do GitHub.",
+        "Para isso ele precisaria de um token, uma senha de acesso. Se o token fica com o agente, um ataque pode fazê-lo vazar a senha.",
+        "Um proxy (intermediário) fica no caminho entre o agente e a internet e vê toda chamada que sai.",
+        "Na técnica man-in-the-middle (homem no meio), o proxy lê o cabeçalho da chamada e insere o token ali, depois que ela sai do agente.",
+        "Mesmo sob prompt injection (instrução maliciosa escondida no texto), o modelo não tem o token para entregar. Ele ainda pode usar o acesso de forma indevida."
+      ],
+      "pre_requisitos": [
+        "API",
+        "Token de acesso",
+        "Prompt injection",
+        "Sandbox"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "AGENTE FAZ A CHAMADA",
+            "nota": "Pedido sai sem nenhum token"
+          },
+          {
+            "rotulo": "PROXY INTERCEPTA",
+            "nota": "Lê o cabeçalho da requisição"
+          },
+          {
+            "rotulo": "INJETA O TOKEN",
+            "nota": "Credencial entra fora do modelo"
+          },
+          {
+            "rotulo": "API RESPONDE",
+            "nota": "Acesso feito e segredo protegido"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Named agent",
+      "traducao": "agente nomeado e congelado",
+      "nivel": "intermediario",
+      "chave": "named agent",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É um talk de lançamento feito por um funcionário do Google, então tudo é demo escolhida a dedo. Não há comparação com a API de outros provedores, nem dados de latência, custo por tarefa ou taxa de erro. O ganho de desempenho por preservar thought signatures é afirmado sem medição. A frase sobre pagar só pelo modelo e não pelo sandbox merece checagem na tabela de preços. O proxy reduz o risco de vazamento, mas não impede o agente de usar o token indevidamente contra a API.",
+  "acoes": [
+    "Se você usa Gemini via API, teste o interaction ID em um fluxo multi-turno e compare com reenviar o histórico, medindo erros e custo.",
+    "Nunca coloque tokens no prompt ou no sandbox do agente. Use um proxy ou um cofre que injete a credencial fora do alcance do modelo.",
+    "Avalie se o seu agente de código precisa de um sandbox persistente. Se sim, compare o Managed Agent com montar o seu próprio.",
+    "Teste a skill da Interactions API em um agente de código para migrar um projeto, e revise o diff antes de aceitar."
+  ],
+  "numeros": [
+    {
+      "valor": "3 min+",
+      "contexto": "Tempo que o agente de deep research pode rodar",
+      "t": 258
+    },
+    {
+      "valor": "2 milhões",
+      "contexto": "Tokens gastos analisando um repositório de hackathon",
+      "t": 721
+    },
+    {
+      "valor": "1.000",
+      "contexto": "Limite de agentes nomeados suportados",
+      "t": 908
+    }
+  ]
+}

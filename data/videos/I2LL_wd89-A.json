@@ -1,0 +1,174 @@
+{
+  "id": "I2LL_wd89-A",
+  "titulo": "How VS Code Went from Monthly to Weekly Releases with AI — Harald Kirschner",
+  "titulo_curto": "How VS Code Went from Monthly to Weekly Releases with AI",
+  "palestrante": "Harald Kirschner",
+  "url": "https://www.youtube.com/watch?v=I2LL_wd89-A",
+  "duracao": 1175,
+  "publicado_ts": 1791039610,
+  "edicao": "2026-10-03",
+  "tese": "Agente rápido só rende se você refaz o sistema em volta: CI, revisão, triagem, rollout e evals precisam acompanhar o ritmo.",
+  "tldr": [
+    "O time do VS Code saiu de releases mensais, que duraram 10 anos, para releases semanais, com uma equipe pequena atendendo mais de 50 milhões de usuários.",
+    "Para isso, o time deixou o código pronto para agentes, deixou os agentes usarem o app, tornou a revisão por IA obrigatória e automatizou a triagem de issues e de erros em PRs de correção.",
+    "Depois de escrever código mais rápido, o gargalo passou para qualidade e aprendizado. O time respondeu com rollout em etapas, evals próprios (VSC-Bench) e protótipos diários."
+  ],
+  "tema": "engenharia-de-software",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Code survival mede a confiança no agente",
+      "texto": "O time acompanha a fatia do código escrito por agente que chega a ser commitado. Código jogado fora indica que o agente errou ou que ninguém confiou nele. A métrica subiu de 55% com o GPT 4.1 para 86% com o Claude Opus 4.6, segundo o palestrante. Ele atribui a alta ao modelo novo e a melhorias no harness (a estrutura em volta do modelo).",
+      "t": 75,
+      "legenda": "Mostra a evolução da taxa de código de agente que sobrevive ao commit.",
+      "print": "img/I2LL_wd89-A/0.jpg"
+    },
+    {
+      "titulo": "CI lento se multiplica com vários agentes",
+      "texto": "Com uma pessoa, build e testes lentos são incômodo contornável: ela revisa outro PR enquanto espera. Com 10 ou 20 agentes batendo no mesmo CI, cada lentidão se acumula. A migração para TypeScript Go deu builds 10 vezes mais rápidos, e o ciclo de feedback dos PRs automáticos depende disso.",
+      "t": 448,
+      "legenda": "Ilustra por que o tempo de CI vira o gargalo quando há muitos agentes.",
+      "print": "img/I2LL_wd89-A/1.jpg"
+    },
+    {
+      "titulo": "Deixe o agente usar o app para se corrigir",
+      "texto": "Agentes entregam UI desalinhada e dizem que está perfeita. O time criou um component browser, que tira screenshots de cada componente a cada mudança e aponta diferenças, e uma skill /launch com Playwright que abre o VS Code e percorre um cenário. O agente verifica o próprio trabalho antes de devolver a tarefa.",
+      "t": 546,
+      "legenda": "Comparação automática de screenshots mostra o efeito colateral de cada PR.",
+      "print": "img/I2LL_wd89-A/2.jpg"
+    },
+    {
+      "titulo": "De stack de erro a PR de correção",
+      "texto": "O pipeline parte de 51 bilhões de eventos de telemetria por dia. Filtra os que têm stack completo, agrupa por fingerprint (impressão digital do erro) e chega a cerca de 10 issues atribuídas a donos de área. Um agente abre o PR com a correção, e um humano aprova. O exemplo mostrado era um cancelamento que faltava no protocolo RPC.",
+      "t": 828,
+      "legenda": "Funil que reduz bilhões de eventos a poucas issues com PR automático.",
+      "print": "img/I2LL_wd89-A/3.jpg"
+    },
+    {
+      "titulo": "Entenda como cada modelo reage ao seu harness",
+      "texto": "Um eval de uma linha, escrever um arquivo com hello world, serviu para testar o harness de ponta a ponta. O mesmo arquivo de cinco caracteres custou 70 vezes mais tokens no modelo mais caro, e não era o modelo de raciocínio alto. O resultado mostra que custo e comportamento variam por combinação de modelo e harness.",
+      "t": 1018,
+      "legenda": "Mostra a diferença de custo em tokens para a mesma tarefa trivial.",
+      "print": "img/I2LL_wd89-A/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "CLAUDE.md / AGENTS.md",
+      "traducao": "arquivo de instruções do repositório para agentes",
+      "nivel": "basico",
+      "chave": "claude.md / agents.md",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Skill",
+      "traducao": "pacote de conhecimento de especialista que o agente carrega",
+      "nivel": "intermediario",
+      "chave": "skill",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Bottleneck",
+      "traducao": "gargalo",
+      "nivel": "basico",
+      "chave": "bottleneck",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP",
+      "traducao": "protocolo para o agente usar ferramentas externas",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Triage",
+      "traducao": "triagem de issues",
+      "nivel": "basico",
+      "chave": "triage",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Rollout",
+      "traducao": "liberação gradual de uma versão",
+      "nivel": "intermediario",
+      "chave": "rollout",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação automatizada do produto",
+      "nivel": "intermediario",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Hill climbing",
+      "traducao": "melhoria iterativa contra um conjunto de cenários",
+      "nivel": "avancado",
+      "chave": "hill climbing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O palestrante é product manager da Microsoft e mostra o próprio produto, com stand na conferência, então o tom é de caso de sucesso. A subida de 55% para 86% mistura troca de modelo com melhoria de harness, e o talk não separa as duas causas nem define como mede o commit. Não há dados sobre bugs, regressões ou tempo de recuperação depois de passar para releases semanais. O contexto também pesa, porque o time é pequeno, mas tem telemetria de 51 bilhões de eventos por dia e acesso direto ao GitHub Copilot. Pouca coisa se transfere sem essa infraestrutura.",
+  "acoes": [
+    "Crie ou revise o AGENTS.md do seu repositório com um mapa curto do código e atualize o arquivo sempre que o agente errar.",
+    "Meça quanto do código gerado por IA você realmente mantém e acompanhe o número ao longo do tempo, como o code survival.",
+    "Dê ao agente um jeito de rodar o app e conferir o resultado, como screenshots ou Playwright, antes de pedir sua revisão.",
+    "Teste seu harness com um eval mínimo em cada modelo que você usa e compare o gasto de tokens, antes de escolher o modelo padrão."
+  ],
+  "numeros": [
+    {
+      "valor": "55% → 86%",
+      "contexto": "code survival, de GPT 4.1 a Claude Opus 4.6",
+      "t": 75
+    },
+    {
+      "valor": "10x",
+      "contexto": "builds mais rápidos com TypeScript Go",
+      "t": 448
+    },
+    {
+      "valor": "51 bilhões",
+      "contexto": "eventos de telemetria por dia filtrados",
+      "t": 828
+    },
+    {
+      "valor": "70x",
+      "contexto": "tokens a mais para um arquivo de 5 caracteres",
+      "t": 1018
+    }
+  ]
+}
