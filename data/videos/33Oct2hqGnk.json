@@ -1,0 +1,174 @@
+{
+  "id": "33Oct2hqGnk",
+  "titulo": "Agents That Write Their Own Tools at Runtime — Sandhya Subramani, AWS",
+  "titulo_curto": "Agents That Write Their Own Tools at Runtime",
+  "palestrante": "Sandhya Subramani, AWS",
+  "url": "https://www.youtube.com/watch?v=33Oct2hqGnk",
+  "duracao": 1240,
+  "publicado_ts": 1791147613,
+  "edicao": "2026-10-04",
+  "tese": "Um agente com um prompt bom e três ferramentas genéricas escreve o que falta, mas só merece produção com evals e guardrails.",
+  "tldr": [
+    "Sandhya Subramani, da AWS, mostra um agente que começa sem nenhuma ferramenta e escreve, carrega e usa as próprias ferramentas durante a execução, sem reiniciar.",
+    "A receita usa o Strands Agents SDK, um prompt de sistema que descreve como é uma boa ferramenta e três ferramentas: editor, shell e load_tool. O mesmo truque cria subagentes, como num planejador de viagem.",
+    "Como o agente pode alterar e apagar coisas, ela defende avaliações em vários níveis e quatro guardrails: ambiente isolado, permissões restritas, observabilidade e evals."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Agente sem ferramentas que cria as próprias",
+      "texto": "O agente da demo tem a pasta de ferramentas vazia. Ao receber um pedido de cálculo, ele escreve uma ferramenta de calculadora, a carrega na hora e responde. Depois faz o mesmo para um contador de caracteres. Não é preciso reiniciar o processo.",
+      "t": 189,
+      "legenda": "A ferramenta nasce durante a conversa e já é usada na resposta seguinte.",
+      "print": null
+    },
+    {
+      "titulo": "Receita: um prompt e três ferramentas",
+      "texto": "O agente precisa de um prompt de sistema com o molde de uma ferramenta (decorator @tool, especificação, regras e onde salvar) e de três ferramentas: editor para escrever, shell para ver o que existe e load_tool para carregar da pasta. Tudo cabe em poucas linhas de código.",
+      "t": 533,
+      "legenda": "O código inteiro do meta-tooling é curto: prompt mais três ferramentas.",
+      "print": "img/33Oct2hqGnk/1.jpg"
+    },
+    {
+      "titulo": "Agentes que criam subagentes",
+      "texto": "Com o mesmo método, o agente cria subagentes. Para um pedido de roteiro no Havaí, ele gerou três: voos, atividades e itinerário, chamando o editor uma vez para cada. Ela cita os padrões swarm, graph, handoff e workflow, que o agente também pode montar.",
+      "t": 783,
+      "legenda": "O agente decide sozinho a divisão em três subagentes.",
+      "print": "img/33Oct2hqGnk/2.jpg"
+    },
+    {
+      "titulo": "Autocorreção em produção",
+      "texto": "Ela argumenta que um agente que reconhece o próprio erro e corrige a ferramenta evita o ciclo de derrubar, consertar e subir de novo. Na demo, o agente quebrou por excesso de saída, e ela diz que ele costuma se consertar. Isso foi relatado, não mostrado em detalhe.",
+      "t": 875,
+      "legenda": "O agente reconhece o erro e propõe atualizar a própria ferramenta.",
+      "print": "img/33Oct2hqGnk/3.jpg"
+    },
+    {
+      "titulo": "Evals e guardrails antes de confiar",
+      "texto": "Ela lista avaliações por sessão (cumpriu o objetivo), por trace (resposta útil e sem invenção), por ferramenta (escolha e parâmetros certos) e entre agentes (ordem e mensagens). Os guardrails são ambiente isolado, permissões restritas e observabilidade, para o agente não apagar dados.",
+      "t": 938,
+      "legenda": "Evals medem objetivo, ferramenta, parâmetros e fluxo entre agentes.",
+      "print": "img/33Oct2hqGnk/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Meta-tooling",
+      "traducao": "agente que escreve as próprias ferramentas",
+      "nivel": "intermediario",
+      "chave": "meta-tooling",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Agent harness",
+      "traducao": "estrutura que executa o modelo e as ferramentas",
+      "nivel": "intermediario",
+      "chave": "agent harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Tool calling",
+      "traducao": "chamada de ferramentas pelo modelo",
+      "nivel": "basico",
+      "chave": "tool calling",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Subagente",
+      "traducao": "agente menor com uma parte da tarefa",
+      "nivel": "intermediario",
+      "chave": "subagente",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Swarm, graph, handoff e workflow",
+      "traducao": "padrões de organização de vários agentes",
+      "nivel": "intermediario",
+      "chave": "swarm, graph, handoff e workflow",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação automática do agente",
+      "nivel": "intermediario",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado de execução",
+      "nivel": "intermediario",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Observabilidade de agentes",
+      "traducao": "telemetria e traces do que o agente fez",
+      "nivel": "intermediario",
+      "chave": "observabilidade de agentes",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É demo de produto da AWS para o Strands, com a palestrante no papel de divulgadora. A demo é pequena (calculadora, contador de letras, roteiro de viagem) e não há medição de taxa de acerto, custo ou segurança. A autocorreção é descrita, não mostrada, e ela admite que a demo quebra. Os guardrails aparecem em lista, sem como configurá-los. A fala de que o Strands escreveu a versão em TypeScript não traz detalhes de quanta revisão humana houve.",
+  "acoes": [
+    "Teste meta-tooling num repositório descartável: dê editor, shell e load_tool a um agente e veja que ferramentas ele cria para pedidos que não prevê.",
+    "Antes de liberar um agente que escreve código, rode-o em sandbox, com permissões mínimas e sem acesso de escrita a dados reais.",
+    "Monte evals em quatro níveis para seus agentes: objetivo da sessão, resposta, escolha e parâmetros de ferramenta, e fluxo entre subagentes.",
+    "Registre traces de cada ferramenta criada em runtime, para revisar o que o agente escreveu e decidir quais promover ao código oficial."
+  ],
+  "numeros": [
+    {
+      "valor": "3",
+      "contexto": "ferramentas necessárias: editor, shell e load_tool",
+      "t": 345
+    },
+    {
+      "valor": "28",
+      "contexto": "letras contadas pela ferramenta na demo",
+      "t": 249
+    },
+    {
+      "valor": "8",
+      "contexto": "evals embutidos no Strands, segundo ela",
+      "t": 907
+    },
+    {
+      "valor": "3 anos",
+      "contexto": "tempo desde a criação interna do Strands na AWS",
+      "t": 1156
+    }
+  ]
+}

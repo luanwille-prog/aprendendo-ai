@@ -1,0 +1,216 @@
+{
+  "id": "jc3kbZkuHTo",
+  "titulo": "The Human Is an Async API — Melanie Warrick, Temporal",
+  "titulo_curto": "The Human Is an Async API",
+  "palestrante": "Melanie Warrick, Temporal",
+  "url": "https://www.youtube.com/watch?v=jc3kbZkuHTo",
+  "duracao": 1155,
+  "publicado_ts": 1791131417,
+  "edicao": "2026-10-04",
+  "tese": "Humano demora minutos ou semanas para responder. Agente que espera por ele precisa pausar de forma durável, guardando o estado fora do processo.",
+  "tldr": [
+    "Melanie Warrick, da Temporal, mostra um demo de entrega de sorvete com três agentes (frota, cliente e despacho) em que um pedido espera aprovação humana sem travar o resto do sistema.",
+    "A solução usa duas primitivas da Temporal, a wait condition (condição de espera) e o signal (sinal), guardadas em um workflow (fluxo durável) que sobrevive a quedas do worker (processo que roda o código).",
+    "Ela mata o worker no meio da aprovação, aprova mesmo offline, e o agente retoma de onde parou porque o histórico de eventos é reexecutado, não refeito. Ao final, discute quando vale pôr um humano no loop."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Três agentes coordenados por um workflow pai",
+      "texto": "O demo tem um agente de frota, um de cliente e um de despacho. Frota e cliente pesquisam (Google Maps, Google Search) e o despacho decide com o resultado. A Temporal registra o estado de tudo em um workflow pai, com histórico de eventos visível na interface.",
+      "t": 76,
+      "legenda": "Vários agentes rodando juntos, com o estado rastreado em um único histórico.",
+      "print": "img/jc3kbZkuHTo/0.jpg"
+    },
+    {
+      "titulo": "Worker, workflow e activity",
+      "texto": "O worker roda o código. O workflow guarda os passos e é onde o loop do agente vive. A activity cobre tudo que fala com o mundo externo, como chamadas ao modelo e às ferramentas. Essa divisão decide onde cada pedaço do código fica.",
+      "t": 386,
+      "legenda": "Chamada de modelo e de ferramenta viram activities; o loop fica no workflow.",
+      "print": "img/jc3kbZkuHTo/1.jpg"
+    },
+    {
+      "titulo": "Chamada bloqueante perde o humano; wait e signal não",
+      "texto": "Se o agente chama o humano como uma função comum, a chamada bloqueia e se perde quando o serviço cai. Com wait condition o fluxo pausa e o estado fica salvo na camada durável. O humano responde por um signal quando puder, e só aquele workflow espera.",
+      "t": 481,
+      "legenda": "Duas primitivas bastam para pausar por minutos ou semanas sem segurar thread.",
+      "print": "img/jc3kbZkuHTo/2.jpg"
+    },
+    {
+      "titulo": "Matar o worker e voltar sem perder trabalho",
+      "texto": "No demo, ela derruba o worker, aprova o pedido enquanto ele está offline e sobe o worker de novo. O evento ficou na fila do armazenamento da Temporal. O agente reexecuta o log até o último ponto, vê a aprovação e entrega o pedido.",
+      "t": 950,
+      "legenda": "Replay do log recupera o estado; nada é refeito.",
+      "print": "img/jc3kbZkuHTo/3.jpg"
+    },
+    {
+      "titulo": "Quando o humano deve entrar no loop",
+      "texto": "O critério central é o custo de errar, principalmente em segurança. Do outro lado há a fadiga de alerta, quando a pessoa passa a aprovar tudo sem ler. Ela admite que a resposta depende do caso e que os modelos continuam probabilísticos.",
+      "t": 1011,
+      "legenda": "A decisão de pôr humano no loop equilibra custo de erro e cansaço de quem aprova.",
+      "print": "img/jc3kbZkuHTo/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Durable execution",
+      "traducao": "execução durável",
+      "nivel": "intermediario",
+      "chave": "durable execution",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Workflow, activity e worker",
+      "traducao": "fluxo, atividade e processo executor da Temporal",
+      "nivel": "intermediario",
+      "chave": "workflow, activity e worker",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Wait condition e signal",
+      "traducao": "condição de espera e sinal",
+      "nivel": "intermediario",
+      "chave": "wait condition e signal",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Replay de event history",
+      "traducao": "reexecução do histórico de eventos",
+      "nivel": "avancado",
+      "chave": "replay de event history",
+      "analogia": "Replay do histórico de eventos é como um cozinheiro que assume o turno no meio do serviço, lê a comanda com os pratos já marcados como prontos e continua a partir do próximo prato.",
+      "explicacao": [
+        "O sistema anota cada passo concluído de uma tarefa em um registro, chamado histórico de eventos (event history).",
+        "Esse registro fica guardado no armazenamento da Temporal, fora do worker (processo que roda o código). Se o worker cai, o registro continua lá.",
+        "Quando o worker volta, ele relê o histórico desde o início e reconstrói o estado. Os passos já feitos usam o resultado anotado, sem chamar o modelo ou a ferramenta de novo.",
+        "Ao chegar no fim do registro, o agente encontra os eventos que chegaram enquanto ele estava fora, como uma aprovação humana, e segue para o próximo passo.",
+        "No demo, a palestrante derruba o worker, aprova o pedido com ele offline e, na volta, o pedido é atribuído e entregue sem perder trabalho."
+      ],
+      "pre_requisitos": [
+        "Durable execution",
+        "Workflow, activity e worker",
+        "Determinismo em workflows"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "WORKER CAI",
+            "nota": "Processo sai do ar no meio da espera"
+          },
+          {
+            "rotulo": "EVENTO NA FILA",
+            "nota": "Aprovação fica guardada na Temporal"
+          },
+          {
+            "rotulo": "WORKER VOLTA",
+            "nota": "Processo sobe de novo"
+          },
+          {
+            "rotulo": "RELÊ O HISTÓRICO",
+            "nota": "Reconstrói o estado sem refazer passos"
+          },
+          {
+            "rotulo": "PEDIDO ENTREGUE",
+            "nota": "Agente segue do ponto onde parou"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Determinismo em workflows",
+      "traducao": "workflows determinísticos, activities não",
+      "nivel": "avancado",
+      "chave": "determinismo em workflows",
+      "analogia": "Determinismo em workflows é como uma receita de bolo escrita, que dá sempre os mesmos passos na mesma ordem, enquanto a ida ao mercado para comprar os ingredientes pode terminar diferente a cada vez.",
+      "explicacao": [
+        "Determinístico quer dizer que, com a mesma entrada, o código faz sempre a mesma coisa.",
+        "A Temporal divide o código em duas partes. O workflow (fluxo) guarda os passos de decisão. A activity (atividade) faz tudo que fala com o mundo externo.",
+        "Chamadas ao modelo de linguagem e a ferramentas podem dar respostas diferentes a cada vez. Por isso viram activities, que podem falhar e receber retry (nova tentativa).",
+        "O workflow precisa ser determinístico porque a Temporal o reexecuta a partir do histórico. Se ele decidisse diferente na reexecução, o estado reconstruído não bateria com o registrado.",
+        "No demo com LangChain, cada chamada de modelo ou de ferramenta dentro de um nó do grafo vira activity, e os passos do processo ficam no workflow."
+      ],
+      "pre_requisitos": [
+        "Workflow, activity e worker",
+        "Replay de event history"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Human in the loop",
+      "traducao": "humano no loop",
+      "nivel": "basico",
+      "chave": "human in the loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Harness",
+      "traducao": "estrutura em volta do modelo",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Alert fatigue",
+      "traducao": "fadiga de alerta",
+      "nivel": "basico",
+      "chave": "alert fatigue",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "A palestrante trabalha na Temporal e avisa que está pitchando a empresa. O demo é controlado, com poucos pedidos, e não traz métrica de custo, latência ou taxa de falha. Ela diz que dá para escalar a milhões de workflows parados, sem mostrar dado. A visão de harness é apresentada como um mapa pessoal e sujeita a debate. Não compara com alternativas, como filas, banco de dados com estado ou outros orquestradores.",
+  "acoes": [
+    "Revise onde seus agentes chamam uma pessoa por uma função que bloqueia. Troque por um estado salvo mais um evento de retomada.",
+    "Em qualquer fluxo de agente, separe o que é passo de decisão (loop) do que fala com o mundo externo (modelo, ferramenta). Só o segundo precisa de retry e timeout próprios.",
+    "Defina um timeout para toda espera por aprovação humana e decida o que acontece quando ele estoura.",
+    "Liste as ações do agente por custo de erro. Peça aprovação humana só nas caras ou de risco de segurança, para evitar que o revisor aprove tudo no automático."
+  ],
+  "numeros": [
+    {
+      "valor": "3 agentes",
+      "contexto": "Frota, cliente e despacho no demo",
+      "t": 43
+    },
+    {
+      "valor": "3 primitivos",
+      "contexto": "Worker, workflow e activity da Temporal",
+      "t": 386
+    },
+    {
+      "valor": "milhões",
+      "contexto": "Workflows parados ao mesmo tempo, segundo ela",
+      "t": 542
+    },
+    {
+      "valor": "200 ms",
+      "contexto": "Tempo de resposta que um humano não costuma ter",
+      "t": 884
+    }
+  ]
+}
