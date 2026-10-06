@@ -1,0 +1,208 @@
+{
+  "id": "NdrSPm6NCdk",
+  "titulo": "Evals in AI: A Deep Dive — Tejas Kumar, IBM",
+  "titulo_curto": "Evals in AI: A Deep Dive",
+  "palestrante": "Tejas Kumar, IBM",
+  "url": "https://www.youtube.com/watch?v=NdrSPm6NCdk",
+  "duracao": 3589,
+  "publicado_ts": 1791219622,
+  "edicao": "2026-10-05",
+  "tese": "Um teste verde só vale se o juiz concordar com humanos em cerca de 80% dos casos. Calibre o juiz com dados rotulados e política atual antes de confiar nele.",
+  "tldr": [
+    "Eval (avaliação) é um teste unitário \"difuso\" para sistemas não determinísticos, com casos de teste, comportamento esperado, juiz e agregação de resultados.",
+    "Um LLM juiz erra por viés de posição, bajulação, preferência pelo próprio texto e gosto por respostas longas, então você mede a concordância dele com veredictos humanos e trava o CI abaixo de 80%.",
+    "Na demo ao vivo, o juiz só chegou a 27 acertos em 30 casos depois de receber a política de devolução no prompt, trocar para um modelo melhor e cobrir o caso do cliente fiel."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Eval dá confiabilidade antes; harness dá confiabilidade na hora",
+      "texto": "O palestrante compara os dois a pedais de bicicleta. O harness (camada de controle em volta do agente) protege em tempo de execução. A eval roda antes do deploy, como a checagem de tipos do TypeScript frente ao JavaScript. Ele cita o caso do chatbot de suporte do Instagram, que aceitou trocar o e-mail de contas sem verificar o dono.",
+      "t": 385,
+      "legenda": "Sem eval nem harness, um agente com acesso alto fez mutações em contas.",
+      "print": null
+    },
+    {
+      "titulo": "Quatro peças de toda eval séria",
+      "texto": "Casos de teste (entradas e respostas geradas), comportamento esperado (direção, não texto exato), juiz e agregação em uma pontuação. As perguntas típicas são se o agente seguiu a política, usou as ferramentas certas e resolveu o problema. Chamadas de ferramenta dá para checar com código determinístico, sem IA.",
+      "t": 758,
+      "legenda": "Os quatro componentes que toda suíte de eval bem definida compartilha.",
+      "print": "img/NdrSPm6NCdk/1.jpg"
+    },
+    {
+      "titulo": "Como o juiz mente",
+      "texto": "O juiz favorece a primeira opção (viés de posição), a resposta mais simpática (bajulação), o texto da própria família de modelos e a resposta mais longa. Para detectar posição, troque a ordem das opções. Para evitar autopreferência, use um juiz de outra família. Prefira avaliar uma resposta por vez (pointwise) a comparar duas (pairwise).",
+      "t": 1110,
+      "legenda": "Quatro maneiras de um juiz LLM distorcer o resultado de uma eval.",
+      "print": "img/NdrSPm6NCdk/2.jpg"
+    },
+    {
+      "titulo": "Calibrar o juiz contra veredictos humanos",
+      "texto": "Monte um conjunto de cerca de 30 casos com pergunta, resposta e nota de um especialista. Esconda a nota, peça ao juiz e meça a concordância. A meta é 80% a 85%. Humanos também discordam entre si cerca de 20% das vezes, e 100% de concordância indica overfitting (ajuste excessivo aos exemplos) ou viés.",
+      "t": 1350,
+      "legenda": "O juiz é aceito quando concorda com humanos em torno de 80%.",
+      "print": null
+    },
+    {
+      "titulo": "Demo ao vivo: de 3.5 Turbo sem política até 27 de 30",
+      "texto": "Com GPT-3.5 Turbo e sem política, o juiz falha muito. Ele recebe a política de 14 dias, depois a regra de item sem uso, e ainda erra o caso da bolsa de ioga. A troca para o 4o mini e a regra de que lealdade não muda a política levam a 27 acertos em 30. O teste passa a falhar só se a concordância cair abaixo de 80%.",
+      "t": 2373,
+      "legenda": "A taxa de concordância do juiz sobe a cada lacuna de contexto preenchida.",
+      "print": "img/NdrSPm6NCdk/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Eval",
+      "traducao": "avaliação automatizada de sistemas de IA",
+      "nivel": "basico",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo de linguagem usado como juiz",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Harness",
+      "traducao": "camada de controle em volta do agente",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Viés de posição",
+      "traducao": "juiz que prefere a primeira opção",
+      "nivel": "intermediario",
+      "chave": "viés de posição",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Bajulação (sycophancy)",
+      "traducao": "modelo que escolhe a resposta mais agradável",
+      "nivel": "intermediario",
+      "chave": "bajulação (sycophancy)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Pointwise e pairwise",
+      "traducao": "avaliar uma resposta por vez ou comparar duas",
+      "nivel": "intermediario",
+      "chave": "pointwise e pairwise",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Conjunto de ouro (golden dataset)",
+      "traducao": "exemplos com veredicto humano confiável",
+      "nivel": "intermediario",
+      "chave": "conjunto de ouro (golden dataset)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Agreement gate",
+      "traducao": "trava de CI pela taxa de concordância do juiz",
+      "nivel": "avancado",
+      "chave": "agreement gate",
+      "analogia": "Um agreement gate é como a catraca do estádio que só libera a entrada quando o fiscal confere que o ingresso bate com a lista oficial na maioria das vezes.",
+      "explicacao": [
+        "Antes de liberar uma nova versão do sistema, uma checagem automática decide se ela pode seguir ou se fica parada.",
+        "A checagem compara as notas dadas por um juiz automático com as notas que uma pessoa já deu para os mesmos casos.",
+        "O resultado vira uma taxa de concordância (agreement rate), ou seja, a porcentagem de casos em que juiz e humano deram o mesmo veredicto.",
+        "Essa conta roda no CI (integração contínua, o processo que testa cada mudança no código). Abaixo de 80% o teste fica vermelho e nada vai para produção. Entre 80% e 90% fica verde.",
+        "Para a trava continuar confiável, fixe a versão exata do modelo juiz. Um apelido como GPT-4o mini pode passar a apontar para outra versão sem aviso e mudar o resultado."
+      ],
+      "pre_requisitos": [
+        "Eval",
+        "LLM-as-a-judge",
+        "Conjunto de ouro (golden dataset)",
+        "Integração contínua (CI)"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "CASOS COM NOTA HUMANA",
+            "nota": "Conjunto de ouro com uns 30 casos"
+          },
+          {
+            "rotulo": "JUIZ AVALIA SEM NOTA",
+            "nota": "Recebe só pergunta e resposta"
+          },
+          {
+            "rotulo": "MEDE CONCORDÂNCIA",
+            "nota": "Porcentagem de veredictos iguais"
+          },
+          {
+            "rotulo": "COMPARA COM 80%",
+            "nota": "Limite mínimo definido no CI"
+          },
+          {
+            "rotulo": "LIBERA OU TRAVA",
+            "nota": "Verde publica, vermelho bloqueia"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "A demo usa 30 exemplos escritos pelo próprio palestrante, sem separar treino e teste. Ajustar a política até bater 80% é justamente o risco de overfitting que ele alerta. A garantia dele de que juiz com 80% protege contra o caso do Instagram não tem teste. O trecho do OpenRAG é divulgação de produto da IBM, onde ele trabalha. Os números sobre vieses (39% de fragilidade do pairwise) vêm de um estudo não citado, e o nome do modelo juiz vem de legenda automática, então confira antes de repetir.",
+  "acoes": [
+    "Comece pelas checagens baratas, como teste exato, regex e validação de JSON ou das chamadas de ferramenta, e só use juiz LLM no que sobrar.",
+    "Monte 30 casos reais com veredicto humano e meça a concordância do seu juiz antes de usá-lo. Mire em 80% a 85% e desconfie de 100%.",
+    "Passe a política vigente ao juiz, de preferência a mesma fonte usada pelo agente em produção, e use um juiz de família diferente da do agente.",
+    "Fixe a versão exata do modelo juiz no CI e adicione ao conjunto, a cada semana, exemplos novos do tráfego real rotulados por uma pessoa."
+  ],
+  "numeros": [
+    {
+      "valor": "80%",
+      "contexto": "concordância mínima do juiz para passar no CI",
+      "t": 1350
+    },
+    {
+      "valor": "39%",
+      "contexto": "maior fragilidade do pairwise frente ao pointwise, em um estudo",
+      "t": 1041
+    },
+    {
+      "valor": "27 de 30",
+      "contexto": "casos em que o juiz concordou com o humano na demo",
+      "t": 2746
+    },
+    {
+      "valor": "20.225",
+      "contexto": "contas comprometidas no caso Instagram, segundo ele",
+      "t": 447
+    }
+  ]
+}

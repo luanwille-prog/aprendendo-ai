@@ -1,0 +1,234 @@
+{
+  "id": "woIYJYd_etI",
+  "titulo": "What Is an Inference Engine, Anyway? — Charles Frye, Modal",
+  "titulo_curto": "What Is an Inference Engine, Anyway?",
+  "palestrante": "Charles Frye, Modal",
+  "url": "https://www.youtube.com/watch?v=woIYJYd_etI",
+  "duracao": 3598,
+  "publicado_ts": 1791244812,
+  "edicao": "2026-10-05",
+  "tese": "O motor de inferência existe para manter a GPU sempre ocupada. O scheduler na CPU, a memória do KV cache e o tipo de carga decidem o desempenho.",
+  "tldr": [
+    "Charles Frye, da Modal, abre o inference engine (motor de inferência) que roda por trás das APIs, usando SGLang e vLLM como referência.",
+    "Cada pedido passa por servidor, tokenizador, scheduler, execução do modelo na GPU e detokenizador, e o scheduler pode virar gargalo mesmo fazendo pouca conta.",
+    "KV cache, CUDA graphs e speculative decoding aceleram o motor, e em produção é preciso rodar evals no próprio deploy, registrar token IDs e coletar muitas métricas."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "Um motor de inferência é um conjunto de processos",
+      "texto": "Um processo cuida da entrada e saída HTTP ou gRPC. Outros tokenizam o texto e o devolvem em texto no fim. No centro ficam o scheduler, que monta lotes de pedidos, e os processos que rodam o modelo na GPU. Frye diz que montar algo que recebe e devolve tokens leva uma ou duas horas com PyTorch. A parte difícil é extrair desempenho, e isso define a arquitetura.",
+      "t": 150,
+      "legenda": "O trabalho pesado fica no scheduler e no código que roda na GPU",
+      "print": "img/woIYJYd_etI/0.jpg"
+    },
+    {
+      "titulo": "Cada tipo de carga pede um deploy diferente",
+      "texto": "Frye separa três cargas. O chatbot com ferramentas tem muito prefixo reaproveitado, saídas curtas e pouca tolerância a atraso. O agente em segundo plano reaproveita prefixo, mas pode levar minutos ou horas. O processador de documentos lê textos sempre novos, gera saídas curtas e precisa de vazão. As métricas são time to first token (tempo até o primeiro token) e inter-token latency (tempo entre tokens).",
+      "t": 790,
+      "legenda": "Chatbot, agente em segundo plano e processador de dados têm perfis de desempenho distintos",
+      "print": "img/woIYJYd_etI/1.jpg"
+    },
+    {
+      "titulo": "O scheduler controla o acesso à GPU",
+      "texto": "A GPU é a peça cara e faz quase toda a conta. O scheduler roda em uma única thread, em Python, e decide o que entra em cada lote. Se ele atrasar, a GPU fica parada. Por isso Frye aponta o scheduler como bom candidato a ser reescrito em Rust. Conforme as GPUs ficam mais rápidas, a pressão sobre esse componente aumenta.",
+      "t": 1292,
+      "legenda": "Um processo de uma thread só decide todo o trabalho que a GPU executa",
+      "print": "img/woIYJYd_etI/2.jpg"
+    },
+    {
+      "titulo": "KV cache e CUDA graphs reduzem trabalho repetido",
+      "texto": "O KV cache guarda contas já feitas da atenção e permite reaproveitar prefixos comuns, como um system prompt longo compartilhado entre usuários. A gestão em páginas ou árvore radix migrou para kernels como o FlashAttention 4. Ao motor resta gerir a capacidade e o layout do cache. CUDA graphs juntam todos os kernels de uma passada do modelo em um grafo lançado de uma vez, o que corta o trabalho da CPU.",
+      "t": 3030,
+      "legenda": "Um só lançamento na CPU dispara todos os kernels da passada do modelo",
+      "print": "img/woIYJYd_etI/3.jpg"
+    },
+    {
+      "titulo": "Speculative decoding troca passos sequenciais por checagem em paralelo",
+      "texto": "Na fase de decode, cada token exige ler os pesos do modelo inteiro da memória. Um modelo menor, o speculator, chuta os próximos tokens. O modelo principal confere todos de uma vez, e a rejection sampling (amostragem por rejeição) mantém a mesma saída. Frye afirma que um speculator melhor dá ganho quase linear na vazão, enquanto outras otimizações rendem poucos pontos percentuais cada.",
+      "t": 3090,
+      "legenda": "O decode vira uma série de pequenos prefills verificados em paralelo",
+      "print": "img/woIYJYd_etI/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Prefill e decode",
+      "traducao": "Processar a entrada e gerar a saída",
+      "nivel": "intermediario",
+      "chave": "prefill e decode",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Time to first token (TTFT)",
+      "traducao": "Tempo até o primeiro token",
+      "nivel": "intermediario",
+      "chave": "time to first token (ttft)",
+      "analogia": "O TTFT é como o tempo entre fazer o pedido no restaurante e o garçom trazer o primeiro prato à mesa.",
+      "explicacao": [
+        "Quando você manda uma pergunta para um chatbot, existe uma espera até a primeira palavra aparecer na tela. Essa espera tem nome, time to first token (tempo até o primeiro token).",
+        "Nesse intervalo o motor lê o prompt inteiro de uma vez. Essa fase se chama prefill (pré-preenchimento) e termina com o primeiro token pronto.",
+        "Prompts longos pedem mais conta no prefill e aumentam o TTFT. Reaproveitar um prefixo já calculado no KV cache encurta essa etapa.",
+        "O TTFT anda junto com a inter-token latency (tempo entre tokens), que mede a velocidade das palavras seguintes. As duas formam o orçamento de latência do deploy.",
+        "Para um chatbot com pessoas, Frye fala em poucas centenas de milissegundos no máximo. Um agente em segundo plano tolera minutos."
+      ],
+      "pre_requisitos": [
+        "Token",
+        "Prefill e decode",
+        "Latência",
+        "KV cache"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PEDIDO ENVIADO",
+            "nota": "Usuário manda o prompt"
+          },
+          {
+            "rotulo": "FILA E LOTE",
+            "nota": "Scheduler encaixa o pedido"
+          },
+          {
+            "rotulo": "PREFILL",
+            "nota": "Modelo lê o prompt inteiro"
+          },
+          {
+            "rotulo": "PRIMEIRO TOKEN",
+            "nota": "Fim da contagem do TTFT"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Scheduler",
+      "traducao": "Escalonador de trabalho para a GPU",
+      "nivel": "avancado",
+      "chave": "scheduler",
+      "analogia": "O scheduler é como o chefe de cozinha que decide quais pedidos vão juntos para o fogão, para que o fogão nunca fique desligado esperando.",
+      "explicacao": [
+        "Um modelo de IA atende muitos pedidos ao mesmo tempo, e alguém precisa decidir a ordem e o que vai junto. Esse papel é do scheduler (escalonador).",
+        "Ele recebe os pedidos já convertidos em tokens, confere quanta memória cada um vai gastar e quanta está livre, e coloca o excedente em uma fila.",
+        "Depois monta lotes (batches) de pedidos e os envia para a GPU, que rende mais quando processa vários pedidos em paralelo.",
+        "No SGLang e no vLLM o scheduler roda em Python, em uma única thread (linha de execução). Ele faz pouca conta, mas toda tarefa da GPU passa por ele.",
+        "Se o scheduler demora a preparar o próximo lote, a GPU, a peça mais cara, fica parada. Por isso ele vira gargalo e concentra boa parte do trabalho de otimização."
+      ],
+      "pre_requisitos": [
+        "GPU",
+        "Token",
+        "Batching",
+        "Tokenizer"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PEDIDO TOKENIZADO",
+            "nota": "Chega do tokenizador"
+          },
+          {
+            "rotulo": "CONFERE RECURSOS",
+            "nota": "Memória livre e fila de espera"
+          },
+          {
+            "rotulo": "MONTA O LOTE",
+            "nota": "Junta vários pedidos de uma vez"
+          },
+          {
+            "rotulo": "GPU OCUPADA",
+            "nota": "Modelo roda sem ficar ociosa"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Tokenizer",
+      "traducao": "Tokenizador",
+      "nivel": "basico",
+      "chave": "tokenizer",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "GPU kernel",
+      "traducao": "Rotina que roda direto na GPU",
+      "nivel": "avancado",
+      "chave": "gpu kernel",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "KV cache",
+      "traducao": "Cache de chaves e valores da atenção",
+      "nivel": "avancado",
+      "chave": "kv cache",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "CUDA graphs",
+      "traducao": "Grafos de kernels lançados de uma vez",
+      "nivel": "avancado",
+      "chave": "cuda graphs",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Speculative decoding",
+      "traducao": "Decodificação especulativa",
+      "nivel": "avancado",
+      "chave": "speculative decoding",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "Frye trabalha na Modal, e o talk fecha com a divulgação de um produto de deploy e das vagas da empresa. A demo de carga usa o próprio app de placas de museu com três réplicas e não mostra números. O ganho de 2x a 8x com speculative decoding chega sem benchmark e remete ao blog da Modal. A regra de que o tokenizador só pesa abaixo de cerca de 20 bilhões de parâmetros vem de terceiros (Crusoe), sem dados. O próprio palestrante admite incerteza sobre detalhes do tokenizador.",
+  "acoes": [
+    "Antes de escolher um provedor ou deploy, classifique sua carga: conversa com pessoa, agente em segundo plano ou processamento de documentos em lote.",
+    "Defina metas de time to first token e de tempo entre tokens e meça as duas no painel do seu provedor de inferência.",
+    "Coloque o system prompt longo e fixo no início do prompt para aproveitar o reaproveitamento de prefixo no KV cache.",
+    "Ao trocar de modelo ou motor, rode suas evals contra o endpoint real e registre os token IDs para pegar bugs de tokenizador e chat template."
+  ],
+  "numeros": [
+    {
+      "valor": "1 hora ou 2",
+      "contexto": "Tempo para escrever um motor simples com PyTorch e Transformers",
+      "t": 108
+    },
+    {
+      "valor": "20 bilhões",
+      "contexto": "Parâmetros acima dos quais o tokenizador costuma não ser gargalo",
+      "t": 1887
+    },
+    {
+      "valor": "1 ms",
+      "contexto": "Tempo por token ao gerar 1.000 tokens de saída por segundo",
+      "t": 1920
+    },
+    {
+      "valor": "2x a 8x",
+      "contexto": "Ganho de vazão no decode com um speculator melhor",
+      "t": 3171
+    }
+  ]
+}

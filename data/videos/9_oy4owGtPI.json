@@ -1,0 +1,174 @@
+{
+  "id": "9_oy4owGtPI",
+  "titulo": "Agent Memory Is Solved. Agent Learning Isn't. — Karthik Ranganathan, Yugabyte",
+  "titulo_curto": "Agent Memory Is Solved. Agent Learning Isn't.",
+  "palestrante": "Karthik Ranganathan, Yugabyte",
+  "url": "https://www.youtube.com/watch?v=9_oy4owGtPI",
+  "duracao": 1235,
+  "publicado_ts": 1791208820,
+  "edicao": "2026-10-05",
+  "tese": "Memória por agente já funciona. Times de agentes só aprendem se o contexto for compartilhado, promovido por humanos e rastreável até a origem.",
+  "tldr": [
+    "Karthik Ranganathan, da Yugabyte, diz que memória individual de agente é problema resolvido, mas aprendizado em grupo não. Quando um agente passa trabalho a outro, entrega só o resultado e perde o raciocínio e os becos sem saída, e o segundo agente gasta tokens para refazer tudo.",
+    "Ele aponta cinco equívocos (mais memória, arquivos compartilhados, RAG em tudo, fine-tuning, janela de contexto maior) e conta que ajustar um pipeline de RAG uma variável por vez levou a fidelidade (faithfulness) de 14% para 82%, com cerca de um sétimo do contexto.",
+    "A solução apresentada é o Meko, uma camada de persistência para agentes. Cada agente guarda memória privada e um humano promove trechos ao espaço compartilhado, onde outros agentes (Claude, Codex, ChatGPT) os recuperam por uma chamada MCP."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "O handoff entre agentes perde o raciocínio",
+      "texto": "Quando o agente A entrega um arquivo (MD, PDF) ao agente B, o resultado vai, mas o raciocínio, os becos sem saída e as falhas anteriores ficam para trás. O agente B refaz tudo e você paga tokens por isso. Ranganathan compara com um novo membro de equipe que propõe 50 alternativas já descartadas.",
+      "t": 189,
+      "legenda": "O handoff passa o output e perde o raciocínio que levou até ele.",
+      "print": "img/9_oy4owGtPI/0.jpg"
+    },
+    {
+      "titulo": "Cinco equívocos sobre memória de agente",
+      "texto": "Mais memória, estado compartilhado, RAG em tudo, fine-tuning e janela de contexto maior não equivalem a aprendizado. Para o palestrante, cada um é uma lacuna de arquitetura. Ele pede contexto compartilhado, promovido sob supervisão (como código) e com origem rastreável.",
+      "t": 237,
+      "legenda": "Os cinco equívocos e os três requisitos de contexto compartilhado.",
+      "print": "img/9_oy4owGtPI/1.jpg"
+    },
+    {
+      "titulo": "Ajustar o RAG uma variável por vez",
+      "texto": "O primeiro RAG da Yugabyte, montado com componentes recomendados pela academia, deu 14% de fidelidade em benchmark público de Markdown. Com traces e testes de uma variável por vez, chegou a 82%. Os chunks recuperados caíram de mais de 7.000 para cerca de 1.000.",
+      "t": 407,
+      "legenda": "A melhora de 14% para 82% veio de ajustes isolados, medidos com traces.",
+      "print": "img/9_oy4owGtPI/2.jpg"
+    },
+    {
+      "titulo": "Memória privada, promoção e memória compartilhada",
+      "texto": "Na demo, Heather Downing salva um fato no Claude Desktop e o Codex não o enxerga, porque a memória ainda é privada. Depois de promover só aquele item ao espaço compartilhado, o Codex o encontra. A promoção é granular e feita por um humano.",
+      "t": 903,
+      "legenda": "A memória só aparece para outro agente depois que um humano a promove.",
+      "print": "img/9_oy4owGtPI/3.jpg"
+    },
+    {
+      "titulo": "Promoção humana como sinal de treino",
+      "texto": "Cada vez que uma pessoa decide que algo merece ser guardado, gera um exemplo rotulado do que é um bom contexto. A Yugabyte sugere que isso pode treinar no futuro um agente que faça a promoção sozinho, mas hoje mantém o humano no loop. Os traces mostram cada tool call, o que permitiria conferir a economia de tokens.",
+      "t": 975,
+      "legenda": "Os traces do data pack mostram as tool calls e o gasto de tokens.",
+      "print": "img/9_oy4owGtPI/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Memory layer",
+      "traducao": "camada de memória",
+      "nivel": "intermediario",
+      "chave": "memory layer",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Persistent memory",
+      "traducao": "memória persistente",
+      "nivel": "basico",
+      "chave": "persistent memory",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "RAG",
+      "traducao": "geração aumentada por recuperação",
+      "nivel": "intermediario",
+      "chave": "rag",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Janela de contexto",
+      "traducao": "quantidade de texto que o modelo lê de uma vez",
+      "nivel": "basico",
+      "chave": "janela de contexto",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Fine-tuning",
+      "traducao": "ajuste fino do modelo",
+      "nivel": "intermediario",
+      "chave": "fine-tuning",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Trace",
+      "traducao": "registro passo a passo da execução do agente",
+      "nivel": "intermediario",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Provenance",
+      "traducao": "origem rastreável da informação",
+      "nivel": "intermediario",
+      "chave": "provenance",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP",
+      "traducao": "Model Context Protocol, padrão para conectar agentes a ferramentas",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é pitch do Meko, produto da própria Yugabyte, e termina com convite para o plano gratuito. A economia de tokens é afirmada sem medição apresentada; a demo é gravada e acelerada, com um único fato. O ganho de 14% para 82% vem de um pipeline interno, sem detalhar quais variáveis mudaram ou qual o benchmark exato. A crítica a fine-tuning e a janelas grandes aparece sem evidência.",
+  "acoes": [
+    "Ao passar trabalho de um agente para outro, entregue também as decisões tomadas, as alternativas descartadas e os erros, não só o arquivo final.",
+    "Se usa RAG, mude uma variável por vez (tamanho do chunk, número de resultados, re-ranking) e meça fidelidade e precisão do contexto antes de adicionar mais documentos.",
+    "Defina quem pode promover uma informação de memória privada para compartilhada, e registre a origem de cada item.",
+    "Antes de testar o Meko, meça o gasto de tokens da tarefa sem ele e compare com a mesma tarefa usando memória compartilhada."
+  ],
+  "numeros": [
+    {
+      "valor": "14% para 82%",
+      "contexto": "fidelidade do RAG após ajustes, benchmark público de MD",
+      "t": 407
+    },
+    {
+      "valor": "20%",
+      "contexto": "fidelidade inicial do RAG em PDF",
+      "t": 407
+    },
+    {
+      "valor": "57%",
+      "contexto": "precisão de contexto inicial do RAG",
+      "t": 407
+    },
+    {
+      "valor": "7.000 para 1.000",
+      "contexto": "chunks de contexto, cerca de um sétimo",
+      "t": 437
+    }
+  ]
+}

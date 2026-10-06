@@ -1,0 +1,174 @@
+{
+  "id": "T3SS931wU0I",
+  "titulo": "Agentic Search vs Vector Search for Coding Agents: We Ran the Eval — Braintrust",
+  "titulo_curto": "Agentic Search vs Vector Search for Coding Agents: We Ran the Eval",
+  "palestrante": "Braintrust",
+  "url": "https://www.youtube.com/watch?v=T3SS931wU0I",
+  "duracao": 1094,
+  "publicado_ts": 1791214236,
+  "edicao": "2026-10-05",
+  "tese": "Rode um eval antes de escolher a ferramenta: busca vetorial e busca agêntica acertaram igual, mas a vetorial custou 4 vezes mais.",
+  "tldr": [
+    "Jess Wang, da Braintrust, explica as quatro partes de um eval (dataset, task, scorer e experimentos) e como logs de produção e evals formam um ciclo de melhoria.",
+    "Ela aplica isso em um caso real: Claude Code localiza bugs do repositório TypeScript Go da Microsoft usando busca agêntica (grep, find, leitura de arquivos) ou busca vetorial, com os testes do repositório como nota.",
+    "As duas abordagens tiveram a mesma acurácia, mas a vetorial custou cerca de 4 vezes mais, porque os trechos vinham sem contexto e o agente precisava buscar de novo várias vezes."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Eval tem quatro peças",
+      "texto": "Um eval junta um dataset (casos de entrada, incluindo casos ideais, extremos e falhas), uma task (prompt de sistema e modelo), um scorer (critério de bom ou ruim) e experimentos. Cada combinação das três primeiras peças gera um experimento, e comparar experimentos mostra melhoras e regressões.",
+      "t": 188,
+      "legenda": "As quatro peças que formam qualquer eval.",
+      "print": "img/T3SS931wU0I/0.jpg"
+    },
+    {
+      "titulo": "Produção alimenta o eval, o eval melhora a produção",
+      "texto": "Logs reais de um chatbot em produção viram uma amostra de 10 a 20 linhas, que vira dataset. Os evals mostram o que mudar no sistema, a mudança vai ao ar e gera novos logs. O ciclo se repete, e por isso ela chama o processo de flywheel (volante de inércia).",
+      "t": 373,
+      "legenda": "O ciclo entre observabilidade e evals.",
+      "print": "img/T3SS931wU0I/1.jpg"
+    },
+    {
+      "titulo": "Montar o experimento com bugs reais",
+      "texto": "O dataset saiu de PRs mergeados com \"fix\" no título do repositório TypeScript Go. Ela voltou ao commit anterior, que ainda tinha o bug, e pediu a um LLM uma descrição da tarefa a partir do diff. A nota é binária: passou na suíte de testes do repositório vale 100%, falhou vale 0%.",
+      "t": 713,
+      "legenda": "O dataset vem de correções reais e a nota vem dos testes.",
+      "print": "img/T3SS931wU0I/2.jpg"
+    },
+    {
+      "titulo": "Trace órfão esconde o que o agente fez",
+      "texto": "Rodar o Claude Code como subprocesso deixou o trace órfão: só aparecia a linha \"run Claude agent\", sem os passos internos. Passar o ID do span pai por variável de ambiente ligou tudo, e o trace passou a mostrar cada turno, chamada ao LLM e comando como grep e ls. Sem isso, não dá para depurar.",
+      "t": 837,
+      "legenda": "Depois da correção, o trace mostra cada comando do agente.",
+      "print": "img/T3SS931wU0I/3.jpg"
+    },
+    {
+      "titulo": "Mesma acurácia, custo 4 vezes maior",
+      "texto": "A busca vetorial devolve trechos sem imports e sem o código que os chama. O agente busca de novo, de novo e de novo, e as chamadas ao LLM se acumulam. A busca agêntica lê a função inteira e segue as chamadas para outros arquivos. Jess resume: a vetorial dá proximidade, a agêntica dá o tecido conectivo.",
+      "t": 900,
+      "legenda": "Acurácia igual nas duas, custo cerca de 4 vezes maior na vetorial.",
+      "print": "img/T3SS931wU0I/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Eval",
+      "traducao": "avaliação",
+      "nivel": "basico",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval flywheel",
+      "traducao": "ciclo contínuo de evals",
+      "nivel": "intermediario",
+      "chave": "eval flywheel",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Embedding",
+      "traducao": "vetor que representa o sentido de um texto",
+      "nivel": "intermediario",
+      "chave": "embedding",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Busca vetorial",
+      "traducao": "busca por proximidade de embeddings",
+      "nivel": "intermediario",
+      "chave": "busca vetorial",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Busca agêntica em arquivos",
+      "traducao": "agente explora o código com grep, find e leitura",
+      "nivel": "intermediario",
+      "chave": "busca agêntica em arquivos",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Trace",
+      "traducao": "registro passo a passo de uma execução",
+      "nivel": "intermediario",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Harness",
+      "traducao": "estrutura que executa o agente",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo de linguagem como avaliador",
+      "nivel": "basico",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "A própria palestrante admite as fragilidades: cerca de 20 casos, um único repositório, uma tentativa por tarefa e uma busca vetorial que ela chama de relativamente fraca. Sem múltiplas rodadas, a diferença de custo pode oscilar. Não há valores em dinheiro nem intervalo de confiança. A Braintrust vende a plataforma de evals usada na demonstração, então o talk também funciona como pitch do produto. A conclusão vale como hipótese a testar, não como regra geral contra busca vetorial.",
+  "acoes": [
+    "Antes de adotar busca vetorial ou agêntica no seu agente de código, monte um eval pequeno com tarefas reais suas e compare acurácia e custo.",
+    "Crie dataset a partir de bugs já corrigidos no seu repositório: volte ao commit anterior à correção e use os testes existentes como nota.",
+    "Registre traces completos das execuções do agente, inclusive de subprocessos, para entender por que uma abordagem custa mais.",
+    "Rode várias tentativas por tarefa antes de confiar na nota, porque LLMs variam de uma execução para outra."
+  ],
+  "numeros": [
+    {
+      "valor": "4x",
+      "contexto": "custo da busca vetorial sobre a agêntica, com mesma acurácia",
+      "t": 900
+    },
+    {
+      "valor": "20",
+      "contexto": "PRs aproximados usados como dataset",
+      "t": 713
+    },
+    {
+      "valor": "26",
+      "contexto": "buscas do agente vetorial em uma linha, sem resolver",
+      "t": 932
+    },
+    {
+      "valor": "94%",
+      "contexto": "exemplo de 200 casos de teste aprovados antes de lançar",
+      "t": 62
+    }
+  ]
+}

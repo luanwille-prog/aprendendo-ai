@@ -1,0 +1,208 @@
+{
+  "id": "F0TNSmbo5hE",
+  "titulo": "From Vibes to Production: Evaluating and Shipping AI Agents That Work 201 — Laurie Voss, Arize AI",
+  "titulo_curto": "From Vibes to Production: Evaluating and Shipping AI Agents That Work 201",
+  "palestrante": "Laurie Voss, Arize AI",
+  "url": "https://www.youtube.com/watch?v=F0TNSmbo5hE",
+  "duracao": 2536,
+  "publicado_ts": 1791241209,
+  "edicao": "2026-10-05",
+  "tese": "Agente não se lê no código, se lê em traces. Em escala, outro agente precisa ler os traces e propor os consertos, guiado pela sua definição de bom.",
+  "tldr": [
+    "Laurie Voss, da Arize AI, argumenta que agentes são não determinísticos, então os traces (registros de cada passo) viram a fonte de verdade, e evals (avaliações automáticas) resumem esses traces em notas e explicações.",
+    "Com milhões de traces, o humano vira gargalo. A proposta é um agente (o Signal, produto da Arize) que agrupa falhas recorrentes e sugere issues, datasets, evaluators e pull requests.",
+    "Na demo ao vivo, um agente de código instrumenta a loja Wonder Toys, lê os traces, descobre que falta filtro de preço e implementa o filtro, sem o palestrante tocar no código."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "O código deixa de ser a fonte de verdade",
+      "texto": "Agentes dão saídas diferentes para a mesma entrada e podem seguir caminhos diferentes. Por isso ler o código não diz o que o agente faz. Os traces, em volume, mostram o comportamento médio, com custo, duração e cada chamada de modelo e de ferramenta.",
+      "t": 295,
+      "legenda": "Um trace mostra entrada, saída, custo e duração de cada passo do agente.",
+      "print": "img/F0TNSmbo5hE/0.jpg"
+    },
+    {
+      "titulo": "O humano vira gargalo em cada camada",
+      "texto": "Ler traces um a um não escala. Evals comprimem milhares de traces em notas com explicação. Em 2026, porém, há evals demais para ler. A proposta é subir mais um nível de abstração: um agente lê as falhas dos evals e as agrupa em sinais.",
+      "t": 608,
+      "legenda": "O loop proposto vai de traces a evals, signals e correções automáticas.",
+      "print": "img/F0TNSmbo5hE/1.jpg"
+    },
+    {
+      "titulo": "Instrumentar um agente é ligar o que já existe",
+      "texto": "O SDK de agentes da OpenAI já emite dados no padrão OpenInference, usado pela indústria de observabilidade. O agente de código só configurou a chave e o endpoint da Arize. Os traces passaram a chegar sem o palestrante escrever código, com skills instaladas no repositório.",
+      "t": 1110,
+      "legenda": "O agente de código liga o tracing existente apontando para o endpoint da Arize.",
+      "print": "img/F0TNSmbo5hE/2.jpg"
+    },
+    {
+      "titulo": "Falha silenciosa só aparece na análise de qualidade",
+      "texto": "Não havia spans com erro. Todas as chamadas voltaram com 200. O agente de código, lendo os traces, achou 42% de buscas sem resultado e filtros estreitos demais. O pedido de preço máximo falhava porque a ferramenta de busca não tinha filtro de preço. Depois da correção, a consulta por brinquedos abaixo de US$ 9 funcionou.",
+      "t": 1710,
+      "legenda": "O diagnóstico aponta busca sem resultado e filtros restritivos, não exceções.",
+      "print": "img/F0TNSmbo5hE/3.jpg"
+    },
+    {
+      "titulo": "Signal transforma padrões em issues, evals e PRs",
+      "texto": "O Signal roda a cada seis horas por padrão e lê os traces. Ele achou alucinação de restrição de idade, consulta nociva respondida com sugestões e obediência a instrução aleatória. Cada achado pode virar issue no GitHub, dataset, evaluator ou pull request. Contra regressões, vale ter evals de comportamento já bom.",
+      "t": 2043,
+      "legenda": "Cada problema detectado oferece issue, dataset, evaluator ou PR.",
+      "print": "img/F0TNSmbo5hE/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Trace",
+      "traducao": "registro de cada passo do agente",
+      "nivel": "basico",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação automática",
+      "nivel": "intermediario",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Observabilidade de agentes",
+      "traducao": "ver o que o agente fez em cada passo",
+      "nivel": "intermediario",
+      "chave": "observabilidade de agentes",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "OpenInference",
+      "traducao": "padrão aberto para registrar o que apps de IA fazem",
+      "nivel": "intermediario",
+      "chave": "openinference",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Skills",
+      "traducao": "instruções empacotadas que ensinam o agente de código a usar uma ferramenta",
+      "nivel": "basico",
+      "chave": "skills",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Teste de regressão",
+      "traducao": "checar que o que já funcionava continua funcionando",
+      "nivel": "intermediario",
+      "chave": "teste de regressão",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo que julga a saída de outro",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Signal",
+      "traducao": "agente da Arize que agrupa falhas e propõe correções",
+      "nivel": "avancado",
+      "chave": "signal",
+      "analogia": "O Signal é como um supervisor de loja que revê as gravações das câmeras a cada turno, anota os problemas que se repetem e deixa no quadro uma lista de consertos para o gerente aprovar.",
+      "explicacao": [
+        "Um assistente de IA atende milhares de pessoas por dia, e ninguém consegue reler todas essas conversas. O Signal faz essa leitura no lugar da equipe.",
+        "Ele é um agente, ou seja, um programa de IA que age sozinho, e roda dentro do Arize AX, a plataforma de observabilidade da Arize. Por padrão, ele acorda a cada seis horas, e esse intervalo pode ser ajustado.",
+        "Em cada rodada, ele lê os traces (registros de cada passo do agente), procura padrões e agrupa as falhas que se repetem. Na demo, ele achou restrição de idade inventada, resposta a pedido perigoso e obediência a instrução aleatória.",
+        "Para cada problema, ele oferece caminhos. Pode abrir uma issue (chamado de tarefa) no GitHub, guardar o trace em um dataset (conjunto de exemplos) para rodar evals ou criar um evaluator (avaliador) para aquele erro.",
+        "Com o repositório conectado, ele lê o código e abre um pull request (proposta de mudança no código) com a correção. O humano só aprova ou rejeita, e isso fecha o ciclo de melhoria sem alguém pedir a análise."
+      ],
+      "pre_requisitos": [
+        "Trace",
+        "Eval",
+        "Observabilidade de agentes",
+        "Pull request"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "TRACES CHEGAM",
+            "nota": "Cada conversa do agente vira registro"
+          },
+          {
+            "rotulo": "SIGNAL LÊ",
+            "nota": "Roda a cada 6 horas por padrão"
+          },
+          {
+            "rotulo": "AGRUPA FALHAS",
+            "nota": "Junta problemas que se repetem"
+          },
+          {
+            "rotulo": "PROPÕE AÇÃO",
+            "nota": "Issue, dataset, evaluator ou PR"
+          },
+          {
+            "rotulo": "HUMANO APROVA",
+            "nota": "Aceita ou rejeita a correção"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é parte workshop e parte pitch do Signal, produto da Arize. O próprio palestrante admite a venda no começo. A demo usou poucos traces, então o Signal agrupou com base em um ou dois. Não há dado de precisão, taxa de falso positivo ou custo. A pergunta sobre confiar em código escrito por agentes foi adiada para outra palestra. Signal roda sobre Claude Code e a Arize paga o custo por enquanto, sem garantia futura. Os evaluators não são criados automaticamente.",
+  "acoes": [
+    "Ligue tracing em um agente seu e leia 20 traces reais. Procure chamadas lentas, passos desnecessários e buscas sem resultado.",
+    "Escreva uma definição de bom comportamento em forma de eval para o pior caso conhecido (por exemplo, nunca dar instruções perigosas) antes de automatizar correções.",
+    "Mantenha um conjunto de evals de regressão com o que o agente já faz bem e rode antes de aceitar qualquer PR gerado por agente.",
+    "Peça ao seu agente de código para analisar traces buscando falhas de qualidade, não só erros HTTP ou exceções."
+  ],
+  "numeros": [
+    {
+      "valor": "42%",
+      "contexto": "das buscas do Wonder Toys sem resultado",
+      "t": 1709
+    },
+    {
+      "valor": "6 horas",
+      "contexto": "intervalo padrão de execução do Signal",
+      "t": 2011
+    },
+    {
+      "valor": "1 ms",
+      "contexto": "tempo suspeito da ferramenta de busca de produtos",
+      "t": 1610
+    },
+    {
+      "valor": "US$ 9",
+      "contexto": "filtro de preço testado após a correção",
+      "t": 1916
+    }
+  ]
+}

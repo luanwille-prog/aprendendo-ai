@@ -1,0 +1,184 @@
+{
+  "id": "qZj7sqmidqA",
+  "titulo": "From Vibes to Production: Evaluating and Shipping AI Agents That Work 101 — Laurie Voss, Arize AI",
+  "titulo_curto": "From Vibes to Production: Evaluating and Shipping AI Agents That Work 101",
+  "palestrante": "Laurie Voss, Arize AI",
+  "url": "https://www.youtube.com/watch?v=qZj7sqmidqA",
+  "duracao": 6686,
+  "publicado_ts": 1791237636,
+  "edicao": "2026-10-05",
+  "tese": "Leia os traces antes de escrever qualquer eval. Defina o que é sucesso, meça com várias camadas de checagem e feche o ciclo com experimentos.",
+  "tldr": [
+    "Laurie Voss constrói um agente analista financeiro com o Claude Agent SDK, instrumenta com OpenTelemetry e lê os traces (registros passo a passo) para achar falhas reais, como relatórios gravados em um disco que não existe.",
+    "Ela empilha três tipos de eval (avaliação): um check de código para o ticker, um juiz de correção que reprova tudo por não ter contexto e um juiz de fidelidade que separa 6 relatórios fiéis de 7 infiéis.",
+    "Depois valida o juiz contra anotações humanas, transforma as falhas em dataset, pede ao Claude que reescreva os prompts e comprova a melhora com um experimento controlado e monitoramento online."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Trace mostra o que o agente fez, eval diz se foi bom",
+      "texto": "Um trace é feito de spans em árvore. Cada chamada ao modelo e cada uso de ferramenta vira um span com entrada, saída, tempo e tokens. Sem isso, você só vê o prompt e o relatório final. Com isso, você vê as quatro buscas na web, a escrita que falhou e o loop sem fim. Observar vem antes de avaliar.",
+      "t": 497,
+      "legenda": "Cada passo do agente aparece como um span dentro do trace.",
+      "print": "img/qZj7sqmidqA/0.jpg"
+    },
+    {
+      "titulo": "Ler os traces revela falhas que nenhum teste pegaria",
+      "texto": "Três dos 13 relatórios tentaram gravar um arquivo em disco, algo impossível no Colab, e responderam apenas que o relatório estava salvo. A falha é silenciosa, porque o agente devolve uma saída mesmo assim. Outro caso entrou em loop de buscas sobre a Microsoft. Só a leitura direta dos traces expõe isso.",
+      "t": 2032,
+      "legenda": "O agente tenta salvar um arquivo que não pode existir e segue como se tivesse funcionado.",
+      "print": "img/qZj7sqmidqA/1.jpg"
+    },
+    {
+      "titulo": "Um check de código barato é a primeira camada",
+      "texto": "O check do ticker é uma função Python curta que procura o código da ação no relatório. Roda em milissegundos, sem custo de LLM. Passaram 12 de 13. A falha foi a consulta sobre a AWS, em que o relatório falou só da AWS e nunca citou o ticker da Amazon. É uma camada de defesa rápida do modelo do queijo suíço.",
+      "t": 3261,
+      "legenda": "Uma função determinística achou o relatório que ignorou a Amazon.",
+      "print": "img/qZj7sqmidqA/2.jpg"
+    },
+    {
+      "titulo": "O mesmo juiz dá resultados opostos conforme o contexto",
+      "texto": "O juiz de correção, sem acesso às fontes, reprovou todos os 13 relatórios. Ele julgava pelo próprio conhecimento, que parava em janeiro, e o agente tinha pesquisado dados de 2026. Ao receber as fontes coletadas, o juiz de fidelidade separou 6 fiéis e 7 infiéis. Escolher a pergunta certa pesa mais do que escolher o eval mais famoso.",
+      "t": 3854,
+      "legenda": "Com o contexto da pesquisa, o juiz passa a dar um sinal útil.",
+      "print": "img/qZj7sqmidqA/3.jpg"
+    },
+    {
+      "titulo": "Juiz também precisa ser testado contra humanos",
+      "texto": "O juiz é um classificador. Compare as previsões dele com rótulos humanos, o golden dataset. Na demo os rótulos eram aleatórios de propósito, e a concordância foi de 46%. Na prática, você lê as explicações dos desacordos e decide se a regra ou o humano estava errado. Separe cerca de 25% dos rótulos para testar sem ajustar o juiz a eles.",
+      "t": 5109,
+      "legenda": "A concordância de 46% mostra onde investigar a rubrica.",
+      "print": "img/qZj7sqmidqA/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Eval",
+      "traducao": "avaliação automática de saídas de IA",
+      "nivel": "basico",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Trace",
+      "traducao": "registro passo a passo da execução",
+      "nivel": "basico",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo usado como avaliador",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Faithfulness eval",
+      "traducao": "avaliação de fidelidade às fontes",
+      "nivel": "intermediario",
+      "chave": "faithfulness eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Rubric",
+      "traducao": "rubrica, o conjunto de regras do juiz",
+      "nivel": "intermediario",
+      "chave": "rubric",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Golden dataset",
+      "traducao": "conjunto de referência rotulado por humanos",
+      "nivel": "intermediario",
+      "chave": "golden dataset",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Capability eval e regression eval",
+      "traducao": "eval de capacidade e eval de regressão",
+      "nivel": "intermediario",
+      "chave": "capability eval e regression eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Precision e recall",
+      "traducao": "precisão e cobertura de um classificador",
+      "nivel": "avancado",
+      "chave": "precision e recall",
+      "analogia": "Precision e recall são como um fiscal de prova que procura cola, em que a precisão mede quantas das suas acusações eram cola de verdade e a cobertura mede quantas colas da sala ele conseguiu pegar.",
+      "explicacao": [
+        "Imagine um juiz que separa relatórios bons de ruins. Para saber se ele é confiável, você compara as decisões dele com as de uma pessoa que já rotulou os mesmos relatórios.",
+        "Precision (precisão) olha só para as vezes em que o juiz disse que o relatório era ruim. Ela pergunta quantas dessas acusações estavam certas.",
+        "Recall (cobertura) olha para todos os relatórios que eram ruins de fato. Ele pergunta quantos desses o juiz conseguiu pegar.",
+        "As duas medidas puxam para lados opostos. Um juiz rigoroso pega mais erros, mas gera falsos positivos (alarmes falsos). Um juiz cauteloso acerta quando acusa, mas deixa erros passarem.",
+        "Laurie recomenda priorizar recall na maioria dos casos, porque um alarme falso custa menos do que um erro que passa. Com só 12 exemplos, os números oscilam muito e servem apenas para ver se o juiz está na faixa certa."
+      ],
+      "pre_requisitos": [
+        "LLM-as-a-judge",
+        "Golden dataset",
+        "Falso positivo e falso negativo"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O workshop é também pitch do Arize AX, e a autora é head de developer relations da empresa. Os resultados vêm de um agente de brinquedo com 13 traces e prompts fracos de propósito. A melhora de 50% para 100% no experimento foi, nas palavras dela, um acerto de primeira favorecido por muitas tentativas. Os rótulos humanos da demo eram aleatórios, então os 46% de concordância só ilustram o método. Não há comparação com outras ferramentas.",
+  "acoes": [
+    "Instrumente um agente seu com OpenTelemetry e leia de 12 a 15 traces completos antes de escrever qualquer eval, anotando as falhas em linguagem natural.",
+    "Escreva um check de código para a falha mais simples e frequente, como formato, tamanho ou presença de um campo obrigatório.",
+    "Ao criar um juiz LLM, use um critério por avaliador, rótulos binários, tags XML e exemplos bons e ruins, e passe ao juiz as fontes que o agente usou.",
+    "Rotule uma amostra com um especialista do negócio, compare com o juiz e leia cada desacordo antes de confiar nas notas."
+  ],
+  "numeros": [
+    {
+      "valor": "13",
+      "contexto": "traces: 1 execução inicial mais 12 consultas de teste",
+      "t": 2316
+    },
+    {
+      "valor": "6 e 7",
+      "contexto": "relatórios fiéis e infiéis no juiz de fidelidade",
+      "t": 3854
+    },
+    {
+      "valor": "46%",
+      "contexto": "concordância entre juiz e rótulos (aleatórios)",
+      "t": 5109
+    },
+    {
+      "valor": "200 a 400",
+      "contexto": "amostras sugeridas para decisões de lançamento",
+      "t": 5983
+    }
+  ]
+}

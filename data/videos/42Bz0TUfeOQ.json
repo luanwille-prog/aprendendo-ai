@@ -1,0 +1,204 @@
+{
+  "id": "42Bz0TUfeOQ",
+  "titulo": "The Transcript Looked Fine. The Call Wasn't. — Debugging Voice Agents, Arize",
+  "titulo_curto": "The Transcript Looked Fine. The Call Wasn't.",
+  "palestrante": "Debugging Voice Agents, Arize",
+  "url": "https://www.youtube.com/watch?v=42Bz0TUfeOQ",
+  "duracao": 1079,
+  "publicado_ts": 1791235833,
+  "edicao": "2026-10-05",
+  "tese": "Transcrição de texto esconde os piores erros de um agente de voz. Depure com áudio, trace e evals de áudio na mesma tela.",
+  "tldr": [
+    "Fuad Ali, da Arize, mostra uma ligação de reembolso que parece correta na transcrição, mas teve 2,4 segundos de silêncio, interrupção e reembolso do pedido errado (40 no lugar de 14).",
+    "A solução proposta junta áudio, transcrição e trace (registro passo a passo da execução) em uma sessão só, usando as convenções abertas OpenInference, e roda evals (avaliações) direto sobre o áudio.",
+    "O fecho é o ciclo observar, avaliar e melhorar, com agentes de SRE (confiabilidade) que propõem correções, repetem as chamadas que falharam e abrem um pull request para aprovação humana."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "A transcrição mente sobre a chamada",
+      "texto": "No exemplo, o texto mostra o agente se corrigindo. O áudio mostra 2,4 segundos de silêncio, o agente falando por cima do cliente, o número 14 ouvido errado e tom robótico. Quem lê só o log não vê nenhum desses problemas, porque latência, turnos de fala e erros de transcrição são fenômenos de áudio.",
+      "t": 161,
+      "legenda": "O texto parece correto, mas o áudio esconde silêncio, interrupção e erro de número.",
+      "print": "img/42Bz0TUfeOQ/0.jpg"
+    },
+    {
+      "titulo": "Uma sessão com áudio, transcrição e trace",
+      "texto": "A proposta é ver tudo no mesmo lugar: tocar o áudio dentro do trace, ler a transcrição, ver latência, tempo até o primeiro áudio, interrupções e custo de tokens de áudio. A conexão entre esses dados importa mais que cada um isolado, porque permite ligar uma fala ao momento exato da chamada de ferramenta.",
+      "t": 315,
+      "legenda": "Áudio, transcrição, latência e evals aparecem juntos em uma única visão.",
+      "print": "img/42Bz0TUfeOQ/1.jpg"
+    },
+    {
+      "titulo": "Um esquema aberto para vários provedores",
+      "texto": "O OpenInference é um conjunto aberto de convenções, compatível com OpenTelemetry, que traduz eventos de websocket de provedores como OpenAI Realtime e Gemini Live para um formato consultável. Isso evita parser próprio por fornecedor e facilita trocar de modelo quando um novo sai.",
+      "t": 378,
+      "legenda": "Um único esquema normaliza eventos de áudio de provedores diferentes.",
+      "print": "img/42Bz0TUfeOQ/2.jpg"
+    },
+    {
+      "titulo": "Achando a falha na chamada de ferramenta",
+      "texto": "Na demo, a chamada da ferramenta aparece alinhada ao áudio da sessão. Aplicado ao caso do reembolso, o trace mostra os três erros: 2,4 s até o primeiro áudio no turno 1, o agente falando por cima no turno 3 e o reembolso processado para o pedido 40.",
+      "t": 540,
+      "legenda": "O trace mostra os três erros que o log de texto escondia.",
+      "print": "img/42Bz0TUfeOQ/3.jpg"
+    },
+    {
+      "titulo": "Do eval ao pull request automático",
+      "texto": "Com os scores de eval gravados nos próprios spans, monitores podem acionar agentes de investigação. O cenário descrito: um agente de SRE acha a causa (resultados de ferramenta sem truncar sobrecarregavam o contexto), sobe a correção em dev, repete os traces que falharam e deixa um PR para o humano aprovar ou recusar.",
+      "t": 882,
+      "legenda": "Um agente propõe a correção e testa contra as chamadas que falharam.",
+      "print": "img/42Bz0TUfeOQ/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Trace",
+      "traducao": "registro passo a passo da execução",
+      "nivel": "intermediario",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "OpenInference",
+      "traducao": "convenções abertas de rastreamento para IA",
+      "nivel": "avancado",
+      "chave": "openinference",
+      "analogia": "OpenInference é como um formulário padrão de ocorrência que todas as filiais de uma empresa preenchem do mesmo jeito, mesmo que cada filial use um sistema próprio no dia a dia.",
+      "explicacao": [
+        "Cada empresa de IA, como OpenAI e Google, registra o que o modelo faz de um jeito diferente. Comparar esses registros dá trabalho, porque os campos têm nomes e formatos distintos.",
+        "O OpenInference define um vocabulário comum e aberto para esses registros. Ele diz quais campos existem e como cada um se chama, como sessão, entrada de áudio, transcrição, resposta e contagem de tokens (pedaços de texto ou áudio que o modelo cobra).",
+        "Um instrumentador automático (auto instrumenter) fica ligado ao seu agente e traduz os eventos de websocket (canal de comunicação contínua) de provedores como OpenAI Realtime e Gemini Live para esse vocabulário.",
+        "O resultado são spans (trechos do trace) compatíveis com OpenTelemetry, o padrão aberto de telemetria. Por isso você pode enviar os dados para a Arize ou para outro back end, como o Grafana.",
+        "Com um esquema único, você consulta e filtra milhares de chamadas de provedores diferentes da mesma forma. Trocar de modelo deixa de exigir um parser (leitor de formato) novo para cada fornecedor."
+      ],
+      "pre_requisitos": [
+        "Trace",
+        "Span",
+        "OpenTelemetry",
+        "Websocket"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "EVENTOS DO PROVEDOR",
+            "nota": "websocket da OpenAI ou do Gemini Live"
+          },
+          {
+            "rotulo": "INSTRUMENTADOR",
+            "nota": "traduz para as convenções abertas"
+          },
+          {
+            "rotulo": "SPANS PADRONIZADOS",
+            "nota": "sessão, áudio, transcrição, tokens"
+          },
+          {
+            "rotulo": "CONSULTA ÚNICA",
+            "nota": "filtra traces de qualquer provedor"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Voice agent",
+      "traducao": "agente de voz",
+      "nivel": "basico",
+      "chave": "voice agent",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Time to first audio",
+      "traducao": "tempo até o primeiro áudio",
+      "nivel": "intermediario",
+      "chave": "time to first audio",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Barge-in",
+      "traducao": "interrupção da fala de um lado pelo outro",
+      "nivel": "intermediario",
+      "chave": "barge-in",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM as a judge",
+      "traducao": "modelo de linguagem como avaliador",
+      "nivel": "intermediario",
+      "chave": "llm as a judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação automatizada",
+      "nivel": "intermediario",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "SRE (site reliability engineering)",
+      "traducao": "engenharia de confiabilidade de sistemas",
+      "nivel": "intermediario",
+      "chave": "sre (site reliability engineering)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O palestrante diz que não é pitch, mas o produto (Arize AX) aparece como solução em quase todos os trechos, e termina com código de um ano grátis do plano Pro. Não há dados de ganho: nenhuma taxa de erro, comparação antes e depois ou taxa de acerto dos evals de áudio. O caso do reembolso é uma chamada gerada por IA. O agente de SRE que corrige sozinho é descrito como futuro desejado, sem demonstração.",
+  "acoes": [
+    "Meça tempo até o primeiro áudio e número de interrupções nas chamadas do seu agente de voz antes de mexer em prompt ou modelo.",
+    "Guarde o áudio original junto com cada trace e use um identificador de sessão para juntar todos os turnos de uma chamada.",
+    "Crie um eval de tom ou de latência que rode sobre o áudio, não só sobre a transcrição, e compare com o que o eval de texto aponta.",
+    "Se já usa OpenTelemetry, teste o instrumentador open source OpenInference e envie os traces ao seu back end atual."
+  ],
+  "numeros": [
+    {
+      "valor": "2,4 s",
+      "contexto": "silêncio antes da resposta do agente na chamada de exemplo",
+      "t": 221
+    },
+    {
+      "valor": "14 vs 40",
+      "contexto": "pedido pedido pelo cliente e pedido que o agente reembolsou",
+      "t": 565
+    },
+    {
+      "valor": "600",
+      "contexto": "cheeseburgers recebidos por engano, exemplo citado em tom de piada",
+      "t": 127
+    },
+    {
+      "valor": "1 ano",
+      "contexto": "plano Pro gratuito oferecido com o código do evento",
+      "t": 1037
+    }
+  ]
+}

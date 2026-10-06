@@ -1,0 +1,174 @@
+{
+  "id": "fz6-NS7qpZc",
+  "titulo": "How I Learned to Stop Worrying and Love the Sandbox — Matt Brockman, E2B",
+  "titulo_curto": "How I Learned to Stop Worrying and Love the Sandbox",
+  "palestrante": "Matt Brockman, E2B",
+  "url": "https://www.youtube.com/watch?v=fz6-NS7qpZc",
+  "duracao": 3573,
+  "publicado_ts": 1791223217,
+  "edicao": "2026-10-05",
+  "tese": "Sandbox bom guarda o estado do agente, mas quem opera precisa vigiar processos órfãos, tempo de vida e quem acessa o quê.",
+  "tldr": [
+    "Matt Brockman, da E2B, explica por que agentes que escrevem código precisam rodar em sandboxes (ambientes isolados na nuvem) em vez de rodar no seu computador ou no seu servidor.",
+    "No workshop, a plateia resolve fases de um jogo de capture the flag (desafio em fases) com problemas reais de operação: CPU esgotada, memória, disco cheio, processos órfãos, timeout de vida e mapa de usuário para sandbox.",
+    "A lição final é que, com centenas de sandboxes, o trabalho vira saber o que roda onde, o que cada uma acessa e quando limpar."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 2,
+  "ideias": [
+    {
+      "titulo": "Snapshot de memória e disco em vez de boot do zero",
+      "texto": "A E2B pausa a sandbox salvando RAM e sistema de arquivos, e retoma do mesmo ponto. O agente não percebe que o tempo passou e encontra tudo como deixou, o que reduz erros. Um template (modelo) é uma VM já em execução, congelada. No workshop, cerca de 200 pessoas retomaram cópias do mesmo template.",
+      "t": 1025,
+      "legenda": "Um template congelado vira centenas de cópias iguais para a plateia.",
+      "print": "img/fz6-NS7qpZc/0.jpg"
+    },
+    {
+      "titulo": "Diagnóstico básico de CPU, memória e disco",
+      "texto": "As primeiras fases usam comandos Linux simples. Lista-se os processos, acha-se o que consome 99,7% da CPU e encerra-se com kill. Para o disco, roda-se um script que mostra o arquivo de 512 MB em /tmp e remove-se. Agentes geram esses problemas com frequência, então saber ler esse diagnóstico ajuda a revisar o trabalho deles.",
+      "t": 1148,
+      "legenda": "Um processo descontrolado aparece no topo da lista e cai com um kill.",
+      "print": "img/fz6-NS7qpZc/1.jpg"
+    },
+    {
+      "titulo": "Vida longa para a tarefa, vida curta depois dela",
+      "texto": "A sandbox ganha timeout longo (uma hora) para a tarefa terminar e, ao fim, um timeout curto (um minuto) para não ficar ocupando recursos. Brockman descreve o tradeoff entre velocidade, com a sandbox rodando, e custo, com ela pausada. Para serviços que precisam ficar sempre no ar, ele diz que sandbox talvez não seja a melhor opção.",
+      "t": 2319,
+      "legenda": "A configuração em duas etapas libera recursos sem cortar a tarefa.",
+      "print": "img/fz6-NS7qpZc/2.jpg"
+    },
+    {
+      "titulo": "Estado restaurado traz de volta os processos esquecidos",
+      "texto": "Retomar do snapshot é rápido, mas processos abandonados voltam junto e degradam o desempenho. Brockman diz que boa parte da gestão de sandboxes é matar órfãos. Na demo, três processos 'orphan worker' são achados com grep e encerrados um a um.",
+      "t": 2442,
+      "legenda": "Três órfãos vivos aparecem e são mortos até a página liberar a próxima fase.",
+      "print": "img/fz6-NS7qpZc/3.jpg"
+    },
+    {
+      "titulo": "Mapa de usuário para sandbox no lugar do round robin",
+      "texto": "Distribuir sandboxes em rodízio faz cada visita cair em um ambiente diferente. A correção é um dicionário que liga user ID a sandbox ID, para a pessoa voltar ao mesmo workspace. Em produção, ele diz que isso fica num banco de dados, o que também permite auditar reatribuições. Um teste falhou ao vivo porque faltava gravar o ID no dicionário.",
+      "t": 2691,
+      "legenda": "Uma estrutura de dados simples dá a cada usuário seu próprio workspace.",
+      "print": "img/fz6-NS7qpZc/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado para rodar código",
+      "nivel": "basico",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Template e snapshot de sandbox",
+      "traducao": "modelo de VM congelada com memória e disco",
+      "nivel": "intermediario",
+      "chave": "template e snapshot de sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "MicroVM",
+      "traducao": "máquina virtual leve (Firecracker)",
+      "nivel": "avancado",
+      "chave": "microvm",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Processo órfão",
+      "traducao": "processo esquecido que continua rodando",
+      "nivel": "intermediario",
+      "chave": "processo órfão",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Idle timeout",
+      "traducao": "tempo ocioso até a sandbox desligar",
+      "nivel": "intermediario",
+      "chave": "idle timeout",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Network egress",
+      "traducao": "tráfego de saída da sandbox para a rede",
+      "nivel": "intermediario",
+      "chave": "network egress",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Capture the flag",
+      "traducao": "desafio em fases que libera um código a cada solução",
+      "nivel": "basico",
+      "chave": "capture the flag",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Kubernetes",
+      "traducao": "orquestrador de contêineres",
+      "nivel": "avancado",
+      "chave": "kubernetes",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O talk é um workshop da E2B e serve também de divulgação da empresa, com pedidos de contratação e programa para startups. Falta evidência. A meta de subir sandboxes em menos de 100 ms é dita sem medição. Os problemas do lab são simulados e pequenos, longe de centenas de sandboxes reais. Brockman admite que a E2B não oferece GPU e que a integração com Kubernetes ainda não está resolvida, usando Nomad. Sobre armazenamento a longo prazo, ele diz que ninguém sabe ainda a resposta.",
+  "acoes": [
+    "Se o seu agente roda código, teste-o numa sandbox em vez de na sua máquina ou no servidor com seus segredos.",
+    "Defina dois timeouts por tarefa, um longo para ela terminar e um curto para depois, e meça o custo.",
+    "Guarde um registro de user ID para sandbox ID e liste periodicamente sandboxes e processos sem dono para removê-los.",
+    "Restrinja a saída de rede da sandbox quando ela tiver segredos e use chaves de desenvolvimento quando não precisar de mais."
+  ],
+  "numeros": [
+    {
+      "valor": "100 ms",
+      "contexto": "meta da E2B para subir uma sandbox",
+      "t": 241
+    },
+    {
+      "valor": "200",
+      "contexto": "cópias do template usadas pela plateia",
+      "t": 1025
+    },
+    {
+      "valor": "99,7%",
+      "contexto": "CPU usada pelo processo descontrolado",
+      "t": 1148
+    },
+    {
+      "valor": "512 MB",
+      "contexto": "arquivo que enchia o disco em /tmp",
+      "t": 1616
+    }
+  ]
+}

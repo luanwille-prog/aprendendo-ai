@@ -1,0 +1,234 @@
+{
+  "id": "hfEczxdNyvU",
+  "titulo": "Advanced Workshop: Mastering AI Observability — Doug Guthrie, Braintrust",
+  "titulo_curto": "Advanced Workshop: Mastering AI Observability",
+  "palestrante": "Doug Guthrie, Braintrust",
+  "url": "https://www.youtube.com/watch?v=hfEczxdNyvU",
+  "duracao": 6697,
+  "publicado_ts": 1791248425,
+  "edicao": "2026-10-05",
+  "tese": "Traces só viram qualidade quando sinal automático (scores e topics) alimenta evals e um coding agent propõe a correção em PR.",
+  "tldr": [
+    "Doug Guthrie, da Braintrust, mostra num workshop prático como transformar traces de produção de um agente de suporte em melhorias medidas por evals (avaliações).",
+    "O sinal vem de duas fontes. Scores online (código ou LLM juiz) medem falhas já conhecidas, e Topics agrupa padrões em tarefas, sentimento e problemas que ninguém previu.",
+    "Um coding agent com a CLI da Braintrust consulta os traces via SQL, cria casos de teste e novos scores, roda os evals e abre um pull request para revisão humana."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Produção alimenta desenvolvimento num flywheel",
+      "texto": "Guthrie defende um ciclo em que a produção informa o desenvolvimento. Você muda o agente, roda evals para checar se melhorou ou piorou, publica e observa. Como o volume de traces é grande demais para leitura humana, o ciclo precisa de uma camada de inteligência que destaque o que importa.",
+      "t": 485,
+      "legenda": "O ciclo que liga produção, evals e mudanças no agente.",
+      "print": "img/hfEczxdNyvU/0.jpg"
+    },
+    {
+      "titulo": "Quatro tipos de score e calibração humana",
+      "texto": "Os scores vão de checagens em código (rápidas e baratas, como validar schema ou ordem de chamada de ferramentas) a LLM juízes e juízes alinhados com revisão humana. Dicas dele: score binário no começo, exemplos no prompt do juiz, modelo mais forte para julgar do que para gerar. Se tudo dá 100%, os testes são fracos.",
+      "t": 610,
+      "legenda": "Taxonomia de scores que o talk usa no resto do workshop.",
+      "print": "img/hfEczxdNyvU/1.jpg"
+    },
+    {
+      "titulo": "Topics encontra falhas que os evals não testam",
+      "texto": "O pipeline de Topics pré-processa o trace em uma conversa enxuta, resume com uma facet (tarefa, sentimento, problemas), gera um embedding e monta um topic map que rotula os traces. Serve para os desconhecidos que ninguém testou, inclusive pedidos de funcionalidade novos. O custo citado é de poucos centavos por milhão de tokens.",
+      "t": 1114,
+      "legenda": "As etapas que transformam um trace bruto em rótulos filtráveis.",
+      "print": "img/hfEczxdNyvU/2.jpg"
+    },
+    {
+      "titulo": "Resultado no demo: falha de busca de pedido",
+      "texto": "Depois de importar 968 traces de exemplo, o painel de Topics mostra as tarefas mais frequentes e o sentimento. A facet customizada de workflow aponta uma falha de recuperação de pedido que os evals existentes não cobriam. A facet padrão de problemas não gerou dados, porque o prompt não combinava com o agente e faltaram 100 ocorrências.",
+      "t": 4078,
+      "legenda": "Os padrões que o pipeline achou nos traces importados.",
+      "print": "img/hfEczxdNyvU/3.jpg"
+    },
+    {
+      "titulo": "Coding agent fecha o ciclo e abre o PR",
+      "texto": "Com a CLI (bt) e uma skill de melhoria, o Codex ou o Claude Code escreve SQL sobre os traces, cria dataset com os casos que falharam, adiciona scores, altera o agente e roda o eval. Uma GitHub Action empacota achados, explicação e evidência de eval num pull request, e o humano decide se aprova.",
+      "t": 6331,
+      "legenda": "O PR automático traz a evidência para o revisor decidir.",
+      "print": "img/hfEczxdNyvU/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Trace",
+      "traducao": "registro passo a passo da execução do agente",
+      "nivel": "basico",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval flywheel",
+      "traducao": "ciclo em que produção alimenta evals e mudanças",
+      "nivel": "intermediario",
+      "chave": "eval flywheel",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo que dá nota à saída de outro modelo",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Online scoring",
+      "traducao": "avaliação automática do tráfego real de produção",
+      "nivel": "intermediario",
+      "chave": "online scoring",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Topics e facets",
+      "traducao": "agrupamento de padrões nos traces por facet",
+      "nivel": "avancado",
+      "chave": "topics e facets",
+      "analogia": "Topics e facets é como uma professora que lê todas as redações da turma e separa em pilhas por assunto, pelo humor do aluno e pelo tipo de erro, sem ter decidido as pilhas antes.",
+      "explicacao": [
+        "Um agente em produção gera milhares de conversas, e ninguém consegue ler todas. Topics lê esses registros, agrupa os parecidos e mostra com que frequência cada padrão aparece.",
+        "Uma facet (faceta, ou ângulo de leitura) define o que observar em cada conversa. As prontas são tarefa (o que o usuário quer), sentimento (como ele se sente) e problemas (onde o agente falhou). Você também pode criar a sua com um prompt próprio.",
+        "Primeiro, um pré-processador (preprocessor) enxuga o trace, o registro passo a passo da execução, numa conversa curta entre usuário, assistente e chamadas de ferramenta. Depois um modelo resume essa conversa pelo ângulo da facet.",
+        "Cada resumo vira um embedding (vetor de números que representa o significado). Resumos parecidos ficam próximos, e isso forma um topic map (mapa de tópicos) que rotula e classifica cada trace.",
+        "Com os rótulos, você filtra o volume e acha falhas que seus evals não testavam, além de pedidos de funcionalidade novos. A Braintrust roda o pipeline em modelo próprio, a US$ 0,06 por milhão de tokens de entrada e US$ 0,40 de saída."
+      ],
+      "pre_requisitos": [
+        "Trace",
+        "Embedding",
+        "Eval flywheel",
+        "Online scoring"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PRÉ-PROCESSAMENTO",
+            "nota": "Trace vira conversa enxuta"
+          },
+          {
+            "rotulo": "FACET",
+            "nota": "Resume pelo ângulo escolhido"
+          },
+          {
+            "rotulo": "EMBEDDING",
+            "nota": "Resumo vira vetor de números"
+          },
+          {
+            "rotulo": "TOPIC MAP",
+            "nota": "Agrupa e rotula os traces"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Embedding",
+      "traducao": "vetor numérico que representa o significado de um texto",
+      "nivel": "intermediario",
+      "chave": "embedding",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Agent skills",
+      "traducao": "instruções empacotadas que ensinam o coding agent a usar uma ferramenta",
+      "nivel": "intermediario",
+      "chave": "agent skills",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Remote eval",
+      "traducao": "eval exposto a um playground, executado no seu servidor",
+      "nivel": "avancado",
+      "chave": "remote eval",
+      "analogia": "Remote eval é como um restaurante em que o cliente escolhe os temperos no balcão, o prato é feito na cozinha do dono e volta pronto para a mesa.",
+      "explicacao": [
+        "Um eval (avaliação) roda o agente sobre um conjunto de casos de teste e dá nota às respostas. Normalmente só quem programa consegue rodar e mudar esse teste.",
+        "O remote eval (avaliação remota) leva esse mesmo eval para um playground (área de testes visual) da Braintrust. Gerentes de produto e especialistas mudam o prompt de sistema ou a descrição de uma ferramenta e clicam em run.",
+        "No código do eval, o engenheiro declara parâmetros. Eles indicam quais peças do agente a tela pode alterar, como o prompt e o modelo de cada subagente.",
+        "Ao clicar em run, a Braintrust envia uma requisição POST ao endpoint exposto no seu servidor, local (localhost:8300 com a opção --dev) ou na sua infraestrutura. O código roda lá e os resultados voltam em streaming para o playground.",
+        "Assim o engenheiro deixa de ser o gargalo para quem quer ajustar prompts, e o código e as ferramentas do agente continuam no seu ambiente."
+      ],
+      "pre_requisitos": [
+        "Eval",
+        "Eval flywheel",
+        "Prompt de sistema",
+        "Endpoint de API"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PLAYGROUND",
+            "nota": "Pessoa ajusta prompt e clica run"
+          },
+          {
+            "rotulo": "POST AO SERVIDOR",
+            "nota": "Braintrust chama seu endpoint"
+          },
+          {
+            "rotulo": "EXECUÇÃO NO SERVIDOR",
+            "nota": "Código roda na sua infraestrutura"
+          },
+          {
+            "rotulo": "RESULTADO NO PLAYGROUND",
+            "nota": "Notas do eval voltam em streaming"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é pitch da Braintrust. As comparações com LangSmith, Arize e ClickHouse vêm sem dados. O demo usa 968 traces sintéticos gerados por script, então ele não prova que Topics acha padrões úteis em tráfego real. A própria facet de problemas não gerou resultado nos dados de exemplo. O pipeline de Topics só roda em modelos hospedados pela Braintrust, o que cria dependência. A afirmação de que um cliente gera 5 a 10 PRs a mais por dia não traz medição nem nome. O PR automático ainda exige revisão humana e não mostra taxa de acerto.",
+  "acoes": [
+    "Ligue tracing no seu agente antes de qualquer outra coisa. Sem trace não há como saber onde a qualidade cai.",
+    "Comece com scores binários e casos difíceis. Se o eval dá 100%, endureça os testes e os critérios.",
+    "Leve para o dataset de eval os traces de produção que falharam, para que a correção não regrida depois.",
+    "Revise por amostragem as notas do seu LLM juiz com um humano e reduza a taxa de amostragem dos scores conforme o agente amadurece, para controlar custo."
+  ],
+  "numeros": [
+    {
+      "valor": "968",
+      "contexto": "traces de suporte importados no demo",
+      "t": 3831
+    },
+    {
+      "valor": "5.260",
+      "contexto": "spans carregados junto com esses traces",
+      "t": 3831
+    },
+    {
+      "valor": "US$ 0,06/0,40",
+      "contexto": "por milhão de tokens, entrada e saída, no pipeline de Topics",
+      "t": 1205
+    },
+    {
+      "valor": "5 a 10",
+      "contexto": "PRs a mais por dia, segundo um cliente citado",
+      "t": 6362
+    }
+  ]
+}

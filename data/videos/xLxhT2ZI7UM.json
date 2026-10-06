@@ -1,0 +1,203 @@
+{
+  "id": "xLxhT2ZI7UM",
+  "titulo": "Your LLM Judge Is a Confident Liar: Building Better Verifiers — Browserbase",
+  "titulo_curto": "Your LLM Judge Is a Confident Liar: Building Better Verifiers",
+  "palestrante": "Browserbase",
+  "url": "https://www.youtube.com/watch?v=xLxhT2ZI7UM",
+  "duracao": 1274,
+  "publicado_ts": 1791243005,
+  "edicao": "2026-10-05",
+  "tese": "Juiz de LLM mal desenhado aprova agente que falhou. Com rubrica, evidência visual e validação humana, o verificador passa a merecer confiança.",
+  "tldr": [
+    "Os juízes de LLM que vêm com benchmarks de agentes web (como o WebVoyager) superestimam o sucesso. Para o mesmo agente, o juiz oficial deu 74% e o verificador novo deu 38%.",
+    "O Universal Verifier gera uma rubrica por tarefa, escolhe os screenshots mais relevantes para cada critério, isola erros e separa falhas controláveis das incontroláveis. Com isso, os falsos positivos caíram de quase metade para perto de zero.",
+    "Os autores validaram o verificador com rótulos humanos e com treino em dados filtrados por ele. Um loop de autoresearch recriou a ideia em um dia, mas chegou a só 70% da qualidade, então ainda precisa de humanos."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "O juiz oficial infla o sucesso do agente",
+      "texto": "Os benchmarks populares de agentes web trazem juízes de LLM prontos, baseados em modelos menores como GPT-4o ou o4-mini. Ao conferir esses juízes com anotadores humanos, a equipe viu respostas erradas dadas com muita confiança. Treinar um agente com esse sinal produz um agente que mente melhor, não um agente melhor.",
+      "t": 227,
+      "legenda": "O mesmo agente cai de 74% para 38% quando o verificador é melhor.",
+      "print": "img/xLxhT2ZI7UM/0.jpg"
+    },
+    {
+      "titulo": "Como o Universal Verifier funciona",
+      "texto": "Dada uma tarefa, o sistema gera uma rubrica com cerca de 10 critérios. Para cada critério, ranqueia os screenshots da trajetória e usa os mais relevantes como evidência. Compara o que o agente disse ter feito com o que a tela mostra. A saída traz uma nota de processo (com crédito parcial) e um booleano de resultado.",
+      "t": 318,
+      "legenda": "O verificador julga critério a critério, com evidência da tela.",
+      "print": "img/xLxhT2ZI7UM/1.jpg"
+    },
+    {
+      "titulo": "Rubrica boa avalia só o que foi pedido",
+      "texto": "Na tarefa do hotel em Jacarta, uma rubrica ruim cobrava o preço total da estadia, que ninguém pediu. Isso derruba a nota do agente sem motivo. Os autores também isolam erros. Se o agente errou o sobrenome mais longo, ele não deve perder pontos no critério seguinte, que só pede o patrimônio da pessoa escolhida.",
+      "t": 444,
+      "legenda": "Critério extra inventado pela rubrica deflaciona a nota do agente.",
+      "print": "img/xLxhT2ZI7UM/2.jpg"
+    },
+    {
+      "titulo": "Falha controlável e incontrolável",
+      "texto": "Se o agente busca o brinquedo certo na Amazon e ele está sem estoque, recebe nota máxima de processo, mas o resultado continua falso. Se acha uma alternativa parecida, conta como sucesso. Erro que o agente podia evitar, ou alucinação, é penalizado. Os autores montaram um esquema com os modos de falha e o crédito de cada um.",
+      "t": 568,
+      "legenda": "Nota de processo e resultado final podem divergir de propósito.",
+      "print": "img/xLxhT2ZI7UM/3.jpg"
+    },
+    {
+      "titulo": "Validação com humanos e treino filtrado",
+      "texto": "Os humanos julgam a trajetória e depois dizem se concordam com o verificador. O Cohen's kappa ficou em 0.58, no nível da concordância entre dois humanos. O verificador chegou a corrigir anotadores. Como prova final, treinar com 3 mil trajetórias filtradas por ele gerou um modelo melhor que o filtrado por um verificador de base.",
+      "t": 726,
+      "legenda": "O verificador concorda com humanos tanto quanto humanos entre si.",
+      "print": "img/xLxhT2ZI7UM/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Verifier",
+      "traducao": "verificador",
+      "nivel": "intermediario",
+      "chave": "verifier",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "LLM como juiz",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Rubric",
+      "traducao": "rubrica de critérios de avaliação",
+      "nivel": "basico",
+      "chave": "rubric",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Computer use",
+      "traducao": "agente que usa computador ou navegador",
+      "nivel": "basico",
+      "chave": "computer use",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Hallucination",
+      "traducao": "alucinação",
+      "nivel": "basico",
+      "chave": "hallucination",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Cohen's kappa",
+      "traducao": "medida de concordância entre avaliadores",
+      "nivel": "avancado",
+      "chave": "cohen's kappa",
+      "analogia": "Cohen's kappa é como conferir se dois juízes de uma competição de ginástica concordam de verdade, descontando as vezes em que dariam a mesma nota só no chute.",
+      "explicacao": [
+        "Quando duas pessoas avaliam as mesmas coisas, como provas ou tarefas, queremos saber se elas concordam. O Cohen's kappa (kappa de Cohen) resume essa concordância em um único número.",
+        "Contar só a porcentagem de acordos engana. Se quase toda tarefa é aprovada, dois avaliadores que aprovam tudo sem olhar concordam muito por pura sorte.",
+        "Por isso o kappa estima quanto acordo viria do acaso. Ele usa a frequência com que cada avaliador costuma dizer sim ou não e desconta esse valor do acordo que realmente aconteceu.",
+        "A conta é kappa = (acordo observado menos acordo por acaso) dividido por (1 menos acordo por acaso). O valor 1 indica acordo perfeito, 0 indica acordo igual ao do acaso e valores negativos indicam acordo pior que o acaso.",
+        "No talk, o verificador teve kappa de 0.58 com os humanos, o mesmo nível medido entre dois anotadores humanos. Na escala mais usada, valores de 0.41 a 0.60 contam como concordância moderada."
+      ],
+      "pre_requisitos": [
+        "Probabilidade básica",
+        "Anotação humana (rótulos de referência)",
+        "Verifier"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "CONTAR ACORDOS",
+            "nota": "Quantas vezes os dois deram o mesmo voto"
+          },
+          {
+            "rotulo": "ESTIMAR O ACASO",
+            "nota": "Acordo esperado se votassem no chute"
+          },
+          {
+            "rotulo": "DESCONTAR O ACASO",
+            "nota": "Tira o acaso e divide pelo que sobra"
+          },
+          {
+            "rotulo": "NOTA KAPPA",
+            "nota": "1 perfeito, 0 acaso; no talk, 0.58"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Autoresearch",
+      "traducao": "pesquisa automatizada por loop de agente",
+      "nivel": "intermediario",
+      "chave": "autoresearch",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Hill climbing",
+      "traducao": "subida de nota iterando contra uma métrica",
+      "nivel": "intermediario",
+      "chave": "hill climbing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk também divulga o Browserbase e o Stagehand, e o verificador é do próprio grupo, que o compara com juízes antigos e fracos. O conjunto de validação é pequeno, 150 trajetórias, sendo cerca de 100 rotuladas por humanos externos. O kappa de 0.58 é moderado, não alto. O teste de autoresearch usou uma execução com um só modelo. A tarefa desktop ainda não tem resultados.",
+  "acoes": [
+    "Antes de confiar em um juiz de LLM, compare-o com rótulos humanos em uma amostra sua e meça o falso positivo, não só a taxa de acerto.",
+    "Gere uma rubrica por tarefa e cobre apenas o que a tarefa pediu. Revise as rubricas para tirar critérios extras.",
+    "Exija evidência concreta no julgamento, como screenshots ou logs, e compare com o que o agente afirmou ter feito.",
+    "Separe nota de processo de resultado final. Assim você distingue agente que errou de ambiente que bloqueou."
+  ],
+  "numeros": [
+    {
+      "valor": "74%",
+      "contexto": "sucesso do Fara-7B segundo o juiz oficial do WebVoyager",
+      "t": 222
+    },
+    {
+      "valor": "38%",
+      "contexto": "sucesso do mesmo agente segundo o Universal Verifier",
+      "t": 254
+    },
+    {
+      "valor": "0.58",
+      "contexto": "Cohen's kappa entre dois anotadores humanos por tarefa",
+      "t": 726
+    },
+    {
+      "valor": "70%",
+      "contexto": "concordância que o autoresearch atingiu em relação ao verificador humano",
+      "t": 884
+    }
+  ]
+}

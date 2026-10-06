@@ -1,0 +1,204 @@
+{
+  "id": "ZUZVNKFSmTM",
+  "titulo": "How Many Credentials Should Your AI Agent Have? Zero. — Jim Clark, Docker",
+  "titulo_curto": "How Many Credentials Should Your AI Agent Have? Zero.",
+  "palestrante": "Jim Clark, Docker",
+  "url": "https://www.youtube.com/watch?v=ZUZVNKFSmTM",
+  "duracao": 1093,
+  "publicado_ts": 1791246615,
+  "edicao": "2026-10-05",
+  "tese": "A segurança de um agente vem de limitar contexto e ferramentas de cada sandbox, e o número certo de credenciais lá dentro é zero.",
+  "tldr": [
+    "Jim Clark, do Docker, diz que o harness (laço que recebe contexto e chama ferramentas) é simples. O risco está no que entra nele, então a fronteira a controlar é o sandbox.",
+    "Ele divide um fluxo em sandboxes por papel, como pesquisador, verificador e publicador, para nunca juntar entrada não confiável com ferramenta perigosa. Um coding agent só recebe a chave de assinatura do Git na hora do commit.",
+    "Um único endpoint de MCP gateway por sandbox centraliza ferramentas, recursos e credenciais, e o Cross App Access (XAA) com Okta reaproveita o SSO da empresa para dar identidade ao agente."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "O harness é simples, o risco está no que entra nele",
+      "texto": "Clark descreve o harness como um laço que recebe contexto e emite chamadas de ferramenta. Como as pessoas trocam de harness o tempo todo, o controle de segurança não pode morar nele. Ele mora nas ferramentas e no contexto que chegam ao agente, ou seja, no sandbox.",
+      "t": 217,
+      "legenda": "Harness, MCP e sandbox: onde o controle de segurança deve ficar",
+      "print": "img/ZUZVNKFSmTM/0.jpg"
+    },
+    {
+      "titulo": "Redação separada em três sandboxes",
+      "texto": "No exemplo da redação, o pesquisador navega pela web, mas não tem ferramenta de escrita no site. O verificador lê a pesquisa e consulta uma base de fatos, sem rede. O publicador só vê material filtrado e tem a ferramenta de publicar, sem rede. Nenhum sandbox junta entrada não confiável com ferramenta perigosa.",
+      "t": 380,
+      "legenda": "Cada papel recebe só a rede e as ferramentas de que precisa",
+      "print": "img/ZUZVNKFSmTM/1.jpg"
+    },
+    {
+      "titulo": "Modele o sandbox pela intenção da tarefa",
+      "texto": "O coding agent trabalha cerca de uma hora, mas só precisa da chave de assinatura do Git por uns 2 minutos, no commit. Se o sandbox reflete a intenção, a chave não fica lá o resto do tempo. A mesma lógica vale para rede, MCPs e diretórios.",
+      "t": 534,
+      "legenda": "A chave de assinatura só existe no sandbox durante o commit",
+      "print": "img/ZUZVNKFSmTM/2.jpg"
+    },
+    {
+      "titulo": "Um endpoint de gateway por sandbox",
+      "texto": "Todo tráfego MCP do harness passa por uma URL interna única. O gateway decide quais ferramentas, recursos e prompts cada sandbox recebe. Isso também deixa os harnesses intercambiáveis, porque a configuração de MCP fica no sandbox e não em cada ferramenta como Codex ou Claude Code.",
+      "t": 625,
+      "legenda": "O gateway é o ponto de controle e deixa o harness trocável",
+      "print": "img/ZUZVNKFSmTM/3.jpg"
+    },
+    {
+      "titulo": "Identidade do agente com XAA e ID-JAG",
+      "texto": "Com Cross App Access, sandbox e gateway informam em nome de quem o agente age. Eles trocam essas declarações com o provedor de identidade da empresa e recebem uma concessão de autorização (ID-JAG) para os mesmos servidores OAuth de Notion, GitHub ou Slack. O SSO existente é reaproveitado e a administração fica central.",
+      "t": 783,
+      "legenda": "O agente obtém acesso pelo SSO que a empresa já tem",
+      "print": "img/ZUZVNKFSmTM/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Harness",
+      "traducao": "laço do agente que recebe contexto e chama ferramentas",
+      "nivel": "basico",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado onde o agente trabalha",
+      "nivel": "basico",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP",
+      "traducao": "protocolo que dá ferramentas e contexto ao agente",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP gateway",
+      "traducao": "ponto único por onde passa o tráfego MCP",
+      "nivel": "intermediario",
+      "chave": "mcp gateway",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Blast radius",
+      "traducao": "raio de impacto de um erro do agente",
+      "nivel": "intermediario",
+      "chave": "blast radius",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Cross App Access (XAA)",
+      "traducao": "acesso entre aplicações com identidade do agente via SSO",
+      "nivel": "avancado",
+      "chave": "cross app access (xaa)",
+      "analogia": "XAA é como o crachá de visitante que a portaria emite para um estagiário, ligado ao nome do chefe dele e válido só nas salas do projeto, sem que o chefe precise emprestar a própria chave.",
+      "explicacao": [
+        "Na empresa, você entra em vários sistemas como Notion, GitHub e Slack com um único login, o SSO (single sign-on, login único). O agente de IA ainda não tem um acesso próprio desse tipo.",
+        "Sem XAA, o caminho comum é colocar o token pessoal de alguém dentro do ambiente do agente ou aprovar uma tela de consentimento em cada sistema. Isso espalha credenciais e aumenta o estrago possível de um erro.",
+        "Com XAA, o sandbox e o MCP gateway declaram a identidade do agente e informam em nome de qual pessoa ele age.",
+        "O gateway troca essas declarações com o provedor de identidade da empresa, como o Okta, e recebe um ID-JAG, uma concessão de autorização prevista na versão mais recente do MCP.",
+        "Com o ID-JAG, o agente usa os mesmos servidores OAuth (padrão de autorização entre aplicações) que a empresa já tem. A TI administra tudo em um lugar e nenhuma credencial fica dentro do sandbox."
+      ],
+      "pre_requisitos": [
+        "SSO",
+        "OAuth",
+        "MCP gateway",
+        "Sandbox"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "SANDBOX E GATEWAY",
+            "nota": "declaram quem é o agente"
+          },
+          {
+            "rotulo": "PROVEDOR DE IDENTIDADE",
+            "nota": "SSO da empresa confere a identidade"
+          },
+          {
+            "rotulo": "ID-JAG",
+            "nota": "concessão de autorização emitida"
+          },
+          {
+            "rotulo": "ACESSO AOS APPS",
+            "nota": "Notion, GitHub, Slack sem credencial"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Progressive disclosure",
+      "traducao": "revelar ferramentas ao agente só quando necessário",
+      "nivel": "intermediario",
+      "chave": "progressive disclosure",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Orquestração",
+      "traducao": "montar o sandbox certo para cada tarefa",
+      "nivel": "intermediario",
+      "chave": "orquestração",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é em parte pitch do sbx, produto do Docker, e termina com convite ao estande. Não há dados de incidentes, testes de ataque nem comparação com outras abordagens. Os exemplos da redação e do commit são ilustrativos, sem medição. O XAA é descrito como parceria entre Docker, Anthropic e Okta, e a promessa de eliminar consent screens depende de a empresa já ter SSO bem configurado. A demo com orquestradores ficou para outra palestra.",
+  "acoes": [
+    "Liste as ferramentas e credenciais que cada agente seu usa hoje e remova as que a tarefa não exige.",
+    "Separe em etapas distintas o agente que lê conteúdo externo e o agente que publica ou escreve em sistemas sensíveis.",
+    "Entregue chaves, como a de assinatura do Git, só no momento do uso e nunca de forma permanente dentro do ambiente do agente.",
+    "Se sua empresa usa SSO como Okta, pergunte ao time de TI como os agentes poderiam usar identidade própria em vez de tokens pessoais."
+  ],
+  "numeros": [
+    {
+      "valor": "1 hora",
+      "contexto": "duração típica das tarefas do coding agent dele",
+      "t": 534
+    },
+    {
+      "valor": "2 minutos",
+      "contexto": "tempo em que o agente precisa da chave de assinatura",
+      "t": 564
+    },
+    {
+      "valor": "0",
+      "contexto": "credenciais que devem existir dentro do sandbox",
+      "t": 721
+    },
+    {
+      "valor": "50",
+      "contexto": "MCPs que um fluxo pode usar, sem expor todos a cada sandbox",
+      "t": 875
+    }
+  ]
+}
