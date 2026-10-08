@@ -1,0 +1,203 @@
+{
+  "id": "X4w2Pkz5tDY",
+  "titulo": "Grep or Embeddings? Agentic Search Over Company Documents — George He, LlamaIndex",
+  "titulo_curto": "Grep or Embeddings? Agentic Search Over Company Documents",
+  "palestrante": "George He, LlamaIndex",
+  "url": "https://www.youtube.com/watch?v=X4w2Pkz5tDY",
+  "duracao": 1401,
+  "publicado_ts": 1791336636,
+  "edicao": "2026-10-07",
+  "tese": "Grep basta para código. Com milhões de documentos, o agente precisa de uma bússola indexada e de ferramentas de leitura para fundamentar a resposta.",
+  "tldr": [
+    "George He (LlamaIndex) explica por que o Claude Code dispensou embeddings: código é pequeno, em texto, local e cheio de pistas como imports e testes.",
+    "Dados de empresa são grandes, bagunçados, multimodais e com permissões. Ele propõe dar ao agente cinco ferramentas: busca híbrida como bússola, listar, filtrar por metadados, grep e leitura de páginas parseadas com screenshots.",
+    "Na demo, um agente monta uma tabela de fluxo de caixa a partir de 135 arquivos de relatórios da Alphabet e cita os arquivos de origem."
+  ],
+  "tema": "dados-e-rag",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Por que o grep funcionou para código",
+      "texto": "O Claude Code testou banco vetorial e desistiu. Manter um índice sincronizado com código que muda o tempo todo custa caro. Além disso, um repositório é pequeno, semiestruturado, deixa pistas (imports, testes), tem hierarquia natural e já está no disco. Essas condições raramente existem em dados de empresa.",
+      "t": 219,
+      "legenda": "Lista de motivos pelos quais código dispensa índice vetorial.",
+      "print": "img/X4w2Pkz5tDY/0.jpg"
+    },
+    {
+      "titulo": "A escala decide a abordagem",
+      "texto": "Com cem a mil arquivos, o agente navega pelo sistema de arquivos dentro do contexto sem gastar muitos tokens. Com milhares ou milhões, ele precisa de uma bússola que indique a região certa antes de ler. Contexto maior também sai caro, e subagentes repetem o contexto completo, o que pesa em tokens e latência.",
+      "t": 345,
+      "legenda": "Escala de arquivos define entre grep local e índice.",
+      "print": "img/X4w2Pkz5tDY/1.jpg"
+    },
+    {
+      "titulo": "Cinco ferramentas em um harness",
+      "texto": "Em vez de decidir sozinho entre RAG e grep, o sistema entrega ao agente um conjunto de ferramentas. A busca híbrida mostra onde procurar. Listar arquivos, filtrar por metadados e grep reduzem o conjunto. A leitura do documento, em texto parseado e em screenshot da página, fundamenta a resposta e evita alucinação.",
+      "t": 537,
+      "legenda": "As cinco ferramentas que compõem o harness de busca.",
+      "print": "img/X4w2Pkz5tDY/2.jpg"
+    },
+    {
+      "titulo": "Busca híbrida com fusão e reranking",
+      "texto": "Palavra-chave (BM25) e busca semântica falham de formas diferentes. Combinar os dois com pesos e reordenar os 100 melhores resultados com um LLM dá resultados melhores nos benchmarks citados por ele. O palestrante recomenda essa combinação para uso corporativo.",
+      "t": 685,
+      "legenda": "Fusão de keyword e vetor supera cada método isolado.",
+      "print": "img/X4w2Pkz5tDY/3.jpg"
+    },
+    {
+      "titulo": "Demo com 135 arquivos da Alphabet",
+      "texto": "A interface devolve trechos e screenshots das páginas de origem. O agente usa grep com regex e lê um intervalo de caracteres por offset, como se o armazenamento remoto fosse local. Ao final, monta a tabela de fluxo de caixa de 2021 a 2025 com base em vários arquivos.",
+      "t": 1150,
+      "legenda": "Chunks e screenshots de página que servem de base para o agente.",
+      "print": "img/X4w2Pkz5tDY/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Busca híbrida",
+      "traducao": "combinação de palavra-chave e busca semântica",
+      "nivel": "intermediario",
+      "chave": "busca híbrida",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "grep",
+      "traducao": "busca de texto por padrão em arquivos",
+      "nivel": "basico",
+      "chave": "grep",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Harness",
+      "traducao": "conjunto de ferramentas que cerca o agente",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Chunking",
+      "traducao": "divisão do documento em pedaços",
+      "nivel": "intermediario",
+      "chave": "chunking",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Pré-indexação",
+      "traducao": "indexar antes da consulta, não a cada pergunta",
+      "nivel": "intermediario",
+      "chave": "pré-indexação",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Parsing de documentos",
+      "traducao": "converter PDF e slides em texto estruturado",
+      "nivel": "intermediario",
+      "chave": "parsing de documentos",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Multi-tenancy",
+      "traducao": "vários clientes isolados no mesmo sistema",
+      "nivel": "avancado",
+      "chave": "multi-tenancy",
+      "analogia": "Multi-tenancy é como um prédio de escritórios com várias empresas, onde todas dividem o mesmo elevador e a mesma portaria, mas cada uma só abre a própria sala com o crachá dela.",
+      "explicacao": [
+        "Multi-tenancy (multilocação) significa que um único sistema atende vários clientes ao mesmo tempo. Cada cliente se chama tenant, ou inquilino.",
+        "Todos os inquilinos usam a mesma infraestrutura, o mesmo índice de busca e o mesmo agente. Isso reduz custo, porque ninguém precisa de um sistema exclusivo.",
+        "O sistema garante que uma pessoa nunca veja os documentos de outra. Para isso, cada documento guarda uma etiqueta de dono e de permissão.",
+        "Em busca corporativa, as permissões vêm de fontes como Google Drive ou SharePoint. O sistema copia essas regras como metadados e filtra cada busca por elas.",
+        "O desafio é manter as permissões atualizadas. Se alguém perde acesso no Drive, o índice precisa refletir a mudança logo, sem reprocessar todos os documentos."
+      ],
+      "pre_requisitos": [
+        "Filtro por metadados",
+        "Pré-indexação",
+        "Controle de acesso"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PERGUNTA DO USUÁRIO",
+            "nota": "Alguém consulta o agente"
+          },
+          {
+            "rotulo": "IDENTIFICA O INQUILINO",
+            "nota": "Sistema vê empresa e permissões"
+          },
+          {
+            "rotulo": "FILTRA O ÍNDICE",
+            "nota": "Só entram documentos liberados"
+          },
+          {
+            "rotulo": "RESPOSTA ISOLADA",
+            "nota": "Sem dados de outros clientes"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Filtro por metadados",
+      "traducao": "restringir busca por ano, empresa ou permissão",
+      "nivel": "intermediario",
+      "chave": "filtro por metadados",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é de um head de engenharia da LlamaIndex, que vende LlamaParse e pipelines de indexação. A conclusão favorece indexar e parsear previamente. Os benchmarks de busca híbrida são citados de forma genérica, sem nome, números ou fonte. A demo usa 135 arquivos e um único exemplo, sem medir acurácia nem custo contra a alternativa só com grep. Permissões e frescor dos dados aparecem como riscos, mas sem solução detalhada.",
+  "acoes": [
+    "Estime quantos arquivos seu agente precisa consultar. Até alguns milhares, teste primeiro listar, grep e leitura antes de montar um índice.",
+    "Se for indexar, use busca híbrida (palavra-chave mais semântica) e adicione metadados como ano, empresa e dono do documento para filtrar.",
+    "Para PDFs com tabelas e gráficos, guarde o texto parseado e também a imagem de cada página, e exija que a resposta cite o arquivo de origem.",
+    "Antes de usar com clientes, defina como as permissões do Drive ou SharePoint serão copiadas e como o índice será atualizado."
+  ],
+  "numeros": [
+    {
+      "valor": "135",
+      "contexto": "arquivos de relatórios da Alphabet na demo",
+      "t": 1087
+    },
+    {
+      "valor": "1 milhão",
+      "contexto": "tokens de contexto dos modelos atuais",
+      "t": 375
+    },
+    {
+      "valor": "100 a 1.000",
+      "contexto": "arquivos em que busca local ainda serve",
+      "t": 345
+    },
+    {
+      "valor": "100",
+      "contexto": "melhores resultados reordenados por um LLM",
+      "t": 685
+    }
+  ]
+}

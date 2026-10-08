@@ -1,0 +1,204 @@
+{
+  "id": "DrfyORO8RqA",
+  "titulo": "Why Bigger Context Windows Won't Save Your Agent — Elizabeth Fuentes Leone, AWS",
+  "titulo_curto": "Why Bigger Context Windows Won't Save Your Agent",
+  "palestrante": "Elizabeth Fuentes Leone, AWS",
+  "url": "https://www.youtube.com/watch?v=DrfyORO8RqA",
+  "duracao": 953,
+  "publicado_ts": 1791419418,
+  "edicao": "2026-10-07",
+  "tese": "Janela de contexto maior não salva o agente. Mantenha dados grandes fora dela e entregue só o que cada passo precisa.",
+  "tldr": [
+    "Elizabeth Fuentes Leone, da AWS, mostra que agentes quebram quando ferramentas devolvem muitos dados, porque o modelo lembra do começo e do fim do contexto e perde o meio.",
+    "Ela organiza a solução em quatro estratégias (externalizar, selecionar, comprimir e isolar) e mostra como aplicá-las com o framework open source Strands Agents.",
+    "Os exemplos cobrem gerenciadores de conversa, memória de curto e longo prazo, ponteiros de memória para logs, limite de chamadas de ferramenta e handles assíncronos para ferramentas lentas."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Janela maior esquece o meio",
+      "texto": "Um agente que monitora uma aplicação puxa logs a cada chamada, e o contexto só cresce. A palestrante diz que aumentar tokens deixou de funcionar: pela curva de atenção, o modelo guarda o começo e o fim e esquece o meio. Dados demais também podem poluir o contexto e abrir espaço para prompt injection.",
+      "t": 141,
+      "legenda": "O modelo lembra bem das pontas do contexto e perde o meio.",
+      "print": "img/DrfyORO8RqA/0.jpg"
+    },
+    {
+      "titulo": "Quatro estratégias de context engineering",
+      "texto": "Context engineering (engenharia de contexto) é dar ao modelo a informação certa na hora certa. A palestrante resume em quatro verbos. Externalizar move dados grandes para armazenamento persistente. Selecionar recupera só o relevante. Comprimir resume ou compacta. Isolar separa o contexto entre agentes.",
+      "t": 207,
+      "legenda": "As quatro estratégias que organizam o resto do talk.",
+      "print": "img/DrfyORO8RqA/1.jpg"
+    },
+    {
+      "titulo": "Gerenciadores de conversa no Strands",
+      "texto": "O Strands Agents oferece três gerenciadores: janela deslizante (guarda só as mensagens recentes), sumarização (resume as antigas) e a combinação dos dois. No exemplo, o agente preserva as quatro últimas mensagens e resume uma proporção do restante, definida em 50%. A criação do agente leva uma linha de código e troca de modelo exige mais uma.",
+      "t": 360,
+      "legenda": "Uma linha de configuração controla o tamanho do contexto.",
+      "print": "img/DrfyORO8RqA/2.jpg"
+    },
+    {
+      "titulo": "Ponteiro de memória para logs grandes",
+      "texto": "Em vez de colocar logs enormes no contexto, uma ferramenta os grava num armazenamento e devolve só um ID. O ID fica no estado do agente. Se o agente precisar dos logs, outra ferramenta usa o ID para buscá-los. Em um swarm (grupo de agentes), o ponteiro passa pelo estado de invocação e evita que um agente despeje lixo no contexto do outro.",
+      "t": 551,
+      "legenda": "Os logs ficam fora do contexto. Só o ID circula.",
+      "print": "img/DrfyORO8RqA/3.jpg"
+    },
+    {
+      "titulo": "Limite de chamadas e handles assíncronos",
+      "texto": "Agentes podem repetir a mesma ferramenta sem parar. A solução mostrada é limitar cada ferramenta a três chamadas e devolver respostas claras. Para ferramentas MCP ou APIs lentas, um handle assíncrono permite iniciar o trabalho e consultar o resultado depois, sem estourar o tempo limite de um gateway.",
+      "t": 678,
+      "legenda": "Um teto de chamadas corta loops infinitos de ferramenta.",
+      "print": "img/DrfyORO8RqA/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Lost in the middle",
+      "traducao": "perda do meio do contexto",
+      "nivel": "intermediario",
+      "chave": "lost in the middle",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Janela de contexto",
+      "traducao": "context window",
+      "nivel": "basico",
+      "chave": "janela de contexto",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Context engineering",
+      "traducao": "engenharia de contexto",
+      "nivel": "intermediario",
+      "chave": "context engineering",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Memory pointer",
+      "traducao": "ponteiro de memória",
+      "nivel": "intermediario",
+      "chave": "memory pointer",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Conversation manager",
+      "traducao": "gerenciador de conversa",
+      "nivel": "intermediario",
+      "chave": "conversation manager",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Memória de curto e longo prazo",
+      "traducao": "short-term e long-term memory",
+      "nivel": "intermediario",
+      "chave": "memória de curto e longo prazo",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Swarm",
+      "traducao": "enxame de agentes",
+      "nivel": "intermediario",
+      "chave": "swarm",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Async handle",
+      "traducao": "handle assíncrono",
+      "nivel": "avancado",
+      "chave": "async handle",
+      "analogia": "Um handle assíncrono é como a senha que a lavanderia entrega quando você deixa a roupa: você vai embora, faz outras coisas e volta depois com a senha para buscar o que ficou pronto.",
+      "explicacao": [
+        "Algumas tarefas demoram, como pedir um relatório a outro sistema. Se o agente fica parado esperando, tudo trava junto com ele.",
+        "Num handle assíncrono (async handle, um comprovante de tarefa em andamento), o agente pede o trabalho e recebe na hora só um número de identificação, sem esperar o resultado.",
+        "Com esse número, o agente segue a conversa e, mais tarde, pergunta se a tarefa terminou. Quando terminar, ele busca o resultado.",
+        "Isso evita o tempo limite (timeout) de intermediários como o API Gateway da AWS, que corta a chamada se a resposta demora demais.",
+        "No exemplo do talk, um servidor MCP (Model Context Protocol, padrão para conectar ferramentas a modelos) feito com FastAPI expõe duas ferramentas, start_job para iniciar e check_job_status para consultar."
+      ],
+      "pre_requisitos": [
+        "Chamada de ferramenta (tool call)",
+        "API",
+        "Timeout",
+        "MCP"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "INICIAR TAREFA",
+            "nota": "Agente chama start_job"
+          },
+          {
+            "rotulo": "RECEBER ID",
+            "nota": "Resposta imediata, sem o resultado"
+          },
+          {
+            "rotulo": "CONSULTAR STATUS",
+            "nota": "check_job_status quando precisar"
+          },
+          {
+            "rotulo": "RESULTADO SEM TIMEOUT",
+            "nota": "Agente usa a resposta sem travar"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "A palestrante trabalha na AWS e apresenta o framework da própria empresa, o Strands Agents, então o talk tem traço de pitch. Não mostra medição: diz ter feito muitos testes com handles assíncronos e que a diferença é grande, mas não dá números nem método. A curva de atenção aparece sem fonte citada. A fala também admite que sumarização ingênua pode perder informação necessária, sem mostrar como medir essa perda.",
+  "acoes": [
+    "Revise suas ferramentas que devolvem textos longos, como logs e consultas. Grave o resultado fora do contexto e devolva ao agente só um ID e um resumo curto.",
+    "Defina um número máximo de chamadas por ferramenta no seu agente. Isso corta loops infinitos e controla custo de tokens.",
+    "Ao resumir conversas longas, teste se o resumo mantém os fatos de que o agente precisa. Combine resumo das mensagens antigas com as mais recentes intactas.",
+    "Para APIs ou ferramentas MCP lentas, separe 'iniciar tarefa' de 'consultar status', para o agente não ficar bloqueado esperando."
+  ],
+  "numeros": [
+    {
+      "valor": "50%",
+      "contexto": "proporção de resumo no conversation manager do exemplo",
+      "t": 360
+    },
+    {
+      "valor": "4",
+      "contexto": "últimas mensagens preservadas sem resumo",
+      "t": 360
+    },
+    {
+      "valor": "3",
+      "contexto": "chamadas máximas por ferramenta no exemplo",
+      "t": 678
+    },
+    {
+      "valor": "3",
+      "contexto": "tipos de gerenciador de conversa no Strands",
+      "t": 268
+    }
+  ]
+}

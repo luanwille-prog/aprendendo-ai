@@ -1,0 +1,174 @@
+{
+  "id": "mUQoVz7THu0",
+  "titulo": "Why Building an Eval Platform Is Harder Than It Looks — Braintrust",
+  "titulo_curto": "Why Building an Eval Platform Is Harder Than It Looks",
+  "palestrante": "Braintrust",
+  "url": "https://www.youtube.com/watch?v=mUQoVz7THu0",
+  "duracao": 1066,
+  "publicado_ts": 1791311435,
+  "edicao": "2026-10-07",
+  "tese": "Plataforma de eval parece planilha com interface bonita, mas vira problema de sistemas quando entram traces enormes e produção.",
+  "tldr": [
+    "Hossein Niazmandi, da Braintrust, defende que qualidade de agente tem dois pilares: evals (avaliações) antes da produção e observabilidade depois dela.",
+    "Ele descreve quatro estágios de maturidade: planilha, interface própria, experimentos lado a lado para PMs e especialistas, e um flywheel que transforma falhas de produção em casos de teste.",
+    "No último estágio o gargalo passa a ser dado: traces com centenas de megabytes exigem consultas em tempo real e de longa duração, o que levou a empresa a criar a BTQL, e agentes de código passam a rodar os evals enquanto humanos decidem."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Dois pilares: eval antes, observabilidade depois",
+      "texto": "Eval testa o comportamento do agente antes de ir para produção. Observabilidade acompanha as interações reais depois do lançamento. Os dois atacam o mesmo problema, porque o LLM é não determinístico e varia a cada execução.",
+      "t": 63,
+      "legenda": "Qualidade de agente se apoia em eval offline e monitoramento em produção.",
+      "print": "img/mUQoVz7THu0/0.jpg"
+    },
+    {
+      "titulo": "O iceberg por baixo da planilha",
+      "texto": "Um eval básico tem três partes: executar o agente, ver as saídas ou notas, e ter exemplos de entrada. Por baixo disso ficam datasets, sistemas de nota, processo de revisão, ferramentas de debug e a ligação com a produção. Além disso, PMs e especialistas de domínio também rodam evals.",
+      "t": 313,
+      "legenda": "A parte visível do eval é pequena perto do trabalho de suporte.",
+      "print": "img/mUQoVz7THu0/1.jpg"
+    },
+    {
+      "titulo": "Quatro estágios de maturidade",
+      "texto": "Planilha tem barreira zero, mas só documenta. Interface própria inclui PMs, mas vira só relatório. Experimentos lado a lado deixam trocar prompt, modelo e parâmetros. O quarto estágio liga a produção e fecha o ciclo.",
+      "t": 598,
+      "legenda": "O terceiro estágio troca registro de resultados por experimentação.",
+      "print": "img/mUQoVz7THu0/2.jpg"
+    },
+    {
+      "titulo": "O flywheel de melhoria",
+      "texto": "O ciclo observa falhas em produção, registra cada passo do trace, define dimensões de sucesso e falha, cria casos de teste a partir delas e itera offline sem gerar regressões. Depois publica e repete. O palestrante cita drift como razão para o ciclo nunca parar.",
+      "t": 661,
+      "legenda": "Falhas de produção viram casos de teste que alimentam a próxima versão.",
+      "print": "img/mUQoVz7THu0/3.jpg"
+    },
+    {
+      "titulo": "Traces quebram o data warehouse comum",
+      "texto": "Traces de agente são JSON semiestruturado e aninhado, com centenas de megabytes por interação, contra kilobytes de observabilidade tradicional. É preciso consulta em tempo real e consultas longas, por isso a Braintrust criou a BTQL. Mais recentemente, agentes de código rodam os evals e humanos revisam.",
+      "t": 726,
+      "legenda": "O volume e o formato dos traces tornam eval um problema de sistemas.",
+      "print": "img/mUQoVz7THu0/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Eval",
+      "traducao": "avaliação",
+      "nivel": "basico",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Observabilidade de agentes",
+      "traducao": "monitoramento do agente em produção",
+      "nivel": "intermediario",
+      "chave": "observabilidade de agentes",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Trace",
+      "traducao": "rastro de execução",
+      "nivel": "intermediario",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval flywheel",
+      "traducao": "ciclo de melhoria contínua",
+      "nivel": "intermediario",
+      "chave": "eval flywheel",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Hill climbing",
+      "traducao": "melhoria incremental contra uma meta",
+      "nivel": "intermediario",
+      "chave": "hill climbing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Drift",
+      "traducao": "mudança gradual do comportamento de usuários e sistema",
+      "nivel": "intermediario",
+      "chave": "drift",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Coding agent",
+      "traducao": "agente de código",
+      "nivel": "basico",
+      "chave": "coding agent",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo que avalia as respostas",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "É palestra de fornecedor. Hossein lidera engenharia de soluções da Braintrust e o argumento de que construir é difícil leva à compra da plataforma. Não há dado de clientes, custo de construir internamente nem comparação com alternativas. As afirmações sobre warehouses que colapsam e sobre insights automáticos de falhas silenciosas não trazem medição. Os estágios são um modelo narrativo, não resultado de pesquisa.",
+  "acoes": [
+    "Se você ainda usa planilha para avaliar seu agente, mantenha, mas guarde entrada, saída e nota de cada execução para comparar versões.",
+    "Escolha uma dimensão de falha que você já viu em produção e transforme alguns casos reais em exemplos de teste.",
+    "Inclua PMs e especialistas de domínio na revisão dos resultados, em vez de deixar só com engenharia.",
+    "Antes de construir uma plataforma própria, estime o tamanho dos seus traces e se precisará consultá-los em tempo real."
+  ],
+  "numeros": [
+    {
+      "valor": "15 anos",
+      "contexto": "experiência do palestrante em soluções, Salesforce e Databricks",
+      "t": 1
+    },
+    {
+      "valor": "centenas de MB",
+      "contexto": "tamanho de dados por interação em alguns traces",
+      "t": 726
+    },
+    {
+      "valor": "2 pilares",
+      "contexto": "evals e observabilidade como qualidade de agente",
+      "t": 63
+    },
+    {
+      "valor": "4 estágios",
+      "contexto": "maturidade de plataformas de eval descrita no talk",
+      "t": 409
+    }
+  ]
+}

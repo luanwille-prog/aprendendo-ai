@@ -1,0 +1,174 @@
+{
+  "id": "oWTEiYpxl80",
+  "titulo": "Why AI Agents Should Have Their Own Sandbox — Philipp Schmid, Google DeepMind",
+  "titulo_curto": "Why AI Agents Should Have Their Own Sandbox",
+  "palestrante": "Philipp Schmid, Google DeepMind",
+  "url": "https://www.youtube.com/watch?v=oWTEiYpxl80",
+  "duracao": 1241,
+  "publicado_ts": 1791392407,
+  "edicao": "2026-10-07",
+  "tese": "Se o agente roda num sandbox na nuvem, controlado por uma única chamada de API, você deixa de gerenciar infraestrutura e o laptop sai da equação.",
+  "tldr": [
+    "Philipp Schmid, do Google DeepMind, apresenta a Interactions API, que usa a mesma interface para chamar modelos Gemini e agentes, com estado guardado no servidor e tarefas longas em segundo plano.",
+    "O agente Antigravity na Gemini API roda num sandbox (ambiente isolado) gerenciado pelo Google, onde executa código, instala ferramentas, guarda arquivos e pode compartilhar o ambiente com outros agentes.",
+    "A demo AI Talk Radio mostra que o agente inteiro é um arquivo AGENTS.md mais skills (pacotes de instruções e scripts), e que levar isso do protótipo ao back end é copiar esses arquivos e criar o agente."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Mesma interface para modelo e agente",
+      "texto": "A Interactions API usa o mesmo formato de chamada para um modelo Gemini e para um agente. Você passa um modelo ou agente, uma entrada (texto ou multimodal) e ferramentas ou ambiente. O estado da conversa pode ficar no servidor: no turno seguinte você manda só o ID da interação anterior. Tarefas lentas, como gerar vídeo, rodam em segundo plano e você consulta depois.",
+      "t": 231,
+      "legenda": "Chamar modelo ou agente usa praticamente o mesmo código.",
+      "print": "img/oWTEiYpxl80/0.jpg"
+    },
+    {
+      "titulo": "De turnos user/model para uma linha do tempo de steps",
+      "texto": "Nas APIs tradicionais, o resultado de uma função volta num turno com papel de usuário, embora venha do ambiente. Schmid defende trocar os turnos por uma linha do tempo de steps (passos), em que cada ação ou geração tem seu próprio tipo. O resultado de função vira function result, e novos recursos entram sem remendos.",
+      "t": 453,
+      "legenda": "Cada ação do agente vira um step com tipo próprio.",
+      "print": "img/oWTEiYpxl80/1.jpg"
+    },
+    {
+      "titulo": "Cada agente ganha um sandbox gerenciado e persistente",
+      "texto": "No campo environment, a chamada pede um sandbox na nuvem. Ali o agente roda código, cria arquivos, instala dependências e chama APIs, sem que você cuide de infraestrutura. O ambiente persiste entre interações e pode ser compartilhado: vários agentes trabalham no mesmo sistema de arquivos ou subagentes retomam o trabalho de outro.",
+      "t": 545,
+      "legenda": "Uma chamada de API sobe um sandbox na nuvem para o agente.",
+      "print": "img/oWTEiYpxl80/2.jpg"
+    },
+    {
+      "titulo": "O agente é só arquivos",
+      "texto": "Na demo, o agente de rádio é um AGENTS.md com as instruções (pesquisar, escrever roteiro, gerar música e fala, mixar) e uma pasta de skills com scripts Python que chamam outros modelos Gemini. O AGENTS.md entra no system prompt (instrução de sistema) e as skills são detectadas sozinhas. Para levar ao back end, basta copiar os arquivos e criar o agente.",
+      "t": 1011,
+      "legenda": "As instruções e as skills do agente cabem em arquivos de texto e Python.",
+      "print": "img/oWTEiYpxl80/3.jpg"
+    },
+    {
+      "titulo": "Agente empacotado a partir de um ambiente pronto",
+      "texto": "Com a Agents API, você define o modelo base, a instrução e o ambiente. Um agente pode montar o próprio ambiente (instalar o GitHub CLI, adicionar skills, rodar checagens) e devolver um ID de ambiente. Novos agentes partem desse ambiente pré-configurado, e você compartilha o agente com times ou clientes sem Terraform ou Kubernetes.",
+      "t": 699,
+      "legenda": "Um ID de ambiente vira ponto de partida reutilizável para outros agentes.",
+      "print": "img/oWTEiYpxl80/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado de execução",
+      "nivel": "basico",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Interaction ID",
+      "traducao": "identificador da interação anterior, usado para estado no servidor",
+      "nivel": "intermediario",
+      "chave": "interaction id",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Steps data model",
+      "traducao": "linha do tempo de passos no lugar de turnos user/model",
+      "nivel": "intermediario",
+      "chave": "steps data model",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Function calling",
+      "traducao": "chamada de função pela IA",
+      "nivel": "basico",
+      "chave": "function calling",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Harness",
+      "traducao": "estrutura que cerca o modelo (ferramentas, instruções, loop)",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "CLAUDE.md / AGENTS.md",
+      "traducao": "arquivo de instruções do agente",
+      "nivel": "basico",
+      "chave": "claude.md / agents.md",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Skills",
+      "traducao": "pacotes de instruções e scripts que o agente carrega",
+      "nivel": "intermediario",
+      "chave": "skills",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Named agent",
+      "traducao": "agente salvo com nome, instrução e ambiente",
+      "nivel": "intermediario",
+      "chave": "named agent",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É uma apresentação de produto do Google, feita pelo time que o vende. Não há comparação de custo, latência, limites de uso ou segurança do sandbox com alternativas. As demos são curadas (o programa de rádio já estava gerado) e usam casos leves. O palestrante diz que agentes ficam rodando horas ou dias, mas não mostra um caso real assim. A crítica ao formato user/model também não vem com evidência de que steps melhoram resultados.",
+  "acoes": [
+    "Pegue uma chave grátis no AI Studio e rode a mesma chamada na Interactions API com um modelo e depois com o agente Antigravity, para ver a diferença na prática.",
+    "Se você já tem um AGENTS.md ou CLAUDE.md, teste-o num agente gerenciado e confira se as instruções e skills são carregadas sem ajuste.",
+    "Pergunte ao time de segurança o que o agente pode acessar antes de montar um sandbox com fontes como GitHub ou buckets: segredos, rede e arquivos entram no ambiente.",
+    "Peça ao agente, no playground, para explorar o ambiente onde roda (sistema, CPU, memória, linguagens) e baixe os arquivos gerados para avaliar o fluxo."
+  ],
+  "numeros": [
+    {
+      "valor": "4 centavos",
+      "contexto": "Preço por imagem do Nano Banana Lite (dito em centavos de dólar)",
+      "t": 43
+    },
+    {
+      "valor": "7 a 10 s",
+      "contexto": "Tempo para subir o ambiente na primeira requisição",
+      "t": 1072
+    },
+    {
+      "valor": "6",
+      "contexto": "Templates do agente Antigravity no playground",
+      "t": 1072
+    },
+    {
+      "valor": "8 vCPU, 16 GB",
+      "contexto": "Máquina que o agente reportou no sandbox de teste",
+      "t": 1104
+    }
+  ]
+}

@@ -1,0 +1,174 @@
+{
+  "id": "XTpyNrEgJQ4",
+  "titulo": "Is Speculative Decoding Worth It? Profiling vLLM on NVIDIA Blackwell — Akamai",
+  "titulo_curto": "Is Speculative Decoding Worth It? Profiling vLLM on NVIDIA Blackwell",
+  "palestrante": "Akamai",
+  "url": "https://www.youtube.com/watch?v=XTpyNrEgJQ4",
+  "duracao": 917,
+  "publicado_ts": 1791325802,
+  "edicao": "2026-10-07",
+  "tese": "Speculative decoding acelera a geração quando sobra memória na GPU, o lote é pequeno e a saída é previsível, como JSON ou código.",
+  "tldr": [
+    "Um modelo pequeno (draft model) chuta de 3 a 5 tokens e o modelo grande confere todos em uma única passada, então a resposta final sai igual e mais rápida.",
+    "Na demo com vLLM em uma GPU NVIDIA Blackwell, a saída estruturada ficou 1,6 vez mais rápida com alta taxa de aceitação, e a escrita criativa teve aceitação bem menor.",
+    "O ganho cai quando a GPU já está cheia de requisições, quando o prompt é longo (como em RAG) ou quando o texto pede variedade."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Um modelo pequeno chuta, o grande confere",
+      "texto": "A inferência tem duas fases. No prefill o modelo lê o prompt e monta o KV cache uma única vez. No decode ele escreve um token por vez, e cada token custa uma passada (forward pass) no modelo grande. Com speculative decoding (decodificação especulativa), um modelo menor propõe de 3 a 5 tokens por ciclo. O modelo alvo aprova ou rejeita todos em uma passada e recalcula os rejeitados. Por isso a qualidade da saída continua a do modelo grande.",
+      "t": 137,
+      "legenda": "O modelo alvo verifica vários tokens propostos em uma única passada",
+      "print": "img/XTpyNrEgJQ4/0.jpg"
+    },
+    {
+      "titulo": "O custo é memória para dois modelos",
+      "texto": "Você hospeda dois modelos e precisa de espaço para o KV cache dos dois. Na demo, o modelo base ocupou cerca de 16 GB de pesos e o draft model 2,5 GB, o que deixou espaço para cache. A palestrante recomenda um draft model de 10 a 50 vezes menor que o alvo, com o mesmo tokenizer e de preferência da mesma família de modelos.",
+      "t": 268,
+      "legenda": "Pesos de 16 GB mais 2,5 GB ainda deixam espaço para KV cache",
+      "print": "img/XTpyNrEgJQ4/1.jpg"
+    },
+    {
+      "titulo": "Saída estruturada ganha 1,6 vez de velocidade",
+      "texto": "A demo roda as duas configurações lado a lado no vLLM. Na tarefa de saída estruturada, a versão especulativa gerou 1,6 vez mais rápido e produziu mais tokens por segundo (throughput, vazão). A métrica que explica o ganho é a taxa de aceitação: tokens aceitos pelo modelo alvo divididos pelo total proposto pelo draft model.",
+      "t": 562,
+      "legenda": "Com saída estruturada, o modo especulativo termina 1,6 vez mais rápido",
+      "print": null
+    },
+    {
+      "titulo": "Texto criativo derruba a taxa de aceitação",
+      "texto": "Na aba de escrita criativa, com temperatura alta, a taxa de aceitação cai bastante. Quanto mais variado o próximo token, menos o modelo pequeno acerta o que o grande escreveria. Poesia e brainstorming ganham pouco. Código, JSON e SQL ganham mais.",
+      "t": 605,
+      "legenda": "Em tarefa criativa o draft model erra mais e o ganho encolhe",
+      "print": null
+    },
+    {
+      "titulo": "Checklist antes de ligar",
+      "texto": "Speculative decoding acelera só o decode. Em RAG ou análise de documentos longos, o tempo vai quase todo para o prefill, então o ganho é pequeno. O slide final resume quatro perguntas: a saída é estruturada, sobra VRAM, o contexto é curto e os lotes são pequenos? Com alta concorrência, a GPU já está ocupada e a técnica atrapalha mais do que ajuda.",
+      "t": 722,
+      "legenda": "Quatro critérios dizem se vale ativar a técnica",
+      "print": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Prefill e decode",
+      "traducao": "leitura do prompt e geração token a token",
+      "nivel": "intermediario",
+      "chave": "prefill e decode",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "KV cache",
+      "traducao": "memória de trabalho do modelo durante a requisição",
+      "nivel": "intermediario",
+      "chave": "kv cache",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Speculative decoding",
+      "traducao": "decodificação especulativa",
+      "nivel": "intermediario",
+      "chave": "speculative decoding",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Draft model",
+      "traducao": "modelo rascunho que propõe tokens",
+      "nivel": "intermediario",
+      "chave": "draft model",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Tokenizer",
+      "traducao": "divisor de texto em tokens",
+      "nivel": "basico",
+      "chave": "tokenizer",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Taxa de aceitação",
+      "traducao": "acceptance rate: fração dos tokens propostos que o modelo alvo aceita",
+      "nivel": "intermediario",
+      "chave": "taxa de aceitação",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Throughput",
+      "traducao": "vazão, tokens gerados por segundo",
+      "nivel": "basico",
+      "chave": "throughput",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "vLLM",
+      "traducao": "motor open source para servir LLMs",
+      "nivel": "intermediario",
+      "chave": "vllm",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "A demo mede uma única execução de cada tarefa, sem repetição nem variância, e não diz quais modelos foram usados como alvo e rascunho. A taxa de aceitação da tarefa criativa aparece na tela, mas não é dita em voz. Os limites para contexto longo e alta concorrência são afirmados sem medição. A palestrante trabalha na Akamai e fecha o talk divulgando o GitHub e serviços da empresa, então parte do conteúdo funciona como divulgação. Ela mesma diz que há pouco material público sobre o tema.",
+  "acoes": [
+    "Se você serve um modelo próprio no vLLM com GPU ociosa, teste speculative decoding nas tarefas que geram JSON, SQL ou código e compare tokens por segundo.",
+    "Escolha um draft model da mesma família do modelo principal, com o mesmo tokenizer e de 10 a 50 vezes menor.",
+    "Acompanhe a taxa de aceitação por tipo de tarefa e desligue a técnica onde ela ficar baixa, como em texto criativo com temperatura alta.",
+    "Em fluxos de RAG com prompts longos, meça primeiro quanto tempo vai para o prefill antes de esperar ganho dessa técnica."
+  ],
+  "numeros": [
+    {
+      "valor": "3 a 5",
+      "contexto": "tokens propostos pelo draft model a cada ciclo",
+      "t": 137
+    },
+    {
+      "valor": "16 GB + 2,5 GB",
+      "contexto": "pesos do modelo base e do draft model na demo",
+      "t": 263
+    },
+    {
+      "valor": "10 a 50x",
+      "contexto": "quanto o draft model deve ser menor que o alvo",
+      "t": 294
+    },
+    {
+      "valor": "1,6x",
+      "contexto": "ganho de velocidade na tarefa de saída estruturada",
+      "t": 562
+    }
+  ]
+}

@@ -1,0 +1,173 @@
+{
+  "id": "toq-jyGLZDk",
+  "titulo": "Why Your AI Agents Can't Talk to Each Other (Yet) — Vlad Luzin, BAND",
+  "titulo_curto": "Why Your AI Agents Can't Talk to Each Other (Yet)",
+  "palestrante": "Vlad Luzin, BAND",
+  "url": "https://www.youtube.com/watch?v=toq-jyGLZDk",
+  "duracao": 1032,
+  "publicado_ts": 1791397834,
+  "edicao": "2026-10-07",
+  "tese": "Quem roda dois agentes lado a lado virou roteador de mensagens. Falta uma camada própria para agentes conversarem entre si.",
+  "tldr": [
+    "O palestrante diz que quem usa Claude e Codex em sessões separadas já opera um sistema multiagente à mão, copiando saída de um para o outro, e que loop engineering (engenharia de loops) só troca essa pessoa por um script.",
+    "Ele argumenta que Slack, Telegram, MCP e A2A não resolvem a conexão, porque conectar agentes é um problema de sistemas distribuídos: transporte ordenado, persistência, vínculo de identificadores de execução, identidade e observabilidade.",
+    "A BAND, empresa dele, lança uma camada de interação com registro de agentes e consentimento entre as partes, e mostra em vídeo gravado um Claude Code e um Codex colaborando entre usuários diferentes."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Você é o roteador entre dois agentes",
+      "texto": "Quem planeja numa sessão e revisa em outra, com Claude ou Codex, mantém dois agentes com estado trabalhando na mesma tarefa. A pessoa copia mensagens de um para o outro, como um roteador de rede. O loop engineering apenas entrega esse papel a um script em Python ou TypeScript.",
+      "t": 124,
+      "legenda": "O humano faz o papel de roteador entre dois agentes.",
+      "print": "img/toq-jyGLZDk/0.jpg"
+    },
+    {
+      "titulo": "Por que um agente só não basta",
+      "texto": "O palestrante cita limites da arquitetura de transformer: viés de confirmação, diluição de atenção, fragmentação e perda de recall do contexto. Segundo ele, contexto de 1 ou 2 milhões de tokens não resolve isso. Por isso se usam vários agentes, um conferindo o outro. Ele afirma sem mostrar medições.",
+      "t": 215,
+      "legenda": "Lista dos motivos citados para dividir o trabalho entre agentes.",
+      "print": "img/toq-jyGLZDk/1.jpg"
+    },
+    {
+      "titulo": "Chat de empresa dá só conversa agente-humano",
+      "texto": "Conectar um agente ao Telegram leva 5 passos, ao Slack 8 e ao WhatsApp 11, segundo o slide. No fim o agente conversa apenas com uma pessoa, não com outro agente. Essas plataformas foram feitas para humanos e bloqueiam bot falando com bot.",
+      "t": 276,
+      "legenda": "Contagem de passos manuais por plataforma de mensagens.",
+      "print": "img/toq-jyGLZDk/2.jpg"
+    },
+    {
+      "titulo": "MCP e A2A deixam lacunas",
+      "texto": "Segundo o palestrante, MCP faz chamadas sem estado, então não dá para voltar a perguntar ao agente o que aconteceu. A2A é cliente-servidor de mão única, e quem quer os dois sentidos implementa cliente e servidor nos dois lados. Faltam ainda descoberta e filas. Para ele, protocolo é abstração baixa demais para construir em escala.",
+      "t": 340,
+      "legenda": "Arquitetura montada só com protocolos, apontada como complexa.",
+      "print": null
+    },
+    {
+      "titulo": "Runtime binding e demo de onboarding",
+      "texto": "Para ligar LangGraph a Codex ou a CrewAI, é preciso mapear thread ID, session ID, execution ID e run ID entre os agentes. Sem isso eles não trabalham como grupo. Na demo gravada, dois agentes entram na plataforma em segundos, recebem um agent card e só trocam contato após consentimento dos dois lados.",
+      "t": 746,
+      "legenda": "Agentes surgem no registro e se conectam após consentimento bilateral.",
+      "print": "img/toq-jyGLZDk/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Loop engineering",
+      "traducao": "engenharia de loops entre agentes",
+      "nivel": "intermediario",
+      "chave": "loop engineering",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Single agent bottleneck",
+      "traducao": "gargalo do agente único",
+      "nivel": "intermediario",
+      "chave": "single agent bottleneck",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP",
+      "traducao": "Model Context Protocol, protocolo para dar ferramentas a agentes",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "A2A",
+      "traducao": "Agent2Agent, protocolo para agentes chamarem agentes",
+      "nivel": "intermediario",
+      "chave": "a2a",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sistema distribuído",
+      "traducao": "software que roda em várias máquinas e precisa coordenar falhas",
+      "nivel": "intermediario",
+      "chave": "sistema distribuído",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Runtime binding",
+      "traducao": "vínculo entre IDs de execução de agentes diferentes",
+      "nivel": "avancado",
+      "chave": "runtime binding",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Rehydration",
+      "traducao": "restaurar o estado de um agente depois de uma falha",
+      "nivel": "avancado",
+      "chave": "rehydration",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Agent card",
+      "traducao": "cartão de identidade de um agente no registro",
+      "nivel": "intermediario",
+      "chave": "agent card",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é pitch de produto: o palestrante é cofundador da BAND e lança o produto no fim. A frase de que um agente só sofre de viés de confirmação e atenção diluída vem sem dado ou estudo. As contagens de passos por mensagem e as críticas a MCP e A2A não têm fonte. As demos são gravadas e curtas, sem medição de latência, custo ou falhas. Ele não discute segurança de agentes de empresas diferentes conversando, só cita governança. A frase final sobre uma concorrente é provocação de estande, não argumento.",
+  "acoes": [
+    "Liste quais tarefas suas já usam duas sessões de IA (planejar e revisar) e anote onde você copia texto à mão. Esses pontos são candidatos a automação.",
+    "Antes de adotar um protocolo ou plataforma de comunicação entre agentes, pergunte se ele guarda estado, entrega mensagens em ordem e permite ver quais ferramentas cada agente chamou.",
+    "Ao testar produtos como a BAND, exija que você consiga ler toda conversa entre seu agente e agentes de terceiros, como na demo de visibilidade e humano no loop."
+  ],
+  "numeros": [
+    {
+      "valor": "5 passos",
+      "contexto": "Conectar um agente ao Telegram",
+      "t": 276
+    },
+    {
+      "valor": "11 passos",
+      "contexto": "Conectar um agente ao WhatsApp",
+      "t": 276
+    },
+    {
+      "valor": "1 a 2 mi tokens",
+      "contexto": "Contexto que, segundo ele, não resolve o gargalo",
+      "t": 215
+    },
+    {
+      "valor": "500.000 linhas",
+      "contexto": "Código de script de loop que a BAND diz dispensar",
+      "t": 935
+    }
+  ]
+}

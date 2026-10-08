@@ -1,0 +1,174 @@
+{
+  "id": "u-o0sW9nwmk",
+  "titulo": "From 36% to 100%: How Self-Improving Agents Write Their Own Skills — Rafal Wilinski, Runlayer",
+  "titulo_curto": "From 36% to 100%: How Self-Improving Agents Write Their Own Skills",
+  "palestrante": "Rafal Wilinski, Runlayer",
+  "url": "https://www.youtube.com/watch?v=u-o0sW9nwmk",
+  "duracao": 1111,
+  "publicado_ts": 1791381610,
+  "edicao": "2026-10-07",
+  "tese": "Se cada tarefa difícil resolvida por um agente vira uma skill compartilhada via MCP, a empresa acumula conhecimento que o modelo sozinho não dá.",
+  "tldr": [
+    "Skills são playbooks em texto que o agente lê quando precisa, e importam mais conforme os agentes trabalham por horas, porque um começo errado custa tokens e dinheiro.",
+    "O palestrante propõe entregar as skills por um servidor MCP central, o que alcança também quem não é desenvolvedor, e deixar um modelo de ponta destilar skills a partir de execuções (traces) que deram certo ou errado.",
+    "Em um teste interno da Runlayer, uma tarefa subiu de 36% para 100% de sucesso depois que uma skill destilada entrou nas execuções seguintes, e a tese final é que essa biblioteca de skills vira o diferencial da empresa."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Skill é um playbook lido sob demanda",
+      "texto": "O agente enxerga só um resumo curto de cada skill. Quando julga o conhecimento útil, lê o texto inteiro e injeta no contexto. Essa técnica se chama progressive disclosure (revelação progressiva) e muda o rumo do agente no começo da tarefa.",
+      "t": 130,
+      "legenda": "Skill como playbook que o agente carrega só quando precisa.",
+      "print": null
+    },
+    {
+      "titulo": "Tarefas longas aumentam o custo do erro inicial",
+      "texto": "O gráfico do METR mostra por quanto tempo agentes trabalham sozinhos com chance razoável de acabar a tarefa. Quanto mais longa a tarefa, mais fundo o agente cava um caminho errado, com centenas de chamadas de ferramenta. A skill orienta a trajetória logo no início.",
+      "t": 195,
+      "legenda": "O horizonte de tarefa dos agentes cresce, e o erro inicial fica mais caro.",
+      "print": "img/u-o0sW9nwmk/1.jpg"
+    },
+    {
+      "titulo": "MCP como camada de distribuição de skills",
+      "texto": "Em vez de instalar skills em cada máquina, a empresa mantém um servidor MCP remoto como fonte única. Ele aplica política, entrega a melhor versão por papel do usuário e funciona em clientes de chat comuns. Isso ataca os problemas de skills feitas para devs e de clientes sem suporte.",
+      "t": 475,
+      "legenda": "Um servidor governado substitui a instalação local de skills.",
+      "print": null
+    },
+    {
+      "titulo": "Destilar skills de execuções, inclusive das que falham",
+      "texto": "Inspirado no artigo Voyager (Minecraft), o agente guarda o que descobriu como receita reutilizável. Na Runlayer, um modelo de ponta lê o trace de cada execução e escreve a skill. As falhas mostram a proteção ou o caso de borda que faltava.",
+      "t": 719,
+      "legenda": "Sucessos dão confiança à skill e falhas a deixam mais robusta.",
+      "print": "img/u-o0sW9nwmk/3.jpg"
+    },
+    {
+      "titulo": "Resultado e flywheel organizacional",
+      "texto": "Rodando um fork do Chromium no AWS Lambda com Sonnet 4.6, a taxa de sucesso era de 36%. Depois que uma skill destilada passou a valer para as execuções seguintes, foi a 100%. Execuções semelhantes são agrupadas, checadas contra prompt injection e dados pessoais e servidas pelo gateway MCP a todos.",
+      "t": 790,
+      "legenda": "Uma skill destilada levou o sucesso de 36% a 100% no teste da Runlayer.",
+      "print": "img/u-o0sW9nwmk/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Skill",
+      "traducao": "playbook que o agente lê quando precisa",
+      "nivel": "basico",
+      "chave": "skill",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Progressive disclosure",
+      "traducao": "revelação progressiva do conteúdo da skill",
+      "nivel": "intermediario",
+      "chave": "progressive disclosure",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP",
+      "traducao": "protocolo que conecta agentes a ferramentas e dados",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP gateway",
+      "traducao": "porta de entrada central que serve e governa o MCP",
+      "nivel": "intermediario",
+      "chave": "mcp gateway",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Trace",
+      "traducao": "registro das chamadas de uma execução do agente",
+      "nivel": "intermediario",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Destilação",
+      "traducao": "extrair uma skill reutilizável a partir de execuções",
+      "nivel": "avancado",
+      "chave": "destilação",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Prompt injection",
+      "traducao": "instrução maliciosa escondida em texto que o agente lê",
+      "nivel": "intermediario",
+      "chave": "prompt injection",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Data flywheel",
+      "traducao": "ciclo em que o uso gera dados que melhoram o sistema",
+      "nivel": "intermediario",
+      "chave": "data flywheel",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é também um pitch da Runlayer, que vende o gateway MCP e o destilador. O resultado de 36% para 100% vem de uma única tarefa (Chromium no Lambda), sem número de execuções, sem grupo de controle e sem dizer se a skill já estava perto de uma resposta copiável. Faltam dados sobre skills destiladas erradas ou desatualizadas, sobre custo do destilador e sobre revisão humana, que o palestrante diz dispensar. A afirmação de que a economia de tokens vem das skills também não traz medição.",
+  "acoes": [
+    "Registre, após cada tarefa difícil resolvida por um agente, os passos que funcionaram e peça ao modelo para transformá-los em uma skill curta (um arquivo de texto com quando usar e como fazer).",
+    "Teste a ideia em escala pequena. Escolha uma tarefa que seu agente falha com frequência, meça a taxa de sucesso em várias execuções, adicione a skill e meça de novo.",
+    "Antes de instalar skills públicas, leia o conteúdo e as permissões. O palestrante cita scripts que pedem root e chaves de API de terceiros.",
+    "Se você lidera a adoção de IA, avalie centralizar skills em um ponto governado, para que áreas sem cliente de desenvolvedor, como RH e jurídico, também usem."
+  ],
+  "numeros": [
+    {
+      "valor": "36%",
+      "contexto": "taxa de sucesso inicial da tarefa Chromium no Lambda",
+      "t": 787
+    },
+    {
+      "valor": "100%",
+      "contexto": "sucesso após a skill destilada entrar nas execuções",
+      "t": 787
+    },
+    {
+      "valor": "6 meses",
+      "contexto": "tempo usando skills via MCP internamente na Runlayer",
+      "t": 503
+    },
+    {
+      "valor": "milhares",
+      "contexto": "skills escaneadas por dia pela Runlayer",
+      "t": 378
+    }
+  ]
+}

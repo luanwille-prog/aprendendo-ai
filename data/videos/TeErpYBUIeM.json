@@ -1,0 +1,164 @@
+{
+  "id": "TeErpYBUIeM",
+  "titulo": "The Self-Improving OSS Agent Stack — Marc Klingen, Langfuse",
+  "titulo_curto": "The Self-Improving OSS Agent Stack",
+  "palestrante": "Marc Klingen, Langfuse",
+  "url": "https://www.youtube.com/watch?v=TeErpYBUIeM",
+  "duracao": 1026,
+  "publicado_ts": 1791306019,
+  "edicao": "2026-10-07",
+  "tese": "Quem melhora agentes bem deixa a IA cuidar do trabalho braçal do loop e guarda para si a definição de metas, datasets e critérios de eval.",
+  "tldr": [
+    "Marc Klingen, cofundador da Langfuse, descreve a stack de referência para agentes: tracing online ligado a datasets, experimentos e evals (avaliações) offline.",
+    "Hoje a IA já propõe correções, mantém datasets e sugere critérios de avaliação, mas o time humano ainda revisa os limites contra os quais o agente se otimiza.",
+    "Numa demo, um coding agent lê os traces de um redator de changelog, acha vazamento de jargão interno, atualiza os evals e testa uma V2 contra a V1 antes de publicar."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "O loop junta produção e testes offline",
+      "texto": "Observabilidade (tracing e monitoramento) mostra como usuários usam o agente. Datasets e evals offline testam mudanças antes do deploy. Sem juntar os dois, o benchmark usa dados desatualizados ou o monitoramento nunca vira teste. Por muito tempo, esse ciclo exigiu trabalho manual de olhar traces toda semana.",
+      "t": 126,
+      "legenda": "O ciclo online + offline que sustenta a melhoria de um agente.",
+      "print": "img/TeErpYBUIeM/0.jpg"
+    },
+    {
+      "titulo": "Camadas de loops e onde o humano fica",
+      "texto": "Klingen mostra loops empilhados, do próximo token até a definição de metas humanas. Os modelos atuais permitem automatizar os loops de nível médio. Os humanos seguem alinhando o dataset com o uso real e definindo como avaliar, porque a IA pode se ajustar demais ao dataset e perseguir falhas irrelevantes.",
+      "t": 253,
+      "legenda": "As duas etapas azuis do loop 3 continuam com humanos.",
+      "print": "img/TeErpYBUIeM/1.jpg"
+    },
+    {
+      "titulo": "IA mantém datasets e critérios de eval",
+      "texto": "O uso mais comum é a IA propor correções do agente, com hill climbing (subir degrau a degrau) contra os datasets. Há cerca de um mês, mais times usam IA para atualizar datasets conforme o uso real e propor novos evaluators a partir de padrões de erro. O time revisa, porque esses critérios definem o alvo da otimização seguinte. Sem revisão, o risco é gerar mais lixo (slop).",
+      "t": 346,
+      "legenda": "Onde a IA já atua no loop e onde o humano valida.",
+      "print": "img/TeErpYBUIeM/2.jpg"
+    },
+    {
+      "titulo": "Menos tempo investido, qualidade maior",
+      "texto": "O quadrante manual dá qualidade alta, mas custa muito tempo da equipe. A automação total custa pouco tempo, mas gera muitos tokens sem sentido. O ponto ideal combina o humano definindo direção e a IA fazendo o trabalho tedioso, olhando muito mais casos de erro do que uma pessoa aguentaria. Sinais implícitos do uso, como edições e aprovações, alimentam o processo.",
+      "t": 503,
+      "legenda": "Direção humana mais execução por IA rende mais qualidade com menos tempo.",
+      "print": "img/TeErpYBUIeM/3.jpg"
+    },
+    {
+      "titulo": "Demo: changelog writer que se corrige",
+      "texto": "Um agente escreve changelog e documentação, e pessoas aprovam ou pedem mudanças em PRs. Um coding agent usa as agent skills da Langfuse, nota que o texto vazava jargão interno e atualiza dataset e evaluators. Depois testa a V2 contra a V1: formato e precisão ficam iguais e a linguagem voltada ao usuário melhora.",
+      "t": 842,
+      "legenda": "Back-test mostra a V2 melhor em linguagem ao usuário sem perder precisão.",
+      "print": "img/TeErpYBUIeM/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Trace",
+      "traducao": "registro detalhado da execução do agente",
+      "nivel": "basico",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação automatizada do comportamento do agente",
+      "nivel": "intermediario",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Hill climbing",
+      "traducao": "melhorar passo a passo contra um dataset fixo",
+      "nivel": "intermediario",
+      "chave": "hill climbing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Observabilidade de agentes",
+      "traducao": "monitorar como usuários usam o agente em produção",
+      "nivel": "intermediario",
+      "chave": "observabilidade de agentes",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Agent skills",
+      "traducao": "instruções empacotadas que ensinam o coding agent a usar uma ferramenta",
+      "nivel": "intermediario",
+      "chave": "agent skills",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Human in the loop",
+      "traducao": "humano no ciclo, decidindo os pontos críticos",
+      "nivel": "basico",
+      "chave": "human in the loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Golden dataset",
+      "traducao": "conjunto de exemplos de referência para testar o agente",
+      "nivel": "intermediario",
+      "chave": "golden dataset",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Teste de regressão",
+      "traducao": "back-test da nova versão contra a antiga",
+      "nivel": "intermediario",
+      "chave": "teste de regressão",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk vem do cofundador da Langfuse e funciona também como pitch de produto, sobretudo a parte final sobre dono dos dados e sistema escalável. Não há métrica sobre quanto tempo se economiza nem comparação entre times. A demo é um caso interno e o próprio palestrante a chama de yolo, pois o agente só abre PRs. Afirmações como 'os melhores usuários já fazem assim' não trazem amostra nem dados.",
+  "acoes": [
+    "Registre traces do seu agente e escolha uma fonte de sinal implícito, como edições, aprovações ou reclamações do usuário, para alimentar um dataset.",
+    "Deixe a IA propor correções e novos casos de teste, mas revise você mesmo o dataset e os critérios de eval, pois eles definem o alvo da otimização.",
+    "Antes de publicar uma mudança no prompt ou na skill do agente, rode a versão nova contra a antiga no mesmo dataset e compare por métrica.",
+    "Defina retenção longa e sem amostragem dos traces, porque agentes vão ler volumes maiores de histórico."
+  ],
+  "numeros": [
+    {
+      "valor": "1 mês",
+      "contexto": "tempo em que mais times passaram a usar IA em datasets e evals",
+      "t": 346
+    },
+    {
+      "valor": "2023",
+      "contexto": "ano em que a Langfuse começou, quando só se editava um HTML",
+      "t": 221
+    }
+  ]
+}

@@ -1,0 +1,199 @@
+{
+  "id": "uKUA1a0Kdfc",
+  "titulo": "Move Fast and Don't Break Things: Scaling Databases for the AI Era — PlanetScale",
+  "titulo_curto": "Move Fast and Don't Break Things: Scaling Databases for the AI Era",
+  "palestrante": "PlanetScale",
+  "url": "https://www.youtube.com/watch?v=uKUA1a0Kdfc",
+  "duracao": 1146,
+  "publicado_ts": 1791316807,
+  "edicao": "2026-10-07",
+  "tese": "Bancos de dados aguentam o tráfego de agentes com isolamento, sharding e back pressure, e boa experiência de desenvolvedor vira boa interface para IA.",
+  "tldr": [
+    "Ben Dicken, da PlanetScale, defende que dá para entregar rápido sem derrubar o banco, se o sistema tiver isolamento, redundância, sharding, back pressure e componentes desacoplados.",
+    "Agentes de IA multiplicam o tráfego e também podem operar a infraestrutura: eles desenham um esquema de sharding a partir de um arquivo JSON e mudam o schema por meio de branches e deploy requests.",
+    "A conclusão é que ferramentas feitas para desenvolvedores humanos, como CLI, API, branching e revert com um clique, servem como primitivas seguras para agentes."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Isolamento limita o estrago de um deploy ruim",
+      "texto": "O data plane (onde moram os dados críticos) fica separado de control plane, observabilidade, analytics, apps e MCPs. Esses outros componentes recebem deploys com mais frequência e falham mais. Um deploy ruim no control plane não pode impedir o acesso ao banco.",
+      "t": 233,
+      "legenda": "Cada componente falha sozinho sem derrubar o data plane.",
+      "print": "img/uKUA1a0Kdfc/0.jpg"
+    },
+    {
+      "titulo": "Em escala, falha rara vira rotina semanal",
+      "texto": "Com um servidor de banco, uma falha acontece a cada alguns anos. Com milhares de servidores, vira falha semanal ou mensal. Por isso o padrão é ter um nó primário e réplicas em outros data centers ou zonas de disponibilidade, prontas para assumir.",
+      "t": 295,
+      "legenda": "Primário com réplicas em standby cobre a falha inevitável de servidores.",
+      "print": "img/uKUA1a0Kdfc/1.jpg"
+    },
+    {
+      "titulo": "Sharding espalha dados, e cada shard ainda tem réplicas",
+      "texto": "Um único nó funciona com 10 GB, mas não com terabytes. O sharding divide dados e consultas entre vários servidores, atrás de um proxy (VTGate). Cada shard mantém primário e réplicas, então se recupera sozinho. A PlanetScale usa Vitess para MySQL e Neki para Postgres.",
+      "t": 450,
+      "legenda": "Proxy distribui as consultas entre shards redundantes.",
+      "print": "img/uKUA1a0Kdfc/2.jpg"
+    },
+    {
+      "titulo": "VSchema em JSON deixa o agente propor o sharding",
+      "texto": "O Vitess é complexo por dentro, mas a configuração de sharding é um arquivo JSON chamado VSchema, no qual se define a coluna de shard e o método. Como agentes lidam bem com texto e JSON, o desenvolvedor passa o schema do banco e pede um protótipo de VSchema. Depois a plataforma aplica via deploy, API ou CLI.",
+      "t": 785,
+      "legenda": "A interface de sharding é um JSON simples que o agente consegue escrever.",
+      "print": "img/uKUA1a0Kdfc/3.jpg"
+    },
+    {
+      "titulo": "Traffic Control aplica back pressure por orçamento",
+      "texto": "O recurso Traffic Control etiqueta o tráfego que chega ao banco e define orçamentos de recursos (CPU, processos de backend) por segmento. Ao estourar o orçamento, o sistema avisa o cliente ou mata as consultas. Perde-se parte do tráfego, mas a aplicação inteira não cai.",
+      "t": 909,
+      "legenda": "O gráfico mostra o tráfego acima do orçamento sendo sinalizado em vez de derrubar o banco.",
+      "print": "img/uKUA1a0Kdfc/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Isolamento de falhas",
+      "traducao": "Failure isolation",
+      "nivel": "basico",
+      "chave": "isolamento de falhas",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Redundância",
+      "traducao": "Redundancy: primário e réplicas",
+      "nivel": "basico",
+      "chave": "redundância",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sharding",
+      "traducao": "Particionamento do banco entre servidores",
+      "nivel": "intermediario",
+      "chave": "sharding",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Back pressure",
+      "traducao": "Contrapressão: recusar carga acima do limite",
+      "nivel": "intermediario",
+      "chave": "back pressure",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Desacoplamento",
+      "traducao": "Decoupling de serviços do backend",
+      "nivel": "intermediario",
+      "chave": "desacoplamento",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Vitess e VSchema",
+      "traducao": "Sistema de sharding para MySQL e seu arquivo JSON de configuração",
+      "nivel": "avancado",
+      "chave": "vitess e vschema",
+      "analogia": "Vitess com VSchema é como uma agência dos correios que separa as cartas por CEP, seguindo uma tabela simples que diz qual carteiro atende cada bairro.",
+      "explicacao": [
+        "Quando um banco de dados fica grande demais para um só computador, você divide os dados entre vários servidores. Cada pedaço se chama shard (fatia).",
+        "O Vitess é um software livre (open source) que faz essa divisão para o MySQL, um banco de dados muito usado. Cada shard continua sendo um banco MySQL comum.",
+        "Na frente das fatias fica o VTGate, um intermediário (proxy). Ele lê cada consulta SQL, descobre em qual shard está o dado e encaminha o pedido para lá.",
+        "Para dizer como dividir, você escreve o VSchema, um arquivo JSON (texto organizado em campos e valores). Nele você escolhe a coluna que define a fatia, o método de divisão e quais tabelas ficam em quais shards.",
+        "Agentes de IA lidam bem com JSON. Você entrega o schema (a estrutura das tabelas) e pede um rascunho de VSchema. Depois a plataforma aplica a mudança por deploy, API ou linha de comando (CLI)."
+      ],
+      "pre_requisitos": [
+        "Sharding",
+        "Banco de dados relacional",
+        "JSON",
+        "Proxy"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "APP ENVIA CONSULTA",
+            "nota": "Pedido SQL chega ao VTGate"
+          },
+          {
+            "rotulo": "VTGATE LÊ O VSCHEMA",
+            "nota": "Acha a coluna e o método de shard"
+          },
+          {
+            "rotulo": "ROTA PARA O SHARD",
+            "nota": "Envia só para a fatia certa"
+          },
+          {
+            "rotulo": "RESPOSTA AO APP",
+            "nota": "Dado volta sem o app ver a divisão"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Branching de schema e deploy request",
+      "traducao": "Branch do banco e pedido de deploy, como no Git",
+      "nivel": "intermediario",
+      "chave": "branching de schema e deploy request",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Control plane",
+      "traducao": "Plano de controle, separado do plano de dados",
+      "nivel": "intermediario",
+      "chave": "control plane",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "É um pitch de produto da PlanetScale, que vende Vitess, Neki, Traffic Control e branching. Não há medição própria nem estudo de caso com dados. O palestrante cita o aumento de 2x a 4x de tráfego do GitHub por agentes de memória, sem fonte. Cursor aparece como cliente, sem detalhes. A parte de agentes projetando shards é afirmada, não demonstrada. Revert sem perda de dados é uma promessa de marketing sem condições descritas.",
+  "acoes": [
+    "Liste os componentes do seu sistema e cheque se o deploy de um deles (painel interno, analytics, MCP) pode derrubar o acesso ao banco.",
+    "Defina o que acontece quando o banco passa do limite de CPU ou conexões. Se a resposta é cair, desenhe uma regra de recusa de parte do tráfego.",
+    "Antes de deixar um agente alterar o banco, exija um fluxo com branch de schema, revisão humana e reversão pronta.",
+    "Ao desenhar ferramentas para agentes, exponha configuração em arquivos simples (JSON) e comandos de CLI ou API que eles consigam usar."
+  ],
+  "numeros": [
+    {
+      "valor": "10 GB",
+      "contexto": "Volume de dados em que um único nó ainda funciona",
+      "t": 418
+    },
+    {
+      "valor": "2x a 4x",
+      "contexto": "Aumento de tráfego do GitHub atribuído a agentes (tweet citado)",
+      "t": 847
+    },
+    {
+      "valor": "100 usuários",
+      "contexto": "App pequeno com um servidor falha uma vez a cada poucos anos",
+      "t": 325
+    }
+  ]
+}
