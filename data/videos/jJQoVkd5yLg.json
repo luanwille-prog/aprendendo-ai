@@ -1,0 +1,169 @@
+{
+  "id": "jJQoVkd5yLg",
+  "titulo": "Why We Deleted Our MCP Server and Rebuilt It — Abhi Arya, Reducto",
+  "titulo_curto": "Why We Deleted Our MCP Server and Rebuilt It",
+  "palestrante": "Abhi Arya, Reducto",
+  "url": "https://www.youtube.com/watch?v=jJQoVkd5yLg",
+  "duracao": 999,
+  "publicado_ts": 1791478823,
+  "edicao": "2026-10-08",
+  "tese": "Software para agentes depende de quem paga quando o agente erra. Poucas ferramentas com estrutura e incerteza visível deixam o humano julgar.",
+  "tldr": [
+    "A Reducto criou um servidor MCP com uma ferramenta por endpoint da API. Funcionou no demo, mas quebrou no dia em que o time inteiro usou, porque o agente montava fluxos completos com confiança e ninguém sabia explicá-los.",
+    "A correção foi apagar o arquivo e recriar com menos ferramentas, que embutem a estrutura do trabalho real, mais uma ferramenta de snapshot do estado e sinais de confiança que fazem o agente perguntar em vez de chutar.",
+    "Com logs de cada sessão alimentando a orientação do MCP, o sistema melhorou sozinho e o time de vendas passou a usá-lo sem ser pedido, inclusive em reuniões com clientes importantes."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Três jeitos de responder quem paga pelo erro",
+      "texto": "O palestrante separa três abordagens. No auto mode, o agente tem autonomia total e o usuário paga pelos erros que não vê. No user-first, o usuário tem todos os controles e o agente quase não faz nada, como um chatbot. A terceira, que ele defende, dá ao agente capacidades delimitadas e deixa o humano verificar o trabalho.",
+      "t": 158,
+      "legenda": "As três abordagens e quem arca com o erro em cada uma.",
+      "print": "img/jJQoVkd5yLg/0.jpg"
+    },
+    {
+      "titulo": "Uma ferramenta por endpoint quebra em produção",
+      "texto": "O primeiro MCP deu uma ferramenta a cada endpoint da API, em um único arquivo grande. O demo curado funcionou. Quando o time todo usou, o agente recebia descrições vagas de uma call ou de uma página do Notion, montava o fluxo inteiro e afirmava que estava tudo certo. Nem usuário nem agente sabiam explicar o que o fluxo fazia.",
+      "t": 327,
+      "legenda": "O ponto em que o MCP v1 falhou ao sair do demo para o uso real.",
+      "print": "img/jJQoVkd5yLg/1.jpg"
+    },
+    {
+      "titulo": "Menos ferramentas, com a estrutura do trabalho dentro",
+      "texto": "Ele apagou o arquivo em um commit. No lugar, criou ferramentas que entendem o produto, como uma única classify-to-extract que liga o classificador ao nó de extração. Após cada passo o agente recebe orientação sobre o próximo, e algumas ferramentas se encadeiam sozinhas. O agente deixa de improvisar o que a equipe já sabe ser verdade.",
+      "t": 404,
+      "legenda": "Uma ferramenta composta substitui várias chamadas soltas.",
+      "print": null
+    },
+    {
+      "titulo": "Snapshot do estado e incerteza visível",
+      "texto": "Como agentes não guardam estado, uma chamada de snapshot devolve o estado vivo do pipeline e os erros com códigos específicos. Em runtime, o extract entrega confidence scores e bounding boxes, e o agente pergunta ao usuário quando há duas leituras possíveis. Nos evals, a equipe passou a reprovar suposições frágeis.",
+      "t": 591,
+      "legenda": "A saída que torna a incerteza do agente legível para o humano.",
+      "print": "img/jJQoVkd5yLg/3.jpg"
+    },
+    {
+      "titulo": "Instrumentação que vira ciclo de melhoria",
+      "texto": "Cada sessão do MCP foi registrada, e o time de vendas exportou suas sessões do Claude Code. Os logs mostram onde o humano corrigiu o agente, onde a confiança caiu e onde ele perguntou. Esses dados voltam para a orientação do MCP, e o sistema melhora a cada pipeline construído, sem reescrita manual.",
+      "t": 787,
+      "legenda": "O ciclo que transforma uso em melhoria da orientação do agente.",
+      "print": "img/jJQoVkd5yLg/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "MCP",
+      "traducao": "Model Context Protocol, padrão para conectar agentes a ferramentas",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Auto mode",
+      "traducao": "modo automático, o agente age sozinho sem o humano inspecionar",
+      "nivel": "basico",
+      "chave": "auto mode",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Snapshot de estado",
+      "traducao": "chamada que devolve o estado vivo do pipeline ao agente",
+      "nivel": "intermediario",
+      "chave": "snapshot de estado",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Confidence score",
+      "traducao": "nota de confiança que acompanha cada campo extraído",
+      "nivel": "intermediario",
+      "chave": "confidence score",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Human in the loop",
+      "traducao": "humano no circuito, com a palavra final",
+      "nivel": "basico",
+      "chave": "human in the loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação automatizada do comportamento do agente",
+      "nivel": "intermediario",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Reward hacking",
+      "traducao": "agente que passa no teste escondendo ou burlando o objetivo real",
+      "nivel": "avancado",
+      "chave": "reward hacking",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Harness",
+      "traducao": "estrutura ao redor do modelo: ferramentas, prompts e regras",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O talk também é divulgação da Reducto, com vaga aberta e estande no final. Não há medição de erros antes e depois, nem de satisfação com valores. A evidência é uma anedota: o time de vendas adotou a ferramenta, com reações no Slack como prova. A amostra é um único time interno, e o autor desenhou o sistema que avalia. A linha que atribui o erro a arquitetura e não a prompt é opinião sem comparação.",
+  "acoes": [
+    "Antes de expor uma API a um agente, liste os fluxos reais de trabalho e crie ferramentas por fluxo, em vez de uma por endpoint.",
+    "Faça o agente perguntar quando houver duas leituras possíveis, e inclua nos seus evals um caso que reprove suposição sem confirmação.",
+    "Exiba confiança e justificativa junto de cada resultado do agente, para que quem usa consiga revisar o que foi feito e por quê.",
+    "Registre as sessões de uso do agente e revise onde humanos corrigiram, para alimentar a orientação do sistema."
+  ],
+  "numeros": [
+    {
+      "valor": "3 bilhões",
+      "contexto": "documentos processados pela Reducto em 3 anos",
+      "t": 33
+    },
+    {
+      "valor": "60%",
+      "contexto": "do caminho que um modelo de fronteira alcança em documento limpo",
+      "t": 64
+    },
+    {
+      "valor": "100",
+      "contexto": "documentos no exemplo de pipeline que falha em silêncio",
+      "t": 527
+    }
+  ]
+}

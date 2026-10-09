@@ -1,0 +1,174 @@
+{
+  "id": "k2ClBT4aqAg",
+  "titulo": "We Mapped 115 Microservices for Our Coding Agents — Kamalakannan Nandagopal, Postman",
+  "titulo_curto": "We Mapped 115 Microservices for Our Coding Agents",
+  "palestrante": "Kamalakannan Nandagopal, Postman",
+  "url": "https://www.youtube.com/watch?v=k2ClBT4aqAg",
+  "duracao": 1046,
+  "publicado_ts": 1791495019,
+  "edicao": "2026-10-08",
+  "tese": "Em microsserviços, o agente de código só acerta se enxergar o mapa das APIs, e esse mapa precisa ficar atualizado.",
+  "tldr": [
+    "A Postman montou um grafo de contexto de API que liga serviços, endpoints, linhas de código e chamadas em produção, e deu esse grafo ao seu agente de código.",
+    "Ela mediu o efeito com evals (avaliações) criados a partir de PRs reais, comparando o agente com grafo, o Claude Code com busca simples e o Claude Code com o grafo como skill.",
+    "O grafo ganhou em descoberta de API, redesenho e análise de impacto, mas falhou quando ficou desatualizado, e o palestrante trata a atualização como parte central do trabalho."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "APIs formam a camada de contexto de um sistema distribuído",
+      "texto": "Cada microsserviço cuida de uma responsabilidade e a API define essa responsabilidade. As chamadas entre serviços revelam os fluxos de usuário que cruzam o sistema. Dentro de um único repositório o agente vai bem. Com centenas de repositórios, falta a ele essa visão de conjunto, e docs, skills e memória individual não a suprem.",
+      "t": 241,
+      "legenda": "A tese central: a API define a responsabilidade de cada serviço.",
+      "print": null
+    },
+    {
+      "titulo": "Todo dado do grafo precisa de lastro em código ou telemetria",
+      "texto": "O grafo cataloga serviços, endpoints, a linha de código de cada implementação, chamadas entre serviços e o caminho dos dados até bancos e caches. A regra do time é que cada ponto aponte para uma verdade concreta: uma linha de código ou um trace de telemetria de produção. O LLM indexa tudo, mas não inventa relações.",
+      "t": 322,
+      "legenda": "O que entra no grafo e a regra de só aceitar dado verificável.",
+      "print": "img/k2ClBT4aqAg/1.jpg"
+    },
+    {
+      "titulo": "Evals saem de PRs reais e decisões de design já tomadas",
+      "texto": "O time pegou PRs reais, registrou a intenção do desenvolvedor e o resultado final, e usou decisões de design documentadas como gabarito. Comparou três configurações: o agente da Postman com o grafo, o Claude Code com busca de código no GitHub e o Claude Code com o grafo como skill. Cada eval recebe nota de 0 a 5, e o gráfico cruza nota com tokens gastos.",
+      "t": 455,
+      "legenda": "Como ler o gráfico: canto superior esquerdo é bom e barato.",
+      "print": "img/k2ClBT4aqAg/2.jpg"
+    },
+    {
+      "titulo": "O ganho maior apareceu em redesenho e análise de impacto",
+      "texto": "Em descoberta de API, a diferença para o Claude Code foi pequena, mas o grafo superou a busca simples. No redesenho, o agente com grafo identificou os formatos de entrada usados por cada consumidor de uma API, enquanto a busca simples foi mal e o Claude com skill desistiu cedo. Na análise de impacto, a qualidade subiu e o gasto de tokens caiu para cerca de metade ou um terço da busca de código.",
+      "t": 728,
+      "legenda": "Mais qualidade com bem menos tokens que a busca de código.",
+      "print": "img/k2ClBT4aqAg/3.jpg"
+    },
+    {
+      "titulo": "Grafo desatualizado derruba a nota e a confiança",
+      "texto": "Em um eval de impacto de um PR, o resultado se inverteu: nota baixa e muito consumo de tokens. A causa foi que surgiram novos consumidores entre a escrita do eval e a execução. Para o palestrante, atraso na sincronização gera lacunas, as lacunas fazem o desenvolvedor perder a confiança e ele deixa de usar. Remoções de APIs e dependências também precisam ser detectadas.",
+      "t": 759,
+      "legenda": "A falha com dados defasados: nota baixa e consumo alto de tokens.",
+      "print": "img/k2ClBT4aqAg/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Sistema distribuído",
+      "traducao": "sistema dividido em muitos serviços independentes",
+      "nivel": "basico",
+      "chave": "sistema distribuído",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Grafo de contexto de API",
+      "traducao": "API context graph",
+      "nivel": "intermediario",
+      "chave": "grafo de contexto de api",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Contexto do agente",
+      "traducao": "informação que o agente recebe para decidir",
+      "nivel": "basico",
+      "chave": "contexto do agente",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Telemetria de produção",
+      "traducao": "traces e métricas coletados do sistema em uso",
+      "nivel": "intermediario",
+      "chave": "telemetria de produção",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação com gabarito para medir o agente",
+      "nivel": "intermediario",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Pull request",
+      "traducao": "pedido de integração de mudanças no código",
+      "nivel": "basico",
+      "chave": "pull request",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Persistent memory",
+      "traducao": "memória do agente entre sessões",
+      "nivel": "intermediario",
+      "chave": "persistent memory",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "RAG",
+      "traducao": "geração com busca de contexto externo",
+      "nivel": "intermediario",
+      "chave": "rag",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é também uma apresentação de produto: o final cita acesso antecipado e o estande da Postman. Os evals são internos, sem número de casos, sem notas exatas e sem repetições, então não dá para medir a margem dos ganhos. Os gráficos mostram tendências, não valores. O Claude Code serve de comparação, mas a configuração dele não é detalhada. A falha por dados defasados mostra o custo de manutenção, que não aparece quantificado. A cifra de 75% dos PRs vem do top 10 de repositórios, não do total.",
+  "acoes": [
+    "Liste os serviços e APIs da sua empresa que o agente de código precisa conhecer e veja se existe um mapa atualizado disso, mesmo que seja uma planilha.",
+    "Monte um eval pequeno com PRs antigos: descreva a tarefa, guarde o resultado real como gabarito e rode seu agente com e sem contexto extra.",
+    "Meça nota e consumo de tokens juntos. Um contexto que melhora a nota mas dobra o custo muda a conta.",
+    "Se mantiver documentação ou grafo para agentes, defina como ele se atualiza a cada mudança e como remoções são detectadas."
+  ],
+  "numeros": [
+    {
+      "valor": "150+",
+      "contexto": "microsserviços na fala (título diz 115)",
+      "t": 43
+    },
+    {
+      "valor": "0 a 5",
+      "contexto": "escala de nota de cada eval",
+      "t": 445
+    },
+    {
+      "valor": "1/2 a 1/3",
+      "contexto": "tokens em impacto, versus busca de código",
+      "t": 728
+    },
+    {
+      "valor": "75%",
+      "contexto": "dos PRs dos 10 maiores repositórios afetaram APIs",
+      "t": 819
+    }
+  ]
+}

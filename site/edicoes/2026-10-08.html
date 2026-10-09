@@ -1,0 +1,1108 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Contexto, confiança e memória para agentes em produção · Aprendendo AI</title>
+<meta name="description" content="Resumos diários dos talks do canal AI Engineer, explicados no estilo Quadro Anotado.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<script>document.documentElement.classList.add("js")</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;500;700;900&family=Barlow:ital,wght@0,400;0,600;1,400&family=Kalam:wght@400;700&display=swap">
+<link rel="stylesheet" href="../estilo.css">
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<header class="topo wrap">
+  <a class="marca" href="../index.html">Aprendendo <span>AI</span></a>
+  <nav class="topo-links" aria-label="Navegação principal">
+    <a href="../index.html#edicoes">Edições</a>
+    <a href="../glossario.html">Glossário</a>
+  </nav>
+</header>
+<main id="conteudo" class="wrap" tabindex="-1">
+<div class="edicao" id="e-2026-10-08">
+  <header class="edicao-head">
+    <h1 class="h-edicao">Contexto, confiança e memória para agentes em produção</h1>
+    <p class="meta">Edição de quinta, 8 out 2026 · 10 vídeos · 2 h 44 min de talks</p>
+<p class="abertura">Esta edição sai do protótipo e entra na rotina de uma empresa que usa agentes de verdade. Começa pelas pessoas e pela plataforma: como dar tempo para o time aprender e como deixar qualquer um publicar um app interno com segurança. Depois vem o contexto que o agente precisa enxergar, do mapa de APIs à telemetria de produção, e como validar o que ele entrega com PRs revisados por agentes, evals guiados pelo cliente e ferramentas MCP mais enxutas. Fecha com arquitetura e memória: separar quem planeja de quem executa e transformar experiência em lições e skills que o agente reaproveita.</p>  </header>
+
+  <div class="edicao-corpo">
+    <nav class="indice card" aria-label="Ordem de leitura">
+      <p class="indice-titulo">Ordem de leitura</p>
+      <ol><li data-id="3XI90A3ENSg"><a href="#v-3XI90A3ENSg" lang="en">How a Remote Company Builds AI Fluency</a> <span class="muted">15:32</span></li><li data-id="HTzgC3FoYsI"><a href="#v-HTzgC3FoYsI" lang="en">Let Anyone at Your Company Ship Internal Apps with AI</a> <span class="muted">17:13</span></li><li data-id="YNT7Plf9KIg"><a href="#v-YNT7Plf9KIg" lang="en">Your AI Agent Has No Nervous System</a> <span class="muted">15:34</span></li><li data-id="k2ClBT4aqAg"><a href="#v-k2ClBT4aqAg" lang="en">We Mapped 115 Microservices for Our Coding Agents</a> <span class="muted">17:26</span></li><li data-id="uuwDWRbxoYo"><a href="#v-uuwDWRbxoYo" lang="en">AI Writes More PRs. Who Validates Them?</a> <span class="muted">11:34</span></li><li data-id="Emo5FGGY-wM"><a href="#v-Emo5FGGY-wM" lang="en">Why 80% Reliability Isn&#39;t Good Enough</a> <span class="muted">17:44</span></li><li data-id="jJQoVkd5yLg"><a href="#v-jJQoVkd5yLg" lang="en">Why We Deleted Our MCP Server and Rebuilt It</a> <span class="muted">16:39</span></li><li data-id="NaOkR3VSfR4"><a href="#v-NaOkR3VSfR4" lang="en">Brains vs Hands: How to Run AI Agents Safely in Production</a> <span class="muted">16:49</span></li><li data-id="KGFyOtl5ktI"><a href="#v-KGFyOtl5ktI" lang="en">Giving AI Agents Memory That Learns</a> <span class="muted">16:38</span></li><li data-id="XPj3mIKEtI4"><a href="#v-XPj3mIKEtI4" lang="en">Turning Agent Memory Into Skills That Work</a> <span class="muted">18:41</span></li></ol>
+      <span class="progresso" data-ids="3XI90A3ENSg HTzgC3FoYsI YNT7Plf9KIg k2ClBT4aqAg uuwDWRbxoYo Emo5FGGY-wM jJQoVkd5yLg NaOkR3VSfR4 KGFyOtl5ktI XPj3mIKEtI4"></span>
+    </nav>
+
+    <div class="talks">
+<article class="video" id="v-3XI90A3ENSg" data-tema="carreira-e-equipes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">01</span>
+    <div class="sec-titulo">
+      <h2 lang="en">How a Remote Company Builds AI Fluency</h2>
+      <p class="tese">Dar ferramentas de IA não muda o jeito de trabalhar. Tempo protegido para aprender e praticar muda, e cada egresso vira professor.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Carreira e equipes</span>
+    <span class="chip">15:32</span>
+    <span class="chip" role="img" aria-label="Complexidade 2 de 5">nível ●●○○○</span>
+<span class="chip">Em Shreve, Automattic</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=3XI90A3ENSg" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>A Automattic (WordPress.com e Tumblr, mais de 1.400 pessoas em 82 países) aposta que as pessoas precisam de tempo real para aprender IA, e não só de acesso às ferramentas.</p><p>Ela roda programas presenciais de duas semanas, metade oficinas e metade projeto real, para engenheiros, times mistos e áreas não técnicas como finanças e liderança.</p><p>Cada egresso vira multiplicador por meio de guias, encontros locais, ride-alongs e um canal de ajuda; os resultados vêm de pesquisas com os participantes e de projetos construídos no programa.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-mcp"><strong>MCP</strong> <span>Model Context Protocol, protocolo que liga a IA a ferramentas</span></a></li><li><a href="../glossario.html#g-skill"><strong>Skill</strong> <span>instrução reutilizável que ensina um agente a fazer uma tarefa</span></a></li><li><a href="../glossario.html#g-hooks"><strong>Hooks</strong> <span>ganchos que rodam código em pontos do ciclo do agente</span></a></li><li><a href="../glossario.html#g-harness"><strong>Harness</strong> <span>ambiente que envolve o modelo e roda o agente</span></a></li><li><a href="../glossario.html#g-spec-driven-development"><strong>Spec-driven development</strong> <span>desenvolvimento guiado por especificação</span></a></li><li><a href="../glossario.html#g-observability"><strong>Observability</strong> <span>observabilidade, ver o que o sistema faz</span></a></li>    </ul>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Metade aula, metade trabalho real</h3>
+    <p>O programa dura duas semanas e é presencial. Metade do tempo é aprendizado facilitado, com oficinas dadas por colegas da própria empresa. A outra metade é trabalho real: cada pessoa traz uma tarefa, um painel ou uma skill que quer construir. Todo dia termina com demos dos projetos.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/3XI90A3ENSg/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A estrutura do programa: oficina e projeto real em partes iguais</span><a class="minuto" href="https://www.youtube.com/watch?v=3XI90A3ENSg&amp;t=94s" target="_blank" rel="noopener" aria-label="Assistir a partir de 01:34 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:34</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Currículo que vai do básico a agentes autônomos</h3>
+    <p>Os primeiros dias cobrem skills, MCPs, spec-driven development (desenvolvimento guiado por especificação) e uso responsável de IA. Depois vêm a criação de MCPs, os hooks para estender o harness (ambiente que roda o agente) e os agentes autônomos em segundo plano. O fim traz tópicos aplicados ao WordPress.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/3XI90A3ENSg/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A progressão do currículo, dos fundamentos aos agentes</span><a class="minuto" href="https://www.youtube.com/watch?v=3XI90A3ENSg&amp;t=218s" target="_blank" rel="noopener" aria-label="Assistir a partir de 03:38 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:38</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Servidor MCP interno como base compartilhada</h3>
+    <p>A empresa mantém um servidor MCP próprio, o Context A8C. Ele permite criar rápido conjuntos de ferramentas que não existem prontos e colocar camadas de governança e observabilidade. Os projetos dos participantes estendem esse servidor, e as capacidades se acumulam.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/3XI90A3ENSg/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O MCP interno que concentra as ferramentas da empresa</span><a class="minuto" href="https://www.youtube.com/watch?v=3XI90A3ENSg&amp;t=313s" target="_blank" rel="noopener" aria-label="Assistir a partir de 05:13 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:13</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Cada egresso multiplica o alcance</h3>
+    <p>Os formados viram guias (um programa de champions), organizam encontros locais de IA e dão ride-alongs, em que mostram como trabalham. Ver alguém com a mesma função usar a ferramenta é mais fácil de absorver do que ouvir conceitos. Um canal de Slack sempre aberto atende quem está começando.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/3XI90A3ENSg/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Os quatro canais pelos quais os egressos ensinam outros</span><a class="minuto" href="https://www.youtube.com/watch?v=3XI90A3ENSg&amp;t=437s" target="_blank" rel="noopener" aria-label="Assistir a partir de 07:17 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:17</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Projetos de duas semanas, inclusive de quem não é engenheiro</h3>
+    <p>Os participantes construíram um sistema agêntico de análise para lojas WooCommerce, um conector de Zendesk e um diretório de skills que funciona em várias ferramentas. A ferramenta de suporte guiado, que destaca partes da tela durante uma sessão de ajuda, saiu de uma pessoa de suporte.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/3XI90A3ENSg/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Exemplos de projetos criados dentro do programa</span><a class="minuto" href="https://www.youtube.com/watch?v=3XI90A3ENSg&amp;t=821s" target="_blank" rel="noopener" aria-label="Assistir a partir de 13:41 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:41</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=3XI90A3ENSg&amp;t=31s" target="_blank" rel="noopener"><strong>1.400</strong><span>pessoas na Automattic, em 82 países</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>00:31</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=3XI90A3ENSg&amp;t=375s" target="_blank" rel="noopener"><strong>7 turmas</strong><span>rodadas no ano, com cerca de 45 pessoas cada</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:15</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=3XI90A3ENSg&amp;t=375s" target="_blank" rel="noopener"><strong>600</strong><span>pessoas que querem passar pelo programa até o fim do ano</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:15</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=3XI90A3ENSg&amp;t=659s" target="_blank" rel="noopener"><strong>72h/30/90</strong><span>prazos das pesquisas após o programa (horas e dias)</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:59</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk descreve um programa interno e não traz evidência de resultado de negócio. As métricas citadas (intencionalidade, fluxo, compartilhamento, ganho individual) vêm de pesquisas de autoavaliação, sem números, grupo de controle ou ligação com produtividade. Os projetos mostrados são escolhidos a dedo. A meta de 600 pessoas e os custos do programa não aparecem. No fim, a palestrante convida o público ao estande da empresa e fala dos conectores do WordPress, o que dá um tom de divulgação.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Reserve tempo protegido para o seu time aprender IA, por exemplo meio dia por semana, em vez de só liberar licenças.</li><li>Peça que cada pessoa traga uma tarefa real para o treinamento. Aprender sobre trabalho de verdade fixa mais do que exemplos genéricos.</li><li>Organize uma sessão curta em que alguém da sua área mostre como usa IA no dia a dia, como os ride-alongs da Automattic.</li><li>Crie um lugar único para guardar e compartilhar skills e prompts úteis, para que o time construa sobre o trabalho dos outros.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="3XI90A3ENSg" aria-label="Marcar How a Remote Company Builds AI Fluency como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-HTzgC3FoYsI">Próximo talk <span lang="en">Let Anyone at Your Company Ship Internal Apps with AI</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-HTzgC3FoYsI" data-tema="carreira-e-equipes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">02</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Let Anyone at Your Company Ship Internal Apps with AI</h2>
+      <p class="tese">Com IA, construir um app interno ficou barato. O gargalo agora é publicar com segurança, e uma plataforma padrão resolve isso para quem não é engenheiro.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Carreira e equipes</span>
+    <span class="chip">17:13</span>
+    <span class="chip" role="img" aria-label="Complexidade 2 de 5">nível ●●○○○</span>
+<span class="chip">Garrett Galow, WorkOS</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=HTzgC3FoYsI" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Uma executiva de vendas da WorkOS criou um chatbot com Lovable, mas o CEO não conseguiu abrir, e dois engenheiros tiveram que refazer o app para publicá-lo.</p><p>A empresa criou o WOW (um CLI instalado em todos os laptops) e o Atlas (a plataforma por baixo, em Cloudflare), que publicam apps com login corporativo, logs e segredos prontos.</p><p>Segundo o palestrante, há 278 apps registrados, 3,3 milhões de requisições na última semana e 37% dos cerca de 60 apps em uso regular sem nenhum engenheiro nos commits.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-cli"><strong>CLI</strong> <span>interface de linha de comando</span></a></li><li><a href="../glossario.html#g-skills"><strong>Skills</strong> <span>habilidades reutilizáveis para agentes de código</span></a></li><li><a href="../glossario.html#g-sso"><strong>SSO</strong> <span>login único corporativo (aqui, via Okta)</span></a></li><li><a href="../glossario.html#g-mdm"><strong>MDM</strong> <span>gestão de dispositivos móveis e laptops da empresa</span></a></li><li><a href="../glossario.html#g-cloudflare-workers"><strong>Cloudflare Workers</strong> <span>plataforma de execução de código em borda, com banco D1 e KV</span></a></li><li><a href="../glossario.html#g-gestao-de-segredos"><strong>Gestão de segredos</strong> <span>cofre para chaves de API, aqui com Doppler</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 1 termo</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-audit-trail"><strong>Audit trail</strong> <span>registro auditável de todas as requisições</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>O gargalo mudou de construir para publicar</h3>
+    <p>O app de vendas funcionava, mas morava numa conta de Lovable que o CEO não tinha. Duas pessoas do time de IA aplicada precisaram refazer, hospedar e manter o app. Com Claude Code e Codex, construir é fácil. Decidir onde rodar, como autenticar e como proteger continua pesado para quem não é engenheiro.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=HTzgC3FoYsI&amp;t=139s" target="_blank" rel="noopener" aria-label="Assistir a partir de 02:19 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:19</a> Construir ficou barato, publicar ainda exigia engenharia</p>  </div>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Claude days: não engenheiros no teclado</h3>
+    <p>A empresa faz hackathons de um dia em duplas. Quem não é engenheiro (marketing, vendas) constrói. O engenheiro só orienta e destrava. Isso gerou ideias reais e também o retorno que mostrou o que faltava na plataforma.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/HTzgC3FoYsI/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Quem tem o problema constrói, o engenheiro faz papel de coach</span><a class="minuto" href="https://www.youtube.com/watch?v=HTzgC3FoYsI&amp;t=292s" target="_blank" rel="noopener" aria-label="Assistir a partir de 04:52 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:52</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Um comando cria repositório, template e deploy</h3>
+    <p>O comando wow app create verifica se a máquina tem Git, Node, GitHub e Doppler (gestor de segredos). Depois cria o repositório na conta corporativa, usa um template e faz o deploy. O CLI chega a todos os funcionários por MDM, a ferramenta de gestão de dispositivos da empresa.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/HTzgC3FoYsI/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Demo ao vivo do app saindo do zero com um único comando</span><a class="minuto" href="https://www.youtube.com/watch?v=HTzgC3FoYsI&amp;t=414s" target="_blank" rel="noopener" aria-label="Assistir a partir de 06:54 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:54</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Atlas: infra invisível, segura e descobrível</h3>
+    <p>A plataforma segue três princípios. A infraestrutura fica invisível (hoje Cloudflare Workers, trocável). O acesso é seguro por padrão, com SSO da Okta, logs auditáveis e segredos no Doppler. Todo app aparece no catálogo e vive sob workos.tools, então um link no Slack basta.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/HTzgC3FoYsI/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Cada app já nasce com banco, domínio, login e log</span><a class="minuto" href="https://www.youtube.com/watch?v=HTzgC3FoYsI&amp;t=724s" target="_blank" rel="noopener" aria-label="Assistir a partir de 12:04 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:04</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>A métrica de sucesso é ausência de engenheiro</h3>
+    <p>O objetivo era permitir que não engenheiros publicassem sozinhos. Entre os cerca de 60 apps mantidos ou usados com regularidade, 37% não têm engenheiro em nenhum commit. O próximo passo é permissão por grupo e papel, mais integrações com dados (Snowflake) e Slack.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/HTzgC3FoYsI/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O número que o palestrante chama de marcador de sucesso</span><a class="minuto" href="https://www.youtube.com/watch?v=HTzgC3FoYsI&amp;t=881s" target="_blank" rel="noopener" aria-label="Assistir a partir de 14:41 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:41</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=HTzgC3FoYsI&amp;t=508s" target="_blank" rel="noopener"><strong>278</strong><span>apps enviados ao registro interno com o WOW</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:28</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=HTzgC3FoYsI&amp;t=508s" target="_blank" rel="noopener"><strong>3,3 milhões</strong><span>requisições nos apps na última semana</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:28</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=HTzgC3FoYsI&amp;t=819s" target="_blank" rel="noopener"><strong>60</strong><span>apps mantidos ou usados com regularidade</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:39</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=HTzgC3FoYsI&amp;t=881s" target="_blank" rel="noopener"><strong>37%</strong><span>desses apps sem engenheiro em nenhum commit</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:41</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é um pitch: o palestrante encerra convidando quem tiver interesse a conversar com a WorkOS sobre a plataforma. Os números vêm da própria empresa, sem metodologia. O 37% vale para cerca de 60 apps, não para os 278, e não diz se commit sem engenheiro significa app sem revisão. Faltam dados sobre incidentes, custo e manutenção. O acesso padrão a todos os funcionários é uma limitação que o próprio talk admite, pois apps com dados de clientes precisam de permissão por grupo, ainda não pronta.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Liste os apps internos que alguém da sua empresa criou com IA e identifique quais só funcionam na conta pessoal do autor.</li><li>Defina um caminho único de publicação (hospedagem, login corporativo e segredos) para que não engenheiros não precisem decidir isso sozinhos.</li><li>Teste um dia de construção em duplas, com a pessoa do negócio no teclado e um engenheiro como apoio.</li><li>Mantenha um catálogo central dos apps internos, com dono e data do último deploy.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="HTzgC3FoYsI" aria-label="Marcar Let Anyone at Your Company Ship Internal Apps with AI como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-YNT7Plf9KIg">Próximo talk <span lang="en">Your AI Agent Has No Nervous System</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-YNT7Plf9KIg" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">03</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Your AI Agent Has No Nervous System</h2>
+      <p class="tese">Agente de código sem contexto do ambiente age rápido e às cegas; a Dynatrace vende o Bluebox como a camada que entrega esse contexto.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">15:34</span>
+    <span class="chip" role="img" aria-label="Complexidade 2 de 5">nível ●●○○○</span>
+<span class="chip">Matt Gibiec, Dynatrace</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=YNT7Plf9KIg" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Matt Gibiec, da Dynatrace, diz que agentes de código giram em loop, causam problemas operacionais e de segurança e são difíceis de medir porque só enxergam os dados que recebem.</p><p>A solução proposta é dar contexto do ambiente real ao agente, como dependências entre serviços, uso em produção e histórico de mudanças, por meio do Bluebox, produto da própria empresa.</p><p>Os cenários mostrados são testar localmente com contexto de produção, detectar problemas cedo, sugerir correções que respeitem o resto do sistema e planejar antes de pedir código, sempre com um humano aprovando.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-observability"><strong>Observability</strong> <span>observabilidade</span></a></li><li><a href="../glossario.html#g-contexto-do-agente"><strong>Contexto do agente</strong></a></li><li><a href="../glossario.html#g-hallucination"><strong>Hallucination</strong> <span>alucinação</span></a></li><li><a href="../glossario.html#g-loop"><strong>Loop</strong> <span>loop do agente</span></a></li><li><a href="../glossario.html#g-sdlc"><strong>SDLC</strong> <span>ciclo de vida de desenvolvimento de software</span></a></li><li><a href="../glossario.html#g-mapa-de-dependencias-de-servicos"><strong>Mapa de dependências de serviços</strong> <span>service dependency mapping</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-human-in-the-loop"><strong>Human in the loop</strong> <span>humano no ciclo</span></a></li><li><a href="../glossario.html#g-coding-agent"><strong>Coding agent</strong> <span>agente de código</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Agente rápido, mas sem enxergar</h3>
+    <p>O palestrante cita o CTO da Dynatrace: agentes operam em velocidade, mas sem visão. Se faltam contexto, detalhes ou permissões nas ferramentas, o agente alucina e automatiza processos que não geram valor. A proposta é chamar esse contexto de sistema nervoso do agente.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/YNT7Plf9KIg/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A tese do talk: agentes são rápidos, mas só tão bons quanto os dados que veem.</span><a class="minuto" href="https://www.youtube.com/watch?v=YNT7Plf9KIg&amp;t=255s" target="_blank" rel="noopener" aria-label="Assistir a partir de 04:15 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:15</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Funciona local, quebra em produção</h3>
+    <p>Uma mudança testada no notebook pode derrubar três outros serviços depois do merge. O Bluebox mapeia serviços e dependências de cada agente e carga de trabalho de IA e leva o contexto de produção para o teste local.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/YNT7Plf9KIg/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O print mostra como o contexto de produção entra no teste local.</span><a class="minuto" href="https://www.youtube.com/watch?v=YNT7Plf9KIg&amp;t=472s" target="_blank" rel="noopener" aria-label="Assistir a partir de 07:52 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:52</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Achar o problema antes do usuário</h3>
+    <p>Com dados históricos de carga, a ferramenta aprende o que é normal e avisa o desenvolvedor na IDE quando um serviço fica lento ou passa a dar erros novos. Por estar ligada ao repositório, cruza o problema com a mudança que o causou.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/YNT7Plf9KIg/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Mostra o alerta no editor associado à mudança de código que causou o desvio.</span><a class="minuto" href="https://www.youtube.com/watch?v=YNT7Plf9KIg&amp;t=564s" target="_blank" rel="noopener" aria-label="Assistir a partir de 09:24 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:24</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Corrigir sem quebrar o resto</h3>
+    <p>Uma correção pode ser de uma linha, mas afetar outros serviços. Por isso o agente precisa conhecer as dependências ao sugerir os passos de remediação, em vez de resolver só o problema à vista.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/YNT7Plf9KIg/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A sugestão de correção leva em conta o impacto nos demais serviços.</span><a class="minuto" href="https://www.youtube.com/watch?v=YNT7Plf9KIg&amp;t=689s" target="_blank" rel="noopener" aria-label="Assistir a partir de 11:29 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>11:29</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Planejar antes de pedir, humano decide no fim</h3>
+    <p>Antes de construir, o agente recebe dados reais de uso para entender o que a feature precisa entregar. O ciclo observar, detectar, sugerir correção e decidir termina com uma pessoa aprovando o envio para produção.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/YNT7Plf9KIg/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O ciclo do Bluebox e o ponto em que o humano mantém o controle.</span><a class="minuto" href="https://www.youtube.com/watch?v=YNT7Plf9KIg&amp;t=813s" target="_blank" rel="noopener" aria-label="Assistir a partir de 13:33 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:33</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=YNT7Plf9KIg&amp;t=94s" target="_blank" rel="noopener"><strong>18 min</strong><span>tempo restante da sessão informado no início</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:34</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=YNT7Plf9KIg&amp;t=441s" target="_blank" rel="noopener"><strong>3 serviços</strong><span>quebram após merge de mudança que funcionava local</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:21</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=YNT7Plf9KIg&amp;t=533s" target="_blank" rel="noopener"><strong>8 anos</strong><span>tempo do palestrante trabalhando com observabilidade</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:53</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é um pitch do Bluebox, produto da Dynatrace, e o palestrante trabalha para a empresa. Não há demonstração ao vivo, métrica, estudo de caso nem cliente citado. As afirmações sobre detectar problemas e sugerir correções seguras aparecem como promessas. O acesso é só por lista de espera. Os problemas descritos (loops, falhas após merge) são reais e conhecidos, mas o vídeo não compara o Bluebox com alternativas.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Liste que contexto seu agente de código recebe hoje (dependências, logs, uso real) e o que falta antes de pedir mudanças em serviços ligados a outros.</li><li>Antes de fazer merge de uma mudança feita por agente, verifique quais outros serviços dependem do código alterado.</li><li>Defina uma métrica de valor para cada agente em uso na equipe, como o tempo economizado ou a taxa de erros após o merge.</li><li>Mantenha aprovação humana antes de qualquer correção automática ir para produção.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="YNT7Plf9KIg" aria-label="Marcar Your AI Agent Has No Nervous System como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-k2ClBT4aqAg">Próximo talk <span lang="en">We Mapped 115 Microservices for Our Coding Agents</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-k2ClBT4aqAg" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">04</span>
+    <div class="sec-titulo">
+      <h2 lang="en">We Mapped 115 Microservices for Our Coding Agents</h2>
+      <p class="tese">Em microsserviços, o agente de código só acerta se enxergar o mapa das APIs, e esse mapa precisa ficar atualizado.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">17:26</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Kamalakannan Nandagopal, Postman</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=k2ClBT4aqAg" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>A Postman montou um grafo de contexto de API que liga serviços, endpoints, linhas de código e chamadas em produção, e deu esse grafo ao seu agente de código.</p><p>Ela mediu o efeito com evals (avaliações) criados a partir de PRs reais, comparando o agente com grafo, o Claude Code com busca simples e o Claude Code com o grafo como skill.</p><p>O grafo ganhou em descoberta de API, redesenho e análise de impacto, mas falhou quando ficou desatualizado, e o palestrante trata a atualização como parte central do trabalho.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-sistema-distribuido"><strong>Sistema distribuído</strong> <span>sistema dividido em muitos serviços independentes</span></a></li><li><a href="../glossario.html#g-grafo-de-contexto-de-api"><strong>Grafo de contexto de API</strong> <span>API context graph</span></a></li><li><a href="../glossario.html#g-contexto-do-agente"><strong>Contexto do agente</strong> <span>informação que o agente recebe para decidir</span></a></li><li><a href="../glossario.html#g-telemetria-de-producao"><strong>Telemetria de produção</strong> <span>traces e métricas coletados do sistema em uso</span></a></li><li><a href="../glossario.html#g-eval"><strong>Eval</strong> <span>avaliação com gabarito para medir o agente</span></a></li><li><a href="../glossario.html#g-pull-request"><strong>Pull request</strong> <span>pedido de integração de mudanças no código</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-persistent-memory"><strong>Persistent memory</strong> <span>memória do agente entre sessões</span></a></li><li><a href="../glossario.html#g-rag"><strong>RAG</strong> <span>geração com busca de contexto externo</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>APIs formam a camada de contexto de um sistema distribuído</h3>
+    <p>Cada microsserviço cuida de uma responsabilidade e a API define essa responsabilidade. As chamadas entre serviços revelam os fluxos de usuário que cruzam o sistema. Dentro de um único repositório o agente vai bem. Com centenas de repositórios, falta a ele essa visão de conjunto, e docs, skills e memória individual não a suprem.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=k2ClBT4aqAg&amp;t=241s" target="_blank" rel="noopener" aria-label="Assistir a partir de 04:01 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:01</a> A tese central: a API define a responsabilidade de cada serviço.</p>  </div>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Todo dado do grafo precisa de lastro em código ou telemetria</h3>
+    <p>O grafo cataloga serviços, endpoints, a linha de código de cada implementação, chamadas entre serviços e o caminho dos dados até bancos e caches. A regra do time é que cada ponto aponte para uma verdade concreta: uma linha de código ou um trace de telemetria de produção. O LLM indexa tudo, mas não inventa relações.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/k2ClBT4aqAg/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O que entra no grafo e a regra de só aceitar dado verificável.</span><a class="minuto" href="https://www.youtube.com/watch?v=k2ClBT4aqAg&amp;t=322s" target="_blank" rel="noopener" aria-label="Assistir a partir de 05:22 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:22</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Evals saem de PRs reais e decisões de design já tomadas</h3>
+    <p>O time pegou PRs reais, registrou a intenção do desenvolvedor e o resultado final, e usou decisões de design documentadas como gabarito. Comparou três configurações: o agente da Postman com o grafo, o Claude Code com busca de código no GitHub e o Claude Code com o grafo como skill. Cada eval recebe nota de 0 a 5, e o gráfico cruza nota com tokens gastos.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/k2ClBT4aqAg/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Como ler o gráfico: canto superior esquerdo é bom e barato.</span><a class="minuto" href="https://www.youtube.com/watch?v=k2ClBT4aqAg&amp;t=455s" target="_blank" rel="noopener" aria-label="Assistir a partir de 07:35 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:35</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>O ganho maior apareceu em redesenho e análise de impacto</h3>
+    <p>Em descoberta de API, a diferença para o Claude Code foi pequena, mas o grafo superou a busca simples. No redesenho, o agente com grafo identificou os formatos de entrada usados por cada consumidor de uma API, enquanto a busca simples foi mal e o Claude com skill desistiu cedo. Na análise de impacto, a qualidade subiu e o gasto de tokens caiu para cerca de metade ou um terço da busca de código.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/k2ClBT4aqAg/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Mais qualidade com bem menos tokens que a busca de código.</span><a class="minuto" href="https://www.youtube.com/watch?v=k2ClBT4aqAg&amp;t=728s" target="_blank" rel="noopener" aria-label="Assistir a partir de 12:08 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:08</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Grafo desatualizado derruba a nota e a confiança</h3>
+    <p>Em um eval de impacto de um PR, o resultado se inverteu: nota baixa e muito consumo de tokens. A causa foi que surgiram novos consumidores entre a escrita do eval e a execução. Para o palestrante, atraso na sincronização gera lacunas, as lacunas fazem o desenvolvedor perder a confiança e ele deixa de usar. Remoções de APIs e dependências também precisam ser detectadas.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/k2ClBT4aqAg/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A falha com dados defasados: nota baixa e consumo alto de tokens.</span><a class="minuto" href="https://www.youtube.com/watch?v=k2ClBT4aqAg&amp;t=759s" target="_blank" rel="noopener" aria-label="Assistir a partir de 12:39 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:39</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=k2ClBT4aqAg&amp;t=43s" target="_blank" rel="noopener"><strong>150+</strong><span>microsserviços na fala (título diz 115)</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>00:43</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=k2ClBT4aqAg&amp;t=445s" target="_blank" rel="noopener"><strong>0 a 5</strong><span>escala de nota de cada eval</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:25</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=k2ClBT4aqAg&amp;t=728s" target="_blank" rel="noopener"><strong>1/2 a 1/3</strong><span>tokens em impacto, versus busca de código</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:08</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=k2ClBT4aqAg&amp;t=819s" target="_blank" rel="noopener"><strong>75%</strong><span>dos PRs dos 10 maiores repositórios afetaram APIs</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:39</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é também uma apresentação de produto: o final cita acesso antecipado e o estande da Postman. Os evals são internos, sem número de casos, sem notas exatas e sem repetições, então não dá para medir a margem dos ganhos. Os gráficos mostram tendências, não valores. O Claude Code serve de comparação, mas a configuração dele não é detalhada. A falha por dados defasados mostra o custo de manutenção, que não aparece quantificado. A cifra de 75% dos PRs vem do top 10 de repositórios, não do total.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Liste os serviços e APIs da sua empresa que o agente de código precisa conhecer e veja se existe um mapa atualizado disso, mesmo que seja uma planilha.</li><li>Monte um eval pequeno com PRs antigos: descreva a tarefa, guarde o resultado real como gabarito e rode seu agente com e sem contexto extra.</li><li>Meça nota e consumo de tokens juntos. Um contexto que melhora a nota mas dobra o custo muda a conta.</li><li>Se mantiver documentação ou grafo para agentes, defina como ele se atualiza a cada mudança e como remoções são detectadas.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="k2ClBT4aqAg" aria-label="Marcar We Mapped 115 Microservices for Our Coding Agents como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-uuwDWRbxoYo">Próximo talk <span lang="en">AI Writes More PRs. Who Validates Them?</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-uuwDWRbxoYo" data-tema="engenharia-de-software">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">05</span>
+    <div class="sec-titulo">
+      <h2 lang="en">AI Writes More PRs. Who Validates Them?</h2>
+      <p class="tese">Se a IA gera mais PRs, a validação também precisa de agente, com confiança liberada em degraus até o merge automático.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Engenharia de software</span>
+    <span class="chip">11:34</span>
+    <span class="chip" role="img" aria-label="Complexidade 2 de 5">nível ●●○○○</span>
+<span class="chip">Ali-Reza Adl-Tabatabai, Sonar</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=uuwDWRbxoYo" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>O palestrante diz que a IA gera mais PRs e PRs maiores, e isso transforma CI e code review em gargalo: ou o time desacelera, ou aprova sem olhar.</p><p>A proposta é um agente de validação que revisa o PR, explica falhas de CI, corrige até ficar verde e aprova e faz merge conforme regras definidas pelo time.</p><p>O produto, Gitar (agora parte da Sonar), usa harness próprio, proxy de LLMs e análise de programa no SonarQube, mas o talk não apresenta dados medidos.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-uuwDWRbxoYo-analise-de-programa"><strong>Análise de programa</strong> <span>análise estática do código (taint, fluxo de controle e de dados)</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-pull-request"><strong>Pull request</strong> <span>proposta de mudança no código para revisão</span></a></li><li><a href="../glossario.html#g-ci-integracao-continua"><strong>CI (integração contínua)</strong> <span>testes e checagens automáticas a cada mudança</span></a></li><li><a href="../glossario.html#g-teste-flaky"><strong>Teste flaky</strong> <span>teste instável que falha e passa sem mudança no código</span></a></li><li><a href="../glossario.html#g-autofix"><strong>Autofix</strong> <span>correção automática de problemas até o PR ficar verde</span></a></li><li><a href="../glossario.html#g-control-plane"><strong>Control plane</strong> <span>camada que orquestra os fluxos</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-harness"><strong>Harness</strong> <span>ambiente que executa o agente, com contexto, memória e ferramentas</span></a></li><li><a href="../glossario.html#g-model-routing"><strong>Model routing</strong> <span>roteamento entre modelos, com failover</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>A IA move o custo para a validação</h3>
+    <p>Com IA, o time gera mais PRs (pull requests, propostas de mudança no código) e PRs maiores, todos com chance de defeito. O custo se desloca para a revisão e para a produção. As duas saídas do palestrante são desacelerar, revisando tudo com cuidado, ou carimbar sem ler e arriscar incidentes.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/uuwDWRbxoYo/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Mostra o dilema entre desacelerar e aprovar sem ler.</span><a class="minuto" href="https://www.youtube.com/watch?v=uuwDWRbxoYo&amp;t=177s" target="_blank" rel="noopener" aria-label="Assistir a partir de 02:57 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:57</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Agente de validação em quatro funções</h3>
+    <p>O agente revisa o PR com poucos comentários de ruído, resume a causa de falhas de CI e identifica testes flaky (instáveis). Também corrige problemas em loop até o PR ficar verde e, por fim, aprova e faz merge segundo regras que o time configura.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/uuwDWRbxoYo/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Resume as funções do agente da criação do PR ao merge.</span><a class="minuto" href="https://www.youtube.com/watch?v=uuwDWRbxoYo&amp;t=231s" target="_blank" rel="noopener" aria-label="Assistir a partir de 03:51 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:51</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Confiança em degraus até a automação total</h3>
+    <p>Segundo o palestrante, os usuários começam só lendo as revisões. Depois deixam o agente bloquear PRs, ligam o autofix e, por último, definem regras de aprovação e merge automáticos. Cada degrau libera mais automação conforme a confiança na precisão cresce.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/uuwDWRbxoYo/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Mostra a ordem em que times liberam autonomia ao agente.</span><a class="minuto" href="https://www.youtube.com/watch?v=uuwDWRbxoYo&amp;t=355s" target="_blank" rel="noopener" aria-label="Assistir a partir de 05:55 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:55</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Insights para plataforma e liderança</h3>
+    <p>Como o agente processa todo PR, ele categoriza as principais falhas de CI (testes instáveis ou problemas de infraestrutura) e o tipo de trabalho entregue (feature, correção, chore, refactor). O primeiro dado serve ao time de plataforma, o segundo à liderança.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/uuwDWRbxoYo/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Exemplifica os painéis para plataforma e liderança.</span><a class="minuto" href="https://www.youtube.com/watch?v=uuwDWRbxoYo&amp;t=417s" target="_blank" rel="noopener" aria-label="Assistir a partir de 06:57 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:57</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Por baixo: control plane, harness e proxy de LLM</h3>
+    <p>A arquitetura tem um control plane que orquestra os fluxos de PR, um harness próprio para execução multiagente, contexto, memória e tool calling, e um proxy de LLM que roteia entre modelos e faz failover. Na Sonar, o agente se combina com análise de programa como taint e data flow.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/uuwDWRbxoYo/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Mostra os três componentes internos do produto.</span><a class="minuto" href="https://www.youtube.com/watch?v=uuwDWRbxoYo&amp;t=479s" target="_blank" rel="noopener" aria-label="Assistir a partir de 07:59 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:59</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=uuwDWRbxoYo&amp;t=13s" target="_blank" rel="noopener"><strong>1 mês</strong><span>tempo desde a aquisição da Gitar pela Sonar</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>00:13</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=uuwDWRbxoYo&amp;t=479s" target="_blank" rel="noopener"><strong>3</strong><span>componentes principais citados na arquitetura</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:59</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=uuwDWRbxoYo&amp;t=665s" target="_blank" rel="noopener"><strong>P7</strong><span>número do estande para ver a demo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>11:05</span></a>
+  </div>
+
+  <div class="casper" id="a-uuwDWRbxoYo-analise-de-programa">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Análise de programa (análise estática do código (taint, fluxo de controle e de dados)).</strong> Análise de programa é como um inspetor que confere a planta de um prédio e segue cada cano e cada fio no papel para achar vazamentos antes de alguém morar lá.</p>
+    <ol class="passos"><li>Uma ferramenta lê o código sem rodar o programa e procura erros e falhas de segurança, como um revisor que lê um contrato antes da assinatura.</li><li>Para isso, ela monta um mapa do programa. O mapa mostra quais partes chamam quais e por quais caminhos a execução pode seguir. Esse é o fluxo de controle (control flow).</li><li>A análise de fluxo de dados (data flow) segue cada dado nesse mapa. A análise de contaminação (taint analysis) marca dados de fora, como o texto do usuário, e avisa se chegam ao banco de dados sem checagem.</li><li>A análise de composição de software (software composition analysis) confere as bibliotecas de terceiros usadas no projeto e aponta versões com falhas conhecidas.</li><li>No talk, a Sonar quer somar essas regras fixas do SonarQube ao agente de IA. A ideia é que as regras deem precisão e o agente dê cobertura e correção. O palestrante não mostra números que comprovem o ganho.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>CÓDIGO DO PR</strong><span>Lido sem executar o programa</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>MAPA DE CAMINHOS</strong><span>Fluxo de controle entre as partes</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>RASTREIO DE DADOS</strong><span>Taint e fluxo de dados</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>AGENTE AVALIA</strong><span>Filtra alertas e propõe correção</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>ALERTA PRECISO</strong><span>Falha apontada com o caminho</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-pull-request">Pull request</a>, <a href="../glossario.html#g-ci-integracao-continua">CI (integração contínua)</a>, <a href="../glossario.html#g-analise-estatica-de-codigo">Análise estática de código</a>, <a href="../glossario.html#g-vulnerabilidade-de-seguranca">Vulnerabilidade de segurança</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é pitch de produto do Gitar/Sonar, feito por cofundador recém-adquirido. Não mostra números de precisão, taxa de falsos positivos, economia ou bugs que passaram. Os resultados no minuto 574 são qualitativos. A tendência de usuários rumo à automação total é uma observação sem amostra informada. A afirmação de resultado garantido a preço fixo por PR não tem detalhes. Aprovar e fazer merge sem humano exige evidência que o talk não traz.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Meça em seu time quanto tempo PRs gerados por IA esperam por revisão e quantas falhas de CI vêm de testes flaky, antes de comprar qualquer ferramenta.</li><li>Adote a escada de confiança: comece com o agente só comentando PRs e compare os achados com a revisão humana por algumas semanas.</li><li>Só libere auto-merge para PRs de baixo risco, com regras escritas (tamanho, área do código, testes passando) e possibilidade de reverter.</li><li>Peça a qualquer fornecedor de revisão por IA dados de precisão e de falsos positivos em repositórios parecidos com o seu.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="uuwDWRbxoYo" aria-label="Marcar AI Writes More PRs. Who Validates Them? como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-Emo5FGGY-wM">Próximo talk <span lang="en">Why 80% Reliability Isn&#39;t Good Enough</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-Emo5FGGY-wM" data-tema="evals">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">06</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Why 80% Reliability Isn&#39;t Good Enough</h2>
+      <p class="tese">Eval estático deixa você torcendo. Eval que nasce do sinal do cliente e muda toda semana é o que gera confiança.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Evals</span>
+    <span class="chip">17:44</span>
+    <span class="chip" role="img" aria-label="Complexidade 2 de 5">nível ●●○○○</span>
+<span class="chip">Felipe Blanes, Amazon AGI Lab</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=Emo5FGGY-wM" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Felipe Blanes, do Amazon AGI Lab, conta que benchmarks públicos e dados sintéticos não previram o que os clientes do Nova Act (serviço da Amazon para criar agentes de navegador) fizeram em produção.</p><p>Ele propõe um ciclo de quatro passos: definir sucesso como o cliente define, capturar sinais (inclusive conversando com clientes), diagnosticar lacunas em modelo, engenharia e produto, e levar isso para decisões.</p><p>Das lições do trabalho com clientes, a confiança aparece só em torno de 90% de confiabilidade, falar dos limites do produto ajuda mais que nota alta, e casos de uso inesperados guiam as próximas funcionalidades.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-eval-flywheel"><strong>Eval flywheel</strong> <span>ciclo contínuo de avaliação</span></a></li><li><a href="../glossario.html#g-benchmark"><strong>Benchmark</strong> <span>teste padronizado de desempenho</span></a></li><li><a href="../glossario.html#g-eval"><strong>Eval</strong> <span>avaliação automatizada de um sistema de IA</span></a></li><li><a href="../glossario.html#g-browser-agent"><strong>Browser agent</strong> <span>agente que opera um navegador</span></a></li><li><a href="../glossario.html#g-harness"><strong>Harness</strong> <span>estrutura de código ao redor do modelo</span></a></li><li><a href="../glossario.html#g-dados-sinteticos"><strong>Dados sintéticos</strong> <span>dados gerados pela própria equipe</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 1 termo</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-trust-cliff"><strong>Trust cliff</strong> <span>penhasco da confiança</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>A ilusão do benchmark</h3>
+    <p>Times otimizam o produto para benchmarks públicos e dados sintéticos. Em produção, o cliente tenta tudo o que ninguém previu e quebra o produto. Com eval estático, depois do lançamento só resta torcer para que o teste refletisse o uso real.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/Emo5FGGY-wM/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Com eval estático, depois do envio só sobra esperança.</span><a class="minuto" href="https://www.youtube.com/watch?v=Emo5FGGY-wM&amp;t=216s" target="_blank" rel="noopener" aria-label="Assistir a partir de 03:36 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:36</a></figcaption>
+  </figure>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>O flywheel de evals em quatro passos</h3>
+    <p>O ciclo repete sem parar: definir sucesso pela visão do cliente, capturar sinais (métricas e conversas), diagnosticar lacunas e alimentar decisões. As lacunas se separam em modelo (viram evals), engenharia (bugs no harness) e produto (posicionamento).</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=Emo5FGGY-wM&amp;t=281s" target="_blank" rel="noopener" aria-label="Assistir a partir de 04:41 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:41</a> O flywheel: definir sucesso, capturar sinais, diagnosticar, decidir.</p>  </div>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Quatro fases da jornada do cliente</h3>
+    <p>O cliente evolui com o produto: descoberta de caso de uso, adotantes iniciais que mostram o que é possível, escala com o caso de uso principal e lacunas de produto para o futuro. Os evals precisam acompanhar a complexidade crescente de cada fase.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/Emo5FGGY-wM/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Cada fase da jornada pede sinais e evals diferentes.</span><a class="minuto" href="https://www.youtube.com/watch?v=Emo5FGGY-wM&amp;t=466s" target="_blank" rel="noopener" aria-label="Assistir a partir de 07:46 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:46</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>O penhasco da confiança</h3>
+    <p>Com 80% de confiabilidade, o cliente ainda precisa monitorar o agente e refazer à mão o que falha, então dá mais trabalho. Perto de 90%, ele passa a entregar o fluxo inteiro ao agente. Na visão do palestrante, confiança funciona quase como tudo ou nada.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/Emo5FGGY-wM/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Abaixo de cerca de 90%, o cliente sente que ganhou trabalho extra.</span><a class="minuto" href="https://www.youtube.com/watch?v=Emo5FGGY-wM&amp;t=593s" target="_blank" rel="noopener" aria-label="Assistir a partir de 09:53 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:53</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Transparência sobre limites vale mais que nota alta</h3>
+    <p>Ele recomenda dizer ao cliente o que funciona, o que está em melhoria e o que está fora de escopo. A parte difícil é a última. Segundo ele, admitir limitações aumenta a confiança mais que um benchmark melhor.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/Emo5FGGY-wM/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Três coisas a declarar ao cliente, inclusive o que o produto não faz.</span><a class="minuto" href="https://www.youtube.com/watch?v=Emo5FGGY-wM&amp;t=689s" target="_blank" rel="noopener" aria-label="Assistir a partir de 11:29 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>11:29</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=Emo5FGGY-wM&amp;t=593s" target="_blank" rel="noopener"><strong>80%</strong><span>confiabilidade que o cliente vê como mais trabalho</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:53</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=Emo5FGGY-wM&amp;t=625s" target="_blank" rel="noopener"><strong>cerca de 90%</strong><span>confiabilidade em que o cliente passa a confiar</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:25</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=Emo5FGGY-wM&amp;t=281s" target="_blank" rel="noopener"><strong>4</strong><span>passos do flywheel de evals</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:41</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=Emo5FGGY-wM&amp;t=879s" target="_blank" rel="noopener"><strong>4</strong><span>princípios para manter os evals atualizados</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:39</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk também funciona como divulgação do Nova Act. Os números de confiabilidade (80% e cerca de 90%) aparecem sem método, sem amostra de clientes e sem dados. A descrição do vídeo cita 92%, mas na fala ele diz &#39;around 90%&#39;. A afirmação de que transparência vale mais que benchmark vem da experiência dele, sem comparação. Os casos da Amazon Leo, Hertz e Sola são anedotas sem métricas de resultado. O ciclo é sensato, mas o talk não mostra como pesar sinais conflitantes entre clientes.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Separe os casos de teste do seu agente em dois grupos: inventados por você e tirados de uso real. Passe a alimentar o segundo grupo toda semana.</li><li>Marque conversas curtas com 2 ou 3 usuários do seu fluxo com IA e registre o que eles tentaram fazer, antes de olhar as métricas.</li><li>Ao entregar uma automação a um colega ou cliente, escreva o que ela faz bem, o que está em melhoria e o que não deve ser usado nela.</li><li>Meça a taxa de acerto real do seu agente em tarefas do dia a dia e pergunte se o usuário ainda precisa vigiá-lo. Se precisa, a taxa ainda é baixa.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="Emo5FGGY-wM" aria-label="Marcar Why 80% Reliability Isn&#39;t Good Enough como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-jJQoVkd5yLg">Próximo talk <span lang="en">Why We Deleted Our MCP Server and Rebuilt It</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-jJQoVkd5yLg" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">07</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Why We Deleted Our MCP Server and Rebuilt It</h2>
+      <p class="tese">Software para agentes depende de quem paga quando o agente erra. Poucas ferramentas com estrutura e incerteza visível deixam o humano julgar.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">16:39</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Abhi Arya, Reducto</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=jJQoVkd5yLg" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>A Reducto criou um servidor MCP com uma ferramenta por endpoint da API. Funcionou no demo, mas quebrou no dia em que o time inteiro usou, porque o agente montava fluxos completos com confiança e ninguém sabia explicá-los.</p><p>A correção foi apagar o arquivo e recriar com menos ferramentas, que embutem a estrutura do trabalho real, mais uma ferramenta de snapshot do estado e sinais de confiança que fazem o agente perguntar em vez de chutar.</p><p>Com logs de cada sessão alimentando a orientação do MCP, o sistema melhorou sozinho e o time de vendas passou a usá-lo sem ser pedido, inclusive em reuniões com clientes importantes.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-mcp"><strong>MCP</strong> <span>Model Context Protocol, padrão para conectar agentes a ferramentas</span></a></li><li><a href="../glossario.html#g-auto-mode"><strong>Auto mode</strong> <span>modo automático, o agente age sozinho sem o humano inspecionar</span></a></li><li><a href="../glossario.html#g-snapshot-de-estado"><strong>Snapshot de estado</strong> <span>chamada que devolve o estado vivo do pipeline ao agente</span></a></li><li><a href="../glossario.html#g-confidence-score"><strong>Confidence score</strong> <span>nota de confiança que acompanha cada campo extraído</span></a></li><li><a href="../glossario.html#g-human-in-the-loop"><strong>Human in the loop</strong> <span>humano no circuito, com a palavra final</span></a></li><li><a href="../glossario.html#g-eval"><strong>Eval</strong> <span>avaliação automatizada do comportamento do agente</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-reward-hacking"><strong>Reward hacking</strong> <span>agente que passa no teste escondendo ou burlando o objetivo real</span></a></li><li><a href="../glossario.html#g-harness"><strong>Harness</strong> <span>estrutura ao redor do modelo: ferramentas, prompts e regras</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Três jeitos de responder quem paga pelo erro</h3>
+    <p>O palestrante separa três abordagens. No auto mode, o agente tem autonomia total e o usuário paga pelos erros que não vê. No user-first, o usuário tem todos os controles e o agente quase não faz nada, como um chatbot. A terceira, que ele defende, dá ao agente capacidades delimitadas e deixa o humano verificar o trabalho.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/jJQoVkd5yLg/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>As três abordagens e quem arca com o erro em cada uma.</span><a class="minuto" href="https://www.youtube.com/watch?v=jJQoVkd5yLg&amp;t=158s" target="_blank" rel="noopener" aria-label="Assistir a partir de 02:38 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:38</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Uma ferramenta por endpoint quebra em produção</h3>
+    <p>O primeiro MCP deu uma ferramenta a cada endpoint da API, em um único arquivo grande. O demo curado funcionou. Quando o time todo usou, o agente recebia descrições vagas de uma call ou de uma página do Notion, montava o fluxo inteiro e afirmava que estava tudo certo. Nem usuário nem agente sabiam explicar o que o fluxo fazia.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/jJQoVkd5yLg/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O ponto em que o MCP v1 falhou ao sair do demo para o uso real.</span><a class="minuto" href="https://www.youtube.com/watch?v=jJQoVkd5yLg&amp;t=327s" target="_blank" rel="noopener" aria-label="Assistir a partir de 05:27 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:27</a></figcaption>
+  </figure>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Menos ferramentas, com a estrutura do trabalho dentro</h3>
+    <p>Ele apagou o arquivo em um commit. No lugar, criou ferramentas que entendem o produto, como uma única classify-to-extract que liga o classificador ao nó de extração. Após cada passo o agente recebe orientação sobre o próximo, e algumas ferramentas se encadeiam sozinhas. O agente deixa de improvisar o que a equipe já sabe ser verdade.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=jJQoVkd5yLg&amp;t=404s" target="_blank" rel="noopener" aria-label="Assistir a partir de 06:44 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:44</a> Uma ferramenta composta substitui várias chamadas soltas.</p>  </div>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Snapshot do estado e incerteza visível</h3>
+    <p>Como agentes não guardam estado, uma chamada de snapshot devolve o estado vivo do pipeline e os erros com códigos específicos. Em runtime, o extract entrega confidence scores e bounding boxes, e o agente pergunta ao usuário quando há duas leituras possíveis. Nos evals, a equipe passou a reprovar suposições frágeis.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/jJQoVkd5yLg/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A saída que torna a incerteza do agente legível para o humano.</span><a class="minuto" href="https://www.youtube.com/watch?v=jJQoVkd5yLg&amp;t=591s" target="_blank" rel="noopener" aria-label="Assistir a partir de 09:51 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:51</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Instrumentação que vira ciclo de melhoria</h3>
+    <p>Cada sessão do MCP foi registrada, e o time de vendas exportou suas sessões do Claude Code. Os logs mostram onde o humano corrigiu o agente, onde a confiança caiu e onde ele perguntou. Esses dados voltam para a orientação do MCP, e o sistema melhora a cada pipeline construído, sem reescrita manual.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/jJQoVkd5yLg/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O ciclo que transforma uso em melhoria da orientação do agente.</span><a class="minuto" href="https://www.youtube.com/watch?v=jJQoVkd5yLg&amp;t=787s" target="_blank" rel="noopener" aria-label="Assistir a partir de 13:07 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:07</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=jJQoVkd5yLg&amp;t=33s" target="_blank" rel="noopener"><strong>3 bilhões</strong><span>documentos processados pela Reducto em 3 anos</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>00:33</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=jJQoVkd5yLg&amp;t=64s" target="_blank" rel="noopener"><strong>60%</strong><span>do caminho que um modelo de fronteira alcança em documento limpo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:04</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=jJQoVkd5yLg&amp;t=527s" target="_blank" rel="noopener"><strong>100</strong><span>documentos no exemplo de pipeline que falha em silêncio</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:47</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk também é divulgação da Reducto, com vaga aberta e estande no final. Não há medição de erros antes e depois, nem de satisfação com valores. A evidência é uma anedota: o time de vendas adotou a ferramenta, com reações no Slack como prova. A amostra é um único time interno, e o autor desenhou o sistema que avalia. A linha que atribui o erro a arquitetura e não a prompt é opinião sem comparação.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Antes de expor uma API a um agente, liste os fluxos reais de trabalho e crie ferramentas por fluxo, em vez de uma por endpoint.</li><li>Faça o agente perguntar quando houver duas leituras possíveis, e inclua nos seus evals um caso que reprove suposição sem confirmação.</li><li>Exiba confiança e justificativa junto de cada resultado do agente, para que quem usa consiga revisar o que foi feito e por quê.</li><li>Registre as sessões de uso do agente e revise onde humanos corrigiram, para alimentar a orientação do sistema.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="jJQoVkd5yLg" aria-label="Marcar Why We Deleted Our MCP Server and Rebuilt It como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-NaOkR3VSfR4">Próximo talk <span lang="en">Brains vs Hands: How to Run AI Agents Safely in Production</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-NaOkR3VSfR4" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">08</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Brains vs Hands: How to Run AI Agents Safely in Production</h2>
+      <p class="tese">Em produção, o LLM planeja o que fazer e um harness determinístico e durável executa. Cérebro e mãos ficam separados.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">16:49</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Viren Baraiya</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=NaOkR3VSfR4" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Viren Baraiya (Orkes, criador do Netflix Conductor) diz que agentes em produção parecem aplicações completas, com tarefas agendadas, eventos, coordenadores e execuções de meses.</p><p>A regra central é que o LLM só planeja o próximo passo, enquanto o harness (a estrutura de código ao redor do agente) executa de forma determinística, com aprovação humana, passos idempotentes e efeitos colaterais registrados.</p><p>Na demo, um agente de SRE gera um plano que vira um workflow do Conductor, roda, é verificado e replanejado em dois ciclos, e o segundo ciclo pula o rollback já feito.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-NaOkR3VSfR4-saga-de-ligacao-tardia"><strong>Saga de ligação tardia</strong> <span>late-bound saga: workflow montado em runtime</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-agent-harness"><strong>Agent harness</strong> <span>estrutura de execução ao redor do agente</span></a></li><li><a href="../glossario.html#g-sistema-deterministico"><strong>Sistema determinístico</strong> <span>mesmo resultado a cada execução</span></a></li><li><a href="../glossario.html#g-durable-execution"><strong>Durable execution</strong> <span>execução durável, que sobrevive a falhas</span></a></li><li><a href="../glossario.html#g-idempotencia"><strong>Idempotência</strong> <span>repetir o passo não causa efeito extra</span></a></li><li><a href="../glossario.html#g-human-in-the-loop"><strong>Human in the loop</strong> <span>aprovação humana no fluxo</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-orquestracao"><strong>Orquestração</strong> <span>motor que coordena os passos do workflow</span></a></li><li><a href="../glossario.html#g-sre-site-reliability-engineering"><strong>SRE (site reliability engineering)</strong> <span>engenharia de confiabilidade de sistemas</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>O agente vira aplicação</h3>
+    <p>Agentes não são só chatbots. Há agentes em segundo plano, agendados, orientados a eventos, coordenadores de longa duração e sistemas multiagente. Como nos microservices, cada agente tem uma responsabilidade, e o conjunto precisa de um harness que os controle e os conecte a bancos, humanos e ferramentas (APIs ou MCP).</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/NaOkR3VSfR4/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O harness é a aplicação, e o agente é só uma das peças.</span><a class="minuto" href="https://www.youtube.com/watch?v=NaOkR3VSfR4&amp;t=281s" target="_blank" rel="noopener" aria-label="Assistir a partir de 04:41 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:41</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Partes determinísticas e não determinísticas</h3>
+    <p>O LLM entrega o raciocínio, que é não determinístico. Pagamentos e reinício de cluster Kubernetes pedem uma sequência de passos fixa, que roda igual toda vez. O harness garante esse determinismo onde ele importa. Como roda por segundos ou meses, também precisa de durabilidade para se recuperar de falhas.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/NaOkR3VSfR4/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Raciocínio fica com o LLM, e passos críticos ficam com código fixo.</span><a class="minuto" href="https://www.youtube.com/watch?v=NaOkR3VSfR4&amp;t=311s" target="_blank" rel="noopener" aria-label="Assistir a partir de 05:11 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:11</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Cérebro planeja, mãos executam</h3>
+    <p>O palestrante pede que o público leve só um slide. O agente decide o que deve acontecer. O harness decide como fazer, pede aprovação humana (por exemplo, uma mensagem no Slack antes de reiniciar um cluster de produção) e registra efeitos colaterais quando o passo não é idempotente.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/NaOkR3VSfR4/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Divisão de responsabilidades entre o LLM (cérebro) e o harness (mãos).</span><a class="minuto" href="https://www.youtube.com/watch?v=NaOkR3VSfR4&amp;t=496s" target="_blank" rel="noopener" aria-label="Assistir a partir de 08:16 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:16</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Sagas de ligação tardia</h3>
+    <p>Um harness agêntico é uma saga (fluxo de passos com controle de falhas) cujo desenho nasce em tempo de execução. O conjunto de ferramentas é finito e determinístico, mas o agente monta a combinação. Com N ferramentas, ele cobre combinações que ninguém desenharia à mão, e mantém visibilidade e controle de um workflow tradicional.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/NaOkR3VSfR4/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O agente propõe o workflow, e o motor de workflow o executa.</span><a class="minuto" href="https://www.youtube.com/watch?v=NaOkR3VSfR4&amp;t=649s" target="_blank" rel="noopener" aria-label="Assistir a partir de 10:49 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:49</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Demo: agente de SRE em dois ciclos</h3>
+    <p>O LLM devolve uma sequência de passos: coletar evidências, analisar logs, reverter o deploy e verificar a recuperação. Uma ferramenta de plan and compile transforma o plano em workflow do Conductor, que é executado. No segundo ciclo, o agente vê que o rollback já foi feito e só checa os serviços dependentes.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/NaOkR3VSfR4/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O plano do LLM vira workflow determinístico e roda em dois ciclos.</span><a class="minuto" href="https://www.youtube.com/watch?v=NaOkR3VSfR4&amp;t=804s" target="_blank" rel="noopener" aria-label="Assistir a partir de 13:24 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:24</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=NaOkR3VSfR4&amp;t=742s" target="_blank" rel="noopener"><strong>2 ciclos</strong><span>Loop de remediação do agente de SRE na demo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:22</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=NaOkR3VSfR4&amp;t=32s" target="_blank" rel="noopener"><strong>1 mão</strong><span>Plateia de outra conferência que já rodava agentes em produção</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>00:32</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=NaOkR3VSfR4&amp;t=372s" target="_blank" rel="noopener"><strong>meses</strong><span>Duração possível de um harness em execução</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:12</span></a>
+  </div>
+
+  <div class="casper" id="a-NaOkR3VSfR4-saga-de-ligacao-tardia">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Saga de ligação tardia (late-bound saga: workflow montado em runtime).</strong> Uma saga de ligação tardia é como um cozinheiro com uma despensa fixa de ingredientes que decide a receita na hora, olhando o pedido do cliente, e anota cada etapa num caderno para poder parar e recomeçar sem errar.</p>
+    <ol class="passos"><li>Uma saga (saga) é uma lista de passos que um sistema segue em ordem, com um plano para o caso de algum passo falhar no meio do caminho.</li><li>Na saga tradicional, uma pessoa escreve todos os passos antes, no código. O fluxo roda sempre igual e é fácil de acompanhar, mas só cobre os caminhos que alguém previu.</li><li>Na saga de ligação tardia (late-bound saga), o conjunto de ferramentas continua fixo e conhecido, mas a ordem e a combinação dos passos nascem em tempo de execução (runtime). Quem monta o plano é o agente de IA, olhando a situação do momento.</li><li>O plano do agente vira um workflow de verdade, executado por um motor de orquestração como o Conductor. Assim você mantém visibilidade, controle e recuperação de falhas, e pode deixar o agente planejar um passo por vez ou vários de uma só vez.</li><li>Com N ferramentas, o agente cobre combinações que ninguém conseguiria desenhar à mão como galhos de um fluxo. O agente decide o que fazer, e o motor de workflow garante como cada passo roda.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>FERRAMENTAS FIXAS</strong><span>Conjunto finito e conhecido de ações</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>AGENTE PLANEJA</strong><span>LLM escolhe e ordena os passos</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>PLANO VIRA WORKFLOW</strong><span>Motor compila o plano em fluxo</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>EXECUÇÃO CONTROLADA</strong><span>Passos rodam com registro e retomada</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>RESULTADO VISÍVEL</strong><span>Fluxo sob medida, rastreável</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-agent-harness">Agent harness</a>, <a href="../glossario.html#g-orquestracao">Orquestração</a>, <a href="../glossario.html#g-sistema-deterministico">Sistema determinístico</a>, <a href="../glossario.html#g-durable-execution">Durable execution</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é também divulgação do Conductor e da edição enterprise da Orkes, com QR code e convite ao estande no fim. A demo é uma execução gravada e pré-planejada, como o próprio palestrante admite (cerca de 773 s). Não há dado de falhas evitadas, custo, latência nem comparação com outras ferramentas de durable execution. A afirmação de que agentes em produção já são comuns se apoia só em mãos levantadas na plateia.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Separe nos seus fluxos o que o LLM decide (diagnóstico, próximo passo) do que precisa rodar igual toda vez (pagamento, reinício, envio de e-mail) e passe a segunda parte para código fixo.</li><li>Coloque um portão de aprovação humana antes de qualquer ação destrutiva em produção, em um canal como o Slack, sem depender do modelo para decidir se pede.</li><li>Registre cada efeito colateral do agente (e-mail enviado, deploy revertido) para que o replanejamento não repita a ação.</li><li>Se o agente roda por horas ou dias, avalie um motor de workflow com execução durável, como Conductor ou Temporal, em vez de um loop em memória.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="NaOkR3VSfR4" aria-label="Marcar Brains vs Hands: How to Run AI Agents Safely in Production como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-KGFyOtl5ktI">Próximo talk <span lang="en">Giving AI Agents Memory That Learns</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-KGFyOtl5ktI" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">09</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Giving AI Agents Memory That Learns</h2>
+      <p class="tese">Log guardado não ensina nada ao agente. Só vira memória quando uma lição entra no contexto que ele lê na próxima execução.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">16:38</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Jake Broekhuizen, LangChain</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=KGFyOtl5ktI" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Jake Broekhuizen, da LangChain, diz que times observam bem seus agentes, mas quase não transformam esses registros em lições para as próximas execuções.</p><p>Ele propõe um ciclo de leitura e escrita: o agente lê a memória de longo prazo, roda e gera um trace (registro da execução), um filtro separa o sinal útil do resto, e o sinal é gravado de volta.</p><p>Três cuidados: a maior parte dos traces deve virar só histórico, atualizações de memória precisam chegar ao agente (cache), e regras de comportamento merecem revisão humana.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-KGFyOtl5ktI-sleep-time-compute"><strong>Sleep-time compute</strong> <span>processamento de memória fora da execução ativa</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-memoria-semantica-episodica-e-procedural"><strong>Memória semântica, episódica e procedural</strong> <span>três tipos de memória do agente</span></a></li><li><a href="../glossario.html#g-memoria-de-curto-e-longo-prazo"><strong>Memória de curto e longo prazo</strong> <span>memória de trabalho e memória durável</span></a></li><li><a href="../glossario.html#g-read-write-cycle"><strong>Read-write cycle</strong> <span>ciclo de leitura e escrita da memória</span></a></li><li><a href="../glossario.html#g-trace"><strong>Trace</strong> <span>registro passo a passo de uma execução</span></a></li><li><a href="../glossario.html#g-progressive-disclosure"><strong>Progressive disclosure</strong> <span>carregar skills só quando a tarefa pede</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-human-in-the-loop"><strong>Human in the loop</strong> <span>humano revisa antes de aplicar</span></a></li><li><a href="../glossario.html#g-context-hub"><strong>Context Hub</strong> <span>repositório de contexto durável da LangChain</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Observar não é aprender</h3>
+    <p>O exemplo é um agente financeiro cujo tom escorregava de consultivo para diretivo, dizendo ao usuário que cancelasse assinaturas. A correção era manual: alguém lia os traces, editava o contexto e checava regressões. Isso escala mal. Se o contexto futuro não muda, o erro de hoje se repete amanhã.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=KGFyOtl5ktI&amp;t=94s" target="_blank" rel="noopener" aria-label="Assistir a partir de 01:34 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:34</a> O caso que guia o talk: tom fora da política e correção manual.</p>  </div>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Três tipos de memória</h3>
+    <p>O palestrante agrupa seis itens (fatos, preferências, padrões, exemplos, skills, instruções) em três tipos. Semântica é o que o agente sabe. Episódica é o que ele viveu. Procedural é como ele deve se comportar. No caso financeiro, a correção veio como regra procedural, não como fato novo.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/KGFyOtl5ktI/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A taxonomia de memória emprestada da ciência cognitiva.</span><a class="minuto" href="https://www.youtube.com/watch?v=KGFyOtl5ktI&amp;t=281s" target="_blank" rel="noopener" aria-label="Assistir a partir de 04:41 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:41</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Memória de trabalho e de longo prazo</h3>
+    <p>Memória de trabalho é o que o agente usa na execução atual: rascunhos, resultados de ferramentas, arquivos. Memória de longo prazo fica em um repositório e guia execuções futuras. Cada harness (estrutura que roda o agente) injeta essa memória de um jeito: no prompt, por ferramenta, por arquivos ou por um store.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/KGFyOtl5ktI/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A separação entre contexto temporário e contexto durável.</span><a class="minuto" href="https://www.youtube.com/watch?v=KGFyOtl5ktI&amp;t=375s" target="_blank" rel="noopener" aria-label="Assistir a partir de 06:15 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:15</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>O ciclo de leitura e escrita</h3>
+    <p>O agente lê contexto do longo prazo, roda e produz um trace. Um filtro decide o que é sinal e o que fica como histórico. O sinal é gravado de volta. Sem o filtro, tudo viraria memória e o agente teria mais dificuldade de raciocinar nas tarefas seguintes.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/KGFyOtl5ktI/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O laço central: memória informa a execução, a execução gera evidência.</span><a class="minuto" href="https://www.youtube.com/watch?v=KGFyOtl5ktI&amp;t=498s" target="_blank" rel="noopener" aria-label="Assistir a partir de 08:18 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:18</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Capturar, analisar, atualizar com LangSmith e Context Hub</h3>
+    <p>Como uma implementação possível, o observability do LangSmith captura a trajetória, uma etapa de análise extrai sinal dos traces e o Context Hub guarda instruções, skills e políticas que o agente baixa na próxima execução. No caso financeiro, o sistema detectou o desvio de tom e ajustou os arquivos markdown de skills.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/KGFyOtl5ktI/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A mesma ideia do ciclo, agora com produtos concretos da LangChain.</span><a class="minuto" href="https://www.youtube.com/watch?v=KGFyOtl5ktI&amp;t=652s" target="_blank" rel="noopener" aria-label="Assistir a partir de 10:52 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:52</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=KGFyOtl5ktI&amp;t=901s" target="_blank" rel="noopener"><strong>75%</strong><span>Parte do comportamento guiada pela memória procedural</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:01</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=KGFyOtl5ktI&amp;t=281s" target="_blank" rel="noopener"><strong>3</strong><span>Tipos de memória: semântica, episódica e procedural</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:41</span></a>
+  </div>
+
+  <div class="casper" id="a-KGFyOtl5ktI-sleep-time-compute">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Sleep-time compute (processamento de memória fora da execução ativa).</strong> Sleep-time compute é como o professor que corrige as provas e prepara a próxima aula à noite, para chegar à sala no dia seguinte já com tudo organizado.</p>
+    <ol class="passos"><li>Um agente de IA trabalha em rodadas. Entre uma rodada e outra, ele fica parado esperando a próxima tarefa.</li><li>Sleep-time compute (processamento em tempo de sono) aproveita esse intervalo para trabalhar na memória do agente. Alguns chamam isso de dreaming (sonhar).</li><li>Nesse intervalo, um processo lê o trace (registro da execução) das rodadas anteriores e separa o que vale guardar do que fica só como histórico.</li><li>As lições escolhidas entram na memória de longo prazo, como regras, skills (habilidades em arquivo) ou preferências do usuário.</li><li>Na rodada seguinte, o agente carrega essa memória já organizada. Assim ele não gasta tempo da tarefa ativa para rever o passado e evita repetir erros.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>AGENTE RODA</strong><span>Executa a tarefa e gera um trace</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>AGENTE PARADO</strong><span>Intervalo sem tarefa ativa</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>REVISA OS TRACES</strong><span>Separa sinal útil de histórico</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>GRAVA NA MEMÓRIA</strong><span>Lições vão para o longo prazo</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>PRÓXIMA RODADA MELHOR</strong><span>Agente já lê a memória atualizada</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-memoria-de-curto-e-longo-prazo">Memória de curto e longo prazo</a>, <a href="../glossario.html#g-trace">Trace</a>, <a href="../glossario.html#g-read-write-cycle">Read-write cycle</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é em parte pitch do LangSmith e do Context Hub, produtos da empresa do palestrante, e ele admite que é só uma implementação possível. Não há medição: sem taxa de erro de tom antes e depois, sem número de traces analisados, sem comparação com a revisão manual. O caso financeiro vem de um único cliente sem nome. O critério do filtro, que o próprio palestrante chama de ponto central, fica em aberto.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Separe os traces do seu agente em três grupos: histórico, dados para eval (avaliação) e candidatos a memória. Só o último grupo muda o contexto.</li><li>Se corrigir o comportamento do agente à mão, grave a correção como regra ou skill em um arquivo que ele leia na próxima execução, em vez de repetir no prompt.</li><li>Exija revisão humana antes de aplicar mudanças automáticas em instruções, políticas e tom do agente.</li><li>Teste se uma atualização de memória realmente chega ao agente, principalmente em execuções longas com cache.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="KGFyOtl5ktI" aria-label="Marcar Giving AI Agents Memory That Learns como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-XPj3mIKEtI4">Próximo talk <span lang="en">Turning Agent Memory Into Skills That Work</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-XPj3mIKEtI4" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">10</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Turning Agent Memory Into Skills That Work</h2>
+      <p class="tese">Recuperar texto parecido não basta. Memória de agente precisa virar grafo tipado e rastreável, e dele sair skills verificáveis.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">18:41</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Will Lyon, Neo4j</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=XPj3mIKEtI4" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Will Lyon, da Neo4j, diz que memória de agente baseada só em embeddings e busca recupera trechos, mas não gera conhecimento acionável. Ele propõe um grafo de contexto com memória de curto prazo, de longo prazo e de raciocínio.</p><p>Desse grafo, a Neo4j destila skills (pacotes de instruções reutilizáveis) como grafos de execução tipados, com checagem de grounding (base nos dados), cobertura e coerência, e alerta quando a skill fica desatualizada.</p><p>Ele mostra o Neo4j Agent Memory Service (NAMS) gerando uma skill de admissão de paciente a partir de conversas de saúde. O talk é também uma apresentação do produto da empresa.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-context-graph"><strong>Context graph</strong> <span>grafo de contexto</span></a></li><li><a href="../glossario.html#g-memoria-de-curto-e-longo-prazo"><strong>Memória de curto e longo prazo</strong> <span>memória de curto, longo prazo e de raciocínio</span></a></li><li><a href="../glossario.html#g-entity-resolution"><strong>Entity resolution</strong> <span>resolução de entidades</span></a></li><li><a href="../glossario.html#g-decision-traces"><strong>Decision traces</strong> <span>rastros de decisão</span></a></li><li><a href="../glossario.html#g-agent-skills"><strong>Agent skills</strong> <span>skills de agente</span></a></li><li><a href="../glossario.html#g-progressive-disclosure"><strong>Progressive disclosure</strong> <span>divulgação progressiva</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-grounding"><strong>Grounding</strong> <span>ancoragem nos dados</span></a></li><li><a href="../glossario.html#g-drift"><strong>Drift</strong> <span>desatualização da skill</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Recuperar não é saber agir</h3>
+    <p>Sistemas de memória comuns guardam embeddings e injetam os trechos mais parecidos no contexto. Falta uma representação canônica das coisas: o mesmo médico aparece com três nomes e o agente não sabe que é a mesma pessoa. Lyon defende conhecimento conectado, tipado e rastreável.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/XPj3mIKEtI4/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O mesmo médico citado de três formas mostra a falta de uma representação canônica.</span><a class="minuto" href="https://www.youtube.com/watch?v=XPj3mIKEtI4&amp;t=80s" target="_blank" rel="noopener" aria-label="Assistir a partir de 01:20 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:20</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Três memórias em um grafo de contexto</h3>
+    <p>A Neo4j modela memória de curto prazo (mensagens), de longo prazo (entidades extraídas e ligadas por relações tipadas) e de raciocínio. Uma ontologia compartilhada e a resolução de entidades garantem que cada coisa tenha uma identidade única no grafo.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/XPj3mIKEtI4/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O desenho mostra mensagens virando entidades e relações em um grafo com tipos.</span><a class="minuto" href="https://www.youtube.com/watch?v=XPj3mIKEtI4&amp;t=140s" target="_blank" rel="noopener" aria-label="Assistir a partir de 02:20 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:20</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Decision traces e memória compartilhada</h3>
+    <p>Cada decisão do agente fica ligada à evidência, às políticas, ao plano, às chamadas de ferramenta, aos resultados, aos tokens gastos e ao tempo. Com isso, centenas ou milhares de agentes que usam as mesmas ferramentas aprendem com as execuções uns dos outros.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/XPj3mIKEtI4/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Cada decisão do agente aparece ligada ao que a justificou e ao que ela produziu.</span><a class="minuto" href="https://www.youtube.com/watch?v=XPj3mIKEtI4&amp;t=270s" target="_blank" rel="noopener" aria-label="Assistir a partir de 04:30 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:30</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>APE: skills como grafos de execução</h3>
+    <p>Skills em prosa têm o mesmo problema da memória: ambiguidade e pouca depuração. A pesquisa da Neo4j propõe o APE, uma extensão do padrão de agent skills em que os passos são nós, descritos por um esquema rígido. Segundo o palestrante, o benchmark mostrou aumento relevante de tarefas concluídas, sem dar o valor.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/XPj3mIKEtI4/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A figura do paper mostra uma skill dividida em passos executáveis com esquema.</span><a class="minuto" href="https://www.youtube.com/watch?v=XPj3mIKEtI4&amp;t=520s" target="_blank" rel="noopener" aria-label="Assistir a partir de 08:40 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:40</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Destilar skills com grounding, cobertura e coerência</h3>
+    <p>O pipeline parte de um escopo (entidade, conversa ou classe da ontologia) e usa LLM só para sintetizar afirmações e textos. Grounding e cobertura checam se os passos vêm dos dados. Coerência, com detecção de comunidades no grafo, sugere dividir a skill quando ela mistura tópicos. Se os dados mudam, a skill é marcada como desatualizada.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/XPj3mIKEtI4/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Cada passo da skill aponta para as chamadas de ferramenta e entidades que o originaram.</span><a class="minuto" href="https://www.youtube.com/watch?v=XPj3mIKEtI4&amp;t=1019s" target="_blank" rel="noopener" aria-label="Assistir a partir de 16:59 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>16:59</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=XPj3mIKEtI4&amp;t=138s" target="_blank" rel="noopener"><strong>3 tipos</strong><span>memória de curto prazo, longo prazo e de raciocínio</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:18</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=XPj3mIKEtI4&amp;t=295s" target="_blank" rel="noopener"><strong>100s a 1000s</strong><span>agentes que podem compartilhar o mesmo grafo de contexto</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:55</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=XPj3mIKEtI4&amp;t=986s" target="_blank" rel="noopener"><strong>7 etapas</strong><span>pipeline de destilação da skill no NAMS</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>16:26</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é pitch do NAMS e das ferramentas da Neo4j, empresa de banco de dados em grafo, então o grafo aparece como solução natural. O resultado do benchmark do APE vem de pesquisa da própria Neo4j e é citado sem número, só como aumento relevante. A demo mostra uma skill de saúde já pronta e não compara com skills escritas à mão ou com RAG simples. Não há dados de custo, latência nem taxa de erro da destilação.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Liste as entidades que seu agente cita com nomes diferentes (clientes, produtos, pessoas) e defina um identificador único para cada uma antes de pensar em memória mais sofisticada.</li><li>Registre em log, para cada decisão do agente, a evidência, as ferramentas chamadas, os resultados e o custo em tokens. Esse histórico serve de base para depurar e para criar skills.</li><li>Ao pedir que um agente escreva uma skill, exija que cada passo cite a execução ou o dado de origem, e revise a skill quando esses dados mudarem.</li><li>Teste o NAMS gratuito com um fluxo pequeno do seu trabalho e compare a skill gerada com uma escrita por você.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="XPj3mIKEtI4" aria-label="Marcar Turning Agent Memory Into Skills That Work como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#fim">Fechar a edição <span aria-hidden="true">↓</span></a>
+  </footer>
+</article>
+      <section class="fim-edicao card" id="fim" aria-labelledby="fim-titulo">
+        <h2 id="fim-titulo">Fim da edição</h2>
+        <span class="progresso" data-ids="3XI90A3ENSg HTzgC3FoYsI YNT7Plf9KIg k2ClBT4aqAg uuwDWRbxoYo Emo5FGGY-wM jJQoVkd5yLg NaOkR3VSfR4 KGFyOtl5ktI XPj3mIKEtI4"></span>
+        <p>Termos novos no glossário:
+<a href="../glossario.html#g-analise-de-programa">Análise de programa</a>, <a href="../glossario.html#g-saga-de-ligacao-tardia">Saga de ligação tardia</a>, <a href="../glossario.html#g-sleep-time-compute">Sleep-time compute</a>.
+        </p>
+        <nav class="paginacao" aria-label="Outras edições">
+<a rel="prev" href="2026-10-07.html"><span class="paginacao-dir">← Edição anterior</span><strong>Da fábrica de software à infraestrutura que a sustenta</strong><span class="muted">quarta, 7 out 2026</span></a>          <a class="voltar" href="../index.html#edicoes"><span class="paginacao-dir">Todas as edições</span><strong>Voltar ao início</strong></a>
+        </nav>
+      </section>
+    </div>
+  </div>
+</div>
+</main>
+<footer class="rodape wrap">
+  <p>Resumos em português dos talks do canal <a href="https://www.youtube.com/@aiDotEngineer" target="_blank" rel="noopener">AI Engineer</a>. Atualizado em 9 out 2026, 08:26. <a href="../status.html">Status da rotina</a></p>
+</footer>
+<script src="../app.js" defer></script>
+</body>
+</html>

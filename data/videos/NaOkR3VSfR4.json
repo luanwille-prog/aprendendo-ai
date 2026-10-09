@@ -1,0 +1,203 @@
+{
+  "id": "NaOkR3VSfR4",
+  "titulo": "Brains vs Hands: How to Run AI Agents Safely in Production — Viren Baraiya",
+  "titulo_curto": "Brains vs Hands: How to Run AI Agents Safely in Production",
+  "palestrante": "Viren Baraiya",
+  "url": "https://www.youtube.com/watch?v=NaOkR3VSfR4",
+  "duracao": 1009,
+  "publicado_ts": 1791498609,
+  "edicao": "2026-10-08",
+  "tese": "Em produção, o LLM planeja o que fazer e um harness determinístico e durável executa. Cérebro e mãos ficam separados.",
+  "tldr": [
+    "Viren Baraiya (Orkes, criador do Netflix Conductor) diz que agentes em produção parecem aplicações completas, com tarefas agendadas, eventos, coordenadores e execuções de meses.",
+    "A regra central é que o LLM só planeja o próximo passo, enquanto o harness (a estrutura de código ao redor do agente) executa de forma determinística, com aprovação humana, passos idempotentes e efeitos colaterais registrados.",
+    "Na demo, um agente de SRE gera um plano que vira um workflow do Conductor, roda, é verificado e replanejado em dois ciclos, e o segundo ciclo pula o rollback já feito."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "O agente vira aplicação",
+      "texto": "Agentes não são só chatbots. Há agentes em segundo plano, agendados, orientados a eventos, coordenadores de longa duração e sistemas multiagente. Como nos microservices, cada agente tem uma responsabilidade, e o conjunto precisa de um harness que os controle e os conecte a bancos, humanos e ferramentas (APIs ou MCP).",
+      "t": 281,
+      "legenda": "O harness é a aplicação, e o agente é só uma das peças.",
+      "print": "img/NaOkR3VSfR4/0.jpg"
+    },
+    {
+      "titulo": "Partes determinísticas e não determinísticas",
+      "texto": "O LLM entrega o raciocínio, que é não determinístico. Pagamentos e reinício de cluster Kubernetes pedem uma sequência de passos fixa, que roda igual toda vez. O harness garante esse determinismo onde ele importa. Como roda por segundos ou meses, também precisa de durabilidade para se recuperar de falhas.",
+      "t": 311,
+      "legenda": "Raciocínio fica com o LLM, e passos críticos ficam com código fixo.",
+      "print": "img/NaOkR3VSfR4/1.jpg"
+    },
+    {
+      "titulo": "Cérebro planeja, mãos executam",
+      "texto": "O palestrante pede que o público leve só um slide. O agente decide o que deve acontecer. O harness decide como fazer, pede aprovação humana (por exemplo, uma mensagem no Slack antes de reiniciar um cluster de produção) e registra efeitos colaterais quando o passo não é idempotente.",
+      "t": 496,
+      "legenda": "Divisão de responsabilidades entre o LLM (cérebro) e o harness (mãos).",
+      "print": "img/NaOkR3VSfR4/2.jpg"
+    },
+    {
+      "titulo": "Sagas de ligação tardia",
+      "texto": "Um harness agêntico é uma saga (fluxo de passos com controle de falhas) cujo desenho nasce em tempo de execução. O conjunto de ferramentas é finito e determinístico, mas o agente monta a combinação. Com N ferramentas, ele cobre combinações que ninguém desenharia à mão, e mantém visibilidade e controle de um workflow tradicional.",
+      "t": 649,
+      "legenda": "O agente propõe o workflow, e o motor de workflow o executa.",
+      "print": "img/NaOkR3VSfR4/3.jpg"
+    },
+    {
+      "titulo": "Demo: agente de SRE em dois ciclos",
+      "texto": "O LLM devolve uma sequência de passos: coletar evidências, analisar logs, reverter o deploy e verificar a recuperação. Uma ferramenta de plan and compile transforma o plano em workflow do Conductor, que é executado. No segundo ciclo, o agente vê que o rollback já foi feito e só checa os serviços dependentes.",
+      "t": 804,
+      "legenda": "O plano do LLM vira workflow determinístico e roda em dois ciclos.",
+      "print": "img/NaOkR3VSfR4/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Agent harness",
+      "traducao": "estrutura de execução ao redor do agente",
+      "nivel": "intermediario",
+      "chave": "agent harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sistema determinístico",
+      "traducao": "mesmo resultado a cada execução",
+      "nivel": "basico",
+      "chave": "sistema determinístico",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Durable execution",
+      "traducao": "execução durável, que sobrevive a falhas",
+      "nivel": "intermediario",
+      "chave": "durable execution",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Idempotência",
+      "traducao": "repetir o passo não causa efeito extra",
+      "nivel": "intermediario",
+      "chave": "idempotência",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Human in the loop",
+      "traducao": "aprovação humana no fluxo",
+      "nivel": "basico",
+      "chave": "human in the loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Saga de ligação tardia",
+      "traducao": "late-bound saga: workflow montado em runtime",
+      "nivel": "avancado",
+      "chave": "saga de ligação tardia",
+      "analogia": "Uma saga de ligação tardia é como um cozinheiro com uma despensa fixa de ingredientes que decide a receita na hora, olhando o pedido do cliente, e anota cada etapa num caderno para poder parar e recomeçar sem errar.",
+      "explicacao": [
+        "Uma saga (saga) é uma lista de passos que um sistema segue em ordem, com um plano para o caso de algum passo falhar no meio do caminho.",
+        "Na saga tradicional, uma pessoa escreve todos os passos antes, no código. O fluxo roda sempre igual e é fácil de acompanhar, mas só cobre os caminhos que alguém previu.",
+        "Na saga de ligação tardia (late-bound saga), o conjunto de ferramentas continua fixo e conhecido, mas a ordem e a combinação dos passos nascem em tempo de execução (runtime). Quem monta o plano é o agente de IA, olhando a situação do momento.",
+        "O plano do agente vira um workflow de verdade, executado por um motor de orquestração como o Conductor. Assim você mantém visibilidade, controle e recuperação de falhas, e pode deixar o agente planejar um passo por vez ou vários de uma só vez.",
+        "Com N ferramentas, o agente cobre combinações que ninguém conseguiria desenhar à mão como galhos de um fluxo. O agente decide o que fazer, e o motor de workflow garante como cada passo roda."
+      ],
+      "pre_requisitos": [
+        "Agent harness",
+        "Orquestração",
+        "Sistema determinístico",
+        "Durable execution"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "FERRAMENTAS FIXAS",
+            "nota": "Conjunto finito e conhecido de ações"
+          },
+          {
+            "rotulo": "AGENTE PLANEJA",
+            "nota": "LLM escolhe e ordena os passos"
+          },
+          {
+            "rotulo": "PLANO VIRA WORKFLOW",
+            "nota": "Motor compila o plano em fluxo"
+          },
+          {
+            "rotulo": "EXECUÇÃO CONTROLADA",
+            "nota": "Passos rodam com registro e retomada"
+          },
+          {
+            "rotulo": "RESULTADO VISÍVEL",
+            "nota": "Fluxo sob medida, rastreável"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Orquestração",
+      "traducao": "motor que coordena os passos do workflow",
+      "nivel": "intermediario",
+      "chave": "orquestração",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "SRE (site reliability engineering)",
+      "traducao": "engenharia de confiabilidade de sistemas",
+      "nivel": "intermediario",
+      "chave": "sre (site reliability engineering)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é também divulgação do Conductor e da edição enterprise da Orkes, com QR code e convite ao estande no fim. A demo é uma execução gravada e pré-planejada, como o próprio palestrante admite (cerca de 773 s). Não há dado de falhas evitadas, custo, latência nem comparação com outras ferramentas de durable execution. A afirmação de que agentes em produção já são comuns se apoia só em mãos levantadas na plateia.",
+  "acoes": [
+    "Separe nos seus fluxos o que o LLM decide (diagnóstico, próximo passo) do que precisa rodar igual toda vez (pagamento, reinício, envio de e-mail) e passe a segunda parte para código fixo.",
+    "Coloque um portão de aprovação humana antes de qualquer ação destrutiva em produção, em um canal como o Slack, sem depender do modelo para decidir se pede.",
+    "Registre cada efeito colateral do agente (e-mail enviado, deploy revertido) para que o replanejamento não repita a ação.",
+    "Se o agente roda por horas ou dias, avalie um motor de workflow com execução durável, como Conductor ou Temporal, em vez de um loop em memória."
+  ],
+  "numeros": [
+    {
+      "valor": "2 ciclos",
+      "contexto": "Loop de remediação do agente de SRE na demo",
+      "t": 742
+    },
+    {
+      "valor": "1 mão",
+      "contexto": "Plateia de outra conferência que já rodava agentes em produção",
+      "t": 32
+    },
+    {
+      "valor": "meses",
+      "contexto": "Duração possível de um harness em execução",
+      "t": 372
+    }
+  ]
+}

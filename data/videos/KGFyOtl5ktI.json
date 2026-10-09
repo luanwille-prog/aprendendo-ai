@@ -1,0 +1,197 @@
+{
+  "id": "KGFyOtl5ktI",
+  "titulo": "Giving AI Agents Memory That Learns — Jake Broekhuizen, LangChain",
+  "titulo_curto": "Giving AI Agents Memory That Learns",
+  "palestrante": "Jake Broekhuizen, LangChain",
+  "url": "https://www.youtube.com/watch?v=KGFyOtl5ktI",
+  "duracao": 998,
+  "publicado_ts": 1791468037,
+  "edicao": "2026-10-08",
+  "tese": "Log guardado não ensina nada ao agente. Só vira memória quando uma lição entra no contexto que ele lê na próxima execução.",
+  "tldr": [
+    "Jake Broekhuizen, da LangChain, diz que times observam bem seus agentes, mas quase não transformam esses registros em lições para as próximas execuções.",
+    "Ele propõe um ciclo de leitura e escrita: o agente lê a memória de longo prazo, roda e gera um trace (registro da execução), um filtro separa o sinal útil do resto, e o sinal é gravado de volta.",
+    "Três cuidados: a maior parte dos traces deve virar só histórico, atualizações de memória precisam chegar ao agente (cache), e regras de comportamento merecem revisão humana."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Observar não é aprender",
+      "texto": "O exemplo é um agente financeiro cujo tom escorregava de consultivo para diretivo, dizendo ao usuário que cancelasse assinaturas. A correção era manual: alguém lia os traces, editava o contexto e checava regressões. Isso escala mal. Se o contexto futuro não muda, o erro de hoje se repete amanhã.",
+      "t": 94,
+      "legenda": "O caso que guia o talk: tom fora da política e correção manual.",
+      "print": null
+    },
+    {
+      "titulo": "Três tipos de memória",
+      "texto": "O palestrante agrupa seis itens (fatos, preferências, padrões, exemplos, skills, instruções) em três tipos. Semântica é o que o agente sabe. Episódica é o que ele viveu. Procedural é como ele deve se comportar. No caso financeiro, a correção veio como regra procedural, não como fato novo.",
+      "t": 281,
+      "legenda": "A taxonomia de memória emprestada da ciência cognitiva.",
+      "print": "img/KGFyOtl5ktI/1.jpg"
+    },
+    {
+      "titulo": "Memória de trabalho e de longo prazo",
+      "texto": "Memória de trabalho é o que o agente usa na execução atual: rascunhos, resultados de ferramentas, arquivos. Memória de longo prazo fica em um repositório e guia execuções futuras. Cada harness (estrutura que roda o agente) injeta essa memória de um jeito: no prompt, por ferramenta, por arquivos ou por um store.",
+      "t": 375,
+      "legenda": "A separação entre contexto temporário e contexto durável.",
+      "print": "img/KGFyOtl5ktI/2.jpg"
+    },
+    {
+      "titulo": "O ciclo de leitura e escrita",
+      "texto": "O agente lê contexto do longo prazo, roda e produz um trace. Um filtro decide o que é sinal e o que fica como histórico. O sinal é gravado de volta. Sem o filtro, tudo viraria memória e o agente teria mais dificuldade de raciocinar nas tarefas seguintes.",
+      "t": 498,
+      "legenda": "O laço central: memória informa a execução, a execução gera evidência.",
+      "print": "img/KGFyOtl5ktI/3.jpg"
+    },
+    {
+      "titulo": "Capturar, analisar, atualizar com LangSmith e Context Hub",
+      "texto": "Como uma implementação possível, o observability do LangSmith captura a trajetória, uma etapa de análise extrai sinal dos traces e o Context Hub guarda instruções, skills e políticas que o agente baixa na próxima execução. No caso financeiro, o sistema detectou o desvio de tom e ajustou os arquivos markdown de skills.",
+      "t": 652,
+      "legenda": "A mesma ideia do ciclo, agora com produtos concretos da LangChain.",
+      "print": "img/KGFyOtl5ktI/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Memória semântica, episódica e procedural",
+      "traducao": "três tipos de memória do agente",
+      "nivel": "intermediario",
+      "chave": "memória semântica, episódica e procedural",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Memória de curto e longo prazo",
+      "traducao": "memória de trabalho e memória durável",
+      "nivel": "intermediario",
+      "chave": "memória de curto e longo prazo",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Read-write cycle",
+      "traducao": "ciclo de leitura e escrita da memória",
+      "nivel": "intermediario",
+      "chave": "read-write cycle",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Trace",
+      "traducao": "registro passo a passo de uma execução",
+      "nivel": "basico",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Progressive disclosure",
+      "traducao": "carregar skills só quando a tarefa pede",
+      "nivel": "intermediario",
+      "chave": "progressive disclosure",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sleep-time compute",
+      "traducao": "processamento de memória fora da execução ativa",
+      "nivel": "avancado",
+      "chave": "sleep-time compute",
+      "analogia": "Sleep-time compute é como o professor que corrige as provas e prepara a próxima aula à noite, para chegar à sala no dia seguinte já com tudo organizado.",
+      "explicacao": [
+        "Um agente de IA trabalha em rodadas. Entre uma rodada e outra, ele fica parado esperando a próxima tarefa.",
+        "Sleep-time compute (processamento em tempo de sono) aproveita esse intervalo para trabalhar na memória do agente. Alguns chamam isso de dreaming (sonhar).",
+        "Nesse intervalo, um processo lê o trace (registro da execução) das rodadas anteriores e separa o que vale guardar do que fica só como histórico.",
+        "As lições escolhidas entram na memória de longo prazo, como regras, skills (habilidades em arquivo) ou preferências do usuário.",
+        "Na rodada seguinte, o agente carrega essa memória já organizada. Assim ele não gasta tempo da tarefa ativa para rever o passado e evita repetir erros."
+      ],
+      "pre_requisitos": [
+        "Memória de curto e longo prazo",
+        "Trace",
+        "Read-write cycle"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "AGENTE RODA",
+            "nota": "Executa a tarefa e gera um trace"
+          },
+          {
+            "rotulo": "AGENTE PARADO",
+            "nota": "Intervalo sem tarefa ativa"
+          },
+          {
+            "rotulo": "REVISA OS TRACES",
+            "nota": "Separa sinal útil de histórico"
+          },
+          {
+            "rotulo": "GRAVA NA MEMÓRIA",
+            "nota": "Lições vão para o longo prazo"
+          },
+          {
+            "rotulo": "PRÓXIMA RODADA MELHOR",
+            "nota": "Agente já lê a memória atualizada"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Human in the loop",
+      "traducao": "humano revisa antes de aplicar",
+      "nivel": "basico",
+      "chave": "human in the loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Context Hub",
+      "traducao": "repositório de contexto durável da LangChain",
+      "nivel": "intermediario",
+      "chave": "context hub",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é em parte pitch do LangSmith e do Context Hub, produtos da empresa do palestrante, e ele admite que é só uma implementação possível. Não há medição: sem taxa de erro de tom antes e depois, sem número de traces analisados, sem comparação com a revisão manual. O caso financeiro vem de um único cliente sem nome. O critério do filtro, que o próprio palestrante chama de ponto central, fica em aberto.",
+  "acoes": [
+    "Separe os traces do seu agente em três grupos: histórico, dados para eval (avaliação) e candidatos a memória. Só o último grupo muda o contexto.",
+    "Se corrigir o comportamento do agente à mão, grave a correção como regra ou skill em um arquivo que ele leia na próxima execução, em vez de repetir no prompt.",
+    "Exija revisão humana antes de aplicar mudanças automáticas em instruções, políticas e tom do agente.",
+    "Teste se uma atualização de memória realmente chega ao agente, principalmente em execuções longas com cache."
+  ],
+  "numeros": [
+    {
+      "valor": "75%",
+      "contexto": "Parte do comportamento guiada pela memória procedural",
+      "t": 901
+    },
+    {
+      "valor": "3",
+      "contexto": "Tipos de memória: semântica, episódica e procedural",
+      "t": 281
+    }
+  ]
+}
