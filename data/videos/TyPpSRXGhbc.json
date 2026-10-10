@@ -1,0 +1,207 @@
+{
+  "id": "TyPpSRXGhbc",
+  "titulo": "Small Models, Big Results: Training a Finance Agent for Under $500 — Charles Dickens, Snorkel AI",
+  "titulo_curto": "Small Models, Big Results: Training a Finance Agent for Under $500",
+  "palestrante": "Charles Dickens, Snorkel AI",
+  "url": "https://www.youtube.com/watch?v=TyPpSRXGhbc",
+  "duracao": 1035,
+  "publicado_ts": 1791592210,
+  "edicao": "2026-10-09",
+  "tese": "Um Qwen3 4B treinado com RL e dados bem verificados superou o 235B em perguntas financeiras. O gargalo estava na disciplina no uso de ferramentas.",
+  "tldr": [
+    "A Snorkel AI e o Sky Computing Lab de Berkeley criaram o FinQA, um conjunto de perguntas financeiras tiradas de relatórios 10-K e revisadas por especialistas.",
+    "Com reinforcement learning (aprendizado por reforço) no framework rLLM e uma recompensa simples de certo ou errado, um modelo de 4 bilhões de parâmetros passou o de 235 bilhões por menos de 500 dólares.",
+    "Dados mais simples e recompensa binária deram mais ganho do que currículo ou rubrica detalhada, e a habilidade se transferiu para perguntas com várias tabelas."
+  ],
+  "tema": "modelos",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "Especialista pequeno contra generalista grande",
+      "texto": "Para o banco, saber raciocinar significa operar no próprio sistema, com schemas complexos, APIs antigas e dívida técnica, sem acumular erros em fluxos longos e com rastro auditável. O palestrante defende que tarefas especializadas pedem um modelo treinado para elas. Escalar o tamanho do modelo seria o reflexo comum, e ele argumenta contra esse reflexo.",
+      "t": 232,
+      "legenda": "O talk enquadra a disputa como generalista grande contra especialista pequeno",
+      "print": "img/TyPpSRXGhbc/0.jpg"
+    },
+    {
+      "titulo": "Como o FinQA foi montado e verificado",
+      "texto": "A equipe puxou relatórios 10-K do sistema EDGAR da SEC e usou o Qwen3 30B para gerar cerca de 6.900 tabelas SQL. Cada tabela virou uma pergunta e resposta, guiada por uma taxonomia criada com especialistas financeiros. A verificação tem três camadas: checagens programáticas de tabelas e colunas, revisão por agentes independentes e revisão manual de especialistas. Nenhuma empresa do benchmark aparece no treino.",
+      "t": 344,
+      "legenda": "O dado de treino passa por checagem automática, por agentes e por humanos",
+      "print": "img/TyPpSRXGhbc/1.jpg"
+    },
+    {
+      "titulo": "Onde até modelos de fronteira falham",
+      "texto": "Os autores viram três falhas recorrentes. A primeira é inventar tabelas e colunas que não existem (schema hallucination). A segunda é encher o próprio contexto com consultas amplas como SELECT *. A terceira é repetir a mesma estratégia depois de um erro, sem ler a mensagem de erro. Segundo o palestrante, as mesmas falhas apareceram em subscrição de seguros.",
+      "t": 440,
+      "legenda": "As falhas são de disciplina no uso de ferramentas, e o raciocínio não aparece entre elas",
+      "print": "img/TyPpSRXGhbc/2.jpg"
+    },
+    {
+      "titulo": "Treino barato com recompensa binária",
+      "texto": "O agente roda num loop ReAct (raciocinar e agir) com ferramentas para consultar as tabelas. A recompensa é só certo ou errado, decidida pelo GPT-5 nano como juiz comparando com a resposta de referência. O treino usou GRPO, cerca de 1.000 ambientes em paralelo e oito GPUs H100. O custo ficou abaixo de 500 dólares, com cerca de 420 em computação e 40 na API do juiz.",
+      "t": 590,
+      "legenda": "Todo o treino coube em menos de 500 dólares",
+      "print": "img/TyPpSRXGhbc/3.jpg"
+    },
+    {
+      "titulo": "Resultado e ablações",
+      "texto": "A acurácia do modelo base mais que dobrou e passou a do 235B no benchmark de 290 perguntas. O ganho se transferiu para perguntas de duas a cinco tabelas sem treino específico, e o desempenho geral no benchmark BFCL de chamada de ferramentas subiu um pouco. Nas ablações (testes que removem ou trocam uma peça por vez), treinar só nos dados simples e usar recompensa binária venceu currículo e rubrica.",
+      "t": 630,
+      "legenda": "O 4B treinado supera o 235B no conjunto de teste separado",
+      "print": "img/TyPpSRXGhbc/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Reinforcement learning",
+      "traducao": "aprendizado por reforço",
+      "nivel": "intermediario",
+      "chave": "reinforcement learning",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "GRPO",
+      "traducao": "otimização de política relativa por grupo",
+      "nivel": "avancado",
+      "chave": "grpo",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo de linguagem como juiz",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Hallucination",
+      "traducao": "alucinação",
+      "nivel": "basico",
+      "chave": "hallucination",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Janela de contexto",
+      "traducao": "quanto texto o modelo consegue considerar de uma vez",
+      "nivel": "basico",
+      "chave": "janela de contexto",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Currículo de treino",
+      "traducao": "ordem planejada dos dados, do fácil ao difícil",
+      "nivel": "intermediario",
+      "chave": "currículo de treino",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Rubric",
+      "traducao": "rubrica de pontuação com critérios ponderados",
+      "nivel": "intermediario",
+      "chave": "rubric",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Ablation study",
+      "traducao": "estudo de ablação, que testa uma variável por vez",
+      "nivel": "intermediario",
+      "chave": "ablation study",
+      "analogia": "Ablation study é como testar uma receita de bolo tirando um ingrediente por vez para descobrir qual deles faz diferença no sabor.",
+      "explicacao": [
+        "Quando algo funciona bem, muitas peças contribuíram. Você quer saber quais delas realmente importam.",
+        "O estudo de ablação (ablation study) mexe em uma peça por vez: tira, troca ou simplifica, e mantém o resto igual.",
+        "Depois você mede o resultado de cada versão e compara com a versão completa. A queda ou o ganho mostra o peso daquela peça.",
+        "No talk, o time testou três misturas de dados de treino (só simples, simples e multitabela, currículo) e dois tipos de recompensa (rubrica ou certo e errado).",
+        "O resultado surpreendeu: dados simples e recompensa binária deram mais ganho que as opções mais sofisticadas."
+      ],
+      "pre_requisitos": [
+        "Reinforcement learning",
+        "Currículo de treino",
+        "Rubric"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "VERSÃO COMPLETA",
+            "nota": "Sistema com todas as peças"
+          },
+          {
+            "rotulo": "MUDA UMA PEÇA",
+            "nota": "Dados ou recompensa, só um"
+          },
+          {
+            "rotulo": "REPETE O TESTE",
+            "nota": "Mesmo benchmark para todos"
+          },
+          {
+            "rotulo": "COMPARA",
+            "nota": "Mede o que cada peça rendeu"
+          },
+          {
+            "rotulo": "PEÇA QUE IMPORTA",
+            "nota": "Dados simples e recompensa binária"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "A Snorkel vende dados e ambientes de treino, e o talk termina anunciando os grants da empresa e vagas abertas. O benchmark foi criado pela própria equipe com o mesmo pipeline sintético do treino. Ele tem 290 perguntas, e a versão multitabela tem 80, então a amostra é pequena. O 235B foi comparado sem ajuste fino, e não há comparação com modelos fechados de fronteira. O juiz GPT-5 nano pode errar. O custo de 500 dólares deixa de fora a geração dos dados e a revisão por especialistas. Os ganhos no BFCL aparecem sem números.",
+  "acoes": [
+    "Antes de trocar por um modelo maior, revise os logs do seu agente e procure as três falhas citadas: tabelas inventadas, consultas que despejam dados demais e repetição do mesmo erro.",
+    "Monte um conjunto de teste próprio com respostas verificáveis e separe por cliente ou empresa, para que nada do teste vaze para exemplos ou ajustes.",
+    "Se for ajustar um modelo, comece por dados simples e uma métrica de certo ou errado. Só adicione rubricas detalhadas se o ganho aparecer no teste.",
+    "Dê ao agente ferramentas que listem tabelas e colunas reais e limitem o tamanho do retorno, para reduzir alucinação de schema e excesso de contexto."
+  ],
+  "numeros": [
+    {
+      "valor": "60% vs 51%",
+      "contexto": "pass@1 do Qwen3 4B treinado contra o 235B",
+      "t": 159
+    },
+    {
+      "valor": "6.900",
+      "contexto": "tabelas SQL geradas a partir de relatórios 10-K",
+      "t": 313
+    },
+    {
+      "valor": "290",
+      "contexto": "perguntas no benchmark separado, revisado por especialistas",
+      "t": 406
+    },
+    {
+      "valor": "< US$ 500",
+      "contexto": "custo total do treino em oito H100, juiz incluído",
+      "t": 597
+    }
+  ]
+}

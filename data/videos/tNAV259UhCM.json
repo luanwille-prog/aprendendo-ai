@@ -1,0 +1,265 @@
+{
+  "id": "tNAV259UhCM",
+  "titulo": "From 15% to 90% GPU Utilization: Fix the Data Pipeline, Not the Model",
+  "titulo_curto": "From 15% to 90% GPU Utilization: Fix the Data Pipeline, Not the Model",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=tNAV259UhCM",
+  "duracao": 1021,
+  "publicado_ts": 1791595814,
+  "edicao": "2026-10-09",
+  "tese": "GPU parada geralmente espera dado. Meça onde o tempo vai e conserte o gargalo certo, um de cada vez, antes de mexer no modelo.",
+  "tldr": [
+    "O treino de um modelo multimodal (imagem e texto) usava só 15% da GPU, porque 85% do tempo ia para buscar, decodificar e redimensionar imagens do S3, uma por vez.",
+    "Tarun Sunkaraneni, da Amazon AGI, corrige em etapas: concorrência com asyncio e Ray actors, prefetching (buscar dados antes do pedido) e object store do Ray para evitar cópias de tensores. A espera cai de 85% para 20%.",
+    "Em escala de produção surge outro gargalo, a placa de rede de uma máquina. Duas flags do Ray (spread scheduling e leitura zero-copy) dão 50% a mais de throughput, mas só funcionam juntas e só em escala grande."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "Meça a razão de tempo de espera antes de otimizar",
+      "texto": "O palestrante define a wait-time ratio (razão de tempo de espera): tempo para preparar e transportar os dados, dividido pelo tempo total do pipeline. No baseline, 85% do tempo era espera por dados. O treino levava de 15 a 20 segundos por lote, e buscar o lote passava de 100 segundos. O flame graph (gráfico de perfil) mostrou o S3 como maior fatia.",
+      "t": 356,
+      "legenda": "Buscar dados leva mais de 100 s por lote, treinar leva 15 a 20 s.",
+      "print": "img/tNAV259UhCM/0.jpg"
+    },
+    {
+      "titulo": "Combine a concorrência com o tipo de gargalo",
+      "texto": "Cada amostra é independente, então o trabalho se paraleliza com facilidade. Ele escolhe asyncio para buscar imagens (espera de rede), e Ray actors, que são processos com APIs de comunicação prontas, para decodificar e pré-processar (uso de CPU). A regra dele é casar a ferramenta com o gargalo, e não repetir a que já funcionou antes. Esse passo deu cerca de 25% de ganho.",
+      "t": 481,
+      "legenda": "Asyncio para IO, Ray actors para CPU, e a busca por lote cai para cerca de 40 s.",
+      "print": "img/tNAV259UhCM/1.jpg"
+    },
+    {
+      "titulo": "Prefetching mantém o produtor à frente do treino",
+      "texto": "Uma thread em segundo plano enche uma fila antes de o trainer pedir. O produtor roda mais rápido que o consumidor, e o treino encontra o lote pronto. O tempo de busca por lote fica perto de zero. O custo é um checkpoint e uma retomada mais trabalhosos, além de um período de cold start (fila ainda vazia) no começo.",
+      "t": 575,
+      "legenda": "Com a fila cheia, o trainer não espera mais pelo dado.",
+      "print": "img/tNAV259UhCM/2.jpg"
+    },
+    {
+      "titulo": "Object store evita copiar tensores entre processos",
+      "texto": "Depois do prefetching, o transporte ficou mais caro. Cada amostra era serializada (pickle) no worker, copiada para o coordenador e serializada de novo para o trainer, com megabytes por amostra. Com o object store do Ray, cada amostra carrega só uma referência (ponteiro). Os ranks do Megatron buscam o dado direto quando precisam. A espera total cai de 85% para 20%.",
+      "t": 670,
+      "legenda": "A referência viaja pelo coordenador e o tensor fica no object store.",
+      "print": "img/tNAV259UhCM/3.jpg"
+    },
+    {
+      "titulo": "Em escala, o gargalo vira a placa de rede",
+      "texto": "Ao multiplicar por quatro os ranks de dados paralelos e o tamanho do lote, a espera voltou a subir. O Ray agrupa workers na mesma máquina, e a placa de rede (NIC) desse nó não dava conta. Espalhar os workers por vários nós (spread scheduling), junto com leitura zero-copy, rendeu 50% a mais de throughput. Nenhuma das duas flags ajudou sozinha em escala pequena.",
+      "t": 825,
+      "legenda": "O Ray junta workers por padrão, e isso satura a rede de um nó.",
+      "print": "img/tNAV259UhCM/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Bottleneck",
+      "traducao": "gargalo",
+      "nivel": "basico",
+      "chave": "bottleneck",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Wait-time ratio",
+      "traducao": "razão de tempo de espera",
+      "nivel": "intermediario",
+      "chave": "wait-time ratio",
+      "analogia": "A wait-time ratio é como medir quanto tempo um cozinheiro fica parado esperando os ingredientes chegarem, em relação ao tempo total do turno.",
+      "explicacao": [
+        "Uma GPU (placa que faz as contas do treino) custa caro e precisa estar sempre ocupada. Quando fica parada, o dinheiro é desperdiçado.",
+        "A wait-time ratio (razão de tempo de espera) mostra quanto do tempo ela passa esperando dados em vez de treinar.",
+        "A conta no talk é o tempo para preparar e transportar os dados, dividido pelo tempo total do pipeline, que inclui o treino.",
+        "No baseline, a razão era de 85%. Buscar um lote levava mais de 100 s e treinar levava 15 a 20 s.",
+        "Depois das otimizações, a razão caiu para 20%. Medir esse número antes de mexer evita otimizar a parte errada."
+      ],
+      "pre_requisitos": [
+        "GPU",
+        "Pipeline de dados",
+        "Bottleneck"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "GIL (global interpreter lock)",
+      "traducao": "trava global do interpretador do Python",
+      "nivel": "avancado",
+      "chave": "gil (global interpreter lock)",
+      "analogia": "O GIL é como uma cozinha com uma única chave do fogão, e só o cozinheiro que segura a chave pode cozinhar naquele momento.",
+      "explicacao": [
+        "Python roda seu código por meio de um programa chamado interpretador, que lê e executa cada instrução.",
+        "O GIL (global interpreter lock, trava global do interpretador) é uma regra desse programa. Só uma thread (linha de execução) executa código Python por vez.",
+        "Por isso, várias threads fazendo conta pesada em Python puro não correm de verdade em paralelo. Elas se revezam.",
+        "Algumas bibliotecas, como os tokenizers do Hugging Face e partes do PIL, soltam a trava enquanto trabalham em código nativo. Nesses casos, threads ajudam.",
+        "Quando a biblioteca não solta a trava, a saída são processos. Cada um tem seu próprio interpretador e sua própria trava, e usam vários núcleos da máquina."
+      ],
+      "pre_requisitos": [
+        "Thread",
+        "Processo",
+        "Concorrência",
+        "Interpretador"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Ray actors",
+      "traducao": "processos com estado do framework Ray",
+      "nivel": "avancado",
+      "chave": "ray actors",
+      "analogia": "Um Ray actor é como um funcionário fixo de uma central de atendimento, com mesa e ramal próprios, que recebe tarefas pelo telefone interno.",
+      "explicacao": [
+        "Um processo é um programa rodando sozinho, com a própria memória. Dá para ter vários ao mesmo tempo para usar mais núcleos.",
+        "Um Ray actor é um processo desse tipo, criado e gerenciado pelo Ray, um framework de computação distribuída (que divide trabalho entre várias máquinas).",
+        "O actor guarda estado. Ele pode manter na memória um tokenizador ou um modelo de imagem carregado e reutilizar a cada tarefa.",
+        "O Ray já traz as chamadas para mandar tarefas e receber resultados entre actors, então você não monta essa comunicação do zero.",
+        "No talk, os actors decodificam e pré-processam imagens, um trabalho de CPU que o asyncio não resolve e que o GIL atrapalharia em threads."
+      ],
+      "pre_requisitos": [
+        "Processo",
+        "GIL (global interpreter lock)",
+        "Concorrência"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Prefetching",
+      "traducao": "busca antecipada de dados",
+      "nivel": "intermediario",
+      "chave": "prefetching",
+      "analogia": "Prefetching é como o ajudante de cozinha que deixa os ingredientes cortados e enfileirados no balcão antes de o chef pedir o próximo prato.",
+      "explicacao": [
+        "Sem prefetching (busca antecipada de dados), o treino pede um lote e só então o sistema começa a buscá-lo. A GPU espera parada.",
+        "Com prefetching, uma thread em segundo plano busca e prepara lotes antes do pedido e os guarda numa fila.",
+        "O produtor (quem prepara os dados) roda mais rápido que o consumidor (o treino). Assim a fila fica sempre com lotes prontos.",
+        "Quando o treino pede um lote, ele já está lá. No talk, o tempo de busca por lote ficou perto de zero.",
+        "Há custos. Checkpoint e retomada do treino ficam mais trabalhosos, e existe um cold start (partida a frio), o período inicial em que a fila ainda está vazia."
+      ],
+      "pre_requisitos": [
+        "Thread",
+        "Fila (queue)",
+        "Produtor e consumidor",
+        "Wait-time ratio"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "THREAD DE FUNDO",
+            "nota": "Busca e prepara lotes antes do pedido"
+          },
+          {
+            "rotulo": "FILA",
+            "nota": "Guarda lotes prontos"
+          },
+          {
+            "rotulo": "TRAINER",
+            "nota": "Pede o lote e o encontra na fila"
+          },
+          {
+            "rotulo": "GPU SEM ESPERA",
+            "nota": "Busca por lote perto de zero"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Object store e zero-copy",
+      "traducao": "armazenamento de objetos compartilhado e leitura sem cópia",
+      "nivel": "avancado",
+      "chave": "object store e zero-copy",
+      "analogia": "O object store é como um armário compartilhado do escritório, onde você deixa o documento grande e entrega aos colegas só um bilhete com o número da gaveta.",
+      "explicacao": [
+        "Mandar um dado grande de um processo para outro costuma significar fazer uma cópia inteira dele, e isso custa tempo.",
+        "No baseline do talk, cada amostra de imagem era serializada (pickle, transformada em bytes), copiada para o coordenador e serializada de novo para o trainer.",
+        "O object store do Ray guarda o dado uma vez, em memória compartilhada. Cada amostra passa a carregar só uma referência, que é um ponteiro para onde o dado está.",
+        "O coordenador repassa apenas a referência. Os ranks do Megatron (os processos de treino) buscam o tensor direto no store quando precisam.",
+        "Zero-copy (leitura sem cópia) deixa o processo ler o dado na própria memória compartilhada, sem duplicá-lo. No talk, essa flag só rendeu em escala grande, junto com o spread scheduling."
+      ],
+      "pre_requisitos": [
+        "Serialização (pickle)",
+        "Ponteiro e referência",
+        "Ray actors",
+        "Tensor"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "WORKER",
+            "nota": "Processa a imagem e guarda no store"
+          },
+          {
+            "rotulo": "OBJECT STORE",
+            "nota": "Dado fica parado em memória comum"
+          },
+          {
+            "rotulo": "COORDENADOR",
+            "nota": "Repassa só a referência (ponteiro)"
+          },
+          {
+            "rotulo": "RANK DE TREINO",
+            "nota": "Busca o tensor direto, sem cópia"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Profiler",
+      "traducao": "perfilador de desempenho",
+      "nivel": "intermediario",
+      "chave": "profiler",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Cold start",
+      "traducao": "partida a frio",
+      "nivel": "basico",
+      "chave": "cold start",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk usa um único experimento, sem informar tamanho do cluster, modelo exato, GPUs nem repetições. Os ganhos vêm de um pipeline deliberadamente ingênuo no ponto de partida, então os 15% iniciais dizem pouco sobre equipes que já usam bons data loaders. O palestrante não mostra medições isoladas de cada flag, só afirma que sozinhas não ajudaram. Também não há conflito de interesse evidente, mas o Ray é a ferramenta central e as conclusões dependem das escolhas padrão dele.",
+  "acoes": [
+    "Antes de otimizar um treino ou pipeline, calcule a fração do tempo que a GPU passa esperando dados e rode um profiler no baseline.",
+    "Escolha o tipo de concorrência pelo gargalo: asyncio para espera de rede, threads quando a biblioteca solta o GIL, processos para trabalho pesado de CPU.",
+    "Passe referências a dados grandes no lugar de copiá-los entre processos, e planeje o custo de comunicação a cada decisão de paralelismo.",
+    "Teste configurações de infraestrutura em uma escada de escalas. Uma flag sem efeito em escala pequena pode valer 50% em escala grande."
+  ],
+  "numeros": [
+    {
+      "valor": "15% a 90%",
+      "contexto": "utilização da GPU antes e depois das otimizações",
+      "t": 161
+    },
+    {
+      "valor": "85%",
+      "contexto": "tempo do baseline gasto esperando dados",
+      "t": 194
+    },
+    {
+      "valor": "mais de 100 s",
+      "contexto": "tempo para buscar um lote, contra 15 a 20 s de treino",
+      "t": 356
+    },
+    {
+      "valor": "50%",
+      "contexto": "ganho extra de throughput em escala com duas flags",
+      "t": 916
+    }
+  ]
+}

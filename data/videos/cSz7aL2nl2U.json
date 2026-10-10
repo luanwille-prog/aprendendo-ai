@@ -1,0 +1,174 @@
+{
+  "id": "cSz7aL2nl2U",
+  "titulo": "Why Your Company Needs a Context Graph (and How to Build It) — Gil Feig, Merge",
+  "titulo_curto": "Why Your Company Needs a Context Graph (and How to Build It)",
+  "palestrante": "Gil Feig, Merge",
+  "url": "https://www.youtube.com/watch?v=cSz7aL2nl2U",
+  "duracao": 911,
+  "publicado_ts": 1791588608,
+  "edicao": "2026-10-09",
+  "tese": "Conectar alguns servidores MCP não basta. O agente precisa de uma camada de contexto com dados sincronizados, skills, memória e rastreio de origem.",
+  "tldr": [
+    "Gil Feig, CTO da Merge, usa a pergunta \"quais clientes ficaram insatisfeitos na semana passada?\" para mostrar que consultas ao vivo via MCP estouram o tempo quando precisam varrer muitos dados.",
+    "A solução proposta junta cópia sincronizada dos dados (vector database), consultas ao vivo, um roteador, um resumidor, e skills e memória que dizem como a empresa define coisas como \"cliente satisfeito\".",
+    "Toda resposta deve guardar de onde veio o dado, quando foi buscado, com quais permissões e o que o invalida, para que se possa investigar quando o agente errar."
+  ],
+  "tema": "dados-e-rag",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Consulta ao vivo não responde perguntas sobre muitos dados",
+      "texto": "Perguntar \"por que o cliente A ficou chateado?\" funciona com uma chamada ao Zendesk. Perguntar quais clientes ficaram chateados no último ano exige puxar milhares de tickets, 100 por vez, até dar timeout. As APIs de terceiros não oferecem busca semântica, então o agente não consegue perguntar em linguagem natural direto à plataforma.",
+      "t": 259,
+      "legenda": "Busca ao vivo escala mal quando a pergunta cobre um período longo.",
+      "print": "img/cSz7aL2nl2U/0.jpg"
+    },
+    {
+      "titulo": "Sincronize uma cópia para perguntas semânticas",
+      "texto": "Para análise ampla, o dado precisa ser copiado para um banco vetorial local. Para ações simples e pontuais, como consultar um cliente no Stripe, a chamada ao vivo basta. Feig diz que a cópia custa mais e é mais difícil de manter atualizada, então ela entra só onde a pergunta exige.",
+      "t": 320,
+      "legenda": "Duas vias de dados: ao vivo para o simples, sincronizado para o profundo.",
+      "print": "img/cSz7aL2nl2U/1.jpg"
+    },
+    {
+      "titulo": "Roteador, resumidor e skills guiam a busca",
+      "texto": "O roteador envia o prompt ao agente certo. O resumidor condensa o que veio do cache e das chamadas ao vivo, para não despejar contexto demais no agente. Skills e memória vêm antes: elas dizem, por exemplo, que a empresa mede satisfação pelo Qualtrics e não pelo número de tickets.",
+      "t": 382,
+      "legenda": "A arquitetura completa da camada de contexto proposta.",
+      "print": "img/cSz7aL2nl2U/2.jpg"
+    },
+    {
+      "titulo": "Quatro camadas de contexto e um fluxograma de decisão",
+      "texto": "As camadas são prompt com skills e memória, chamadas de API ao vivo, dados em cache e contexto derivado (resumos guardados para reuso). No fluxograma, o agente confere se há skill ou memória, depois se o cache está dentro do prazo aceitável (SLA), e só então chama a API ao vivo, em ciclos até juntar contexto suficiente.",
+      "t": 640,
+      "legenda": "Ordem de decisão: skill, cache fresco, API ao vivo, resposta.",
+      "print": "img/cSz7aL2nl2U/3.jpg"
+    },
+    {
+      "titulo": "Rastreabilidade de cada dado",
+      "texto": "Cada dado guardado deve levar metadados: origem, hora da busca, ID e escopos usados, quem acessou, se foi transformado, como era o original e o que o invalida (por exemplo, mais de um mês de idade). Isso permite auditar decisões de negócio e investigar falhas.",
+      "t": 727,
+      "legenda": "Lista do que registrar para saber de onde veio cada dado.",
+      "print": "img/cSz7aL2nl2U/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Context graph",
+      "traducao": "grafo de contexto (o cérebro da empresa)",
+      "nivel": "intermediario",
+      "chave": "context graph",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP",
+      "traducao": "Model Context Protocol, padrão para o agente chamar ferramentas",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Busca vetorial",
+      "traducao": "busca por significado em um banco de vetores",
+      "nivel": "intermediario",
+      "chave": "busca vetorial",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Router e summarizer",
+      "traducao": "roteador e resumidor",
+      "nivel": "intermediario",
+      "chave": "router e summarizer",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Skills",
+      "traducao": "instruções da empresa sobre como fazer uma tarefa",
+      "nivel": "basico",
+      "chave": "skills",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Contexto derivado",
+      "traducao": "resumos criados a partir de dados de terceiros e guardados",
+      "nivel": "intermediario",
+      "chave": "contexto derivado",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "SLA de frescor",
+      "traducao": "prazo máximo de idade aceitável do dado em cache",
+      "nivel": "intermediario",
+      "chave": "sla de frescor",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Provenance",
+      "traducao": "proveniência, a origem rastreável do dado",
+      "nivel": "intermediario",
+      "chave": "provenance",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "A Merge vende sincronização de dados (Unified), conexões MCP ao vivo (Agent Handler) e um roteador de LLM (Gateway), e o talk termina com o pitch. Todas as peças descritas coincidem com esses produtos. Não há medição, caso de cliente nem comparação de custo ou qualidade. Frases como \"é só física\" são opinião. O custo e a manutenção do cache, que o próprio palestrante admite serem maiores, ficam sem números.",
+  "acoes": [
+    "Separe suas perguntas frequentes entre lookup simples (uma chamada ao vivo basta) e análise sobre muitos registros (exige cópia sincronizada ou exportação).",
+    "Escreva como sua empresa define termos como \"cliente satisfeito\" ou \"risco de renovação\" e entregue isso ao agente como skill ou documento fixo.",
+    "Peça ao agente que sempre cite a fonte e a data de cada dado usado numa resposta e defina uma idade máxima aceitável para dados em cache.",
+    "Limite o que o agente puxa de cada sistema (o exemplo do talk pega só 5 tickets) para evitar timeout e contexto inchado."
+  ],
+  "numeros": [
+    {
+      "valor": "400+",
+      "contexto": "clientes corporativos da Merge",
+      "t": 42
+    },
+    {
+      "valor": "130",
+      "contexto": "funcionários da Merge",
+      "t": 74
+    },
+    {
+      "valor": "100",
+      "contexto": "tickets por página numa busca ao vivo",
+      "t": 259
+    },
+    {
+      "valor": "5",
+      "contexto": "tickets puxados no exemplo do status do cliente Acme",
+      "t": 789
+    }
+  ]
+}

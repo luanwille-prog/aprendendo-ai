@@ -1,0 +1,174 @@
+{
+  "id": "9WiBJRO84yY",
+  "titulo": "Building on the Codex Harness — Dominik Kundel, OpenAI",
+  "titulo_curto": "Building on the Codex Harness",
+  "palestrante": "Dominik Kundel, OpenAI",
+  "url": "https://www.youtube.com/watch?v=9WiBJRO84yY",
+  "duracao": 1087,
+  "publicado_ts": 1791559804,
+  "edicao": "2026-10-09",
+  "tese": "Em vez de montar um harness do zero, embuta o do Codex via App Server e personalize só instruções e ferramentas.",
+  "tldr": [
+    "Dominik Kundel, da OpenAI, apresenta o Codex App Server, um protocolo aberto (JSON-RPC) que envolve o harness do Codex e alimenta o app, as extensões de IDE e clientes de terceiros.",
+    "Pelo protocolo, o desenvolvedor controla mais de 120 tipos de mensagem, login com ChatGPT, instruções extras sobre o prompt de sistema, ferramentas dinâmicas adiadas e configurações de modelo e sandbox por thread.",
+    "Ele fecha com três dicas: embarcar a própria versão do binário, marcar ferramentas novas como adiadas e usar developer instructions em vez de reescrever o prompt de sistema."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "O App Server é o protocolo por trás do Codex",
+      "texto": "O App Server segue o estilo JSON-RPC e conecta o cliente (seu app) ao servidor (o harness do Codex). Os mesmos eventos alimentam o app do Codex, as extensões de IDE, Xcode, JetBrains e projetos de terceiros. Harness e protocolo são open source e aceitam outros provedores de modelo que tenham API compatível com Responses.",
+      "t": 137,
+      "legenda": "Vários clientes, um único harness e um único protocolo.",
+      "print": "img/9WiBJRO84yY/0.jpg"
+    },
+    {
+      "titulo": "Inspetor mostra os eventos reais",
+      "texto": "Para tirar o protocolo do abstrato, o palestrante construiu um inspetor que intercepta as mensagens entre o app do Codex e o servidor. Aparecem threads iniciadas, leitura de configuração e deltas de texto em streaming. Tudo o que o app faz passa por essas mensagens, então um cliente próprio pode fazer o mesmo.",
+      "t": 262,
+      "legenda": "Os eventos reais trocados entre o app do Codex e o servidor.",
+      "print": "img/9WiBJRO84yY/1.jpg"
+    },
+    {
+      "titulo": "Controle fino do agente",
+      "texto": "Diferente de protocolos mais genéricos como o ACP, o App Server expõe partes internas do harness. Há mais de 120 mensagens, de threads e turnos a busca de arquivos e modo goal. Dá para anexar developer instructions, registrar ferramentas dinâmicas e mudar modelo, provedor e sandbox por thread. O login com ChatGPT deixa o usuário usar a própria assinatura.",
+      "t": 354,
+      "legenda": "A superfície de controle vai além de um chat genérico.",
+      "print": "img/9WiBJRO84yY/2.jpg"
+    },
+    {
+      "titulo": "Codex dentro do Doom",
+      "texto": "Como demo, ele roda o Codex dentro do jogo Doom, num app Electron que fala com o App Server por IPC. Ferramentas dinâmicas dão ao agente acesso a vida, armadura e armas. O mesmo servidor também executa comandos reais no shell da máquina. A demo mostra que a interface pode ser qualquer coisa além de um chat.",
+      "t": 821,
+      "legenda": "O agente altera o estado do jogo por ferramentas dinâmicas.",
+      "print": "img/9WiBJRO84yY/3.jpg"
+    },
+    {
+      "titulo": "App Server ou codex exec",
+      "texto": "O comando codex exec roda tarefas sem interação e serve para scripts e CI, como corrigir um PR automaticamente. O App Server compensa quando o cliente é mais completo ou quando é preciso abrir várias threads em paralelo, por exemplo num eval harness próprio. Assim você evita criar sua própria paralelização de chamadas ao exec.",
+      "t": 913,
+      "legenda": "Script e CI usam exec. Clientes ricos e paralelismo usam o App Server.",
+      "print": "img/9WiBJRO84yY/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Codex App Server",
+      "traducao": "servidor de aplicação do Codex",
+      "nivel": "intermediario",
+      "chave": "codex app server",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "JSON-RPC",
+      "traducao": "protocolo de chamada remota em JSON",
+      "nivel": "intermediario",
+      "chave": "json-rpc",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Harness",
+      "traducao": "arcabouço que cerca o modelo",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Agent Client Protocol (ACP)",
+      "traducao": "protocolo aberto entre clientes e agentes",
+      "nivel": "intermediario",
+      "chave": "agent client protocol (acp)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Developer instructions",
+      "traducao": "instruções do desenvolvedor",
+      "nivel": "intermediario",
+      "chave": "developer instructions",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Dynamic tools",
+      "traducao": "ferramentas dinâmicas",
+      "nivel": "intermediario",
+      "chave": "dynamic tools",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Deferred context",
+      "traducao": "carregamento adiado de ferramentas",
+      "nivel": "avancado",
+      "chave": "deferred context",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado de execução",
+      "nivel": "basico",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É um talk de produto da OpenAI e promove o ecossistema Codex, inclusive o login com ChatGPT que atrai usuários para a assinatura. Não há benchmark, medição de custo ou comparação de esforço com outros harnesses. As afirmações de que o Codex implementa o protocolo quase sozinho e de que o ACP é mais genérico saem do próprio palestrante. O protocolo muda entre versões, o que ele admite ao recomendar embarcar o binário.",
+  "acoes": [
+    "Se você constrói um app com agente, teste o App Server do Codex antes de escrever um harness próprio. Peça ao Codex para ler a documentação e gerar o cliente.",
+    "Embarque a versão do binário junto com seu produto e gere os bindings dessa versão, para não depender do CLI instalado pelo usuário.",
+    "Para ferramentas novas, marque como adiadas (deferred). O agente as encontra por busca e a janela de contexto não enche.",
+    "Para mudar o comportamento do agente, comece por developer instructions. Só reescreva o prompt de sistema se tiver evals que justifiquem."
+  ],
+  "numeros": [
+    {
+      "valor": "18 min",
+      "contexto": "duração prevista do talk",
+      "t": 12
+    },
+    {
+      "valor": "120+",
+      "contexto": "tipos de mensagem do cliente no protocolo",
+      "t": 323
+    },
+    {
+      "valor": "2",
+      "contexto": "versões do binário no Windows (Linux e nativa)",
+      "t": 541
+    },
+    {
+      "valor": "5.5",
+      "contexto": "versão do modelo usada na demo do Doom",
+      "t": 789
+    }
+  ]
+}

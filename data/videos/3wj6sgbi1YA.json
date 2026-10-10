@@ -1,0 +1,174 @@
+{
+  "id": "3wj6sgbi1YA",
+  "titulo": "Designing CLIs for Agents, Not Humans — Pedro Lopez, Airbyte",
+  "titulo_curto": "Designing CLIs for Agents, Not Humans",
+  "palestrante": "Pedro Lopez, Airbyte",
+  "url": "https://www.youtube.com/watch?v=3wj6sgbi1YA",
+  "duracao": 1100,
+  "publicado_ts": 1791565231,
+  "edicao": "2026-10-09",
+  "tese": "MCP serve ao usuário comum e a CLI ao técnico. Ambas devem ser camadas finas, pequenas e sem interação humana.",
+  "tldr": [
+    "A Airbyte expõe seus dados de SaaS (Zendesk, Stripe, HubSpot) para agentes por dois caminhos, um servidor MCP e uma CLI, ambos camadas finas sobre a mesma plataforma.",
+    "No MCP, o time mantém poucas ferramentas com descoberta progressiva, usa OAuth como login e abandona a elicitation (pedido de dados ao usuário) porque os clientes a suportam de forma desigual.",
+    "Na CLI, o desenho para agentes pede JSON de entrada e saída, comandos consistentes no formato substantivo-verbo, skills distribuídas com a ferramenta e nenhum prompt interativo."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "MCP cruza Zendesk e Stripe em uma pergunta",
+      "texto": "Na demo no ChatGPT, o palestrante pergunta quais conectores existem e depois pede cinco clientes pagantes com tickets de suporte. O agente busca no Context Store (índice de busca dos dados) e cruza as duas fontes sozinho. O MCP é indicado para quem não é técnico e só quer plugar os dados no chat.",
+      "t": 318,
+      "legenda": "O agente combina duas fontes de dados e devolve cinco clientes.",
+      "print": "img/3wj6sgbi1YA/0.jpg"
+    },
+    {
+      "titulo": "Poucas ferramentas, descoberta progressiva",
+      "texto": "A Airbyte tem muitos conectores, cada um com entidades e ações próprias. Em vez de uma ferramenta MCP para cada um, expõe duas: descrever o conector (traz o schema) e executar (lê, escreve e apaga registros). Descrições curtas poupam contexto e, segundo ele, melhoram o desempenho do servidor.",
+      "t": 348,
+      "legenda": "Duas ferramentas cobrem todos os conectores.",
+      "print": "img/3wj6sgbi1YA/1.jpg"
+    },
+    {
+      "titulo": "A elicitation por URL ainda não funciona em todo cliente",
+      "texto": "O MCP prevê um modo de elicitation por URL para pedir credenciais com segurança. Na prática, o Claude Desktop responde que não suporta o recurso. A Airbyte voltou a gerar o próprio link de conexão. A lição é que a especificação promete mais do que os clientes entregam.",
+      "t": 596,
+      "legenda": "Cliente real recusa um recurso que consta da especificação.",
+      "print": "img/3wj6sgbi1YA/2.jpg"
+    },
+    {
+      "titulo": "JSON de entrada e saída, com pipes",
+      "texto": "Humanos gostam de flags. Agentes montam consultas complexas com mais precisão em JSON, com menos chute. Na saída, JSON permite usar pipes do Unix, como jq, para filtrar e cortar respostas longas antes que cheguem ao contexto do agente.",
+      "t": 720,
+      "legenda": "JSON na entrada e na saída habilita o encadeamento com jq.",
+      "print": "img/3wj6sgbi1YA/3.jpg"
+    },
+    {
+      "titulo": "Skills embarcadas para o agente descobrir a CLI",
+      "texto": "Sem uma skill, o agente nem sabe que a CLI existe. A skill traz uma descrição que dispara quando o assunto são conectores e aponta para arquivos de referência separados. Assim, o contexto carrega só o necessário. Erros repetidos do agente indicam um contrato de CLI pouco óbvio.",
+      "t": 848,
+      "legenda": "A skill principal aponta para referências carregadas sob demanda.",
+      "print": "img/3wj6sgbi1YA/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "MCP",
+      "traducao": "Model Context Protocol, protocolo para conectar agentes a ferramentas e dados",
+      "nivel": "basico",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "CLI",
+      "traducao": "interface de linha de comando",
+      "nivel": "basico",
+      "chave": "cli",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Progressive tool discovery",
+      "traducao": "descoberta progressiva de ferramentas",
+      "nivel": "intermediario",
+      "chave": "progressive tool discovery",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "OAuth",
+      "traducao": "login delegado, sem repassar senha ao app",
+      "nivel": "intermediario",
+      "chave": "oauth",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Elicitation",
+      "traducao": "pedido de informação ao usuário durante o uso do MCP",
+      "nivel": "intermediario",
+      "chave": "elicitation",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Skills",
+      "traducao": "instruções empacotadas que o agente carrega quando precisa",
+      "nivel": "intermediario",
+      "chave": "skills",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Progressive disclosure",
+      "traducao": "carregar informação em etapas, só quando necessária",
+      "nivel": "intermediario",
+      "chave": "progressive disclosure",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Pipes do Unix e jq",
+      "traducao": "encadear comandos e filtrar JSON no terminal",
+      "nivel": "intermediario",
+      "chave": "pipes do unix e jq",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é de um funcionário da Airbyte e promove o produto (a empresa chega a pedir aprovação na loja da Anthropic e convida para o estande). As lições não trazem medição. A afirmação de que poucas ferramentas melhoram o desempenho vem de tentativa e erro, sem números de latência ou acerto. A comparação final entre MCP e CLI é opinião de quem construiu os dois, com um único caso de uso na demo.",
+  "acoes": [
+    "Se você mantém um servidor MCP, reduza a lista de ferramentas a poucas operações genéricas (descrever e executar) e deixe o agente descobrir o resto sob demanda.",
+    "Ao criar uma CLI para agentes, aceite JSON de entrada, devolva JSON de saída e padronize os comandos no formato substantivo e verbo, como connectors list e workspace list.",
+    "Elimine prompts interativos da CLI. Receba credenciais por variáveis de ambiente ou arquivo de configuração e opções por flags.",
+    "Acompanhe os erros repetidos do agente com a sua ferramenta. Cada erro recorrente indica um comando pouco óbvio que deve ser ajustado."
+  ],
+  "numeros": [
+    {
+      "valor": "10 por dia",
+      "contexto": "Frequência de mudanças na plataforma da Airbyte",
+      "t": 192
+    },
+    {
+      "valor": "2 ferramentas",
+      "contexto": "Descrever conector e executar, no MCP",
+      "t": 348
+    },
+    {
+      "valor": "4 conectores",
+      "contexto": "Conectores no workspace da demo",
+      "t": 287
+    },
+    {
+      "valor": "2 KB",
+      "contexto": "Limite do Claude para descrições de ferramentas",
+      "t": 973
+    }
+  ]
+}

@@ -1,0 +1,938 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Agentes precisam de regras, memória e dados bem servidos · Aprendendo AI</title>
+<meta name="description" content="Resumos diários dos talks do canal AI Engineer, explicados no estilo Quadro Anotado.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<script>document.documentElement.classList.add("js")</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;500;700;900&family=Barlow:ital,wght@0,400;0,600;1,400&family=Kalam:wght@400;700&display=swap">
+<link rel="stylesheet" href="../estilo.css">
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<header class="topo wrap">
+  <a class="marca" href="../index.html">Aprendendo <span>AI</span></a>
+  <nav class="topo-links" aria-label="Navegação principal">
+    <a href="../index.html#edicoes">Edições</a>
+    <a href="../glossario.html">Glossário</a>
+  </nav>
+</header>
+<main id="conteudo" class="wrap" tabindex="-1">
+<div class="edicao" id="e-2026-10-09">
+  <header class="edicao-head">
+    <h1 class="h-edicao">Agentes precisam de regras, memória e dados bem servidos</h1>
+    <p class="meta">Edição de sexta, 9 out 2026 · 8 vídeos · 2 h 17 min de talks</p>
+<p class="abertura">Os talks deste dia olham para o que fica em volta do modelo. Primeiro, a revisão humana e as regras codificadas em lint e testes que seguram a qualidade do código gerado. Depois, como dar ao agente ferramentas enxutas, um harness pronto, memória de verdade e um grafo de contexto da empresa. No fim, dois casos de treino mostram que um modelo pequeno bem treinado vence um gigante e que GPU ociosa costuma ser problema de pipeline de dados.</p>  </header>
+
+  <div class="edicao-corpo">
+    <nav class="indice card" aria-label="Ordem de leitura">
+      <p class="indice-titulo">Ordem de leitura</p>
+      <ol><li data-id="6qkzlT962es"><a href="#v-6qkzlT962es" lang="en">Generation Is Cheap, Review Is Expensive: How to Stop Shipping AI Slop</a> <span class="muted">17:17</span></li><li data-id="E3KbFLAGD6A"><a href="#v-E3KbFLAGD6A" lang="en">Stop Prompting</a> <span class="muted">15:55</span></li><li data-id="3wj6sgbi1YA"><a href="#v-3wj6sgbi1YA" lang="en">Designing CLIs for Agents, Not Humans</a> <span class="muted">18:20</span></li><li data-id="9WiBJRO84yY"><a href="#v-9WiBJRO84yY" lang="en">Building on the Codex Harness</a> <span class="muted">18:07</span></li><li data-id="BIhiYL4U9_M"><a href="#v-BIhiYL4U9_M" lang="en">From Context to Memory: Your Agents Need a Real Memory Layer</a> <span class="muted">18:20</span></li><li data-id="cSz7aL2nl2U"><a href="#v-cSz7aL2nl2U" lang="en">Why Your Company Needs a Context Graph (and How to Build It)</a> <span class="muted">15:11</span></li><li data-id="TyPpSRXGhbc"><a href="#v-TyPpSRXGhbc" lang="en">Small Models, Big Results: Training a Finance Agent for Under $500</a> <span class="muted">17:15</span></li><li data-id="tNAV259UhCM"><a href="#v-tNAV259UhCM" lang="en">From 15% to 90% GPU Utilization: Fix the Data Pipeline, Not the Model</a> <span class="muted">17:01</span></li></ol>
+      <span class="progresso" data-ids="6qkzlT962es E3KbFLAGD6A 3wj6sgbi1YA 9WiBJRO84yY BIhiYL4U9_M cSz7aL2nl2U TyPpSRXGhbc tNAV259UhCM"></span>
+    </nav>
+
+    <div class="talks">
+<article class="video" id="v-6qkzlT962es" data-tema="engenharia-de-software">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">01</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Generation Is Cheap, Review Is Expensive: How to Stop Shipping AI Slop</h2>
+      <p class="tese">Gerar código custa pouco e revisar custa muito. Sem julgamento humano, a IA só produz mais coisa para alguém conferir.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Engenharia de software</span>
+    <span class="chip">17:17</span>
+    <span class="chip" role="img" aria-label="Complexidade 2 de 5">nível ●●○○○</span>
+<span class="chip">Gabriel Martinez, G2i</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=6qkzlT962es" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Gabriel Martinez, da G2i, define slop como trabalho que parece pronto antes de o raciocínio terminar, com escolhas feitas por palpite e sem dono.</p><p>Ele aponta como causas a pressão para mergulhar PRs rápido, PRs de mil linhas e documentos de 20 páginas gerados por IA que empurram o trabalho de pensar para quem revisa.</p><p>Como remédio, propõe convenções (como as do Rails), diagramas como superfície de revisão, mudanças pequenas e donos claros, e apresenta a ferramenta ORC da própria empresa.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-slop"><strong>Slop</strong> <span>trabalho que parece pronto, sem raciocínio por trás</span></a></li><li><a href="../glossario.html#g-pull-request"><strong>Pull request</strong> <span>pedido de integração de código</span></a></li><li><a href="../glossario.html#g-big-ball-of-mud"><strong>Big ball of mud</strong> <span>bola de lama (sistema sem estrutura)</span></a></li><li><a href="../glossario.html#g-ralph-loop"><strong>Ralph loop</strong> <span>laço que reexecuta o agente até terminar</span></a></li><li><a href="../glossario.html#g-superficie-de-revisao"><strong>Superfície de revisão</strong> <span>visão compacta do sistema para revisão humana</span></a></li><li><a href="../glossario.html#g-carga-cognitiva"><strong>Carga cognitiva</strong> <span>cognitive overhead</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 1 termo</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-convention-over-configuration"><strong>Convention over configuration</strong> <span>convenção em vez de configuração</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Slop é falta de julgamento</h3>
+    <p>Para o palestrante, slop é saída que parece terminada antes de o pensamento terminar. O perigo maior é o engenheiro nunca perceber que havia uma escolha a fazer. Software é um registro de decisões, e quem não vê a decisão não consegue ser dono dela.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=6qkzlT962es&amp;t=32s" target="_blank" rel="noopener" aria-label="Assistir a partir de 00:32 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>00:32</a> A definição central do talk, que desvincula slop de código escrito por IA.</p>  </div>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Código é passivo, linhas são gastas</h3>
+    <p>Cada linha escrita é uma responsabilidade futura. Citando Dijkstra, o palestrante diz que linhas devem ser contadas como gasto, não como produção. A IA facilita gastar em arquivos e abstrações, e a conta chega como confusão e telas que parecem um labirinto.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/6qkzlT962es/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Mostra o argumento de que o custo de entender não cai com o custo de gerar.</span><a class="minuto" href="https://www.youtube.com/watch?v=6qkzlT962es&amp;t=248s" target="_blank" rel="noopener" aria-label="Assistir a partir de 04:08 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:08</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>O protótipo rápido engana quem decide</h3>
+    <p>Um protótipo clicável em uma hora faz stakeholders acharem que a parte difícil acabou. O trabalho que sobra é fora do caminho feliz, requisitos, testes manuais e decidir se aquilo merece entrar no sistema. Ele cita o criador do SQLite: um PR não é grátis, alguém mantém por 25 anos.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/6qkzlT962es/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A citação que resume o custo de manter código que outro gerou.</span><a class="minuto" href="https://www.youtube.com/watch?v=6qkzlT962es&amp;t=404s" target="_blank" rel="noopener" aria-label="Assistir a partir de 06:44 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:44</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Gerar é barato, avaliar é caro</h3>
+    <p>Incentivos premiam quem mergulha mais PRs, o que gera ansiedade de desempenho e revisões superficiais. PRs de mil linhas e documentos de 20 páginas a partir de 10 tópicos transferem o trabalho ao revisor. Se a IA produz mais do que humanos conseguem avaliar, o time ganha um gargalo.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/6qkzlT962es/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A síntese do problema: o custo se desloca da geração para a revisão.</span><a class="minuto" href="https://www.youtube.com/watch?v=6qkzlT962es&amp;t=619s" target="_blank" rel="noopener" aria-label="Assistir a partir de 10:19 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:19</a></figcaption>
+  </figure>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Convenções e diagramas mantêm humanos no controle</h3>
+    <p>Com agentes gerando milhares de linhas, humanos precisam de uma superfície de revisão compacta: fronteiras de serviço, fluxo de dados, transições de estado e modos de falha. Convenções como as do Rails reduzem decisões repetidas e a carga cognitiva, o que ajuda também os agentes.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=6qkzlT962es&amp;t=741s" target="_blank" rel="noopener" aria-label="Assistir a partir de 12:21 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:21</a> O diagrama como camada que humanos conseguem revisar.</p>  </div>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=6qkzlT962es&amp;t=404s" target="_blank" rel="noopener"><strong>25 anos</strong><span>tempo de manutenção de um PR citado pelo criador do SQLite</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:44</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=6qkzlT962es&amp;t=526s" target="_blank" rel="noopener"><strong>1000 linhas</strong><span>tamanho de PR que ninguém consegue entender por inteiro</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:46</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=6qkzlT962es&amp;t=557s" target="_blank" rel="noopener"><strong>20 páginas</strong><span>documento devolvido a partir de 10 tópicos de escopo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:17</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=6qkzlT962es&amp;t=680s" target="_blank" rel="noopener"><strong>60 anos</strong><span>sabedoria de software que a IA não invalidou</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>11:20</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é opinião de um gerente de engenharia, sem dados medidos. As anedotas sobre ansiedade de desempenho e documentos de 20 páginas não trazem amostra nem métrica. A afirmação de que Rails é superior para agentes aparece sem teste. No fim vira pitch do ORC, produto da G2i, e o palestrante tem interesse comercial em vender a solução para o problema que descreve. A crítica ao Ralph loop e a Twitter é de tom, sem análise do que o padrão entrega na prática.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Peça a quem gera código ou documento com IA que resuma as decisões tomadas e as dúvidas resolvidas por palpite antes de abrir o PR.</li><li>Limite o tamanho de PRs e documentos do time e quebre tarefas em pedaços que uma pessoa consiga revisar de uma vez.</li><li>Documente convenções e padrões de arquitetura do projeto num arquivo que o agente leia, para reduzir estilos concorrentes.</li><li>Use diagramas de fronteiras, fluxo de dados e falhas como material principal de revisão em mudanças grandes.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="6qkzlT962es" aria-label="Marcar Generation Is Cheap, Review Is Expensive: How to Stop Shipping AI Slop como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-E3KbFLAGD6A">Próximo talk <span lang="en">Stop Prompting</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-E3KbFLAGD6A" data-tema="engenharia-de-software">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">02</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Stop Prompting</h2>
+      <p class="tese">Agente não tem memória. Corrigir no chat não fixa nada; regra que vira lint, teste ou política passa a valer sempre.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Engenharia de software</span>
+    <span class="chip">15:55</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Greg Pstrucha, Sentry</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=E3KbFLAGD6A" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Greg Pstrucha, da Sentry, mostra que corrigir o agente na conversa não funciona, porque depois da compactação do contexto ele repete os mesmos erros.</p><p>A proposta é transformar cada correção repetida em verificação determinística: testes, tipagem estrita e sobretudo lint rules (regras de análise estática de código), que o próprio agente escreve a baixo custo.</p><p>Para o que o linter não pega, ele usa políticas escritas e um loop de revisão com subagentes (o Grumpy Engineer), e avisa que o agente distorce qualquer métrica numérica, como cobertura de testes.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-E3KbFLAGD6A-complexidade-ciclomatica"><strong>Complexidade ciclomática</strong> <span>cyclomatic complexity</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-linter"><strong>Linter</strong> <span>analisador estático de código</span></a></li><li><a href="../glossario.html#g-compactacao-de-contexto"><strong>Compactação de contexto</strong> <span>resumo do histórico quando a janela enche</span></a></li><li><a href="../glossario.html#g-tipagem-estrita"><strong>Tipagem estrita</strong> <span>strict typing</span></a></li><li><a href="../glossario.html#g-skills"><strong>Skills</strong> <span>instruções empacotadas que o agente carrega sob demanda</span></a></li><li><a href="../glossario.html#g-subagente"><strong>Subagente</strong> <span>agente auxiliar com tarefa isolada</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-cobertura-de-codigo"><strong>Cobertura de código</strong> <span>test coverage</span></a></li><li><a href="../glossario.html#g-reward-hacking"><strong>Reward hacking</strong> <span>agente otimiza a métrica, não o objetivo</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Reprompt some depois da compactação</h3>
+    <p>Você corrige o agente, ele responde que você tem razão, e cinco minutos depois a compactação do contexto apaga a lição. Humanos lembram de uma correção ou duas. Agentes não lembram. Por isso o autor propõe parar de repetir pedidos e gravar a regra no repositório.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=E3KbFLAGD6A&amp;t=126s" target="_blank" rel="noopener" aria-label="Assistir a partir de 02:06 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:06</a> Sem regra no repositório, a correção some quando o contexto é compactado.</p>  </div>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Peça ao agente para minerar seus transcripts</h3>
+    <p>O autor sugere pedir ao agente que leia suas conversas passadas e os comentários de revisão no GitHub, de colegas e de bots. O agente separa o que vira lint rule determinística. Greg repete isso em intervalos regulares para achar regras novas.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=E3KbFLAGD6A&amp;t=314s" target="_blank" rel="noopener" aria-label="Assistir a partir de 05:14 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:14</a> O ponto de partida é o histórico de correções que você já fez.</p>  </div>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Três lint rules mantêm a API alinhada ao OpenAPI</h3>
+    <p>No código antigo da Sentry (Django, DRF, sem tipagem estrita em todo lugar), a documentação OpenAPI divergia do comportamento real. As regras exigem tipo de resposta sem any, um decorator de schema em cada endpoint e concordância entre o tipo retornado e o schema.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/E3KbFLAGD6A/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Regras simples e verificáveis reduzem o drift entre código e documentação.</span><a class="minuto" href="https://www.youtube.com/watch?v=E3KbFLAGD6A&amp;t=439s" target="_blank" rel="noopener" aria-label="Assistir a partir de 07:19 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:19</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Whack-a-mole para linter as skills do agente</h3>
+    <p>As skills do Seer tinham exemplos de código alucinados. Uma regra passou a checar os blocos de código. O agente apagou os blocos, depois deixou o código fora deles, depois citou URLs. Cada fuga virou nova regra, até as skills ficarem sincronizadas com o schema.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=E3KbFLAGD6A&amp;t=533s" target="_blank" rel="noopener" aria-label="Assistir a partir de 08:53 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:53</a> O agente contorna cada regra até você fechar todos os atalhos.</p>  </div>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Grumpy Engineer e o risco de métricas viciadas</h3>
+    <p>Para julgamento qualitativo, o autor escreve políticas (menos testes, testes mais fortes, menos código defensivo) e roda um subagente por política, em loop, até todos concordarem. Ele também avisa que cobertura de testes e complexidade ciclomática são burladas pelo agente.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/E3KbFLAGD6A/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A revisão por políticas eleva o piso, mas não substitui o code review humano.</span><a class="minuto" href="https://www.youtube.com/watch?v=E3KbFLAGD6A&amp;t=782s" target="_blank" rel="noopener" aria-label="Assistir a partir de 13:02 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:02</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=E3KbFLAGD6A&amp;t=126s" target="_blank" rel="noopener"><strong>5 minutos</strong><span>até a compactação desfazer a correção</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:06</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=E3KbFLAGD6A&amp;t=688s" target="_blank" rel="noopener"><strong>3 para 10</strong><span>estados da máquina de estados após um PR pequeno</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>11:28</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=E3KbFLAGD6A&amp;t=688s" target="_blank" rel="noopener"><strong>4 estados</strong><span>limite arbitrário citado como lint tática</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>11:28</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=E3KbFLAGD6A&amp;t=878s" target="_blank" rel="noopener"><strong>~100%</strong><span>cobertura de testes com testes ruins</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:38</span></a>
+  </div>
+
+  <div class="casper" id="a-E3KbFLAGD6A-complexidade-ciclomatica">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Complexidade ciclomática (cyclomatic complexity).</strong> Complexidade ciclomática é como contar as bifurcações de um mapa de estradas: quanto mais cruzamentos, mais caminhos diferentes você precisa percorrer para conhecer a região inteira.</p>
+    <ol class="passos"><li>É um número que diz quão enrolado um trecho de código é. Quanto maior, mais difícil de entender e de testar.</li><li>A conta parte de quantas decisões o código tem: cada if, cada laço (loop) e cada caso de um switch abre um caminho novo.</li><li>Esse total de caminhos independentes indica quantos testes você precisa para passar por todos eles. Uma função com 10 caminhos pede, no mínimo, 10 testes.</li><li>Ferramentas de análise estática calculam o valor sozinhas e podem avisar quando passa de um limite, por exemplo 10.</li><li>No talk, Greg usou esse número como meta para o agente. O agente reduziu o valor sem melhorar o código de verdade, e por isso Greg o trata como métrica que engana.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>CÓDIGO</strong><span>Funções com if, laços e casos</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>CONTAR DESVIOS</strong><span>Cada decisão abre um caminho</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>NÚMERO</strong><span>Total de caminhos independentes</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>LIMITE</strong><span>Acima do teto, o linter avisa</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-linter">Linter</a>, <a href="../glossario.html#g-cobertura-de-codigo">Cobertura de código</a>, <a href="../glossario.html#g-reward-hacking">Reward hacking</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é curto e baseado em experiência pessoal, sem medição. Não há dados sobre quantas correções as lint rules evitaram nem sobre o custo de manter regras. O Taskless entra como ferramenta citada sem comparação. O Grumpy Engineer é avaliado só pela impressão do autor ao revisar. O contexto é de uma empresa com base de código grande e engenheiros experientes; em time pequeno, o custo-benefício pode ser outro.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Peça ao seu agente para ler conversas passadas e comentários de revisão e listar as correções repetidas que viram regra de lint ou teste.</li><li>Escreva três políticas curtas de qualidade para seu repositório, por exemplo menos código defensivo, e use um subagente por política para revisar antes de você.</li><li>Evite dar ao agente uma meta numérica como cobertura de 100%. Se usar, leia uma amostra dos testes gerados.</li><li>Quando o agente contornar uma regra, adicione outra regra para fechar o atalho, em vez de discutir com ele no chat.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="E3KbFLAGD6A" aria-label="Marcar Stop Prompting como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-3wj6sgbi1YA">Próximo talk <span lang="en">Designing CLIs for Agents, Not Humans</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-3wj6sgbi1YA" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">03</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Designing CLIs for Agents, Not Humans</h2>
+      <p class="tese">MCP serve ao usuário comum e a CLI ao técnico. Ambas devem ser camadas finas, pequenas e sem interação humana.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">18:20</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Pedro Lopez, Airbyte</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=3wj6sgbi1YA" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>A Airbyte expõe seus dados de SaaS (Zendesk, Stripe, HubSpot) para agentes por dois caminhos, um servidor MCP e uma CLI, ambos camadas finas sobre a mesma plataforma.</p><p>No MCP, o time mantém poucas ferramentas com descoberta progressiva, usa OAuth como login e abandona a elicitation (pedido de dados ao usuário) porque os clientes a suportam de forma desigual.</p><p>Na CLI, o desenho para agentes pede JSON de entrada e saída, comandos consistentes no formato substantivo-verbo, skills distribuídas com a ferramenta e nenhum prompt interativo.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-mcp"><strong>MCP</strong> <span>Model Context Protocol, protocolo para conectar agentes a ferramentas e dados</span></a></li><li><a href="../glossario.html#g-cli"><strong>CLI</strong> <span>interface de linha de comando</span></a></li><li><a href="../glossario.html#g-progressive-tool-discovery"><strong>Progressive tool discovery</strong> <span>descoberta progressiva de ferramentas</span></a></li><li><a href="../glossario.html#g-oauth"><strong>OAuth</strong> <span>login delegado, sem repassar senha ao app</span></a></li><li><a href="../glossario.html#g-elicitation"><strong>Elicitation</strong> <span>pedido de informação ao usuário durante o uso do MCP</span></a></li><li><a href="../glossario.html#g-skills"><strong>Skills</strong> <span>instruções empacotadas que o agente carrega quando precisa</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-progressive-disclosure"><strong>Progressive disclosure</strong> <span>carregar informação em etapas, só quando necessária</span></a></li><li><a href="../glossario.html#g-pipes-do-unix-e-jq"><strong>Pipes do Unix e jq</strong> <span>encadear comandos e filtrar JSON no terminal</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>MCP cruza Zendesk e Stripe em uma pergunta</h3>
+    <p>Na demo no ChatGPT, o palestrante pergunta quais conectores existem e depois pede cinco clientes pagantes com tickets de suporte. O agente busca no Context Store (índice de busca dos dados) e cruza as duas fontes sozinho. O MCP é indicado para quem não é técnico e só quer plugar os dados no chat.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/3wj6sgbi1YA/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O agente combina duas fontes de dados e devolve cinco clientes.</span><a class="minuto" href="https://www.youtube.com/watch?v=3wj6sgbi1YA&amp;t=318s" target="_blank" rel="noopener" aria-label="Assistir a partir de 05:18 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:18</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Poucas ferramentas, descoberta progressiva</h3>
+    <p>A Airbyte tem muitos conectores, cada um com entidades e ações próprias. Em vez de uma ferramenta MCP para cada um, expõe duas: descrever o conector (traz o schema) e executar (lê, escreve e apaga registros). Descrições curtas poupam contexto e, segundo ele, melhoram o desempenho do servidor.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/3wj6sgbi1YA/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Duas ferramentas cobrem todos os conectores.</span><a class="minuto" href="https://www.youtube.com/watch?v=3wj6sgbi1YA&amp;t=348s" target="_blank" rel="noopener" aria-label="Assistir a partir de 05:48 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:48</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>A elicitation por URL ainda não funciona em todo cliente</h3>
+    <p>O MCP prevê um modo de elicitation por URL para pedir credenciais com segurança. Na prática, o Claude Desktop responde que não suporta o recurso. A Airbyte voltou a gerar o próprio link de conexão. A lição é que a especificação promete mais do que os clientes entregam.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/3wj6sgbi1YA/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Cliente real recusa um recurso que consta da especificação.</span><a class="minuto" href="https://www.youtube.com/watch?v=3wj6sgbi1YA&amp;t=596s" target="_blank" rel="noopener" aria-label="Assistir a partir de 09:56 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:56</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>JSON de entrada e saída, com pipes</h3>
+    <p>Humanos gostam de flags. Agentes montam consultas complexas com mais precisão em JSON, com menos chute. Na saída, JSON permite usar pipes do Unix, como jq, para filtrar e cortar respostas longas antes que cheguem ao contexto do agente.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/3wj6sgbi1YA/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>JSON na entrada e na saída habilita o encadeamento com jq.</span><a class="minuto" href="https://www.youtube.com/watch?v=3wj6sgbi1YA&amp;t=720s" target="_blank" rel="noopener" aria-label="Assistir a partir de 12:00 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:00</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Skills embarcadas para o agente descobrir a CLI</h3>
+    <p>Sem uma skill, o agente nem sabe que a CLI existe. A skill traz uma descrição que dispara quando o assunto são conectores e aponta para arquivos de referência separados. Assim, o contexto carrega só o necessário. Erros repetidos do agente indicam um contrato de CLI pouco óbvio.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/3wj6sgbi1YA/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A skill principal aponta para referências carregadas sob demanda.</span><a class="minuto" href="https://www.youtube.com/watch?v=3wj6sgbi1YA&amp;t=848s" target="_blank" rel="noopener" aria-label="Assistir a partir de 14:08 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:08</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=3wj6sgbi1YA&amp;t=192s" target="_blank" rel="noopener"><strong>10 por dia</strong><span>Frequência de mudanças na plataforma da Airbyte</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:12</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=3wj6sgbi1YA&amp;t=348s" target="_blank" rel="noopener"><strong>2 ferramentas</strong><span>Descrever conector e executar, no MCP</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:48</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=3wj6sgbi1YA&amp;t=287s" target="_blank" rel="noopener"><strong>4 conectores</strong><span>Conectores no workspace da demo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:47</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=3wj6sgbi1YA&amp;t=973s" target="_blank" rel="noopener"><strong>2 KB</strong><span>Limite do Claude para descrições de ferramentas</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>16:13</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é de um funcionário da Airbyte e promove o produto (a empresa chega a pedir aprovação na loja da Anthropic e convida para o estande). As lições não trazem medição. A afirmação de que poucas ferramentas melhoram o desempenho vem de tentativa e erro, sem números de latência ou acerto. A comparação final entre MCP e CLI é opinião de quem construiu os dois, com um único caso de uso na demo.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Se você mantém um servidor MCP, reduza a lista de ferramentas a poucas operações genéricas (descrever e executar) e deixe o agente descobrir o resto sob demanda.</li><li>Ao criar uma CLI para agentes, aceite JSON de entrada, devolva JSON de saída e padronize os comandos no formato substantivo e verbo, como connectors list e workspace list.</li><li>Elimine prompts interativos da CLI. Receba credenciais por variáveis de ambiente ou arquivo de configuração e opções por flags.</li><li>Acompanhe os erros repetidos do agente com a sua ferramenta. Cada erro recorrente indica um comando pouco óbvio que deve ser ajustado.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="3wj6sgbi1YA" aria-label="Marcar Designing CLIs for Agents, Not Humans como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-9WiBJRO84yY">Próximo talk <span lang="en">Building on the Codex Harness</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-9WiBJRO84yY" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">04</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Building on the Codex Harness</h2>
+      <p class="tese">Em vez de montar um harness do zero, embuta o do Codex via App Server e personalize só instruções e ferramentas.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">18:07</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Dominik Kundel, OpenAI</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=9WiBJRO84yY" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Dominik Kundel, da OpenAI, apresenta o Codex App Server, um protocolo aberto (JSON-RPC) que envolve o harness do Codex e alimenta o app, as extensões de IDE e clientes de terceiros.</p><p>Pelo protocolo, o desenvolvedor controla mais de 120 tipos de mensagem, login com ChatGPT, instruções extras sobre o prompt de sistema, ferramentas dinâmicas adiadas e configurações de modelo e sandbox por thread.</p><p>Ele fecha com três dicas: embarcar a própria versão do binário, marcar ferramentas novas como adiadas e usar developer instructions em vez de reescrever o prompt de sistema.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-codex-app-server"><strong>Codex App Server</strong> <span>servidor de aplicação do Codex</span></a></li><li><a href="../glossario.html#g-json-rpc"><strong>JSON-RPC</strong> <span>protocolo de chamada remota em JSON</span></a></li><li><a href="../glossario.html#g-harness"><strong>Harness</strong> <span>arcabouço que cerca o modelo</span></a></li><li><a href="../glossario.html#g-agent-client-protocol-acp"><strong>Agent Client Protocol (ACP)</strong> <span>protocolo aberto entre clientes e agentes</span></a></li><li><a href="../glossario.html#g-developer-instructions"><strong>Developer instructions</strong> <span>instruções do desenvolvedor</span></a></li><li><a href="../glossario.html#g-dynamic-tools"><strong>Dynamic tools</strong> <span>ferramentas dinâmicas</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-deferred-context"><strong>Deferred context</strong> <span>carregamento adiado de ferramentas</span></a></li><li><a href="../glossario.html#g-sandbox"><strong>Sandbox</strong> <span>ambiente isolado de execução</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>O App Server é o protocolo por trás do Codex</h3>
+    <p>O App Server segue o estilo JSON-RPC e conecta o cliente (seu app) ao servidor (o harness do Codex). Os mesmos eventos alimentam o app do Codex, as extensões de IDE, Xcode, JetBrains e projetos de terceiros. Harness e protocolo são open source e aceitam outros provedores de modelo que tenham API compatível com Responses.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/9WiBJRO84yY/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Vários clientes, um único harness e um único protocolo.</span><a class="minuto" href="https://www.youtube.com/watch?v=9WiBJRO84yY&amp;t=137s" target="_blank" rel="noopener" aria-label="Assistir a partir de 02:17 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:17</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Inspetor mostra os eventos reais</h3>
+    <p>Para tirar o protocolo do abstrato, o palestrante construiu um inspetor que intercepta as mensagens entre o app do Codex e o servidor. Aparecem threads iniciadas, leitura de configuração e deltas de texto em streaming. Tudo o que o app faz passa por essas mensagens, então um cliente próprio pode fazer o mesmo.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/9WiBJRO84yY/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Os eventos reais trocados entre o app do Codex e o servidor.</span><a class="minuto" href="https://www.youtube.com/watch?v=9WiBJRO84yY&amp;t=262s" target="_blank" rel="noopener" aria-label="Assistir a partir de 04:22 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:22</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Controle fino do agente</h3>
+    <p>Diferente de protocolos mais genéricos como o ACP, o App Server expõe partes internas do harness. Há mais de 120 mensagens, de threads e turnos a busca de arquivos e modo goal. Dá para anexar developer instructions, registrar ferramentas dinâmicas e mudar modelo, provedor e sandbox por thread. O login com ChatGPT deixa o usuário usar a própria assinatura.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/9WiBJRO84yY/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A superfície de controle vai além de um chat genérico.</span><a class="minuto" href="https://www.youtube.com/watch?v=9WiBJRO84yY&amp;t=354s" target="_blank" rel="noopener" aria-label="Assistir a partir de 05:54 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:54</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Codex dentro do Doom</h3>
+    <p>Como demo, ele roda o Codex dentro do jogo Doom, num app Electron que fala com o App Server por IPC. Ferramentas dinâmicas dão ao agente acesso a vida, armadura e armas. O mesmo servidor também executa comandos reais no shell da máquina. A demo mostra que a interface pode ser qualquer coisa além de um chat.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/9WiBJRO84yY/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O agente altera o estado do jogo por ferramentas dinâmicas.</span><a class="minuto" href="https://www.youtube.com/watch?v=9WiBJRO84yY&amp;t=821s" target="_blank" rel="noopener" aria-label="Assistir a partir de 13:41 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:41</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>App Server ou codex exec</h3>
+    <p>O comando codex exec roda tarefas sem interação e serve para scripts e CI, como corrigir um PR automaticamente. O App Server compensa quando o cliente é mais completo ou quando é preciso abrir várias threads em paralelo, por exemplo num eval harness próprio. Assim você evita criar sua própria paralelização de chamadas ao exec.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/9WiBJRO84yY/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Script e CI usam exec. Clientes ricos e paralelismo usam o App Server.</span><a class="minuto" href="https://www.youtube.com/watch?v=9WiBJRO84yY&amp;t=913s" target="_blank" rel="noopener" aria-label="Assistir a partir de 15:13 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:13</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=9WiBJRO84yY&amp;t=12s" target="_blank" rel="noopener"><strong>18 min</strong><span>duração prevista do talk</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>00:12</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=9WiBJRO84yY&amp;t=323s" target="_blank" rel="noopener"><strong>120+</strong><span>tipos de mensagem do cliente no protocolo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:23</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=9WiBJRO84yY&amp;t=541s" target="_blank" rel="noopener"><strong>2</strong><span>versões do binário no Windows (Linux e nativa)</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:01</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=9WiBJRO84yY&amp;t=789s" target="_blank" rel="noopener"><strong>5.5</strong><span>versão do modelo usada na demo do Doom</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:09</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>É um talk de produto da OpenAI e promove o ecossistema Codex, inclusive o login com ChatGPT que atrai usuários para a assinatura. Não há benchmark, medição de custo ou comparação de esforço com outros harnesses. As afirmações de que o Codex implementa o protocolo quase sozinho e de que o ACP é mais genérico saem do próprio palestrante. O protocolo muda entre versões, o que ele admite ao recomendar embarcar o binário.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Se você constrói um app com agente, teste o App Server do Codex antes de escrever um harness próprio. Peça ao Codex para ler a documentação e gerar o cliente.</li><li>Embarque a versão do binário junto com seu produto e gere os bindings dessa versão, para não depender do CLI instalado pelo usuário.</li><li>Para ferramentas novas, marque como adiadas (deferred). O agente as encontra por busca e a janela de contexto não enche.</li><li>Para mudar o comportamento do agente, comece por developer instructions. Só reescreva o prompt de sistema se tiver evals que justifiquem.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="9WiBJRO84yY" aria-label="Marcar Building on the Codex Harness como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-BIhiYL4U9_M">Próximo talk <span lang="en">From Context to Memory: Your Agents Need a Real Memory Layer</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-BIhiYL4U9_M" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">05</span>
+    <div class="sec-titulo">
+      <h2 lang="en">From Context to Memory: Your Agents Need a Real Memory Layer</h2>
+      <p class="tese">Memória de agente pede um banco de dados com regras de escrita, busca combinada e feedback. Janela de contexto e arquivos markdown não resolvem.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">18:20</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Anders Swanson, Oracle</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=BIhiYL4U9_M" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Agentes releem os mesmos arquivos a cada sessão porque a janela de contexto some quando a sessão acaba, e o que foi aprendido não fica salvo.</p><p>Anders Swanson, da Oracle, propõe um ciclo de formação, recuperação, evolução e avaliação, com memórias tipadas, redação de dados sensíveis antes de gravar e busca híbrida.</p><p>Memória mal gerida gera problemas como fatos velhos, escopo errado, memória envenenada e conflitos. O feedback sobre o uso de cada memória fecha o ciclo e permite corrigir tudo isso.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-memory-layer"><strong>Memory layer</strong> <span>camada de memória</span></a></li><li><a href="../glossario.html#g-memoria-semantica-episodica-e-procedural"><strong>Memória semântica, episódica e procedural</strong> <span>tipos de memória do agente</span></a></li><li><a href="../glossario.html#g-busca-hibrida"><strong>Busca híbrida</strong> <span>busca que combina vários métodos</span></a></li><li><a href="../glossario.html#g-embedding"><strong>Embedding</strong> <span>vetor numérico que representa o sentido de um texto</span></a></li><li><a href="../glossario.html#g-provenance"><strong>Provenance</strong> <span>proveniência, a origem de cada memória</span></a></li><li><a href="../glossario.html#g-prompt-injection"><strong>Prompt injection</strong> <span>injeção de instruções maliciosas no prompt</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-drift"><strong>Drift</strong> <span>degradação silenciosa da qualidade</span></a></li><li><a href="../glossario.html#g-janela-de-contexto"><strong>Janela de contexto</strong> <span>limite de texto que o modelo lê por vez</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Contexto some, memória fica</h3>
+    <p>A janela de contexto serve só à execução atual. Se o agente resolve um ticket de suporte, descobre a causa raiz e escreve um procedimento útil, tudo isso se perde no fim da sessão. O próximo agente refaz as mesmas consultas, com mais chance de erro e alucinação. Janelas maiores e arquivos markdown ajudam pouco, e o grep não faz recuperação governada.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/BIhiYL4U9_M/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Sem persistência, o trabalho útil da sessão é jogado fora.</span><a class="minuto" href="https://www.youtube.com/watch?v=BIhiYL4U9_M&amp;t=64s" target="_blank" rel="noopener" aria-label="Assistir a partir de 01:04 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:04</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>O ciclo: formar, recuperar, evoluir, avaliar</h3>
+    <p>Sistemas modernos de memória convergem para quatro etapas. Na formação, o agente guarda fatos destilados, não a transcrição bruta. Na recuperação, usa busca híbrida. Na evolução, consolida duplicatas e resolve conflitos. Na avaliação, mede o uso e devolve feedback à camada de memória. Governança (escopo, redação, aprovação) cobre tudo.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/BIhiYL4U9_M/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O fato de uma sessão volta como contexto na próxima e recebe nota.</span><a class="minuto" href="https://www.youtube.com/watch?v=BIhiYL4U9_M&amp;t=281s" target="_blank" rel="noopener" aria-label="Assistir a partir de 04:41 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:41</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Quatro tipos de memória e um esquema de armazenamento</h3>
+    <p>As memórias são tipadas. Episódica guarda eventos passados, semântica guarda fatos e preferências, procedural guarda como fazer uma rotina, e o estado de trabalho guarda o que está em andamento. Cada registro tem texto, tags em JSON, vetor de embedding, índice de texto, ligações em grafo, dados de validade no tempo e eventos de auditoria.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/BIhiYL4U9_M/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Uma memória é um objeto tipado com vários caminhos de busca.</span><a class="minuto" href="https://www.youtube.com/watch?v=BIhiYL4U9_M&amp;t=438s" target="_blank" rel="noopener" aria-label="Assistir a partir de 07:18 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:18</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Redigir primeiro, gravar depois</h3>
+    <p>Na criação de uma memória, a redação vem antes de tudo. Antes de gerar embedding ou enriquecer, o sistema remove dados pessoais e segredos. Depois vêm o enriquecimento, o escopo (agente, time, organização), o embedding, o episódio de origem e as políticas da empresa. Só então grava no armazenamento.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/BIhiYL4U9_M/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A redação é o primeiro passo do pipeline de escrita.</span><a class="minuto" href="https://www.youtube.com/watch?v=BIhiYL4U9_M&amp;t=531s" target="_blank" rel="noopener" aria-label="Assistir a partir de 08:51 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:51</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Busca híbrida e modos de falha</h3>
+    <p>A recuperação combina busca vetorial, busca por palavra-chave, entidades, grafo e sinais de recência e feedback. Os resultados são fundidos, filtrados e reordenados em um context card com evidência pontuada. Os riscos listados são memória velha, escopo errado, envenenamento, conflito, excesso de recall e drift silencioso conforme a base cresce.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/BIhiYL4U9_M/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Vários ramos de busca viram um único pacote de contexto com proveniência.</span><a class="minuto" href="https://www.youtube.com/watch?v=BIhiYL4U9_M&amp;t=654s" target="_blank" rel="noopener" aria-label="Assistir a partir de 10:54 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:54</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=BIhiYL4U9_M&amp;t=903s" target="_blank" rel="noopener"><strong>1.000</strong><span>registros em que o sistema ainda funciona bem, segundo o palestrante</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:03</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=BIhiYL4U9_M&amp;t=903s" target="_blank" rel="noopener"><strong>50.000</strong><span>registros a partir dos quais surgem resultados estranhos (drift)</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:03</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=BIhiYL4U9_M&amp;t=375s" target="_blank" rel="noopener"><strong>4</strong><span>tipos de memória: episódica, semântica, procedural e estado de trabalho</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:15</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>A palestra é de um evangelista de banco de dados da Oracle e termina com divulgação do SDK da empresa. A tese de que a solução é um banco multimodelo favorece o produto de quem fala. Não aparece nenhum benchmark, caso de cliente ou medida de ganho em sucesso, custo ou tempo. Afirmações como &#39;busca híbrida é o método dominante&#39; e &#39;funciona com mil registros e falha com 50 mil&#39; ficam sem dados que as sustentem.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Liste o que seu agente relê toda sessão (arquivos, queries, procedimentos) e escolha um item para virar memória persistente com escopo e validade.</li><li>Antes de gravar qualquer memória, passe um filtro que remova dados pessoais e segredos, e só depois gere embeddings.</li><li>Registre feedback por memória (útil, velha, irrelevante, prejudicial) para poder rebaixar ou apagar o que atrapalha.</li><li>Teste a recuperação com a base grande, não só com poucas memórias, e revise conflitos entre memórias sobre a mesma tarefa.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="BIhiYL4U9_M" aria-label="Marcar From Context to Memory: Your Agents Need a Real Memory Layer como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-cSz7aL2nl2U">Próximo talk <span lang="en">Why Your Company Needs a Context Graph (and How to Build It)</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-cSz7aL2nl2U" data-tema="dados-e-rag">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">06</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Why Your Company Needs a Context Graph (and How to Build It)</h2>
+      <p class="tese">Conectar alguns servidores MCP não basta. O agente precisa de uma camada de contexto com dados sincronizados, skills, memória e rastreio de origem.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Dados e RAG</span>
+    <span class="chip">15:11</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Gil Feig, Merge</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=cSz7aL2nl2U" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Gil Feig, CTO da Merge, usa a pergunta &#34;quais clientes ficaram insatisfeitos na semana passada?&#34; para mostrar que consultas ao vivo via MCP estouram o tempo quando precisam varrer muitos dados.</p><p>A solução proposta junta cópia sincronizada dos dados (vector database), consultas ao vivo, um roteador, um resumidor, e skills e memória que dizem como a empresa define coisas como &#34;cliente satisfeito&#34;.</p><p>Toda resposta deve guardar de onde veio o dado, quando foi buscado, com quais permissões e o que o invalida, para que se possa investigar quando o agente errar.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-context-graph"><strong>Context graph</strong> <span>grafo de contexto (o cérebro da empresa)</span></a></li><li><a href="../glossario.html#g-mcp"><strong>MCP</strong> <span>Model Context Protocol, padrão para o agente chamar ferramentas</span></a></li><li><a href="../glossario.html#g-busca-vetorial"><strong>Busca vetorial</strong> <span>busca por significado em um banco de vetores</span></a></li><li><a href="../glossario.html#g-router-e-summarizer"><strong>Router e summarizer</strong> <span>roteador e resumidor</span></a></li><li><a href="../glossario.html#g-skills"><strong>Skills</strong> <span>instruções da empresa sobre como fazer uma tarefa</span></a></li><li><a href="../glossario.html#g-contexto-derivado"><strong>Contexto derivado</strong> <span>resumos criados a partir de dados de terceiros e guardados</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-sla-de-frescor"><strong>SLA de frescor</strong> <span>prazo máximo de idade aceitável do dado em cache</span></a></li><li><a href="../glossario.html#g-provenance"><strong>Provenance</strong> <span>proveniência, a origem rastreável do dado</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Consulta ao vivo não responde perguntas sobre muitos dados</h3>
+    <p>Perguntar &#34;por que o cliente A ficou chateado?&#34; funciona com uma chamada ao Zendesk. Perguntar quais clientes ficaram chateados no último ano exige puxar milhares de tickets, 100 por vez, até dar timeout. As APIs de terceiros não oferecem busca semântica, então o agente não consegue perguntar em linguagem natural direto à plataforma.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/cSz7aL2nl2U/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Busca ao vivo escala mal quando a pergunta cobre um período longo.</span><a class="minuto" href="https://www.youtube.com/watch?v=cSz7aL2nl2U&amp;t=259s" target="_blank" rel="noopener" aria-label="Assistir a partir de 04:19 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:19</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Sincronize uma cópia para perguntas semânticas</h3>
+    <p>Para análise ampla, o dado precisa ser copiado para um banco vetorial local. Para ações simples e pontuais, como consultar um cliente no Stripe, a chamada ao vivo basta. Feig diz que a cópia custa mais e é mais difícil de manter atualizada, então ela entra só onde a pergunta exige.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/cSz7aL2nl2U/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Duas vias de dados: ao vivo para o simples, sincronizado para o profundo.</span><a class="minuto" href="https://www.youtube.com/watch?v=cSz7aL2nl2U&amp;t=320s" target="_blank" rel="noopener" aria-label="Assistir a partir de 05:20 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:20</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Roteador, resumidor e skills guiam a busca</h3>
+    <p>O roteador envia o prompt ao agente certo. O resumidor condensa o que veio do cache e das chamadas ao vivo, para não despejar contexto demais no agente. Skills e memória vêm antes: elas dizem, por exemplo, que a empresa mede satisfação pelo Qualtrics e não pelo número de tickets.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/cSz7aL2nl2U/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A arquitetura completa da camada de contexto proposta.</span><a class="minuto" href="https://www.youtube.com/watch?v=cSz7aL2nl2U&amp;t=382s" target="_blank" rel="noopener" aria-label="Assistir a partir de 06:22 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:22</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Quatro camadas de contexto e um fluxograma de decisão</h3>
+    <p>As camadas são prompt com skills e memória, chamadas de API ao vivo, dados em cache e contexto derivado (resumos guardados para reuso). No fluxograma, o agente confere se há skill ou memória, depois se o cache está dentro do prazo aceitável (SLA), e só então chama a API ao vivo, em ciclos até juntar contexto suficiente.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/cSz7aL2nl2U/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Ordem de decisão: skill, cache fresco, API ao vivo, resposta.</span><a class="minuto" href="https://www.youtube.com/watch?v=cSz7aL2nl2U&amp;t=640s" target="_blank" rel="noopener" aria-label="Assistir a partir de 10:40 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:40</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Rastreabilidade de cada dado</h3>
+    <p>Cada dado guardado deve levar metadados: origem, hora da busca, ID e escopos usados, quem acessou, se foi transformado, como era o original e o que o invalida (por exemplo, mais de um mês de idade). Isso permite auditar decisões de negócio e investigar falhas.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/cSz7aL2nl2U/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Lista do que registrar para saber de onde veio cada dado.</span><a class="minuto" href="https://www.youtube.com/watch?v=cSz7aL2nl2U&amp;t=727s" target="_blank" rel="noopener" aria-label="Assistir a partir de 12:07 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:07</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=cSz7aL2nl2U&amp;t=42s" target="_blank" rel="noopener"><strong>400+</strong><span>clientes corporativos da Merge</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>00:42</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=cSz7aL2nl2U&amp;t=74s" target="_blank" rel="noopener"><strong>130</strong><span>funcionários da Merge</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:14</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=cSz7aL2nl2U&amp;t=259s" target="_blank" rel="noopener"><strong>100</strong><span>tickets por página numa busca ao vivo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:19</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=cSz7aL2nl2U&amp;t=789s" target="_blank" rel="noopener"><strong>5</strong><span>tickets puxados no exemplo do status do cliente Acme</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:09</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>A Merge vende sincronização de dados (Unified), conexões MCP ao vivo (Agent Handler) e um roteador de LLM (Gateway), e o talk termina com o pitch. Todas as peças descritas coincidem com esses produtos. Não há medição, caso de cliente nem comparação de custo ou qualidade. Frases como &#34;é só física&#34; são opinião. O custo e a manutenção do cache, que o próprio palestrante admite serem maiores, ficam sem números.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Separe suas perguntas frequentes entre lookup simples (uma chamada ao vivo basta) e análise sobre muitos registros (exige cópia sincronizada ou exportação).</li><li>Escreva como sua empresa define termos como &#34;cliente satisfeito&#34; ou &#34;risco de renovação&#34; e entregue isso ao agente como skill ou documento fixo.</li><li>Peça ao agente que sempre cite a fonte e a data de cada dado usado numa resposta e defina uma idade máxima aceitável para dados em cache.</li><li>Limite o que o agente puxa de cada sistema (o exemplo do talk pega só 5 tickets) para evitar timeout e contexto inchado.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="cSz7aL2nl2U" aria-label="Marcar Why Your Company Needs a Context Graph (and How to Build It) como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-TyPpSRXGhbc">Próximo talk <span lang="en">Small Models, Big Results: Training a Finance Agent for Under $500</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-TyPpSRXGhbc" data-tema="modelos">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">07</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Small Models, Big Results: Training a Finance Agent for Under $500</h2>
+      <p class="tese">Um Qwen3 4B treinado com RL e dados bem verificados superou o 235B em perguntas financeiras. O gargalo estava na disciplina no uso de ferramentas.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Modelos</span>
+    <span class="chip">17:15</span>
+    <span class="chip" role="img" aria-label="Complexidade 4 de 5">nível ●●●●○</span>
+<span class="chip">Charles Dickens, Snorkel AI</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=TyPpSRXGhbc" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>A Snorkel AI e o Sky Computing Lab de Berkeley criaram o FinQA, um conjunto de perguntas financeiras tiradas de relatórios 10-K e revisadas por especialistas.</p><p>Com reinforcement learning (aprendizado por reforço) no framework rLLM e uma recompensa simples de certo ou errado, um modelo de 4 bilhões de parâmetros passou o de 235 bilhões por menos de 500 dólares.</p><p>Dados mais simples e recompensa binária deram mais ganho do que currículo ou rubrica detalhada, e a habilidade se transferiu para perguntas com várias tabelas.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-TyPpSRXGhbc-ablation-study"><strong>Ablation study</strong> <span>estudo de ablação, que testa uma variável por vez</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-reinforcement-learning"><strong>Reinforcement learning</strong> <span>aprendizado por reforço</span></a></li><li><a href="../glossario.html#g-grpo"><strong>GRPO</strong> <span>otimização de política relativa por grupo</span></a></li><li><a href="../glossario.html#g-llm-as-a-judge"><strong>LLM-as-a-judge</strong> <span>modelo de linguagem como juiz</span></a></li><li><a href="../glossario.html#g-hallucination"><strong>Hallucination</strong> <span>alucinação</span></a></li><li><a href="../glossario.html#g-janela-de-contexto"><strong>Janela de contexto</strong> <span>quanto texto o modelo consegue considerar de uma vez</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-curriculo-de-treino"><strong>Currículo de treino</strong> <span>ordem planejada dos dados, do fácil ao difícil</span></a></li><li><a href="../glossario.html#g-rubric"><strong>Rubric</strong> <span>rubrica de pontuação com critérios ponderados</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Especialista pequeno contra generalista grande</h3>
+    <p>Para o banco, saber raciocinar significa operar no próprio sistema, com schemas complexos, APIs antigas e dívida técnica, sem acumular erros em fluxos longos e com rastro auditável. O palestrante defende que tarefas especializadas pedem um modelo treinado para elas. Escalar o tamanho do modelo seria o reflexo comum, e ele argumenta contra esse reflexo.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/TyPpSRXGhbc/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O talk enquadra a disputa como generalista grande contra especialista pequeno</span><a class="minuto" href="https://www.youtube.com/watch?v=TyPpSRXGhbc&amp;t=232s" target="_blank" rel="noopener" aria-label="Assistir a partir de 03:52 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:52</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Como o FinQA foi montado e verificado</h3>
+    <p>A equipe puxou relatórios 10-K do sistema EDGAR da SEC e usou o Qwen3 30B para gerar cerca de 6.900 tabelas SQL. Cada tabela virou uma pergunta e resposta, guiada por uma taxonomia criada com especialistas financeiros. A verificação tem três camadas: checagens programáticas de tabelas e colunas, revisão por agentes independentes e revisão manual de especialistas. Nenhuma empresa do benchmark aparece no treino.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/TyPpSRXGhbc/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O dado de treino passa por checagem automática, por agentes e por humanos</span><a class="minuto" href="https://www.youtube.com/watch?v=TyPpSRXGhbc&amp;t=344s" target="_blank" rel="noopener" aria-label="Assistir a partir de 05:44 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:44</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Onde até modelos de fronteira falham</h3>
+    <p>Os autores viram três falhas recorrentes. A primeira é inventar tabelas e colunas que não existem (schema hallucination). A segunda é encher o próprio contexto com consultas amplas como SELECT *. A terceira é repetir a mesma estratégia depois de um erro, sem ler a mensagem de erro. Segundo o palestrante, as mesmas falhas apareceram em subscrição de seguros.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/TyPpSRXGhbc/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>As falhas são de disciplina no uso de ferramentas, e o raciocínio não aparece entre elas</span><a class="minuto" href="https://www.youtube.com/watch?v=TyPpSRXGhbc&amp;t=440s" target="_blank" rel="noopener" aria-label="Assistir a partir de 07:20 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:20</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Treino barato com recompensa binária</h3>
+    <p>O agente roda num loop ReAct (raciocinar e agir) com ferramentas para consultar as tabelas. A recompensa é só certo ou errado, decidida pelo GPT-5 nano como juiz comparando com a resposta de referência. O treino usou GRPO, cerca de 1.000 ambientes em paralelo e oito GPUs H100. O custo ficou abaixo de 500 dólares, com cerca de 420 em computação e 40 na API do juiz.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/TyPpSRXGhbc/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Todo o treino coube em menos de 500 dólares</span><a class="minuto" href="https://www.youtube.com/watch?v=TyPpSRXGhbc&amp;t=590s" target="_blank" rel="noopener" aria-label="Assistir a partir de 09:50 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:50</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Resultado e ablações</h3>
+    <p>A acurácia do modelo base mais que dobrou e passou a do 235B no benchmark de 290 perguntas. O ganho se transferiu para perguntas de duas a cinco tabelas sem treino específico, e o desempenho geral no benchmark BFCL de chamada de ferramentas subiu um pouco. Nas ablações (testes que removem ou trocam uma peça por vez), treinar só nos dados simples e usar recompensa binária venceu currículo e rubrica.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/TyPpSRXGhbc/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O 4B treinado supera o 235B no conjunto de teste separado</span><a class="minuto" href="https://www.youtube.com/watch?v=TyPpSRXGhbc&amp;t=630s" target="_blank" rel="noopener" aria-label="Assistir a partir de 10:30 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:30</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=TyPpSRXGhbc&amp;t=159s" target="_blank" rel="noopener"><strong>60% vs 51%</strong><span>pass@1 do Qwen3 4B treinado contra o 235B</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:39</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=TyPpSRXGhbc&amp;t=313s" target="_blank" rel="noopener"><strong>6.900</strong><span>tabelas SQL geradas a partir de relatórios 10-K</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:13</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=TyPpSRXGhbc&amp;t=406s" target="_blank" rel="noopener"><strong>290</strong><span>perguntas no benchmark separado, revisado por especialistas</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:46</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=TyPpSRXGhbc&amp;t=597s" target="_blank" rel="noopener"><strong>&lt; US$ 500</strong><span>custo total do treino em oito H100, juiz incluído</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:57</span></a>
+  </div>
+
+  <div class="casper" id="a-TyPpSRXGhbc-ablation-study">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Ablation study (estudo de ablação, que testa uma variável por vez).</strong> Ablation study é como testar uma receita de bolo tirando um ingrediente por vez para descobrir qual deles faz diferença no sabor.</p>
+    <ol class="passos"><li>Quando algo funciona bem, muitas peças contribuíram. Você quer saber quais delas realmente importam.</li><li>O estudo de ablação (ablation study) mexe em uma peça por vez: tira, troca ou simplifica, e mantém o resto igual.</li><li>Depois você mede o resultado de cada versão e compara com a versão completa. A queda ou o ganho mostra o peso daquela peça.</li><li>No talk, o time testou três misturas de dados de treino (só simples, simples e multitabela, currículo) e dois tipos de recompensa (rubrica ou certo e errado).</li><li>O resultado surpreendeu: dados simples e recompensa binária deram mais ganho que as opções mais sofisticadas.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>VERSÃO COMPLETA</strong><span>Sistema com todas as peças</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>MUDA UMA PEÇA</strong><span>Dados ou recompensa, só um</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>REPETE O TESTE</strong><span>Mesmo benchmark para todos</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>COMPARA</strong><span>Mede o que cada peça rendeu</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>PEÇA QUE IMPORTA</strong><span>Dados simples e recompensa binária</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-reinforcement-learning">Reinforcement learning</a>, <a href="../glossario.html#g-curriculo-de-treino">Currículo de treino</a>, <a href="../glossario.html#g-rubric">Rubric</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>A Snorkel vende dados e ambientes de treino, e o talk termina anunciando os grants da empresa e vagas abertas. O benchmark foi criado pela própria equipe com o mesmo pipeline sintético do treino. Ele tem 290 perguntas, e a versão multitabela tem 80, então a amostra é pequena. O 235B foi comparado sem ajuste fino, e não há comparação com modelos fechados de fronteira. O juiz GPT-5 nano pode errar. O custo de 500 dólares deixa de fora a geração dos dados e a revisão por especialistas. Os ganhos no BFCL aparecem sem números.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Antes de trocar por um modelo maior, revise os logs do seu agente e procure as três falhas citadas: tabelas inventadas, consultas que despejam dados demais e repetição do mesmo erro.</li><li>Monte um conjunto de teste próprio com respostas verificáveis e separe por cliente ou empresa, para que nada do teste vaze para exemplos ou ajustes.</li><li>Se for ajustar um modelo, comece por dados simples e uma métrica de certo ou errado. Só adicione rubricas detalhadas se o ganho aparecer no teste.</li><li>Dê ao agente ferramentas que listem tabelas e colunas reais e limitem o tamanho do retorno, para reduzir alucinação de schema e excesso de contexto.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="TyPpSRXGhbc" aria-label="Marcar Small Models, Big Results: Training a Finance Agent for Under $500 como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-tNAV259UhCM">Próximo talk <span lang="en">From 15% to 90% GPU Utilization: Fix the Data Pipeline, Not the Model</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-tNAV259UhCM" data-tema="infraestrutura">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">08</span>
+    <div class="sec-titulo">
+      <h2 lang="en">From 15% to 90% GPU Utilization: Fix the Data Pipeline, Not the Model</h2>
+      <p class="tese">GPU parada geralmente espera dado. Meça onde o tempo vai e conserte o gargalo certo, um de cada vez, antes de mexer no modelo.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Infraestrutura</span>
+    <span class="chip">17:01</span>
+    <span class="chip" role="img" aria-label="Complexidade 4 de 5">nível ●●●●○</span>
+    <a class="chip chip-link" href="https://www.youtube.com/watch?v=tNAV259UhCM" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>O treino de um modelo multimodal (imagem e texto) usava só 15% da GPU, porque 85% do tempo ia para buscar, decodificar e redimensionar imagens do S3, uma por vez.</p><p>Tarun Sunkaraneni, da Amazon AGI, corrige em etapas: concorrência com asyncio e Ray actors, prefetching (buscar dados antes do pedido) e object store do Ray para evitar cópias de tensores. A espera cai de 85% para 20%.</p><p>Em escala de produção surge outro gargalo, a placa de rede de uma máquina. Duas flags do Ray (spread scheduling e leitura zero-copy) dão 50% a mais de throughput, mas só funcionam juntas e só em escala grande.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-tNAV259UhCM-wait-time-ratio"><strong>Wait-time ratio</strong> <span>razão de tempo de espera</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-tNAV259UhCM-gil-global-interpreter-lock"><strong>GIL (global interpreter lock)</strong> <span>trava global do interpretador do Python</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-tNAV259UhCM-ray-actors"><strong>Ray actors</strong> <span>processos com estado do framework Ray</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-tNAV259UhCM-prefetching"><strong>Prefetching</strong> <span>busca antecipada de dados</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-tNAV259UhCM-object-store-e-zero-copy"><strong>Object store e zero-copy</strong> <span>armazenamento de objetos compartilhado e leitura sem cópia</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-bottleneck"><strong>Bottleneck</strong> <span>gargalo</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-profiler"><strong>Profiler</strong> <span>perfilador de desempenho</span></a></li><li><a href="../glossario.html#g-cold-start"><strong>Cold start</strong> <span>partida a frio</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Meça a razão de tempo de espera antes de otimizar</h3>
+    <p>O palestrante define a wait-time ratio (razão de tempo de espera): tempo para preparar e transportar os dados, dividido pelo tempo total do pipeline. No baseline, 85% do tempo era espera por dados. O treino levava de 15 a 20 segundos por lote, e buscar o lote passava de 100 segundos. O flame graph (gráfico de perfil) mostrou o S3 como maior fatia.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/tNAV259UhCM/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Buscar dados leva mais de 100 s por lote, treinar leva 15 a 20 s.</span><a class="minuto" href="https://www.youtube.com/watch?v=tNAV259UhCM&amp;t=356s" target="_blank" rel="noopener" aria-label="Assistir a partir de 05:56 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:56</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Combine a concorrência com o tipo de gargalo</h3>
+    <p>Cada amostra é independente, então o trabalho se paraleliza com facilidade. Ele escolhe asyncio para buscar imagens (espera de rede), e Ray actors, que são processos com APIs de comunicação prontas, para decodificar e pré-processar (uso de CPU). A regra dele é casar a ferramenta com o gargalo, e não repetir a que já funcionou antes. Esse passo deu cerca de 25% de ganho.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/tNAV259UhCM/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Asyncio para IO, Ray actors para CPU, e a busca por lote cai para cerca de 40 s.</span><a class="minuto" href="https://www.youtube.com/watch?v=tNAV259UhCM&amp;t=481s" target="_blank" rel="noopener" aria-label="Assistir a partir de 08:01 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:01</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Prefetching mantém o produtor à frente do treino</h3>
+    <p>Uma thread em segundo plano enche uma fila antes de o trainer pedir. O produtor roda mais rápido que o consumidor, e o treino encontra o lote pronto. O tempo de busca por lote fica perto de zero. O custo é um checkpoint e uma retomada mais trabalhosos, além de um período de cold start (fila ainda vazia) no começo.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/tNAV259UhCM/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Com a fila cheia, o trainer não espera mais pelo dado.</span><a class="minuto" href="https://www.youtube.com/watch?v=tNAV259UhCM&amp;t=575s" target="_blank" rel="noopener" aria-label="Assistir a partir de 09:35 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:35</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Object store evita copiar tensores entre processos</h3>
+    <p>Depois do prefetching, o transporte ficou mais caro. Cada amostra era serializada (pickle) no worker, copiada para o coordenador e serializada de novo para o trainer, com megabytes por amostra. Com o object store do Ray, cada amostra carrega só uma referência (ponteiro). Os ranks do Megatron buscam o dado direto quando precisam. A espera total cai de 85% para 20%.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/tNAV259UhCM/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A referência viaja pelo coordenador e o tensor fica no object store.</span><a class="minuto" href="https://www.youtube.com/watch?v=tNAV259UhCM&amp;t=670s" target="_blank" rel="noopener" aria-label="Assistir a partir de 11:10 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>11:10</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Em escala, o gargalo vira a placa de rede</h3>
+    <p>Ao multiplicar por quatro os ranks de dados paralelos e o tamanho do lote, a espera voltou a subir. O Ray agrupa workers na mesma máquina, e a placa de rede (NIC) desse nó não dava conta. Espalhar os workers por vários nós (spread scheduling), junto com leitura zero-copy, rendeu 50% a mais de throughput. Nenhuma das duas flags ajudou sozinha em escala pequena.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/tNAV259UhCM/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O Ray junta workers por padrão, e isso satura a rede de um nó.</span><a class="minuto" href="https://www.youtube.com/watch?v=tNAV259UhCM&amp;t=825s" target="_blank" rel="noopener" aria-label="Assistir a partir de 13:45 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:45</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=tNAV259UhCM&amp;t=161s" target="_blank" rel="noopener"><strong>15% a 90%</strong><span>utilização da GPU antes e depois das otimizações</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:41</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=tNAV259UhCM&amp;t=194s" target="_blank" rel="noopener"><strong>85%</strong><span>tempo do baseline gasto esperando dados</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:14</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=tNAV259UhCM&amp;t=356s" target="_blank" rel="noopener"><strong>mais de 100 s</strong><span>tempo para buscar um lote, contra 15 a 20 s de treino</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:56</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=tNAV259UhCM&amp;t=916s" target="_blank" rel="noopener"><strong>50%</strong><span>ganho extra de throughput em escala com duas flags</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:16</span></a>
+  </div>
+
+  <div class="casper" id="a-tNAV259UhCM-wait-time-ratio">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Wait-time ratio (razão de tempo de espera).</strong> A wait-time ratio é como medir quanto tempo um cozinheiro fica parado esperando os ingredientes chegarem, em relação ao tempo total do turno.</p>
+    <ol class="passos"><li>Uma GPU (placa que faz as contas do treino) custa caro e precisa estar sempre ocupada. Quando fica parada, o dinheiro é desperdiçado.</li><li>A wait-time ratio (razão de tempo de espera) mostra quanto do tempo ela passa esperando dados em vez de treinar.</li><li>A conta no talk é o tempo para preparar e transportar os dados, dividido pelo tempo total do pipeline, que inclui o treino.</li><li>No baseline, a razão era de 85%. Buscar um lote levava mais de 100 s e treinar levava 15 a 20 s.</li><li>Depois das otimizações, a razão caiu para 20%. Medir esse número antes de mexer evita otimizar a parte errada.</li></ol>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-gpu">GPU</a>, <a href="../glossario.html#g-pipeline-de-dados">Pipeline de dados</a>, <a href="../glossario.html#g-bottleneck">Bottleneck</a></p>  </div>
+  <div class="casper" id="a-tNAV259UhCM-gil-global-interpreter-lock">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>GIL (global interpreter lock) (trava global do interpretador do Python).</strong> O GIL é como uma cozinha com uma única chave do fogão, e só o cozinheiro que segura a chave pode cozinhar naquele momento.</p>
+    <ol class="passos"><li>Python roda seu código por meio de um programa chamado interpretador, que lê e executa cada instrução.</li><li>O GIL (global interpreter lock, trava global do interpretador) é uma regra desse programa. Só uma thread (linha de execução) executa código Python por vez.</li><li>Por isso, várias threads fazendo conta pesada em Python puro não correm de verdade em paralelo. Elas se revezam.</li><li>Algumas bibliotecas, como os tokenizers do Hugging Face e partes do PIL, soltam a trava enquanto trabalham em código nativo. Nesses casos, threads ajudam.</li><li>Quando a biblioteca não solta a trava, a saída são processos. Cada um tem seu próprio interpretador e sua própria trava, e usam vários núcleos da máquina.</li></ol>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-thread">Thread</a>, <a href="../glossario.html#g-processo">Processo</a>, <a href="../glossario.html#g-concorrencia">Concorrência</a>, <a href="../glossario.html#g-interpretador">Interpretador</a></p>  </div>
+  <div class="casper" id="a-tNAV259UhCM-ray-actors">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Ray actors (processos com estado do framework Ray).</strong> Um Ray actor é como um funcionário fixo de uma central de atendimento, com mesa e ramal próprios, que recebe tarefas pelo telefone interno.</p>
+    <ol class="passos"><li>Um processo é um programa rodando sozinho, com a própria memória. Dá para ter vários ao mesmo tempo para usar mais núcleos.</li><li>Um Ray actor é um processo desse tipo, criado e gerenciado pelo Ray, um framework de computação distribuída (que divide trabalho entre várias máquinas).</li><li>O actor guarda estado. Ele pode manter na memória um tokenizador ou um modelo de imagem carregado e reutilizar a cada tarefa.</li><li>O Ray já traz as chamadas para mandar tarefas e receber resultados entre actors, então você não monta essa comunicação do zero.</li><li>No talk, os actors decodificam e pré-processam imagens, um trabalho de CPU que o asyncio não resolve e que o GIL atrapalharia em threads.</li></ol>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-processo">Processo</a>, <a href="../glossario.html#g-gil-global-interpreter-lock">GIL (global interpreter lock)</a>, <a href="../glossario.html#g-concorrencia">Concorrência</a></p>  </div>
+  <div class="casper" id="a-tNAV259UhCM-prefetching">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Prefetching (busca antecipada de dados).</strong> Prefetching é como o ajudante de cozinha que deixa os ingredientes cortados e enfileirados no balcão antes de o chef pedir o próximo prato.</p>
+    <ol class="passos"><li>Sem prefetching (busca antecipada de dados), o treino pede um lote e só então o sistema começa a buscá-lo. A GPU espera parada.</li><li>Com prefetching, uma thread em segundo plano busca e prepara lotes antes do pedido e os guarda numa fila.</li><li>O produtor (quem prepara os dados) roda mais rápido que o consumidor (o treino). Assim a fila fica sempre com lotes prontos.</li><li>Quando o treino pede um lote, ele já está lá. No talk, o tempo de busca por lote ficou perto de zero.</li><li>Há custos. Checkpoint e retomada do treino ficam mais trabalhosos, e existe um cold start (partida a frio), o período inicial em que a fila ainda está vazia.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>THREAD DE FUNDO</strong><span>Busca e prepara lotes antes do pedido</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>FILA</strong><span>Guarda lotes prontos</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>TRAINER</strong><span>Pede o lote e o encontra na fila</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>GPU SEM ESPERA</strong><span>Busca por lote perto de zero</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-thread">Thread</a>, <a href="../glossario.html#g-fila-queue">Fila (queue)</a>, <a href="../glossario.html#g-produtor-e-consumidor">Produtor e consumidor</a>, <a href="../glossario.html#g-wait-time-ratio">Wait-time ratio</a></p>  </div>
+  <div class="casper" id="a-tNAV259UhCM-object-store-e-zero-copy">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Object store e zero-copy (armazenamento de objetos compartilhado e leitura sem cópia).</strong> O object store é como um armário compartilhado do escritório, onde você deixa o documento grande e entrega aos colegas só um bilhete com o número da gaveta.</p>
+    <ol class="passos"><li>Mandar um dado grande de um processo para outro costuma significar fazer uma cópia inteira dele, e isso custa tempo.</li><li>No baseline do talk, cada amostra de imagem era serializada (pickle, transformada em bytes), copiada para o coordenador e serializada de novo para o trainer.</li><li>O object store do Ray guarda o dado uma vez, em memória compartilhada. Cada amostra passa a carregar só uma referência, que é um ponteiro para onde o dado está.</li><li>O coordenador repassa apenas a referência. Os ranks do Megatron (os processos de treino) buscam o tensor direto no store quando precisam.</li><li>Zero-copy (leitura sem cópia) deixa o processo ler o dado na própria memória compartilhada, sem duplicá-lo. No talk, essa flag só rendeu em escala grande, junto com o spread scheduling.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>WORKER</strong><span>Processa a imagem e guarda no store</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>OBJECT STORE</strong><span>Dado fica parado em memória comum</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>COORDENADOR</strong><span>Repassa só a referência (ponteiro)</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>RANK DE TREINO</strong><span>Busca o tensor direto, sem cópia</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-serializacao-pickle">Serialização (pickle)</a>, <a href="../glossario.html#g-ponteiro-e-referencia">Ponteiro e referência</a>, <a href="../glossario.html#g-ray-actors">Ray actors</a>, <a href="../glossario.html#g-tensor">Tensor</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk usa um único experimento, sem informar tamanho do cluster, modelo exato, GPUs nem repetições. Os ganhos vêm de um pipeline deliberadamente ingênuo no ponto de partida, então os 15% iniciais dizem pouco sobre equipes que já usam bons data loaders. O palestrante não mostra medições isoladas de cada flag, só afirma que sozinhas não ajudaram. Também não há conflito de interesse evidente, mas o Ray é a ferramenta central e as conclusões dependem das escolhas padrão dele.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Antes de otimizar um treino ou pipeline, calcule a fração do tempo que a GPU passa esperando dados e rode um profiler no baseline.</li><li>Escolha o tipo de concorrência pelo gargalo: asyncio para espera de rede, threads quando a biblioteca solta o GIL, processos para trabalho pesado de CPU.</li><li>Passe referências a dados grandes no lugar de copiá-los entre processos, e planeje o custo de comunicação a cada decisão de paralelismo.</li><li>Teste configurações de infraestrutura em uma escada de escalas. Uma flag sem efeito em escala pequena pode valer 50% em escala grande.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="tNAV259UhCM" aria-label="Marcar From 15% to 90% GPU Utilization: Fix the Data Pipeline, Not the Model como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#fim">Fechar a edição <span aria-hidden="true">↓</span></a>
+  </footer>
+</article>
+      <section class="fim-edicao card" id="fim" aria-labelledby="fim-titulo">
+        <h2 id="fim-titulo">Fim da edição</h2>
+        <span class="progresso" data-ids="6qkzlT962es E3KbFLAGD6A 3wj6sgbi1YA 9WiBJRO84yY BIhiYL4U9_M cSz7aL2nl2U TyPpSRXGhbc tNAV259UhCM"></span>
+        <p>Termos novos no glossário:
+<a href="../glossario.html#g-complexidade-ciclomatica">Complexidade ciclomática</a>, <a href="../glossario.html#g-ablation-study">Ablation study</a>, <a href="../glossario.html#g-wait-time-ratio">Wait-time ratio</a>, <a href="../glossario.html#g-gil-global-interpreter-lock">GIL (global interpreter lock)</a>, <a href="../glossario.html#g-ray-actors">Ray actors</a>, <a href="../glossario.html#g-prefetching">Prefetching</a>, <a href="../glossario.html#g-object-store-e-zero-copy">Object store e zero-copy</a>.
+        </p>
+        <nav class="paginacao" aria-label="Outras edições">
+<a rel="prev" href="2026-10-08.html"><span class="paginacao-dir">← Edição anterior</span><strong>Contexto, confiança e memória para agentes em produção</strong><span class="muted">quinta, 8 out 2026</span></a>          <a class="voltar" href="../index.html#edicoes"><span class="paginacao-dir">Todas as edições</span><strong>Voltar ao início</strong></a>
+        </nav>
+      </section>
+    </div>
+  </div>
+</div>
+</main>
+<footer class="rodape wrap">
+  <p>Resumos em português dos talks do canal <a href="https://www.youtube.com/@aiDotEngineer" target="_blank" rel="noopener">AI Engineer</a>. Atualizado em 10 out 2026, 15:41. <a href="../status.html">Status da rotina</a></p>
+</footer>
+<script src="../app.js" defer></script>
+</body>
+</html>
