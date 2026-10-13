@@ -1,0 +1,208 @@
+{
+  "id": "7v2myBde05o",
+  "titulo": "AI Agents Don't Read Your Policy Docs. They Hit Your APIs — Gravitee",
+  "titulo_curto": "AI Agents Don't Read Your Policy Docs. They Hit Your APIs",
+  "palestrante": "Gravitee",
+  "url": "https://www.youtube.com/watch?v=7v2myBde05o",
+  "duracao": 1070,
+  "publicado_ts": 1791666039,
+  "edicao": "2026-10-12",
+  "tese": "Regra escrita em prompt ou documento de política não impede o agente de agir. Quem bloqueia é o gateway, na infraestrutura.",
+  "tldr": [
+    "O CTO da Gravitee roda cinco demos ao vivo com dois agentes de reservas de hotel. Um tem as regras só no prompt e o outro passa por um gateway com identidade restrita.",
+    "O agente sem gateway apaga todas as reservas e vaza dados de hóspedes. O agente governado recebe 403, tem limite de requisições, cache semântico e bloqueio de prompts grandes.",
+    "O argumento final é que, com centenas de agentes por pessoa, a governança precisa ficar numa camada de infraestrutura que também roteia modelos, enxuga ferramentas MCP e enxerga o uso de IA nos notebooks."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Política em documento não vale em tempo de execução",
+      "texto": "O agente da esquerda recebe um pedido para cancelar uma reserva e rodar a ferramenta de apagar todas. Ele executa, porque a ferramenta existia e o usuário tinha permissão. A política do hotel dizendo para não usar IA nisso não é lida por ninguém na hora. O banco de dados fica sem as reservas.",
+      "t": 217,
+      "legenda": "Sem gateway, a chamada destrutiva retorna 200 e o banco é esvaziado.",
+      "print": "img/7v2myBde05o/0.jpg"
+    },
+    {
+      "titulo": "O gateway nega com 403 e o agente faz só a parte permitida",
+      "texto": "No agente governado, a ferramenta é descoberta, mas a execução é barrada no gateway com código 403 (proibido). O token do usuário só vale no momento da tarefa, com permissões estreitas. O agente ainda cancela a reserva autorizada e avisa que não pode apagar o resto.",
+      "t": 247,
+      "legenda": "O mesmo prompt é bloqueado no gateway e o agente cumpre só o que é permitido.",
+      "print": "img/7v2myBde05o/1.jpg"
+    },
+    {
+      "titulo": "Vazamento de dados pessoais barrado antes de sair",
+      "texto": "Na segunda demo, o usuário pede a lista completa de hóspedes com e-mails e dados de carro, sob o pretexto de conformidade. O agente sem gateway entrega tudo (dados fictícios). O gateway bloqueia, sugere autenticação e deixa um rastro em OpenTelemetry para auditar cada passo.",
+      "t": 339,
+      "legenda": "O gateway devolve erro real, sem vazamento, e registra cada etapa.",
+      "print": "img/7v2myBde05o/2.jpg"
+    },
+    {
+      "titulo": "Limite de requisições e cache cortam custo de token",
+      "texto": "Um agente com bug repete o mesmo pedido oito vezes. Com o gateway, só as três primeiras passam e as demais são barradas antes do modelo. No cache semântico, cinco pedidos parecidos são servidos do Redis, gastando cerca de 200 tokens contra cerca de mil. O nível de similaridade é configurável de 0 a 1.",
+      "t": 461,
+      "legenda": "Rate limit de três por minuto barra as chamadas antes de gastar token.",
+      "print": "img/7v2myBde05o/3.jpg"
+    },
+    {
+      "titulo": "Bloqueio de prompt grande e de assunto fora do escopo",
+      "texto": "Um prompt com dez minutos de transcrição gasta 2.000 tokens de entrada e gera 312 de saída numa tarefa simples. O gateway recusa antes de chamar o modelo e sugere dividir em passos. Também filtra perguntas que não têm relação com reserva de hotel, como a previsão do tempo.",
+      "t": 676,
+      "legenda": "O gateway recusa o prompt antes de qualquer chamada ao modelo.",
+      "print": "img/7v2myBde05o/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "AI gateway",
+      "traducao": "gateway de IA",
+      "nivel": "intermediario",
+      "chave": "ai gateway",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Prompt injection",
+      "traducao": "injeção de prompt",
+      "nivel": "intermediario",
+      "chave": "prompt injection",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP",
+      "traducao": "Model Context Protocol, protocolo que expõe ferramentas ao agente",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Rate limiting",
+      "traducao": "limite de taxa de requisições",
+      "nivel": "basico",
+      "chave": "rate limiting",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Semantic caching",
+      "traducao": "cache semântico, que reaproveita respostas para perguntas parecidas",
+      "nivel": "intermediario",
+      "chave": "semantic caching",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "JWT",
+      "traducao": "JSON Web Token, token com as permissões do usuário",
+      "nivel": "avancado",
+      "chave": "jwt",
+      "analogia": "O JWT é como um crachá de visitante carimbado pela portaria, que diz quem você é, quais andares você pode visitar e até que horas ele vale.",
+      "explicacao": [
+        "Quando você entra num sistema, ele precisa lembrar quem você é a cada pedido. Em vez de pedir sua senha toda vez, ele entrega um comprovante digital chamado token.",
+        "O JWT (JSON Web Token, ficha digital em formato de texto) é um tipo de token. Ele carrega informações chamadas claims (declarações), como quem é o usuário, o que ele pode fazer e quando o token expira.",
+        "Quem emite o token assina o conteúdo com uma chave secreta. Se alguém mudar uma claim para ganhar mais poder, a assinatura deixa de bater e o token é recusado.",
+        "No talk, o gateway faz uma token exchange (troca de token). Ele troca a credencial do usuário por um JWT de vida curta, com permissões estreitas, que só vale enquanto a tarefa roda.",
+        "Quando o agente tenta usar a ferramenta de apagar todas as reservas, o gateway lê as claims, não encontra essa permissão e devolve o código 403 (proibido)."
+      ],
+      "pre_requisitos": [
+        "Autenticação e autorização",
+        "Token de acesso",
+        "Códigos de status HTTP",
+        "AI gateway"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "LOGIN DO USUÁRIO",
+            "nota": "O sistema confirma quem é a pessoa"
+          },
+          {
+            "rotulo": "TOKEN EMITIDO",
+            "nota": "Claims dizem o que pode e até quando"
+          },
+          {
+            "rotulo": "AGENTE CHAMA FERRAMENTA",
+            "nota": "Envia o token junto com o pedido"
+          },
+          {
+            "rotulo": "GATEWAY CONFERE",
+            "nota": "Checa assinatura, claims e validade"
+          },
+          {
+            "rotulo": "LIBERA OU NEGA COM 403",
+            "nota": "A ação só roda se houver permissão"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Blast radius",
+      "traducao": "raio de impacto de um erro ou ataque",
+      "nivel": "intermediario",
+      "chave": "blast radius",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Model routing",
+      "traducao": "roteamento entre modelos",
+      "nivel": "intermediario",
+      "chave": "model routing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É um pitch de produto do gateway da própria empresa, e o palestrante é o CTO. As demos são ao vivo, mas usam dados fictícios e um cenário montado para o agente falhar. A pesquisa de 88% e 14% é interna e sem metodologia. Não há comparação com outros gateways nem custo e latência do gateway. Os casos de cache e de prompt grande tratam economia de um centavo como argumento, sem medir ganho real.",
+  "acoes": [
+    "Liste as ferramentas que seus agentes podem chamar e marque as destrutivas (apagar, exportar tudo). Exija permissão no servidor para elas, em vez de confiar no prompt.",
+    "Dê a cada agente uma identidade própria com permissões mínimas e token de curta duração, em vez de reaproveitar as credenciais do usuário.",
+    "Ative limite de requisições e limite de tokens por usuário ou agente, para que um loop com bug não gere uma conta alta.",
+    "Em servidores MCP de terceiros, exponha só as ferramentas necessárias. Cortar uma lista grande reduz custo de contexto e o raio de impacto."
+  ],
+  "numeros": [
+    {
+      "valor": "88%",
+      "contexto": "organizações com agente em produção agindo (pesquisa da empresa)",
+      "t": 32
+    },
+    {
+      "valor": "14%",
+      "contexto": "dessas organizações têm alguma governança sobre o agente",
+      "t": 32
+    },
+    {
+      "valor": "3 por minuto",
+      "contexto": "limite de requisições aplicado no gateway da demo",
+      "t": 461
+    },
+    {
+      "valor": "64",
+      "contexto": "ferramentas expostas pelo servidor MCP do CRM citado",
+      "t": 922
+    }
+  ]
+}

@@ -1,0 +1,174 @@
+{
+  "id": "YIxzNZDDy1A",
+  "titulo": "From Zero to Leaderboard: Agent Evaluation — Wolfram Ravenwolf, Weights & Biases",
+  "titulo_curto": "From Zero to Leaderboard: Agent Evaluation",
+  "palestrante": "Wolfram Ravenwolf, Weights & Biases",
+  "url": "https://www.youtube.com/watch?v=YIxzNZDDy1A",
+  "duracao": 3150,
+  "publicado_ts": 1791738018,
+  "edicao": "2026-10-12",
+  "tese": "Um placar de benchmark mede uma configuração inteira, com várias rodadas, custo e traces à mostra. Uma média de modelo sozinha engana.",
+  "tldr": [
+    "Wolfram Ravenwolf mostra como montar uma avaliação de agentes em seis camadas (benchmark, runner, sandbox, agente, modelo e configurações) e fixar a versão de cada uma.",
+    "Ele roda cada configuração cinco vezes e publica média, melhor, pior, teto e consistência, para separar sorte de comportamento confiável.",
+    "Os exemplos mostram que um modelo barato pode custar mais por gastar muitos tokens e que mais raciocínio pode piorar a nota quando o tempo da tarefa é limitado."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Você avalia uma configuração, não um modelo",
+      "texto": "O resultado depende de seis camadas: benchmark, runner, sandbox, agente, modelo com seu provedor e as configurações. Trocar qualquer uma gera um experimento novo. Por isso o autor fixa a versão do Terminal Bench 2.0 e a do Harbor, mesmo sabendo que existe a 2.1.",
+      "t": 601,
+      "legenda": "Seis camadas definem o que o placar realmente mede",
+      "print": "img/YIxzNZDDy1A/0.jpg"
+    },
+    {
+      "titulo": "Média, piso e teto contam histórias diferentes",
+      "texto": "No leaderboard, a base escura da barra é a fração de tarefas resolvidas em todas as cinco rodadas (consistência). A média fica no meio e as setas marcam a melhor e a pior rodada. O teto é o que resolveu ao menos uma vez. Dois modelos com média parecida podem ter bases 6 pontos percentuais distantes.",
+      "t": 2322,
+      "legenda": "Cada barra traz base consistente, média e teto",
+      "print": "img/YIxzNZDDy1A/1.jpg"
+    },
+    {
+      "titulo": "Modelo barato pode sair mais caro",
+      "texto": "O Gemini 3.5 Flash chegou perto do GPT 5.5 em nota, mas consumiu muito mais tokens e custou mais no total. Olhar só a nota ou só o preço por token leva a uma escolha ruim. O custo da rodada inteira precisa aparecer ao lado do resultado.",
+      "t": 2512,
+      "legenda": "Menos preço por token não garantiu menor custo total",
+      "print": "img/YIxzNZDDy1A/2.jpg"
+    },
+    {
+      "titulo": "Mais raciocínio pode derrubar a nota",
+      "texto": "Com o Opus, subir o esforço de raciocínio para o máximo piorou o resultado. Nos traces, o modelo gastava minutos pensando antes de cada comando e esgotava a hora da tarefa. Com o raciocínio desligado, tentava, errava e corrigia em mais turnos. Nos modelos GPT, mais raciocínio melhorou a nota.",
+      "t": 2729,
+      "legenda": "Raciocínio máximo ficou abaixo do desligado no Opus",
+      "print": "img/YIxzNZDDy1A/3.jpg"
+    },
+    {
+      "titulo": "A barra é a afirmação, o trace é a prova",
+      "texto": "Cada barra do leaderboard leva ao Weave, com as cinco rodadas e as 89 tarefas. Dá para abrir a mensagem inicial, a análise do modelo, cada comando e a recompensa final. É assim que se descobre por que um modelo caro falhou, por exemplo por recusas ou por ignorar a instrução.",
+      "t": 2887,
+      "legenda": "Clicar na barra abre os traces que a sustentam",
+      "print": "img/YIxzNZDDy1A/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Benchmark",
+      "traducao": "conjunto padronizado de tarefas para comparar sistemas",
+      "nivel": "basico",
+      "chave": "benchmark",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Terminal Bench",
+      "traducao": "benchmark de tarefas de agente no terminal",
+      "nivel": "intermediario",
+      "chave": "terminal bench",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado para rodar cada tarefa",
+      "nivel": "basico",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Agent harness",
+      "traducao": "software que conecta o modelo às ferramentas e ao terminal",
+      "nivel": "intermediario",
+      "chave": "agent harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Thinking budget",
+      "traducao": "esforço de raciocínio permitido ao modelo",
+      "nivel": "intermediario",
+      "chave": "thinking budget",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Verifier",
+      "traducao": "checagem automática que dá nota 0 ou 1 à tarefa",
+      "nivel": "intermediario",
+      "chave": "verifier",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Trace",
+      "traducao": "registro passo a passo do que o agente fez",
+      "nivel": "intermediario",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação sistemática do desempenho de modelos e agentes",
+      "nivel": "basico",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O palestrante trabalha na Weights & Biases e usa os sandboxes, a inferência e o Weave da empresa, então a demo também vende a plataforma. Cinco rodadas por configuração é pouco, e ele admite que diferenças pequenas podem ser variância. O efeito do raciocínio máximo vale para o limite de uma hora por tarefa que ele escolheu, e outro limite poderia mudar a conclusão. Os custos usam preços publicados, não o gasto real. A metodologia é convincente, mas os números do leaderboard não foram verificados de forma independente.",
+  "acoes": [
+    "Ao ler um placar, procure versão do benchmark, agente, provedor, limite de tempo e número de rodadas antes de confiar na nota.",
+    "Rode cada teste do seu agente várias vezes e registre média, pior caso e quantas tarefas passam sempre, não só a média.",
+    "Compare modelos pelo custo total da tarefa (tokens gastos vezes preço), não pelo preço por token.",
+    "Guarde os traces de cada rodada e leia os que falharam. Separe falha de infraestrutura, que merece nova tentativa, de falha real do modelo."
+  ],
+  "numeros": [
+    {
+      "valor": "5 rodadas",
+      "contexto": "Execuções por configuração no WolfBench",
+      "t": 415
+    },
+    {
+      "valor": "1,65 bi tokens",
+      "contexto": "Uso do Gemini 3.5 Flash; o GPT 5.5 usou 136 milhões",
+      "t": 2512
+    },
+    {
+      "valor": "US$ 620 vs 497",
+      "contexto": "Custo do Gemini 3.5 Flash contra GPT 5.5",
+      "t": 2543
+    },
+    {
+      "valor": "US$ 11 mil",
+      "contexto": "Gasto para testar o Fable, com 13 recusas",
+      "t": 2636
+    }
+  ]
+}

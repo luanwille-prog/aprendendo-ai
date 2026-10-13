@@ -1,0 +1,268 @@
+{
+  "id": "ws9XcGGPBDk",
+  "titulo": "Your Agent Is a Lethal Trifecta (And What to Do About It) — Kim Maida, Keycard",
+  "titulo_curto": "Your Agent Is a Lethal Trifecta (And What to Do About It)",
+  "palestrante": "Kim Maida, Keycard",
+  "url": "https://www.youtube.com/watch?v=ws9XcGGPBDk",
+  "duracao": 1508,
+  "publicado_ts": 1791810035,
+  "edicao": "2026-10-12",
+  "tese": "Agente seguro precisa de credencial curta, atrelada ao usuário e à tarefa. Chave fixa e botão de aprovação sozinhos não seguram o risco.",
+  "tldr": [
+    "Kim Maida mostra um agente de plantão que usa chaves de API fixas e senha de administrador. Ele apaga um banco de cobrança, reinicia um servidor de produção e escala um serviço de 4 para 40 pods.",
+    "Ela propõe o token exchange (troca de tokens) do OAuth: um serviço de tokens de segurança confere política, identidade do usuário e do agente, e emite credenciais que expiram em minutos e valem para uma única chamada.",
+    "Na segunda demo, a política nega acesso a dados de clientes e a exclusão do banco, libera a renovação do certificado e bloqueia o restart mesmo após aprovação, porque o papel do usuário não permite a ação."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Chave fixa apaga quem fez o quê",
+      "texto": "Na primeira demo, o agente chama a API de incidentes, o data warehouse e o banco com chaves estáticas. O log de auditoria não diz quem usou cada chave, e o relatório da manhã despeja dados pessoais de clientes no ticket. O problema nasce do excesso de acesso dado de antemão.",
+      "t": 62,
+      "legenda": "O log mostra chaves fixas e dados pessoais no relatório, sem identidade de quem agiu.",
+      "print": null
+    },
+    {
+      "titulo": "A trifeta letal",
+      "texto": "Dados privados, conteúdo não confiável (tickets) e comunicação externa tornam o agente útil e perigoso ao mesmo tempo. Maida rejeita remover uma das três capacidades, porque o agente perde utilidade. Ela propõe controlar o acesso para conter o raio de dano.",
+      "t": 290,
+      "legenda": "As três capacidades juntas formam o risco descrito por Simon Willison.",
+      "print": "img/ws9XcGGPBDk/1.jpg"
+    },
+    {
+      "titulo": "OAuth, gateway e sandbox deixam acesso permanente",
+      "texto": "OAuth concede permissões antes de existir a tarefa. O gateway MCP segura credenciais permanentes. O sandbox limita o processo, mas o trabalho útil sai dele. Nenhum entrega ao agente uma credencial reduzida a uma só tarefa, e a aprovação humana sozinha cansa o usuário.",
+      "t": 446,
+      "legenda": "Cada controle prende o acesso a algo diferente, e nenhum limita por tarefa.",
+      "print": "img/ws9XcGGPBDk/2.jpg"
+    },
+    {
+      "titulo": "Cada chamada pede um token curto ao STS",
+      "texto": "O token do usuário vira subject token. O runtime do agente se autentica no security token service (STS), envia esse token e pede acesso a uma única chamada de ferramenta. O STS avalia política, cadeia de delegação e acesso pedido, e devolve um token que expira em minutos e não é guardado.",
+      "t": 799,
+      "legenda": "O diagrama mostra o STS decidindo cada troca de token entre agente, MCP e recurso.",
+      "print": "img/ws9XcGGPBDk/3.jpg"
+    },
+    {
+      "titulo": "A política bloqueia o que o usuário não pode fazer",
+      "texto": "Na segunda demo, o STS nega a consulta a dados de clientes e a exclusão do banco. A renovação do certificado passa. O restart de produção é bloqueado mesmo após clique em aprovar, porque o papel do usuário não permite. O escalonamento passa porque o papel permite.",
+      "t": 1364,
+      "legenda": "O restart fica negado após a aprovação, pois o papel do usuário não tem essa autoridade.",
+      "print": "img/ws9XcGGPBDk/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Lethal trifecta",
+      "traducao": "trifeta letal",
+      "nivel": "basico",
+      "chave": "lethal trifecta",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "OAuth",
+      "traducao": "protocolo de autorização delegada",
+      "nivel": "intermediario",
+      "chave": "oauth",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Token exchange",
+      "traducao": "troca de tokens (extensão do OAuth 2)",
+      "nivel": "avancado",
+      "chave": "token exchange",
+      "analogia": "A troca de tokens é como trocar o crachá de visitante na portaria por uma pulseira que só abre uma sala e vence no fim da tarde.",
+      "explicacao": [
+        "Um token é um comprovante digital que diz quem você é e o que pode fazer, como um crachá.",
+        "Quando você faz login, o servidor de autorização (authorization server) entrega ao agente um token com só parte das suas permissões, chamadas escopos (scopes).",
+        "Na hora de usar uma ferramenta, o agente envia esse token, chamado subject token (token do sujeito), e pede outro bem mais restrito.",
+        "O pedido vai a um serviço de tokens de segurança, que devolve um token novo válido para uma única chamada e por poucos minutos.",
+        "O padrão token exchange saiu em 2020 como extensão do OAuth 2 (RFC 8693). O token novo mantém a identidade do usuário, o que permite auditar quem agiu."
+      ],
+      "pre_requisitos": [
+        "OAuth",
+        "Token de acesso",
+        "Escopos (scopes)",
+        "Security token service (STS)"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "LOGIN DO USUÁRIO",
+            "nota": "Gera token com escopos delegados"
+          },
+          {
+            "rotulo": "PEDIDO DE TROCA",
+            "nota": "Agente envia o subject token ao STS"
+          },
+          {
+            "rotulo": "CHECAGEM DE POLÍTICA",
+            "nota": "STS confere usuário, agente e acesso"
+          },
+          {
+            "rotulo": "TOKEN EFÊMERO",
+            "nota": "Vale para uma chamada e expira rápido"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Security token service (STS)",
+      "traducao": "serviço de tokens de segurança",
+      "nivel": "avancado",
+      "chave": "security token service (sts)",
+      "analogia": "O STS é como o guichê do almoxarifado que confere o pedido assinado pelo chefe e entrega só a ferramenta daquela tarefa, com prazo de devolução.",
+      "explicacao": [
+        "O STS é um servidor que entrega credenciais temporárias, sob pedido, para cada ação do agente.",
+        "O runtime do agente, o programa que roda o ciclo do agente, se apresenta ao STS com a credencial do aplicativo ou com uma identidade de carga (workload identity).",
+        "Junto, o runtime envia o token do usuário e o pedido de acesso a uma ferramenta específica.",
+        "O STS avalia a política de governança, a cadeia de delegação (quem age em nome de quem) e o acesso pedido. Se tudo passa, emite um token que expira em minutos.",
+        "Se o servidor MCP precisa de um recurso externo, ele volta ao STS e troca esse token por outro restrito à mesma chamada, mantendo o usuário registrado."
+      ],
+      "pre_requisitos": [
+        "Token exchange",
+        "OAuth",
+        "Servidor MCP",
+        "Política de acesso"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "RUNTIME SE IDENTIFICA",
+            "nota": "Mostra credencial do app e do usuário"
+          },
+          {
+            "rotulo": "AVALIAÇÃO",
+            "nota": "Política, delegação e acesso pedido"
+          },
+          {
+            "rotulo": "EMISSÃO DO TOKEN",
+            "nota": "Escopo de uma chamada, poucos minutos"
+          },
+          {
+            "rotulo": "RECURSO ACESSADO",
+            "nota": "Token descartado após o uso"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Delegation chain",
+      "traducao": "cadeia de delegação",
+      "nivel": "avancado",
+      "chave": "delegation chain",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Intent based authorization",
+      "traducao": "autorização baseada em intenção (proposta, não é padrão)",
+      "nivel": "avancado",
+      "chave": "intent based authorization",
+      "analogia": "A autorização por intenção é como a ordem de serviço do mecânico, que lista o conserto combinado e impede trocar outras peças sem nova assinatura do cliente.",
+      "explicacao": [
+        "Antes de agir, o agente descreve o que pretende fazer, e um sistema confere se isso bate com o pedido do usuário.",
+        "Essa descrição se chama missão (mission) e traz um objetivo, as ações permitidas e os limites.",
+        "No talk, a missão de triar o incidente 2294 permite ler esse ticket e resumir ou escalar, mas proíbe ler outros tickets e usar outros serviços.",
+        "O STS aprova sozinho as missões de baixo risco e manda as arriscadas, como escalar um serviço, para o usuário revisar. Depois dá um ID à missão.",
+        "Cada chamada de ferramenta leva esse ID, e o gateway pergunta ao STS se ela cabe na missão antes de pedir a troca de token. A IBA ainda é proposta, sem padrão fechado."
+      ],
+      "pre_requisitos": [
+        "Security token service (STS)",
+        "Token exchange",
+        "MCP gateway",
+        "Human in the loop"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PROMPT DO USUÁRIO",
+            "nota": "Pedido em linguagem natural"
+          },
+          {
+            "rotulo": "MISSÃO PROPOSTA",
+            "nota": "Objetivo, ações permitidas e limites"
+          },
+          {
+            "rotulo": "APROVAÇÃO",
+            "nota": "Automática ou revisada pelo usuário"
+          },
+          {
+            "rotulo": "CHECAGEM POR CHAMADA",
+            "nota": "Gateway confere o ID da missão"
+          },
+          {
+            "rotulo": "TOKEN LIBERADO",
+            "nota": "Só se a chamada cabe na missão"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP gateway",
+      "traducao": "gateway de MCP",
+      "nivel": "intermediario",
+      "chave": "mcp gateway",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Human in the loop",
+      "traducao": "humano no circuito",
+      "nivel": "basico",
+      "chave": "human in the loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "Maida é head de DevRel da Keycard, que vende o STS e a autorização por intenção, então o talk também é pitch. Ela admite que a intenção ainda é proposta e que a demo usa política por tarefa. As demos são encenadas, sem dados de incidentes reais nem medição de falhas evitadas. Não há custo de latência da troca de token a cada chamada, nem esforço de configurar política. Prompt injection só aparece como risco geral, sem teste.",
+  "acoes": [
+    "Liste as chaves de API e senhas que seus agentes usam hoje. Troque as de administrador por credenciais com escopo mínimo e prazo curto.",
+    "Registre no log de auditoria o usuário e o agente por trás de cada chamada. Sem isso, você não sabe quem agiu.",
+    "Defina em política quais ações o agente nunca faz sozinho, como apagar banco ou acessar dados pessoais. Não deixe isso só para o botão de aprovar.",
+    "Pergunte ao seu provedor de identidade e de MCP se ele suporta token exchange (RFC 8693) antes de montar uma solução própria."
+  ],
+  "numeros": [
+    {
+      "valor": "4 para 40",
+      "contexto": "Pods do serviço escalados pelo agente",
+      "t": 228
+    },
+    {
+      "valor": "US$ 420/h",
+      "contexto": "Custo adicional do escalonamento",
+      "t": 228
+    },
+    {
+      "valor": "2020",
+      "contexto": "Ano de publicação do padrão token exchange",
+      "t": 539
+    },
+    {
+      "valor": "minutos",
+      "contexto": "Prazo de expiração do token efêmero",
+      "t": 954
+    }
+  ]
+}

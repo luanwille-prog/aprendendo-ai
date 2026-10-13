@@ -1,0 +1,233 @@
+{
+  "id": "7BcQdtRA3Tc",
+  "titulo": "Taming the AI Hardware Cambrian Explosion — Abdul Dakkak, Modular",
+  "titulo_curto": "Taming the AI Hardware Cambrian Explosion",
+  "palestrante": "Abdul Dakkak, Modular",
+  "url": "https://www.youtube.com/watch?v=7BcQdtRA3Tc",
+  "duracao": 1028,
+  "publicado_ts": 1791752422,
+  "edicao": "2026-10-12",
+  "tese": "Com chips novos toda hora, a Modular aposta numa pilha única (Mojo, MAX, Cloud) para rodar inferência rápida em qualquer hardware.",
+  "tldr": [
+    "A falta de computação e a chegada de muitos chips novos deixaram o software de inferência fragmentado, com vLLM, SGLang, TensorRT-LLM e llama.cpp cada um remendando um hardware.",
+    "A Modular propõe reconstruir tudo do zero: a linguagem Mojo (parecida com Python), o motor de inferência MAX e a Modular Cloud para distribuir o serviço.",
+    "O palestrante apresenta benchmarks de velocidade contra vLLM e torch.compile em Kimi K2.5, FLUX.2, AMD MI355 e Gemma 4, e convida o público a validar os resultados com pip install modular."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "Cada chip novo complica a pilha",
+      "texto": "O vLLM já precisa de caminhos separados para Nvidia e AMD. Cada hardware adicional deixa o diagrama mais confuso. Na prática, as equipes misturam vLLM, SGLang, TensorRT-LLM e llama.cpp, e cada ferramenta resolve só uma parte do problema.",
+      "t": 66,
+      "legenda": "Cada hardware extra torna a pilha de software mais difícil de manter.",
+      "print": "img/7BcQdtRA3Tc/0.jpg"
+    },
+    {
+      "titulo": "Quatro camadas, uma pilha",
+      "texto": "A Modular divide a solução em camadas. Mojo é a linguagem para CPUs, GPUs e aceleradores. MAX é o motor de inferência feito sobre Mojo. Os kernels (código que roda direto na GPU) ficam por baixo. A Modular Cloud cuida de escolher hardware, rotear requisições e distribuir o modelo.",
+      "t": 162,
+      "legenda": "A arquitetura proposta, do código de baixo nível até a nuvem.",
+      "print": "img/7BcQdtRA3Tc/1.jpg"
+    },
+    {
+      "titulo": "Mojo no quadrante ideal",
+      "texto": "O palestrante compara linguagens em três eixos: usabilidade, desempenho e portabilidade. CUDA dá desempenho, mas custa usabilidade. OpenCL dá portabilidade, mas perde velocidade. Triton fica no meio, com cerca de 70% do desempenho. Mojo diz querer reunir os três.",
+      "t": 288,
+      "legenda": "Posicionamento de Mojo contra CUDA, OpenCL e Triton, feito pela própria Modular.",
+      "print": "img/7BcQdtRA3Tc/2.jpg"
+    },
+    {
+      "titulo": "MAX atende vários tipos de modelo",
+      "texto": "MAX foi pensado para a inferência de IA generativa atual, sem herdar as limitações do PyTorch. Ele serve texto, imagem, vídeo e voz no mesmo framework, expõe endpoints compatíveis com a API da OpenAI e permite separar prefill e decode em hardwares diferentes.",
+      "t": 477,
+      "legenda": "Definir modelos em Python e servir por endpoint compatível com OpenAI.",
+      "print": "img/7BcQdtRA3Tc/3.jpg"
+    },
+    {
+      "titulo": "Benchmarks de velocidade",
+      "texto": "A Modular mostra ganhos sobre vLLM e torch.compile: 5,5x no tempo até o primeiro token com Kimi K2.5 e 7x com FLUX.2. Na AMD MI355 o ganho é de 4x, e ele lembra que a AMD custa cerca de 30% menos. Ele cita a Artificial Analysis como verificadora independente.",
+      "t": 697,
+      "legenda": "Comparação de velocidade apresentada pela própria Modular.",
+      "print": "img/7BcQdtRA3Tc/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Mojo",
+      "traducao": "linguagem de programação parecida com Python para CPU e GPU",
+      "nivel": "intermediario",
+      "chave": "mojo",
+      "analogia": "Mojo é como um único livro de receitas escrito em linguagem simples que funciona igual no fogão a gás, no elétrico e no forno industrial.",
+      "explicacao": [
+        "Mojo é uma linguagem de programação, ou seja, um jeito de escrever instruções para o computador.",
+        "Ela tem a cara do Python, a linguagem mais usada em IA. Segundo a Modular, quem sabe Python já conhece cerca de 90% do Mojo.",
+        "A diferença está no alcance. O mesmo código roda em CPU (processador comum), em GPU (placa gráfica) e em outros aceleradores, de fabricantes diferentes.",
+        "Ela também dá acesso de baixo nível ao chip. Isso permite escrever kernels (funções que rodam direto na GPU) tão rápidos quanto os feitos em CUDA, segundo a empresa.",
+        "A Modular usa Mojo como base de toda a pilha. O motor de inferência MAX e os kernels dele são escritos em Mojo."
+      ],
+      "pre_requisitos": [
+        "Python",
+        "CPU e GPU",
+        "Compilador",
+        "GPU kernel"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "CÓDIGO EM MOJO",
+            "nota": "sintaxe parecida com Python"
+          },
+          {
+            "rotulo": "COMPILAÇÃO",
+            "nota": "traduz para o chip escolhido"
+          },
+          {
+            "rotulo": "CPU, GPU OU ACELERADOR",
+            "nota": "Nvidia, AMD e outros"
+          },
+          {
+            "rotulo": "MESMO CÓDIGO, RÁPIDO",
+            "nota": "portável e com bom desempenho"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "CUDA",
+      "traducao": "plataforma da Nvidia para programar GPUs",
+      "nivel": "intermediario",
+      "chave": "cuda",
+      "analogia": "CUDA é como o manual exclusivo de uma marca de máquina de lavar, que ensina a usar todos os recursos dela mas não serve para máquinas de outras marcas.",
+      "explicacao": [
+        "Uma GPU (placa gráfica) faz milhares de contas pequenas ao mesmo tempo. Por isso ela acelera tanto a IA.",
+        "Para dar ordens a uma GPU, o programador precisa de uma ferramenta própria. CUDA é a ferramenta da Nvidia para isso.",
+        "Com CUDA, o programador escreve kernels (funções que rodam direto na GPU) em uma variação de C++ e controla memória e paralelismo de perto.",
+        "O resultado é desempenho máximo em chips Nvidia. O custo é um código difícil de escrever e preso a um único fabricante.",
+        "No talk, CUDA aparece como referência de velocidade. A Modular diz que Mojo compete com CUDA no desempenho e ainda roda em outros hardwares, como AMD."
+      ],
+      "pre_requisitos": [
+        "CPU e GPU",
+        "Processamento paralelo",
+        "GPU kernel"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "CÓDIGO CUDA",
+            "nota": "kernel escrito em C++ da Nvidia"
+          },
+          {
+            "rotulo": "COMPILADOR NVIDIA",
+            "nota": "gera instruções para a GPU"
+          },
+          {
+            "rotulo": "MILHARES DE NÚCLEOS",
+            "nota": "executam contas em paralelo"
+          },
+          {
+            "rotulo": "RESULTADO RÁPIDO",
+            "nota": "só em GPUs da Nvidia"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "GPU kernel",
+      "traducao": "função de baixo nível que roda na GPU",
+      "nivel": "avancado",
+      "chave": "gpu kernel",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "vLLM",
+      "traducao": "servidor open source de inferência de LLMs",
+      "nivel": "intermediario",
+      "chave": "vllm",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "KV cache",
+      "traducao": "memória de atenção reaproveitada entre tokens",
+      "nivel": "avancado",
+      "chave": "kv cache",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Prefill e decode",
+      "traducao": "fase de ler o prompt e fase de gerar a resposta",
+      "nivel": "avancado",
+      "chave": "prefill e decode",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Time to first token (TTFT)",
+      "traducao": "tempo até o primeiro token da resposta",
+      "nivel": "intermediario",
+      "chave": "time to first token (ttft)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Pareto frontier",
+      "traducao": "fronteira de melhores trocas entre custo e desempenho",
+      "nivel": "avancado",
+      "chave": "pareto frontier",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é pitch de produto da Modular, feito pelo cientista-chefe da empresa. Os benchmarks aparecem em slides, sem detalhar hardware, tamanho de lote ou configuração do vLLM usado como base. Ele diz que a Artificial Analysis verificou os resultados, mas só mostra isso para o FLUX.2. A comparação entre 7x (Nvidia) e 4x (AMD) é reconhecida por ele mesmo como difícil. Mojo 1.0 e o código aberto do Mojo ainda são promessa para os próximos meses.",
+  "acoes": [
+    "Se você roda modelos em GPU própria ou alugada, meça TTFT e throughput da sua configuração atual antes de comparar com qualquer alternativa.",
+    "Teste o pip install modular em uma máquina de laboratório com um modelo que você já usa e compare com o vLLM na sua carga real.",
+    "Ao ver benchmark de fornecedor, pergunte qual hardware, qual versão do concorrente e quem verificou o resultado.",
+    "Se sua equipe depende só de Nvidia, avalie quanto custaria trocar de hardware e se uma camada portável reduziria esse risco."
+  ],
+  "numeros": [
+    {
+      "valor": "5,5x",
+      "contexto": "TTFT melhor que vLLM no Kimi K2.5",
+      "t": 697
+    },
+    {
+      "valor": "7x",
+      "contexto": "mais rápido que torch.compile no FLUX.2",
+      "t": 731
+    },
+    {
+      "valor": "4x",
+      "contexto": "mais rápido na AMD MI355",
+      "t": 762
+    },
+    {
+      "valor": "3x",
+      "contexto": "mais rápido que o concorrente no FLUX.2 dev",
+      "t": 793
+    }
+  ]
+}

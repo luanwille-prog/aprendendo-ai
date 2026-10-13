@@ -1,0 +1,208 @@
+{
+  "id": "fnuNVFgLjHA",
+  "titulo": "Building Self-Learning Loops for Your Agent — Fuad Ali, Arize AI",
+  "titulo_curto": "Building Self-Learning Loops for Your Agent",
+  "palestrante": "Fuad Ali, Arize AI",
+  "url": "https://www.youtube.com/watch?v=fnuNVFgLjHA",
+  "duracao": 2335,
+  "publicado_ts": 1791732631,
+  "edicao": "2026-10-12",
+  "tese": "Se o agente lê a própria telemetria e o próprio código, ele detecta a falha, propõe o conserto e testa o conserto antes de chamar um humano.",
+  "tldr": [
+    "Fuad Ali, da Arize, defende que a observabilidade deve ser consumida por agentes de código, e não só lida por pessoas em dashboards.",
+    "O exemplo é um assistente de compras que ignora o filtro de preço. Duas rotas, o Signal (agente automático da Arize) e o Claude Code com skills, cruzam traces e código para achar o bug e abrir um PR.",
+    "Para validar, ele propõe um juiz que usa ferramentas (harness as a judge) e experimentos que repetem em um endpoint de desenvolvimento as falhas reais coletadas, comparando qualidade, latência e custo."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Três fases da observabilidade",
+      "texto": "Na fase 1, uma pessoa lê o painel e escreve o código da correção. Na fase 2, a pessoa escreve um prompt para corrigir. Na fase 3, o agente de código lê a telemetria sozinho. Ali compara com um foguete que se corrige a cada milissegundo usando os próprios dados. O ponto é que, com milhares de agentes, nenhum humano consegue ler tudo.",
+      "t": 168,
+      "legenda": "O leitor da telemetria passa de humano para agente de código.",
+      "print": "img/fnuNVFgLjHA/0.jpg"
+    },
+    {
+      "titulo": "O bug do filtro de preço",
+      "texto": "O assistente Wonder Toys, feito com o OpenAI Agents SDK e rastreado na Arize, devolve presentes acima de 30 dólares quando o usuário pede algo abaixo de 30. O agente responde com confiança e não verifica o produto. Esse tipo de falha não aparece em staging (ambiente de teste), porque ninguém escreveu o teste para um caso que ainda não conhecia.",
+      "t": 417,
+      "legenda": "A aplicação de exemplo usada para provocar e corrigir a falha.",
+      "print": "img/fnuNVFgLjHA/1.jpg"
+    },
+    {
+      "titulo": "Signal agrupa falhas e abre PR",
+      "texto": "O Signal roda em segundo plano sobre os traces de produção. Ele agrupa falhas por causa raiz, lê o repositório no GitHub, escreve uma investigação com hipótese e evidências e abre um pull request. No demo, a revisão do código continua com um humano. A alternativa sob demanda é usar o Claude Code com as skills da Arize dentro do repositório.",
+      "t": 1289,
+      "legenda": "O Signal lista as falhas agrupadas, a investigação e o PR sugerido.",
+      "print": "img/fnuNVFgLjHA/2.jpg"
+    },
+    {
+      "titulo": "Harness como juiz",
+      "texto": "O LLM-as-a-judge (modelo que avalia respostas) usa uma rubrica fixa e só pega problemas já conhecidos. O harness as a judge é um agente com ferramentas. Ele lê a árvore do trace, consulta sistemas externos e abre o código. No exemplo, a regra é em linguagem simples. Passa se todo preço retornado estiver dentro da faixa pedida, e falha se algum passar do orçamento.",
+      "t": 1628,
+      "legenda": "O juiz com harness consulta ferramentas e código, não só entrada e saída.",
+      "print": "img/fnuNVFgLjHA/3.jpg"
+    },
+    {
+      "titulo": "Validar o conserto com falhas reais",
+      "texto": "Os agent experiments sobem a versão corrigida atrás de um endpoint de desenvolvimento. Eles disparam um dataset de traces que falharam e pontuam as respostas com o mesmo juiz usado em produção. Depois comparam antes e depois em qualidade, latência e custo. No fim, o agente entrega ao humano um PR já testado.",
+      "t": 2038,
+      "legenda": "O ciclo fecha com validação automática contra falhas reais antes da revisão humana.",
+      "print": "img/fnuNVFgLjHA/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Trace",
+      "traducao": "registro passo a passo de uma execução do agente",
+      "nivel": "basico",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Observabilidade de agentes",
+      "traducao": "acompanhar o que o agente faz em produção",
+      "nivel": "basico",
+      "chave": "observabilidade de agentes",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Signal",
+      "traducao": "agente da Arize que analisa traces continuamente",
+      "nivel": "intermediario",
+      "chave": "signal",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Skills",
+      "traducao": "pacotes de instruções que ensinam um agente de código a usar uma ferramenta",
+      "nivel": "intermediario",
+      "chave": "skills",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo que avalia as respostas de outro modelo",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Harness",
+      "traducao": "estrutura em volta do modelo com ferramentas e ambiente",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Pull request",
+      "traducao": "proposta de mudança no código para revisão",
+      "nivel": "basico",
+      "chave": "pull request",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Agent experiments",
+      "traducao": "testar uma nova versão do agente contra um dataset de falhas",
+      "nivel": "avancado",
+      "chave": "agent experiments",
+      "analogia": "Agent experiments é como um mecânico que, depois de consertar o freio, refaz no pátio as mesmas manobras em que o carro falhou antes de devolver a chave ao dono.",
+      "explicacao": [
+        "Quando alguém conserta um agente, precisa saber se o conserto funciona de verdade antes de colocá-lo no ar para os clientes.",
+        "Para isso, você junta os casos reais em que o agente errou, como 25 pedidos de presente abaixo de 30 dólares que voltaram com produtos mais caros, e forma um dataset (conjunto de exemplos).",
+        "A versão corrigida sobe em um ambiente de desenvolvimento, acessível por um endpoint (endereço que recebe pedidos), e recebe cada um desses pedidos como se fosse um usuário.",
+        "O mesmo juiz usado em produção dá nota às novas respostas. Assim dá para comparar antes e depois em qualidade, latência (tempo de resposta) e custo.",
+        "Como os experimentos também ficam disponíveis por skills e API, o próprio agente pode rodar esse teste no PR que abriu e só chamar o humano com o resultado em mãos."
+      ],
+      "pre_requisitos": [
+        "Trace",
+        "LLM-as-a-judge",
+        "Pull request",
+        "Dataset de avaliação"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "COLETAR FALHAS",
+            "nota": "Traces reais que deram errado"
+          },
+          {
+            "rotulo": "SUBIR VERSAO DEV",
+            "nota": "Conserto atrás de um endpoint"
+          },
+          {
+            "rotulo": "REPETIR PEDIDOS",
+            "nota": "Dataset enviado ao agente novo"
+          },
+          {
+            "rotulo": "PONTUAR E COMPARAR",
+            "nota": "Juiz, latência e custo"
+          },
+          {
+            "rotulo": "PR VALIDADO",
+            "nota": "Humano revisa com os números"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É um workshop da Arize para vender Arize. Signal, skills e agent experiments são produtos dela, e há código promocional de plano Pro no fim. O bug foi plantado pelo próprio palestrante, então o demo prova o caminho, não a taxa de acerto em casos reais. O ganho de 36% aparece como exemplo, sem dataset, sem amostra e sem metodologia. O trecho de verificação ele mesmo diz que não pretendia mostrar. O Wi-Fi ruim impediu a plateia de reproduzir o fluxo.",
+  "acoes": [
+    "Ative tracing no seu agente antes de qualquer outra coisa. Sem traces, nenhuma análise automática funciona.",
+    "Quando um agente falhar em produção, guarde os traces com falha em um dataset. Use esse dataset para testar cada correção antes de publicar.",
+    "Escreva a regra do juiz em uma frase que verifique o resultado final, por exemplo se todos os preços estão dentro do orçamento pedido.",
+    "Deixe um humano revisar todo PR que um agente abrir, mesmo que ele tenha passado nos testes automáticos."
+  ],
+  "numeros": [
+    {
+      "valor": "1 trilhão",
+      "contexto": "spans processados pela Arize, segundo o palestrante",
+      "t": 231
+    },
+    {
+      "valor": "60 milhões",
+      "contexto": "evals por mês rodados na Arize",
+      "t": 231
+    },
+    {
+      "valor": "25",
+      "contexto": "exemplos hipotéticos de buscas de orçamento que falharam",
+      "t": 1879
+    },
+    {
+      "valor": "36%",
+      "contexto": "ganho de desempenho no avaliador, dado como exemplo",
+      "t": 2038
+    }
+  ]
+}

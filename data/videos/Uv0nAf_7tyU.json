@@ -1,0 +1,174 @@
+{
+  "id": "Uv0nAf_7tyU",
+  "titulo": "Decoupling the Brain from the Hands: Claude Managed Agents (Part 1 of 4) — Anthropic",
+  "titulo_curto": "Decoupling the Brain from the Hands: Claude Managed Agents (Part 1 of 4)",
+  "palestrante": "Anthropic",
+  "url": "https://www.youtube.com/watch?v=Uv0nAf_7tyU",
+  "duracao": 1059,
+  "publicado_ts": 1791783840,
+  "edicao": "2026-10-12",
+  "tese": "Todo harness guarda suposições sobre o modelo que envelhecem. Separe sessão, cérebro e mãos para trocar cada peça sem derrubar o agente.",
+  "tldr": [
+    "A primeira versão do Claude Managed Agents colocou sessão, harness e sandbox no mesmo container. Isso virou um \"pet\" difícil de depurar, de inspecionar sem expor dados do cliente e de conectar a redes privadas.",
+    "A Anthropic separou o agente em três interfaces: um log de sessão só de acréscimo, o cérebro (harness mais Claude) e as mãos (sandboxes e ferramentas). Só o log precisa ser protegido, e o resto pode cair e ser recriado.",
+    "A mudança manteve as credenciais fora do sandbox, deu flexibilidade para a compactação de contexto e reduziu o tempo até o primeiro token em cerca de 90%. A parte final apresenta o fluxo básico da API com um agente que conta piadas."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Harness guarda suposições que ficam velhas",
+      "texto": "O harness é a camada que roda o loop de chamadas de ferramenta e cobre o que o modelo não faz sozinho. A palestrante cita a \"ansiedade de contexto\" do Sonnet 4.5, que encerrava a tarefa com pressa perto do limite, e o reset de contexto criado para isso. O Opus 4.5 não tinha o problema, então a muleta virou peso morto.",
+      "t": 192,
+      "legenda": "Cada modelo novo pode tornar obsoleta uma gambiarra do harness.",
+      "print": "img/Uv0nAf_7tyU/0.jpg"
+    },
+    {
+      "titulo": "Pet contra cattle na primeira arquitetura",
+      "texto": "Em dezembro, o primeiro desenho colocou sessão, harness e execução no mesmo container. Ficou fácil de editar, mas o container virou um \"pet\", uma máquina insubstituível. Um pacote perdido e um container morto pareciam iguais, os dados do cliente impediam a investigação e conectar um MCP dentro da VPC do cliente exigia peering de rede ou rodar o harness nele.",
+      "t": 349,
+      "legenda": "Tudo no mesmo container: simples de montar e difícil de depurar.",
+      "print": "img/Uv0nAf_7tyU/1.jpg"
+    },
+    {
+      "titulo": "Cérebro e mãos desacoplados",
+      "texto": "O agente virou três interfaces: sessão (log de eventos só de acréscimo), cérebro (harness com Claude) e mãos (sandboxes, MCP, VPC do cliente). Se o sandbox morre, o erro volta ao Claude como uma chamada de ferramenta que falhou. Se o harness morre, uma nova instância relê o log e continua do último evento.",
+      "t": 473,
+      "legenda": "Só o log de sessão precisa ser protegido; o resto é descartável.",
+      "print": "img/Uv0nAf_7tyU/2.jpg"
+    },
+    {
+      "titulo": "Credenciais nunca entram no sandbox",
+      "texto": "Quando o sandbox precisa chamar um serviço que exige token, a requisição passa por um proxy que injeta a credencial antes de sair. O modelo nunca vê o token. Por isso um ataque de prompt injection não consegue pedir ao Claude que imprima ou grave o segredo.",
+      "t": 545,
+      "legenda": "O proxy injeta o token; o Claude só vê a chamada, nunca o segredo.",
+      "print": null
+    },
+    {
+      "titulo": "Fluxo básico da API: environment, agent, session, events",
+      "texto": "Primeiro se cria o environment (modelo do sandbox, rede e pacotes). Depois o agent, com nome, modelo, system prompt e ferramentas. Por fim a session, que nasce ociosa até receber um evento. O diálogo acontece pelo fluxo de eventos, com mensagem do usuário, tool use customizado, erro de sessão, status idle e interrupção.",
+      "t": 943,
+      "legenda": "A sessão só trabalha quando recebe um evento, e tudo passa pelo stream.",
+      "print": "img/Uv0nAf_7tyU/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Harness",
+      "traducao": "camada que cerca o modelo",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado de execução",
+      "nivel": "basico",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Blast radius",
+      "traducao": "raio de impacto de uma falha",
+      "nivel": "intermediario",
+      "chave": "blast radius",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Pet e cattle",
+      "traducao": "máquina insubstituível e máquina descartável",
+      "nivel": "intermediario",
+      "chave": "pet e cattle",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Prompt injection",
+      "traducao": "injeção de instruções maliciosas no prompt",
+      "nivel": "intermediario",
+      "chave": "prompt injection",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Compactação de contexto",
+      "traducao": "resumir o histórico para caber na janela",
+      "nivel": "intermediario",
+      "chave": "compactação de contexto",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Time to first token (TTFT)",
+      "traducao": "tempo até o primeiro token",
+      "nivel": "intermediario",
+      "chave": "time to first token (ttft)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "MCP",
+      "traducao": "protocolo que conecta ferramentas ao modelo",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é uma apresentação de produto da Anthropic e termina em onboarding de créditos e console. A queda de cerca de 90% no tempo até o primeiro token aparece sem linha de base, sem metodologia e sem dizer se vale para média ou p99. Os problemas da primeira arquitetura vêm só de clientes em acesso antecipado, sem números. O talk quase não discute custos, como a latência extra do proxy de credenciais ou o trabalho de manter o log de sessão durável.",
+  "acoes": [
+    "Liste as suposições do seu harness ou dos seus prompts de sistema sobre limites do modelo, como resets de contexto, e teste a remoção de cada uma a cada troca de modelo.",
+    "Mantenha segredos fora do ambiente onde o agente roda código. Faça as chamadas autenticadas passarem por um proxy ou serviço que injete o token.",
+    "Registre cada passo do agente em um log só de acréscimo. Assim você consegue retomar uma tarefa depois de uma falha e testar outras estratégias de compactação.",
+    "Rode cada tarefa do agente em um container separado e descartável para limitar o estrago quando o código gerado falhar ou for malicioso."
+  ],
+  "numeros": [
+    {
+      "valor": "~90%",
+      "contexto": "queda no tempo até o primeiro token após o desacoplamento",
+      "t": 629
+    },
+    {
+      "valor": "Dezembro",
+      "contexto": "mês do ano anterior em que a 1ª arquitetura foi lançada a clientes",
+      "t": 318
+    },
+    {
+      "valor": "2 horas",
+      "contexto": "duração prevista do workshop completo",
+      "t": 96
+    },
+    {
+      "valor": "12 meses",
+      "contexto": "tempo da palestrante focada em infraestrutura de agentes",
+      "t": 33
+    }
+  ]
+}

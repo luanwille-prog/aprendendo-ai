@@ -1,0 +1,174 @@
+{
+  "id": "rAUyRDOFyHU",
+  "titulo": "Agents in Orbit: Workflows, Not Autopilot — Eduardo Simon & Javier Casal, Flywire",
+  "titulo_curto": "Agents in Orbit: Workflows, Not Autopilot",
+  "palestrante": "Eduardo Simon & Javier Casal, Flywire",
+  "url": "https://www.youtube.com/watch?v=rAUyRDOFyHU",
+  "duracao": 1133,
+  "publicado_ts": 1791828010,
+  "edicao": "2026-10-12",
+  "tese": "Coloque código determinístico no comando e chame o modelo só nos passos que pedem julgamento, com permissões declaradas e revisão humana.",
+  "tldr": [
+    "A Flywire, empresa de pagamentos com cerca de 400 engenheiros, criou o Orbit, plataforma interna que roda workflows em YAML com passos de código comum e passos curtos de modelo.",
+    "Cada passo de modelo declara em YAML a rede, as ferramentas, as skills e os servidores MCP que pode usar, e o arquivo passa por revisão de merge request como qualquer código.",
+    "Os palestrantes reportam mais de 11.000 execuções com 99% de sucesso em 30 dias, mas admitem que avaliação online ainda não existe e que o sandbox completo é meta futura."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Workflow no lugar de piloto automático",
+      "texto": "O Orbit define cada agente em um único arquivo YAML. Passos de código buscam dados, classificam risco e publicam resultados. O modelo entra só no meio, onde é preciso raciocinar. Isso deixa o processo previsível, barato e fácil de revisar.",
+      "t": 257,
+      "legenda": "O YAML mostra onde termina o código e onde começa o modelo.",
+      "print": "img/rAUyRDOFyHU/0.jpg"
+    },
+    {
+      "titulo": "Permissões por passo, visíveis no YAML",
+      "texto": "Em cada passo de modelo, a equipe restringe rede, ferramentas, skills e servidores MCP, até as ferramentas permitidas em cada servidor. O passo de code review lê e busca código, mas não edita nem faz push. O acesso fica revisável como qualquer código.",
+      "t": 688,
+      "legenda": "O acesso de cada passo fica declarado e passa por revisão.",
+      "print": "img/rAUyRDOFyHU/1.jpg"
+    },
+    {
+      "titulo": "Arquitetura separada e guard rails",
+      "texto": "A primeira versão rodava orquestração e ambiente de execução no mesmo contêiner. Depois eles foram separados em orquestração, runtime e estado de sessão. Um erro no orquestrador não derruba o sandbox. Timeouts, limites de taxa e locks contra execução duplicada controlam o uso.",
+      "t": 509,
+      "legenda": "Três componentes separados permitem escalar e isolar falhas.",
+      "print": "img/rAUyRDOFyHU/2.jpg"
+    },
+    {
+      "titulo": "Comece pela skill, depois vire workflow",
+      "texto": "A recomendação é escrever primeiro uma skill, que é barata e útil desde o primeiro dia. Quando a equipe confirma que a tarefa vale automação, ela vira workflow em segundo plano. O mesmo repositório de skills serve ao Claude Code no notebook e ao Orbit.",
+      "t": 719,
+      "legenda": "Uma única fonte de skills alimenta uso manual e automação.",
+      "print": null
+    },
+    {
+      "titulo": "Saída estruturada e lacunas de avaliação",
+      "texto": "Cada passo de modelo responde em JSON Schema, e o fluxo se ramifica por esse resultado, sem parsing de texto. Se a validação falha, há nova tentativa. Na avaliação, um novo agente recebe poucos testes com casos reais. Golden datasets rodam sob demanda e avaliação online ainda está em construção.",
+      "t": 876,
+      "legenda": "A avaliação ainda é manual, com golden datasets sob demanda.",
+      "print": "img/rAUyRDOFyHU/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Workflow",
+      "traducao": "fluxo de trabalho com passos definidos",
+      "nivel": "basico",
+      "chave": "workflow",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Structured output",
+      "traducao": "saída estruturada em JSON Schema",
+      "nivel": "intermediario",
+      "chave": "structured output",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Golden dataset",
+      "traducao": "conjunto de casos de referência",
+      "nivel": "intermediario",
+      "chave": "golden dataset",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Skill",
+      "traducao": "instruções reutilizáveis para o agente",
+      "nivel": "basico",
+      "chave": "skill",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Claude Agent SDK",
+      "traducao": "kit para montar agentes sobre o harness do Claude Code",
+      "nivel": "intermediario",
+      "chave": "claude agent sdk",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "MicroVM",
+      "traducao": "máquina virtual leve e isolada",
+      "nivel": "avancado",
+      "chave": "microvm",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Control plane",
+      "traducao": "camada que coordena execuções",
+      "nivel": "avancado",
+      "chave": "control plane",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Model routing",
+      "traducao": "escolha automática do modelo por tarefa",
+      "nivel": "intermediario",
+      "chave": "model routing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk descreve uma plataforma interna, sem comparação com alternativas. O número de 99% de sucesso mede execuções que terminaram, não respostas corretas. A avaliação de novos agentes é uma checagem em poucos casos reais, e avaliação online ainda não existe. O sandbox completo é meta. As execuções por agente são contagens de volume, sem dados de qualidade nem de bugs encontrados.",
+  "acoes": [
+    "Separe uma tarefa repetitiva da sua equipe em passos de código e passos que exigem julgamento. Chame o modelo só nos segundos.",
+    "Comece escrevendo uma skill para a tarefa e use-a por algumas semanas antes de automatizar em segundo plano.",
+    "Em cada agente, liste por escrito as ferramentas e os acessos permitidos. Para code review, deixe só leitura.",
+    "Peça saída em JSON com schema fixo e valide antes de usar o resultado. Guarde casos reais de execuções como golden dataset."
+  ],
+  "numeros": [
+    {
+      "valor": "9.700",
+      "contexto": "execuções do agente de code review em 30 dias",
+      "t": 938
+    },
+    {
+      "valor": "11.000",
+      "contexto": "execuções somadas em todos os workflows",
+      "t": 970
+    },
+    {
+      "valor": "99%",
+      "contexto": "taxa de sucesso de execução reportada",
+      "t": 970
+    },
+    {
+      "valor": "400",
+      "contexto": "engenheiros de software na Flywire",
+      "t": 61
+    }
+  ]
+}

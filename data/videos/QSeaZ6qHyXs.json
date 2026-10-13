@@ -1,0 +1,169 @@
+{
+  "id": "QSeaZ6qHyXs",
+  "titulo": "Claude Managed Agents Q&A: Evals, CI/CD and Multi-Tenancy (Part 4 of 4) — Anthropic",
+  "titulo_curto": "Claude Managed Agents Q&A: Evals, CI/CD and Multi-Tenancy (Part 4 of 4)",
+  "palestrante": "Anthropic",
+  "url": "https://www.youtube.com/watch?v=QSeaZ6qHyXs",
+  "duracao": 1137,
+  "publicado_ts": 1791785265,
+  "edicao": "2026-10-12",
+  "tese": "Agentes gerenciados pedem as mesmas disciplinas de qualquer sistema em produção: config versionada, isolamento por cliente e dados de eval bons.",
+  "tldr": [
+    "Na rodada de perguntas, a equipe da Anthropic explica como versionar agentes em YAML com a CLI e atualizá-los via CI/CD, e como isolar clientes por agente, workspace ou organização.",
+    "Também cobre limites práticos: mensagens durante uma custom tool devolvem erro 400, GPUs exigem sandbox próprio (como o Modal) e sessões longas usam um critério de saída.",
+    "Sobre qualidade, a recomendação é investir em dados de avaliação bons e usar sessões históricas, e o padrão coordenador com subagente mantém o agente principal livre."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Agente como código, atualizado por CI",
+      "texto": "A CLI da Anthropic (chamada de ant no material) envolve a API e aceita arquivos YAML, num estilo parecido com Terraform. Você guarda agentes, ambientes e outros recursos duráveis no repositório e roda um pipeline de CI/CD (integração e entrega contínuas) a cada mudança. A própria equipe diz que faz assim internamente. O mesmo mecanismo serve para sincronizar uma definição em vários workspaces.",
+      "t": 34,
+      "legenda": "Config do agente em YAML no repositório, atualizada pela CLI no pipeline.",
+      "print": null
+    },
+    {
+      "titulo": "Custom tool pausa a sessão e bloqueia mensagens",
+      "texto": "Enquanto o agente espera o resultado de uma custom tool (ferramenta que você mesmo implementa), a execução fica pausada. Mensagens novas são bloqueadas por causa da ordem dos eventos e a API responde com erro 400. Se o agente está fazendo outro trabalho, as mensagens entram na fila normalmente.",
+      "t": 96,
+      "legenda": "Sessão esperando custom tool: nova mensagem retorna 400.",
+      "print": null
+    },
+    {
+      "titulo": "Eval bom depende de dado bom",
+      "texto": "A equipe roda evals (avaliações) a cada novo modelo, abrindo muitas sessões em paralelo na nuvem para reajustar prompts e suposições do harness. Para quem constrói agentes, o conselho é cuidar dos dados. Avaliações mal definidas dão 100% sem dizer nada sobre desempenho. Sessões históricas são uma boa fonte para montar o conjunto de teste.",
+      "t": 250,
+      "legenda": "Conselho sobre evals: dados de qualidade e sessões históricas como base.",
+      "print": null
+    },
+    {
+      "titulo": "Isolamento por cliente em três níveis",
+      "texto": "Para separar clientes, dá para usar um agente por cliente, um workspace por cliente ou uma organização por cliente. Se há exigência legal de segregação de dados, a recomendação é um workspace por cliente, pois os recursos são alocados por workspace. Com tudo num workspace só, o campo de metadados da sessão (por exemplo, o ID do cliente) guarda o mapeamento.",
+      "t": 560,
+      "legenda": "Opções de isolamento: agente, workspace ou organização por cliente.",
+      "print": null
+    },
+    {
+      "titulo": "Coordenador livre, subagente cuida da custom tool",
+      "texto": "Para o agente principal continuar recebendo mensagens enquanto espera uma ferramenta, a saída é delegar. Um subagente define e executa a custom tool e o coordenador fica ocioso e responsivo. O talk mostra na tela uma lacuna em que a thread principal está ociosa enquanto os subagentes trabalham.",
+      "t": 1088,
+      "legenda": "Thread principal ociosa enquanto subagentes esperam resultados de ferramentas.",
+      "print": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Multi-tenancy",
+      "traducao": "multilocação (vários clientes no mesmo sistema)",
+      "nivel": "intermediario",
+      "chave": "multi-tenancy",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "CI (integração contínua)",
+      "traducao": "pipeline que testa e publica mudanças automaticamente",
+      "nivel": "basico",
+      "chave": "ci (integração contínua)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado onde o agente executa código",
+      "nivel": "intermediario",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação automatizada da qualidade do agente",
+      "nivel": "intermediario",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Subagent",
+      "traducao": "subagente",
+      "nivel": "intermediario",
+      "chave": "subagent",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Custom tool",
+      "traducao": "ferramenta customizada, executada por você",
+      "nivel": "intermediario",
+      "chave": "custom tool",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Workspace",
+      "traducao": "espaço de trabalho que agrupa recursos e chaves de API",
+      "nivel": "basico",
+      "chave": "workspace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Rubric",
+      "traducao": "rubrica de critérios de saída",
+      "nivel": "avancado",
+      "chave": "rubric",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É um Q&A de produto da própria Anthropic sobre o Claude Managed Agents, então boa parte funciona como documentação falada e promoção da plataforma. Não aparecem números de desempenho, custo ou resultados de evals internos, só afirmações gerais de que os agentes de revisão reduzem bugs e tempo por PR. A pergunta sobre o gargalo de revisão de código ficou sem resposta firme, e a equipe admite que é uma questão em aberto.",
+  "acoes": [
+    "Guarde a definição dos seus agentes em arquivos YAML no repositório e atualize-os por pipeline de CI, em vez de editar no console.",
+    "Se atende vários clientes com exigência de segregação de dados, planeje um workspace por cliente e mantenha uma tabela de qual cliente usa qual agente.",
+    "Monte seu conjunto de eval a partir de sessões históricas reais e confira se a nota 100% significa algo antes de confiar nela.",
+    "Se precisa de agente sempre responsivo com ferramentas lentas, teste o padrão coordenador com subagente que executa a custom tool."
+  ],
+  "numeros": [
+    {
+      "valor": "400",
+      "contexto": "erro ao enviar mensagem durante espera de custom tool",
+      "t": 96
+    },
+    {
+      "valor": "10.000",
+      "contexto": "sessões em paralelo citadas como exemplo de eval",
+      "t": 188
+    },
+    {
+      "valor": "6 horas",
+      "contexto": "duração de sessão longa citada; sem limite especial",
+      "t": 932
+    }
+  ]
+}

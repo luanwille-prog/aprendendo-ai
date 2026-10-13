@@ -1,0 +1,296 @@
+{
+  "id": "htod7Nv1cBc",
+  "titulo": "How MiniMax M3 Was Built: Sparse Attention and Native Multimodality — Olive Song",
+  "titulo_curto": "How MiniMax M3 Was Built: Sparse Attention and Native Multimodality",
+  "palestrante": "Olive Song",
+  "url": "https://www.youtube.com/watch?v=htod7Nv1cBc",
+  "duracao": 903,
+  "publicado_ts": 1791671423,
+  "edicao": "2026-10-12",
+  "tese": "A MiniMax ajustou a atenção esparsa ao hardware real e treinou texto e imagem juntos desde o passo zero para ter contexto longo sem perder qualidade.",
+  "tldr": [
+    "O MiniMax M3 é um modelo open weights (pesos abertos) com 1 milhão de tokens de contexto, foco em código e agentes, e visão treinada junto com o texto desde o início.",
+    "A MSA, a atenção esparsa da MiniMax, usa um ramo indexador leve para escolher blocos de tokens e um ramo esparso que olha só para esses blocos, com desenho pensado para GQA e para a memória da GPU.",
+    "Nos testes da equipe, adicionar visão depois do pré-treino prejudicou o texto ou ficou instável, e o treino multimodal desde o passo zero integrou melhor as duas modalidades."
+  ],
+  "tema": "modelos",
+  "complexidade": 5,
+  "ideias": [
+    {
+      "titulo": "Dois ramos decidem onde o modelo presta atenção",
+      "texto": "A sparse attention (atenção esparsa) da MiniMax tem um ramo indexador, que faz uma atenção completa barata com quatro cabeças de query e uma de key. Ele aprende a imitar as notas de atenção do ramo principal. O ramo esparso então calcula a atenção só nos blocos que o indexador escolheu. Assim o modelo evita comparar cada token com todos os outros em contextos de 1 milhão de tokens.",
+      "t": 177,
+      "legenda": "O indexador escolhe os blocos e o ramo esparso só calcula atenção neles",
+      "print": "img/htod7Nv1cBc/0.jpg"
+    },
+    {
+      "titulo": "O desenho da DeepSeek não servia para GQA",
+      "texto": "A DSA, atenção esparsa da DeepSeek, foi feita para MQA, em que existe uma única cabeça de key e value bem larga. Em GQA (grouped-query attention), a mesma largura se divide em várias cabeças. Com a DSA, todas essas cabeças acabavam olhando os mesmos tokens e perdiam diversidade. A GPU também precisava fazer várias leituras separadas na memória, o que custa mais tempo.",
+      "t": 349,
+      "legenda": "Em GQA a GPU faz leituras separadas por cabeça, o que encarece a atenção esparsa",
+      "print": "img/htod7Nv1cBc/1.jpg"
+    },
+    {
+      "titulo": "Escolher blocos sai mais barato do que escolher tokens",
+      "texto": "A MSA deixa cada cabeça de KV selecionar o seu próprio conjunto de tokens. Ela também troca a seleção token a token por seleção de blocos. Com menos candidatos, o cálculo de top-k fica mais leve, e a leitura contígua de memória aproveita melhor a GPU. A palestrante afirma que essa troca não trouxe perda relevante de qualidade, e a equipe escreveu kernels próprios para treino e inferência.",
+      "t": 466,
+      "legenda": "Selecionar blocos reduz candidatos do top-k e melhora o acesso à memória",
+      "print": "img/htod7Nv1cBc/2.jpg"
+    },
+    {
+      "titulo": "Três jeitos de ensinar visão a um modelo de texto",
+      "texto": "A equipe testou três estratégias. Adicionar visão depois do pré-treino, no estilo CPT (continued pre-training), degradou o texto. Adicionar visão no meio do pré-treino ficou sensível demais à mistura de dados e à taxa de aprendizado, e o resultado de uma rodada não se repetia na outra. Treinar com texto e imagem desde o passo zero quase não prejudicou o texto com o mesmo orçamento de tokens de texto.",
+      "t": 598,
+      "legenda": "Só o treino multimodal desde o início preservou o desempenho em texto",
+      "print": "img/htod7Nv1cBc/3.jpg"
+    },
+    {
+      "titulo": "Mapas de atenção mostram a integração entre texto e imagem",
+      "texto": "Nos modelos treinados no estilo CPT, os tokens de texto quase ignoram os tokens visuais, e essa região aparece escura no mapa de atenção. No modelo nativo, o mapa não separa texto e imagem. A equipe lê isso como sinal de que o modelo aprendeu a juntar as duas informações. Depois, a palestrante mostra que a atenção 3D dentro do ViT, com quatro quadros por vez, melhora a compreensão de vídeo e também de imagens.",
+      "t": 705,
+      "legenda": "No modelo nativo o texto presta atenção aos tokens visuais",
+      "print": "img/htod7Nv1cBc/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Sparse attention",
+      "traducao": "atenção esparsa, que calcula a atenção só em parte dos tokens",
+      "nivel": "avancado",
+      "chave": "sparse attention",
+      "analogia": "Sparse attention é como estudar para a prova lendo só os capítulos que o professor marcou como importantes, em vez de reler o livro inteiro.",
+      "explicacao": [
+        "Para escrever cada palavra, o modelo consulta o que já leu antes. Esse ato de consultar e pesar o texto anterior se chama attention (atenção).",
+        "Na atenção completa, cada token (pedaço de palavra) é comparado com todos os outros. Com 1 milhão de tokens, o número de comparações fica enorme e lento.",
+        "A sparse attention (atenção esparsa) compara cada token só com uma parte do texto. O desafio é escolher bem essa parte para não perder informação importante.",
+        "Na MSA, da MiniMax, um ramo indexador leve faz uma atenção barata e dá notas aos trechos. Ele aprende a imitar as notas do ramo principal durante o treino.",
+        "O ramo esparso calcula a atenção de verdade só nos blocos que o indexador escolheu. A MiniMax afirma ganhos de 9 vezes na leitura do prompt e 15 vezes na geração."
+      ],
+      "pre_requisitos": [
+        "Token",
+        "Mecanismo de atenção",
+        "Janela de contexto"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "CONTEXTO LONGO",
+            "nota": "Até 1 milhão de tokens para consultar"
+          },
+          {
+            "rotulo": "RAMO INDEXADOR",
+            "nota": "Atenção barata que dá notas aos trechos"
+          },
+          {
+            "rotulo": "ESCOLHA DE BLOCOS",
+            "nota": "Separa os blocos com nota mais alta"
+          },
+          {
+            "rotulo": "RAMO ESPARSO",
+            "nota": "Calcula atenção só nos blocos escolhidos"
+          },
+          {
+            "rotulo": "MENOS CONTAS",
+            "nota": "Resposta mais rápida em texto longo"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Janela de contexto",
+      "traducao": "quantidade de tokens que o modelo lê de uma vez",
+      "nivel": "basico",
+      "chave": "janela de contexto",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Prefill e decode",
+      "traducao": "leitura do prompt e geração token a token",
+      "nivel": "intermediario",
+      "chave": "prefill e decode",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "GQA (grouped-query attention)",
+      "traducao": "atenção em que grupos de queries compartilham cabeças de key e value",
+      "nivel": "avancado",
+      "chave": "gqa (grouped-query attention)",
+      "analogia": "GQA é como uma escola em que cada grupo de alunos divide o mesmo livro didático, em vez de cada aluno ter o seu próprio exemplar.",
+      "explicacao": [
+        "Na atenção, cada token faz uma pergunta, chamada query, e procura respostas nos outros tokens, que guardam uma etiqueta (key) e um conteúdo (value).",
+        "O modelo tem várias cabeças de atenção trabalhando em paralelo. Se cada cabeça guardar suas próprias keys e values, a memória da GPU enche rápido em textos longos.",
+        "Na GQA (grouped-query attention, ou atenção com queries agrupadas), as queries se dividem em grupos e cada grupo compartilha uma cabeça de key e value. Isso economiza memória.",
+        "A MQA leva a ideia ao extremo, com uma única cabeça de key e value bem larga. A DeepSeek desenhou sua atenção esparsa para MQA.",
+        "Aplicada em GQA, essa atenção fazia todas as cabeças olharem os mesmos tokens e exigia leituras separadas na memória. A MSA deixa cada cabeça escolher seus próprios blocos."
+      ],
+      "pre_requisitos": [
+        "Mecanismo de atenção",
+        "Query, key e value",
+        "Cache KV",
+        "Sparse attention"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "MUITAS QUERIES",
+            "nota": "Cada cabeça faz sua própria pergunta"
+          },
+          {
+            "rotulo": "GRUPOS",
+            "nota": "Queries divididas em poucos grupos"
+          },
+          {
+            "rotulo": "KV COMPARTILHADO",
+            "nota": "Uma cabeça de key e value por grupo"
+          },
+          {
+            "rotulo": "MENOS MEMÓRIA",
+            "nota": "Cache menor sem perder diversidade"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "GPU kernel",
+      "traducao": "rotina de baixo nível que roda diretamente na GPU",
+      "nivel": "avancado",
+      "chave": "gpu kernel",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Early fusion",
+      "traducao": "fusão antecipada de modalidades desde o início do treino",
+      "nivel": "intermediario",
+      "chave": "early fusion",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Continued pre-training (CPT)",
+      "traducao": "pré-treino continuado sobre um modelo já treinado",
+      "nivel": "avancado",
+      "chave": "continued pre-training (cpt)",
+      "analogia": "CPT é como mandar um cozinheiro experiente de comida italiana fazer um curso rápido de comida japonesa depois de anos de carreira.",
+      "explicacao": [
+        "Primeiro, o modelo passa pelo pré-treino, a fase longa em que lê uma quantidade gigante de texto e aprende a língua e o mundo.",
+        "No CPT (continued pre-training, ou pré-treino continuado), a equipe pega esse modelo pronto e continua o treino com um tipo novo de dado, como imagens ou um domínio específico.",
+        "O CPT sai barato porque reaproveita o modelo existente. O risco é que, no fim do pré-treino, o modelo já se acomodou, e os dados novos podem atrapalhar o que ele já sabia.",
+        "A MiniMax testou adicionar visão no estilo CPT e viu o desempenho em texto cair. Nos mapas de atenção, o texto quase ignorava os tokens de imagem.",
+        "Por isso a equipe treinou texto e imagem juntos desde o passo zero. Com o mesmo orçamento de tokens de texto, essa escolha quase não prejudicou o texto."
+      ],
+      "pre_requisitos": [
+        "Pré-treino",
+        "Taxa de aprendizado",
+        "Modelo multimodal"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "MODELO JÁ TREINADO",
+            "nota": "Pré-treino de texto quase concluído"
+          },
+          {
+            "rotulo": "DADOS NOVOS",
+            "nota": "Imagens ou um domínio diferente"
+          },
+          {
+            "rotulo": "TREINO CONTINUA",
+            "nota": "Ajusta os pesos com a nova mistura"
+          },
+          {
+            "rotulo": "MODELO ADAPTADO",
+            "nota": "Ganha a habilidade, pode perder texto"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Vision transformer (ViT)",
+      "traducao": "transformer que converte imagens em tokens visuais",
+      "nivel": "avancado",
+      "chave": "vision transformer (vit)",
+      "analogia": "Um ViT é como montar um quebra-cabeça ao contrário, em que você corta a foto em peças, descreve cada peça e depois compara as peças entre si para entender a cena.",
+      "explicacao": [
+        "Um modelo de linguagem só entende tokens. Para ele ler uma imagem, alguém precisa traduzir a imagem em tokens.",
+        "O ViT (vision transformer, ou transformer de visão) corta a imagem em pequenos quadrados, chamados patches, e transforma cada um numa lista de números.",
+        "Dentro do ViT, os patches trocam informação entre si pela atenção. No fim, ele entrega tokens visuais que o modelo de linguagem consegue ler junto com o texto.",
+        "No MiniMax M3, esses tokens visuais entram no lugar de marcadores de imagem dentro do texto, e o modelo processa tudo junto.",
+        "Em vídeo, um ViT comum olha cada quadro separado. A MiniMax usou atenção 3D, em que patches de quatro quadros seguidos se enxergam, o que melhorou vídeo e imagem."
+      ],
+      "pre_requisitos": [
+        "Transformer",
+        "Token",
+        "Mecanismo de atenção",
+        "Modelo multimodal"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "IMAGEM OU VÍDEO",
+            "nota": "Entrada visual bruta"
+          },
+          {
+            "rotulo": "PATCHES",
+            "nota": "Imagem cortada em pequenos quadrados"
+          },
+          {
+            "rotulo": "ATENÇÃO NO VIT",
+            "nota": "Patches comparam entre si, até 4 quadros"
+          },
+          {
+            "rotulo": "TOKENS VISUAIS",
+            "nota": "Entram no texto e o modelo lê junto"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "A palestrante trabalha na MiniMax e apresenta o próprio modelo. Os ganhos de 9 vezes no prefill e 15 vezes no decode não vêm com tamanho de contexto, hardware nem custo do teste. A frase de que o modelo assume 90% do trabalho de código atual não tem nenhum dado no talk. As estratégias de treino aparecem sem números de benchmark, e os mapas de atenção são exemplos visuais escolhidos pela equipe. O relatório técnico citado na descrição é o lugar para checar essas afirmações.",
+  "acoes": [
+    "Antes de adotar o M3 para bases de código grandes, rode suas próprias tarefas com contexto longo e meça latência e acerto contra o modelo que você já usa.",
+    "Ao escolher um modelo para ler telas, gráficos ou documentos com imagem, teste com exemplos reais do seu trabalho e veja se ele usa a imagem na resposta.",
+    "Desconfie de números de velocidade sem condição de teste. Procure no relatório técnico o tamanho de contexto e o hardware usados.",
+    "Se você usa agentes de computer use, inclua o M3 na comparação, porque a visão nativa é o argumento principal da MiniMax para esse caso."
+  ],
+  "numeros": [
+    {
+      "valor": "1 milhão",
+      "contexto": "tokens na janela de contexto do MiniMax M3",
+      "t": 97
+    },
+    {
+      "valor": "9x",
+      "contexto": "prefill mais rápido com MSA que com atenção completa",
+      "t": 97
+    },
+    {
+      "valor": "15x",
+      "contexto": "decode mais rápido com MSA que com atenção completa",
+      "t": 97
+    },
+    {
+      "valor": "4 quadros",
+      "contexto": "melhor equilíbrio para a atenção 3D dentro do ViT",
+      "t": 849
+    }
+  ]
+}

@@ -1,0 +1,203 @@
+{
+  "id": "FGftGOzfohc",
+  "titulo": "Build a Research Agent with Claude Managed Agents (Part 2 of 4) — Anthropic",
+  "titulo_curto": "Build a Research Agent with Claude Managed Agents (Part 2 of 4)",
+  "palestrante": "Anthropic",
+  "url": "https://www.youtube.com/watch?v=FGftGOzfohc",
+  "duracao": 2135,
+  "publicado_ts": 1791785270,
+  "edicao": "2026-10-12",
+  "tese": "Um agente hospedado vira ferramenta de trabalho quando ganha skills, subagentes, memória e um avaliador que o obriga a refazer o trabalho.",
+  "tldr": [
+    "A Anthropic mostra, em workshop, como montar um agente de pesquisa financeira no Claude Managed Agents: começa com um agente de uma linha no console e termina com skill do SEC, subagentes, ferramenta própria e memória compartilhada.",
+    "O recurso central é o outcome (resultado): você entrega a tarefa e uma rubrica, e um subagente avaliador confere o trabalho e manda o Claude tentar de novo até passar.",
+    "No Q&A, a equipe admite limites: não há controle de orçamento por sessão, nem rewind ou fork de sessão, nem outcome por subagente. Cofres de credenciais, memória e sandbox próprio cobrem parte da segurança."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Um agente em minutos, sem código",
+      "texto": "No console, o palestrante descreve o agente em uma frase e o Claude gera nome, prompt de sistema e modelo. Depois se cria o environment (template do sandbox) e se abre a sessão. A Anthropic cuida da infraestrutura, do harness, do escalonamento e do log de eventos.",
+      "t": 93,
+      "legenda": "Criar um agente no console leva poucos cliques.",
+      "print": "img/FGftGOzfohc/0.jpg"
+    },
+    {
+      "titulo": "Chat é só um fluxo de eventos",
+      "texto": "A conversa com a sessão acontece por um stream de eventos. O app envia um evento de mensagem do usuário e repassa ao navegador o stream SSE que volta. Quem só precisa de um chat para aqui. O diferencial é rodar tarefas longas, de horas a meses.",
+      "t": 724,
+      "legenda": "A interface de chat se apoia no stream de eventos da sessão.",
+      "print": null
+    },
+    {
+      "titulo": "Skill, subagentes e ferramenta própria",
+      "texto": "O agente principal recebe uma skill para consultar o SEC, subagentes especializados e uma referência a si mesmo para se clonar. O clone copia prompt e ferramentas, não o histórico da conversa. Uma ferramenta própria, dispatch analysis, permite orquestrar várias sessões.",
+      "t": 910,
+      "legenda": "O agente ganha subagentes, skill e ferramenta própria.",
+      "print": "img/FGftGOzfohc/2.jpg"
+    },
+    {
+      "titulo": "Outcome: o agente se corrige sozinho",
+      "texto": "Você define tarefa, rubrica e número máximo de iterações. Quando o Claude acha que terminou, um subagente avaliador compara o trabalho com a rubrica. Se reprovar, o Claude tenta de novo. No caso da Nvidia, ele entregou uma nota na memória e um scorecard em JSON.",
+      "t": 1160,
+      "legenda": "Sessão com outcome mostra threads de subagentes e a avaliação final.",
+      "print": "img/FGftGOzfohc/3.jpg"
+    },
+    {
+      "titulo": "Cofre troca o segredo na saída",
+      "texto": "Em produção, a chave não vai no prompt. O vault guarda a credencial real, e o sandbox só vê um valor placeholder. Na saída de rede, a plataforma troca o placeholder pelo segredo real, mas só para os domínios autorizados. Para outro domínio, a troca não acontece.",
+      "t": 1534,
+      "legenda": "O vault junta credenciais e as vincula a domínios específicos.",
+      "print": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Outcome",
+      "traducao": "resultado verificado por avaliador",
+      "nivel": "intermediario",
+      "chave": "outcome",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Rubric",
+      "traducao": "rubrica de avaliação",
+      "nivel": "intermediario",
+      "chave": "rubric",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Subagente",
+      "traducao": "agente delegado pelo principal",
+      "nivel": "intermediario",
+      "chave": "subagente",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Skill",
+      "traducao": "instruções reutilizáveis do agente",
+      "nivel": "basico",
+      "chave": "skill",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado de execução",
+      "nivel": "basico",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Segredo por placeholder",
+      "traducao": "troca do valor falso pelo real na saída",
+      "nivel": "avancado",
+      "chave": "segredo por placeholder",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Memory store",
+      "traducao": "memória de longo prazo compartilhada",
+      "nivel": "intermediario",
+      "chave": "memory store",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Dreaming",
+      "traducao": "consolidação de memória entre sessões",
+      "nivel": "avancado",
+      "chave": "dreaming",
+      "analogia": "Dreaming é como o gerente que, no fim da semana, lê as anotações de toda a equipe e reescreve o manual do escritório com o que funcionou.",
+      "explicacao": [
+        "Vários agentes trabalham em tarefas parecidas e cada um anota o que aprendeu em um caderno comum.",
+        "Com o tempo, esse caderno fica cheio de notas soltas, repetidas ou até contraditórias.",
+        "Dreaming (sonhar, em tradução livre) é uma etapa que roda depois das sessões e relê as transcrições e as memórias de várias sessões juntas.",
+        "Ela reescreve o memory store (memória de longo prazo compartilhada) para que os próximos agentes saibam o que buscar e herdem os casos difíceis que outros já resolveram.",
+        "Hoje o recurso só atualiza memory stores. A Anthropic cita como ideia futura aplicar o mesmo processo a skills, prompts e definições de agente."
+      ],
+      "pre_requisitos": [
+        "Memory store",
+        "Sessão de agente",
+        "Subagente"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "SESSÕES RODAM",
+            "nota": "Agentes anotam o que fizeram"
+          },
+          {
+            "rotulo": "MEMÓRIAS ACUMULAM",
+            "nota": "Notas soltas no memory store"
+          },
+          {
+            "rotulo": "DREAMING ANALISA",
+            "nota": "Relê transcrições e memórias"
+          },
+          {
+            "rotulo": "MEMÓRIA CONSOLIDADA",
+            "nota": "Próximos agentes já sabem mais"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É um workshop da própria Anthropic e funciona como demonstração de produto. A sessão da Nvidia exibida foi gravada na véspera, então não se viu o resultado ao vivo nem quantas rodadas o avaliador exigiu. Não há dados de custo, taxa de acerto ou erros do scorecard. O Q&A traz as lacunas: sem limite de gasto por sessão, sem fork de sessão, sem outcome por subagente. A pergunta sobre dependência de fornecedor foi respondida com 'tudo é API', sem prova.",
+  "acoes": [
+    "Ao pedir tarefas longas a um agente, escreva uma rubrica com critérios verificáveis e peça que outro agente confira o resultado antes de você revisar.",
+    "Nunca cole chaves de API no prompt de um agente. Use um cofre de segredos e restrinja cada credencial aos domínios necessários.",
+    "Se for rodar agentes em loop, defina você mesmo um teto de iterações e de gasto, porque a plataforma ainda não oferece esse controle.",
+    "Guarde conhecimento reutilizável em uma skill ou memória compartilhada, em vez de repetir contexto em cada sessão."
+  ],
+  "numeros": [
+    {
+      "valor": "6 atos",
+      "contexto": "etapas do workshop guiado pela skill",
+      "t": 438
+    },
+    {
+      "valor": "~10 min",
+      "contexto": "duração estimada da análise da Nvidia",
+      "t": 1130
+    },
+    {
+      "valor": "5 min",
+      "contexto": "prazo real para receber créditos, segundo o palestrante",
+      "t": 1410
+    },
+    {
+      "valor": "10 mensagens",
+      "contexto": "podem ser enfileiradas de uma vez para guiar o agente",
+      "t": 1691
+    }
+  ]
+}

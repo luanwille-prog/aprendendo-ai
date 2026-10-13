@@ -1,0 +1,152 @@
+{
+  "id": "IK8cC4FScps",
+  "titulo": "Building AI Agents with Real-Time Web Data — Yohan Raju, Bright Data",
+  "titulo_curto": "Building AI Agents with Real-Time Web Data",
+  "palestrante": "Yohan Raju, Bright Data",
+  "url": "https://www.youtube.com/watch?v=IK8cC4FScps",
+  "duracao": 1648,
+  "publicado_ts": 1791716425,
+  "edicao": "2026-10-12",
+  "tese": "Agente que decide com preço, avaliação e opinião de hoje precisa buscar dado fresco na web, e o gargalo real é conseguir acesso sem ser bloqueado.",
+  "tldr": [
+    "Yohan Raju, da Bright Data, mostra por que manter scrapers (programas que extraem dados de sites) fica caro quando a lista de sites cresce: cada site tem layout próprio, muda sem aviso e usa proteção anti-bot.",
+    "Ele separa dois caminhos de um agente: responder com o que o modelo já sabe ou com dado pré-indexado, ou sair para a web quando a pergunta depende de informação atual, como 'melhor época para viajar este ano'.",
+    "Na demo, um notebook puxa dados de um copo térmico na Amazon e comentários no Reddit pelas APIs da empresa, e o Gemini devolve uma recomendação de compra. O servidor MCP da Bright Data entra como a camada que dá ao agente acesso a busca, páginas e navegador."
+  ],
+  "tema": "dados-e-rag",
+  "complexidade": 2,
+  "ideias": [
+    {
+      "titulo": "Escalar scraping custa engenharia, não só código",
+      "texto": "Segundo o palestrante, um scraper leva de 3 a 5 dias para ser feito e testado. Com 10 sites isso é gerenciável. Com 100 ou 1000, cada mudança de seletor (o endereço do preço ou do título na página) derruba o pipeline, exige correção e reprocessamento dos dados perdidos. A promessa é que agentes descubram e consertem esses scrapers sozinhos.",
+      "t": 294,
+      "legenda": "Quando o seletor do preço muda, o pipeline para até alguém consertar.",
+      "print": null
+    },
+    {
+      "titulo": "A arquitetura tradicional tem muitas camadas que podem falhar",
+      "texto": "O diagrama vai do gatilho agendado (cron) à camada de proxy, ao parsing com validação, à limpeza (deduplicação, enriquecimento) e ao banco de dados. Se qualquer etapa quebra, como o anti-bot ou um seletor, o processo recomeça, às vezes com backfill (preencher o histórico perdido) e risco de estourar SLA (prazo combinado).",
+      "t": 427,
+      "legenda": "O fluxo completo de coleta, de gatilho até banco, com pontos de falha em cada camada.",
+      "print": "img/IK8cC4FScps/1.jpg"
+    },
+    {
+      "titulo": "Dois caminhos: conhecimento guardado ou web ao vivo",
+      "texto": "Perguntas como 'melhor época para viajar a San Francisco' podem ser respondidas com dado pré-treinado ou pré-indexado. Se a pergunta traz 'este ano', o agente precisa ir à web. O palestrante também cita cache para respostas repetidas, como o clima do dia, para economizar tokens e dinheiro, e diz que sites bloqueiam crawlers de IA via robots.txt.",
+      "t": 632,
+      "legenda": "O agente escolhe entre responder do que já tem e buscar informação atual.",
+      "print": "img/IK8cC4FScps/2.jpg"
+    },
+    {
+      "titulo": "MCP dá ao agente busca, páginas e navegador",
+      "texto": "O servidor MCP (protocolo que conecta agentes a ferramentas) da Bright Data reúne mais de 60 ferramentas: busca no Google, páginas em markdown ou HTML, dados de Amazon, Reddit, LinkedIn e automação de navegador. Na comparação lado a lado, o Claude com o MCP leu uma página do Glassdoor e o Claude sem ele foi bloqueado.",
+      "t": 940,
+      "legenda": "Mesmo prompt, resultado diferente: com o MCP a página abre, sem ele o acesso é bloqueado.",
+      "print": "img/IK8cC4FScps/3.jpg"
+    },
+    {
+      "titulo": "Demo final transforma dois dados em uma recomendação",
+      "texto": "O notebook busca preço, nota e vendedores na Amazon, pesquisa posts no Reddit e manda os dois para o Gemini. A resposta recomenda a compra por causa do desconto e das avaliações positivas, com ressalvas sobre opiniões mistas e estoque baixo. O padrão vale para outros casos além de e-commerce.",
+      "t": 1552,
+      "legenda": "O modelo cruza dados da Amazon e do Reddit e justifica a decisão de comprar.",
+      "print": "img/IK8cC4FScps/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Web scraping",
+      "traducao": "extração automática de dados de sites",
+      "nivel": "basico",
+      "chave": "web scraping",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Anti-bot e proxy residencial",
+      "traducao": "proteções contra robôs e IPs que parecem de usuários comuns",
+      "nivel": "intermediario",
+      "chave": "anti-bot e proxy residencial",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "RAG",
+      "traducao": "geração com busca em dados pré-indexados",
+      "nivel": "intermediario",
+      "chave": "rag",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP",
+      "traducao": "protocolo que conecta agentes a ferramentas externas",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Browser agent",
+      "traducao": "agente que controla um navegador",
+      "nivel": "intermediario",
+      "chave": "browser agent",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Knowledge cutoff",
+      "traducao": "data limite do que o modelo aprendeu no treino",
+      "nivel": "basico",
+      "chave": "knowledge cutoff",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é um pitch da Bright Data, feita para vender acesso a dados. A comparação do Glassdoor mostra um único caso, sem taxa de sucesso ou custo. A demo da Amazon e do Reddit não mede se a recomendação é boa, e o comentário sobre Reddit cita poucos posts. A afirmação de que agentes dispensam engenheiros para manter scrapers aparece sem dados. O palestrante também não discute os termos de uso dos sites nem a legalidade de contornar bloqueios.",
+  "acoes": [
+    "Ao desenhar um agente, liste quais perguntas dependem de dado atual e quais podem usar base interna ou cache. Só as primeiras justificam buscar na web.",
+    "Antes de montar um scraper próprio, estime o custo de manutenção por site e compare com uma API pronta de dados.",
+    "Revise os termos de uso e o robots.txt dos sites que você pretende coletar antes de contornar qualquer bloqueio.",
+    "Teste a recomendação do agente contra uma decisão que você já conhece para ver se os dados coletados sustentam a conclusão."
+  ],
+  "numeros": [
+    {
+      "valor": "3 a 5 dias",
+      "contexto": "tempo para desenvolver um scraper por site",
+      "t": 171
+    },
+    {
+      "valor": "60+",
+      "contexto": "APIs no endpoint MCP da Bright Data",
+      "t": 817
+    },
+    {
+      "valor": "60+",
+      "contexto": "ferramentas disponíveis para agentes de IA",
+      "t": 1386
+    },
+    {
+      "valor": "90%",
+      "contexto": "exemplo de taxa de retorno do campo preço a validar",
+      "t": 509
+    }
+  ]
+}

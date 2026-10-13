@@ -1,0 +1,233 @@
+{
+  "id": "Ndp5VaqFrl0",
+  "titulo": "Turning My Obsidian Vault Into a Local AI Engineer — Filip Makraduli, Superlinked",
+  "titulo_curto": "Turning My Obsidian Vault Into a Local AI Engineer",
+  "palestrante": "Filip Makraduli, Superlinked",
+  "url": "https://www.youtube.com/watch?v=Ndp5VaqFrl0",
+  "duracao": 2845,
+  "publicado_ts": 1791720032,
+  "edicao": "2026-10-12",
+  "tese": "Um servidor MCP manda o trabalho pesado e sensível para modelos abertos na sua nuvem, e o agente só vê o resultado enxuto e anonimizado.",
+  "tldr": [
+    "Filip Makraduli mostra como ligar o Claude Code a um servidor MCP que envia documentos para modelos abertos rodando na nuvem privada do usuário, usando o motor de inferência Superlinked SIE.",
+    "Na demo, um NDA e contratos escaneados passam por OCR e por redação de dados pessoais antes de o agente receber um arquivo Markdown menor, o que reduz tokens e evita expor dados sensíveis.",
+    "Na parte final, ele cita ganhos de desempenho com batching, troca de modelos na GPU e LoRAs, apresenta o roteamento de modelos como ideia futura e admite que o limite de privacidade ainda precisa de mais testes."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Delegar o trabalho pesado a um servidor MCP privado",
+      "texto": "O agente continua no fluxo normal. Quando surge uma tarefa cara em tokens ou sensível, ele chama uma ferramenta MCP. Essa ferramenta envia o arquivo para workers com GPU na nuvem do usuário. O Claude Code recebe de volta só o resultado processado.",
+      "t": 650,
+      "legenda": "A arquitetura separa o agente, o servidor MCP e o cluster que processa os documentos.",
+      "print": "img/Ndp5VaqFrl0/0.jpg"
+    },
+    {
+      "titulo": "Um conjunto de ferramentas para documentos",
+      "texto": "O pacote expõe ferramentas para converter documentos em Markdown com OCR, extrair entidades, legendar e etiquetar, gerar estruturas, resumir e responder perguntas. Ele é open source, então qualquer pessoa pode contribuir com novas ferramentas que usam a mesma inferência.",
+      "t": 868,
+      "legenda": "Lista das ferramentas disponíveis, de docs para Markdown a perguntas e respostas.",
+      "print": null
+    },
+    {
+      "titulo": "Redação de um NDA no Claude Code",
+      "texto": "Na demo, o prompt pede para redigir (mascarar) os dados do NDA. A ferramenta devolve o texto com e-mail, nome e outros dados pessoais trocados por rótulos. O resumo da chamada mostra 10 trechos mascarados e a contagem por tipo de rótulo.",
+      "t": 1214,
+      "legenda": "A saída da ferramenta mostra quantos trechos foram mascarados e de que tipo.",
+      "print": "img/Ndp5VaqFrl0/2.jpg"
+    },
+    {
+      "titulo": "Scan vira Markdown sem dados pessoais",
+      "texto": "Um contrato escaneado é uma imagem, então precisa de OCR. O palestrante compara o arquivo antes e depois. O resultado é um Markdown legível com os dados pessoais mascarados. Uma barra de status também contabiliza os tokens economizados, embora ele diga que ainda precisa ajustar essa contagem.",
+      "t": 1341,
+      "legenda": "O mesmo contrato como imagem escaneada e como texto Markdown já mascarado.",
+      "print": "img/Ndp5VaqFrl0/3.jpg"
+    },
+    {
+      "titulo": "Batching por worker e embeddings mais baratos",
+      "texto": "A equipe diz que uma fila compartilhada, da qual cada worker puxa trabalho, deu melhor latência de ponta a ponta. Nos testes de embeddings com tarefas do MTEB, o melhor modelo aberto por tarefa chegou a 99,8% do modelo de fronteira, com preço cerca de 10 vezes menor.",
+      "t": 1654,
+      "legenda": "O slide mostra a qualidade relativa e a diferença de preço dos embeddings abertos.",
+      "print": "img/Ndp5VaqFrl0/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "MCP",
+      "traducao": "Model Context Protocol, protocolo que liga agentes a ferramentas externas",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Tool calling",
+      "traducao": "chamada de ferramenta pelo modelo",
+      "nivel": "basico",
+      "chave": "tool calling",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "OCR",
+      "traducao": "reconhecimento óptico de caracteres, que lê texto em imagens",
+      "nivel": "basico",
+      "chave": "ocr",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Redação de PII",
+      "traducao": "mascarar informações pessoalmente identificáveis, como CPF e telefone",
+      "nivel": "basico",
+      "chave": "redação de pii",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LoRA",
+      "traducao": "adaptador leve de fine-tuning que especializa um modelo numa tarefa",
+      "nivel": "avancado",
+      "chave": "lora",
+      "analogia": "LoRA é como colar post-its com ajustes num livro de receitas grande, sem reescrever o livro inteiro.",
+      "explicacao": [
+        "Um modelo de IA sai de fábrica sabendo um pouco de tudo, mas pode errar em assuntos de nicho, como a linguagem jurídica em alemão.",
+        "Fine-tuning (ajuste fino) é treinar o modelo de novo com exemplos do seu nicho para ele melhorar naquele assunto.",
+        "LoRA (Low-Rank Adaptation, adaptação de baixa ordem) congela os pesos originais do modelo e treina só um conjunto pequeno de pesos extras, chamado adaptador.",
+        "Como o adaptador é pequeno, ele sai barato e rápido de treinar. No talk, colegas do palestrante criaram LoRAs para alemão jurídico com custo baixo.",
+        "Um mesmo modelo base pode receber vários adaptadores e trocar entre eles. Assim a equipe testa cada LoRA em produção e fica com o que rende mais."
+      ],
+      "pre_requisitos": [
+        "Fine-tuning",
+        "Pesos do modelo",
+        "Modelo base"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "MODELO BASE",
+            "nota": "Pesos originais ficam congelados"
+          },
+          {
+            "rotulo": "DADOS DO NICHO",
+            "nota": "Exemplos de alemão jurídico"
+          },
+          {
+            "rotulo": "ADAPTADOR LORA",
+            "nota": "Poucos pesos extras treinados"
+          },
+          {
+            "rotulo": "MODELO ESPECIALIZADO",
+            "nota": "Base mais adaptador, fácil de trocar"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Hot swapping de modelos",
+      "traducao": "trocar modelos carregados na mesma GPU sem reiniciar o serviço",
+      "nivel": "avancado",
+      "chave": "hot swapping de modelos",
+      "analogia": "Hot swapping de modelos é como uma cozinha com um fogão só, onde o cozinheiro troca a panela conforme o pedido sem apagar o fogo.",
+      "explicacao": [
+        "Um modelo de IA precisa ficar carregado na memória de uma placa de vídeo, a GPU (unidade de processamento gráfico), para responder.",
+        "GPU custa caro. Reservar uma GPU inteira para um modelo pequeno que fica parado boa parte do tempo desperdiça dinheiro.",
+        "Hot swapping (troca a quente) mantém vários modelos prontos e troca qual deles roda na GPU sem reiniciar o serviço.",
+        "A técnica rende mais com modelos pequenos que cabem numa GPU só, como os de reconhecimento de entidades, embeddings ou geração curta.",
+        "No Superlinked SIE, um gateway (porta de entrada) manda cada pedido ao grupo de workers certo. Cada worker junta pedidos em lotes (batching) antes de rodar o modelo."
+      ],
+      "pre_requisitos": [
+        "GPU",
+        "Inferência",
+        "Batching",
+        "LoRA"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PEDIDO CHEGA",
+            "nota": "A tarefa indica qual modelo usar"
+          },
+          {
+            "rotulo": "GATEWAY",
+            "nota": "Envia ao grupo de workers certo"
+          },
+          {
+            "rotulo": "TROCA NA GPU",
+            "nota": "Carrega o modelo pedido sem reiniciar"
+          },
+          {
+            "rotulo": "GPU COMPARTILHADA",
+            "nota": "Vários modelos usam a mesma placa"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Model routing",
+      "traducao": "escolher qual modelo atende cada tarefa, por custo, qualidade e latência",
+      "nivel": "avancado",
+      "chave": "model routing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Elicitation",
+      "traducao": "o servidor MCP pede algo de volta ao cliente, comunicação em dois sentidos",
+      "nivel": "avancado",
+      "chave": "elicitation",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O talk também promove o produto da empresa do palestrante, o Superlinked SIE, e oferece créditos de cluster. A demo usa dados sintéticos e um cluster gerenciado pela própria Superlinked. Os números de embedding (99,8% e 10 vezes mais barato) vêm de testes internos, sem metodologia detalhada. A pergunta final expõe o ponto fraco. Se o agente consegue ler o arquivo bruto antes de chamar a ferramenta, a privacidade depende de instrução, não de barreira técnica. O palestrante diz que seus testes não vazaram dados, mas admite que falta testar mais e reforçar com guardrails.",
+  "acoes": [
+    "Antes de mandar documentos sensíveis a um agente, verifique se ele tem acesso direto à pasta com os originais. Se tiver, a redação por ferramenta não garante nada.",
+    "Teste o pré-processamento com OCR em um PDF escaneado seu e compare o tamanho do contexto antes e depois, para estimar a economia de tokens.",
+    "Ao escolher um modelo para resumo, confira se o modo de raciocínio (thinking tokens) está ligado. O palestrante teve resumos vazios porque o modelo gastou tudo pensando.",
+    "Rode uma amostra de documentos reais anonimizados pela ferramenta de redação e confira à mão se algum dado pessoal passou."
+  ],
+  "numeros": [
+    {
+      "valor": "10 trechos",
+      "contexto": "mascarados no NDA da demo de redação",
+      "t": 1214
+    },
+    {
+      "valor": "10x",
+      "contexto": "preço menor dos embeddings abertos, com qualidade parecida",
+      "t": 1654
+    },
+    {
+      "valor": "99,8%",
+      "contexto": "qualidade do melhor modelo por tarefa frente ao de fronteira (MTEB)",
+      "t": 1654
+    },
+    {
+      "valor": "10 páginas",
+      "contexto": "exemplo de PDF com imagens para pré-processar com OCR",
+      "t": 490
+    }
+  ]
+}

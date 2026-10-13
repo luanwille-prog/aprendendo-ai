@@ -1,0 +1,208 @@
+{
+  "id": "7RFJRDYroic",
+  "titulo": "Parameter Golf with AutoResearch — Vayum Arora, Zhengyao Jiang, Dixing Xu & Dhruv Srikanth, Weco AI",
+  "titulo_curto": "Parameter Golf with AutoResearch",
+  "palestrante": "Vayum Arora, Zhengyao Jiang, Dixing Xu & Dhruv Srikanth, Weco AI",
+  "url": "https://www.youtube.com/watch?v=7RFJRDYroic",
+  "duracao": 2053,
+  "publicado_ts": 1791752416,
+  "edicao": "2026-10-12",
+  "tese": "Autoresearch rende quando o eval é rápido, barato e difícil de burlar, e quando um humano acompanha a árvore de tentativas e corrige o rumo.",
+  "tldr": [
+    "Autoresearch é um loop em que o modelo propõe mudanças no código, roda um eval (avaliação) fixo e guarda só o que melhora a nota.",
+    "A Weco AI conta que seu agente Aiden virou o maior contribuidor do Parameter Golf da OpenAI e monta uma versão reduzida do desafio para o público rodar ao vivo.",
+    "O workshop lista o que decide o resultado: arquivo editável, comando de eval, métrica com direção clara, limite de tempo, orientação inicial e intervenção humana durante a busca."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "As peças de uma rodada de autoresearch",
+      "texto": "Toda rodada precisa de um arquivo que o agente pode alterar (no exemplo, solution.py com a configuração e o treino do modelo), um comando que avalia cada versão e devolve um único número, a métrica, a direção (subir ou descer) e o número de passos. O arquivo editável define o espaço de busca. O comando de eval imprime a nota no terminal, e é essa nota que guia o ciclo de tentativa e erro.",
+      "t": 690,
+      "legenda": "O contrato mínimo que qualquer sistema de autoresearch pede",
+      "print": "img/7RFJRDYroic/0.jpg"
+    },
+    {
+      "titulo": "O eval é a peça mais importante",
+      "texto": "Os palestrantes pedem um eval rápido, barato e com pouco ruído. Rápido e barato permite mais tentativas dentro do mesmo orçamento, e mais tentativas trazem mais avanços. Pouco ruído dá confiança de que a melhora é real. Eles também alertam que agentes adoram reward hacking (burlar a recompensa), achando brechas no protocolo de avaliação. Por isso o eval precisa ser robusto.",
+      "t": 750,
+      "legenda": "Eval rápido e estável multiplica as tentativas úteis do agente",
+      "print": "img/7RFJRDYroic/1.jpg"
+    },
+    {
+      "titulo": "Limite de tempo e orientação inicial",
+      "texto": "Cada avaliação precisa de um teto de tempo, porque o loop pode travar, o hardware pode falhar e o agente pode gerar código que trava tudo. No Mini Parameter Golf o teto é de 210 segundos (minuto 14:35). Antes de começar, vale passar ao agente um arquivo markdown com o que você já sabe, como restrições e ideias promissoras (compressão, quantização, compartilhar pesos entre blocos).",
+      "t": 880,
+      "legenda": "O orçamento de tempo por tentativa tem justificativa explícita",
+      "print": "img/7RFJRDYroic/2.jpg"
+    },
+    {
+      "titulo": "Árvore de experimentos e controle humano",
+      "texto": "A busca da Weco tem forma de árvore. A raiz é o programa original com sua nota, e cada nó é uma versão modificada com nota própria. Ramos que melhoram ganham continuação, e ramos ruins são podados. Dá para abrir qualquer nó, ler o diff (as linhas alteradas) e, se a busca empacar, escrever uma ideia em linguagem comum para abrir um ramo novo.",
+      "t": 1065,
+      "legenda": "Cada tentativa fica visível com sua mudança de código e sua nota",
+      "print": "img/7RFJRDYroic/3.jpg"
+    },
+    {
+      "titulo": "O maior salto veio de uma ideia humana",
+      "texto": "No Parameter Golf, o agente ficou estagnado de 15 a 19 de abril testando atenção e compressão. Uma pessoa da comunidade publicou um tokenizer (divisor de texto em pedaços) novo. Em oito horas o sistema incorporou a ideia ao que já tinha e entregou o maior salto em semanas. O time conclui que autoresearch funciona melhor como colaboração do que no modo ligar e esquecer.",
+      "t": 1190,
+      "legenda": "A ideia de fora destravou a busca que estava parada havia dias",
+      "print": "img/7RFJRDYroic/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Autoresearch",
+      "traducao": "pesquisa automatizada em loop",
+      "nivel": "intermediario",
+      "chave": "autoresearch",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação",
+      "nivel": "basico",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Reward hacking",
+      "traducao": "burlar a recompensa",
+      "nivel": "intermediario",
+      "chave": "reward hacking",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Bits per byte (BPB)",
+      "traducao": "bits por byte, mede quão bem o modelo prevê texto",
+      "nivel": "avancado",
+      "chave": "bits per byte (bpb)",
+      "analogia": "BPB é como contar quantas perguntas de sim ou não um jogador precisa fazer, em média, para adivinhar cada letra de um texto que ele está lendo.",
+      "explicacao": [
+        "Um modelo de linguagem lê um texto e tenta adivinhar o próximo pedaço. O BPB mede quanto custa cada erro dessas apostas. Quanto menor o número, melhor o modelo prevê o texto.",
+        "Um bit é a menor unidade de informação, como uma resposta de sim ou não. Um byte é o espaço que um caractere simples ocupa no computador, mais ou menos uma letra.",
+        "Para cada trecho real, o modelo diz qual probabilidade dava a ele. Se apostou alto e acertou, gasta poucos bits. Se foi pego de surpresa, gasta muitos. No fim, soma os bits e divide pelo número de bytes do texto.",
+        "A conta usa bytes em vez de tokens. Assim modelos com tokenizers (divisores de texto) diferentes ficam comparáveis, e trocar o tokenizer mantém a mesma régua.",
+        "No Parameter Golf da OpenAI, a nota de cada envio era o BPB num conjunto de validação do FineWeb. Vencia quem chegava ao menor valor com até 16 MB de arquivos e 10 minutos de treino."
+      ],
+      "pre_requisitos": [
+        "Modelo de linguagem",
+        "Probabilidade",
+        "Tokenizer",
+        "Conjunto de validação"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "TEXTO DE VALIDAÇÃO",
+            "nota": "Texto que o modelo nunca viu no treino"
+          },
+          {
+            "rotulo": "PREVISÃO DO MODELO",
+            "nota": "Probabilidade para cada próximo pedaço"
+          },
+          {
+            "rotulo": "CONTA DE BITS",
+            "nota": "Surpresa alta custa mais bits"
+          },
+          {
+            "rotulo": "DIVIDE POR BYTES",
+            "nota": "Total de bits sobre tamanho do texto"
+          },
+          {
+            "rotulo": "NOTA BPB",
+            "nota": "Menor valor indica previsão melhor"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Busca em árvore",
+      "traducao": "tree search, exploração ramificada de tentativas",
+      "nivel": "intermediario",
+      "chave": "busca em árvore",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Tokenizer",
+      "traducao": "divisor de texto em tokens",
+      "nivel": "intermediario",
+      "chave": "tokenizer",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Quantization",
+      "traducao": "quantização, reduzir a precisão dos pesos",
+      "nivel": "avancado",
+      "chave": "quantization",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Reinforcement learning",
+      "traducao": "aprendizado por reforço",
+      "nivel": "avancado",
+      "chave": "reinforcement learning",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O workshop vende a plataforma da Weco. A árvore, a observabilidade e o controle aparecem como diferenciais dela, e a parceria com a Modal fornece créditos. Os números do Parameter Golf são autodeclarados, sem fonte externa na fala, e parte deles saiu truncada na legenda. A história do tokenizer é um único caso. A demo ao vivo falhou por causa da internet, então o público quase não viu o loop rodar nem o direcionamento funcionar. Na competição, um jogador com um só nó já liderava, o que mostra como o reward hacking aparece rápido.",
+  "acoes": [
+    "Antes de soltar um agente em loop, escreva um comando que avalia o resultado e imprime um único número, com direção clara (subir ou descer).",
+    "Rode o eval várias vezes sem mudar nada para medir o ruído, e coloque um limite de tempo por tentativa para o loop não travar.",
+    "Separe um conjunto de validação escondido do agente e restrinja quais arquivos ele pode editar, para reduzir o reward hacking.",
+    "Escreva um arquivo markdown com restrições e ideias que você já sabe que funcionam, e revise as tentativas no meio da busca para corrigir o rumo."
+  ],
+  "numeros": [
+    {
+      "valor": "16 MB",
+      "contexto": "Limite para pesos e código no Parameter Golf, com treino de até 10 minutos",
+      "t": 339
+    },
+    {
+      "valor": "7",
+      "contexto": "Recordes do Aiden aceitos no placar, segundo a Weco",
+      "t": 434
+    },
+    {
+      "valor": "4%",
+      "contexto": "Fatia da computação da comunidade usada pelo Aiden para 15% dos recordes",
+      "t": 466
+    },
+    {
+      "valor": "210 s",
+      "contexto": "Teto de tempo por avaliação no Mini Parameter Golf",
+      "t": 875
+    }
+  ]
+}

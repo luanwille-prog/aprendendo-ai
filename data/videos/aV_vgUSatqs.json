@@ -1,0 +1,174 @@
+{
+  "id": "aV_vgUSatqs",
+  "titulo": "Burn Your Flags: Interactive CLIs for Agents — Mark Lummus & Navinkumar Patil, PayPal",
+  "titulo_curto": "Burn Your Flags: Interactive CLIs for Agents",
+  "palestrante": "Mark Lummus & Navinkumar Patil, PayPal",
+  "url": "https://www.youtube.com/watch?v=aV_vgUSatqs",
+  "duracao": 3222,
+  "publicado_ts": 1791750604,
+  "edicao": "2026-10-12",
+  "tese": "CLI interativo falha em silêncio com agente. Dê contexto, um canal com JSON e um terminal controlável, e mantenha a CLI previsível.",
+  "tldr": [
+    "O PayPal mostra que agentes perdem perguntas de terminal (menus com setas) sem gerar erro, porque veem um loop de redesenho da tela e não uma pergunta.",
+    "Em vez de multiplicar flags, os palestrantes sugerem três ideias num workshop com a CLI de pedidos de café Barista 9000: tmux, side channel com JSON e context injection.",
+    "O vencedor do prêmio (um Mac Mini) fez o agente construir um solver determinístico e rápido, o que expõe o quanto o placar premiava latência e não o uso de agente."
+  ],
+  "tema": "agentes",
+  "complexidade": 2,
+  "ideias": [
+    {
+      "titulo": "Prompt interativo some para o agente",
+      "texto": "Num menu com setas, o humano vê a pergunta. O agente vê só o redesenho da tela e o harness (a camada que executa o agente) perde o estado da interface. A falha é silenciosa: sem erro, sem aviso. Flags resolvem fluxos simples, mas não perguntas que dependem de respostas anteriores ou de uma API.",
+      "t": 235,
+      "legenda": "O mesmo prompt aparece como pergunta para o humano e como loop de redesenho para o agente.",
+      "print": "img/aV_vgUSatqs/0.jpg"
+    },
+    {
+      "titulo": "Dica 1: tmux para enviar teclas e ler a tela",
+      "texto": "O tmux roda a CLI numa sessão separada. O agente envia teclas (send-keys) e lê a tela (capture-pane). Serve para tarefas longas e vários agentes. Os palestrantes avisam que continua sendo leitura de tela, o caminho de menor esforço. Também pedem que o agente comece pelo comando help.",
+      "t": 1608,
+      "legenda": "Sessão tmux destacada, controlada por comandos que o agente consegue executar.",
+      "print": "img/aV_vgUSatqs/1.jpg"
+    },
+    {
+      "titulo": "Dica 2: side channel com saída em JSON",
+      "texto": "O side channel (canal lateral, via IPC, comunicação entre processos) funciona como uma API REST ao lado do site. O humano usa a interface visual e o agente lê o estado e envia entradas em JSON. Na demo, o comando barista brew ask lista campos e opções, como tamanhos de café e o padrão.",
+      "t": 1824,
+      "legenda": "A CLI entrega as opções em formato legível por máquina, sem raspar a tela.",
+      "print": "img/aV_vgUSatqs/2.jpg"
+    },
+    {
+      "titulo": "Dica 3: injetar contexto em vez de perguntar passo a passo",
+      "texto": "Humanos querem um conjunto de opções por vez. O agente pode receber tudo de uma vez num arquivo de entrada. O exemplo é leite de aveia acabando: o contexto diz ao agente o que confirmar com o usuário e se deve escolher um substituto.",
+      "t": 1917,
+      "legenda": "A mesma CLI atende duas personas, com contexto completo entregue ao agente.",
+      "print": "img/aV_vgUSatqs/3.jpg"
+    },
+    {
+      "titulo": "A CLI deve ser pequena e determinística",
+      "texto": "Um participante usou um parser determinístico perto do servidor para ganhar no placar. Lummus aproveita para defender que a CLI não deve conter outro agente. O LLM já é o elemento não determinístico, então a CLI precisa devolver a mesma resposta a cada comando.",
+      "t": 2519,
+      "legenda": "O placar premiava pontuação e tempo, o que favoreceu soluções determinísticas.",
+      "print": "img/aV_vgUSatqs/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "CLI",
+      "traducao": "interface de linha de comando",
+      "nivel": "basico",
+      "chave": "cli",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "CLI interativa",
+      "traducao": "linha de comando que faz perguntas durante a execução",
+      "nivel": "basico",
+      "chave": "cli interativa",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Harness",
+      "traducao": "camada que executa o agente e as ferramentas",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "tmux",
+      "traducao": "multiplexador de terminal",
+      "nivel": "intermediario",
+      "chave": "tmux",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Screen scraping",
+      "traducao": "raspagem de tela",
+      "nivel": "intermediario",
+      "chave": "screen scraping",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Side channel",
+      "traducao": "canal lateral estruturado (IPC)",
+      "nivel": "intermediario",
+      "chave": "side channel",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Context injection",
+      "traducao": "injeção de contexto",
+      "nivel": "intermediario",
+      "chave": "context injection",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sistema determinístico",
+      "traducao": "sempre a mesma saída para a mesma entrada",
+      "nivel": "basico",
+      "chave": "sistema determinístico",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O workshop é conduzido por uma empresa que quer posicionar o PayPal em ferramentas para desenvolvedores, e as três dicas vêm sem medição de ganho. O placar mistura precisão e latência, e os próprios participantes relataram que dava para vencer com parser determinístico, ou seja, sem testar o que se queria ensinar. Os palestrantes pediram modelos médios como Haiku ou Sonnet, mas o vencedor usou Opus 4.8 só para construir a solução. Não há comparação entre as três técnicas.",
+  "acoes": [
+    "Teste sua CLI interna com um agente e confira se ele trava ou falha sem erro em prompts interativos.",
+    "Ofereça uma saída em JSON e um comando de help claro nas ferramentas que o agente vai chamar.",
+    "Passe ao agente o contexto inteiro (opções, restrições, o que confirmar) em um arquivo, em vez de depender de perguntas em sequência.",
+    "Mantenha a CLI previsível e sem agente embutido, e deixe o raciocínio com o modelo."
+  ],
+  "numeros": [
+    {
+      "valor": "5.000",
+      "contexto": "pontuação máxima disputada no placar",
+      "t": 2054
+    },
+    {
+      "valor": "29 ms",
+      "contexto": "melhor latência citada pelo vencedor",
+      "t": 2865
+    },
+    {
+      "valor": "49,98",
+      "contexto": "pontuação do primeiro script do participante vibe coder",
+      "t": 2991
+    },
+    {
+      "valor": "25 a 30 min",
+      "contexto": "tempo previsto para o exercício inicial",
+      "t": 900
+    }
+  ]
+}

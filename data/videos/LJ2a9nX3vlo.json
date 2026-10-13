@@ -1,0 +1,174 @@
+{
+  "id": "LJ2a9nX3vlo",
+  "titulo": "RAG Needs a Map: Using GraphRAG to Retrieve Connected Context — Nyah Macklin, Neo4j",
+  "titulo_curto": "RAG Needs a Map: Using GraphRAG to Retrieve Connected Context",
+  "palestrante": "Nyah Macklin, Neo4j",
+  "url": "https://www.youtube.com/watch?v=LJ2a9nX3vlo",
+  "duracao": 3178,
+  "publicado_ts": 1791714620,
+  "edicao": "2026-10-12",
+  "tese": "Vetores acham trechos parecidos. Um grafo de conhecimento guarda as ligações entre eles, e o agente passa a responder perguntas de contagem e de vários saltos.",
+  "tldr": [
+    "Nyah Macklin, da Neo4j, ensina em um workshop de nível introdutório como somar um grafo de conhecimento ao RAG (geração com busca de documentos), formando o GraphRAG.",
+    "Na prática, o grupo monta o grafo a partir de PDFs com um LLM, cria um índice vetorial no Aura e configura um agente com busca por similaridade e texto para Cypher.",
+    "O teste final mostra o agente citando fontes e errando uma contagem de lições, e a palestrante usa o erro para defender que o banco precisa ser conferido à mão."
+  ],
+  "tema": "dados-e-rag",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Três visões do mesmo objeto: humano, vetor e grafo",
+      "texto": "Macklin usa uma maçã para mostrar que um vetor é uma lista de números que ninguém lê, enquanto um grafo diz que a maçã vem de uma árvore, é redonda, é vermelha e é uma fruta. O grafo serve a humanos e a máquinas ao mesmo tempo, e isso sustenta a promessa de respostas explicáveis.",
+      "t": 460,
+      "legenda": "O vetor é opaco, o grafo mostra as relações de forma legível.",
+      "print": "img/LJ2a9nX3vlo/0.jpg"
+    },
+    {
+      "titulo": "RAG comum versus GraphRAG",
+      "texto": "No RAG comum, os PDFs viram chunks (pedaços de texto), recebem embeddings (vetores) e os top k mais próximos vão para o LLM. No GraphRAG, o caminho de busca também passa por um grafo. Macklin recomenda vetor para perguntas que um buscador resolve e grafo para perguntas com vários saltos ou que exigem agregação. Ela defende usar os dois juntos.",
+      "t": 765,
+      "legenda": "A diferença de arquitetura está em um único bloco extra, o grafo.",
+      "print": "img/LJ2a9nX3vlo/1.jpg"
+    },
+    {
+      "titulo": "Configurar a ferramenta de busca no agente Aura",
+      "texto": "Na tela de criação do agente, a ferramenta de busca de lições usa o índice vetorial chunk embedding, retorna os 5 melhores resultados e usa o modelo text-embedding-3-small da OpenAI, com 1536 dimensões. Uma consulta Cypher devolve nós conectados e pontuações, o que traz o contexto do grafo junto com o trecho.",
+      "t": 2472,
+      "legenda": "A busca vetorial entra como ferramenta do agente e devolve dados do grafo.",
+      "print": "img/LJ2a9nX3vlo/2.jpg"
+    },
+    {
+      "titulo": "Resposta com fontes e contagem errada",
+      "texto": "O agente responde que temperatura controla a aleatoriedade do texto e mostra as fontes no curso. Na pergunta sobre quantas lições existem, ele diz 30. O banco tem 15, porque o construtor rodou duas vezes e duplicou nós. A palestrante confere no console e acha o número certo.",
+      "t": 2757,
+      "legenda": "Rodar o construtor duas vezes inflou a contagem; só a consulta direta revelou o erro.",
+      "print": "img/LJ2a9nX3vlo/3.jpg"
+    },
+    {
+      "titulo": "O esquema guia o LLM na criação do grafo",
+      "texto": "No código, um splitter de tamanho fixo corta o texto em chunks. O esquema lista tipos de nós (tecnologia, conceito, exemplo, processo, desafio, benefício), tipos de relação e padrões permitidos entre eles. Com isso o LLM não inventa estrutura nova a cada documento.",
+      "t": 2942,
+      "legenda": "O esquema fixa quais nós e relações o LLM pode extrair.",
+      "print": "img/LJ2a9nX3vlo/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "GraphRAG",
+      "traducao": "RAG com grafo de conhecimento",
+      "nivel": "intermediario",
+      "chave": "graphrag",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Knowledge graph",
+      "traducao": "grafo de conhecimento",
+      "nivel": "basico",
+      "chave": "knowledge graph",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "RAG",
+      "traducao": "geração aumentada por recuperação",
+      "nivel": "basico",
+      "chave": "rag",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Embedding",
+      "traducao": "vetor numérico que representa um texto",
+      "nivel": "basico",
+      "chave": "embedding",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Retriever",
+      "traducao": "recuperador de contexto",
+      "nivel": "intermediario",
+      "chave": "retriever",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Cypher",
+      "traducao": "linguagem de consulta para grafos",
+      "nivel": "intermediario",
+      "chave": "cypher",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Chunking",
+      "traducao": "divisão do texto em pedaços",
+      "nivel": "basico",
+      "chave": "chunking",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Multi-hop",
+      "traducao": "pergunta que exige vários saltos entre nós",
+      "nivel": "intermediario",
+      "chave": "multi-hop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é um workshop da Neo4j para vender Neo4j e Aura, e a comparação com RAG só de vetores é feita sem benchmark nem medição de acurácia. As afirmações sobre acurácia e explicabilidade ficam sem evidência. O exemplo usa um curso pequeno da própria empresa, com PDFs de um curso introdutório, e o único teste de agregação deu resposta errada por duplicação, o que mostra fragilidade do pipeline. Ela cita a regra de três saltos sem fonte.",
+  "acoes": [
+    "Antes de adotar GraphRAG, liste as perguntas reais do seu produto e separe as que um buscador vetorial já resolve das que pedem contagem, soma ou vários saltos.",
+    "Se for testar, defina o esquema de nós e relações antes de rodar o LLM, para evitar que ele invente tipos diferentes a cada documento.",
+    "Torne o pipeline de construção idempotente (rodar duas vezes dá o mesmo resultado) e confira contagens com uma consulta direta ao banco.",
+    "Exija que o agente mostre as fontes de cada resposta e compare algumas por amostragem com o banco."
+  ],
+  "numeros": [
+    {
+      "valor": "5",
+      "contexto": "resultados top k na busca por similaridade",
+      "t": 2472
+    },
+    {
+      "valor": "1536",
+      "contexto": "dimensões do embedding text-embedding-3-small",
+      "t": 2472
+    },
+    {
+      "valor": "30 vs 15",
+      "contexto": "lições contadas pelo agente versus o banco",
+      "t": 2757
+    },
+    {
+      "valor": "500",
+      "contexto": "tamanho do chunk no splitter de tamanho fixo",
+      "t": 2942
+    }
+  ]
+}

@@ -1,0 +1,174 @@
+{
+  "id": "spxoDAfh5ig",
+  "titulo": "Beyond RAG: Build a Relational Context Engine from Scratch — Peter Werry, Unblocked",
+  "titulo_curto": "Beyond RAG: Build a Relational Context Engine from Scratch",
+  "palestrante": "Peter Werry, Unblocked",
+  "url": "https://www.youtube.com/watch?v=spxoDAfh5ig",
+  "duracao": 2298,
+  "publicado_ts": 1791712818,
+  "edicao": "2026-10-12",
+  "tese": "Busca por similaridade resolve só metade do problema. Perguntas com data, autor ou estado pedem que o modelo escreva a query, não a resposta.",
+  "tldr": [
+    "Peter Werry, da Unblocked, mostra que RAG (busca por similaridade em vetores) falha em perguntas como \"PRs que eu mergeei semana passada\", porque elas têm uma metade temporal e estrutural.",
+    "A solução do workshop faz o modelo gerar uma query de banco de dados a partir de quatro peças: descoberta de schema, resolução de identidade, validação com allow list e um loop de retentativa com erros.",
+    "O mesmo motor alimenta um agente de chat, mas o próprio palestrante recomenda reforçar a validação antes de usar em produção e diz que a Unblocked usa schemas estáticos."
+  ],
+  "tema": "dados-e-rag",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "RAG não enxerga autor, data nem estado",
+      "texto": "Ao embutir a frase \"PRs que eu mergeei semana passada\", a busca vetorial devolve PRs que falam de merge, mas ignora autor, estado e data. O resultado pode ser um PR semanticamente perfeito e mergeado três anos atrás. A recuperação tem duas metades: a semântica e a estruturada.",
+      "t": 333,
+      "legenda": "Mostra por que similaridade sozinha erra perguntas com filtro temporal.",
+      "print": "img/spxoDAfh5ig/0.jpg"
+    },
+    {
+      "titulo": "O modelo escreve a query, não a resposta",
+      "texto": "O plano de consulta passa o schema ao modelo, força uma chamada de ferramenta para extrair nomes e inclui a data atual no prompt. Assim o modelo gera um filtro de banco, por exemplo mapeando \"Peter\" para o login do GitHub dele. A execução fica a cargo do banco.",
+      "t": 960,
+      "legenda": "A query gerada troca o nome falado pelo login real do autor.",
+      "print": "img/spxoDAfh5ig/1.jpg"
+    },
+    {
+      "titulo": "Validação com allow list, nunca deny list",
+      "texto": "A saída do modelo é entrada não confiável. Cláusulas como where ou function podem rodar JavaScript no servidor, o que abre um ponto de prompt injection. Por isso o código procedural libera só operadores permitidos e apaga campos ocultos, como o tenant ID, para reinjetar o valor correto.",
+      "t": 1147,
+      "legenda": "A validação nega por padrão e barra o operador não permitido.",
+      "print": "img/spxoDAfh5ig/2.jpg"
+    },
+    {
+      "titulo": "Loop de retentativa com o erro como feedback",
+      "texto": "Quando a query falha na validação ou na execução, o erro volta ao modelo, que tenta de novo até um limite de tentativas. No exemplo, a terceira tentativa caiu em match exato e não achou nada, o que mostrou a necessidade de busca full text. Peter chama esse loop de uma das peças mais importantes.",
+      "t": 1271,
+      "legenda": "O modelo precisou de várias tentativas e esbarrou no match exato.",
+      "print": "img/spxoDAfh5ig/3.jpg"
+    },
+    {
+      "titulo": "O mesmo motor serve ao agente de chat",
+      "texto": "A aba de chat usa o mesmo motor do playground. A pergunta \"trabalhamos em algo de autenticação semana passada?\" faz o agente gerar a query, buscar os dados e raciocinar sobre eles. A diferença é que o chat raciocina e o playground só consulta.",
+      "t": 1390,
+      "legenda": "O agente gera a query e raciocina sobre o resultado.",
+      "print": "img/spxoDAfh5ig/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "RAG",
+      "traducao": "geração aumentada por recuperação",
+      "nivel": "basico",
+      "chave": "rag",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Geração de query estruturada",
+      "traducao": "texto em linguagem natural convertido em consulta de banco",
+      "nivel": "intermediario",
+      "chave": "geração de query estruturada",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Schema discovery",
+      "traducao": "descoberta de schema por amostragem",
+      "nivel": "intermediario",
+      "chave": "schema discovery",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Entity resolution",
+      "traducao": "resolução de identidade",
+      "nivel": "intermediario",
+      "chave": "entity resolution",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Tool calling",
+      "traducao": "chamada de ferramenta",
+      "nivel": "intermediario",
+      "chave": "tool calling",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Allow list",
+      "traducao": "lista de permissões (nega tudo por padrão)",
+      "nivel": "intermediario",
+      "chave": "allow list",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Multi-tenancy",
+      "traducao": "vários clientes na mesma base",
+      "nivel": "avancado",
+      "chave": "multi-tenancy",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Busca híbrida",
+      "traducao": "similaridade, busca lexical e fusão de ranking",
+      "nivel": "intermediario",
+      "chave": "busca híbrida",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O workshop é uma demonstração didática de uma empresa de contexto organizacional, com um único repositório e só pull requests. Não há medição de acerto, custo ou latência. Peter admite que o algoritmo de schema é hacky, que a amostra de 300 documentos veio de tentativa e erro com clientes e que sempre vai faltar algum documento. Ele também diz que a Unblocked usa schemas estáticos em produção e que a validação precisa de mais trabalho antes de uso interno.",
+  "acoes": [
+    "Separe suas perguntas em dois tipos. Perguntas com data, autor, estado ou contagem pedem filtro estruturado. Perguntas sobre conteúdo pedem busca semântica.",
+    "Ao deixar um modelo gerar consultas, valide a saída com código: libere só operadores permitidos e remova campos sensíveis, como tenant ID, antes de executar.",
+    "Passe a data atual e o schema no prompt, e devolva ao modelo as mensagens de erro para ele corrigir a query em poucas tentativas.",
+    "Combine as duas metades: comece com busca vetorial para achar pontos de partida e dê ao agente uma ferramenta de consulta estruturada para aprofundar."
+  ],
+  "numeros": [
+    {
+      "valor": "6",
+      "contexto": "pull requests empilhados que formam o workshop",
+      "t": 138
+    },
+    {
+      "valor": "3 anos",
+      "contexto": "idade do PR errado que a busca por similaridade devolve",
+      "t": 366
+    },
+    {
+      "valor": "300",
+      "contexto": "documentos amostrados para inferir o schema",
+      "t": 646
+    },
+    {
+      "valor": "2 a 8",
+      "contexto": "caracteres que o algoritmo aceita como tipo",
+      "t": 1935
+    }
+  ]
+}

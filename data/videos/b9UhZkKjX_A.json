@@ -1,0 +1,174 @@
+{
+  "id": "b9UhZkKjX_A",
+  "titulo": "From Your Laptop to the Pipeline: Scaling Custom Agents with GitHub Copilot",
+  "titulo_curto": "From Your Laptop to the Pipeline: Scaling Custom Agents with GitHub Copilot",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=b9UhZkKjX_A",
+  "duracao": 1179,
+  "publicado_ts": 1791649831,
+  "edicao": "2026-10-12",
+  "tese": "Agente útil começa no laptop, vira ativo da empresa num marketplace e só escala de verdade quando roda no pipeline, onde dá para medir o custo.",
+  "tldr": [
+    "Jose Palafox, do GitHub, mostra três degraus para usar agentes com o Copilot: criar um agente local no CLI, compartilhá-lo na organização e rodá-lo sem supervisão no CI.",
+    "O compartilhamento usa um marketplace (um repositório com um JSON extra) ou o repositório .github-private, e o comando Orchestrate coordena agentes em vários repositórios.",
+    "No pipeline, os Agentic Workflows rodam o Copilot CLI em modo headless no GitHub Actions, com aprovação humana por slash command e telemetria para controlar custo."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Todas as portas passam pelo mesmo harness",
+      "texto": "IDE, CLI e SDK entram no mesmo serviço central do Copilot, chamado de harness (estrutura que cuida de autenticação, logs, filtros e envio aos modelos). Por isso um agente criado em uma interface pode ser chamado nas outras, inclusive pelo celular com o comando /remote.",
+      "t": 160,
+      "legenda": "Qualquer interface passa pelo mesmo harness antes de chegar ao modelo.",
+      "print": "img/b9UhZkKjX_A/0.jpg"
+    },
+    {
+      "titulo": "Agent builder gera o agente a partir de uma linha",
+      "texto": "O comando de agentes no CLI cria o arquivo do agente a partir de uma descrição curta. Ele escreve a descrição, o front matter (cabeçalho de configuração), os critérios de sucesso e a metodologia. O usuário edita o que não gostar, como a ordem das fontes consultadas. Cada agente também define o modelo que usa.",
+      "t": 376,
+      "legenda": "Um prompt de uma linha vira um arquivo de agente completo e editável.",
+      "print": "img/b9UhZkKjX_A/1.jpg"
+    },
+    {
+      "titulo": "Marketplace e repositório .github-private distribuem agentes",
+      "texto": "Um marketplace é um repositório com um JSON extra que dá versionamento, atualização em massa e avisos de vulnerabilidade. O repositório .github-private expõe os agentes a toda a organização, e o mesmo agente de compliance aparece no menu do cloud agent. Palafox diz que agentes reutilizáveis elevam a taxa de cache hit e reduzem a conta.",
+      "t": 530,
+      "legenda": "O agente do repositório aparece como opção no menu do cloud agent.",
+      "print": "img/b9UhZkKjX_A/2.jpg"
+    },
+    {
+      "titulo": "Pipeline com humano no loop via slash command",
+      "texto": "O Copilot CLI roda com a opção -P (um prompt único) dentro do GitHub Actions. Um agente agendado acha duplicação de código e abre issues. O desenvolvedor aprova com um slash command no comentário, e isso aciona o agente de PRD (documento de requisitos), que gera o plano e passa a implementação ao Copilot. O humano volta na aceitação.",
+      "t": 845,
+      "legenda": "Cada fase do pipeline só avança quando uma pessoa aprova.",
+      "print": "img/b9UhZkKjX_A/3.jpg"
+    },
+    {
+      "titulo": "Rodar no CI dá visibilidade de custo",
+      "texto": "Com os agentes fora dos laptops e instrumentados com OTel (padrão aberto de telemetria), dá para medir custo e uso de tokens por agente. Palafox propõe um agente que investiga quando uma execução passa do P90 de custo e testes A/B de modelos para achar um mais barato.",
+      "t": 1090,
+      "legenda": "No pipeline cada execução gera dados que permitem otimizar custo.",
+      "print": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Harness",
+      "traducao": "estrutura que envolve o modelo",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Agent skills",
+      "traducao": "habilidades do agente",
+      "nivel": "intermediario",
+      "chave": "agent skills",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Subagente",
+      "traducao": "agente auxiliar para uma tarefa",
+      "nivel": "intermediario",
+      "chave": "subagente",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Prompt caching",
+      "traducao": "cache de prompt",
+      "nivel": "intermediario",
+      "chave": "prompt caching",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Human in the loop",
+      "traducao": "humano no loop",
+      "nivel": "basico",
+      "chave": "human in the loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "CI (integração contínua)",
+      "traducao": "automação que roda a cada mudança no código",
+      "nivel": "basico",
+      "chave": "ci (integração contínua)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Observabilidade de agentes",
+      "traducao": "enxergar o que o agente faz e quanto custa",
+      "nivel": "intermediario",
+      "chave": "observabilidade de agentes",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Marketplace de agentes",
+      "traducao": "repositório que distribui agentes",
+      "nivel": "basico",
+      "chave": "marketplace de agentes",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "A palestra é demonstração de produto do GitHub, feita por um especialista de campo que ajuda clientes a adotar o Copilot. Quase tudo depende do ecossistema GitHub e Copilot. Não há métrica de ganho, de qualidade dos agentes ou de custo real do pipeline. A afirmação de que agentes em CI reduzem a conta vem sem dados. O exemplo dos 200 agentes é o próprio projeto da GitHub, que tem interesse em mostrá-lo, e Palafox escolheu um agente \"ao acaso\" na demo.",
+  "acoes": [
+    "Crie um repositório central para os agentes e skills do time, para que todos usem as mesmas versões em vez de cada pessoa manter a sua.",
+    "Escolha uma tarefa de manutenção repetitiva, como achar código duplicado, e teste rodá-la em CI por agendamento, abrindo issues em vez de alterar código.",
+    "Exija aprovação humana entre as fases de qualquer agente autônomo, por exemplo com um comando em comentário de issue, antes de gastar com a etapa seguinte.",
+    "Registre custo e tokens por execução de agente e defina um limite, como o P90, que dispare uma investigação."
+  ],
+  "numeros": [
+    {
+      "valor": "6,5 anos",
+      "contexto": "tempo de Jose Palafox no GitHub",
+      "t": 1
+    },
+    {
+      "valor": "3 agentes",
+      "contexto": "agentes no repositório .github-private da demo",
+      "t": 528
+    },
+    {
+      "valor": "~200",
+      "contexto": "agentes no repositório do framework Agentic Workflows",
+      "t": 933
+    },
+    {
+      "valor": "~30",
+      "contexto": "agentes de pipeline prontos no projeto Agentics",
+      "t": 995
+    }
+  ]
+}

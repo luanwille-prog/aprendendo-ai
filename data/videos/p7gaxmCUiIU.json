@@ -1,0 +1,174 @@
+{
+  "id": "p7gaxmCUiIU",
+  "titulo": "Hill-Climbing Skills: Improve Agents Without Changing the Model — Shubhankar Srivastava, Browserbase",
+  "titulo_curto": "Hill-Climbing Skills: Improve Agents Without Changing the Model",
+  "palestrante": "Shubhankar Srivastava, Browserbase",
+  "url": "https://www.youtube.com/watch?v=p7gaxmCUiIU",
+  "duracao": 3112,
+  "publicado_ts": 1791754205,
+  "edicao": "2026-10-12",
+  "tese": "Agente que escreve suas próprias lições num arquivo de skill melhora a cada rodada sem mexer nos pesos do modelo.",
+  "tldr": [
+    "A Browserbase montou o AutoBrowse, um loop com dois agentes: um executa a tarefa no navegador e outro lê os traces (registros de cada passo) e anota lições num arquivo strategy.md.",
+    "Ao fim do loop, as lições viram um arquivo skill.md reutilizável. Nos exemplos do palestrante, o custo e o tempo por tarefa caíram bastante, em parte porque o agente descobriu atalhos como montar a busca direto na URL.",
+    "A técnica exige um ambiente que se possa repetir e um resultado verificável. Sites mudam e skills geradas por agente podem ser alvo de prompt injection, então o palestrante defende monitoramento, reparo com revisão humana e controles em camadas."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Dois agentes: quem faz e quem ensina",
+      "texto": "O loop usa dois agentes do Claude Agent SDK. O doer (executor) opera o navegador com a CLI da Browserbase. O teacher (professor) lê screenshots, logs e resultado de cada rodada e reescreve o strategy.md. O palestrante diz que não fixa número de iterações, meta de sucesso nem limite de tokens.",
+      "t": 498,
+      "legenda": "Doer navega, teacher lê os traces e atualiza o strategy.md.",
+      "print": "img/p7gaxmCUiIU/0.jpg"
+    },
+    {
+      "titulo": "O atalho da URL no Google Flights",
+      "texto": "Na primeira iteração a tarefa de voo falhou. A lição registrada foi pular o calendário e montar a busca por parâmetro de URL. O palestrante admite que um humano talvez não escrevesse essa URL à mão. Na segunda rodada a tarefa passou.",
+      "t": 599,
+      "legenda": "A lição da rodada 1 troca cliques no calendário por parâmetros na URL.",
+      "print": "img/p7gaxmCUiIU/1.jpg"
+    },
+    {
+      "titulo": "Do bloqueio no OpenTable a 0,51 dólar",
+      "texto": "No OpenTable a primeira rodada recebeu access denied. O teacher concluiu que certas rotas disparavam o bloqueio e que uma URL com latitude, longitude e ID de metrô funcionava. O custo foi de 6,22 para 0,51 dólar e o tempo de 189 para 27 segundos, segundo o palestrante.",
+      "t": 899,
+      "legenda": "Custo e tempo caem entre a iteração 1 e a skill final.",
+      "print": "img/p7gaxmCUiIU/2.jpg"
+    },
+    {
+      "titulo": "Skill como artefato portátil e catálogo",
+      "texto": "O resultado final é um markdown que qualquer agente lê, com ou sem Browserbase. A empresa gerou skills para centenas de sites e as publicou de graça no browse.sh. O palestrante compara o catálogo às páginas amarelas para agentes.",
+      "t": 1118,
+      "legenda": "Catálogo público de skills por site, gerado pelo mesmo loop.",
+      "print": "img/p7gaxmCUiIU/3.jpg"
+    },
+    {
+      "titulo": "Quando a técnica funciona e como mantê-la",
+      "texto": "Duas condições para usar fora de navegadores: ambiente que se repete e resultado verificável. Como sites mudam, ele sugere disparar o loop de reparo quando há falha em produção, ou rodar amostras periódicas, e mandar a correção como pull request para um humano revisar.",
+      "t": 1299,
+      "legenda": "Ambiente repetível e resultado verificável são os pré-requisitos.",
+      "print": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Browser agent",
+      "traducao": "agente de navegador",
+      "nivel": "basico",
+      "chave": "browser agent",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Hill climbing",
+      "traducao": "subida de encosta, melhoria por tentativas sucessivas",
+      "nivel": "intermediario",
+      "chave": "hill climbing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Autoresearch",
+      "traducao": "pesquisa automática em loop, ideia atribuída a Karpathy",
+      "nivel": "intermediario",
+      "chave": "autoresearch",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Skill",
+      "traducao": "arquivo de instruções reutilizável pelo agente",
+      "nivel": "basico",
+      "chave": "skill",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Doer e teacher",
+      "traducao": "executor e professor",
+      "nivel": "intermediario",
+      "chave": "doer e teacher",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Verifier",
+      "traducao": "verificador do resultado",
+      "nivel": "intermediario",
+      "chave": "verifier",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Prompt injection",
+      "traducao": "instruções maliciosas escondidas em conteúdo lido pelo agente",
+      "nivel": "intermediario",
+      "chave": "prompt injection",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Drift",
+      "traducao": "mudança do site que quebra a skill com o tempo",
+      "nivel": "intermediario",
+      "chave": "drift",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O palestrante vende a Browserbase e diz que a venda só fecha quando o agente funciona, então os ganhos de 3x a 16x citados são de casos escolhidos por ele. Falta amostra: poucas tarefas, sem repetição estatística e sem comparar com um agente que só recebe um bom prompt. O próprio talk mostra falha depois de sucesso. O verificador é frouxo (sucesso binário e 'poucas barreiras'), e o caso 'melhor voo' fica sem resposta. A defesa contra prompt injection é descrita em linhas gerais, sem testes.",
+  "acoes": [
+    "Se você usa agente em uma tarefa repetitiva, peça que ele grave ao final o que funcionou e o que falhou num arquivo de notas e leia esse arquivo na rodada seguinte.",
+    "Antes de montar um loop de melhoria, defina um critério de sucesso que dê para checar e um jeito de repetir a tarefa do mesmo ponto.",
+    "Revise toda skill gerada por agente como código de terceiros antes de usar, pois ela pode ter aprendido instruções maliciosas de um site.",
+    "Compare custo e qualidade de um modelo menor com mais iterações contra um maior com poucas, como o palestrante diz ter feito com Sonnet e Opus."
+  ],
+  "numeros": [
+    {
+      "valor": "US$ 12 a 3",
+      "contexto": "custo do voo da iteração 1 para a 2, na demo",
+      "t": 715
+    },
+    {
+      "valor": "US$ 6,22 a 0,51",
+      "contexto": "custo no OpenTable após o aprendizado",
+      "t": 899
+    },
+    {
+      "valor": "189 s a 27 s",
+      "contexto": "tempo da tarefa no OpenTable",
+      "t": 899
+    },
+    {
+      "valor": "US$ 30 a 100",
+      "contexto": "custo estimado de um loop AutoBrowse, no máximo",
+      "t": 1693
+    }
+  ]
+}

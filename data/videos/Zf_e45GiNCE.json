@@ -1,0 +1,208 @@
+{
+  "id": "Zf_e45GiNCE",
+  "titulo": "Zero Cold Starts: Serverless AI Agents on Akamai Functions — Thorsten Hans",
+  "titulo_curto": "Zero Cold Starts: Serverless AI Agents on Akamai Functions",
+  "palestrante": "Thorsten Hans",
+  "url": "https://www.youtube.com/watch?v=Zf_e45GiNCE",
+  "duracao": 1357,
+  "publicado_ts": 1791655238,
+  "edicao": "2026-10-12",
+  "tese": "WebAssembly no servidor elimina o cold start e deixa MCPs e agentes rodarem perto do usuário, com um único comando de deploy.",
+  "tldr": [
+    "Thorsten Hans, da Akamai, argumenta que containers e VMs sofrem com cold start (partida a frio) e com regiões únicas, e propõe WebAssembly como alternativa leve, portátil e isolada por padrão.",
+    "Ele mostra ao vivo como criar um servidor MCP com wasmcp e Spin, testar no MCP Inspector, publicar no Akamai Functions em cerca de 60 segundos e usá-lo no editor Zed.",
+    "Na parte final, publica um agente feito com o Vercel AI SDK, ligado a um modelo numa GPU da Linode, e mede cerca de 820 ms para o ciclo completo com o LLM."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "O custo do cold start em containers e VMs",
+      "texto": "Containers e VMs podem levar de segundos a minutos para subir quando a demanda dispara. Para evitar isso, as equipes mantêm servidores ociosos, o que aumenta a conta de nuvem e o impacto ambiental. Soluções de nível mais alto costumam trazer SDKs proprietários, e migrar depois fica caro.",
+      "t": 96,
+      "legenda": "O slide lista os atritos das arquiteturas presas a uma região.",
+      "print": "img/Zf_e45GiNCE/0.jpg"
+    },
+    {
+      "titulo": "WebAssembly como contêiner mais leve",
+      "texto": "O palestrante compara WebAssembly a containers como containers são a VMs: binários pequenos, fáceis de distribuir e rápidos de iniciar. O Spin, projeto da CNCF, reúne CLI, runtime baseado em Wasmtime e SDKs por linguagem. O Akamai Functions é a plataforma que executa esses binários no mundo todo.",
+      "t": 219,
+      "legenda": "O slide mostra as peças do Spin que compõem a pilha edge native.",
+      "print": "img/Zf_e45GiNCE/1.jpg"
+    },
+    {
+      "titulo": "Montar um MCP só com a lógica de negócio",
+      "texto": "O wasmcp gera um projeto com as ferramentas (tools) e cuida de autenticação e protocolo. O fluxo da demo é wasmcp new, make para compilar em Wasm, wasmcp compose para montar o servidor e spin up para rodar local. Depois o MCP Inspector confirma que a ferramenta responde.",
+      "t": 565,
+      "legenda": "A demo mostra o caminho do scaffold até o servidor MCP rodando em localhost.",
+      "print": "img/Zf_e45GiNCE/2.jpg"
+    },
+    {
+      "titulo": "Deploy global com um comando",
+      "texto": "O comando spin aka deploy empacota o app em camadas OCI e envia para o Akamai Functions. A plataforma distribui o pacote por todas as regiões, faz um health check em cada uma e só então libera um subdomínio público. Segundo o palestrante, leva cerca de 60 segundos. O Zed consome o MCP publicado e executa as ferramentas de registro de decisões.",
+      "t": 786,
+      "legenda": "O deploy distribui o MCP pelas regiões e devolve uma URL pública.",
+      "print": null
+    },
+    {
+      "titulo": "Agente com Vercel AI SDK e medição de latência",
+      "texto": "O agente de jogos lança moedas e dados, usa o Vercel AI SDK e chama um modelo numa GPU dedicada da Linode. Os cabeçalhos HTTP mostram o ponto de presença e a região mais próxima. O palestrante explica que o snapshot de memória, feito na compilação, mantém o runtime JavaScript aquecido.",
+      "t": 1133,
+      "legenda": "Os cabeçalhos mostram a região atendida e o tempo da chamada.",
+      "print": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Cold start",
+      "traducao": "partida a frio",
+      "nivel": "basico",
+      "chave": "cold start",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "WebAssembly",
+      "traducao": "formato binário portátil e isolado, também chamado Wasm",
+      "nivel": "intermediario",
+      "chave": "webassembly",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Spin",
+      "traducao": "framework open source para apps WebAssembly no servidor",
+      "nivel": "intermediario",
+      "chave": "spin",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Edge computing",
+      "traducao": "execução perto do usuário, em várias regiões",
+      "nivel": "basico",
+      "chave": "edge computing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado com permissões explícitas",
+      "nivel": "basico",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP",
+      "traducao": "Model Context Protocol, protocolo que expõe ferramentas a agentes",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Memory snapshot",
+      "traducao": "cópia do estado da memória gravada na compilação",
+      "nivel": "avancado",
+      "chave": "memory snapshot",
+      "analogia": "Um memory snapshot é como deixar a marmita pronta e congelada no domingo, para que na segunda você só esquente e coma, sem precisar cozinhar tudo de novo.",
+      "explicacao": [
+        "Todo programa precisa se preparar antes de responder. Ele carrega o que vai usar e organiza tudo na memória do computador, e essa preparação leva tempo.",
+        "Um memory snapshot (fotografia da memória) guarda essa memória já preparada num arquivo. Na próxima vez, o programa abre o arquivo e começa direto do ponto em que estava pronto.",
+        "Linguagens interpretadas, como JavaScript, precisam de um interpretador que lê o código na hora. No Spin, a compilação carrega o interpretador, o código do usuário e todas as dependências, e roda a parte inicial do programa.",
+        "Depois disso, o compilador tira a fotografia da memória e grava tudo dentro do binário WebAssembly. Quando chega uma requisição, o runtime (ambiente de execução) já está aquecido, o que reduz o cold start (partida a frio).",
+        "O custo é o tamanho. O app precisa levar o próprio runtime JavaScript junto. O palestrante cita o SpiderMonkey otimizado, com cerca de 10 MB, e afirma sem mostrar dados que isso supera o JavaScript nativo."
+      ],
+      "pre_requisitos": [
+        "Cold start",
+        "WebAssembly",
+        "Linguagem interpretada",
+        "Runtime"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "CARREGA INTERPRETADOR",
+            "nota": "Runtime JavaScript entra na memória"
+          },
+          {
+            "rotulo": "CARREGA CÓDIGO",
+            "nota": "Seu JavaScript e as dependências"
+          },
+          {
+            "rotulo": "AVALIA ESCOPO GLOBAL",
+            "nota": "Roda a preparação inicial do app"
+          },
+          {
+            "rotulo": "GRAVA SNAPSHOT",
+            "nota": "Memória salva no binário Wasm"
+          },
+          {
+            "rotulo": "PARTIDA AQUECIDA",
+            "nota": "App responde sem refazer o preparo"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP Inspector",
+      "traducao": "ferramenta para testar servidores MCP no navegador",
+      "nivel": "basico",
+      "chave": "mcp inspector",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é pitch de produto: o palestrante é advocate da Akamai e vende o Akamai Functions. Os números (menos de 0,5 ms de cold start, 60 segundos de deploy, 33 ms) saem de demos e de afirmações da própria empresa, sem benchmark comparativo com Lambda, Cloudflare Workers ou containers. A medida de 33 ms foi feita antes de um erro e a de cerca de 820 ms é de poucas tentativas. Não há custo, limites de memória ou de tempo de execução. A frase de que apps JavaScript em Wasm superam o JavaScript nativo não vem com dados.",
+  "acoes": [
+    "Se você mantém MCPs ou agentes em containers, meça o cold start real deles antes de decidir mudar de plataforma.",
+    "Teste o wasmcp localmente com o template de tools para entender como separar lógica de negócio de autenticação e protocolo.",
+    "Antes de adotar um serviço gerenciado, pergunte quais SDKs ou formatos proprietários ele exige e quanto custaria migrar depois.",
+    "Peça ao fornecedor um benchmark reproduzível, com percentis de latência, em vez de aceitar o tempo de uma demo."
+  ],
+  "numeros": [
+    {
+      "valor": "< 0,5 ms",
+      "contexto": "cold start médio no Akamai Functions, segundo o palestrante",
+      "t": 282
+    },
+    {
+      "valor": "~60 s",
+      "contexto": "tempo para distribuir o MCP globalmente com um deploy",
+      "t": 849
+    },
+    {
+      "valor": "~10 MB",
+      "contexto": "tamanho do runtime JavaScript embutido no app",
+      "t": 1102
+    },
+    {
+      "valor": "~820 ms",
+      "contexto": "ciclo completo do agente passando pelo LLM",
+      "t": 1196
+    }
+  ]
+}

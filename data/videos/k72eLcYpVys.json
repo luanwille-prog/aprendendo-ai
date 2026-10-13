@@ -1,0 +1,224 @@
+{
+  "id": "k72eLcYpVys",
+  "titulo": "1,000 Agent Tasks in a Sandbox: What Breaks When LLMs Run Code — Kevin Orellana, AWS",
+  "titulo_curto": "1,000 Agent Tasks in a Sandbox: What Breaks When LLMs Run Code",
+  "palestrante": "Kevin Orellana, AWS",
+  "url": "https://www.youtube.com/watch?v=k72eLcYpVys",
+  "duracao": 919,
+  "publicado_ts": 1791783391,
+  "edicao": "2026-10-12",
+  "tese": "Se o seu agente roda em sandbox, teste a plataforma com mil tarefas reais e remotas: os limites do ambiente decidem se ele termina o trabalho.",
+  "tldr": [
+    "Kevin Orellana, da AWS, apontou um agente de código para o sandbox da sua equipe (Amazon Bedrock AgentCore) e mandou ele quebrar tudo durante a noite, com mil testes em 10 domínios.",
+    "Os defeitos caíram em duas camadas: a de interface (bug de codificação no servidor MCP, byte nulo) e a do sandbox (memória, permissões de arquivo, chamadas de sistema bloqueadas).",
+    "A conclusão é que limites baixos do sandbox, como memória e permissões, decidem se um agente consegue cumprir a tarefa, e por isso vale fazer fuzz test (teste com entradas variadas) remoto, não só local."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Usar um agente de código como cliente de teste da plataforma",
+      "texto": "A equipe envolveu o sandbox e o navegador em nuvem em um servidor MCP (protocolo que expõe ferramentas a agentes). Depois pediu a um agente de código que escrevesse e rodasse mil testes em 10 domínios. O número mil foi arbitrário, escolhido para lançar uma rede larga e ver o que voltava.",
+      "t": 189,
+      "legenda": "O desenho mostra agente, MCP, sandbox e SQLite ligados em um fluxo simples.",
+      "print": "img/k72eLcYpVys/0.jpg"
+    },
+    {
+      "titulo": "Resultados em banco de dados, não em markdown",
+      "texto": "Agentes tendem a gravar arquivos markdown, mas isso não escala com mil testes. O SQLite permitiu rodar vários subagentes em paralelo no computador local, cada um gravando seu resultado no mesmo lugar para consulta depois.",
+      "t": 220,
+      "legenda": "Cada ponto é um fluxo que um cliente real rodaria, como gerar PDF ou treinar um modelo.",
+      "print": "img/k72eLcYpVys/1.jpg"
+    },
+    {
+      "titulo": "Falhas de interface versus falhas de sandbox",
+      "texto": "Três falhas ilustram a divisão. Uma imagem enviada voltava diferente por erro de codificação no MCP. Um byte nulo derrubou testes. Arquivos gravados num diretório específico do sandbox não podiam ser lidos depois. As duas primeiras são da camada de interface, a terceira do sandbox.",
+      "t": 313,
+      "legenda": "As falhas foram separadas em duas camadas, o que muda quem precisa corrigir.",
+      "print": "img/k72eLcYpVys/2.jpg"
+    },
+    {
+      "titulo": "Navegador esgota memória, interpretador de código não",
+      "texto": "Ao comparar duas aplicações hospedadas, o navegador em nuvem falhou muitas vezes por falta de memória, porque abrir várias abas pesa. O interpretador de código quase não teve esse problema. Cada aplicação exige coisas diferentes do mesmo tipo de ambiente.",
+      "t": 471,
+      "legenda": "As falhas em vermelho do navegador vêm de memória; o sandbox de código quase não as tem.",
+      "print": "img/k72eLcYpVys/3.jpg"
+    },
+    {
+      "titulo": "Primitivas do sandbox decidem o que o agente consegue fazer",
+      "texto": "Permissões de arquivo, sistema de arquivos persistente ou efêmero, seccomp (filtro de chamadas de sistema) e programas eBPF controlam se um processo pode abrir outro processo, instalar um pacote ou fazer chamadas de saída. Detalhes pequenos somam e impedem o agente de resolver o problema de negócio.",
+      "t": 564,
+      "legenda": "O slide lista as peças do sandbox onde as falhas se concentram.",
+      "print": "img/k72eLcYpVys/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado de execução",
+      "nivel": "basico",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP",
+      "traducao": "Model Context Protocol, protocolo de ferramentas para agentes",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Coding agent",
+      "traducao": "agente de código",
+      "nivel": "basico",
+      "chave": "coding agent",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Fuzz testing",
+      "traducao": "teste com entradas amplas e variadas para achar falhas",
+      "nivel": "intermediario",
+      "chave": "fuzz testing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Seccomp",
+      "traducao": "filtro de chamadas de sistema do Linux",
+      "nivel": "avancado",
+      "chave": "seccomp",
+      "analogia": "Seccomp é como o crachá de um funcionário temporário, que só abre as portas da lista aprovada pela empresa e deixa todas as outras fechadas.",
+      "explicacao": [
+        "Todo programa precisa pedir ao sistema operacional para fazer coisas básicas, como abrir um arquivo, acessar a rede ou iniciar outro programa.",
+        "Esses pedidos se chamam chamadas de sistema (system calls, ou syscalls). O Linux tem centenas delas, e o kernel (núcleo do sistema) atende cada uma.",
+        "O seccomp (secure computing, computação segura) é um recurso do Linux que define quais chamadas um processo pode fazer. As que ficam fora da lista são negadas ou encerram o processo.",
+        "Num sandbox (ambiente isolado), esse filtro reduz o estrago que um código malicioso pode causar. O custo é que tarefas legítimas também podem esbarrar no bloqueio.",
+        "No talk, um pacote de machine learning que precisa abrir um novo processo falha se o filtro proibir essa chamada. O agente trava mesmo com o código dele correto."
+      ],
+      "pre_requisitos": [
+        "Sandbox",
+        "Kernel",
+        "Chamada de sistema",
+        "Processo"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PROGRAMA PEDE AÇÃO",
+            "nota": "Ex.: abrir um novo processo"
+          },
+          {
+            "rotulo": "FILTRO SECCOMP",
+            "nota": "Confere a lista de chamadas permitidas"
+          },
+          {
+            "rotulo": "KERNEL EXECUTA OU NEGA",
+            "nota": "A tarefa segue ou falha"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "eBPF",
+      "traducao": "programas que rodam dentro do kernel para interceptar ações",
+      "nivel": "avancado",
+      "chave": "ebpf",
+      "analogia": "eBPF é como um guarda de trânsito posto num cruzamento da cidade, que observa cada carro e pode parar ou desviar alguns sem precisar reconstruir a rua.",
+      "explicacao": [
+        "O kernel é o núcleo do sistema operacional. Ele controla memória, arquivos, rede e processos de todos os programas da máquina.",
+        "Mudar o comportamento do kernel costumava exigir recompilar o sistema ou instalar módulos arriscados, que podiam derrubar a máquina inteira.",
+        "O eBPF (extended Berkeley Packet Filter, filtro de pacotes estendido) permite carregar pequenos programas que rodam dentro do kernel. Um verificador checa cada programa antes, para ele não travar o sistema.",
+        "Esses programas se prendem a eventos, como uma conexão de rede ou a abertura de um arquivo. Ali eles registram, liberam ou bloqueiam a ação.",
+        "Em sandboxes de agentes, o eBPF pode decidir se o agente faz chamadas de saída (egress) para a internet ou para APIs internas da empresa."
+      ],
+      "pre_requisitos": [
+        "Kernel",
+        "Sandbox",
+        "Egress (tráfego de saída)"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PROGRAMA CARREGADO",
+            "nota": "Pequeno código enviado ao kernel"
+          },
+          {
+            "rotulo": "VERIFICADOR DO KERNEL",
+            "nota": "Checa se o código é seguro"
+          },
+          {
+            "rotulo": "GANCHO NO EVENTO",
+            "nota": "Ex.: conexão de rede do agente"
+          },
+          {
+            "rotulo": "AÇÃO LIBERADA OU BARRADA",
+            "nota": "O agente segue ou é bloqueado"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Subagente",
+      "traducao": "agente auxiliar que executa parte do trabalho",
+      "nivel": "intermediario",
+      "chave": "subagente",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Benchmark",
+      "traducao": "teste padronizado para comparar modelos",
+      "nivel": "basico",
+      "chave": "benchmark",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk vem de um engenheiro da AWS e inclui um aviso do próprio produto (acesso SSH aos sandboxes do AgentCore). Não há taxa de falha, número de bugs ou comparação com outro método de teste, só três exemplos escolhidos. Os mil testes foram gerados por um LLM, e o próprio palestrante admite que o número era arbitrário. A citação sobre o estudo de Berkeley que chegou a 100% em benchmark de agentes de código aparece sem título ou link, então não dá para checar.",
+  "acoes": [
+    "Se você hospeda agentes em sandbox, peça a um agente de código para gerar centenas de fluxos reais (instalar pacote, gravar e ler arquivo, abrir processo) e rodar no ambiente remoto, não só no seu computador.",
+    "Grave os resultados de testes de agentes em um banco simples como SQLite, com campo para a camada da falha, em vez de arquivos markdown soltos.",
+    "Ao analisar uma falha, classifique primeiro se veio da interface (codificação, formato) ou do sandbox (memória, permissão), para saber quem corrige.",
+    "Compare as ferramentas e permissões do seu ambiente local com as do sandbox remoto antes de migrar um agente de código para a nuvem."
+  ],
+  "numeros": [
+    {
+      "valor": "1.000",
+      "contexto": "testes gerados pelo agente em 10 domínios",
+      "t": 127
+    },
+    {
+      "valor": "10",
+      "contexto": "domínios de teste cobertos",
+      "t": 127
+    },
+    {
+      "valor": "100%",
+      "contexto": "resultado atribuído a estudo de Berkeley em benchmarks, com exploits",
+      "t": 815
+    }
+  ]
+}

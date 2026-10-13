@@ -1,0 +1,174 @@
+{
+  "id": "qFaKvbVc5cE",
+  "titulo": "Teaching Agents to Search with NVIDIA Data Designer — Dhruv Nathawani, NVIDIA",
+  "titulo_curto": "Teaching Agents to Search with NVIDIA Data Designer",
+  "palestrante": "Dhruv Nathawani, NVIDIA",
+  "url": "https://www.youtube.com/watch?v=qFaKvbVc5cE",
+  "duracao": 3330,
+  "publicado_ts": 1791736222,
+  "edicao": "2026-10-12",
+  "tese": "Comportamento de agente vira problema de dados: gere em excesso, filtre forte e olhe os exemplos antes de treinar.",
+  "tldr": [
+    "Dhruv Nathawani, da NVIDIA, mostra como usar o Data Designer, ferramenta open source, para gerar dados sintéticos que ensinam um modelo a pesquisar na web em vez de responder de memória.",
+    "O fluxo parte de caminhos no Wikidata, transforma cada caminho em uma charada, deixa um agente buscar a resposta com a Tavily via MCP e filtra o resultado para uso em fine-tuning supervisionado.",
+    "A parte mais difícil é verificar se as respostas estão certas, porque até a fonte pode ficar desatualizada. Ele combina juiz LLM, checagem determinística e revisão humana."
+  ],
+  "tema": "dados-e-rag",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Dados gerados coluna a coluna",
+      "texto": "O Data Designer monta o conjunto de dados como um grafo de colunas. Uma coluna de semente traz dados reais, colunas sampler injetam variedade (por exemplo, dificuldade fácil, média ou difícil) e colunas de LLM geram texto ou JSON. O ponto é fugir do laço que repete o mesmo prompt, que passa a repetir conteúdo depois de 10 a 20 tentativas.",
+      "t": 386,
+      "legenda": "A receita do dataset é um grafo de colunas que qualquer pessoa pode reexecutar.",
+      "print": "img/qFaKvbVc5cE/0.jpg"
+    },
+    {
+      "titulo": "Preview antes do lote",
+      "texto": "Antes de gerar milhares de registros, o modo preview cria só três. Nathawani lê as perguntas, as respostas e a nota do juiz, e ajusta prompts ou samplers. Só depois dispara o lote. Ele insiste que criar dados é um processo iterativo e que olhar os exemplos é a melhor checagem de qualidade.",
+      "t": 764,
+      "legenda": "Três registros de preview bastam para ver se o prompt está produzindo o que se quer.",
+      "print": "img/qFaKvbVc5cE/1.jpg"
+    },
+    {
+      "titulo": "Charadas a partir de caminhos no Wikidata",
+      "texto": "A semente é um caminho de 5 a 8 saltos no grafo Wikidata, como NVIDIA, Jensen, Oregon State, Benton County e Thomas Hart Benton. O modelo escreve uma pergunta que exige encadear várias buscas. Perguntas assim não estão no treino do modelo, então ele precisa usar a ferramenta de busca em vez de trapacear. Acima de 8 saltos, o caminho tende a sair do assunto.",
+      "t": 1453,
+      "legenda": "Cada caminho no grafo vira uma pergunta que só se responde com várias buscas.",
+      "print": "img/qFaKvbVc5cE/2.jpg"
+    },
+    {
+      "titulo": "Do funil de 50 mil sementes a 7 mil registros",
+      "texto": "Do total gerado, só uma fração sobrevive ao filtro. Para ele, a qualidade do dado pesa mais que o volume, e diversidade é um dos eixos de qualidade. Ele mostra uma função que cruza a nota do juiz LLM com o tamanho da pergunta e a taxa de aprovação de cada faixa.",
+      "t": 2449,
+      "legenda": "O filtro descarta a maior parte dos registros e a taxa de aprovação varia por faixa.",
+      "print": "img/qFaKvbVc5cE/3.jpg"
+    },
+    {
+      "titulo": "A fonte de verdade também envelhece",
+      "texto": "Uma charada perguntava qual país é dono da US Steel. O agente respondeu EUA, o verificador aceitou, mas a empresa foi vendida ao Japão. Até a semente do Wikidata estava desatualizada. Por isso ele combina juiz LLM, checagem determinística (que deu cerca de 24% de acerto por ser rígida) e revisão humana dos julgamentos do juiz.",
+      "t": 2481,
+      "legenda": "O verificador aprovou uma resposta que já estava desatualizada na fonte.",
+      "print": "img/qFaKvbVc5cE/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Dados sintéticos",
+      "traducao": "dados gerados por modelo, ancorados em uma semente",
+      "nivel": "basico",
+      "chave": "dados sintéticos",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Seed data",
+      "traducao": "dados semente",
+      "nivel": "intermediario",
+      "chave": "seed data",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP",
+      "traducao": "protocolo que conecta agentes a ferramentas",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo que avalia a saída de outro modelo",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Benchmark",
+      "traducao": "conjunto de testes padronizado",
+      "nivel": "basico",
+      "chave": "benchmark",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Knowledge cutoff",
+      "traducao": "data de corte do conhecimento do modelo",
+      "nivel": "basico",
+      "chave": "knowledge cutoff",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Destilação",
+      "traducao": "treinar um modelo com saídas de outro",
+      "nivel": "intermediario",
+      "chave": "destilação",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Reinforcement learning",
+      "traducao": "aprendizado por reforço, com função de recompensa",
+      "nivel": "avancado",
+      "chave": "reinforcement learning",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O talk também divulga o ecossistema da NVIDIA (Data Designer, Nemotron, NeMo Gym, Anonymizer). Os ganhos citados (0% a 30% no BrowseComp, 26% a 41% no BIRD) vêm do próprio palestrante, sem baseline, número de execuções ou comparação com outros dados. A checagem determinística de 24% e o caso da US Steel mostram que a avaliação do dado gerado segue em aberto. O uso de Tavily vem de um acordo de créditos, como ele admite. O modelo gerador (GPT-OSS 120B) limita o teto da qualidade.",
+  "acoes": [
+    "Antes de gerar um dataset grande, rode um preview de 3 a 10 registros e leia tudo à mão. Ajuste o prompt até o exemplo ficar bom.",
+    "Ao criar dados com modelo, acrescente uma coluna de variação (dificuldade, tipo, persona) em vez de repetir o mesmo prompt, e gere mais do que precisa para filtrar depois.",
+    "Em avaliação com juiz LLM, separe uma amostra dos julgamentos para revisão humana e confira se o juiz concorda com as pessoas antes de confiar na nota.",
+    "Guarde a receita de geração em código versionado, para que outra pessoa reproduza o dataset com pequenas mudanças."
+  ],
+  "numeros": [
+    {
+      "valor": "6,5 tri",
+      "contexto": "tokens de treino já criados com o Data Designer",
+      "t": 295
+    },
+    {
+      "valor": "0% a 30%",
+      "contexto": "ganho no BrowseComp após o fine-tuning com os dados",
+      "t": 1389
+    },
+    {
+      "valor": "26% a 41%",
+      "contexto": "ganho no benchmark BIRD (SQL) no modelo Nano",
+      "t": 1911
+    },
+    {
+      "valor": "50 mil a 7 mil",
+      "contexto": "sementes iniciais e registros SFT finais",
+      "t": 2388
+    }
+  ]
+}

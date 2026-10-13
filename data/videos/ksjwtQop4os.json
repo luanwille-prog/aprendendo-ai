@@ -1,0 +1,208 @@
+{
+  "id": "ksjwtQop4os",
+  "titulo": "Vector Isn't Enough: Hybrid Search & Retrieval — Jeff Vestal & James Williams, Elastic",
+  "titulo_curto": "Vector Isn't Enough: Hybrid Search & Retrieval",
+  "palestrante": "Jeff Vestal & James Williams, Elastic",
+  "url": "https://www.youtube.com/watch?v=ksjwtQop4os",
+  "duracao": 4579,
+  "publicado_ts": 1791723618,
+  "edicao": "2026-10-12",
+  "tese": "Busca vetorial sozinha falha com identificadores exatos. Combine com BM25, meça o resultado e só então confie que o agente responda bem.",
+  "tldr": [
+    "Workshop prático da Elastic mostra por que a busca semântica erra códigos e IDs, e por que a busca por palavra-chave (BM25) erra paráfrases.",
+    "A solução apresentada é a busca híbrida, combinada por RRF (ordem dos resultados) ou por combinação linear (scores normalizados com pesos), com filtros, judgment sets e reranker como segunda etapa.",
+    "Na demo com o Agent Builder, um agente diagnostica o exit code 137 (falta de memória) buscando na documentação e cita as fontes, o que prova que a qualidade da resposta depende do que a busca entrega."
+  ],
+  "tema": "dados-e-rag",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Nenhuma busca resolve tudo sozinha",
+      "texto": "A busca semântica acha o sentido mesmo com palavras diferentes, mas falha com códigos de produto e identificadores exatos. A busca lexical (BM25) acerta a palavra exata, mas perde paráfrases. Os palestrantes defendem usar as duas juntas e chamam isso de tese central da Elastic.",
+      "t": 1008,
+      "legenda": "O fluxo da busca semântica, de onde vêm seus limites",
+      "print": null
+    },
+    {
+      "titulo": "RRF é o ponto de partida, a combinação linear dá controle",
+      "texto": "O BM25 e a busca vetorial usam escalas de score diferentes, então somar os números não funciona. O RRF ignora o score e usa só a posição de cada documento nas duas listas. A combinação linear normaliza os scores entre 0 e 1 e deixa você ajustar pesos. Antes, vale filtrar por palavra-chave, data ou local para reduzir o conjunto de candidatos.",
+      "t": 2327,
+      "legenda": "A tabela do RRF mostra a fusão por posição, sem usar score",
+      "print": null
+    },
+    {
+      "titulo": "Roteie cada tipo de consulta para a estratégia certa",
+      "texto": "Ajustar pesos é difícil e não há receita pronta. Uma alternativa prática é criar search templates (modelos de busca) com RRF, combinação linear ou reranker, e deixar um LLM ou uma regra simples escolher o modelo conforme a pergunta. Eles chamam isso de autotuning dos pobres. Judgment sets (consultas com os documentos esperados) medem qual configuração acerta mais.",
+      "t": 2512,
+      "legenda": "Rotear consultas entre estratégias de busca com templates",
+      "print": "img/ksjwtQop4os/2.jpg"
+    },
+    {
+      "titulo": "Um agente cita fontes quando o dado traz a fonte",
+      "texto": "Modelos não consultam uma tabela, eles geram tokens. Por isso, entregar os documentos ao LLM e pedir citação permite que o leitor confira a resposta. Na demo, o agente carrega uma skill, busca com ES|QL, explica que o exit code 137 vem do gerenciador de falta de memória e aponta ajustes de JVM, com links para a documentação.",
+      "t": 3821,
+      "legenda": "Resposta do agente com trilha de passos e fontes clicáveis",
+      "print": "img/ksjwtQop4os/3.jpg"
+    },
+    {
+      "titulo": "Reranker só quando a ordem exata importa",
+      "texto": "O reranker reavalia um conjunto pequeno de candidatos juntando consulta e documento, ao custo de uma inferência extra na hora da consulta. O modo pointwise pontua cada documento separado. O listwise compara todos juntos e ajuda quando os candidatos são muito parecidos. Se a primeira etapa já entrega algo bom, o reranker pode ser dispensado.",
+      "t": 4228,
+      "legenda": "Pointwise avalia um por vez, listwise vê a lista inteira",
+      "print": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Busca híbrida",
+      "traducao": "hybrid search",
+      "nivel": "intermediario",
+      "chave": "busca híbrida",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "BM25",
+      "traducao": "busca lexical por palavra-chave",
+      "nivel": "intermediario",
+      "chave": "bm25",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Reciprocal rank fusion (RRF)",
+      "traducao": "fusão por posição no ranking",
+      "nivel": "intermediario",
+      "chave": "reciprocal rank fusion (rrf)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Combinação linear",
+      "traducao": "linear combination com scores normalizados",
+      "nivel": "avancado",
+      "chave": "combinação linear",
+      "analogia": "Combinação linear é como calcular a média final de um aluno: você converte a prova e o trabalho para a mesma escala de 0 a 10 e dá mais peso para a prova antes de somar.",
+      "explicacao": [
+        "Quando duas buscas avaliam os mesmos documentos, cada uma dá uma nota própria. A combinação linear (linear combination) junta essas notas numa nota final única.",
+        "Cada busca usa uma régua diferente. O BM25 (busca por palavra-chave) pode dar nota 12 e a busca vetorial pode dar 0,8. Somar esses números direto favorece a busca com números maiores.",
+        "Por isso o primeiro passo normaliza os scores (notas de relevância), ou seja, coloca todos na mesma escala. A técnica min-max transforma a menor nota em 0 e a maior em 1.",
+        "Depois você multiplica cada nota por um peso e soma. Com peso 0,7 para a busca semântica e 0,3 para a palavra-chave, por exemplo, a soma define a ordem final dos documentos.",
+        "Para escolher os pesos, você testa várias combinações contra um judgment set (perguntas com os documentos esperados). O RRF olha só a posição na lista; aqui a força de cada nota também conta."
+      ],
+      "pre_requisitos": [
+        "BM25",
+        "Busca vetorial",
+        "Busca híbrida",
+        "Reciprocal rank fusion (RRF)"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "DUAS BUSCAS",
+            "nota": "BM25 e vetorial rodam em paralelo"
+          },
+          {
+            "rotulo": "NORMALIZAR",
+            "nota": "Notas vão para a escala de 0 a 1"
+          },
+          {
+            "rotulo": "APLICAR PESOS",
+            "nota": "Cada nota vezes o seu peso"
+          },
+          {
+            "rotulo": "SOMAR",
+            "nota": "A soma vira a nota final"
+          },
+          {
+            "rotulo": "RANKING FINAL",
+            "nota": "Lista única, ajustável pelos pesos"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Judgment set",
+      "traducao": "conjunto de consultas com documentos esperados",
+      "nivel": "intermediario",
+      "chave": "judgment set",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Chunking",
+      "traducao": "divisão do texto em trechos",
+      "nivel": "basico",
+      "chave": "chunking",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Re-ranker",
+      "traducao": "reordenação em segunda etapa",
+      "nivel": "avancado",
+      "chave": "re-ranker",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "ES|QL",
+      "traducao": "linguagem de consulta da Elastic com pipes",
+      "nivel": "intermediario",
+      "chave": "es|ql",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É um workshop de uma fornecedora de busca, então a tese de que o hybrid search é a resposta e o Elastic o melhor lugar para rodá-lo é também pitch de produto. Não há medição comparativa de relevância, latência ou custo, só afirmações dos palestrantes. Eles admitem que a afinação automática de pesos ainda não existe e que não sabem o valor padrão do rank constant do RRF. O dataset do lab é pequeno e sintético, e a demo do exit code 137 é um caso único e favorável.",
+  "acoes": [
+    "Teste sua base com busca por palavra-chave e busca semântica separadas, usando consultas com código de erro ou ID, e veja onde cada uma falha antes de escolher.",
+    "Monte um judgment set pequeno, com 20 a 30 perguntas reais e os documentos esperados, para comparar RRF, pesos lineares e reranker com número.",
+    "Quando o agente responder errado, olhe primeiro os documentos recuperados, não o modelo.",
+    "Exija que o agente cite fontes com link no conteúdo que ele consulta e confira alguns links por amostragem."
+  ],
+  "numeros": [
+    {
+      "valor": "250 tokens",
+      "contexto": "tamanho padrão de cada chunk, com 1 frase de sobreposição",
+      "t": 507
+    },
+    {
+      "valor": "64",
+      "contexto": "candidatos analisados juntos pelo reranker listwise (Jina V3)",
+      "t": 4228
+    },
+    {
+      "valor": "75",
+      "contexto": "pessoas que o palestrante previu para o workshop",
+      "t": 43
+    },
+    {
+      "valor": "5",
+      "contexto": "documentos retornados na busca da demo do agente",
+      "t": 3821
+    }
+  ]
+}

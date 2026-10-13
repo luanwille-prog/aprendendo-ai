@@ -1,0 +1,197 @@
+{
+  "id": "bI8WyG9YB0I",
+  "titulo": "SonarQube + OpenAI: Agentic Development — Killian Carlsen-Phelan, Sonar",
+  "titulo_curto": "SonarQube + OpenAI: Agentic Development",
+  "palestrante": "Killian Carlsen-Phelan, Sonar",
+  "url": "https://www.youtube.com/watch?v=bI8WyG9YB0I",
+  "duracao": 2517,
+  "publicado_ts": 1791745211,
+  "edicao": "2026-10-12",
+  "tese": "O gargalo saiu de gerar código e foi para verificá-lo, então a checagem de segurança precisa rodar dentro do loop do agente.",
+  "tldr": [
+    "A abertura da OpenAI defende que tarefa concluída exige evidência, que sandbox não prova que o código está correto e que a verificação deve ficar dentro do loop do agente.",
+    "Killian Carlsen-Phelan, da Sonar, mostra ao vivo um projeto Python com chave de API exposta e SQL injection, ligado ao Codex por plugin, hooks, skills e servidor MCP.",
+    "O fluxo guide, verify e solve bloqueia segredo no prompt, lista os problemas do painel, corrige a consulta com query parametrizada e reanalisa a edição automaticamente."
+  ],
+  "tema": "engenharia-de-software",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Concluído exige evidência",
+      "texto": "O representante da OpenAI define pronto como um diff revisável mais evidência de ferramenta, e não só o agente dizer que corrigiu. Autocrítica do modelo não funciona como juiz independente, porque o agente e o verificador podem errar do mesmo jeito. A revisão humana continua no ciclo.",
+      "t": 76,
+      "legenda": "Definição de pronto: diff revisável e evidência de ferramenta.",
+      "print": null
+    },
+    {
+      "titulo": "Contenção não é correção",
+      "texto": "A camada de execução define o que o agente pode fazer: ferramentas, escopo e aprovações. A camada de artefato avalia se o resultado é aceitável. Um sandbox contém uma escrita, mas não prova que uma query é segura. Por isso se empilham controles com fronteiras diferentes.",
+      "t": 171,
+      "legenda": "Sandbox limita o dano, mas não valida o código gerado.",
+      "print": null
+    },
+    {
+      "titulo": "Guide, verify e solve",
+      "texto": "A Sonar divide o ciclo em gerar, guiar, verificar e resolver. Guide injeta regras e arquitetura do projeto antes da geração. Verify checa segurança e qualidade logo após a edição. Solve corrige o problema achado. A ideia é verificar no IDE (loop interno) e não esperar a falha no CI (loop externo).",
+      "t": 519,
+      "legenda": "Ciclo de desenvolvimento centrado em agente, com três etapas da Sonar.",
+      "print": "img/bI8WyG9YB0I/2.jpg"
+    },
+    {
+      "titulo": "Taint analysis mostra o caminho da falha",
+      "texto": "No projeto de exemplo, um argumento vindo de sys.argv entra direto em uma f-string executada no banco. O SonarQube usa análise de fluxo de dados (taint analysis) para rastrear a entrada do usuário até a execução da query, entre arquivos e funções. A nota de segurança do projeto é E.",
+      "t": 1279,
+      "legenda": "O painel traça a entrada do usuário até a query vulnerável.",
+      "print": "img/bI8WyG9YB0I/3.jpg"
+    },
+    {
+      "titulo": "Hook bloqueia segredo e reanalisa a correção",
+      "texto": "Ao pedir ao Codex para fazer commit com um token falso, o hook de detecção de segredos bloqueia o prompt antes de ele chegar ao modelo. Depois, o pedido para corrigir a issue S8702 gera uma query parametrizada, e um hook pós-edição reanalisa só o código alterado. Um participante lembra que o hook atua no envio do prompt e pode ser contornado.",
+      "t": 1635,
+      "legenda": "O hook barra o segredo antes de ele entrar no contexto do modelo.",
+      "print": "img/bI8WyG9YB0I/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "SQL injection",
+      "traducao": "injeção de SQL",
+      "nivel": "basico",
+      "chave": "sql injection",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Hooks",
+      "traducao": "gatilhos de ciclo de vida do agente",
+      "nivel": "intermediario",
+      "chave": "hooks",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP",
+      "traducao": "protocolo de ferramentas para agentes",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Taint analysis",
+      "traducao": "análise de contaminação de dados",
+      "nivel": "avancado",
+      "chave": "taint analysis",
+      "analogia": "Taint analysis é como pingar corante na água de uma cozinha para ver por quais canos ela passa até chegar à panela.",
+      "explicacao": [
+        "Todo dado que vem de fora do programa, como o texto que alguém digita, é tratado como suspeito. A ferramenta marca esse dado como contaminado (tainted).",
+        "A análise segue esse dado marcado enquanto ele passa de variável em variável, de função em função e até de um arquivo para outro.",
+        "O ponto onde o dado entra se chama fonte (source). O ponto perigoso onde ele é usado se chama destino (sink), por exemplo o comando que executa uma consulta no banco.",
+        "Se o dado chega ao destino sem passar por uma limpeza ou proteção, a ferramenta aponta a falha. No exemplo do vídeo, um argumento de sys.argv vai direto para uma f-string executada no banco, o que abre caminho para SQL injection.",
+        "O SonarQube faz isso lendo o código sem executá-lo, com análise estática e execução simbólica (symbolic execution), e mostra no painel o caminho completo da fonte até o destino."
+      ],
+      "pre_requisitos": [
+        "SQL injection",
+        "Análise estática de código",
+        "Entrada do usuário",
+        "Query parametrizada"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "FONTE",
+            "nota": "Dado externo entra, como sys.argv"
+          },
+          {
+            "rotulo": "MARCAÇÃO",
+            "nota": "O dado recebe a marca de suspeito"
+          },
+          {
+            "rotulo": "PROPAGAÇÃO",
+            "nota": "Segue por funções e arquivos"
+          },
+          {
+            "rotulo": "DESTINO",
+            "nota": "Chega à execução da query no banco"
+          },
+          {
+            "rotulo": "ALERTA COM CAMINHO",
+            "nota": "Painel mostra a falha e o trajeto"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Inner, outer e meta loop",
+      "traducao": "loop interno e externo de verificação",
+      "nivel": "intermediario",
+      "chave": "inner, outer e meta loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Plugin",
+      "traducao": "extensão do Codex com hooks, skills e MCP",
+      "nivel": "basico",
+      "chave": "plugin",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Verification gate",
+      "traducao": "portão de verificação",
+      "nivel": "intermediario",
+      "chave": "verification gate",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "A fala é demonstração de produto da Sonar, em parceria com a OpenAI, e a venda aparece o tempo todo. Os números de pesquisa (42% e 96%) vêm de uma pesquisa da própria Sonar, sem metodologia detalhada. A demo usa um projeto de menos de 200 linhas com falhas plantadas, o que não mostra taxa de falsos positivos em código real. Context augmentation e agentic analysis não estão no plano gratuito. A rede ruim atrapalhou a demo, e o hook de segredos só atua no envio do prompt, como o próprio palestrante admitiu.",
+  "acoes": [
+    "Rode um scanner de segredos e de SQL injection (como SonarQube ou similar) sobre um repositório pequeno seu e anote o que ele acha antes de pedir correção a um agente.",
+    "Defina para cada tarefa de agente o que conta como pronto, com diff revisável e um teste ou análise independente, em vez de aceitar um simples 'corrigido'.",
+    "Configure um hook que bloqueie chaves de API no prompt do seu agente de código e teste com um token falso.",
+    "Mantenha segredos fora do código, em variáveis de ambiente, e revise queries que usam f-string com entrada do usuário."
+  ],
+  "numeros": [
+    {
+      "valor": "42%",
+      "contexto": "do código commitado é gerado ou assistido por IA",
+      "t": 424
+    },
+    {
+      "valor": "96%",
+      "contexto": "dos desenvolvedores não confiam totalmente nesse código",
+      "t": 424
+    },
+    {
+      "valor": "4",
+      "contexto": "falhas plantadas no projeto de exemplo (3 de segurança, 1 code smell)",
+      "t": 834
+    },
+    {
+      "valor": "90 dias",
+      "contexto": "tempo médio para remediar um segredo em repositório público",
+      "t": 1027
+    }
+  ]
+}

@@ -1,0 +1,199 @@
+{
+  "id": "BOCjybvJYM4",
+  "titulo": "Continuously Improving Agents with Langfuse — Annabell Schäfer & Lotte Verheyden, ClickHouse",
+  "titulo_curto": "Continuously Improving Agents with Langfuse",
+  "palestrante": "Annabell Schäfer & Lotte Verheyden, ClickHouse",
+  "url": "https://www.youtube.com/watch?v=BOCjybvJYM4",
+  "duracao": 2662,
+  "publicado_ts": 1791741610,
+  "edicao": "2026-10-12",
+  "tese": "Agente em produção falha em silêncio. Defina sinais próprios do seu caso, meça em traces e deixe um agente de código achar os padrões.",
+  "tldr": [
+    "O workshop apresenta o loop de engenharia de IA, com uma parte online (tracing e monitoramento) e uma offline (datasets, experimentos e evals), e foca na parte online.",
+    "Na prática, a equipe liga o Langfuse a um agente de suporte técnico chamado Specs e cria três monitores: discordância do usuário, frustração em caixa alta e pedido fora do escopo.",
+    "Com traces de produção em mãos, um agente de código usa a CLI e a skill do Langfuse para achar falhas que ninguém tinha medido, como uma ferramenta de busca que falha em silêncio, e propõe a correção."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "O loop de engenharia de IA tem duas metades",
+      "texto": "Agentes não são determinísticos. O sistema pode parecer saudável enquanto as respostas estão erradas. O loop tem cinco passos, divididos em online (tracing e monitoramento) e offline (datasets, experimentos e avaliação). Equipes fora de setores de alto risco podem começar só pela parte online e já corrigir muita coisa.",
+      "t": 170,
+      "legenda": "O ciclo de cinco passos, com tracing e monitoramento como ponto de partida.",
+      "print": "img/BOCjybvJYM4/0.jpg"
+    },
+    {
+      "titulo": "Tudo começa pelo trace",
+      "texto": "Um trace é composto por observations (observações): chamadas ao modelo, chamadas a ferramentas e etapas aninhadas. Cada uma carrega dados como duração, tokens, custo, modelo e versão do prompt. Se o trace for ruim, o monitoramento perde casos, o dataset fica pior e as decisões de avaliação se baseiam em pouco.",
+      "t": 855,
+      "legenda": "Um trace real do agente Specs, com cada passo como uma observação.",
+      "print": "img/BOCjybvJYM4/1.jpg"
+    },
+    {
+      "titulo": "Monitores sob medida para as falhas do seu app",
+      "texto": "Annabell cria três evaluators (avaliadores) para o agente de suporte. Um juiz LLM detecta discordância do usuário. Um código em Python detecta texto em caixa alta, sinal de frustração. Um terceiro compara o system prompt com o pedido para achar solicitações fora do escopo. Ela insiste que o ponto é pensar nos modos de falha do seu caso, não copiar templates.",
+      "t": 1170,
+      "legenda": "O mapeamento de variáveis define qual parte do trace o avaliador enxerga.",
+      "print": "img/BOCjybvJYM4/2.jpg"
+    },
+    {
+      "titulo": "Scores viram filtro para achar o que importa",
+      "texto": "Depois de rodar o agente com uma discordância e um pedido em caixa alta, o trace raiz aparece marcado com user disagreement verdadeiro. Esses scores permitem filtrar milhares de traces e olhar só os suspeitos. Os avaliadores automáticos escalam, mas só pegam o que você previu. Feedback humano pega o que você não previu.",
+      "t": 1620,
+      "legenda": "O score aparece direto no trace e serve de filtro.",
+      "print": "img/BOCjybvJYM4/3.jpg"
+    },
+    {
+      "titulo": "Agente de código investiga os traces",
+      "texto": "Com a CLI e a skill do Langfuse instaladas, o Codex lê traces e scores da produção. O relatório aponta uma falha silenciosa na ferramenta de busca de ajuda, retries que aumentam latência e custo, e uma lacuna de cobertura dos avaliadores. Depois o agente propõe remover a ferramenta que não ajuda, já editando o código do repositório.",
+      "t": 2228,
+      "legenda": "O relatório lista falhas que nenhum monitor manual cobria.",
+      "print": "img/BOCjybvJYM4/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Trace",
+      "traducao": "registro de execução do agente",
+      "nivel": "basico",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Observation",
+      "traducao": "observação (um passo dentro do trace)",
+      "nivel": "intermediario",
+      "chave": "observation",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Online scoring",
+      "traducao": "avaliação em tempo real sobre tráfego de produção",
+      "nivel": "intermediario",
+      "chave": "online scoring",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo usado como avaliador",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Evaluator baseado em código",
+      "traducao": "avaliador determinístico escrito em Python ou TypeScript",
+      "nivel": "intermediario",
+      "chave": "evaluator baseado em código",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "JSONPath",
+      "traducao": "caminho para extrair um campo do trace",
+      "nivel": "avancado",
+      "chave": "jsonpath",
+      "analogia": "JSONPath é como o endereço de uma folha num arquivo de escritório, do tipo armário 3, pasta azul, última folha, que leva você direto ao papel certo sem abrir o resto.",
+      "explicacao": [
+        "Cada execução do agente fica guardada como um registro grande, com a pergunta do usuário, as respostas e as ferramentas usadas.",
+        "Esse registro vem no formato JSON (um jeito padrão de organizar dados em campos dentro de campos), parecido com pastas dentro de pastas.",
+        "JSONPath (caminho JSON) é uma linha curta que aponta para um campo específico, como $.messages para a conversa inteira ou o último item dessa lista para a última mensagem.",
+        "No Langfuse, você escreve esse caminho no avaliador, e o texto encontrado entra no lugar da variável entre chaves no prompt do juiz.",
+        "Assim o avaliador recebe só a parte certa do trace, por exemplo o histórico completo e a última fala do usuário, e julga se houve discordância."
+      ],
+      "pre_requisitos": [
+        "JSON",
+        "Trace",
+        "Evaluator",
+        "Variáveis de prompt"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "TRACE CHEGA",
+            "nota": "registro completo em JSON"
+          },
+          {
+            "rotulo": "CAMINHO JSONPATH",
+            "nota": "aponta o campo desejado"
+          },
+          {
+            "rotulo": "VARIÁVEL PREENCHIDA",
+            "nota": "texto entra no prompt do juiz"
+          },
+          {
+            "rotulo": "AVALIADOR JULGA",
+            "nota": "score gravado no trace"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Skill",
+      "traducao": "pacote de instruções que o agente de código carrega",
+      "nivel": "intermediario",
+      "chave": "skill",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Data flywheel",
+      "traducao": "ciclo em que dados de produção alimentam o dataset de testes",
+      "nivel": "intermediario",
+      "chave": "data flywheel",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É um workshop de uma empresa que vende o Langfuse, e a ClickHouse é a dona do produto. Os monitores e o relatório do agente de código aparecem em um app de brinquedo, com traces semeados por script, então não há evidência de ganho em produção real. A palestrante diz que a contagem era 120 ou 70 traces e jura que não está fazendo p-hacking, o que mostra amostra pequena e relatório pré-preparado. A correção proposta pelo agente não foi testada na tela.",
+  "acoes": [
+    "Liste de três a cinco modos de falha do seu agente (discordância, frustração, fora do escopo) e crie um avaliador para cada, em vez de copiar templates prontos.",
+    "Confira se seus traces registram entrada, saída, ferramentas, versão do prompt, custo e latência de cada passo antes de montar qualquer avaliação.",
+    "Use avaliadores de código para checagens exatas, como caixa alta ou grafia de marca, e reserve o juiz LLM para sinais implícitos na conversa.",
+    "Revise traces manualmente toda semana e leve os casos interessantes para um dataset de testes offline."
+  ],
+  "numeros": [
+    {
+      "valor": "5 passos",
+      "contexto": "etapas do loop de engenharia de IA",
+      "t": 166
+    },
+    {
+      "valor": "70 a 120",
+      "contexto": "traces semeados analisados pelo agente de código",
+      "t": 2225
+    },
+    {
+      "valor": "8 módulos",
+      "contexto": "passos do workshop completo no site",
+      "t": 2534
+    }
+  ]
+}

@@ -1,0 +1,234 @@
+{
+  "id": "1tpqdglI3T0",
+  "titulo": "Build a Platform and Watch It Burn — Michael Forrester, Accenture & Whitney Lee, Datadog",
+  "titulo_curto": "Build a Platform and Watch It Burn",
+  "palestrante": "Michael Forrester, Accenture & Whitney Lee, Datadog",
+  "url": "https://www.youtube.com/watch?v=1tpqdglI3T0",
+  "duracao": 3155,
+  "publicado_ts": 1791739825,
+  "edicao": "2026-10-12",
+  "tese": "Não dá para confiar que o modelo recuse sozinho. Proteja o agente com controles de infraestrutura e guardrails de entrada e saída.",
+  "tldr": [
+    "Os palestrantes montaram um bot de burritos com acesso a um cluster Kubernetes e pediram à plateia que o levasse a fazer coisas fora do pedido, como implantar uma imagem externa e vazar uma receita secreta.",
+    "Eles repetiram os ataques em dois clusters protegidos. O primeiro usa controles de infraestrutura (política de rede, Kyverno, monitoramento de runtime). O segundo liga guardrails de IA (LLM Guard) na entrada e na saída.",
+    "A conclusão é que recusas do modelo variam de uma tentativa para outra, então a segurança precisa vir de camadas externas ao modelo, somadas às práticas de CI/CD e identidade que times já usam."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "O modelo recusa hoje e aceita amanhã",
+      "texto": "Os palestrantes mostram que o bot recusou vazar dados em algumas tentativas e aceitou em outras. Nomes de vilões na imagem faziam o modelo desconfiar, enquanto uma história de marketing o deixava à vontade. O comportamento muda com o contexto e com a sorte, então a recusa do modelo não serve como controle de segurança.",
+      "t": 480,
+      "legenda": "O bot implanta uma imagem externa só porque a história parece legítima.",
+      "print": null
+    },
+    {
+      "titulo": "Controles de infraestrutura barram o que o modelo deixa passar",
+      "texto": "No segundo cluster, o Kyverno (um controlador de admissão do Kubernetes) bloqueou a imagem de fora, porque só aceita registry interno e exige limites de recursos. Política de rede cuida da saída de dados. O monitoramento de runtime com Falco ou Tetragon não bloqueou o acesso à receita na demo, e os palestrantes admitiram a falha.",
+      "t": 919,
+      "legenda": "Cada ataque tem um controle de infraestrutura correspondente, nem todos funcionaram.",
+      "print": null
+    },
+    {
+      "titulo": "Traces mostram o que o agente fez",
+      "texto": "Com OpenTelemetry, cada conversa vira um trace no Datadog, com prompt de sistema, chamadas de ferramenta, resultados, tokens e custo. Dá para apontar a interação exata que causou um comportamento. O mesmo vale para outras ferramentas de observabilidade, como Grafana ou Jaeger.",
+      "t": 1299,
+      "legenda": "Um único trace expõe entrada, ferramentas chamadas e resultado.",
+      "print": "img/1tpqdglI3T0/2.jpg"
+    },
+    {
+      "titulo": "Filtro de entrada custa menos que filtro de saída",
+      "texto": "O guardrail de saída deixa o modelo processar o pedido e só depois redige o trecho sensível, então você paga pelos tokens. O de entrada bloqueia antes da chamada ao modelo, sem custo de LLM. Eles recomendam usar os dois e acrescentar regex simples para padrões conhecidos antes do classificador.",
+      "t": 2323,
+      "legenda": "O pedido é barrado antes de chegar ao modelo, sem gasto de tokens.",
+      "print": null
+    },
+    {
+      "titulo": "Descrição de ferramenta MCP também é vetor de ataque",
+      "texto": "Uma ferramenta de clima trazia na descrição a instrução de chamar também a ferramenta read internal config e incluir a saída. O agente obedeceu. Quem pergunta o clima nem percebe o vazamento. Os palestrantes sugerem registry ou gateway de MCP, em vez de ligar servidores públicos direto.",
+      "t": 2664,
+      "legenda": "A descrição da ferramenta manda o agente ler a configuração interna.",
+      "print": "img/1tpqdglI3T0/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Excessive agency",
+      "traducao": "agência excessiva",
+      "nivel": "intermediario",
+      "chave": "excessive agency",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Prompt injection",
+      "traducao": "injeção de prompt",
+      "nivel": "intermediario",
+      "chave": "prompt injection",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Kubernetes",
+      "traducao": "orquestrador de contêineres",
+      "nivel": "intermediario",
+      "chave": "kubernetes",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Admission controller",
+      "traducao": "controlador de admissão",
+      "nivel": "avancado",
+      "chave": "admission controller",
+      "analogia": "Um admission controller é como o porteiro de um prédio comercial que confere a lista de autorizados antes de deixar alguém subir.",
+      "explicacao": [
+        "Num sistema que roda muitos programas, alguém precisa decidir o que pode entrar. O admission controller (controlador de admissão) faz essa checagem antes de qualquer coisa começar a rodar.",
+        "No Kubernetes, todo pedido para criar algo passa pela API do cluster. Antes de executar o pedido, a API consulta o controlador de admissão.",
+        "Ferramentas como o Kyverno se ligam a esse ponto por um webhook (chamada automática entre sistemas). O Kyverno compara o pedido com regras escritas pela empresa e devolve sim ou não.",
+        "Na demo, as regras exigiam imagens vindas só do registry (repositório de imagens) interno e limites de recursos definidos. Por isso o agente não conseguiu implantar a imagem externa.",
+        "O controlador pode validar, aceitando ou recusando o pedido, ou mutar, corrigindo o pedido antes de aprovar. Como a regra vale para o cluster inteiro, ela barra pessoas e agentes de IA do mesmo jeito."
+      ],
+      "pre_requisitos": [
+        "Kubernetes",
+        "Contêiner",
+        "Registry de imagens",
+        "Webhook"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PEDIDO DE DEPLOY",
+            "nota": "Alguém pede para criar um contêiner"
+          },
+          {
+            "rotulo": "API DO KUBERNETES",
+            "nota": "Repassa o pedido ao webhook"
+          },
+          {
+            "rotulo": "KYVERNO VALIDA",
+            "nota": "Confere registry e limites de recursos"
+          },
+          {
+            "rotulo": "VEREDITO",
+            "nota": "Aprovado implanta, recusado cai"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Runtime security",
+      "traducao": "segurança em tempo de execução",
+      "nivel": "avancado",
+      "chave": "runtime security",
+      "analogia": "Runtime security é como a câmera e o segurança dentro da loja, que vigiam o que cada cliente faz depois de já ter entrado.",
+      "explicacao": [
+        "Checar um programa na entrada não basta. Depois que ele começa a rodar, ainda pode fazer algo perigoso. Runtime security (segurança em tempo de execução) vigia o programa enquanto ele funciona.",
+        "Essas ferramentas observam o kernel (núcleo) do Linux, onde todo comando passa. Elas enxergam ações como abrir arquivos ou rodar um simples ls, mesmo sem entender o Kubernetes.",
+        "O Falco detecta e reage. O comando chega a rodar, o Falco dispara um alerta e o Falco Talon pode derrubar o pod (unidade que roda o contêiner) envolvido.",
+        "KubeArmor e Tetragon tentam prevenir. Eles usam LSM (módulos de segurança do Linux) e eBPF (programas pequenos dentro do kernel) para que o comando proibido falhe antes de executar.",
+        "Na demo, essa camada falhou e a plateia conseguiu ler a receita secreta. Ataques rápidos, como um fork bomb, pedem prevenção, porque a resposta depois do fato chega tarde."
+      ],
+      "pre_requisitos": [
+        "Kernel do Linux",
+        "Contêiner",
+        "Pod",
+        "Admission controller"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PROGRAMA RODANDO",
+            "nota": "O contêiner já está em execução"
+          },
+          {
+            "rotulo": "KERNEL OBSERVADO",
+            "nota": "Falco ou Tetragon veem cada comando"
+          },
+          {
+            "rotulo": "DETECTA OU BLOQUEIA",
+            "nota": "Alerta depois ou impede na hora"
+          },
+          {
+            "rotulo": "RESPOSTA",
+            "nota": "Alerta, pod derrubado ou comando negado"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Guardrails de entrada e saída",
+      "traducao": "filtros antes e depois do modelo",
+      "nivel": "intermediario",
+      "chave": "guardrails de entrada e saída",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP",
+      "traducao": "protocolo de ferramentas para agentes",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Trace",
+      "traducao": "rastro de execução",
+      "nivel": "intermediario",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É workshop com demo ao vivo, e os próprios palestrantes admitem que parte falhou (Falco não bloqueou, ninguém recebeu cluster na rodada três). Não há medição de taxa de sucesso dos ataques: falam em 20 ou 30 prompts até o modelo ceder, sem amostra formal. Whitney trabalha no Datadog, que aparece como backend de traces, e Michael faz treinamento. A regra de adoção de IA (sistema delimitado, vale o custo, saída verificável) é opinião, sem dados.",
+  "acoes": [
+    "Liste as ferramentas e permissões que seus agentes têm hoje e corte o que não for necessário. O talk aponta escopo grande demais e credenciais soltas como causa principal dos incidentes.",
+    "Não use a recusa do modelo como defesa. Teste seus agentes com várias tentativas e histórias diferentes, e coloque controles fora do modelo, como política de rede e registry permitido.",
+    "Ligue instrumentação com OpenTelemetry nos agentes para ver prompts, chamadas de ferramenta e custos, e cuide de dados sensíveis que apareçam nos traces.",
+    "Só conecte servidores MCP vindos de registry ou gateway aprovado e leia as descrições das ferramentas antes de liberar."
+  ],
+  "numeros": [
+    {
+      "valor": "34",
+      "contexto": "componentes integrados na plataforma da demo",
+      "t": 137
+    },
+    {
+      "valor": "20 a 30",
+      "contexto": "prompts até o modelo ceder, segundo os palestrantes",
+      "t": 2571
+    },
+    {
+      "valor": "80 a 90%",
+      "contexto": "do necessário, estimam, pega com filtro de entrada e saída",
+      "t": 2725
+    },
+    {
+      "valor": "100 horas",
+      "contexto": "de trabalho estimadas para montar o repositório",
+      "t": 3098
+    }
+  ]
+}

@@ -1,0 +1,203 @@
+{
+  "id": "iH_wV8BbS24",
+  "titulo": "Sandboxes Aren't Optional: 4 Ways to Isolate Coding Agents — Robert Brennan, OpenHands",
+  "titulo_curto": "Sandboxes Aren't Optional: 4 Ways to Isolate Coding Agents",
+  "palestrante": "Robert Brennan, OpenHands",
+  "url": "https://www.youtube.com/watch?v=iH_wV8BbS24",
+  "duracao": 862,
+  "publicado_ts": 1791781818,
+  "edicao": "2026-10-12",
+  "tese": "Agente de código herda tudo o que você acessa. Isole cada agente com o mínimo necessário e escolha o sandbox pela escala.",
+  "tldr": [
+    "Robert Brennan, CEO da OpenHands, diz que as empresas estão tirando agentes de código do laptop e levando para a nuvem em 2026, e que isso exige sandbox (ambiente isolado).",
+    "Ele compara quatro formas de isolar: Docker no laptop, Claude Code no GitHub Actions, uma VM ou Mac Mini dedicada e um pod de Kubernetes por sessão, avaliando local ou remoto, escala, isolamento, persistência e gatilhos.",
+    "Ele admite que sandbox não é garantia, porque há fugas de container e um caso relatado durante testes do modelo Mythos, e fecha com uma propaganda do OpenHands Agent Canvas."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Permissões puladas expõem tudo o que você acessa",
+      "texto": "Rodar o agente local com dangerously skip permissions dá a ele seu sistema de arquivos, variáveis de ambiente com segredos, arquivos na home e qualquer banco ou cluster de produção em que você esteja conectado. A alternativa é aprovar cada ação à mão, o que obriga a vigiar o agente o tempo todo.",
+      "t": 248,
+      "legenda": "Sem sandbox, o agente acessa tudo o que o usuário acessa.",
+      "print": "img/iH_wV8BbS24/0.jpg"
+    },
+    {
+      "titulo": "Menor privilégio limita o estrago",
+      "texto": "Brennan aplica ao agente um princípio antigo de segurança: dar só o acesso necessário ao trabalho, como o repositório em edição e um ou dois segredos. Assim, se houver prompt injection ou confusão do agente, o dano fica restrito a esse recorte.",
+      "t": 292,
+      "legenda": "O sandbox define o raio de dano de um erro ou ataque.",
+      "print": "img/iH_wV8BbS24/1.jpg"
+    },
+    {
+      "titulo": "Docker local é seguro e simples, mas não escala",
+      "texto": "Um container por conversa é descartável: se o agente apagar tudo, você destrói o container e recomeça. Dá para montar só o repositório, portas e segredos escolhidos. O limite é o laptop, que comporta poucos containers e não escuta eventos de Slack ou DataDog.",
+      "t": 342,
+      "legenda": "Docker local isola bem, mas depende de uma máquina e de comandos manuais.",
+      "print": "img/iH_wV8BbS24/2.jpg"
+    },
+    {
+      "titulo": "VM compartilhada reintroduz o problema de privilégio",
+      "texto": "Uma VM ou Mac Mini dedicada dá persistência e recebe webhooks, mas junta todos os agentes no mesmo ambiente. Um agente de revisão de código pode ganhar acesso ao DataDog ou editar a memória de outro agente. O ambiente também pode degradar com o tempo.",
+      "t": 527,
+      "legenda": "Agentes co-localizados compartilham acessos e atrapalham uns aos outros.",
+      "print": "img/iH_wV8BbS24/3.jpg"
+    },
+    {
+      "titulo": "Tabela comparativa das quatro estratégias",
+      "texto": "Brennan compara as opções em cinco eixos: local ou remoto, escala, isolamento, persistência e gatilhos. Kubernetes com um pod por sessão aparece como a opção mais robusta: isolamento por agente, escala na casa dos milhares e execução por agenda ou evento.",
+      "t": 662,
+      "legenda": "O mesmo quadro mostra o trade-off entre conveniência local e isolamento em nuvem.",
+      "print": "img/iH_wV8BbS24/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado de execução",
+      "nivel": "basico",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Princípio do menor privilégio",
+      "traducao": "principle of least privilege",
+      "nivel": "intermediario",
+      "chave": "princípio do menor privilégio",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Blast radius",
+      "traducao": "raio de impacto de uma falha",
+      "nivel": "intermediario",
+      "chave": "blast radius",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Prompt injection",
+      "traducao": "injeção de instruções maliciosas no prompt",
+      "nivel": "intermediario",
+      "chave": "prompt injection",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Container Docker",
+      "traducao": "ambiente leve e descartável para rodar programas",
+      "nivel": "basico",
+      "chave": "container docker",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Kubernetes",
+      "traducao": "orquestrador de containers na nuvem",
+      "nivel": "intermediario",
+      "chave": "kubernetes",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Webhook",
+      "traducao": "aviso automático enviado por outro sistema",
+      "nivel": "intermediario",
+      "chave": "webhook",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Container escape",
+      "traducao": "fuga do container",
+      "nivel": "avancado",
+      "chave": "container escape",
+      "analogia": "Container escape é como um aluno de castigo que acha uma porta destrancada no fundo da sala e passa a andar pela escola inteira.",
+      "explicacao": [
+        "Um container é uma caixa fechada dentro do computador. O programa que roda ali só deveria ver o que está dentro da caixa.",
+        "Todas as caixas dividem o mesmo sistema de base da máquina, chamado kernel (núcleo do sistema operacional). As paredes da caixa dependem desse núcleo.",
+        "Uma fuga do container (container escape) acontece quando o programa explora uma falha nessas paredes e sai da caixa.",
+        "Fora da caixa, ele alcança arquivos, segredos e a rede da máquina hospedeira. Para um agente de IA, isso desfaz o isolamento que o sandbox prometia.",
+        "Muitas falhas desse tipo já são conhecidas e afetam versões antigas do Docker. Manter tudo atualizado e dar ao agente o mínimo de acesso reduz o risco."
+      ],
+      "pre_requisitos": [
+        "Container Docker",
+        "Sandbox",
+        "Princípio do menor privilégio"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "AGENTE NO CONTAINER",
+            "nota": "Só vê o que foi montado na caixa"
+          },
+          {
+            "rotulo": "ACHA UMA FALHA",
+            "nota": "Ex.: versão antiga do Docker"
+          },
+          {
+            "rotulo": "ROMPE A PAREDE",
+            "nota": "Sai para a máquina hospedeira"
+          },
+          {
+            "rotulo": "ACESSO AMPLO",
+            "nota": "Arquivos, segredos e internet"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk usa a insegurança do modo sem permissões para vender a plataforma da OpenHands, e o fecho é propaganda do Agent Canvas. As comparações são qualitativas, sem teste, custo ou medição de incidentes. A fuga do Mythos é citada de passagem, sem fonte. GitHub Actions e Kubernetes são descritos em linhas gerais, sem custo de operar o cluster.",
+  "acoes": [
+    "Liste o que seu agente local alcança hoje: pastas, variáveis de ambiente com segredos e acessos a produção. Retire o que ele não precisa.",
+    "Se usa dangerously skip permissions, rode o agente dentro de um container Docker com só o repositório montado e segredos mínimos.",
+    "Para tarefas agendadas ou por evento, como revisão de PR, teste GitHub Actions antes de montar infraestrutura própria.",
+    "Evite juntar agentes com funções diferentes na mesma VM. Dê a cada um seu ambiente e seus próprios segredos."
+  ],
+  "numeros": [
+    {
+      "valor": "2 anos",
+      "contexto": "tempo desde a fundação da OpenHands",
+      "t": 33
+    },
+    {
+      "valor": "início de 2024",
+      "contexto": "salto de chatbots e IDEs para agentes",
+      "t": 94
+    },
+    {
+      "valor": "segunda 9h",
+      "contexto": "exemplo de agenda para atualizar dependências",
+      "t": 464
+    },
+    {
+      "valor": "milhares",
+      "contexto": "agentes possíveis em Kubernetes, segundo o palestrante",
+      "t": 682
+    }
+  ]
+}

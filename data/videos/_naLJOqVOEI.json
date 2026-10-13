@@ -1,0 +1,208 @@
+{
+  "id": "_naLJOqVOEI",
+  "titulo": "Same Model, Different Speed: Why Your Inference Provider Matters — FriendliAI",
+  "titulo_curto": "Same Model, Different Speed: Why Your Inference Provider Matters",
+  "palestrante": "FriendliAI",
+  "url": "https://www.youtube.com/watch?v=_naLJOqVOEI",
+  "duracao": 784,
+  "publicado_ts": 1791747005,
+  "edicao": "2026-10-12",
+  "tese": "O mesmo modelo aberto roda mais rápido ou mais devagar conforme o provedor, porque cache, roteamento e decodificação especulativa mudam a experiência.",
+  "tldr": [
+    "Yunmo Koo, engenheiro da FriendliAI, diz que modelos de pesos abertos como o GLM 5.2 já competem com os fechados em código e custam bem menos.",
+    "Ele mostra que o mesmo modelo e o mesmo agente de código levam tempos diferentes em provedores diferentes, e atribui a diferença a prefix caching, cache em camadas e speculative decoding híbrido.",
+    "A recomendação final é testar a sua própria carga de trabalho, medindo velocidade, confiabilidade, custo e qualidade, em vez de confiar em benchmarks do provedor."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Modelos abertos já competem com os fechados",
+      "texto": "O palestrante mostra um ranking de código em que o GLM 5.2 aparece acima do Opus 4.8 e logo abaixo de outro modelo fechado. Ele conclui que a pergunta deixou de ser se o modelo aberto é bom o bastante e passou a ser como rodá-lo rápido e com confiabilidade em produção.",
+      "t": 80,
+      "legenda": "Ranking que coloca o GLM 5.2 acima do Opus 4.8 em código",
+      "print": "img/_naLJOqVOEI/0.jpg"
+    },
+    {
+      "titulo": "Mesmo modelo, provedores diferentes, tempos diferentes",
+      "texto": "Com o GLM 5.2 e o mesmo agente de código, o palestrante pede um jogo estilo Candy Crush. Na FriendliAI o jogo sai em cerca de dois minutos. O outro provedor leva mais de três. Ele diz que a diferença vem da pilha inteira de inferência, e não do modelo.",
+      "t": 235,
+      "legenda": "Mesma tarefa e mesmo modelo, com tempos diferentes por provedor",
+      "print": "img/_naLJOqVOEI/1.jpg"
+    },
+    {
+      "titulo": "Reaproveitar o prefixo evita recalcular a entrada",
+      "texto": "Em agentes, a entrada passa de 10 mil tokens e boa parte se repete entre requisições. Reaproveitar o KV cache do prefixo comum pula o prefill e reduz o TTFT. Para funcionar em escala, o roteador precisa mandar a requisição à réplica que já guarda aquele prefixo.",
+      "t": 351,
+      "legenda": "Prefixo repetido é reaproveitado em vez de recalculado",
+      "print": "img/_naLJOqVOEI/2.jpg"
+    },
+    {
+      "titulo": "O cache vira uma hierarquia de memória",
+      "texto": "O KV cache pode ficar maior que os pesos do modelo, e a memória da GPU é pequena. A solução descrita usa três camadas. O cache quente fica na GPU, o morno na RAM da CPU e o frio em NVMe ou disco. O sistema move blocos pouco usados e os traz de volta quando precisa.",
+      "t": 420,
+      "legenda": "Cache em três camadas, da mais rápida à mais barata",
+      "print": "img/_naLJOqVOEI/3.jpg"
+    },
+    {
+      "titulo": "Speculative decoding híbrido e adaptativo",
+      "texto": "Um modelo rascunho propõe vários tokens e o modelo principal valida todos de uma vez. Isso reduz o tempo por token sem mudar a saída. A versão baseada em modelo aceita mais tokens, mas gasta computação extra. A versão sem modelo é barata, mas só funciona bem quando a saída lembra o contexto. A empresa alterna entre as duas conforme o tráfego.",
+      "t": 510,
+      "legenda": "Duas formas de rascunhar tokens, cada uma com custo diferente",
+      "print": "img/_naLJOqVOEI/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Open weights",
+      "traducao": "pesos abertos",
+      "nivel": "basico",
+      "chave": "open weights",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "KV cache",
+      "traducao": "cache de chave e valor da atenção",
+      "nivel": "intermediario",
+      "chave": "kv cache",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Prefill e decode",
+      "traducao": "leitura da entrada e geração da saída",
+      "nivel": "intermediario",
+      "chave": "prefill e decode",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Time to first token (TTFT)",
+      "traducao": "tempo até o primeiro token",
+      "nivel": "intermediario",
+      "chave": "time to first token (ttft)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Cache-aware routing",
+      "traducao": "roteamento que considera o cache",
+      "nivel": "avancado",
+      "chave": "cache-aware routing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Hierarquia de cache",
+      "traducao": "cache em camadas GPU, CPU e NVMe",
+      "nivel": "avancado",
+      "chave": "hierarquia de cache",
+      "analogia": "A hierarquia de cache é como a cozinha de um restaurante, onde o que o cozinheiro usa toda hora fica na bancada, o que usa às vezes fica na geladeira e o resto fica no estoque dos fundos.",
+      "explicacao": [
+        "Quando um modelo lê um texto, ele guarda anotações sobre esse texto para não precisar ler tudo de novo. Essas anotações ocupam espaço na memória.",
+        "Em textos longos, essas anotações (o KV cache, cache de chave e valor) podem ficar maiores que o próprio modelo. A memória da placa de vídeo (GPU) é a mais rápida, mas é pequena.",
+        "A solução organiza o cache em três camadas. O cache quente, usado agora, fica na memória da GPU. O morno fica na RAM do processador (CPU). O frio vai para o NVMe, um disco rápido, ou para o disco comum.",
+        "O sistema observa o uso de cada bloco de cache. Ele tira da GPU os blocos pouco usados e traz de volta os que uma nova requisição vai precisar, antes da hora de usar.",
+        "Com mais prefixos guardados em algum lugar, o servidor recalcula menos a entrada. Isso reduz o tempo até o primeiro token (TTFT, time to first token) em agentes com contexto longo."
+      ],
+      "pre_requisitos": [
+        "KV cache",
+        "Prefill e decode",
+        "Time to first token (TTFT)",
+        "Cache-aware routing"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "GPU: CACHE QUENTE",
+            "nota": "Mais rápida, pouco espaço"
+          },
+          {
+            "rotulo": "CPU RAM: CACHE MORNO",
+            "nota": "Mais espaço, um pouco mais lenta"
+          },
+          {
+            "rotulo": "NVME/DISCO: CACHE FRIO",
+            "nota": "Barato e grande, mais lento"
+          },
+          {
+            "rotulo": "MOVIMENTO DINÂMICO",
+            "nota": "Desce o pouco usado, sobe o necessário"
+          },
+          {
+            "rotulo": "MENOS RECÁLCULO",
+            "nota": "Prefill menor e TTFT mais baixo"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Speculative decoding",
+      "traducao": "decodificação especulativa",
+      "nivel": "avancado",
+      "chave": "speculative decoding",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Draft model",
+      "traducao": "modelo rascunho",
+      "nivel": "avancado",
+      "chave": "draft model",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O talk é um pitch da FriendliAI, que vende o serviço descrito e convida a plateia a visitar o estande. A comparação do jogo usa uma única tarefa e um único concorrente sem nome, sem repetições nem variância. O 7x do cliente Kilo Code vem de um depoimento, sem metodologia exposta, e a palavra é up to na descrição. Os 99,9% de uptime vêm de um snapshot de agregador, sem janela de tempo informada. A comparação de custo com o Opus 4.8 usa um só prompt. A conclusão de testar a própria carga é a parte mais sólida.",
+  "acoes": [
+    "Antes de escolher um provedor para um modelo aberto, rode o seu próprio prompt, com o seu tamanho de entrada, em pelo menos dois provedores e compare tempo, taxa de erro e custo.",
+    "Em agentes, deixe a parte fixa do prompt (instruções e ferramentas) no começo e o conteúdo variável no fim, para aumentar o reaproveitamento de cache do provedor.",
+    "Meça a taxa de erros 5xx, timeouts e rate limits do provedor, porque uma chamada falha pode derrubar a execução inteira de um agente.",
+    "Teste o seu fluxo com um modelo aberto e compare o custo por tarefa com o do modelo fechado que você usa hoje."
+  ],
+  "numeros": [
+    {
+      "valor": "5,6x",
+      "contexto": "GLM 5.2 mais barato que o Opus 4.8 no jogo de tower defense",
+      "t": 159
+    },
+    {
+      "valor": "50% a 90%",
+      "contexto": "fatia de tokens idênticos entre requisições de agentes",
+      "t": 318
+    },
+    {
+      "valor": "99,9%",
+      "contexto": "uptime citado para a FriendliAI em snapshot de agregador",
+      "t": 641
+    },
+    {
+      "valor": "7x",
+      "contexto": "mais rápido segundo a Kilo Code em teste com modelos GLM",
+      "t": 736
+    }
+  ]
+}

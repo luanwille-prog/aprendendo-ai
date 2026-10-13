@@ -1,0 +1,233 @@
+{
+  "id": "p-2MT8KYZqU",
+  "titulo": "AI Security Engineer Foundations + Certificate — Micah Silverman, Snyk",
+  "titulo_curto": "AI Security Engineer Foundations + Certificate",
+  "palestrante": "Micah Silverman, Snyk",
+  "url": "https://www.youtube.com/watch?v=p-2MT8KYZqU",
+  "duracao": 7216,
+  "publicado_ts": 1791725404,
+  "edicao": "2026-10-12",
+  "tese": "Segurança de IA reaproveita controles clássicos. Tire o dado do alcance do modelo em vez de pedir no prompt que ele não conte.",
+  "tldr": [
+    "Micah Silverman, da Snyk, percorre em duas horas os riscos da OWASP para LLMs, shadow AI, threat modeling (modelagem de ameaças), MCP, vibe coding e red teaming.",
+    "O fio condutor é que prompt não funciona como controle de acesso. Isolar credenciais, limitar dados, exigir aprovação humana e escanear dependências vale mais do que instruir o modelo.",
+    "No exercício final, um chatbot de notas escolares recusa revelar notas, e essa recusa já mostra que ele tem acesso a elas. Vários prompts da plateia falham, o que ilustra a variação de comportamento do modelo."
+  ],
+  "tema": "engenharia-de-software",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Prompt não substitui controle de acesso",
+      "texto": "Um chatbot de alunos deveria mostrar só nomes e horários. Dizer no system prompt para não revelar notas deixa as notas ao alcance do modelo. Silverman propõe uma view do banco, ou uma cópia sincronizada, sem os campos sensíveis. Se o dado nunca chega ao contexto, não há o que vazar.",
+      "t": 3723,
+      "legenda": "A defesa mais forte é o modelo nunca ter acesso ao dado.",
+      "print": "img/p-2MT8KYZqU/0.jpg"
+    },
+    {
+      "titulo": "AI BOM como gate de build",
+      "texto": "Um AI BOM (AI bill of materials, inventário de modelos, datasets, agentes e ferramentas) vira ação quando entra no CI/CD. Na demo da plataforma EVO, uma política que proíbe modelos da Salesforce acusa na hora um problema crítico no projeto AI buffet. A proposta é guardar uma linha de base e quebrar o build quando surgir componente de IA fora dela.",
+      "t": 2389,
+      "legenda": "Inventário mais política detecta um modelo proibido sem revisão manual.",
+      "print": "img/p-2MT8KYZqU/1.jpg"
+    },
+    {
+      "titulo": "Tool poisoning em servidores MCP",
+      "texto": "Um servidor MCP malicioso pode esconder instruções na descrição de uma ferramenta, como incluir a chave SSH na consulta de uma busca. O modelo trata a descrição como autoridade. Silverman mostra o agent scan da Snyk, que lê os arquivos de configuração do Cursor e do VS Code e aponta prompt injection na definição da ferramenta.",
+      "t": 4477,
+      "legenda": "O scan inspeciona a descrição da ferramenta antes de o agente usá-la.",
+      "print": "img/p-2MT8KYZqU/2.jpg"
+    },
+    {
+      "titulo": "Servidor MCP também é código com bug",
+      "texto": "O servidor MCP da Framelink para Figma montava um comando curl concatenando a URL. Um argumento com aspas e ponto e vírgula executava um segundo comando no shell. É o mesmo padrão de SQL injection, aplicado a bash. Por isso a defesa inclui scan de código e de dependências, além do scan do agente.",
+      "t": 4726,
+      "legenda": "Entrada sem sanitização virou execução de comando no servidor MCP.",
+      "print": "img/p-2MT8KYZqU/3.jpg"
+    },
+    {
+      "titulo": "Playbook de desenvolvimento seguro com agentes",
+      "texto": "Depois de casos como o banco de produção apagado no Replit e os e-mails apagados pelo OpenClaw mesmo com regra salva na memória, Silverman lista camadas. Ambientes separados sem credenciais compartilhadas, aprovação humana para deploy e ações destrutivas, sandbox, rede segmentada e verificação de pacotes contra nomes alucinados.",
+      "t": 5895,
+      "legenda": "O controle fica fora da conversa, em ambiente, credencial e aprovação.",
+      "print": "img/p-2MT8KYZqU/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Prompt injection",
+      "traducao": "injeção de prompt",
+      "nivel": "basico",
+      "chave": "prompt injection",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "AI BOM",
+      "traducao": "inventário de materiais de IA",
+      "nivel": "intermediario",
+      "chave": "ai bom",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Shadow AI",
+      "traducao": "uso de IA não autorizado",
+      "nivel": "basico",
+      "chave": "shadow ai",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Threat modeling",
+      "traducao": "modelagem de ameaças",
+      "nivel": "intermediario",
+      "chave": "threat modeling",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP",
+      "traducao": "protocolo que liga o modelo a ferramentas externas",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Tool poisoning",
+      "traducao": "envenenamento de ferramenta",
+      "nivel": "avancado",
+      "chave": "tool poisoning",
+      "analogia": "Tool poisoning é como um manual de instruções de uma impressora nova que diz, no meio dos passos, para você mandar uma cópia de todo documento para um endereço estranho, e você obedece porque confia no manual.",
+      "explicacao": [
+        "Assistentes de IA podem usar ferramentas, como buscar num banco de dados ou enviar uma mensagem. Cada ferramenta vem com um texto que explica para o modelo como usá-la.",
+        "O modelo lê esse texto e segue o que está escrito, porque ele não tem outra fonte para saber como a ferramenta funciona.",
+        "Tool poisoning (envenenamento de ferramenta) acontece quando quem criou a ferramenta esconde ordens maliciosas nessa descrição. Um exemplo do talk é uma busca que pede para incluir a chave SSH (a senha de acesso do computador) na consulta.",
+        "Esse ataque vem de um servidor MCP (o programa que liga o modelo a ferramentas externas) feito de propósito para enganar o agente. Como o agente tem o mesmo acesso que o desenvolvedor, ele pode vazar segredos ou desviar ações sem que ninguém perceba.",
+        "A defesa é tratar o servidor MCP como código de terceiros. Leia as descrições das ferramentas e rode um scanner, como o agent scan da Snyk, que procura prompt injection (injeção de prompt) nessas definições."
+      ],
+      "pre_requisitos": [
+        "MCP",
+        "Prompt injection",
+        "Agente de IA"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "SERVIDOR MALICIOSO",
+            "nota": "Instalado pelo próprio usuário"
+          },
+          {
+            "rotulo": "DESCRIÇÃO ENVENENADA",
+            "nota": "Ordem escondida no texto da ferramenta"
+          },
+          {
+            "rotulo": "MODELO OBEDECE",
+            "nota": "Trata a descrição como autoridade"
+          },
+          {
+            "rotulo": "SEGREDO VAZADO",
+            "nota": "Chave ou dados enviados ao atacante"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Excessive agency",
+      "traducao": "autonomia excessiva do agente",
+      "nivel": "intermediario",
+      "chave": "excessive agency",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Slopsquatting",
+      "traducao": "registro malicioso de pacote alucinado",
+      "nivel": "avancado",
+      "chave": "slopsquatting",
+      "analogia": "Slopsquatting é como um GPS que inventa uma rua que não existe, e um golpista corre para abrir uma loja falsa exatamente nesse endereço antes que você chegue lá.",
+      "explicacao": [
+        "Programas usam pacotes, que são peças de código prontas baixadas da internet pelo nome.",
+        "Quando a IA escreve código, às vezes ela inventa o nome de um pacote que não existe. Isso se chama alucinação.",
+        "Slopsquatting (registro malicioso de pacote alucinado) acontece quando um atacante percebe esses nomes inventados e publica um pacote real com esse nome, cheio de código malicioso.",
+        "Antes, instalar o pacote inventado dava erro. Depois do registro, a instalação funciona e o código do atacante roda na sua máquina. Por isso o palestrante chama de primo do typosquatting (registro de nomes com erro de digitação) e de ataque de tempo.",
+        "A defesa é conferir se cada pacote sugerido pela IA existe e é legítimo, manter um SBOM (lista de componentes do software) por projeto e quebrar o build quando surgir dependência fora da lista."
+      ],
+      "pre_requisitos": [
+        "Alucinação de LLM",
+        "Gerenciador de pacotes",
+        "Cadeia de suprimentos de software",
+        "Typosquatting"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "IA ALUCINA PACOTE",
+            "nota": "Sugere um nome que não existe"
+          },
+          {
+            "rotulo": "ATACANTE MONITORA",
+            "nota": "Coleta nomes inventados pela IA"
+          },
+          {
+            "rotulo": "REGISTRO MALICIOSO",
+            "nota": "Publica pacote falso com esse nome"
+          },
+          {
+            "rotulo": "CÓDIGO INSTALADO",
+            "nota": "Malware roda no seu projeto"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é também uma vitrine da Snyk. EVO, agent scan e o scanner de código aparecem como solução, e o palestrante admite ser parcial. As estatísticas de shadow AI e de skills com falhas são citadas sem fonte na fala. A demo final tem poucas tentativas, e nenhuma extraiu a nota, então não prova nem a robustez nem a fragilidade do chatbot.",
+  "acoes": [
+    "Revise o que cada assistente de IA da sua empresa pode ler e escrever. Se o dado sensível não precisa estar no contexto, retire-o em vez de proibir no prompt.",
+    "Faça um inventário simples dos modelos, servidores MCP e skills em uso nos seus projetos e defina quem aprova cada novo componente.",
+    "Antes de instalar um servidor MCP ou uma skill, leia as descrições das ferramentas e rode um scanner de segurança, tratando-os como código de terceiros.",
+    "Mantenha agentes longe de produção, exija sua aprovação para deploy e ações destrutivas e confira se cada pacote sugerido pela IA existe e é legítimo."
+  ],
+  "numeros": [
+    {
+      "valor": "89%",
+      "contexto": "queda de uso não autorizado com alternativa aprovada",
+      "t": 2233
+    },
+    {
+      "valor": "8 milhões",
+      "contexto": "downloads semanais do SDK do MCP",
+      "t": 4105
+    },
+    {
+      "valor": "40.000",
+      "contexto": "instâncias do OpenClaw acessíveis publicamente",
+      "t": 5550
+    },
+    {
+      "valor": "37%",
+      "contexto": "de cerca de 4.000 skills do ClawHub com falha relevante",
+      "t": 5611
+    }
+  ]
+}

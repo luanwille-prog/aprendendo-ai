@@ -1,0 +1,174 @@
+{
+  "id": "ZyC56eV8sVw",
+  "titulo": "AI Security Engineer Foundations + Certificate — Javier Garza, Snyk",
+  "titulo_curto": "AI Security Engineer Foundations + Certificate",
+  "palestrante": "Javier Garza, Snyk",
+  "url": "https://www.youtube.com/watch?v=ZyC56eV8sVw",
+  "duracao": 7053,
+  "publicado_ts": 1791747016,
+  "edicao": "2026-10-12",
+  "tese": "Agentes de IA herdam os velhos riscos de software e ganham novos. Sem inventário, escaneamento contínuo e limites de acesso, ninguém sabe o que roda.",
+  "tldr": [
+    "Javier Garza, da Snyk, percorre em duas horas o OWASP Top 10 para LLMs (lista dos dez maiores riscos de segurança em aplicações com modelos de linguagem), shadow AI, threat modeling, segurança de skills e MCP, vibe coding seguro e red teaming.",
+    "Ele defende inventariar tudo que a IA usa com um AI BOM, escanear servidores MCP e skills antes de instalar, limitar o acesso do agente ao mínimo e manter um humano aprovando ações de risco.",
+    "Os casos mostrados incluem skill maliciosa publicada num marketplace, injeção de comando num servidor MCP, banco de produção apagado por um agente e um agente que arquivou centenas de e-mails."
+  ],
+  "tema": "engenharia-de-software",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Injeção indireta esconde ordens em conteúdo comum",
+      "texto": "Na injeção direta, o atacante digita a ordem no chat, como no jogo Gandalf. Na indireta, ele planta o texto em algo que o modelo vai ler, como um perfil do LinkedIn com letras brancas sobre fundo branco. O modelo lê a instrução escondida e pode obedecer. Garza lista defesas: sanitizar entrada, restringir o comportamento no prompt de sistema e exigir aprovação humana em ações de risco.",
+      "t": 545,
+      "legenda": "Texto invisível numa página pode dar ordens ao modelo que a lê.",
+      "print": "img/ZyC56eV8sVw/0.jpg"
+    },
+    {
+      "titulo": "AI BOM lista modelos, datasets e agentes do projeto",
+      "texto": "O AI BOM (AI bill of materials, lista de materiais de IA) faz para modelos, datasets, agentes e servidores MCP o que o SBOM faz para bibliotecas. Garza roda o scan pela linha de comando num repositório e abre o resultado num painel com 69 ativos. O painel cruza cada modelo com vulnerabilidades conhecidas. Quando surge uma falha num modelo ou ferramenta, o inventário mostra rápido quem na empresa é afetado.",
+      "t": 2552,
+      "legenda": "O inventário aponta quais componentes de IA têm vulnerabilidade conhecida.",
+      "print": null
+    },
+    {
+      "titulo": "Threat modeling precisa cobrir prompts, memória e APIs",
+      "texto": "Threat modeling (modelagem de ameaças) é desenhar o sistema e listar ataques antes de implantar. Para IA, o escopo cresce além de bancos e credenciais: entram modelos, prompts de sistema, janela de contexto, memória e APIs acessadas pelo agente. Garza usa a matriz MITRE ATLAS, que organiza táticas de ataque a sistemas de IA, e pede para tratar toda entrada externa como não confiável. Cita o OpenClaw como exemplo de ferramenta popular com falhas.",
+      "t": 3176,
+      "legenda": "A matriz ATLAS mapeia táticas de ataque a agentes de IA.",
+      "print": null
+    },
+    {
+      "titulo": "Servidor MCP é código e pode esconder ordens maliciosas",
+      "texto": "Instalar um servidor MCP é fácil, e por isso também é fácil publicar um malicioso. No tool poisoning (envenenamento de ferramenta), a descrição da ferramenta traz instruções ocultas, por exemplo enviar chaves de API. Garza mostra um exemplo que parece pedir uma busca de pacote npm. Ele recomenda dois tipos de scan: um nas ferramentas instaladas, outro no código do servidor, que acha injeção de comando e path traversal.",
+      "t": 4249,
+      "legenda": "Uma ferramenta MCP pode parecer normal e rodar ação maliciosa ao aceitar.",
+      "print": "img/ZyC56eV8sVw/3.jpg"
+    },
+    {
+      "titulo": "Skill maliciosa chegou ao topo do ranking de um marketplace",
+      "texto": "Marketplaces de skills publicam e instalam com um comando, sem curadoria. Um pesquisador criou de propósito uma skill com nome chamativo, manipulou a contagem de downloads até o topo do ranking e fez a skill enviar um ping ao seu servidor. O ping mostrou o IP e o país de quem instalou. A lição de Garza: skill é texto, mas pode mandar o agente rodar comandos, então leia antes de instalar.",
+      "t": 5885,
+      "legenda": "O texto da skill manda o agente executar um comando que avisa o atacante.",
+      "print": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Prompt injection",
+      "traducao": "injeção de prompt",
+      "nivel": "basico",
+      "chave": "prompt injection",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP",
+      "traducao": "Model Context Protocol, protocolo que liga agentes a ferramentas e APIs",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Skills",
+      "traducao": "arquivos de texto que ensinam o agente a executar uma tarefa",
+      "nivel": "basico",
+      "chave": "skills",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "AI BOM",
+      "traducao": "lista de materiais de IA: inventário de modelos, datasets e agentes",
+      "nivel": "intermediario",
+      "chave": "ai bom",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Supply chain vulnerability",
+      "traducao": "vulnerabilidade na cadeia de suprimentos de software",
+      "nivel": "intermediario",
+      "chave": "supply chain vulnerability",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Tool poisoning",
+      "traducao": "envenenamento de ferramenta: instruções ocultas na definição da ferramenta",
+      "nivel": "intermediario",
+      "chave": "tool poisoning",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Excessive agency",
+      "traducao": "autonomia excessiva do agente",
+      "nivel": "intermediario",
+      "chave": "excessive agency",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Human in the loop",
+      "traducao": "humano aprovando ações do agente",
+      "nivel": "basico",
+      "chave": "human in the loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O workshop também vende as ferramentas da Snyk (AI BOM, agent scan, code scan), e o palestrante é da empresa. Os números são citados de memória e sem fonte, como 367 skills com malware em 10.000 (1239s) e a afirmação de que mais de 50% do código gerado tem ao menos cinco vulnerabilidades (2896s), que parece vir de demos dele. Várias histórias circulam como notícia, sem verificação (a ligação de OpenClaw com 2 milhões de dólares em tokens, o caso Mythos). O ritmo corrido deixa pouca profundidade técnica e alguns pontos misturam fatos com opinião.",
+  "acoes": [
+    "Liste os modelos, servidores MCP e skills que sua equipe usa. Uma planilha já serve como AI BOM inicial.",
+    "Leia o arquivo inteiro de qualquer skill antes de instalar e rode um scanner de segurança nos servidores MCP, de novo a cada atualização.",
+    "Configure o agente para pedir aprovação em apagar arquivos, enviar e-mail e mexer em produção, e evite o modo de aprovação automática.",
+    "Ao pedir código a uma IA, inclua requisitos de segurança no prompt e rode um scan de vulnerabilidades no resultado antes de publicar."
+  ],
+  "numeros": [
+    {
+      "valor": "367 de 10.000",
+      "contexto": "skills com malware num scan da Snyk",
+      "t": 1239
+    },
+    {
+      "valor": "30 dias",
+      "contexto": "prazo de retenção de prompts exigido de algumas empresas",
+      "t": 892
+    },
+    {
+      "valor": "8,3 milhões",
+      "contexto": "downloads semanais do MCP SDK",
+      "t": 4094
+    },
+    {
+      "valor": "30.000",
+      "contexto": "portas do OpenClaw abertas no mundo, segundo Shodan",
+      "t": 5754
+    }
+  ]
+}

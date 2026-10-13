@@ -1,0 +1,199 @@
+{
+  "id": "qJtcEDc_WJU",
+  "titulo": "Scheduled Agents, Dreaming and Q&A: Claude Managed Agents (Part 3 of 4) — Anthropic",
+  "titulo_curto": "Scheduled Agents, Dreaming and Q&A: Claude Managed Agents (Part 3 of 4)",
+  "palestrante": "Anthropic",
+  "url": "https://www.youtube.com/watch?v=qJtcEDc_WJU",
+  "duracao": 1590,
+  "publicado_ts": 1791785262,
+  "edicao": "2026-10-12",
+  "tese": "Managed Agents entrega sessão, agenda e memória como blocos de API; o dreaming melhora a memória, mas só um eval seu prova o ganho.",
+  "tldr": [
+    "A Anthropic mostra como disparar uma sessão de agente por empresa com uma ferramenta customizada e como agendar execuções recorrentes com deployments (implantações com agenda).",
+    "O dreaming (\"sonhar\") revisa até 30 dias de sessões passadas e reescreve a memória do agente com o que deu errado. Ainda está em research preview (prévia de pesquisa).",
+    "Na sessão de perguntas, a equipe admite lacunas: sem controle de acesso granular além de workspaces, sem modelos de outras empresas e sem versão on-premise (na infraestrutura do cliente)."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Uma sessão por empresa via ferramenta customizada",
+      "texto": "O agente principal verifica se tem a informação e chama a ferramenta dispatch analysis. Ela abre uma sessão separada para cada ticker (Google e Microsoft). Cada sessão tem subagentes, um critério de resultado e memória compartilhada para aprender com as outras.",
+      "t": 32,
+      "legenda": "Um pedido vira uma sessão independente por empresa.",
+      "print": "img/qJtcEDc_WJU/0.jpg"
+    },
+    {
+      "titulo": "Deployment junta agente, agenda e recursos",
+      "texto": "Um deployment recebe a definição do agente, uma agenda (por exemplo, todo dia às 9h ou todo dia 1) e mensagens iniciais. Também aceita recursos como memory stores, repositórios do GitHub e arquivos. Tudo vai por API e SDK, então dá para montar sua própria interface.",
+      "t": 94,
+      "legenda": "Um deployment é agente mais agenda mais recursos.",
+      "print": "img/qJtcEDc_WJU/1.jpg"
+    },
+    {
+      "titulo": "Dreaming revisa 30 dias de sessões",
+      "texto": "Você escolhe um memory store, um modelo e, se quiser, instruções. O sistema abre uma sessão que dispara subagentes para ler as transcrições das sessões anteriores. No demo, achou lacunas numa skill e atualizou a memória com o que aprendeu.",
+      "t": 222,
+      "legenda": "O dreaming encontrou falhas numa skill e corrigiu a memória.",
+      "print": "img/qJtcEDc_WJU/2.jpg"
+    },
+    {
+      "titulo": "Harness aqui é o loop de ferramentas; o resto é seu",
+      "texto": "Para a Anthropic, o harness cuida do contexto, do estado da sessão e da execução das ferramentas. A coordenação de vários agentes em uma topologia fica por sua conta, com a sessão como unidade básica. Para saber se funciona, a recomendação é rodar evals e usar outcomes com rubrica e limite de iterações.",
+      "t": 622,
+      "legenda": "A sessão é a primitiva; o harness de orquestração é construído por você.",
+      "print": "img/qJtcEDc_WJU/3.jpg"
+    },
+    {
+      "titulo": "Workspace é a única fronteira de tenancy hoje",
+      "texto": "Para multi-tenancy, a equipe desaconselha trazer a chave de API do cliente, porque você perde observabilidade. Sugere workspaces como unidade de separação, com mapeamento de cliente para agente do seu lado. Controle de acesso granular (RBAC) ainda está no roadmap.",
+      "t": 1125,
+      "legenda": "Sem RBAC próprio, o workspace separa clientes e equipes.",
+      "print": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Deployment",
+      "traducao": "implantação com agenda",
+      "nivel": "intermediario",
+      "chave": "deployment",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Dreaming",
+      "traducao": "sonhar (revisão de sessões passadas)",
+      "nivel": "avancado",
+      "chave": "dreaming",
+      "analogia": "Dreaming é como o técnico que assiste às gravações do último mês de jogos e reescreve o caderno de jogadas com os erros que se repetiram.",
+      "explicacao": [
+        "Um agente faz tarefas e guarda anotações para usar na próxima vez. O dreaming (\"sonhar\") é uma revisão periódica dessas anotações.",
+        "Você escolhe qual memória revisar, qual modelo vai fazer a revisão e um período, por exemplo os últimos 30 dias de trabalho.",
+        "O sistema lê o histórico completo de cada sessão (transcript, o registro de tudo que o agente fez) e procura falhas, informações que faltaram e problemas que se repetiram.",
+        "Para dar conta do volume, ele abre uma sessão própria que dispara vários subagentes (agentes auxiliares), e cada um analisa parte das sessões antigas.",
+        "No fim, ele propõe uma versão atualizada do memory store (repositório de memória do agente). O recurso ainda é research preview (prévia de pesquisa), então só um eval (avaliação) seu mostra se a nova memória melhorou o resultado."
+      ],
+      "pre_requisitos": [
+        "Memory store",
+        "Sessão de agente",
+        "Subagentes",
+        "Evals"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "ESCOLHER MEMÓRIA",
+            "nota": "memory store, modelo e instruções"
+          },
+          {
+            "rotulo": "LER SESSÕES ANTIGAS",
+            "nota": "últimos 30 dias de transcripts"
+          },
+          {
+            "rotulo": "SUBAGENTES ANALISAM",
+            "nota": "procuram falhas e lacunas repetidas"
+          },
+          {
+            "rotulo": "MEMÓRIA REESCRITA",
+            "nota": "nova versão para testar com evals"
+          }
+        ]
+      },
+      "no_glossario": true
+    },
+    {
+      "nome": "Memory store",
+      "traducao": "repositório de memória do agente",
+      "nivel": "intermediario",
+      "chave": "memory store",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Harness",
+      "traducao": "arcabouço que roda o agente",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Compaction",
+      "traducao": "compactação de contexto",
+      "nivel": "intermediario",
+      "chave": "compaction",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Multi-tenancy",
+      "traducao": "multilocação (vários clientes na mesma aplicação)",
+      "nivel": "avancado",
+      "chave": "multi-tenancy",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Rubric",
+      "traducao": "rubrica de avaliação",
+      "nivel": "intermediario",
+      "chave": "rubric",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "On premise",
+      "traducao": "na infraestrutura do cliente",
+      "nivel": "basico",
+      "chave": "on premise",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É um workshop de produto da própria Anthropic, com demo ao vivo que teve falhas (deployments falhando, Wi-Fi ruim). O ganho do dreaming vem só de relato: dizem que veem melhora nos evals e que clientes tiveram ganho significativo, sem números nem metodologia. Um participante apontou o risco de o dreaming ignorar a sessão minoritária que acertou. A equipe também admite que não há RBAC, que só roda modelos Claude e que o on-premise ainda está em consideração.",
+  "acoes": [
+    "Antes de ligar dreaming em produção, monte um conjunto próprio de evals (avaliações) e compare a memória antes e depois.",
+    "Se você tem tarefa recorrente, como relatório semanal, descreva-a como agente mais agenda mais recursos, o formato de um deployment.",
+    "Para vários clientes, planeje já a separação por workspace e o mapeamento cliente-agente do seu lado, porque o RBAC granular ainda não existe.",
+    "Reavalie suas skills e guard rails a cada novo modelo, pois a equipe espera que eles encolham com o tempo."
+  ],
+  "numeros": [
+    {
+      "valor": "30 dias",
+      "contexto": "janela de sessões que o dreaming analisa no demo",
+      "t": 191
+    },
+    {
+      "valor": "10 horas",
+      "contexto": "sessões longas já vistas em produção",
+      "t": 375
+    },
+    {
+      "valor": "9 de 10",
+      "contexto": "exemplo hipotético de sessões que discordam de uma",
+      "t": 871
+    }
+  ]
+}

@@ -1,0 +1,174 @@
+{
+  "id": "ORVh4GivEU0",
+  "titulo": "Beyond RAG: A Relational Context Engine That Cuts Token Burn — Unblocked",
+  "titulo_curto": "Beyond RAG: A Relational Context Engine That Cuts Token Burn",
+  "palestrante": "Unblocked",
+  "url": "https://www.youtube.com/watch?v=ORVh4GivEU0",
+  "duracao": 1184,
+  "publicado_ts": 1791660639,
+  "edicao": "2026-10-12",
+  "tese": "RAG responde perguntas de conteúdo. Perguntas de estrutura (quem, quando, quantos) pedem um motor de consulta com schema, validação e retry.",
+  "tldr": [
+    "Peter Werry, da Unblocked, mostra que um context engine (motor de contexto) entrega ao agente de código PRs, Slack e documentos relacionados, e que isso reduziu o custo de uma sessão em cerca de 50% na demo.",
+    "Busca vetorial não responde perguntas como \"quais PRs eu fechei semana passada\", que são consultas estruturadas. O talk constrói um motor que converte linguagem natural em query de banco.",
+    "A parte difícil é o entorno da query: descobrir o schema, resolver identidades, validar a query gerada pelo LLM, devolver erros ao modelo para novas tentativas e somar busca full-text."
+  ],
+  "tema": "dados-e-rag",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Contexto pronto reduz o trabalho do agente",
+      "texto": "Sem context engine, o Claude explora o código do zero, como um funcionário novo. Com ele, recebe um pacote de contexto da tarefa, com código, documentos do Notion, PRs e conversas do Slack, mais links para buscar detalhes. Na demo, a sessão custou US$ 1,29 em 1min30 contra cerca de US$ 2,60 em 3 minutos.",
+      "t": 221,
+      "legenda": "Comparação de custo e tempo com e sem context engine.",
+      "print": "img/ORVh4GivEU0/0.jpg"
+    },
+    {
+      "titulo": "Rastrear uma regressão até a troca de modelo",
+      "texto": "Um colega notou que o produto de code review achava cada vez menos problemas. Ao perguntar à Unblocked, ela ligou a queda à troca de versão do modelo Opus e criou um PR de correção, com descrição que cita o PR causador e a conversa no Slack. A fala sobre as versões saiu confusa na legenda automática.",
+      "t": 314,
+      "legenda": "O PR de correção traz o histórico que explica a regressão.",
+      "print": "img/ORVh4GivEU0/1.jpg"
+    },
+    {
+      "titulo": "Busca semântica não faz consultas",
+      "texto": "RAG cobre bem perguntas de conteúdo: o código, o PR que o mudou, a thread que o discute. Perguntas como \"PRs que fechei semana passada\" ou \"quem mais revisou pagamentos\" são filtros e agregações com tempo. Essa informação não está codificada em um vector store (banco de vetores), então precisa de um motor de consulta.",
+      "t": 440,
+      "legenda": "Pergunta com recorte temporal que um vector store não responde.",
+      "print": "img/ORVh4GivEU0/2.jpg"
+    },
+    {
+      "titulo": "Gerar a query é a parte fácil",
+      "texto": "Quatro peças cercam o LLM: schema para limitar a query, mapeamento de identidades entre sistemas, validação da query (que é não confiável) e retry quando há erro. Schema e identidades saem bem de métodos procedurais comuns, com o LLM só como desempate. A síntese recebe schema, data atual e dados do usuário.",
+      "t": 501,
+      "legenda": "O entorno da query dá mais trabalho que a geração em si.",
+      "print": "img/ORVh4GivEU0/3.jpg"
+    },
+    {
+      "titulo": "Validar bloqueia operadores perigosos e vira feedback",
+      "texto": "A query do LLM pode trazer operadores como $function, que executa JavaScript no servidor, ou tocar campos de tenant. A validação barra isso e injeta o filtro de tenant por baixo, sem o modelo ver. Na demo, uma regex foi barrada; o erro voltou ao LLM, que tentou de novo em um loop com limite de tentativas.",
+      "t": 880,
+      "legenda": "A validação recusa a regex e o erro alimenta a próxima tentativa.",
+      "print": "img/ORVh4GivEU0/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Context engineering",
+      "traducao": "engenharia de contexto",
+      "nivel": "intermediario",
+      "chave": "context engineering",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "RAG",
+      "traducao": "geração aumentada por recuperação",
+      "nivel": "basico",
+      "chave": "rag",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Busca vetorial",
+      "traducao": "busca por similaridade de embeddings",
+      "nivel": "intermediario",
+      "chave": "busca vetorial",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Entity resolution",
+      "traducao": "resolução de identidades entre sistemas",
+      "nivel": "intermediario",
+      "chave": "entity resolution",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Descoberta automática de schema",
+      "traducao": "inferir a estrutura dos dados por amostragem",
+      "nivel": "intermediario",
+      "chave": "descoberta automática de schema",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Multi-tenancy",
+      "traducao": "isolamento de dados entre clientes",
+      "nivel": "avancado",
+      "chave": "multi-tenancy",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Agent loop",
+      "traducao": "ciclo de ações do agente",
+      "nivel": "intermediario",
+      "chave": "agent loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Full-text search",
+      "traducao": "busca textual por palavras",
+      "nivel": "basico",
+      "chave": "full-text search",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É em parte pitch da Unblocked. A economia de 50% vem de uma única sessão escolhida pelo palestrante, sem repetições nem média, e a tarefa não é descrita. O caso da regressão é um exemplo único, contado por um colega. A parte de construção é útil, mas o repositório usa um banco de documentos e uma coleção simples de PRs, bem longe da escala real. O simulador open source seria o jeito de verificar o ganho.",
+  "acoes": [
+    "Classifique as perguntas que seu agente recebe em semânticas (achar conteúdo) e estruturais (contar, filtrar, agrupar por data). Só as estruturais precisam de consulta a banco.",
+    "Se o agente gera queries, trate a saída do LLM como não confiável: valide operadores, bloqueie campos sensíveis e injete filtros de tenant fora do modelo.",
+    "Devolva a mensagem de erro da query ao modelo em um loop com limite de tentativas, em vez de falhar na primeira.",
+    "Teste o ganho de contexto pré-reunido com o simulador open source da Unblocked, rodando a mesma tarefa com e sem contexto."
+  ],
+  "numeros": [
+    {
+      "valor": "US$ 1,29",
+      "contexto": "custo da sessão com context engine",
+      "t": 221
+    },
+    {
+      "valor": "1min30",
+      "contexto": "duração da sessão com context engine",
+      "t": 221
+    },
+    {
+      "valor": "~US$ 2,60",
+      "contexto": "custo sem contexto, em 3 min (moeda inferida)",
+      "t": 252
+    },
+    {
+      "valor": "50%",
+      "contexto": "redução de custo citada pelo palestrante",
+      "t": 252
+    }
+  ]
+}

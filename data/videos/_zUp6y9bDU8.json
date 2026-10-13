@@ -1,0 +1,174 @@
+{
+  "id": "_zUp6y9bDU8",
+  "titulo": "Let Your Agent Cook: Using Skills to Evaluate and Improve Your App — Ankur Duggal, Arize AI",
+  "titulo_curto": "Let Your Agent Cook: Using Skills to Evaluate and Improve Your App",
+  "palestrante": "Ankur Duggal, Arize AI",
+  "url": "https://www.youtube.com/watch?v=_zUp6y9bDU8",
+  "duracao": 2164,
+  "publicado_ts": 1791743414,
+  "edicao": "2026-10-12",
+  "tese": "Dê ao agente de código os traces, as evals e o código juntos, e ele acha e testa a correção em minutos. Você ainda revisa.",
+  "tldr": [
+    "Ankur Duggal, da Arize, mostra que confiar só na sensação de que o agente responde certo não sustenta produção, e que traces (registros de cada passo do agente) mostram onde ele realmente falha.",
+    "Na demo, o Claude Code usa a CLI e as skills da Arize para baixar traces e resultados de evals de um agente financeiro, listar falhas como resumos ruins, respostas inventadas e chamadas repetidas de ferramenta, e montar datasets, avaliadores e experimentos.",
+    "Ele pede revisão humana das mudanças e avaliações feitas sob medida para a sua aplicação, porque o agente de código pode se distrair com detalhes como linting e porque modelos e perguntas dos usuários mudam com o tempo."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "O trace mostra o que o agente decidiu",
+      "texto": "No código tradicional, o fluxo é previsível. Num agente, o código tem uma linha só (agent.run) e o resto depende do modelo. O trace registra cada chamada de LLM, documento recuperado e ferramenta usada. No exemplo do reembolso, o agente chamou a ferramenta de status do pedido, que era a errada para a pergunta do cliente.",
+      "t": 202,
+      "legenda": "O trace expõe a ferramenta errada escolhida no caso do reembolso.",
+      "print": "img/_zUp6y9bDU8/0.jpg"
+    },
+    {
+      "titulo": "O ciclo de melhoria manual é longo",
+      "texto": "O caminho padrão tem várias etapas. Você identifica a falha em produção, junta uma amostra de casos, descobre a causa (prompt, guardrail ou ferramenta), cria uma eval para monitorar, faz a mudança, roda o experimento e publica. Duggal diz que isso leva horas ou dias e quer reduzir a minutos.",
+      "t": 264,
+      "legenda": "As etapas manuais que a proposta quer comprimir.",
+      "print": "img/_zUp6y9bDU8/1.jpg"
+    },
+    {
+      "titulo": "Um único lugar para dados e código",
+      "texto": "A proposta junta traces, resultados de evals, anotações humanas, logs de APM (monitoramento de desempenho) e o código num agente de código, que pode ser Claude Code, Cursor ou Codex. Com a CLI e as skills, esse agente lê os dados e propõe correções com base no que falhou, e não só no que parece errado na saída.",
+      "t": 363,
+      "legenda": "Todas as fontes de contexto chegam ao agente de código.",
+      "print": null
+    },
+    {
+      "titulo": "O agente de código diagnostica o agente financeiro",
+      "texto": "Na demo, o Claude Code puxa os spans (cada passo de um trace) e os resultados de evals. Ele aponta cerca de 44% das interações com resumo ruim, respostas inventadas, chamadas redundantes de ferramenta e falhas silenciosas, em que a ferramenta diz ter dado certo sem trazer resposta. Também sugere quais evals criar.",
+      "t": 1011,
+      "legenda": "A análise do agente lista as falhas e a taxa de resumo ruim.",
+      "print": "img/_zUp6y9bDU8/3.jpg"
+    },
+    {
+      "titulo": "Experimentos mostram se a correção funcionou",
+      "texto": "Num caso anterior, o agente falhava com ações de outros países. Ele criou um dataset com os casos de falha e testou três versões. A base com bug teve 0% de acerto. A correção só do nome do país não resolveu, porque a ferramenta estava desatualizada. Com a ferramenta atualizada, a taxa chegou a cerca de 90%.",
+      "t": 1263,
+      "legenda": "Três iterações do experimento, da base com bug até cerca de 90% de acerto.",
+      "print": "img/_zUp6y9bDU8/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Trace",
+      "traducao": "registro passo a passo da execução do agente",
+      "nivel": "basico",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação automatizada da qualidade do agente",
+      "nivel": "basico",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "um modelo de linguagem que avalia as respostas",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Skill",
+      "traducao": "pacote de instruções que ensina o agente a fazer uma tarefa",
+      "nivel": "intermediario",
+      "chave": "skill",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "CLI",
+      "traducao": "interface de linha de comando",
+      "nivel": "basico",
+      "chave": "cli",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Coding agent",
+      "traducao": "agente de código",
+      "nivel": "basico",
+      "chave": "coding agent",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Grounding",
+      "traducao": "ancorar a resposta em fontes verificáveis",
+      "nivel": "intermediario",
+      "chave": "grounding",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Linter",
+      "traducao": "ferramenta que aponta problemas de estilo no código",
+      "nivel": "basico",
+      "chave": "linter",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é um pitch da Arize, e a demo roda sobre a plataforma e as skills dela. Os números vêm de um único agente de demonstração e de uma execução. Os 90% de acerto não trazem tamanho do dataset nem repetição. A reparação ao vivo não terminou durante a fala, apesar de ter levado cerca de 14 minutos. Para a pergunta sobre linting, ele diz que não viu o problema com as skills, sem dados. Sobre o modelo juiz, admite que não há benchmark e que cada equipe deve testar. O palestrante também usou o modo que dispensa permissões e avisou que não é boa prática.",
+  "acoes": [
+    "Ative tracing no seu agente antes de pensar em evals, porque sem o registro dos passos você não sabe onde ele erra.",
+    "Dê a um agente de código acesso aos traces e resultados de evals e peça uma lista de falhas, sem aceitar mudanças automáticas.",
+    "Crie um dataset com os casos que falharam e rode o experimento antes e depois de cada correção, para provar a melhora.",
+    "Defina amostragem nas evals online e acompanhe o custo, já que cada avaliador com LLM é uma chamada extra paga."
+  ],
+  "numeros": [
+    {
+      "valor": "44%",
+      "contexto": "interações com resumo ruim, segundo a análise do agente",
+      "t": 1011
+    },
+    {
+      "valor": "0%",
+      "contexto": "acerto da versão inicial com bug no caso internacional",
+      "t": 1263
+    },
+    {
+      "valor": "cerca de 90%",
+      "contexto": "acerto da iteração final no caso internacional",
+      "t": 1295
+    },
+    {
+      "valor": "14 minutos",
+      "contexto": "tempo da correção ao vivo, ainda incompleta",
+      "t": 1952
+    }
+  ]
+}

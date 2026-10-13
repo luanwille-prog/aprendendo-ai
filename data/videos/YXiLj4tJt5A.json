@@ -1,0 +1,174 @@
+{
+  "id": "YXiLj4tJt5A",
+  "titulo": "Agent Speedrun — Elizabeth Fuentes Leone & Sandhya Subramani, AWS",
+  "titulo_curto": "Agent Speedrun",
+  "palestrante": "Elizabeth Fuentes Leone & Sandhya Subramani, AWS",
+  "url": "https://www.youtube.com/watch?v=YXiLj4tJt5A",
+  "duracao": 3595,
+  "publicado_ts": 1791730805,
+  "edicao": "2026-10-12",
+  "tese": "Prompt é sugestão. Para controlar um agente em produção, ponha código determinístico nos pontos do loop e só então faça o deploy.",
+  "tldr": [
+    "O workshop constrói um agente de atendimento com Strands Agents (framework open source da AWS), com três ferramentas e dados fictícios de clientes e pedidos.",
+    "Depois o agente ganha camadas de controle. Hooks (ganchos de código) limitam chamadas de ferramenta, skills (instruções em markdown) entram sob demanda e steering (direcionamento) revisa fluxo e tom da resposta.",
+    "Na última parte, o mesmo código vai para o Amazon Bedrock AgentCore com um decorador de entrada e observabilidade ligada, e a chamada do agente publicado funciona."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Um agente é um loop com ferramentas",
+      "texto": "O agente recebe a pergunta, chama o LLM, o LLM escolhe uma ferramenta, o resultado volta e o loop repete até a resposta final. As ferramentas são funções Python com o decorador @tool, e o system prompt diz ao modelo quando usá-las. Aqui são três: buscar cliente, ver histórico de pedidos e processar reembolso.",
+      "t": 1350,
+      "legenda": "O agente encadeia duas ferramentas sozinho antes de responder.",
+      "print": "img/YXiLj4tJt5A/0.jpg"
+    },
+    {
+      "titulo": "Hook como limitador de chamadas",
+      "texto": "Um hook roda código antes da invocação e antes de cada chamada de ferramenta. O exemplo zera um contador a cada pedido do usuário e bloqueia a ferramenta depois do limite de três chamadas. Com o limite baixado na demo, o bloqueio aparece no log. Na pergunta da plateia, os apresentadores explicam que o hook também poderia encerrar o turno inteiro.",
+      "t": 1843,
+      "legenda": "Com o limite baixo, o hook bloqueia a ferramenta e o log mostra isso.",
+      "print": "img/YXiLj4tJt5A/1.jpg"
+    },
+    {
+      "titulo": "Prompt é sugestão, hook é regra",
+      "texto": "Elizabeth lembra que o LLM é probabilístico e que o prompt funciona como sugestão. Um hook é código, então bloqueia de forma determinística. Ele pode barrar um número de cartão antes de chegar ao modelo, o que também poupa tokens, ou filtrar a resposta depois da chamada.",
+      "t": 1905,
+      "legenda": "O hook intercepta antes e depois do modelo, em código.",
+      "print": "img/YXiLj4tJt5A/2.jpg"
+    },
+    {
+      "titulo": "Skills carregam contexto só quando preciso",
+      "texto": "Procedimentos de reembolso, rastreio de pedido e problemas de conta ficam em arquivos markdown numa pasta de skills. O agente lê o que precisa para cada pergunta, em vez de encher o system prompt, que gasta tokens de entrada a cada chamada. Na demo, o pedido de reembolso de fones dispara a skill como se fosse uma ferramenta.",
+      "t": 2310,
+      "legenda": "A skill vira uma chamada de ferramenta quando a pergunta pede.",
+      "print": "img/YXiLj4tJt5A/3.jpg"
+    },
+    {
+      "titulo": "Steering: um agente revisor no loop",
+      "texto": "Steering usa handlers nos mesmos pontos dos hooks, mas com um revisor que checa a ordem do fluxo (verificar o cliente antes do reembolso) e o tom da resposta (não prometer prazo, não culpar o cliente). Pode ser função fixa ou outro agente. Depois, o deploy no AgentCore exige só o decorador de entrada do runtime sobre o código existente.",
+      "t": 2592,
+      "legenda": "Duas regras de steering: ordem do fluxo e tom da resposta.",
+      "print": "img/YXiLj4tJt5A/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Agent harness",
+      "traducao": "arcabouço do agente",
+      "nivel": "basico",
+      "chave": "agent harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Agent loop",
+      "traducao": "loop do agente",
+      "nivel": "basico",
+      "chave": "agent loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Hooks",
+      "traducao": "ganchos de código no fluxo do agente",
+      "nivel": "intermediario",
+      "chave": "hooks",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sistema determinístico",
+      "traducao": "comportamento previsível, sem variação",
+      "nivel": "basico",
+      "chave": "sistema determinístico",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Skills",
+      "traducao": "instruções em markdown carregadas sob demanda",
+      "nivel": "intermediario",
+      "chave": "skills",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Steering",
+      "traducao": "direcionamento da resposta por um agente revisor",
+      "nivel": "intermediario",
+      "chave": "steering",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "AgentCore Runtime",
+      "traducao": "ambiente gerenciado da AWS para rodar agentes",
+      "nivel": "intermediario",
+      "chave": "agentcore runtime",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Observabilidade de agentes",
+      "traducao": "ver tokens, ferramentas e traces do agente",
+      "nivel": "intermediario",
+      "chave": "observabilidade de agentes",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "Workshop de divulgação do ecossistema AWS (Strands e AgentCore), então o caminho feliz domina. Os dados são fictícios, a demo tem três ferramentas e não há medição de custo, latência ou taxa de erro dos controles. A fala de que o agente vai responder como se quer, com plena confiança, não tem evidência no vídeo e contradiz o próprio argumento sobre modelos probabilísticos. As afirmações de segurança e de custo baixo não trazem números. O deploy foi apressado, sem mostrar falhas.",
+  "acoes": [
+    "Liste as ferramentas do seu agente e defina um limite de chamadas por pedido, aplicado em código e não no prompt.",
+    "Separe regras que não podem falhar (dados sensíveis, limites) para hooks ou validações em código e deixe no prompt só as orientações flexíveis.",
+    "Mova procedimentos longos do system prompt para arquivos markdown carregados por tipo de pergunta, para gastar menos tokens.",
+    "Antes de publicar um agente, ligue a observabilidade e confira sessões, traces e consumo de tokens numa chamada de teste."
+  ],
+  "numeros": [
+    {
+      "valor": "8 horas",
+      "contexto": "duração máxima de uma sessão no AgentCore Runtime",
+      "t": 197
+    },
+    {
+      "valor": "250",
+      "contexto": "participantes previstos no ambiente do workshop",
+      "t": 514
+    },
+    {
+      "valor": "60 linhas",
+      "contexto": "código do chat multi-turno, segundo a palestrante",
+      "t": 1504
+    },
+    {
+      "valor": "3 chamadas",
+      "contexto": "limite de ferramentas por pedido no hook da demo",
+      "t": 1720
+    }
+  ]
+}

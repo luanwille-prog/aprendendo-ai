@@ -1,0 +1,174 @@
+{
+  "id": "4n08JHb90hI",
+  "titulo": "Agents That Own Their Inference — Du'an Lightfoot & Khaja Omer, Akamai Technologies",
+  "titulo_curto": "Agents That Own Their Inference",
+  "palestrante": "Du'an Lightfoot & Khaja Omer, Akamai Technologies",
+  "url": "https://www.youtube.com/watch?v=4n08JHb90hI",
+  "duracao": 6610,
+  "publicado_ts": 1791727220,
+  "edicao": "2026-10-12",
+  "tese": "Rodar o próprio modelo só compensa se você medir cada ajuste com a sua carga real. Até a otimização famosa pode piorar tudo.",
+  "tldr": [
+    "O workshop mostra como servir um modelo Qwen de 4 bilhões de parâmetros em GPU dedicada com vLLM, medindo velocidade por requisição, vazão total e uso de memória do KV cache.",
+    "Trocar o modelo de BF16 para FP8 elevou a velocidade de 37,5 para 53,4 tokens por segundo, mas o speculative decoding derrubou de 58 para 16, porque o modelo rascunho era incompatível.",
+    "O método final é repetir um ciclo: medir a linha de base, mudar um parâmetro de servidor, refazer o teste de carga e checar a qualidade, o que levou a vazão de 800 para 1.100 tokens por segundo com 64 requisições simultâneas."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "Alugar API ou ter GPU própria depende do uso",
+      "texto": "Uso alto e constante, dados privados e capacidade disponível favorecem GPU dedicada. Tráfego baixo e irregular, modelos mais capazes e time sem experiência em hospedagem favorecem API paga por token. Os palestrantes mostram uma conta de custo mensal para 200 mil tokens por dia, mas o valor da GPU sai truncado na legenda automática.",
+      "t": 231,
+      "legenda": "Critérios que separam GPU própria de API hospedada",
+      "print": "img/4n08JHb90hI/0.jpg"
+    },
+    {
+      "titulo": "Memória da GPU define quantos usuários cabem",
+      "texto": "Os pesos de um modelo de 4 bilhões de parâmetros em BF16 ocupam 8 GB. O que sobra na GPU vira KV cache, o espaço onde ficam prompt, ferramentas e resposta de cada usuário. O notebook calcula cerca de 37 mil tokens de contexto no total, o que dá quatro usuários com 8 mil tokens cada.",
+      "t": 2124,
+      "legenda": "Pesos de 8 GB deixam cerca de 37 mil tokens para o KV cache",
+      "print": "img/4n08JHb90hI/1.jpg"
+    },
+    {
+      "titulo": "FP8 acelera, mas exige eval próprio",
+      "texto": "Com o modelo FP8 da Red Hat, a velocidade com uma requisição subiu de 37,5 para 53,4 tokens por segundo. O pico de vazão foi 1,4 vez maior. O tempo até o primeiro token também cresceu sob carga alta. Omar insiste em criar evals (avaliações) próprios, por exemplo para ver se o JSON das chamadas de função continua válido.",
+      "t": 3845,
+      "legenda": "Comparação antes e depois da quantização FP8",
+      "print": "img/4n08JHb90hI/2.jpg"
+    },
+    {
+      "titulo": "Speculative decoding que piora a velocidade",
+      "texto": "Um modelo pequeno (0,6B) rascunha 4 tokens e o modelo de 4B verifica. Aqui a taxa de aceitação foi baixa porque o rascunho não foi treinado para esse modelo, e a velocidade caiu de 58 para 16 tokens por segundo. A lição é testar a compatibilidade e o número de tokens especulativos antes de ativar.",
+      "t": 4538,
+      "legenda": "Queda de 58 para 16 tokens por segundo com o rascunho incompatível",
+      "print": "img/4n08JHb90hI/3.jpg"
+    },
+    {
+      "titulo": "Achar o ponto em que a vazão estabiliza",
+      "texto": "Acima de 32 requisições simultâneas a vazão parou de crescer e a latência disparou. Subir o limite de sequências de 32 para 128 mudou isso: com 64 simultâneas, a vazão foi a 1.100 tokens por segundo e a latência caiu para cerca de 800 ms. O modelo da comparação final é o BF16, porque o notebook falhou e foi refeito.",
+      "t": 6452,
+      "legenda": "Com 64 requisições, vazão sobe e latência cai após o ajuste",
+      "print": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "vLLM",
+      "traducao": "servidor de inferência de código aberto",
+      "nivel": "intermediario",
+      "chave": "vllm",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "KV cache",
+      "traducao": "memória do contexto já processado",
+      "nivel": "intermediario",
+      "chave": "kv cache",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Prefill e decode",
+      "traducao": "leitura do prompt e geração token a token",
+      "nivel": "intermediario",
+      "chave": "prefill e decode",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Time to first token (TTFT)",
+      "traducao": "tempo até o primeiro token",
+      "nivel": "basico",
+      "chave": "time to first token (ttft)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Throughput",
+      "traducao": "vazão: tokens por segundo no total",
+      "nivel": "intermediario",
+      "chave": "throughput",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Quantization",
+      "traducao": "quantização: pesos com menos bits",
+      "nivel": "intermediario",
+      "chave": "quantization",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Mixture of experts",
+      "traducao": "mistura de especialistas",
+      "nivel": "avancado",
+      "chave": "mixture of experts",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Speculative decoding",
+      "traducao": "decodificação especulativa",
+      "nivel": "avancado",
+      "chave": "speculative decoding",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O talk é de uma empresa de nuvem que vende GPU, e o ambiente do workshop usa a infraestrutura dela, então a comparação entre alugar e ter GPU favorece o lado de quem vende. A conta de custo (200 mil tokens por dia) aparece sem detalhes legíveis. Os testes usam um só modelo de 4B, uma GPU e prompts curtos (256 tokens de entrada, 128 de saída). O eval de qualidade do FP8 é simples e os próprios palestrantes avisam que ele não basta. A comparação final mistura FP8 e BF16 por causa da falha do notebook.",
+  "acoes": [
+    "Antes de mudar qualquer configuração de servidor, rode um teste de carga com o seu tamanho real de prompt e guarde os números como linha de base.",
+    "Ao testar uma versão quantizada, monte um conjunto pequeno de casos seus, como validade de JSON em chamadas de função, e compare com o modelo original.",
+    "Mude um parâmetro por vez (memória da GPU, limite de sequências, tamanho do lote) e refaça o teste, anotando vazão e latência.",
+    "Compare o custo mensal de API com o de uma GPU dedicada usando seu volume diário de tokens, e só considere ter a GPU se o uso for alto e constante."
+  ],
+  "numeros": [
+    {
+      "valor": "37,5 para 53,4",
+      "contexto": "tokens/s com 1 requisição, BF16 para FP8",
+      "t": 3845
+    },
+    {
+      "valor": "277 a 1.300 ms",
+      "contexto": "TTFT de 32 para 64 requisições simultâneas",
+      "t": 3280
+    },
+    {
+      "valor": "58,2 para 16",
+      "contexto": "tokens/s ao ativar speculative decoding",
+      "t": 4538
+    },
+    {
+      "valor": "1.100 tok/s",
+      "contexto": "vazão com 64 simultâneas após subir max sequences",
+      "t": 6452
+    }
+  ]
+}

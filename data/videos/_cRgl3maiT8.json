@@ -1,0 +1,262 @@
+{
+  "id": "_cRgl3maiT8",
+  "titulo": "How Inference Keeps Up with Our Insatiable Need for Tokens — Cerebras & Gimlet Labs",
+  "titulo_curto": "How Inference Keeps Up with Our Insatiable Need for Tokens",
+  "palestrante": "Cerebras & Gimlet Labs",
+  "url": "https://www.youtube.com/watch?v=_cRgl3maiT8",
+  "duracao": 1366,
+  "publicado_ts": 1791783416,
+  "edicao": "2026-10-12",
+  "tese": "Gerar token é limitado pela memória, então toda otimização de inferência tenta ler menos, reaproveitar mais e casar cada tarefa com o hardware certo.",
+  "tldr": [
+    "O talk percorre as técnicas que baratearam a inferência, do runtime (batching contínuo, KV cache paginado, prompt caching, chunked prefill) ao sistema (separar prefill e decode, speculative decoding, separar attention e FFN).",
+    "A ideia que liga tudo é que o decode espera a memória, enquanto o prefill gasta computação. Por isso cada fase e cada camada rodam melhor em hardware diferente.",
+    "Os palestrantes vendem seus produtos (chips da Cerebras e a nuvem multi-chip da Gimlet), e fecham dizendo que agentes já ajudam a escrever kernels otimizados."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "O decode espera a memória, não a conta",
+      "texto": "Para gerar cada token, o modelo lê todos os pesos da memória. Segundo Daniel, até 90% do tempo o processador fica parado esperando esses dados. Dividir o modelo entre GPUs ajuda, mas exige um all-reduce (soma dos resultados parciais) a cada camada, e 4x mais GPUs rendem só cerca de 2x de velocidade.",
+      "t": 188,
+      "legenda": "Mais GPUs aceleram o token, mas o custo de comunicação cresce mais rápido.",
+      "print": "img/_cRgl3maiT8/0.jpg"
+    },
+    {
+      "titulo": "Fronteira de Pareto entre velocidade e vazão",
+      "texto": "Quem serve inferência escolhe entre rapidez por usuário e total de tokens por segundo. O exemplo dado é o fast mode do Claude Code, que gasta cerca de 6x mais recursos por token para ir ao dobro da velocidade. As otimizações do talk servem para empurrar essa curva para a direita.",
+      "t": 219,
+      "legenda": "Ganhar velocidade custa vazão, e cada técnica tenta deslocar a curva.",
+      "print": "img/_cRgl3maiT8/1.jpg"
+    },
+    {
+      "titulo": "KV cache cresce rápido e o paging o domestica",
+      "texto": "O KV cache guarda os vetores K e V de cada token já processado. Com contexto de 128k, uma única requisição ocupa 42 GB. O KV cache paginado, inspirado em memória virtual de sistema operacional, evita reservar blocos que ficam vazios e, segundo Daniel, atende 3x mais requisições.",
+      "t": 371,
+      "legenda": "Reserva fixa desperdiça memória, e blocos paginados ocupam só o necessário.",
+      "print": "img/_cRgl3maiT8/2.jpg"
+    },
+    {
+      "titulo": "Separar prefill e decode em pools diferentes",
+      "texto": "O prefill (ler o prompt) é limitado por computação, e o decode (gerar a resposta) é limitado por memória. Resumir um documento pesa no prefill, e escrever um livro pesa no decode. Com dois pools de máquinas, cada um escala sozinho e um não trava o outro.",
+      "t": 679,
+      "legenda": "Cada fase ganha seu próprio pool, escalado conforme o tipo de carga.",
+      "print": "img/_cRgl3maiT8/3.jpg"
+    },
+    {
+      "titulo": "Speculative decoding com modelo rascunho",
+      "texto": "Um modelo pequeno propõe vários tokens e o modelo grande só verifica. No exemplo de Michelle, nove tokens exigem três passadas do modelo grande em vez de nove. Rodar o rascunho em chips rápidos para modelos pequenos levaria, segundo a Gimlet, a 10x mais interatividade que GPUs homogêneas.",
+      "t": 960,
+      "legenda": "A curva desloca para a direita com rascunho e com chips diferentes por tarefa.",
+      "print": "img/_cRgl3maiT8/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "KV cache",
+      "traducao": "cache de chaves e valores da atenção",
+      "nivel": "intermediario",
+      "chave": "kv cache",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Prefill e decode",
+      "traducao": "fase de ler o prompt e fase de gerar a resposta",
+      "nivel": "intermediario",
+      "chave": "prefill e decode",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Continuous batching",
+      "traducao": "batching contínuo",
+      "nivel": "intermediario",
+      "chave": "continuous batching",
+      "analogia": "O batching contínuo é como uma van escolar que, a cada parada onde um aluno desce, já embarca outro que estava esperando, em vez de rodar com bancos vazios até o fim da rota.",
+      "explicacao": [
+        "Para gerar cada palavra, o modelo precisa carregar todos os seus pesos da memória, e isso demora mais que a conta em si.",
+        "O batching (processamento em lote) aproveita essa mesma leitura dos pesos para atender vários usuários de uma vez.",
+        "O problema é que algumas respostas são mais longas que outras. Quando uma termina cedo, a vaga dela fica ociosa até o lote inteiro acabar.",
+        "O batching contínuo (continuous batching) preenche cada vaga liberada com um novo pedido na hora, sem esperar o lote terminar.",
+        "O custo é a memória. Cada pedido a mais no lote soma seu próprio KV cache, e isso motivou técnicas como o KV cache paginado."
+      ],
+      "pre_requisitos": [
+        "Token",
+        "Pesos do modelo",
+        "Banda de memória"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "LEITURA DOS PESOS",
+            "nota": "Um custo pago a cada token"
+          },
+          {
+            "rotulo": "LOTE DE PEDIDOS",
+            "nota": "Vários usuários na mesma leitura"
+          },
+          {
+            "rotulo": "VAGA LIBERADA",
+            "nota": "Uma resposta curta termina antes"
+          },
+          {
+            "rotulo": "NOVO PEDIDO ENTRA",
+            "nota": "Mais tokens por leitura de pesos"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Paged KV cache",
+      "traducao": "KV cache paginado",
+      "nivel": "avancado",
+      "chave": "paged kv cache",
+      "analogia": "O KV cache paginado é como um restaurante que acomoda cada cliente na primeira mesa livre, em vez de reservar uma mesa de dez lugares para quem talvez traga dois amigos.",
+      "explicacao": [
+        "Enquanto conversa com você, o modelo guarda anotações sobre cada palavra já lida para não precisar reler tudo de novo.",
+        "Essas anotações formam o KV cache (cache de chaves e valores) e crescem rápido. Com contexto de 128 mil tokens, uma só conversa ocupa cerca de 42 GB.",
+        "No método antigo, o sistema reservava de antemão um bloco grande e contínuo de memória para cada pedido. Boa parte desse bloco ficava vazia, mas ninguém mais podia usar.",
+        "O KV cache paginado (paged KV cache) copia a ideia de memória virtual do sistema operacional. Ele divide a memória em páginas pequenas e grava cada pedaço do cache em qualquer página livre.",
+        "Uma tabela registra onde está cada página. Assim quase nada fica reservado sem uso, e o mesmo hardware atende cerca de 3x mais pedidos, segundo o palestrante."
+      ],
+      "pre_requisitos": [
+        "KV cache",
+        "Token",
+        "Memória virtual",
+        "Continuous batching"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "NOVO PEDIDO",
+            "nota": "Precisa guardar cache de cada token"
+          },
+          {
+            "rotulo": "PÁGINAS PEQUENAS",
+            "nota": "Memória dividida em blocos iguais"
+          },
+          {
+            "rotulo": "OCUPA ONDE HÁ ESPAÇO",
+            "nota": "Tabela aponta onde está cada bloco"
+          },
+          {
+            "rotulo": "3X MAIS PEDIDOS",
+            "nota": "Quase nenhuma memória fica parada"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Prompt caching",
+      "traducao": "reaproveitar o cache de um prompt já processado",
+      "nivel": "basico",
+      "chave": "prompt caching",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Disaggregation",
+      "traducao": "desagregação: separar etapas em máquinas diferentes",
+      "nivel": "avancado",
+      "chave": "disaggregation",
+      "analogia": "A desagregação é como uma cozinha de restaurante que separa a equipe de preparo da equipe de finalização, e contrata mais gente só no setor que está apertado naquele dia.",
+      "explicacao": [
+        "Quando você manda uma pergunta para uma IA, o trabalho acontece em duas fases. Primeiro ela lê o seu texto, depois escreve a resposta palavra por palavra.",
+        "A leitura se chama prefill (pré-preenchimento) e gasta muita conta. A escrita se chama decode (decodificação) e passa a maior parte do tempo esperando dados da memória.",
+        "Cada tarefa pesa numa fase diferente. Resumir um documento longo pesa no prefill, e escrever um livro a partir de poucos temas pesa no decode.",
+        "A desagregação (disaggregation) põe cada fase num grupo próprio de máquinas, chamado pool. Um pool faz só prefill e outro faz só decode.",
+        "Cada pool cresce ou encolhe conforme a carga, e uma fase não trava a outra. O passo seguinte é usar hardware diferente em cada pool, com mais computação num e mais banda de memória no outro."
+      ],
+      "pre_requisitos": [
+        "Prefill e decode",
+        "KV cache",
+        "Banda de memória"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PEDIDO CHEGA",
+            "nota": "Prompt mais resposta a gerar"
+          },
+          {
+            "rotulo": "POOL DE PREFILL",
+            "nota": "Lê o prompt, limitado por conta"
+          },
+          {
+            "rotulo": "POOL DE DECODE",
+            "nota": "Gera tokens, limitado por memória"
+          },
+          {
+            "rotulo": "ESCALA INDEPENDENTE",
+            "nota": "Cada pool cresce conforme a carga"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Speculative decoding",
+      "traducao": "decodificação especulativa",
+      "nivel": "avancado",
+      "chave": "speculative decoding",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Fronteira de Pareto",
+      "traducao": "troca entre velocidade e vazão",
+      "nivel": "intermediario",
+      "chave": "fronteira de pareto",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "Os dois palestrantes vendem o que descrevem. Cerebras compara a própria banda de memória com a de uma H100 e cita 3.000 contra 600 tokens por segundo, sem dizer modelo, tamanho de lote ou fonte. Os ganhos da Gimlet (3 a 10x, 10x de interatividade, 33% no GPT-OSS-120B em AMD) aparecem em slides sem metodologia, e a parceria com a AWS é descrita como plano. A afirmação de que até 90% do tempo é espera de memória vale para o decode com lote pequeno, não para toda carga.",
+  "acoes": [
+    "Estruture prompts de agentes com a parte fixa (instruções, ferramentas) no começo, para o provedor reaproveitar o prompt caching e cobrar menos.",
+    "Ao estimar custo de contexto longo, lembre que cada requisição ocupa memória de KV cache proporcional ao tamanho. A regra citada é 1 GB a cada 3.000 tokens num modelo de 70B.",
+    "Ao escolher provedor de inferência, peça métricas de velocidade por usuário e de vazão juntas, já que melhorar uma costuma piorar a outra.",
+    "Se sua equipe escreve kernels ou otimiza modelos, teste um agente de geração de kernels sobre código já otimizado, como o KForge fez, e meça o ganho de ponta a ponta."
+  ],
+  "numeros": [
+    {
+      "valor": "3,2 quadrilhões",
+      "contexto": "tokens por mês no Google, contra 480 trilhões um ano antes",
+      "t": 63
+    },
+    {
+      "valor": "42 GB",
+      "contexto": "KV cache de uma requisição com contexto de 128k",
+      "t": 341
+    },
+    {
+      "valor": "7.000x",
+      "contexto": "banda de memória da Cerebras sobre a H100 (21.000 contra 3,35 TB/s)",
+      "t": 744
+    },
+    {
+      "valor": "33%",
+      "contexto": "ganho do KForge no GPT-OSS-120B em hardware AMD",
+      "t": 1177
+    }
+  ]
+}

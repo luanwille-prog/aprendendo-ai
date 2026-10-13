@@ -1,0 +1,208 @@
+{
+  "id": "13YZ1EB9hjU",
+  "titulo": "Stop Renting Intelligence: The Train-to-Deploy Loop for Specialized AI — Fireworks AI",
+  "titulo_curto": "Stop Renting Intelligence: The Train-to-Deploy Loop for Specialized AI",
+  "palestrante": "Fireworks AI",
+  "url": "https://www.youtube.com/watch?v=13YZ1EB9hjU",
+  "duracao": 1157,
+  "publicado_ts": 1791757833,
+  "edicao": "2026-10-12",
+  "tese": "Modelo aberto chega perto do fechado quando você o treina em loop com seus dados e serve na mesma plataforma que treinou.",
+  "tldr": [
+    "A palestrante da Fireworks AI argumenta que modelos abertos como o GLM 5.2 já servem para produção e que o treino com dados próprios fecha a diferença de qualidade para os modelos fechados.",
+    "Ela apresenta três formas de treinar (agente de treino, treino gerenciado e API de treino) e um ciclo contínuo de treinar, publicar, monitorar e treinar de novo, com troca de pesos sem downtime.",
+    "Os resultados de clientes (Cursor, Vercel, Genspark) vêm da própria empresa, e a tese de que treino e serviço devem ficar na mesma plataforma também é argumento de venda."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Três verdades sobre modelos abertos",
+      "texto": "Ela afirma que modelos abertos já são prontos para produção (cita o GLM 5.2 em código), que a diferença de qualidade se fecha com customização e que a pilha de IA virou um ciclo contínuo de treinar e servir, em vez de servir uma vez.",
+      "t": 87,
+      "legenda": "A tese do talk resumida em três afirmações.",
+      "print": "img/13YZ1EB9hjU/0.jpg"
+    },
+    {
+      "titulo": "Casos de clientes: Cursor, Vercel e Genspark",
+      "texto": "O Composer 2 do Cursor foi treinado e hospedado na plataforma, com inferência 13 vezes mais rápida. A Vercel teve latência 40 vezes menor. A Genspark ganhou 12% de qualidade com reinforcement fine-tuning (RFT, ajuste fino por reforço). Os números são da empresa, sem metodologia.",
+      "t": 230,
+      "legenda": "Resultados que a Fireworks atribui a cada cliente.",
+      "print": "img/13YZ1EB9hjU/1.jpg"
+    },
+    {
+      "titulo": "Motor próprio de inferência e draft model",
+      "texto": "A Fireworks otimiza o FireAttention, seu motor de inferência, e os CUDA kernels (código que roda na GPU) para a carga de cada cliente: tokens de entrada e saída, taxa de acerto do cache e meta de latência. O cliente também pode treinar um draft model para acelerar o modelo principal.",
+      "t": 326,
+      "legenda": "Onde o motor de inferência se encaixa entre modelo e GPU.",
+      "print": "img/13YZ1EB9hjU/2.jpg"
+    },
+    {
+      "titulo": "Três formas de treinar",
+      "texto": "O agente de treino atende gerentes de produto e iniciantes: limpa dados, escolhe modelo e hiperparâmetros. O treino gerenciado pede modelo, dados e hiperparâmetros e um clique. A API de treino deixa engenheiros de ML definir o próprio loop e a função de perda. Funciona para SFT, RFT e DPO.",
+      "t": 450,
+      "legenda": "Os três níveis de controle do treino na plataforma.",
+      "print": "img/13YZ1EB9hjU/3.jpg"
+    },
+    {
+      "titulo": "O flywheel: hot loading e fidelidade numérica",
+      "texto": "Depois do treino, um clique publica o modelo. A plataforma monitora tokens, cache e speculator, e permite retreinar a partir do checkpoint. O hot loading troca os pesos sem downtime. Treinar e servir no mesmo lugar evita diferenças numéricas que pioram a qualidade.",
+      "t": 701,
+      "legenda": "O ciclo contínuo que a plataforma promete automatizar.",
+      "print": "img/13YZ1EB9hjU/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Fine-tuning",
+      "traducao": "ajuste fino",
+      "nivel": "basico",
+      "chave": "fine-tuning",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Reinforcement fine-tuning (RFT)",
+      "traducao": "ajuste fino por reforço",
+      "nivel": "avancado",
+      "chave": "reinforcement fine-tuning (rft)",
+      "analogia": "RFT é como treinar um time de basquete com um placar: o técnico não mostra cada jogada certa, só diz quantos pontos cada tentativa valeu, e o time repete o que pontua mais.",
+      "explicacao": [
+        "Um modelo de IA já vem treinado para tarefas gerais. Você pode continuar o treino dele com a sua tarefa para ele ficar melhor nela.",
+        "No ajuste fino comum, você mostra pares de pergunta e resposta certa e o modelo copia o padrão. No RFT, você não precisa escrever a resposta certa.",
+        "O modelo gera várias respostas para cada pergunta. Uma função avaliadora (evaluator function, a regra que dá nota) pontua cada resposta.",
+        "O treino ajusta os pesos do modelo para que respostas com nota alta fiquem mais prováveis e as de nota baixa, menos prováveis.",
+        "A qualidade depende da função avaliadora e de dados limpos. No talk, a Genspark limpou os dados, definiu avaliadores e relatou 12% de ganho de qualidade."
+      ],
+      "pre_requisitos": [
+        "Fine-tuning",
+        "Pesos do modelo",
+        "Função de avaliação",
+        "Aprendizado por reforço"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PERGUNTAS DA TAREFA",
+            "nota": "Exemplos reais do seu uso"
+          },
+          {
+            "rotulo": "MODELO RESPONDE",
+            "nota": "Gera várias tentativas por pergunta"
+          },
+          {
+            "rotulo": "AVALIADOR DÁ NOTA",
+            "nota": "Regra pontua cada tentativa"
+          },
+          {
+            "rotulo": "AJUSTE DOS PESOS",
+            "nota": "Reforça as respostas de nota alta"
+          },
+          {
+            "rotulo": "MODELO MELHOR",
+            "nota": "Acerta mais na sua tarefa"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "DPO",
+      "traducao": "otimização direta de preferências",
+      "nivel": "avancado",
+      "chave": "dpo",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Speculative decoding",
+      "traducao": "decodificação especulativa",
+      "nivel": "avancado",
+      "chave": "speculative decoding",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Draft model",
+      "traducao": "modelo rascunho",
+      "nivel": "avancado",
+      "chave": "draft model",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "GPU kernel",
+      "traducao": "kernel de GPU (CUDA kernel)",
+      "nivel": "avancado",
+      "chave": "gpu kernel",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Hiperparâmetro",
+      "traducao": "parâmetro de configuração do treino",
+      "nivel": "intermediario",
+      "chave": "hiperparâmetro",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Data flywheel",
+      "traducao": "ciclo de dados que se retroalimenta",
+      "nivel": "intermediario",
+      "chave": "data flywheel",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É um pitch de produto da Fireworks. Os ganhos de Cursor (13x), Vercel (40x) e Genspark (12%) vêm da própria empresa, sem baseline, metodologia ou amostra. O 13x e o 40x misturam otimização de inferência com troca de modelo. O argumento de que treino e serviço precisam estar na mesma plataforma beneficia quem vende as duas coisas. Faltam custos comparados com modelos fechados, apesar de o custo abrir o talk.",
+  "acoes": [
+    "Se o custo de um modelo fechado pesa, separe uma tarefa repetitiva e meça um modelo aberto nela com seu próprio conjunto de testes antes de decidir.",
+    "Antes de treinar, monte um conjunto de avaliação separado dos dados de treino, como o agente do demo pede, para medir se o ajuste fino melhorou algo.",
+    "Ao comparar fornecedores, peça a carga de teste (tokens de entrada e saída, cache, latência) por trás de qualquer número de aceleração.",
+    "Se treinar e servir em lugares diferentes, compare as saídas do modelo nos dois ambientes para detectar diferenças numéricas."
+  ],
+  "numeros": [
+    {
+      "valor": "30 trilhões",
+      "contexto": "tokens servidos pela Fireworks, antes do GLM 5.2",
+      "t": 168
+    },
+    {
+      "valor": "13x",
+      "contexto": "inferência mais rápida no Composer 2 do Cursor",
+      "t": 230
+    },
+    {
+      "valor": "40x",
+      "contexto": "melhoria de latência para a Vercel",
+      "t": 230
+    },
+    {
+      "valor": "12%",
+      "contexto": "ganho de qualidade da Genspark com RFT",
+      "t": 262
+    }
+  ]
+}

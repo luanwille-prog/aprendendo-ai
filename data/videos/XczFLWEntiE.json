@@ -1,0 +1,152 @@
+{
+  "id": "XczFLWEntiE",
+  "titulo": "AI Apps in a Flash: Ship to GPUs Without Docker — Dean Quiñanola, Runpod",
+  "titulo_curto": "AI Apps in a Flash: Ship to GPUs Without Docker",
+  "palestrante": "Dean Quiñanola, Runpod",
+  "url": "https://www.youtube.com/watch?v=XczFLWEntiE",
+  "duracao": 862,
+  "publicado_ts": 1791741622,
+  "edicao": "2026-10-12",
+  "tese": "Rodar código Python direto em GPU de nuvem, sem Docker, encurta o ciclo de teste e deixa o engenheiro de ML focado no experimento.",
+  "tldr": [
+    "O palestrante diz que o ciclo tradicional (escrever código, montar imagem Docker, enviar ao registro, executar) leva cerca de 15 minutos por iteração em apps de IA.",
+    "O Runpod Flash deixa o dev rodar funções Python em GPU remota como se fossem locais, com instalação de dependências na hora e deploy por um comando, o flash deploy.",
+    "A demo ao vivo evolui uma função de checar a GPU para geração de texto e depois de imagem, e termina com o endpoint em produção chamado por API."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 2,
+  "ideias": [
+    {
+      "titulo": "O loop do Docker é o gargalo",
+      "texto": "Em app de IA serverless, cada mudança no código exige build da imagem, push para o registro e nova execução. O palestrante estima cerca de 15 minutos por volta. A proposta do Flash é cortar esse caminho para escrever, executar e ver o resultado.",
+      "t": 44,
+      "legenda": "O ciclo que o Flash promete eliminar, com estimativa de 15 minutos.",
+      "print": "img/XczFLWEntiE/0.jpg"
+    },
+    {
+      "titulo": "Live serverless na prática",
+      "texto": "Com o comando flash dev, sobe uma API local que dispara a função numa GPU remota. A primeira função só consulta o torch e devolve a placa usada. O resultado mostra uma RTX 4090, depois de uma espera de cold start (partida a frio do worker).",
+      "t": 302,
+      "legenda": "Função local rodando de fato numa GPU remota, após o cold start.",
+      "print": "img/XczFLWEntiE/1.jpg"
+    },
+    {
+      "titulo": "Dependências instaladas na hora",
+      "texto": "Ao trocar a função por geração de texto, o Flash recarrega o endpoint e instala as bibliotecas Python durante a execução. Sem o token do Hugging Face, o modelo recusou a pergunta. Com o token no código, respondeu. A correção foi só editar e executar de novo.",
+      "t": 398,
+      "legenda": "Instalação de dependências em tempo de execução, sem rebuild de imagem.",
+      "print": null
+    },
+    {
+      "titulo": "Deploy com um comando",
+      "texto": "Depois da geração de imagem, o flash deploy empacota o app, envia aos servidores da Runpod e expõe um endpoint de produção. A demo chamou esse endpoint com um novo prompt e recebeu a imagem em base64. O palestrante repete que não há Docker no caminho.",
+      "t": 649,
+      "legenda": "Saída do flash deploy: empacota, envia e sobe o endpoint.",
+      "print": "img/XczFLWEntiE/3.jpg"
+    },
+    {
+      "titulo": "Chamadas entre endpoints e volumes",
+      "texto": "Um endpoint pode chamar outro como se fosse uma função local, sem o dev precisar saber o endereço de cada servidor. Volumes de rede com cache aquecido levam o cache junto quando o endpoint escala. A parte está listada em slide e não foi demonstrada.",
+      "t": 170,
+      "legenda": "Lista de recursos anunciados, sem demo ao vivo.",
+      "print": "img/XczFLWEntiE/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Docker",
+      "traducao": "empacotamento de app em contêiner",
+      "nivel": "basico",
+      "chave": "docker",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Serverless GPU",
+      "traducao": "GPU sob demanda sem gerenciar servidor",
+      "nivel": "intermediario",
+      "chave": "serverless gpu",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Live serverless",
+      "traducao": "execução remota com iteração instantânea",
+      "nivel": "intermediario",
+      "chave": "live serverless",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Cold start",
+      "traducao": "partida a frio do worker",
+      "nivel": "basico",
+      "chave": "cold start",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Endpoint de fila e load balanced",
+      "traducao": "dois modos de servir requisições",
+      "nivel": "intermediario",
+      "chave": "endpoint de fila e load balanced",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Network volume",
+      "traducao": "disco de rede compartilhado, com cache aquecido",
+      "nivel": "intermediario",
+      "chave": "network volume",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É uma apresentação de produto da Runpod, feita por um funcionário. Não há benchmark: os 15 minutos do loop Docker são experiência pessoal e não se mostra o tempo do Flash. A demo teve cold start, rollout travado que foi encerrado à mão e uma imagem que não saiu como pedido. Endpoint-to-endpoint e warm caching só aparecem em slide. O suporte a pods ainda não existe. A única prova de adoção é um hackathon interno.",
+  "acoes": [
+    "Meça quanto tempo seu ciclo de build e deploy de um app com GPU leva hoje e compare com uma alternativa sem imagem própria antes de adotar qualquer ferramenta.",
+    "Se testar o Flash, use os US$ 10 de crédito citados e rode um dos exemplos do repositório flash-examples antes de migrar um projeto real.",
+    "Planeje o cold start do endpoint na experiência do usuário final, pois a demo mostrou a espera já no primeiro uso.",
+    "Guarde tokens como o do Hugging Face em variáveis de ambiente e não no código, mesmo em protótipos de demo."
+  ],
+  "numeros": [
+    {
+      "valor": "15 min",
+      "contexto": "duração estimada de um loop build-push-run",
+      "t": 44
+    },
+    {
+      "valor": "RTX 4090",
+      "contexto": "GPU retornada pela primeira função da demo",
+      "t": 302
+    },
+    {
+      "valor": "3 a 4 h",
+      "contexto": "tempo que o colega levou para criar o wrapper no hackathon",
+      "t": 742
+    },
+    {
+      "valor": "US$ 10",
+      "contexto": "crédito oferecido ao criar conta na Runpod",
+      "t": 773
+    }
+  ]
+}

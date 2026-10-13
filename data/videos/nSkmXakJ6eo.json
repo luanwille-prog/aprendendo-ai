@@ -1,0 +1,203 @@
+{
+  "id": "nSkmXakJ6eo",
+  "titulo": "Auth for Agents: Let AI Sign Up for Your Product with auth.md — Michael Grinich, WorkOS",
+  "titulo_curto": "Auth for Agents: Let AI Sign Up for Your Product with auth.md",
+  "palestrante": "Michael Grinich, WorkOS",
+  "url": "https://www.youtube.com/watch?v=nSkmXakJ6eo",
+  "duracao": 1273,
+  "publicado_ts": 1791783429,
+  "edicao": "2026-10-12",
+  "tese": "Agentes já escolhem fornecedores, mas o cadastro foi feito para humanos. O auth.md propõe um jeito aberto de o agente se registrar sozinho.",
+  "tldr": [
+    "Michael Grinich, da WorkOS, diz que agentes passaram a escolher ferramentas por conta própria, mas formulários, CAPTCHAs e chaves de API copiadas à mão os barram na porta.",
+    "Ele apresenta o auth.md, uma especificação aberta baseada em padrões OAuth. O arquivo diz ao agente como se registrar, e o agente prova a identidade do usuário com um token chamado ID-JAG.",
+    "Na demo, um agente encontra o auth.md da Cloudflare, ganha uma conta temporária e publica um app sem nenhum cadastro humano. O pagamento fica para depois do uso."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Agentes viraram consumidores",
+      "texto": "Quando um agente recebe a tarefa de construir algo, ele decide sozinho que precisa de banco de dados, e-mail ou deploy, e escolhe o fornecedor. Para Grinich, hoje pode valer mais construir para agentes do que para pessoas. Ele reescreve o lema da Y Combinator: faça algo que agentes queiram.",
+      "t": 353,
+      "legenda": "O argumento de que agentes são uma nova classe de consumidores.",
+      "print": null
+    },
+    {
+      "titulo": "O cadastro atual bloqueia agentes",
+      "texto": "Por 20 ou 30 anos a web tentou barrar tráfego automatizado. Formulários, CAPTCHA, verificação de e-mail, escolha de plano e cópia de chave de API pressupõem uma pessoa. O MCP resolve a conexão e as ferramentas, mas o login ainda exige um humano dando consentimento.",
+      "t": 507,
+      "legenda": "Lista de etapas de cadastro que um agente não consegue cumprir.",
+      "print": "img/nSkmXakJ6eo/1.jpg"
+    },
+    {
+      "titulo": "O que o auth.md declara",
+      "texto": "O arquivo diz o que o serviço faz, quais provas de identidade aceita, quais fluxos de autenticação suporta, quais escopos e limites de plano gratuito existem, e como um humano ou organização assume a conta depois. Grinich diz que o foco é só o passo de registro, sem resolver identidade, permissões e conexões de longa duração.",
+      "t": 722,
+      "legenda": "Campos que um serviço declara para receber agentes.",
+      "print": "img/nSkmXakJ6eo/2.jpg"
+    },
+    {
+      "titulo": "Demo: do localhost ao deploy na Cloudflare",
+      "texto": "O agente percebe que o app só roda na máquina local, procura serviços que publicam auth.md e escolhe a Cloudflare. Ele gera uma assertion de identidade, recebe uma conta temporária e usa o Wrangler (CLI da Cloudflare) para publicar. O humano só aprova os passos.",
+      "t": 816,
+      "legenda": "O agente se cadastra e publica o app sem nenhum clique de cadastro.",
+      "print": "img/nSkmXakJ6eo/3.jpg"
+    },
+    {
+      "titulo": "Fluxo técnico com ID-JAG",
+      "texto": "O agente consulta o auth.md do serviço (discovery), envia o ID-JAG, uma credencial assinada que representa o usuário, e recebe um token de acesso. Depois disso a API normal, o MCP e a documentação seguem iguais. O pagamento vem depois do uso, nos termos do fornecedor.",
+      "t": 956,
+      "legenda": "Sequência de chamadas do registro de um agente.",
+      "print": "img/nSkmXakJ6eo/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Agent registration",
+      "traducao": "registro de agente",
+      "nivel": "basico",
+      "chave": "agent registration",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "auth.md",
+      "traducao": "arquivo que ensina o agente a se cadastrar",
+      "nivel": "intermediario",
+      "chave": "auth.md",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "ID-JAG",
+      "traducao": "credencial assinada que representa a identidade do usuário",
+      "nivel": "avancado",
+      "chave": "id-jag",
+      "analogia": "O ID-JAG é como uma carta de apresentação assinada pelo seu chefe, que o estagiário entrega na recepção de outra empresa para ser atendido em nome dele.",
+      "explicacao": [
+        "Quando um agente quer usar um serviço novo, o serviço precisa saber em nome de quem ele age. O ID-JAG é o documento que responde essa pergunta.",
+        "O agente pede ao serviço de identidade do usuário, o lugar onde a pessoa já tem login, um comprovante assinado que diz quem é o usuário.",
+        "Esse comprovante é uma identity assertion (afirmação de identidade). A assinatura digital permite ao serviço de destino conferir que ninguém falsificou ou alterou o documento.",
+        "O agente entrega o ID-JAG ao serviço, como a Cloudflare na demo. O serviço confere a assinatura, decide quanto acesso dar e devolve um access token (chave de acesso) para a API.",
+        "O nome vem de Identity Assertion JWT Authorization Grant, um padrão em construção na família OAuth. Ele cobre só o registro, e depois o agente usa a API e o MCP normalmente."
+      ],
+      "pre_requisitos": [
+        "OAuth",
+        "Access token",
+        "Assinatura digital",
+        "auth.md"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "DISCOVERY",
+            "nota": "Agente lê o auth.md do serviço"
+          },
+          {
+            "rotulo": "SERVIÇO DE IDENTIDADE",
+            "nota": "Emite a afirmação assinada do usuário"
+          },
+          {
+            "rotulo": "ENVIO DO ID-JAG",
+            "nota": "Agente entrega a credencial ao serviço"
+          },
+          {
+            "rotulo": "VERIFICAÇÃO",
+            "nota": "Serviço confere a assinatura e o limite"
+          },
+          {
+            "rotulo": "ACCESS TOKEN",
+            "nota": "Agente usa a API sem cadastro humano"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "OAuth",
+      "traducao": "padrão aberto de autorização",
+      "nivel": "intermediario",
+      "chave": "oauth",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP",
+      "traducao": "protocolo de conexão de agentes a ferramentas",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Harness",
+      "traducao": "estrutura que cerca o modelo",
+      "nivel": "basico",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "CAPTCHA",
+      "traducao": "teste para distinguir humano de robô",
+      "nivel": "basico",
+      "chave": "captcha",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Human in the loop",
+      "traducao": "humano no ciclo",
+      "nivel": "basico",
+      "chave": "human in the loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é pitch de produto: a WorkOS vende uma versão hospedada do auth.md e fala em 'boom de crescimento imediato' sem nenhum dado. A demo foi feita em colaboração com a Cloudflare e mostra o caso mais favorável. Faltam respostas sobre abuso: o próprio Grinich admite que fraude e agentes maliciosos são o problema, mas não detalha como o serviço decide quem é bom. Não há medição de adoção nem lista de outros provedores além da Cloudflare e da Firecrawl.",
+  "acoes": [
+    "Se você oferece um produto com cadastro, liste quais etapas (CAPTCHA, e-mail, chave copiada à mão) impediriam um agente de usá-lo.",
+    "Leia a especificação do auth.md no GitHub da WorkOS e avalie se o seu serviço precisa de limite gratuito para agentes.",
+    "Ao testar agentes que contratam serviços, defina um teto de gasto e de tempo de conta antes de liberar o cadastro automático.",
+    "Teste a demo com Cloudflare em um projeto descartável para ver o fluxo de registro de ponta a ponta."
+  ],
+  "numeros": [
+    {
+      "valor": "72 horas",
+      "contexto": "exemplo de prazo de deploy gratuito na Cloudflare",
+      "t": 877
+    },
+    {
+      "valor": "20 a 30 anos",
+      "contexto": "tempo em que a web tenta bloquear tráfego automatizado",
+      "t": 446
+    },
+    {
+      "valor": "janeiro de 2007",
+      "contexto": "lançamento do iPhone, usado como analogia",
+      "t": 1189
+    }
+  ]
+}

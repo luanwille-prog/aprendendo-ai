@@ -1,0 +1,174 @@
+{
+  "id": "j4AmIK6OvHc",
+  "titulo": "Latency Is a Budget. Humanlike Is the Goal. — Jesse Hall, LiveKit",
+  "titulo_curto": "Latency Is a Budget. Humanlike Is the Goal.",
+  "palestrante": "Jesse Hall, LiveKit",
+  "url": "https://www.youtube.com/watch?v=j4AmIK6OvHc",
+  "duracao": 1020,
+  "publicado_ts": 1791682213,
+  "edicao": "2026-10-12",
+  "tese": "Agente de voz bom cabe num orçamento de latência e soa humano. Testar o pipeline inteiro vale mais que escolher modelo por ranking.",
+  "tldr": [
+    "Jesse Hall, da LiveKit, diz que velocidade pura não resolve agentes de voz. O objetivo é soar humano dentro de um orçamento de latência, e rankings de modelos isolados enganam porque o erro de cada etapa se acumula no pipeline.",
+    "A latência que importa é a percebida pelo usuário (tempo até o primeiro áudio audível), não a do painel. Detecção de fim de turno por áudio, resposta em streaming por frase e ferramentas lentas rodando em segundo plano mantêm a conversa fluida.",
+    "A LiveKit apresenta um benchmark open source que roda centenas de chamadores simulados contra o seu agente e pontua resultados. Fecha com um checklist e o anúncio de um Gemma 4 31B ajustado para voz."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "A armadilha do ranking",
+      "texto": "Rankings avaliam um modelo por vez, com áudio limpo. Quem entrega um agente de voz entrega um pipeline de três modelos em cascata. Se a transcrição ouve 'dia 30' em vez de 'dia 3', o LLM agenda o dia errado com toda a confiança e as camadas seguintes não percebem.",
+      "t": 296,
+      "legenda": "O ranking mede um componente, mas o produto é a conversa inteira.",
+      "print": "img/j4AmIK6OvHc/0.jpg"
+    },
+    {
+      "titulo": "Latência medida versus percebida",
+      "texto": "O painel do provedor de TTS (text-to-speech, síntese de voz) mostra time to first byte, mas bytes podem ser silêncio. Eles mediram provedores que enviam centenas de milissegundos de silêncio no início, chegando a três quartos de segundo. O número que importa é o tempo até o primeiro áudio audível. No LLM, vale o tempo até completar a primeira frase, não o primeiro token.",
+      "t": 359,
+      "legenda": "Medida do painel e percepção do usuário divergem.",
+      "print": "img/j4AmIK6OvHc/1.jpg"
+    },
+    {
+      "titulo": "Ganhar tempo como uma pessoa",
+      "texto": "Ferramentas podem levar de 2 a 40 segundos ou mais, e nenhum modelo esconde isso. Uma recepcionista diz 'um instante, estou consultando' e continua ouvindo. No código, uma única linha devolve a palavra ao agente enquanto a ferramenta trabalha em segundo plano. Conversa e ferramenta deixam de dividir a mesma thread.",
+      "t": 470,
+      "legenda": "Uma linha de código separa a conversa do trabalho da ferramenta.",
+      "print": "img/j4AmIK6OvHc/2.jpg"
+    },
+    {
+      "titulo": "Detecção de turno por áudio",
+      "texto": "Esperar a transcrição completa para decidir que o usuário terminou já é tarde. O detector da LiveKit usa ritmo, tom e entonação do áudio. O LLM já roda sobre uma transcrição provisória, e o TTS começa na primeira frase completa. Isso pode economizar meio segundo.",
+      "t": 639,
+      "legenda": "Comparação de cortes indevidos no mesmo orçamento de latência.",
+      "print": "img/j4AmIK6OvHc/3.jpg"
+    },
+    {
+      "titulo": "Benchmark do agente inteiro",
+      "texto": "O benchmark usa um agente de hotel real, com back end real, e centenas de chamadores simulados que interrompem, murmuram e mudam de ideia. Pontua desfechos (reserva correta no banco, corte do chamador, dados vazados) e penaliza perguntas desnecessárias. Troca-se só a stack, com entrada idêntica, e dá para rodar contra o seu agente.",
+      "t": 766,
+      "legenda": "Avaliação por desfecho, comparável entre stacks de modelos.",
+      "print": "img/j4AmIK6OvHc/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Voice agent",
+      "traducao": "agente de voz",
+      "nivel": "basico",
+      "chave": "voice agent",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Pipeline em cascata",
+      "traducao": "STT, LLM e TTS encadeados",
+      "nivel": "intermediario",
+      "chave": "pipeline em cascata",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Time to first audio",
+      "traducao": "tempo até o primeiro áudio",
+      "nivel": "intermediario",
+      "chave": "time to first audio",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Time to first token (TTFT)",
+      "traducao": "tempo até o primeiro token",
+      "nivel": "intermediario",
+      "chave": "time to first token (ttft)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Detecção de fim de turno",
+      "traducao": "turn detection",
+      "nivel": "intermediario",
+      "chave": "detecção de fim de turno",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Barge-in",
+      "traducao": "usuário interrompe o agente",
+      "nivel": "intermediario",
+      "chave": "barge-in",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Simulated user",
+      "traducao": "usuário simulado",
+      "nivel": "intermediario",
+      "chave": "simulated user",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Latência",
+      "traducao": "tempo de resposta",
+      "nivel": "basico",
+      "chave": "latência",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É um talk de um fornecedor de infraestrutura que vende o benchmark e o Gemma ajustado. O número de 4,5% contra 9,9% de cortes indevidos vem de avaliação própria, embora o código seja aberto, e o talk não mostra a amostra. Os 88% de evals de voz e os 380 ms do modelo novo são prévia de lançamento, sem comparação detalhada. O benchmark gira em torno de um único agente de hotel, então vale testar no seu caso. A LiveKit diz ser neutra, mas lucra com o stack que recomenda.",
+  "acoes": [
+    "Defina o orçamento de latência de ponta a ponta do seu agente de voz (1,5 s como teto, perto de 600 ms como meta) antes de escolher modelos.",
+    "Meça o tempo até o primeiro áudio audível na ligação real, não o time to first byte do painel do provedor.",
+    "Mova para execução assíncrona qualquer ferramenta que passe de 1 segundo, e faça o agente avisar o usuário enquanto trabalha.",
+    "Rode o benchmark open source da LiveKit contra o seu agente, com chamadores simulados que interrompem e mudam de ideia, e repita em produção."
+  ],
+  "numeros": [
+    {
+      "valor": "9,9% vs 4,5%",
+      "contexto": "Cortes indevidos: melhor alternativa vs detector da LiveKit",
+      "t": 639
+    },
+    {
+      "valor": "1,5 s",
+      "contexto": "Latência total em que a conversa ainda funciona",
+      "t": 702
+    },
+    {
+      "valor": "600 ms",
+      "contexto": "Latência em que o agente começa a soar humano",
+      "t": 702
+    },
+    {
+      "valor": "380 ms",
+      "contexto": "Início da fala do Gemma ajustado; 88% nos evals de voz",
+      "t": 893
+    }
+  ]
+}

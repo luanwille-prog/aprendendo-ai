@@ -1,0 +1,236 @@
+{
+  "id": "xn8EsW0wxyc",
+  "titulo": "How Secrets Leak Through AI Agents (and How to Stop It) — Venice AI",
+  "titulo_curto": "How Secrets Leak Through AI Agents (and How to Stop It)",
+  "palestrante": "Venice AI",
+  "url": "https://www.youtube.com/watch?v=xn8EsW0wxyc",
+  "duracao": 921,
+  "publicado_ts": 1791736234,
+  "edicao": "2026-10-12",
+  "tese": "Modelo privado não garante produto privado. O vazamento acontece nos logs, nos segredos e nas ferramentas que você monta em volta do modelo.",
+  "tldr": [
+    "Joshua Mo, da Venice AI, diz que o modelo é só uma parte do agente. O risco maior está no sistema ao redor, como logs que guardam prompts e cofres de senha ligados direto ao LLM.",
+    "Ele propõe guardar hashes em vez de dados pessoais, dividir chaves de criptografia, usar handles revogáveis, limitar as ferramentas do agente e filtrar prompt injection antes do agente.",
+    "A ideia central é ligar o cofre de segredos à camada de execução (determinística) e não à camada de raciocínio (o LLM). O talk termina admitindo que tool calls confidenciais ainda são um problema em aberto."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "O segredo passa pelo LLM e pode vazar",
+      "texto": "No fluxo comum, o runtime busca a senha no cofre (1Password, HashiCorp Vault) e a entrega à camada de raciocínio. Se o LLM monta uma tool call, ele pode mandar esse segredo para qualquer servidor, inclusive o de um atacante. Segundo o palestrante, o segredo ainda pode parar em dados de treino.",
+      "t": 354,
+      "legenda": "O segredo viaja do cofre até o LLM, que decide para onde enviá-lo.",
+      "print": "img/xn8EsW0wxyc/0.jpg"
+    },
+    {
+      "titulo": "Chave dividida e hash reduzem o dano",
+      "texto": "A Venice guarda hashes no lugar de identificadores pessoais, por exemplo para limitar o uso por usuário. Os dados criptografados ficam em um enclave com custódia de chave dividida em duas metades. O atacante precisa das duas para decifrar, e a própria equipe também não acessa os dados sozinha.",
+      "t": 415,
+      "legenda": "Duas metades de chave: uma só não abre os dados.",
+      "print": "img/xn8EsW0wxyc/1.jpg"
+    },
+    {
+      "titulo": "Escopo estreito: uma ferramenta, não vinte",
+      "texto": "Um servidor MCP pode expor 15 a 20 ferramentas, mas a tarefa usa uma. Carregar tudo, junto com a chave de API, aumenta a chance de exfiltração. Menos ferramentas também deixam a janela de contexto mais vazia, o que o palestrante associa a melhor desempenho do agente.",
+      "t": 507,
+      "legenda": "Poucas ferramentas reduzem o risco e o ruído de contexto.",
+      "print": "img/xn8EsW0wxyc/2.jpg"
+    },
+    {
+      "titulo": "Cofre ligado à execução, não ao raciocínio",
+      "texto": "O LLM gera entradas não determinísticas. Se o cofre se conecta ao runtime, o runtime vira uma camada de execução determinística. Ela faz o login no site ou chama a API externa sem que a senha apareça no prompt. Ali dá para aplicar regras de segurança que não funcionam dentro do LLM.",
+      "t": 664,
+      "legenda": "O LLM pede a ação, a camada de execução usa a credencial.",
+      "print": "img/xn8EsW0wxyc/3.jpg"
+    },
+    {
+      "titulo": "Computação confidencial com atestação",
+      "texto": "Em um ambiente de execução confiável (TEE), a inferência roda isolada no nível do hardware. A Venice devolve junto da resposta uma atestação, que o usuário confere em um verificador. Tool calls totalmente criptografadas continuam sem solução prática, segundo o próprio palestrante.",
+      "t": 793,
+      "legenda": "A atestação prova criptograficamente onde a inferência rodou.",
+      "print": "img/xn8EsW0wxyc/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Blast radius",
+      "traducao": "raio de impacto",
+      "nivel": "basico",
+      "chave": "blast radius",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Observability",
+      "traducao": "observabilidade (métricas, logs e traces)",
+      "nivel": "intermediario",
+      "chave": "observability",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Gestão de segredos",
+      "traducao": "cofres de senha e chaves de API",
+      "nivel": "intermediario",
+      "chave": "gestão de segredos",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Split key custody",
+      "traducao": "custódia de chave dividida",
+      "nivel": "avancado",
+      "chave": "split key custody",
+      "analogia": "Split key custody é como o cofre de um banco que só abre quando dois funcionários giram suas chaves ao mesmo tempo.",
+      "explicacao": [
+        "Para proteger um dado, a empresa o embaralha com uma chave secreta. Sem a chave, o dado vira texto ilegível.",
+        "Na custódia de chave dividida (split key custody), essa chave fica separada em duas metades guardadas em lugares diferentes.",
+        "Para decifrar o dado, o sistema precisa juntar as duas metades. Quem rouba só uma metade continua sem acesso.",
+        "A própria equipe também não abre os dados sozinha. Se a conta de um funcionário for invadida, o atacante ainda fica sem a outra metade.",
+        "No talk, a Venice guarda resultados de geração de vídeo assim, criptografados em um enclave, com uma metade de leitura e outra de escrita."
+      ],
+      "pre_requisitos": [
+        "Criptografia",
+        "Chave de criptografia",
+        "Gestão de segredos"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "DADO CRIPTOGRAFADO",
+            "nota": "Guardado ilegível no enclave"
+          },
+          {
+            "rotulo": "CHAVE EM DUAS METADES",
+            "nota": "Cada metade fica em um lugar"
+          },
+          {
+            "rotulo": "JUNTAR AS METADES",
+            "nota": "Só as duas juntas decifram"
+          },
+          {
+            "rotulo": "ACESSO PROTEGIDO",
+            "nota": "Uma metade roubada não abre nada"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Handle revogável",
+      "traducao": "objeto que concede acesso e pode ser cancelado",
+      "nivel": "intermediario",
+      "chave": "handle revogável",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Prompt injection",
+      "traducao": "injeção de prompt",
+      "nivel": "intermediario",
+      "chave": "prompt injection",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado de execução",
+      "nivel": "intermediario",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Trusted execution environment (TEE)",
+      "traducao": "ambiente de execução confiável",
+      "nivel": "avancado",
+      "chave": "trusted execution environment (tee)",
+      "analogia": "Um TEE é como uma sala de provas lacrada na escola, onde ninguém de fora vê o que o aluno escreve e o fiscal entrega um recibo confirmando que a prova foi feita ali.",
+      "explicacao": [
+        "Quando você manda uma pergunta para uma IA, ela roda em um computador de outra empresa. Em geral, quem controla esse computador pode espiar.",
+        "Um ambiente de execução confiável (trusted execution environment, TEE) é uma área isolada dentro do próprio chip do processador.",
+        "O que roda ali fica protegido pelo hardware. Nem o sistema operacional nem o dono do servidor conseguem ler os dados durante o processamento.",
+        "Junto com a resposta, o serviço devolve uma atestação (attestation), um comprovante assinado que diz onde a inferência rodou.",
+        "O usuário confere essa atestação em um verificador. Assim ele tem prova criptográfica de que o pedido rodou em um processo privado."
+      ],
+      "pre_requisitos": [
+        "Inferência",
+        "Criptografia",
+        "Sandbox"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PEDIDO DO USUÁRIO",
+            "nota": "Prompt enviado ao provedor"
+          },
+          {
+            "rotulo": "INFERÊNCIA NO TEE",
+            "nota": "Roda isolada no chip"
+          },
+          {
+            "rotulo": "RESPOSTA + ATESTAÇÃO",
+            "nota": "Comprovante assinado junto"
+          },
+          {
+            "rotulo": "VERIFICADOR",
+            "nota": "Usuário confere a atestação"
+          },
+          {
+            "rotulo": "PRIVACIDADE PROVADA",
+            "nota": "Prova de onde o modelo rodou"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é em parte pitch da Venice, que vende privacidade como produto. As afirmações sobre prompts não armazenados e atestação aparecem sem auditoria externa ou dados. Não há demonstração, benchmark nem caso real de vazamento. O vínculo entre segredo no LLM e dados de treino é dito sem fonte. A afirmação de que contexto vazio melhora o desempenho vem como fato conhecido, sem medição. Os padrões de arquitetura valem como lista de boas práticas.",
+  "acoes": [
+    "Revise seus logs e a observabilidade: confira se prompts, respostas de ferramentas e chaves de API estão sendo gravados sem filtro.",
+    "Nunca cole chaves ou senhas em prompts. Monte o agente para que o código de execução leia a credencial e o modelo só peça a ação.",
+    "Ao conectar um servidor MCP, habilite só as ferramentas necessárias para a tarefa e use credenciais com escopo mínimo que você possa revogar.",
+    "Se o agente tem acesso à internet, monitore as chamadas externas, porque sandbox sozinho não impede o envio de dados para fora."
+  ],
+  "numeros": [
+    {
+      "valor": "90%",
+      "contexto": "Fatia da receita anual vinda de um cliente enterprise (exemplo)",
+      "t": 106
+    },
+    {
+      "valor": "2 metades",
+      "contexto": "Chave de criptografia dividida em duas partes",
+      "t": 447
+    },
+    {
+      "valor": "15 a 20",
+      "contexto": "Ferramentas que um servidor MCP pode expor",
+      "t": 507
+    },
+    {
+      "valor": "100%",
+      "contexto": "Compatibilidade declarada com a API da OpenAI",
+      "t": 44
+    }
+  ]
+}

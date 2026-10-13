@@ -1,0 +1,208 @@
+{
+  "id": "s-glGHAa1a4",
+  "titulo": "An AI Future Without the Lock-In — Remy Guercio, Tailscale",
+  "titulo_curto": "An AI Future Without the Lock-In",
+  "palestrante": "Remy Guercio, Tailscale",
+  "url": "https://www.youtube.com/watch?v=s-glGHAa1a4",
+  "duracao": 1178,
+  "publicado_ts": 1791676835,
+  "edicao": "2026-10-12",
+  "tese": "Para fugir do lock-in, separe as quatro camadas da IA interna e ponha um AI gateway no meio, com identidade, orçamento e logs.",
+  "tldr": [
+    "Remy Guercio, da Tailscale, diz que o ano do \"token maxing\" (gastar token sem limite) acabou e que as empresas agora precisam provar retorno, o que ele chama de \"ROI maxing\".",
+    "Ele divide uma implantação interna de IA em quatro camadas (modelos, conectores de dados, interface e sandbox) e defende que a empresa consiga trocar cada uma sem refazer o resto.",
+    "O AI gateway, no caso o Aperture, fica no meio dessas camadas e usa a identidade da rede Tailscale para controlar acesso, orçamento por modelo e logs, sem chaves de API compartilhadas."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "De token maxing para ROI maxing",
+      "texto": "No último ano, muita empresa tratou o orçamento de IA como ilimitado. Isso mudou nos últimos meses. O palestrante vê sessões com centenas de mensagens sem limpar o contexto e cache cheio o tempo todo. A resposta de pânico, concentrar tudo em um ou dois fornecedores, reduz a escolha. ROI maxing significa provar valor e abrir o uso para mais gente.",
+      "t": 311,
+      "legenda": "O foco passa de gastar token para provar retorno.",
+      "print": "img/s-glGHAa1a4/0.jpg"
+    },
+    {
+      "titulo": "As quatro camadas de uma IA interna",
+      "texto": "Toda implantação interna tem LLMs, conectores de dados (MCP, CLI, API ou leitura de arquivo), interface (chat, IDE, Slack) e sandbox. Cada camada pode ser trocada de forma independente. Times diferentes escolhem coisas diferentes: engenharia no IDE, marketing no Slack. A liberdade de escolha em cada camada é o que evita o lock-in.",
+      "t": 373,
+      "legenda": "As quatro camadas que podem ser trocadas separadamente.",
+      "print": "img/s-glGHAa1a4/1.jpg"
+    },
+    {
+      "titulo": "Identidade da rede no lugar de chaves sintéticas",
+      "texto": "Gateways comuns trocam as chaves dos provedores por outras chaves que você cria para cada usuário. O Aperture usa a rede Tailscale (baseada em WireGuard): cada conexão já traz a identidade do usuário, da máquina ou do agente, com grupos sincronizados de Entra ou Okta. A biblioteca open source tsnet, usada para construir o Aperture, permite ver essa identidade.",
+      "t": 591,
+      "legenda": "Cada conexão na tailnet carrega identidade, sem nova chave.",
+      "print": "img/s-glGHAa1a4/2.jpg"
+    },
+    {
+      "titulo": "Orçamento por modelo e acesso por time",
+      "texto": "Com a identidade conhecida, o gateway define quais modelos e provedores cada pessoa pode usar. A regra do exemplo é orçamento ilimitado para modelo barato e bem restrito para modelo de fronteira. A mesma lógica vale para MCP: marketing acessa Calendar e Gmail, engenharia também acessa GitHub, até só leitura.",
+      "t": 714,
+      "legenda": "Configuração de provedores e orçamentos por modelo no gateway.",
+      "print": "img/s-glGHAa1a4/3.jpg"
+    },
+    {
+      "titulo": "Logs para diagnosticar o que o agente fez",
+      "texto": "Com todo o tráfego passando pelo gateway, dá para pedir a um agente que analise o log e explique onde outro agente errou. Segundo o palestrante, modelos baratos têm dificuldade de parar sozinhos, mas analisam bem o erro depois. Isso serve também para uso individual, como agentes rodando em segundo plano.",
+      "t": 1088,
+      "legenda": "Logs do gateway permitem diagnosticar ações inesperadas do agente.",
+      "print": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "AI gateway",
+      "traducao": "gateway de IA",
+      "nivel": "intermediario",
+      "chave": "ai gateway",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "MCP gateway",
+      "traducao": "gateway de MCP",
+      "nivel": "intermediario",
+      "chave": "mcp gateway",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP",
+      "traducao": "Model Context Protocol, protocolo de conexão de dados",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado de execução do agente",
+      "nivel": "basico",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Lock-in",
+      "traducao": "dependência de um fornecedor",
+      "nivel": "basico",
+      "chave": "lock-in",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Token maxing e ROI maxing",
+      "traducao": "gastar o máximo de tokens versus maximizar o retorno",
+      "nivel": "basico",
+      "chave": "token maxing e roi maxing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Tailnet e tsnet",
+      "traducao": "rede privada Tailscale e sua biblioteca em Go",
+      "nivel": "avancado",
+      "chave": "tailnet e tsnet",
+      "analogia": "Uma tailnet é como o crachá de um prédio de escritórios, em que cada porta já sabe quem você é e de qual equipe faz parte, e o tsnet é como entregar um crachá próprio a um programa.",
+      "explicacao": [
+        "A Tailscale cria uma rede privada que liga só os seus aparelhos, como notebooks, servidores e contêineres, mesmo que eles estejam em lugares diferentes. Essa rede privada se chama tailnet.",
+        "Você instala o agente da Tailscale em cada máquina. A partir daí, as máquinas conversam direto entre si numa rede em malha (mesh network), por cima do WireGuard, um protocolo de conexão criptografada.",
+        "Cada conexão dentro da tailnet chega com a identidade de quem está do outro lado. Pode ser um usuário, uma máquina marcada com uma etiqueta (tag), como um robô que revisa código, e os grupos sincronizados do Entra ou do Okta.",
+        "O tsnet é uma biblioteca open source (de código aberto) em Go que coloca um programa dentro da tailnet como se ele fosse mais uma máquina. Assim o programa consegue ler a identidade de cada conexão que recebe.",
+        "A Tailscale construiu o gateway Aperture com o tsnet. Por isso o gateway sabe quem faz cada chamada ao modelo e aplica acesso e orçamento sem criar chaves de API novas para cada pessoa."
+      ],
+      "pre_requisitos": [
+        "Rede privada (VPN)",
+        "Criptografia",
+        "Chave de API",
+        "AI gateway"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "AGENTE INSTALADO",
+            "nota": "Notebook, servidor ou contêiner entra"
+          },
+          {
+            "rotulo": "CONEXÃO NA TAILNET",
+            "nota": "Túnel criptografado com WireGuard"
+          },
+          {
+            "rotulo": "IDENTIDADE ANEXADA",
+            "nota": "Usuário, tag de máquina e grupo"
+          },
+          {
+            "rotulo": "APP COM TSNET",
+            "nota": "Lê quem está do outro lado"
+          },
+          {
+            "rotulo": "ACESSO SEM CHAVE NOVA",
+            "nota": "Gateway aplica regras por pessoa"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Janela de contexto",
+      "traducao": "quantidade de texto que o modelo lê de uma vez",
+      "nivel": "basico",
+      "chave": "janela de contexto",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é pitch do Aperture, produto da empresa do palestrante, e ele mesmo diz isso. Não apresenta dados de economia, nem casos de clientes com números. As afirmações sobre sessões longas e desperdício de token vêm da experiência dele com centenas de conversas, sem amostra mensurável. A defesa de que o gateway evita lock-in ignora que o próprio gateway vira uma nova dependência, no caso da rede Tailscale. Funcionalidades como a autenticação pass-through e a orquestração de sandbox são promessas futuras.",
+  "acoes": [
+    "Liste as quatro camadas (modelo, conectores de dados, interface, sandbox) da IA usada na sua equipe e marque em quais você já está preso a um fornecedor.",
+    "Revise as sessões longas de agente de código no seu time e limpe ou compacte o contexto com mais frequência para reduzir gasto.",
+    "Avalie um AI gateway (o Aperture ou outro) para concentrar chaves, logs e orçamento por modelo antes de consolidar tudo em um só fornecedor.",
+    "Se rodar agentes em segundo plano, guarde os logs das chamadas para poder investigar depois quando algo inesperado acontecer."
+  ],
+  "numeros": [
+    {
+      "valor": "12 meses",
+      "contexto": "período descrito como a fase do token maxing",
+      "t": 33
+    },
+    {
+      "valor": "6 meses",
+      "contexto": "tempo conversando com centenas de pessoas sobre gasto com IA",
+      "t": 218
+    },
+    {
+      "valor": "10s de milhões",
+      "contexto": "tokens em uma única sessão sem limpar o contexto",
+      "t": 157
+    },
+    {
+      "valor": "4",
+      "contexto": "camadas de uma implantação interna de IA",
+      "t": 341
+    }
+  ]
+}

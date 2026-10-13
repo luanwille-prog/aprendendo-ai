@@ -1,0 +1,237 @@
+{
+  "id": "KhRjivBSwiw",
+  "titulo": "The Data Context Layer for Agents — Yoni Michael & Brandon Callender, Typedef",
+  "titulo_curto": "The Data Context Layer for Agents",
+  "palestrante": "Yoni Michael & Brandon Callender, Typedef",
+  "url": "https://www.youtube.com/watch?v=KhRjivBSwiw",
+  "duracao": 6381,
+  "publicado_ts": 1791721823,
+  "edicao": "2026-10-12",
+  "tese": "Um grafo de contexto dá ao agente a estrutura que o grep não dá, mas só vale se o agente usar a ferramenta e o eval medir esse uso.",
+  "tldr": [
+    "A Typedef defende que agentes de dados erram por falta de contexto sobre o que cada linha de tabela significa, quais joins são seguros e o que quebra numa mudança, e propõe computar esses fatos e guardá-los num grafo consultável.",
+    "No workshop, Brandon Callender monta um grafo de código sobre cinco crates do Qdrant com tree-sitter, rustdoc JSON e Neo4j, e mostra que ele separa dois tipos chamados PostingList que o grep mistura.",
+    "O agente continua usando grep mesmo com a ferramenta nova, então o trabalho difícil fica em nomear a ferramenta como ele espera, devolver saídas no formato do ripgrep, medir a adoção e medir a consistência com pass^k, além de ler os traces."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Busca por texto não tem noção de identidade",
+      "texto": "Brandon pergunta ao agente sobre a struct PostingList do Qdrant. O ripgrep devolve dois resultados exatos e mais uma dúzia de nomes parecidos. O agente escolhe um, talvez o errado, e volta atrás. O texto não diz qual símbolo importa, onde ele é usado nem em que crate vive.",
+      "t": 1757,
+      "legenda": "O grep acha os dois PostingList, mas não diz qual é qual.",
+      "print": "img/KhRjivBSwiw/0.jpg"
+    },
+    {
+      "titulo": "Resolução de símbolos separa os homônimos",
+      "texto": "O tree-sitter dá a estrutura sintática, mas os dois PostingList ainda colidem. O rustdoc JSON do compilador Rust resolve cada símbolo para um nome canônico, com arquivo e linha. A ferramenta blast radius então devolve conjuntos diferentes de dependentes para cada tipo, numa só chamada.",
+      "t": 2617,
+      "legenda": "Cada PostingList tem seu próprio conjunto de dependentes no grafo.",
+      "print": null
+    },
+    {
+      "titulo": "O agente ignora a ferramenta melhor",
+      "texto": "Com ferramentas de grafo e grep disponíveis, o agente usa grep. Brandon atribui isso ao pós-treino, que reforça esse hábito. A saída prática é chamar a ferramenta de search, devolver resultados no formato do ripgrep e garantir que a primeira chamada já traga algo útil, porque o agente abandona uma ferramenta que parece quebrada.",
+      "t": 3644,
+      "legenda": "Nome e formato da ferramenta pesam tanto quanto a qualidade dela.",
+      "print": "img/KhRjivBSwiw/2.jpg"
+    },
+    {
+      "titulo": "Acertar uma vez e acertar sempre dão placares opostos",
+      "texto": "Com uma execução por pergunta, o agente de grafo mal supera o de grep. Com cinco repetições, pass@k (acertou ao menos uma vez) fica parecido, mas pass^k (acertou em todas) inverte o quadro: o agente de grafo vai melhor. Ele também gasta cerca de 3,1 vezes menos tokens.",
+      "t": 4079,
+      "legenda": "O mesmo experimento muda de vencedor conforme a métrica de consistência.",
+      "print": null
+    },
+    {
+      "titulo": "Placar favorável pode esconder falha na ferramenta",
+      "texto": "Brandon refez uma palestra inteira porque, ao ler os traces, viu que a ferramenta de busca devolvia caminhos de arquivo errados. O placar apontava na direção certa, mas por motivos errados. A regra dele é endurecer o eval, ler os traces e nunca confiar no próprio placar.",
+      "t": 5047,
+      "legenda": "A leitura dos traces revelou um defeito que o placar não mostrava.",
+      "print": "img/KhRjivBSwiw/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Grain",
+      "traducao": "granularidade da tabela: o que cada linha representa",
+      "nivel": "basico",
+      "chave": "grain",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Fan out",
+      "traducao": "multiplicação de linhas num join um-para-muitos",
+      "nivel": "intermediario",
+      "chave": "fan out",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Context graph",
+      "traducao": "grafo de contexto",
+      "nivel": "intermediario",
+      "chave": "context graph",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Blast radius",
+      "traducao": "raio de impacto de uma mudança",
+      "nivel": "intermediario",
+      "chave": "blast radius",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Resolução de símbolos",
+      "traducao": "ligar cada nome no código à sua definição única",
+      "nivel": "avancado",
+      "chave": "resolução de símbolos",
+      "analogia": "Resolução de símbolos é como a secretaria da escola que separa dois alunos chamados João Silva pelo número de matrícula, para que cada nota vá para o boletim certo.",
+      "explicacao": [
+        "Num programa, cada coisa tem um nome, como uma função ou um tipo de dado. Às vezes duas coisas diferentes recebem o mesmo nome em lugares diferentes.",
+        "Uma busca por texto, como o grep (comando que procura palavras em arquivos), acha todas as ocorrências do nome, mas não sabe dizer qual delas é qual.",
+        "Um parser (leitor da estrutura do código), como o tree-sitter, entende a gramática do código, mas os dois tipos PostingList do Qdrant continuam colidindo nesse nível.",
+        "A resolução liga cada uso do nome à sua definição única. No Rust, o compilador já faz isso e exporta o resultado no rustdoc JSON, com nome canônico, arquivo e linha.",
+        "Com cada símbolo identificado, o grafo pode guardar relações separadas para cada um, e ferramentas como o blast radius (raio de impacto) devolvem dependentes diferentes para cada PostingList."
+      ],
+      "pre_requisitos": [
+        "Símbolo no código",
+        "Busca por texto (grep)",
+        "Árvore sintática (AST)",
+        "Compilador"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "CÓDIGO COM NOMES IGUAIS",
+            "nota": "dois PostingList em arquivos distintos"
+          },
+          {
+            "rotulo": "ÁRVORE SINTÁTICA",
+            "nota": "tree-sitter lê a estrutura"
+          },
+          {
+            "rotulo": "COMPILADOR RESOLVE",
+            "nota": "rustdoc JSON liga uso à definição"
+          },
+          {
+            "rotulo": "NOME CANÔNICO ÚNICO",
+            "nota": "cada tipo com arquivo e linha"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Banco de dados em grafo",
+      "traducao": "banco que guarda nós e relações, como o Neo4j",
+      "nivel": "intermediario",
+      "chave": "banco de dados em grafo",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "pass@k e pass^k",
+      "traducao": "acertou ao menos uma vez versus acertou em todas as repetições",
+      "nivel": "avancado",
+      "chave": "pass@k e pass^k",
+      "analogia": "pass@k e pass^k são como avaliar um goleiro em cinco pênaltis, contando se ele defendeu pelo menos um ou se defendeu todos.",
+      "explicacao": [
+        "Um agente de IA pode responder a mesma pergunta de jeitos diferentes a cada vez. Por isso uma única tentativa diz pouco sobre ele.",
+        "Para medir melhor, a avaliação roda cada pergunta k vezes. No workshop, foram 30 perguntas repetidas cinco vezes.",
+        "O pass@k (passou em alguma) marca acerto se pelo menos uma das k tentativas estiver certa. Ele mede se o agente consegue chegar à resposta.",
+        "O pass^k (passou em todas) só marca acerto se as k tentativas estiverem certas. Ele mede se o agente é confiável e repete o acerto.",
+        "No experimento, o agente de grep e o de grafo empataram no pass@k, mas no pass^k o agente de grafo acertou cerca de duas vezes mais e gastou 3,1 vezes menos tokens."
+      ],
+      "pre_requisitos": [
+        "Eval (avaliação de agentes)",
+        "Aleatoriedade nas respostas do modelo",
+        "Agente de IA"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "MESMA PERGUNTA K VEZES",
+            "nota": "ex.: 5 rodadas por pergunta"
+          },
+          {
+            "rotulo": "CORRIGIR CADA RODADA",
+            "nota": "certo ou errado em cada uma"
+          },
+          {
+            "rotulo": "PASS@K",
+            "nota": "acertou ao menos uma vez"
+          },
+          {
+            "rotulo": "PASS^K",
+            "nota": "acertou em todas as rodadas"
+          },
+          {
+            "rotulo": "COMPARAR OS PLACARES",
+            "nota": "mostra se o agente é consistente"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Trace",
+      "traducao": "registro passo a passo do que o agente fez",
+      "nivel": "intermediario",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "A primeira metade é pitch da Typedef. O ganho de cerca de 35 pontos vem de um benchmark interno, sem tabela, sem intervalo e sem comparação publicada com outras ferramentas. A segunda metade é mais honesta: Brandon admite empate com 1 execução, usa só 30 perguntas e o grafo não cobre as partes privadas dos crates, o que favorece o grafo em algumas perguntas. Ele mesmo diz que não vale cada pessoa construir isso como produto. A tese vale, mas o benchmark do Mattermost (300 a 350 modelos dbt) é próprio e não verificado.",
+  "acoes": [
+    "Ao dar uma ferramenta nova a um agente, meça a adoção nos traces (quantas vezes ele a chama) antes de julgar se a ferramenta é boa.",
+    "Nomeie a ferramenta com o verbo que o agente já conhece, como search, e devolva a saída no formato de um comando familiar, como o ripgrep.",
+    "Ao avaliar um agente, rode cada pergunta várias vezes e compare pass@k com pass^k, para saber se ele acerta sempre ou só às vezes.",
+    "Antes de aceitar um resultado de eval, leia alguns traces completos e procure atalhos, como o agente consultando o git para achar a resposta."
+  ],
+  "numeros": [
+    {
+      "valor": "35 pontos",
+      "contexto": "ganho de sucesso nas tarefas com a camada de contexto (benchmark da Typedef)",
+      "t": 1318
+    },
+    {
+      "valor": "30 x 5",
+      "contexto": "perguntas do eval, cada uma repetida cinco vezes",
+      "t": 3769
+    },
+    {
+      "valor": "3,1x",
+      "contexto": "menos tokens no agente com grafo do que no agente com grep",
+      "t": 4109
+    },
+    {
+      "valor": "34% a 72%",
+      "contexto": "uso das ferramentas após ajustar o prompt (exemplo dado)",
+      "t": 4109
+    }
+  ]
+}
