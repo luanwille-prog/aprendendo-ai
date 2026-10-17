@@ -1,0 +1,208 @@
+{
+  "id": "8g1N_a3h9H0",
+  "titulo": "How to Actually Tokenmaxx and Save Millions — Alvin Pane, OutRival",
+  "titulo_curto": "How to Actually Tokenmaxx and Save Millions",
+  "palestrante": "Alvin Pane, OutRival",
+  "url": "https://www.youtube.com/watch?v=8g1N_a3h9H0",
+  "duracao": 672,
+  "publicado_ts": 1791990014,
+  "edicao": "2026-10-16",
+  "tese": "Antes de trocar para um prompt ou modelo mais barato, meça quanto a produção discorda de si mesma. Só então decida se o candidato piorou.",
+  "tldr": [
+    "Alvin Pane, da OutRival, propõe usar tokens com economia: medir, aplicar cache, encurtar o prompt com otimizador e só depois testar um modelo menor.",
+    "O ponto central é o teste A/A: rodar a produção contra ela mesma revelou 7% de discordância, o que torna os 18% do candidato barato uma comparação injusta.",
+    "A regra de liberação combina revisão humana das diferenças, intervalo de confiança pareado com limite inferior acima de zero e checagem separada das categorias críticas."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "O prompt inchado é um imposto de computação",
+      "texto": "O exemplo sintético da HarborBite mostra um prompt de quase 5.000 tokens, cheio de casos de borda, definições pedantes e exemplos colados ao longo do tempo. Enviado milhões de vezes por dia, esse texto vira custo fixo e latência. Ninguém apaga uma linha por medo de quebrar a produção.",
+      "t": 40,
+      "legenda": "O prompt de exemplo que carrega regras acumuladas a cada requisição.",
+      "print": null
+    },
+    {
+      "titulo": "Teste do teto: a produção concorda com ela mesma?",
+      "texto": "O candidato barato discordava da produção em 18% dos casos e foi descartado. Ao rodar a própria produção três vezes nas mesmas entradas, a equipe viu que ela discorda de si em cerca de 7%. Os 18% misturam diferença real e ruído natural do modelo diante de entradas ambíguas.",
+      "t": 191,
+      "legenda": "A produção concorda só 93% consigo mesma, o teto realista de comparação.",
+      "print": "img/8g1N_a3h9H0/1.jpg"
+    },
+    {
+      "titulo": "Três alavancas em sequência: cache, prompt, modelo",
+      "texto": "Primeiro estruture o prompt para aproveitar o cache de prefixo. Depois encolha as instruções: com DSPy você define entradas, formato de saída e função de pontuação, e o otimizador GEPA busca instruções mais curtas. Por último, tente um modelo menor, que muitas vezes falhou ou sofreu overfitting nos testes da equipe.",
+      "t": 330,
+      "legenda": "O otimizador trocou exemplos longos por regras compactas, com 51% menos tokens.",
+      "print": "img/8g1N_a3h9H0/2.jpg"
+    },
+    {
+      "titulo": "Avaliação em sombra com três comparações",
+      "texto": "Em uma implantação em sombra, o sistema novo recebe as mesmas entradas da produção. Medem-se produção contra produção, candidato contra candidato e candidato contra produção. Subtrair a discordância interna de cada versão da discordância entre elas mostra o que mudou de fato.",
+      "t": 455,
+      "legenda": "Três ângulos de comparação separam ruído de mudança real.",
+      "print": null
+    },
+    {
+      "titulo": "Critério de liberação com intervalo de confiança",
+      "texto": "Na revisão humana do exemplo, apareceram 443 regressões e 2.463 melhorias. Mesmo assim, o time não libera por estimativa pontual. Calcula um intervalo de confiança pareado sobre o ganho líquido e exige limite inferior acima de zero, além de rodar a conta em cada categoria crítica.",
+      "t": 570,
+      "legenda": "Liberar só se o limite inferior do intervalo ficar acima de zero.",
+      "print": "img/8g1N_a3h9H0/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Token maxing e ROI maxing",
+      "traducao": "maximizar uso de tokens versus maximizar retorno",
+      "nivel": "basico",
+      "chave": "token maxing e roi maxing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Trace",
+      "traducao": "rastro de execução de uma tarefa",
+      "nivel": "intermediario",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Teste A/A (ceiling test)",
+      "traducao": "teste do teto: comparar a produção com ela mesma",
+      "nivel": "intermediario",
+      "chave": "teste a/a (ceiling test)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Prompt caching",
+      "traducao": "cache de prefixo do prompt",
+      "nivel": "intermediario",
+      "chave": "prompt caching",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Otimização de prompt",
+      "traducao": "busca automática por instruções mais curtas (DSPy e GEPA)",
+      "nivel": "avancado",
+      "chave": "otimização de prompt",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Model routing",
+      "traducao": "roteamento entre modelo barato e modelo de fronteira",
+      "nivel": "intermediario",
+      "chave": "model routing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Shadow deployment",
+      "traducao": "implantação em sombra com as mesmas entradas da produção",
+      "nivel": "intermediario",
+      "chave": "shadow deployment",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Intervalo de confiança pareado",
+      "traducao": "faixa estatística do ganho líquido entre duas versões",
+      "nivel": "avancado",
+      "chave": "intervalo de confiança pareado",
+      "analogia": "O intervalo de confiança pareado é como comparar dois cozinheiros preparando os mesmos pratos para os mesmos clientes e só trocar de chef quando, até no pior cenário provável, o novo ainda sai na frente.",
+      "explicacao": [
+        "Quando você testa uma versão nova em alguns milhares de pedidos, o resultado vale para aquela amostra. Outra amostra daria um número um pouco diferente, por puro acaso.",
+        "Intervalo de confiança (confidence interval) é a faixa de valores onde o ganho real provavelmente está. Em vez de afirmar um número único, a estimativa pontual (point estimate), você diz que o ganho fica entre um mínimo e um máximo.",
+        "Pareado (paired) quer dizer que as duas versões respondem exatamente ao mesmo pedido. A comparação acontece caso a caso, e as repetições da mesma conversa ficam agrupadas. Assim a diferença de dificuldade entre pedidos sai da conta.",
+        "No exemplo, a revisão achou 2.463 melhorias e 443 regressões. O time calcula a faixa em torno desse ganho líquido e olha o limite inferior. Se ele fica acima de zero, o candidato é melhor. Se a faixa cruza o zero, falta evidência.",
+        "Por fim, a mesma conta roda em cada categoria crítica. Uma média global boa pode esconder uma intenção de cliente importante que piorou."
+      ],
+      "pre_requisitos": [
+        "Estimativa pontual",
+        "Ruído de amostragem",
+        "Teste A/A (ceiling test)",
+        "Shadow deployment"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "MESMAS ENTRADAS",
+            "nota": "Duas versões, o mesmo pedido"
+          },
+          {
+            "rotulo": "REVISÃO DAS DIFERENÇAS",
+            "nota": "Conta melhorias e regressões"
+          },
+          {
+            "rotulo": "INTERVALO DO GANHO",
+            "nota": "Faixa provável do ganho líquido"
+          },
+          {
+            "rotulo": "CATEGORIAS CRÍTICAS",
+            "nota": "Mesma conta em cada intenção vital"
+          },
+          {
+            "rotulo": "LIBERAR OU ESPERAR",
+            "nota": "Limite inferior acima de zero libera"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O exemplo da HarborBite é um proxy sintético, e a própria descrição avisa que não prova economia de milhões. Os números de 443 regressões e 2.463 melhorias vêm de um caso hipotético (\"let's say\"). Os 7% e os 18% são relatados sem tamanho de amostra nem detalhes do método. O palestrante vende a abordagem de uma empresa que opera o sistema, e admite que muitos experimentos de modelo menor não ficaram bons para liberar.",
+  "acoes": [
+    "Registre versão do prompt, modelo, tokens, latência e custo de cada chamada antes de mexer em qualquer coisa.",
+    "Rode sua tarefa mais cara três vezes nas mesmas entradas e meça quanto ela discorda de si mesma. Use esse número como teto de comparação.",
+    "Organize o prompt com a parte fixa no início para aproveitar o cache de prefixo.",
+    "Antes de trocar de modelo, revise à mão uma amostra das diferenças e exija limite inferior do intervalo acima de zero, incluindo as categorias críticas."
+  ],
+  "numeros": [
+    {
+      "valor": "18%",
+      "contexto": "discordância do candidato barato com a produção",
+      "t": 129
+    },
+    {
+      "valor": "7%",
+      "contexto": "discordância da produção consigo mesma",
+      "t": 191
+    },
+    {
+      "valor": "51%",
+      "contexto": "redução de tokens de instrução com GEPA",
+      "t": 319
+    },
+    {
+      "valor": "2.463 x 443",
+      "contexto": "melhorias contra regressões no exemplo hipotético",
+      "t": 537
+    }
+  ]
+}

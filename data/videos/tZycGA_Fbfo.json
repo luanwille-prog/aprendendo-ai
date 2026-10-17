@@ -1,0 +1,174 @@
+{
+  "id": "tZycGA_Fbfo",
+  "titulo": "Paving the Road to Production: Governed Enterprise AI Agents — Harish Gaggar, Credit Karma",
+  "titulo_curto": "Paving the Road to Production: Governed Enterprise AI Agents",
+  "palestrante": "Harish Gaggar, Credit Karma",
+  "url": "https://www.youtube.com/watch?v=tZycGA_Fbfo",
+  "duracao": 1766,
+  "publicado_ts": 1791997204,
+  "edicao": "2026-10-16",
+  "tese": "Agente em produção precisa de um chassi pronto (gateway, rastreio, memória, filtro de PII) antes de qualquer lógica de negócio.",
+  "tldr": [
+    "Harish Gaggar, do Credit Karma (Intuit), mostra como a empresa registra um agente num portal interno e recebe de volta um repositório com identidade, memória, rastreio, avaliação e filtro de dados sensíveis já configurados.",
+    "Todo acesso a ferramentas passa por um MCP gateway que autentica a chamada, enquanto um workflow em LangGraph exige aprovação humana para ações sensíveis e grava tudo em trilha de auditoria.",
+    "Um otimizador de contexto reduz tokens em cerca de 90% nas demos, mas o talk não mostra se a qualidade da resposta se mantém."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Caminho pavimentado: registrar o agente gera tudo",
+      "texto": "O desenvolvedor registra o agente num portal interno. O portal cria o repositório com os frameworks de memória, rastreio, avaliação, otimização de contexto e filtro de PII, além de identidade de workload, tabelas e segredos. Assim o padrão fica igual em todos os times e os resultados ficam num lugar só.",
+      "t": 316,
+      "legenda": "Um registro no portal cria repositório e recursos de produção juntos",
+      "print": "img/tZycGA_Fbfo/0.jpg"
+    },
+    {
+      "titulo": "MCP gateway como porta única de autenticação",
+      "texto": "O cliente pede autenticação uma vez, o gateway guarda a sessão no Redis e devolve um token JWT. Cada chamada de ferramenta vai ao gateway com esse token, que identifica o servidor MCP de destino e repassa o token do usuário. Nenhum endpoint recebe acesso direto.",
+      "t": 626,
+      "legenda": "O gateway autentica e roteia toda chamada de ferramenta",
+      "print": "img/tZycGA_Fbfo/1.jpg"
+    },
+    {
+      "titulo": "Workflow com política e aprovação humana",
+      "texto": "O LangGraph interpreta a pergunta, classifica o risco (leitura, modificação, exclusão), busca evidências via gateway e checa políticas. Leitura executa direto. Escrita sensível espera aprovação humana. Aprovada ou rejeitada, a decisão vai para o log de auditoria.",
+      "t": 934,
+      "legenda": "Ações de escrita sensíveis passam por aprovação antes de executar",
+      "print": "img/tZycGA_Fbfo/2.jpg"
+    },
+    {
+      "titulo": "Tabelas de tracking e avaliação desde o dia um",
+      "texto": "Cada agente tem seu projeto com seis tabelas: execução do job, checagens de qualidade, scores de eval, métricas, chamadas de ferramenta e trajetória. Com isso a empresa pode somar custo, tokens e qualidade de centenas de agentes em dashboards executivos.",
+      "t": 1275,
+      "legenda": "Cada execução grava pergunta, resposta, modelo, tempo e custo",
+      "print": "img/tZycGA_Fbfo/3.jpg"
+    },
+    {
+      "titulo": "Otimizador de contexto corta tokens",
+      "texto": "O otimizador poda o payload pelo limite de tokens, reordena por relevância, remove duplicatas e comprime antes de chamar o modelo. Na demo, a mesma consulta caiu de 24 mil para 2,4 mil tokens. O palestrante cita economia típica de 70% a 78%.",
+      "t": 1554,
+      "legenda": "A mesma consulta gastou cerca de 90% menos tokens com o otimizador",
+      "print": "img/tZycGA_Fbfo/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "MCP gateway",
+      "traducao": "gateway de MCP (porta de entrada das ferramentas)",
+      "nivel": "intermediario",
+      "chave": "mcp gateway",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "JWT",
+      "traducao": "JSON Web Token (token de acesso assinado)",
+      "nivel": "intermediario",
+      "chave": "jwt",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Kubernetes",
+      "traducao": "orquestrador de containers",
+      "nivel": "intermediario",
+      "chave": "kubernetes",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Observability",
+      "traducao": "observabilidade (logs, traces e métricas)",
+      "nivel": "intermediario",
+      "chave": "observability",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Human in the loop",
+      "traducao": "humano no ciclo (aprovação antes de agir)",
+      "nivel": "basico",
+      "chave": "human in the loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Checkpointing",
+      "traducao": "pontos de salvamento do estado do workflow",
+      "nivel": "intermediario",
+      "chave": "checkpointing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Redação de PII",
+      "traducao": "ocultação de dados pessoais e segredos",
+      "nivel": "intermediario",
+      "chave": "redação de pii",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Context engineering",
+      "traducao": "engenharia de contexto (podar, reordenar e comprimir)",
+      "nivel": "intermediario",
+      "chave": "context engineering",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É relato de arquitetura interna sem código aberto nem dados de produção. As demos mostram registros nas tabelas, não um score de qualidade validado do sistema. A redução de 90% em tokens vem de uma consulta de listagem no Artifactory, sem comparação de qualidade das respostas antes e depois, e sem ROI medido. O filtro de PII é descrito como bloqueio acima de 90% de severidade, sem taxa de erro. O palestrante também promove o próprio livro sobre MCP no fim.",
+  "acoes": [
+    "Passe todas as chamadas de ferramentas dos seus agentes por um ponto único com autenticação, em vez de dar acesso direto a cada API.",
+    "Classifique as ações do agente por risco e exija aprovação humana para escrita e exclusão, registrando cada decisão em log.",
+    "Grave desde o início pergunta, resposta, modelo, tokens e custo de cada execução, para responder depois quanto o agente custou e rendeu.",
+    "Antes de adotar poda de contexto, rode as mesmas perguntas com e sem ela e compare a qualidade das respostas, não só os tokens."
+  ],
+  "numeros": [
+    {
+      "valor": "24 mil",
+      "contexto": "tokens na consulta sem otimizador (caiu para 2,4 mil)",
+      "t": 1554
+    },
+    {
+      "valor": "70% a 78%",
+      "contexto": "economia típica de tokens citada pelo palestrante",
+      "t": 1617
+    },
+    {
+      "valor": "8",
+      "contexto": "checagens de qualidade registradas por execução",
+      "t": 1337
+    },
+    {
+      "valor": "90%",
+      "contexto": "limite de severidade para bloquear e ocultar segredos",
+      "t": 1431
+    }
+  ]
+}

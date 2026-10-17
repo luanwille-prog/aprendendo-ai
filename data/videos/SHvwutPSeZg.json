@@ -1,0 +1,304 @@
+{
+  "id": "SHvwutPSeZg",
+  "titulo": "Judge a Transaction by the Company It Keeps — Somya Rai & MD Sharique, EXL",
+  "titulo_curto": "Judge a Transaction by the Company It Keeps",
+  "palestrante": "Somya Rai & MD Sharique, EXL",
+  "url": "https://www.youtube.com/watch?v=SHvwutPSeZg",
+  "duracao": 1227,
+  "publicado_ts": 1791896412,
+  "edicao": "2026-10-16",
+  "tese": "Para pegar fraude, olhe as conexões da transação: embeddings de grafo somados ao XGBoost elevam a detecção com o mesmo orçamento de alertas.",
+  "tldr": [
+    "A EXL somou embeddings de uma graph neural network (rede neural de grafos) ao classificador XGBoost que já usava e comparou os dois com a mesma taxa de alertas.",
+    "Os palestrantes relatam ganho relativo de 27% a 33% na taxa de verdadeiros positivos, com amostragem que preserva vizinhanças, grafos mensais contra vazamento e agregação por média, máximo e desvio padrão.",
+    "Para servir em cerca de 3 ms, eles guardam representações em cache e trocam a previsão por nó pela previsão por aresta, o que reduz o cache de 60 GB para 2 a 3 GB."
+  ],
+  "tema": "modelos",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "O sinal de fraude está nas conexões",
+      "texto": "A mesma transação, com o mesmo vetor de 198 features (atributos), recebe nota 0,04 quando o modelo vê só a linha da tabela. A nota sobe para 0,91 quando o modelo enxerga a vizinhança: usuário, loja e outras transações marcadas como fraude na última hora. Para os autores, fraude é uma propriedade da vizinhança da transação.",
+      "t": 20,
+      "legenda": "Mesma linha de dados, nota 0,04 sem vizinhança e 0,91 com vizinhança.",
+      "print": "img/SHvwutPSeZg/0.jpg"
+    },
+    {
+      "titulo": "Mais colunas na tabela batem num teto",
+      "texto": "No canal de compras presenciais, o time passou de 40 atributos brutos para 87 features e a taxa de verdadeiros positivos foi de 35,5% para 36,6%. No canal online, quase 200 features renderam cerca de um ponto. Toda feature tabular deriva da mesma linha e do histórico do próprio cartão, então não captura dispositivos compartilhados nem lojas que acabaram de virar foco de fraude.",
+      "t": 135,
+      "legenda": "Duas a cinco vezes mais features renderam cerca de um ponto de ganho.",
+      "print": "img/SHvwutPSeZg/1.jpg"
+    },
+    {
+      "titulo": "Amostragem e vazamento resolvidos na construção do grafo",
+      "texto": "Fraude é rara (0,05% no presencial), então o time eleva a taxa para cerca de 10 vezes a natural. Para isso, mantém o histórico completo de cada usuário selecionado, porque cortar transações quebra a vizinhança. Cada mês vira um grafo separado, cada transação só agrega vizinhos com data anterior e os normalizadores são ajustados apenas no mês de treino. Assim o vazamento de dados (leakage) fica bloqueado pela própria estrutura.",
+      "t": 530,
+      "legenda": "Grafos mensais disjuntos impedem que informação do futuro ou do teste entre no treino.",
+      "print": "img/SHvwutPSeZg/2.jpg"
+    },
+    {
+      "titulo": "Média esconde o vizinho perigoso",
+      "texto": "O GraphSAGE resume os vizinhos de cada nó. Com três vizinhos normais (nota perto de 0,1) e um ligado a um anel de fraude (0,92), a média dá 0,32 e dilui o sinal. O máximo preserva o 0,92 e o desvio padrão mostra o quanto a vizinhança diverge. O time concatena as três estatísticas sem acrescentar parâmetros aprendidos.",
+      "t": 730,
+      "legenda": "A média reduz o vizinho fraudulento a 0,32 e o máximo preserva 0,92.",
+      "print": "img/SHvwutPSeZg/3.jpg"
+    },
+    {
+      "titulo": "Servir em milissegundos exige cache e previsão por aresta",
+      "texto": "Offline, o time calcula as representações de usuários, lojas e transações recentes e as guarda em cache. Online, roda só a passagem de duas camadas da transação nova mais o XGBoost. Guardar um vetor por transação exigiria cerca de 60 GB. Por isso eles preveem sobre a aresta e guardam apenas usuários e lojas, em 2 a 3 GB. A mediana fica em 2,3 ms e o P99 em 3,1 ms.",
+      "t": 1175,
+      "legenda": "A GNN leva 1,61 ms e o total fica em 3,1 ms no P99.",
+      "print": "img/SHvwutPSeZg/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Graph neural network (GNN)",
+      "traducao": "rede neural de grafos",
+      "nivel": "avancado",
+      "chave": "graph neural network (gnn)",
+      "analogia": "Uma GNN é como um porteiro de prédio que desconfia de um visitante porque ele chegou junto com pessoas já conhecidas por causar confusão.",
+      "explicacao": [
+        "Um grafo é um mapa de pontos ligados por linhas. No caso da fraude, os pontos são transações, usuários e lojas, e as linhas mostram quem comprou onde.",
+        "Uma graph neural network (rede neural de grafos) aprende sobre cada ponto olhando também para os vizinhos ligados a ele, e não só para os dados do próprio ponto.",
+        "Cada camada faz três passos. Primeiro coleta o estado de cada vizinho. Depois resume esse grupo, que tem tamanho variável, num vetor de tamanho fixo. Por fim junta esse resumo com o estado do próprio ponto.",
+        "Com duas camadas empilhadas, cada transação passa a carregar informação dos vizinhos e dos vizinhos dos vizinhos.",
+        "O resultado é um embedding (vetor de números) por ponto. No talk, esse vetor entra como informação extra no classificador XGBoost."
+      ],
+      "pre_requisitos": [
+        "Grafo",
+        "Rede neural",
+        "Embedding"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "COLETAR",
+            "nota": "puxa o estado de cada vizinho"
+          },
+          {
+            "rotulo": "AGREGAR",
+            "nota": "resume vizinhos num vetor fixo"
+          },
+          {
+            "rotulo": "ATUALIZAR",
+            "nota": "junta resumo com o próprio nó"
+          },
+          {
+            "rotulo": "REPETIR 2 CAMADAS",
+            "nota": "alcança vizinhos dos vizinhos"
+          },
+          {
+            "rotulo": "EMBEDDING DO NÓ",
+            "nota": "vetor que alimenta o XGBoost"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "GraphSAGE",
+      "traducao": "GNN que amostra e agrega vizinhos, aplicável a nós novos",
+      "nivel": "avancado",
+      "chave": "graphsage",
+      "analogia": "O GraphSAGE é como um técnico de futebol que avalia um jogador novo pelo time em que ele jogou, sem precisar ter treinado com ele antes.",
+      "explicacao": [
+        "O GraphSAGE é um tipo de GNN que resume a vizinhança de cada ponto do grafo para gerar um vetor que o descreve.",
+        "Ele sorteia um número fixo de vizinhos por salto, com preferência pelos mais recentes. Assim uma loja enorme, ligada a milhões de compras, não domina todas as mensagens.",
+        "Ele agrega os vizinhos sorteados. O time da EXL usa média, máximo e desvio padrão juntos, porque a média sozinha dilui um único vizinho perigoso no meio de vizinhos normais.",
+        "Depois combina esse resumo com o vetor do próprio ponto usando pesos aprendidos e gera um vetor de tamanho fixo após dois saltos.",
+        "Ele é inductive (indutivo), porque aprende a regra de agregação e não um vetor fixo por ponto. Por isso consegue gerar o vetor de um usuário ou loja novos sem retreinar o modelo."
+      ],
+      "pre_requisitos": [
+        "Graph neural network (GNN)",
+        "Embedding",
+        "Média, máximo e desvio padrão"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "AMOSTRAR",
+            "nota": "sorteia vizinhos recentes por salto"
+          },
+          {
+            "rotulo": "AGREGAR",
+            "nota": "média, máximo e desvio padrão"
+          },
+          {
+            "rotulo": "COMBINAR",
+            "nota": "soma ao vetor do próprio nó"
+          },
+          {
+            "rotulo": "EMBEDDING",
+            "nota": "vetor fixo, serve até para nó novo"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "XGBoost",
+      "traducao": "modelo de árvores com gradient boosting para dados tabulares",
+      "nivel": "intermediario",
+      "chave": "xgboost",
+      "analogia": "O XGBoost é como uma fila de revisores numa redação de escola, em que cada revisor corrige só os erros que os anteriores deixaram passar.",
+      "explicacao": [
+        "O XGBoost é um programa que aprende a dar uma nota a cada linha de uma tabela, como a chance de uma transação ser fraude.",
+        "Ele usa árvores de decisão, que são sequências de perguntas simples do tipo \"o valor passa de 500 reais?\".",
+        "Ele monta as árvores uma depois da outra. Cada árvore nova foca nos casos que as anteriores erraram. Essa técnica se chama gradient boosting (reforço por gradiente).",
+        "A nota final é a soma das respostas de todas as árvores. O modelo funciona muito bem com dados de tabela, mas enxerga uma linha de cada vez.",
+        "No talk, o time manteve o XGBoost e acrescentou os embeddings da GNN como colunas novas, para que ele também enxergue as conexões."
+      ],
+      "pre_requisitos": [
+        "Árvore de decisão",
+        "Feature",
+        "Dados tabulares"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "ÁRVORE 1",
+            "nota": "primeira tentativa de nota"
+          },
+          {
+            "rotulo": "MEDIR ERROS",
+            "nota": "vê onde a nota errou"
+          },
+          {
+            "rotulo": "ÁRVORE NOVA",
+            "nota": "foca nos casos errados"
+          },
+          {
+            "rotulo": "NOTA FINAL",
+            "nota": "soma de todas as árvores"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Embedding",
+      "traducao": "vetor numérico que representa uma entidade",
+      "nivel": "intermediario",
+      "chave": "embedding",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Data leakage",
+      "traducao": "vazamento de dados entre treino, teste ou futuro",
+      "nivel": "intermediario",
+      "chave": "data leakage",
+      "analogia": "Vazamento de dados é como um aluno que viu o gabarito antes da prova e tira nota alta sem ter aprendido a matéria.",
+      "explicacao": [
+        "Um modelo aprende com dados de treino e depois é testado com dados que nunca viu, para medir se funciona de verdade.",
+        "Data leakage (vazamento de dados) acontece quando informação que o modelo não teria na vida real entra no treino. O teste fica bom, e o modelo falha em produção.",
+        "O vazamento pode vir do futuro, dos dados de teste, do próprio rótulo de fraude ou de estatísticas calculadas com a base inteira.",
+        "Em grafo o risco cresce, porque uma ligação entre registros pode carregar informação de outra época ou de outro grupo de dados.",
+        "A EXL bloqueia isso na construção. Cada mês vira um grafo separado, cada transação só usa vizinhos anteriores, o rótulo nunca vira atributo e os normalizadores são ajustados só no mês de treino."
+      ],
+      "pre_requisitos": [
+        "Treino, validação e teste",
+        "Rótulo",
+        "Feature"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Precision at K",
+      "traducao": "precisão entre os K casos mais bem pontuados",
+      "nivel": "intermediario",
+      "chave": "precision at k",
+      "analogia": "A precisão em K é como um fiscal de trânsito que só consegue parar 10 carros por dia e conta quantos deles estavam mesmo irregulares.",
+      "explicacao": [
+        "A equipe de analistas só consegue revisar um número limitado de alertas por dia, chamado de orçamento de alertas.",
+        "O modelo dá uma nota a cada transação, e as transações são ordenadas da nota mais alta para a mais baixa.",
+        "Precision at K (precisão em K) mede quantos dos K primeiros da lista são fraude de verdade. No talk, K corresponde a 0,5% a 1,5% das transações.",
+        "Métricas gerais, como a área sob a curva, avaliam a lista inteira. A precisão em K avalia só a fatia que alguém vai olhar.",
+        "Um modelo melhor nessa métrica coloca mais fraudes reais dentro da fatia revisada, sem aumentar o trabalho da equipe."
+      ],
+      "pre_requisitos": [
+        "Precisão",
+        "Score de modelo",
+        "Taxa de verdadeiros positivos"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "DAR NOTA",
+            "nota": "modelo pontua cada transação"
+          },
+          {
+            "rotulo": "ORDENAR",
+            "nota": "da nota mais alta à mais baixa"
+          },
+          {
+            "rotulo": "CORTAR TOP K",
+            "nota": "fatia que analistas revisam"
+          },
+          {
+            "rotulo": "PRECISÃO EM K",
+            "nota": "fraudes reais dentro da fatia"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Hard negatives",
+      "traducao": "exemplos negativos difíceis de distinguir dos positivos",
+      "nivel": "intermediario",
+      "chave": "hard negatives",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Latência",
+      "traducao": "tempo de resposta por requisição",
+      "nivel": "basico",
+      "chave": "latência",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "A EXL vende serviços de dados e IA, e o talk funciona como vitrine. Os US$ 65 milhões são captura de fraude anual projetada, sem economia realizada. O talk não diz quem é o cliente nem o tamanho da base. A explicabilidade se apoia em 200 casos por canal. O modelo por aresta, que é o que vai a produção, não tem taxa de verdadeiros positivos mostrada. Há só a expectativa da Nvidia de desempenho equivalente. O ganho com janela móvel e decaimento temporal é citado sem número.",
+  "acoes": [
+    "Antes de criar mais colunas para um modelo, pergunte se o sinal que falta está nas relações entre registros, como clientes, dispositivos ou fornecedores em comum.",
+    "Avalie modelos de alerta pela precisão dentro da fatia que a equipe consegue revisar, além da métrica geral.",
+    "Ao reduzir uma base desbalanceada, verifique se a amostragem não apaga o histórico e as ligações de que o modelo depende.",
+    "Exija que cada alerta venha com a evidência concreta que o motivou, para que analistas confiem e rotulem melhor os casos."
+  ],
+  "numeros": [
+    {
+      "valor": "0,04 vs 0,91",
+      "contexto": "nota da mesma transação sem e com a vizinhança no grafo",
+      "t": 35
+    },
+    {
+      "valor": "27% a 33%",
+      "contexto": "ganho relativo na taxa de verdadeiros positivos com a mesma taxa de alertas",
+      "t": 842
+    },
+    {
+      "valor": "60 GB → 2-3 GB",
+      "contexto": "cache ao trocar embeddings por transação por usuário e loja",
+      "t": 1127
+    },
+    {
+      "valor": "3,1 ms",
+      "contexto": "latência P99 de ponta a ponta na pontuação em tempo real",
+      "t": 1190
+    }
+  ]
+}

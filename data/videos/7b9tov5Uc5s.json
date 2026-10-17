@@ -1,0 +1,174 @@
+{
+  "id": "7b9tov5Uc5s",
+  "titulo": "Rebuilding CI for AI-Scale Commit Volume — Gautam Korlam, Sonar",
+  "titulo_curto": "Rebuilding CI for AI-Scale Commit Volume",
+  "palestrante": "Gautam Korlam, Sonar",
+  "url": "https://www.youtube.com/watch?v=7b9tov5Uc5s",
+  "duracao": 1158,
+  "publicado_ts": 1791986418,
+  "edicao": "2026-10-16",
+  "tese": "Agentes geram código mais rápido do que a fila de CI e revisão aguenta. O gargalo mudou de lugar e o processo precisa mudar com ele.",
+  "tldr": [
+    "Filas de CI, revisão e merge foram feitas para o ritmo humano e travam quando agentes abrem vários pull requests ao mesmo tempo.",
+    "Gautam Korlam, ex-Uber e hoje na Sonar, propõe CI incremental e com cache, revisão em camadas e aprovação automática para mudanças de baixo risco.",
+    "Em setores regulados, cada aprovação precisa deixar registro durável: quem pediu, qual commit foi testado, quem aprovou e por que houve exceção."
+  ],
+  "tema": "engenharia-de-software",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "A fila de merge testa combinações, não mudanças isoladas",
+      "texto": "No Uber, mudanças que passavam sozinhas no CI quebravam o main quando combinadas. Serializar tudo levaria até 20 dias. O SubmitQueue testa em paralelo as combinações prováveis, remove da fila o PR que vai quebrar e avisa o autor.",
+      "t": 126,
+      "legenda": "A fila testa commits juntos para manter o main verde.",
+      "print": "img/7b9tov5Uc5s/0.jpg"
+    },
+    {
+      "titulo": "O volume de PRs cresce mais rápido que a equipe",
+      "texto": "Korlam diz que o ritmo de commits da própria equipe quase multiplicou por 10 em três anos, com o mesmo time. O gráfico do Gitar mostra crescimento de cerca de 25% ao mês no número de PRs revisados. A fila de CI e a de revisão ficam sobrecarregadas.",
+      "t": 255,
+      "legenda": "Número de PRs por mês sobe de forma exponencial.",
+      "print": "img/7b9tov5Uc5s/1.jpg"
+    },
+    {
+      "titulo": "Acelerar o CI e mover checagens para a esquerda",
+      "texto": "A equipe baixou o CI de cerca de 10 minutos para menos de 1 minuto nos passos incrementais. Usou cache de saídas do build em Rust, menos invalidação do compilador e sharding. Checagens caras foram empurradas para antes ou para depois do merge, conforme o caso.",
+      "t": 654,
+      "legenda": "CI incremental cai de uns 10 minutos para menos de 1.",
+      "print": "img/7b9tov5Uc5s/2.jpg"
+    },
+    {
+      "titulo": "Política de aprovação por nível de risco",
+      "texto": "Bumps de dependência e mudanças de documentação podem ser aprovados automaticamente. Áreas sensíveis, como pagamentos, exigem aprovador humano. O agente que escreveu a mudança nunca a aprova, para manter o princípio de zero trust (não confiar por padrão).",
+      "t": 874,
+      "legenda": "Regras de risco decidem o que é auto-aprovado e o que escala.",
+      "print": "img/7b9tov5Uc5s/3.jpg"
+    },
+    {
+      "titulo": "Registro que sobrevive ao CI expirado",
+      "texto": "Logs de CI expiram e force push muda o código apontado pelo branch. Sem registro, só resta um carimbo de aprovação. O talk lista o que guardar: agente e sessão de origem, commit testado, resolução de cada achado, aprovador distinto e motivo de cada override.",
+      "t": 1028,
+      "legenda": "Lista de evidências que o PR precisa carregar para auditoria.",
+      "print": "img/7b9tov5Uc5s/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "CI (integração contínua)",
+      "traducao": "integração contínua",
+      "nivel": "basico",
+      "chave": "ci (integração contínua)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Merge queue",
+      "traducao": "fila de merge",
+      "nivel": "intermediario",
+      "chave": "merge queue",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Software factory",
+      "traducao": "fábrica de software com agentes",
+      "nivel": "intermediario",
+      "chave": "software factory",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sharding",
+      "traducao": "divisão do trabalho em partes paralelas",
+      "nivel": "intermediario",
+      "chave": "sharding",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Teste flaky",
+      "traducao": "teste instável",
+      "nivel": "basico",
+      "chave": "teste flaky",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Shift left",
+      "traducao": "mover checagens para etapas anteriores",
+      "nivel": "intermediario",
+      "chave": "shift left",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Audit trail",
+      "traducao": "trilha de auditoria",
+      "nivel": "intermediario",
+      "chave": "audit trail",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Pull request",
+      "traducao": "pedido de integração de código",
+      "nivel": "basico",
+      "chave": "pull request",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk também é pitch do Gitar, produto da Sonar, e Korlam o cita várias vezes. Os números (10x, 25% ao mês, 13% de PRs com falha) vêm da própria plataforma e de uma equipe pequena, sem metodologia nem comparação. A descrição do vídeo avisa que são exemplos, não garantias. A afirmação de que times com mais de 100 mil devs adotam auto-aprovação não traz fonte.",
+  "acoes": [
+    "Meça o tempo total do PR, da abertura ao merge, e separe quanto vai para CI, revisão e espera. Corrija o maior trecho primeiro.",
+    "Defina uma política de risco por escrito: o que pode ser auto-aprovado (docs, dependências) e o que exige humano (pagamentos, autenticação).",
+    "Impeça que o agente ou quem deu o prompt aprove a própria mudança. Configure o aprovador como pessoa ou agente distinto.",
+    "Grave no PR o commit testado, o resultado do CI e o motivo de cada override, porque os logs do CI expiram."
+  ],
+  "numeros": [
+    {
+      "valor": "20 dias",
+      "contexto": "Espera se o Uber serializasse todos os merges",
+      "t": 93
+    },
+    {
+      "valor": "10x",
+      "contexto": "Aumento de commits da equipe em cerca de 3 anos",
+      "t": 219
+    },
+    {
+      "valor": "25% ao mês",
+      "contexto": "Crescimento de PRs revisados pelo Gitar",
+      "t": 250
+    },
+    {
+      "valor": "13%",
+      "contexto": "PRs com ao menos uma falha de CI registrada",
+      "t": 438
+    }
+  ]
+}

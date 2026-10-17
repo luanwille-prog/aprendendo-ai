@@ -1,0 +1,174 @@
+{
+  "id": "kiClTcJUnhc",
+  "titulo": "Why One AI Agent Isn’t Enough (And How to Run 1,000) - CJ Avilla & Harrison Stall, Anthropic",
+  "titulo_curto": "Why One AI Agent Isn’t Enough (And How to Run 1,000) - CJ Avilla & Harrison Stall, Anthropic",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=kiClTcJUnhc",
+  "duracao": 6103,
+  "publicado_ts": 1792177210,
+  "edicao": "2026-10-16",
+  "tese": "Tarefa grande pede muitos agentes com contexto isolado, e escala só com orçamento, limites de rede e segredos fora do sandbox.",
+  "tldr": [
+    "A Anthropic apresenta Flows no Claude Managed Agents. Você dá um objetivo, o Claude monta sozinho uma equipe de até 1.000 agentes em fases e a API entrega tudo por um fluxo de eventos.",
+    "Um agente só falha por preguiça, por viés a favor do próprio trabalho e por perda do objetivo. Dar um agente e um contexto isolado a cada item resolve os três, ao custo de gastar bem mais tokens.",
+    "Rodar centenas de agentes exige segurança: orçamento por sessão, interrupção pela API, auto mode, cofre de credenciais com segredo falso dentro do container e rede liberada só para os domínios necessários."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Um agente por item, em fases isoladas",
+      "texto": "No scanner de ações, cada ticker vai para um agente de varredura com contexto próprio. Depois passa para uma fase de revisão, também isolada. Nenhum agente sofre influência dos resultados dos outros. O Claude decide quantos agentes criar conforme a complexidade da tarefa.",
+      "t": 1590,
+      "legenda": "O fluxo divide a lista de tickers e isola cada contexto.",
+      "print": "img/kiClTcJUnhc/0.jpg"
+    },
+    {
+      "titulo": "Gaste mais computação onde importa",
+      "texto": "Os palestrantes comparam um agente único com o flow. O flow custa bem mais e encontra mais detalhes. Dá para pedir modelo barato (Haiku) na varredura e modelo mais forte com 2 ou 3 agentes por ticker na revisão. Eles recomendam um conjunto de evals (avaliações) para validar flows importantes.",
+      "t": 1652,
+      "legenda": "O flow acha mais detalhes e custa mais.",
+      "print": "img/kiClTcJUnhc/1.jpg"
+    },
+    {
+      "titulo": "Bug Hunter divide a revisão de PR",
+      "texto": "O código do PR é cortado em fatias. Um agente por fatia lista problemas, um segundo revisa e discorda, uma fase escolhe candidatos e um provador baixa o repositório e tenta reproduzir o bug. O resultado vira comentário inline com prioridade.",
+      "t": 3894,
+      "legenda": "Quatro fases isoladas filtram falsos alarmes antes do humano.",
+      "print": "img/kiClTcJUnhc/2.jpg"
+    },
+    {
+      "titulo": "Os três defeitos do agente único",
+      "texto": "Preguiça agêntica: após ver 35 serviços saudáveis, o agente dá o resto como bom. Viés de preferência própria: quem escreveu o código tende a aprová-lo. Perda de objetivo: com a compactação do contexto, a ordem 'não toque na produção' pode sumir. Um agente por serviço, revisão adversarial e o objetivo copiado em cada subagente corrigem isso.",
+      "t": 4358,
+      "legenda": "O exemplo dos 50 serviços mostra preguiça e perda de objetivo.",
+      "print": "img/kiClTcJUnhc/3.jpg"
+    },
+    {
+      "titulo": "Credencial nunca entra no sandbox",
+      "texto": "O container recebe só um segredo falso. Na saída, o proxy de rede troca o placeholder pelo valor real e só para os hosts permitidos. Assim nem um prompt malicioso extrai a chave. Somam-se orçamento, interrupção, auto mode, ferramentas desligadas e rede restrita ao domínio necessário.",
+      "t": 5322,
+      "legenda": "O vault define onde o segredo entra e para quais domínios vale.",
+      "print": "img/kiClTcJUnhc/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Multi-agent",
+      "traducao": "sistema com vários agentes",
+      "nivel": "intermediario",
+      "chave": "multi-agent",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Fan out",
+      "traducao": "espalhar o trabalho em paralelo",
+      "nivel": "intermediario",
+      "chave": "fan out",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Adversarial review",
+      "traducao": "revisão adversarial por outro agente",
+      "nivel": "intermediario",
+      "chave": "adversarial review",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Hill climbing",
+      "traducao": "melhorar o prompt em rodadas",
+      "nivel": "intermediario",
+      "chave": "hill climbing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Prompt injection",
+      "traducao": "instruções escondidas em conteúdo externo",
+      "nivel": "basico",
+      "chave": "prompt injection",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Auto mode",
+      "traducao": "aprovação automática de ferramentas por classificador",
+      "nivel": "intermediario",
+      "chave": "auto mode",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Segredo por placeholder",
+      "traducao": "segredo falso trocado na saída da rede",
+      "nivel": "avancado",
+      "chave": "segredo por placeholder",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Network egress",
+      "traducao": "tráfego de saída da rede",
+      "nivel": "avancado",
+      "chave": "network egress",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É um workshop de lançamento, dado por funcionários da Anthropic sobre um produto com três dias de vida. A comparação entre agente único e flow não mostra amostra, tarefa nem números, só que o flow acha mais e custa mais. Os palestrantes admitem que não sabem onde mais agentes deixam de ajudar. O sistema operacional de 85 horas ainda rodava, sem resultado verificado. O flow aceita só um nível de aninhamento.",
+  "acoes": [
+    "Teste um flow com um problema que hoje falha por preguiça, como revisar 50 itens. Peça um agente por item e confira se todos foram checados.",
+    "Defina orçamento baixo, por exemplo US$ 1, em toda sessão de agente. Suba o valor depois de ver o que foi feito e retome sem perder trabalho.",
+    "Use um agente diferente para revisar o trabalho do primeiro. Não peça ao autor que avalie o próprio resultado.",
+    "Tire chaves de API de arquivos e markdowns que o agente lê. Use cofre de credenciais e libere rede só para os domínios necessários."
+  ],
+  "numeros": [
+    {
+      "valor": "5.000",
+      "contexto": "homens-ano estimados para o OS/360 da IBM",
+      "t": 95
+    },
+    {
+      "valor": "1.000",
+      "contexto": "agentes no máximo por flow",
+      "t": 2736
+    },
+    {
+      "valor": "85 horas",
+      "contexto": "tempo do flow que construía um sistema operacional",
+      "t": 2770
+    },
+    {
+      "valor": "97%",
+      "contexto": "aprovações dadas por humanos quando o agente pergunta",
+      "t": 5230
+    }
+  ]
+}
