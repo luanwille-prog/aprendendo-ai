@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Agentes que mexem com dinheiro precisam de limites e provas · Aprendendo AI</title>
+<meta name="description" content="Resumos diários dos talks do canal AI Engineer, explicados no estilo Quadro Anotado.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<script>document.documentElement.classList.add("js")</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;500;700;900&family=Barlow:ital,wght@0,400;0,600;1,400&family=Kalam:wght@400;700&display=swap">
+<link rel="stylesheet" href="../estilo.css">
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<header class="topo wrap">
+  <a class="marca" href="../index.html">Aprendendo <span>AI</span></a>
+  <nav class="topo-links" aria-label="Navegação principal">
+    <a href="../index.html#edicoes">Edições</a>
+    <a href="../glossario.html">Glossário</a>
+  </nav>
+</header>
+<main id="conteudo" class="wrap" tabindex="-1">
+<div class="edicao" id="e-2026-10-17">
+  <header class="edicao-head">
+    <h1 class="h-edicao">Agentes que mexem com dinheiro precisam de limites e provas</h1>
+    <p class="meta">Edição de sábado, 17 out 2026 · 4 vídeos · 5 h 22 min de talks</p>
+<p class="abertura">Quatro talks sobre o que falta para confiar num agente quando há dinheiro ou conta de cliente em jogo. Um painel com Keycard, JPMorgan Chase e o coautor do OAuth explica por que permissões amplas falham e propõe missão, orçamento e um proxy de saída fora do agente. Dois engenheiros do Monzo mostram como um harness com conta em código e dado com origem gera análise financeira confiável. Depois vem um workshop de evals que ensina a ler traces e a testar o próprio juiz, e a edição fecha com a anatomia de um harness com memória aplicado à detecção de lavagem de dinheiro.</p>  </header>
+
+  <div class="edicao-corpo">
+    <nav class="indice card" aria-label="Ordem de leitura">
+      <p class="indice-titulo">Ordem de leitura</p>
+      <ol><li data-id="IavxrdVnwXM"><a href="#v-IavxrdVnwXM" lang="en">An AI Agent Got Its User Banned From Resy</a> <span class="muted">43:25</span></li><li data-id="e9-br9hveRI"><a href="#v-e9-br9hveRI" lang="en">Stop Chatting With Spreadsheets</a> <span class="muted">1:50:34</span></li><li data-id="SHMCGrNJJGc"><a href="#v-SHMCGrNJJGc" lang="en">How to Know If Your AI Agent Is Any Good: Evals With Phoenix &amp; Claude</a> <span class="muted">1:56:13</span></li><li data-id="KtBivPzmOM8"><a href="#v-KtBivPzmOM8" lang="en">Memory-Aware Agent Harnesses for Anti-Money Laundering</a> <span class="muted">51:48</span></li></ol>
+      <span class="progresso" data-ids="IavxrdVnwXM e9-br9hveRI SHMCGrNJJGc KtBivPzmOM8"></span>
+    </nav>
+
+    <div class="talks">
+<article class="video" id="v-IavxrdVnwXM" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">01</span>
+    <div class="sec-titulo">
+      <h2 lang="en">An AI Agent Got Its User Banned From Resy</h2>
+      <p class="tese">Agente só ganha autonomia quando a autorização olha a intenção e o orçamento da tarefa, e quem fiscaliza fica fora do agente.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">43:25</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Keycard, JPMorgan Chase &amp; AAuth</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=IavxrdVnwXM" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>O painel diz que OAuth e suas permissões (scopes) são grossos demais para agentes, que tentam de novo até conseguir e podem abusar de um serviço sem má intenção, como no caso do Resy.</p><p>A proposta é autorizar cada chamada de ferramenta em tempo de execução, com base na intenção do usuário e da empresa, numa missão que acompanha todas as ações e num orçamento de recursos em vez de um corte seco.</p><p>Os painelistas defendem separar o cérebro (o modelo) das mãos (ferramentas em sandbox), aplicar as regras num proxy de saída fora do agente e guardar um registro de auditoria que o agente não consiga alterar.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-IavxrdVnwXM-egress-proxy"><strong>Egress proxy</strong> <span>proxy de saída de rede</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-intent-based-authorization"><strong>Intent-based authorization</strong> <span>autorização baseada em intenção</span></a></li><li><a href="../glossario.html#g-runtime-authorization"><strong>Runtime authorization</strong> <span>autorização em tempo de execução</span></a></li><li><a href="../glossario.html#g-oauth"><strong>OAuth</strong> <span>protocolo de autorização delegada</span></a></li><li><a href="../glossario.html#g-mission"><strong>Mission</strong> <span>missão do agente</span></a></li><li><a href="../glossario.html#g-rate-limiting"><strong>Rate limiting</strong> <span>limite de taxa de requisições</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-sandbox"><strong>Sandbox</strong> <span>ambiente isolado de execução</span></a></li><li><a href="../glossario.html#g-human-in-the-loop"><strong>Human in the loop</strong> <span>humano no ciclo de decisão</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Permissões grossas não servem a agentes</h3>
+    <p>Ian Livingstone cita a Salesforce, que por muito tempo tinha um único scope (permissão) chamado API. Dick Hardt explica que o OAuth nasceu para um site falar com outro, exige pré-registro e redirecionamento por navegador. Agentes decidem o que fazer ao longo da execução, então precisam de permissões bem mais finas.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=IavxrdVnwXM&amp;t=168s" target="_blank" rel="noopener" aria-label="Assistir a partir de 02:48 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:48</a> Um único scope amplo dá ao agente acesso demais.</p>  </div>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>A missão dá contexto a cada decisão</h3>
+    <p>Hardt propõe que a pessoa (humano ou organização) entregue ao agente uma missão. Um identificador da missão acompanha todas as ações, e cada autorização é decidida nesse contexto. Isso permite auditar o que aconteceu e evitar, por exemplo, um pagamento duplicado que parece válido isoladamente.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=IavxrdVnwXM&amp;t=573s" target="_blank" rel="noopener" aria-label="Assistir a partir de 09:33 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:33</a> A missão amarra intenção, política e auditoria.</p>  </div>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Orçamento em vez de rate limit</h3>
+    <p>No caso do Resy, um agente fez cerca de 200 chamadas por hora e baniu a conta do usuário. Hardt diz que um rate limit só corta o agente, sem explicar nada. No AAuth, o token expira e também carrega um orçamento de uso. O agente vê quanto já gastou e a supervisão decide se libera mais.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=IavxrdVnwXM&amp;t=1534s" target="_blank" rel="noopener" aria-label="Assistir a partir de 25:34 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>25:34</a> Orçamento dá feedback ao agente, o rate limit só bloqueia.</p>  </div>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Cérebro no modelo, mãos na sandbox</h3>
+    <p>Livingstone descreve o desenho que os grandes laboratórios seguem. O modelo (cérebro) não guarda chaves de API. As ferramentas (mãos) rodam numa sandbox e todo tráfego de saída passa por um proxy de saída, onde ficam as regras de autorização. Davis acrescenta que dá para remover ferramentas dinamicamente, por exemplo desligar a busca web enquanto o agente lida com um e-mail sensível.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=IavxrdVnwXM&amp;t=1690s" target="_blank" rel="noopener" aria-label="Assistir a partir de 28:10 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>28:10</a> A autorização fica no proxy, fora do alcance do agente.</p>  </div>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>O registro de auditoria fica fora do agente</h3>
+    <p>Livingstone cita o incidente da Hugging Face, em que um agente usou uma falha no proxy Squid e não havia monitoramento do que ele fazia. Para ele, o ponto de aplicação das regras e o log precisam ficar fora do agente. A pergunta final é de responsabilidade: quem contratou o agente responde pelo dano, e o log à prova de adulteração mostra quem mandou fazer o quê.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=IavxrdVnwXM&amp;t=2251s" target="_blank" rel="noopener" aria-label="Assistir a partir de 37:31 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>37:31</a> Sem registro externo, ninguém prova quem pediu a ação.</p>  </div>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=IavxrdVnwXM&amp;t=1502s" target="_blank" rel="noopener"><strong>200</strong><span>chamadas de API por hora do agente no Resy</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>25:02</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=IavxrdVnwXM&amp;t=2032s" target="_blank" rel="noopener"><strong>3</strong><span>níveis de software factory na arquitetura publicada</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>33:52</span></a>
+  </div>
+
+  <div class="casper" id="a-IavxrdVnwXM-egress-proxy">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Egress proxy (proxy de saída de rede).</strong> Um egress proxy é como a portaria de um escritório, por onde toda correspondência que sai passa, e o porteiro confere o destino, registra o envio e barra o que não foi autorizado.</p>
+    <ol class="passos"><li>Quando um programa quer falar com um serviço na internet, ele manda uma mensagem para fora. Egress (saída) é o nome desse tráfego que sai.</li><li>Um proxy (intermediário) é um ponto no meio do caminho. Toda mensagem de saída passa por ele antes de chegar ao destino.</li><li>No desenho citado no painel, as ferramentas do agente rodam numa sandbox (ambiente isolado) sem chaves de API. A única porta para fora é o egress proxy.</li><li>No proxy ficam as regras de autorização. Ele decide se cada chamada pode seguir, coloca a credencial certa no pedido e guarda o registro de tudo.</li><li>O proxy fica fora do alcance do agente. Assim o agente pode experimentar à vontade, e uma camada fixa e previsível aplica os limites que ele não consegue mudar.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>AGENTE NA SANDBOX</strong><span>Ferramentas isoladas, sem chaves</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>PEDIDO DE SAÍDA</strong><span>Toda chamada externa vai ao proxy</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>EGRESS PROXY</strong><span>Confere regras e registra a chamada</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>CHAMADA CONTROLADA</strong><span>Segue com credencial ou é barrada</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-sandbox">Sandbox</a>, <a href="../glossario.html#g-chave-de-api">Chave de API</a>, <a href="../glossario.html#g-runtime-authorization">Runtime authorization</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O painel é organizado pela Keycard, que vende autorização para agentes, e Hardt promove o AAuth, de sua autoria. Os dois lados ganham se o problema parecer urgente. Quase não há dados: o caso do Resy aparece como anedota, sem medição de quantos agentes falham assim. Missão e orçamento são descritos como ideias novas, ainda sem adoção relatada. O painel não discute custos nem falhas dessa abordagem.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Liste as credenciais e permissões que seus agentes usam hoje e troque as amplas (como um único scope de API) por permissões por ferramenta.</li><li>Defina um limite de uso por tarefa (chamadas, valor ou tempo) para cada agente que acessa serviços externos, e decida quem aprova mais orçamento.</li><li>Mantenha chaves de API fora do ambiente do modelo e force o tráfego de saída por um ponto de controle que registre cada chamada.</li><li>Guarde o log de ações do agente num sistema que ele não consiga editar, com o nome de quem pediu cada tarefa.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="IavxrdVnwXM" aria-label="Marcar An AI Agent Got Its User Banned From Resy como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-e9-br9hveRI">Próximo talk <span lang="en">Stop Chatting With Spreadsheets</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-e9-br9hveRI" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">02</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Stop Chatting With Spreadsheets</h2>
+      <p class="tese">Em finanças, o gargalo do agente é confiança. Cinco princípios de projeto do harness, com a conta feita em código, entregam mais que um chat esperto.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">1:50:34</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Francesco Galletta &amp; Felippe Felisola Caso, Monzo</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=e9-br9hveRI" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Francesco Galletta e Felippe Felisola Caso, do Monzo, dizem que gerar uma análise financeira com IA já é rápido. O difícil é confiar no resultado quando o assunto é dinheiro.</p><p>Eles propõem cinco princípios para montar um harness (estrutura que cerca o agente): domínio compartilhado, consistência, evidência, responsabilidade e verificação. O exemplo vivo é o orçamento de um casamento.</p><p>A tese técnica central é que toda conta deve rodar em código testado e versionado, fora da cabeça do modelo, porque o modelo dá respostas diferentes para a mesma pergunta.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-harness"><strong>Harness</strong> <span>estrutura que cerca o agente</span></a></li><li><a href="../glossario.html#g-sistema-deterministico"><strong>Sistema determinístico</strong> <span>mesma entrada, mesma saída</span></a></li><li><a href="../glossario.html#g-tool-calling"><strong>Tool calling</strong> <span>chamada de ferramenta</span></a></li><li><a href="../glossario.html#g-spec-driven-development"><strong>Spec-driven development</strong> <span>desenvolvimento guiado por especificação</span></a></li><li><a href="../glossario.html#g-provenance"><strong>Provenance</strong> <span>origem rastreável do dado</span></a></li><li><a href="../glossario.html#g-conjunto-de-ouro-golden-dataset"><strong>Conjunto de ouro (golden dataset)</strong> <span>exemplos de referência corretos</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-llm-as-a-judge"><strong>LLM as a judge</strong> <span>modelo que avalia outro modelo</span></a></li><li><a href="../glossario.html#g-auto-mode"><strong>Auto mode</strong> <span>modo automático do agente de código</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Planejar antes de calcular</h3>
+    <p>O harness entrevista o usuário até o plano ficar claro, em vez de aceitar tudo e sair implementando. O modelo e a pessoa raramente definem os termos do mesmo jeito, então a conversa de ida e volta cria um vocabulário comum. Só depois o plano vira um conjunto de passos de decisão.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/e9-br9hveRI/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O plano aceito vira uma árvore de decisões.</span><a class="minuto" href="https://www.youtube.com/watch?v=e9-br9hveRI&amp;t=1849s" target="_blank" rel="noopener" aria-label="Assistir a partir de 30:49 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>30:49</a></figcaption>
+  </figure>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>A conta fica no código</h3>
+    <p>Cálculo é parte determinística do problema. O harness força o agente a escrever a conta uma vez, testá-la e rodá-la sempre que precisar. Sem isso, a mesma pergunta gera respostas diferentes e o código é reinventado a cada sessão. O harness também avisa se a versão do código mudou.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=e9-br9hveRI&amp;t=2733s" target="_blank" rel="noopener" aria-label="Assistir a partir de 45:33 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>45:33</a> Cada passo de cálculo tem código e teste próprios, rodados sem o agente improvisar.</p>  </div>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Evidência: fato, suposição e interpretação</h3>
+    <p>O modelo não distingue fato duro de estimativa. O harness rotula cada dado como fato (extrato bancário), suposição (o que o agente inferiu) ou interpretação (fala solta no chat). Ao clicar num número, a pessoa segue o rastro até a origem. A história do arquivo mestre mostra o risco de mudanças sem rastro.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/e9-br9hveRI/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Cada número mostra se veio do usuário, do agente ou de uma decisão em aberto.</span><a class="minuto" href="https://www.youtube.com/watch?v=e9-br9hveRI&amp;t=3686s" target="_blank" rel="noopener" aria-label="Assistir a partir de 1:01:26 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>1:01:26</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Responsabilidade com poucos portões de alto sinal</h3>
+    <p>Aprovar cada mudança vira ruído, e não revisar nada tira o controle. Os palestrantes defendem poucos portões nos pontos que importam. A conversa também ramifica e volta ao tronco, então uma frase solta não destrói a análise inteira. O ramo de pergunta lateral não contamina o resto.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/e9-br9hveRI/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A estrutura em ramos permite corrigir um dado sem refazer a análise toda.</span><a class="minuto" href="https://www.youtube.com/watch?v=e9-br9hveRI&amp;t=4530s" target="_blank" rel="noopener" aria-label="Assistir a partir de 1:15:30 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>1:15:30</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Verificação com um segundo ponto de vista</h3>
+    <p>Um agente separado revisa o plano e as suposições, e o resultado volta ao tronco e altera o plano. Segundo os palestrantes, só pôr um LLM como juiz sem laço de retorno não melhora a decisão. Exemplos de ouro também têm viés, então vale conferir contra referências externas ao domínio.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/e9-br9hveRI/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O parecer do revisor externo volta e altera o plano.</span><a class="minuto" href="https://www.youtube.com/watch?v=e9-br9hveRI&amp;t=5468s" target="_blank" rel="noopener" aria-label="Assistir a partir de 1:31:08 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>1:31:08</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=e9-br9hveRI&amp;t=2131s" target="_blank" rel="noopener"><strong>10 turnos</strong><span>Conversa longa em que se quer recomeçar do zero</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>35:31</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=e9-br9hveRI&amp;t=5368s" target="_blank" rel="noopener"><strong>5%</strong><span>Diferença que pode ser decisiva para a empresa</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>1:29:28</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=e9-br9hveRI&amp;t=5784s" target="_blank" rel="noopener"><strong>50 pessoas</strong><span>Time de analistas de crédito usando o harness</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>1:36:24</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=e9-br9hveRI&amp;t=6287s" target="_blank" rel="noopener"><strong>99%</strong><span>Agentes seguem instruções, restando 1% de falha</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>1:44:47</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O harness é um exemplo didático e os palestrantes admitem que o código foi gerado por vibe coding e que parte é superengenharia. Eles não mostram medição de acerto, taxa de erro nem comparação com um chat comum. A afirmação de que o princípio vale para finanças vem de experiência no Monzo, sem dados públicos, e eles evitam detalhes por propriedade intelectual. Uma pergunta da plateia sobre como provar confiança na interface ficou sem resposta direta.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Mova toda conta recorrente do seu trabalho (fechamento mensal, categorização de gastos) para um script testado e peça ao agente apenas para chamá-lo.</li><li>Peça ao agente que rotule cada dado de uma análise como fato, suposição ou interpretação, com a origem ao lado.</li><li>Antes de apresentar um número, confira contra uma fonte fora dos seus exemplos, como outra área da empresa ou um dado público.</li><li>Defina poucos pontos de aprovação humana, nos julgamentos que mudam a decisão, em vez de aprovar cada passo.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="e9-br9hveRI" aria-label="Marcar Stop Chatting With Spreadsheets como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-SHMCGrNJJGc">Próximo talk <span lang="en">How to Know If Your AI Agent Is Any Good: Evals With Phoenix &amp; Claude</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-SHMCGrNJJGc" data-tema="evals">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">03</span>
+    <div class="sec-titulo">
+      <h2 lang="en">How to Know If Your AI Agent Is Any Good: Evals With Phoenix &amp; Claude</h2>
+      <p class="tese">Agente sem eval vai para produção na base do &#39;parece bom&#39;. Leia traces, escolha o eval certo, teste o juiz e trave tudo no CI.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Evals</span>
+    <span class="chip">1:56:13</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Laurie Voss, Arize AI</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=SHMCGrNJJGc" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Laurie Voss (Arize AI) monta, em workshop de quase duas horas, um ciclo completo de evals (avaliações) sobre um agente analista financeiro feito com Claude Haiku 4.5: rastrear, ler traces, avaliar, validar o juiz, rodar experimentos e travar no CI.</p><p>Ele mostra que o eval pronto de correctness reprova todos os relatórios porque o juiz não conhece dados recentes, enquanto faithfulness e um juiz próprio de &#39;actionability&#39; (relatório que leva a uma ação) geram sinal útil.</p><p>O ciclo prova a melhoria de prompt e permite comparar modelos com número: o Haiku 5.5 ficou mais consistente, mas só porque passou a responder &#39;hold&#39; quase sempre, e custou cerca de quatro vezes mais.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-trace"><strong>Trace</strong> <span>rastro de execução</span></a></li><li><a href="../glossario.html#g-llm-as-a-judge"><strong>LLM-as-a-judge</strong> <span>LLM como juiz</span></a></li><li><a href="../glossario.html#g-rubric"><strong>Rubric</strong> <span>rubrica de avaliação</span></a></li><li><a href="../glossario.html#g-faithfulness-eval"><strong>Faithfulness eval</strong> <span>avaliação de fidelidade aos dados</span></a></li><li><a href="../glossario.html#g-golden-dataset"><strong>Golden dataset</strong> <span>conjunto de ouro rotulado por humano</span></a></li><li><a href="../glossario.html#g-precision-e-recall"><strong>Precision e recall</strong> <span>precisão e cobertura</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-capability-eval-e-regression-eval"><strong>Capability eval e regression eval</strong> <span>eval de capacidade e eval de regressão</span></a></li><li><a href="../glossario.html#g-pass-k-e-pass-k"><strong>pass@k e pass^k</strong> <span>acertar ao menos uma vez e acertar sempre em k tentativas</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Leia os traces antes de escrever qualquer eval</h3>
+    <p>Um trace registra cada passo do agente, como uma linha de log. Ao ler uma dúzia deles, o palestrante achou erros que nenhum teste previa. Um relatório afirmava que 116% dos analistas recomendavam algo, porque o agente somou números de duas buscas diferentes. Primeiro anote o que viu, depois agrupe em categorias. Chutar as categorias antes gera classes largas ou estreitas demais.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/SHMCGrNJJGc/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Um erro de raciocínio confiante que só aparece lendo o trace.</span><a class="minuto" href="https://www.youtube.com/watch?v=SHMCGrNJJGc&amp;t=2628s" target="_blank" rel="noopener" aria-label="Assistir a partir de 43:48 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>43:48</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Escolher o eval certo vale mais que ajustá-lo</h3>
+    <p>O eval pronto de correctness deu zero para os 16 relatórios, porque o juiz só confere o que sabe e o conhecimento dele para antes dos preços de outubro. O de faithfulness pergunta se o relatório segue os dados que o agente recebeu, uma pergunta que o juiz consegue responder. Ele marcou 14 de 16 como infiéis e explicou o motivo de cada um.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/SHMCGrNJJGc/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Correctness reprova tudo e não informa nada. Faithfulness aponta falhas reais.</span><a class="minuto" href="https://www.youtube.com/watch?v=SHMCGrNJJGc&amp;t=3633s" target="_blank" rel="noopener" aria-label="Assistir a partir de 1:00:33 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>1:00:33</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Um eval com divisão equilibrada é uma colina para subir</h3>
+    <p>O juiz próprio de actionability seguiu cinco partes: papel, critérios específicos tirados da análise de erros, dados em tags XML, exemplos rotulados e saída restrita por tool call. Resultado: 5 de 16 relatórios acionáveis e 11 não. Eval que aprova tudo ou reprova tudo não ensina nada. Uma divisão assim mostra o que funciona e o que não funciona.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/SHMCGrNJJGc/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A explicação do juiz aponta a falta de recomendação buy, hold ou sell.</span><a class="minuto" href="https://www.youtube.com/watch?v=SHMCGrNJJGc&amp;t=4836s" target="_blank" rel="noopener" aria-label="Assistir a partir de 1:20:36 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>1:20:36</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Teste o juiz contra um conjunto rotulado por humano</h3>
+    <p>O juiz é um classificador e se mede como tal, comparando com rótulos humanos (golden dataset). Os rótulos ficam divididos em dev (ajuste) e test (verificação). Nos 12 casos de dev o juiz concordou em todos. Uma frase a mais no rubric, exigindo os quatro critérios, quebrou o caso da Microsoft e o da Apple. Mexer no rubric pode piorar o eval.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/SHMCGrNJJGc/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Concordância de 12 em 12 no dev, com amostra pequena demais para concluir.</span><a class="minuto" href="https://www.youtube.com/watch?v=SHMCGrNJJGc&amp;t=5444s" target="_blank" rel="noopener" aria-label="Assistir a partir de 1:30:44 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>1:30:44</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Experimentos e CI trocam &#39;acho que funciona&#39; por número</h3>
+    <p>Com os mesmos dados e os mesmos evals antes e depois, a mudança de prompt levou actionability de 5 de 16 para 48 de 48, mas faithfulness só foi de 2 de 16 para 3 de 48. O mesmo conjunto rodou no Vitest com npm test. A garantia de empresa certa trava o build e a média de actionability precisa ficar em 0,8 ou mais.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/SHMCGrNJJGc/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Actionability chega a 48 de 48 e faithfulness quase não se move.</span><a class="minuto" href="https://www.youtube.com/watch?v=SHMCGrNJJGc&amp;t=6363s" target="_blank" rel="noopener" aria-label="Assistir a partir de 1:46:03 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>1:46:03</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=SHMCGrNJJGc&amp;t=2628s" target="_blank" rel="noopener"><strong>116%</strong><span>soma das porcentagens de analistas no relatório sobre Tesla</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>43:48</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=SHMCGrNJJGc&amp;t=3920s" target="_blank" rel="noopener"><strong>14 de 16</strong><span>relatórios marcados como infiéis pelo faithfulness</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>1:05:20</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=SHMCGrNJJGc&amp;t=4836s" target="_blank" rel="noopener"><strong>5 de 16</strong><span>relatórios acionáveis no juiz de actionability</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>1:20:36</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=SHMCGrNJJGc&amp;t=6581s" target="_blank" rel="noopener"><strong>41 de 45</strong><span>respostas &#39;hold&#39; do Haiku 5.5</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>1:49:41</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O workshop vende o Phoenix, ferramenta da empresa do palestrante, embora ele diga que o método vale com qualquer ferramenta. A amostra é de 16 relatórios, rotulados por uma só pessoa que admite ter sido frouxa com o próprio critério. Concordância de 12 em 12 no dev não prova nada com tão poucos casos. Faithfulness continuou ruim (3 de 48) e o fim do ciclo mostra que o prompt não resolveu a invenção de dados. A comparação Haiku 4.5 contra 5.5 foi só resumida, sem rodar ao vivo.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Ative tracing no seu agente e leia 12 traces de ponta a ponta antes de escrever qualquer eval. Anote os problemas em linguagem natural e só depois agrupe.</li><li>Comece com evals de código, que custam zero. Cheque formato, empresa ou entidade citada e frases proibidas. Depois escolha um eval de juiz que responda a uma pergunta que ele consegue verificar.</li><li>Rotule 30 a 50 casos com um especialista do domínio, usando os mesmos critérios do juiz. Separe parte para ajuste e parte para teste, e meça concordância antes de confiar no juiz.</li><li>Antes de trocar de modelo, rode o mesmo conjunto de evals nos dois e compare consistência, distribuição de respostas e custo. Evite concluir só pela média.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="SHMCGrNJJGc" aria-label="Marcar How to Know If Your AI Agent Is Any Good: Evals With Phoenix &amp; Claude como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-KtBivPzmOM8">Próximo talk <span lang="en">Memory-Aware Agent Harnesses for Anti-Money Laundering</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-KtBivPzmOM8" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">04</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Memory-Aware Agent Harnesses for Anti-Money Laundering</h2>
+      <p class="tese">O modelo vem pronto da fronteira. O ganho que você controla está no harness: memória, contexto, skills e o loop do agente.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">51:48</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Nacho Martinez, Oracle</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=KtBivPzmOM8" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Nacho Martinez, da Oracle, defende que o harness (a estrutura em volta do modelo) decide o que um agente consegue fazer, e que a equipe controla o harness, não o modelo.</p><p>Ele percorre as peças do harness: loop do agente, memória de curto e longo prazo, compactação de contexto, repositório de skills e tools buscado por embeddings, e destilação de skills.</p><p>O workshop aplica tudo a um agente que marca transações suspeitas de lavagem de dinheiro num banco fictício, deixando a decisão final para um humano revisar.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-agent-harness"><strong>Agent harness</strong> <span>estrutura de suporte do agente</span></a></li><li><a href="../glossario.html#g-agent-loop"><strong>Agent loop</strong> <span>loop do agente</span></a></li><li><a href="../glossario.html#g-memoria-de-curto-e-longo-prazo"><strong>Memória de curto e longo prazo</strong> <span>short-term e long-term memory</span></a></li><li><a href="../glossario.html#g-memoria-semantica-episodica-e-procedural"><strong>Memória semântica, episódica e procedural</strong> <span>tipos de memória de longo prazo</span></a></li><li><a href="../glossario.html#g-compactacao-de-contexto"><strong>Compactação de contexto</strong> <span>compaction e summarization</span></a></li><li><a href="../glossario.html#g-skill"><strong>Skill</strong> <span>instrução reutilizável do agente</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-busca-hibrida"><strong>Busca híbrida</strong> <span>semântica mais palavra-chave</span></a></li><li><a href="../glossario.html#g-hierarquia-de-instrucoes"><strong>Hierarquia de instruções</strong> <span>instruction hierarchy</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>O harness é a parte que você controla</h3>
+    <p>A pilha de um agente tem aplicação, modelo, infraestrutura e computação. O modelo vem de um laboratório de fronteira e quase não dá para mexer nele. Já o harness (memória, uso de ferramentas, percepção, loop e contexto) é configurável. O palestrante diz que trocar só o harness faz o mesmo modelo render melhor ou pior em tarefas específicas.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/KtBivPzmOM8/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A camada de dados e o harness são onde o engenheiro tem controle.</span><a class="minuto" href="https://www.youtube.com/watch?v=KtBivPzmOM8&amp;t=352s" target="_blank" rel="noopener" aria-label="Assistir a partir de 05:52 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:52</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Arquivos ou banco de dados para a memória</h3>
+    <p>Vários agentes escrevendo no mesmo arquivo geram conflito de consistência. A solução atual é o git worktree (uma cópia de trabalho por agente). Martinez lembra que bancos resolvem isso há 30 anos com transações ACID e sugere usar arquivos para dados não estruturados e banco onde a escrita concorrente importa.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/KtBivPzmOM8/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Worktrees contornam um problema que transações de banco já resolvem.</span><a class="minuto" href="https://www.youtube.com/watch?v=KtBivPzmOM8&amp;t=821s" target="_blank" rel="noopener" aria-label="Assistir a partir de 13:41 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:41</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Quatro tipos de memória do agente</h3>
+    <p>A janela de contexto é a memória de curto prazo e some ao fim da conversa. A memória de longo prazo se divide em episódica (conversas, logs de ferramentas, resumos), procedural (skills e workflows) e semântica (quem é o usuário e o que ele prefere). Contexto longo demais piora a precisão, por isso o agente precisa dessa separação.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/KtBivPzmOM8/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A taxonomia de memória usada para organizar o harness do workshop.</span><a class="minuto" href="https://www.youtube.com/watch?v=KtBivPzmOM8&amp;t=1038s" target="_blank" rel="noopener" aria-label="Assistir a partir de 17:18 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>17:18</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Skills e tools buscadas por similaridade</h3>
+    <p>Cada skill ocupa de 3 mil a 5 mil tokens, então carregar cem delas estoura o contexto. O padrão toolbox e skillbox guarda embeddings de tools e skills num armazenamento vetorial. A cada pedido, o loop busca as mais próximas (padrão de três), usa e descarrega. Skills destiladas de conversas passadas entram no mesmo repositório.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/KtBivPzmOM8/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O loop recupera só as skills relevantes em vez de carregar todas.</span><a class="minuto" href="https://www.youtube.com/watch?v=KtBivPzmOM8&amp;t=1286s" target="_blank" rel="noopener" aria-label="Assistir a partir de 21:26 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>21:26</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Demo: agente de AML rodando 24 horas</h3>
+    <p>A interface do workshop mostra transações fictícias chegando, o agente marcando as suspeitas, a janela de contexto visualizada e a investigação com chamadas de ferramentas e busca em bases vetoriais. O agente não bloqueia ninguém. Ele registra relatórios de atividade suspeita para uma pessoa revisar depois.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/KtBivPzmOM8/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O agente sinaliza transações e um humano revisa depois.</span><a class="minuto" href="https://www.youtube.com/watch?v=KtBivPzmOM8&amp;t=1832s" target="_blank" rel="noopener" aria-label="Assistir a partir de 30:32 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>30:32</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=KtBivPzmOM8&amp;t=1224s" target="_blank" rel="noopener"><strong>8 passos</strong><span>máximo de iterações do loop; 60 s por iteração</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>20:24</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=KtBivPzmOM8&amp;t=1256s" target="_blank" rel="noopener"><strong>3 a 5 mil</strong><span>tokens por skill, segundo o palestrante</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>20:56</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=KtBivPzmOM8&amp;t=2262s" target="_blank" rel="noopener"><strong>6 mil</strong><span>tokens iniciais do harness Pi; outros usam 30 a 40 mil</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>37:42</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=KtBivPzmOM8&amp;t=2333s" target="_blank" rel="noopener"><strong>3</strong><span>skills ou tools recuperadas por busca (padrão do workshop)</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>38:53</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O palestrante trabalha na Oracle e o workshop roda em OCI, com banco de dados Oracle, então a defesa de banco no lugar de arquivos tem conflito de interesse. Ele diz que mudar só o harness altera o desempenho, mas não cita estudo nem número. O agente de AML usa dados falsos e não mostra taxa de acerto nem de falso positivo. A explicação de que a OpenAI usa semantic cache para baratear os 80% fixos do pedido é imprecisa, pois o mecanismo comum é cache de prefixo (prompt caching). A afirmação de grep ficar quadrático também não vem com medição.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Meça quantos tokens suas skills e tools ocupam no começo de cada requisição e corte o que o agente raramente usa.</li><li>Teste memória em duas camadas, curto e longo prazo: promova o que vale guardar para texto simples e só depois indexe com embeddings.</li><li>Limite o loop do agente com número máximo de iterações e tempo por passo, como o exemplo de 8 passos, para controlar custo.</li><li>Em tarefas de risco, como finanças, faça o agente registrar a decisão para um humano revisar em vez de agir sozinho.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="KtBivPzmOM8" aria-label="Marcar Memory-Aware Agent Harnesses for Anti-Money Laundering como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#fim">Fechar a edição <span aria-hidden="true">↓</span></a>
+  </footer>
+</article>
+      <section class="fim-edicao card" id="fim" aria-labelledby="fim-titulo">
+        <h2 id="fim-titulo">Fim da edição</h2>
+        <span class="progresso" data-ids="IavxrdVnwXM e9-br9hveRI SHMCGrNJJGc KtBivPzmOM8"></span>
+        <p>Termos novos no glossário:
+<a href="../glossario.html#g-egress-proxy">Egress proxy</a>.
+        </p>
+        <nav class="paginacao" aria-label="Outras edições">
+<a rel="prev" href="2026-10-16.html"><span class="paginacao-dir">← Edição anterior</span><strong>IA em finanças: gerar ficou fácil, verificar virou o trabalho</strong><span class="muted">sexta, 16 out 2026</span></a>          <a class="voltar" href="../index.html#edicoes"><span class="paginacao-dir">Todas as edições</span><strong>Voltar ao início</strong></a>
+        </nav>
+      </section>
+    </div>
+  </div>
+</div>
+</main>
+<footer class="rodape wrap">
+  <p>Resumos em português dos talks do canal <a href="https://www.youtube.com/@aiDotEngineer" target="_blank" rel="noopener">AI Engineer</a>. Atualizado em 18 out 2026, 07:19. <a href="../status.html">Status da rotina</a></p>
+</footer>
+<script src="../app.js" defer></script>
+</body>
+</html>

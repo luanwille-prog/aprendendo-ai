@@ -1,0 +1,174 @@
+{
+  "id": "SHMCGrNJJGc",
+  "titulo": "How to Know If Your AI Agent Is Any Good: Evals With Phoenix & Claude — Laurie Voss, Arize AI",
+  "titulo_curto": "How to Know If Your AI Agent Is Any Good: Evals With Phoenix & Claude",
+  "palestrante": "Laurie Voss, Arize AI",
+  "url": "https://www.youtube.com/watch?v=SHMCGrNJJGc",
+  "duracao": 6973,
+  "publicado_ts": 1792263623,
+  "edicao": "2026-10-17",
+  "tese": "Agente sem eval vai para produção na base do 'parece bom'. Leia traces, escolha o eval certo, teste o juiz e trave tudo no CI.",
+  "tldr": [
+    "Laurie Voss (Arize AI) monta, em workshop de quase duas horas, um ciclo completo de evals (avaliações) sobre um agente analista financeiro feito com Claude Haiku 4.5: rastrear, ler traces, avaliar, validar o juiz, rodar experimentos e travar no CI.",
+    "Ele mostra que o eval pronto de correctness reprova todos os relatórios porque o juiz não conhece dados recentes, enquanto faithfulness e um juiz próprio de 'actionability' (relatório que leva a uma ação) geram sinal útil.",
+    "O ciclo prova a melhoria de prompt e permite comparar modelos com número: o Haiku 5.5 ficou mais consistente, mas só porque passou a responder 'hold' quase sempre, e custou cerca de quatro vezes mais."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Leia os traces antes de escrever qualquer eval",
+      "texto": "Um trace registra cada passo do agente, como uma linha de log. Ao ler uma dúzia deles, o palestrante achou erros que nenhum teste previa. Um relatório afirmava que 116% dos analistas recomendavam algo, porque o agente somou números de duas buscas diferentes. Primeiro anote o que viu, depois agrupe em categorias. Chutar as categorias antes gera classes largas ou estreitas demais.",
+      "t": 2628,
+      "legenda": "Um erro de raciocínio confiante que só aparece lendo o trace.",
+      "print": "img/SHMCGrNJJGc/0.jpg"
+    },
+    {
+      "titulo": "Escolher o eval certo vale mais que ajustá-lo",
+      "texto": "O eval pronto de correctness deu zero para os 16 relatórios, porque o juiz só confere o que sabe e o conhecimento dele para antes dos preços de outubro. O de faithfulness pergunta se o relatório segue os dados que o agente recebeu, uma pergunta que o juiz consegue responder. Ele marcou 14 de 16 como infiéis e explicou o motivo de cada um.",
+      "t": 3633,
+      "legenda": "Correctness reprova tudo e não informa nada. Faithfulness aponta falhas reais.",
+      "print": "img/SHMCGrNJJGc/1.jpg"
+    },
+    {
+      "titulo": "Um eval com divisão equilibrada é uma colina para subir",
+      "texto": "O juiz próprio de actionability seguiu cinco partes: papel, critérios específicos tirados da análise de erros, dados em tags XML, exemplos rotulados e saída restrita por tool call. Resultado: 5 de 16 relatórios acionáveis e 11 não. Eval que aprova tudo ou reprova tudo não ensina nada. Uma divisão assim mostra o que funciona e o que não funciona.",
+      "t": 4836,
+      "legenda": "A explicação do juiz aponta a falta de recomendação buy, hold ou sell.",
+      "print": "img/SHMCGrNJJGc/2.jpg"
+    },
+    {
+      "titulo": "Teste o juiz contra um conjunto rotulado por humano",
+      "texto": "O juiz é um classificador e se mede como tal, comparando com rótulos humanos (golden dataset). Os rótulos ficam divididos em dev (ajuste) e test (verificação). Nos 12 casos de dev o juiz concordou em todos. Uma frase a mais no rubric, exigindo os quatro critérios, quebrou o caso da Microsoft e o da Apple. Mexer no rubric pode piorar o eval.",
+      "t": 5444,
+      "legenda": "Concordância de 12 em 12 no dev, com amostra pequena demais para concluir.",
+      "print": "img/SHMCGrNJJGc/3.jpg"
+    },
+    {
+      "titulo": "Experimentos e CI trocam 'acho que funciona' por número",
+      "texto": "Com os mesmos dados e os mesmos evals antes e depois, a mudança de prompt levou actionability de 5 de 16 para 48 de 48, mas faithfulness só foi de 2 de 16 para 3 de 48. O mesmo conjunto rodou no Vitest com npm test. A garantia de empresa certa trava o build e a média de actionability precisa ficar em 0,8 ou mais.",
+      "t": 6363,
+      "legenda": "Actionability chega a 48 de 48 e faithfulness quase não se move.",
+      "print": "img/SHMCGrNJJGc/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Trace",
+      "traducao": "rastro de execução",
+      "nivel": "basico",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "LLM como juiz",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Rubric",
+      "traducao": "rubrica de avaliação",
+      "nivel": "intermediario",
+      "chave": "rubric",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Faithfulness eval",
+      "traducao": "avaliação de fidelidade aos dados",
+      "nivel": "intermediario",
+      "chave": "faithfulness eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Golden dataset",
+      "traducao": "conjunto de ouro rotulado por humano",
+      "nivel": "intermediario",
+      "chave": "golden dataset",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Precision e recall",
+      "traducao": "precisão e cobertura",
+      "nivel": "intermediario",
+      "chave": "precision e recall",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Capability eval e regression eval",
+      "traducao": "eval de capacidade e eval de regressão",
+      "nivel": "intermediario",
+      "chave": "capability eval e regression eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "pass@k e pass^k",
+      "traducao": "acertar ao menos uma vez e acertar sempre em k tentativas",
+      "nivel": "avancado",
+      "chave": "pass@k e pass^k",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O workshop vende o Phoenix, ferramenta da empresa do palestrante, embora ele diga que o método vale com qualquer ferramenta. A amostra é de 16 relatórios, rotulados por uma só pessoa que admite ter sido frouxa com o próprio critério. Concordância de 12 em 12 no dev não prova nada com tão poucos casos. Faithfulness continuou ruim (3 de 48) e o fim do ciclo mostra que o prompt não resolveu a invenção de dados. A comparação Haiku 4.5 contra 5.5 foi só resumida, sem rodar ao vivo.",
+  "acoes": [
+    "Ative tracing no seu agente e leia 12 traces de ponta a ponta antes de escrever qualquer eval. Anote os problemas em linguagem natural e só depois agrupe.",
+    "Comece com evals de código, que custam zero. Cheque formato, empresa ou entidade citada e frases proibidas. Depois escolha um eval de juiz que responda a uma pergunta que ele consegue verificar.",
+    "Rotule 30 a 50 casos com um especialista do domínio, usando os mesmos critérios do juiz. Separe parte para ajuste e parte para teste, e meça concordância antes de confiar no juiz.",
+    "Antes de trocar de modelo, rode o mesmo conjunto de evals nos dois e compare consistência, distribuição de respostas e custo. Evite concluir só pela média."
+  ],
+  "numeros": [
+    {
+      "valor": "116%",
+      "contexto": "soma das porcentagens de analistas no relatório sobre Tesla",
+      "t": 2628
+    },
+    {
+      "valor": "14 de 16",
+      "contexto": "relatórios marcados como infiéis pelo faithfulness",
+      "t": 3920
+    },
+    {
+      "valor": "5 de 16",
+      "contexto": "relatórios acionáveis no juiz de actionability",
+      "t": 4836
+    },
+    {
+      "valor": "41 de 45",
+      "contexto": "respostas 'hold' do Haiku 5.5",
+      "t": 6581
+    }
+  ]
+}

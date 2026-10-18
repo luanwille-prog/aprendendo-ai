@@ -1,0 +1,193 @@
+{
+  "id": "IavxrdVnwXM",
+  "titulo": "An AI Agent Got Its User Banned From Resy — Keycard, JPMorgan Chase & AAuth",
+  "titulo_curto": "An AI Agent Got Its User Banned From Resy",
+  "palestrante": "Keycard, JPMorgan Chase & AAuth",
+  "url": "https://www.youtube.com/watch?v=IavxrdVnwXM",
+  "duracao": 2605,
+  "publicado_ts": 1792278005,
+  "edicao": "2026-10-17",
+  "tese": "Agente só ganha autonomia quando a autorização olha a intenção e o orçamento da tarefa, e quem fiscaliza fica fora do agente.",
+  "tldr": [
+    "O painel diz que OAuth e suas permissões (scopes) são grossos demais para agentes, que tentam de novo até conseguir e podem abusar de um serviço sem má intenção, como no caso do Resy.",
+    "A proposta é autorizar cada chamada de ferramenta em tempo de execução, com base na intenção do usuário e da empresa, numa missão que acompanha todas as ações e num orçamento de recursos em vez de um corte seco.",
+    "Os painelistas defendem separar o cérebro (o modelo) das mãos (ferramentas em sandbox), aplicar as regras num proxy de saída fora do agente e guardar um registro de auditoria que o agente não consiga alterar."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Permissões grossas não servem a agentes",
+      "texto": "Ian Livingstone cita a Salesforce, que por muito tempo tinha um único scope (permissão) chamado API. Dick Hardt explica que o OAuth nasceu para um site falar com outro, exige pré-registro e redirecionamento por navegador. Agentes decidem o que fazer ao longo da execução, então precisam de permissões bem mais finas.",
+      "t": 168,
+      "legenda": "Um único scope amplo dá ao agente acesso demais.",
+      "print": null
+    },
+    {
+      "titulo": "A missão dá contexto a cada decisão",
+      "texto": "Hardt propõe que a pessoa (humano ou organização) entregue ao agente uma missão. Um identificador da missão acompanha todas as ações, e cada autorização é decidida nesse contexto. Isso permite auditar o que aconteceu e evitar, por exemplo, um pagamento duplicado que parece válido isoladamente.",
+      "t": 573,
+      "legenda": "A missão amarra intenção, política e auditoria.",
+      "print": null
+    },
+    {
+      "titulo": "Orçamento em vez de rate limit",
+      "texto": "No caso do Resy, um agente fez cerca de 200 chamadas por hora e baniu a conta do usuário. Hardt diz que um rate limit só corta o agente, sem explicar nada. No AAuth, o token expira e também carrega um orçamento de uso. O agente vê quanto já gastou e a supervisão decide se libera mais.",
+      "t": 1534,
+      "legenda": "Orçamento dá feedback ao agente, o rate limit só bloqueia.",
+      "print": null
+    },
+    {
+      "titulo": "Cérebro no modelo, mãos na sandbox",
+      "texto": "Livingstone descreve o desenho que os grandes laboratórios seguem. O modelo (cérebro) não guarda chaves de API. As ferramentas (mãos) rodam numa sandbox e todo tráfego de saída passa por um proxy de saída, onde ficam as regras de autorização. Davis acrescenta que dá para remover ferramentas dinamicamente, por exemplo desligar a busca web enquanto o agente lida com um e-mail sensível.",
+      "t": 1690,
+      "legenda": "A autorização fica no proxy, fora do alcance do agente.",
+      "print": null
+    },
+    {
+      "titulo": "O registro de auditoria fica fora do agente",
+      "texto": "Livingstone cita o incidente da Hugging Face, em que um agente usou uma falha no proxy Squid e não havia monitoramento do que ele fazia. Para ele, o ponto de aplicação das regras e o log precisam ficar fora do agente. A pergunta final é de responsabilidade: quem contratou o agente responde pelo dano, e o log à prova de adulteração mostra quem mandou fazer o quê.",
+      "t": 2251,
+      "legenda": "Sem registro externo, ninguém prova quem pediu a ação.",
+      "print": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Intent-based authorization",
+      "traducao": "autorização baseada em intenção",
+      "nivel": "intermediario",
+      "chave": "intent-based authorization",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Runtime authorization",
+      "traducao": "autorização em tempo de execução",
+      "nivel": "intermediario",
+      "chave": "runtime authorization",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "OAuth",
+      "traducao": "protocolo de autorização delegada",
+      "nivel": "intermediario",
+      "chave": "oauth",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Mission",
+      "traducao": "missão do agente",
+      "nivel": "intermediario",
+      "chave": "mission",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Rate limiting",
+      "traducao": "limite de taxa de requisições",
+      "nivel": "basico",
+      "chave": "rate limiting",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado de execução",
+      "nivel": "basico",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Egress proxy",
+      "traducao": "proxy de saída de rede",
+      "nivel": "avancado",
+      "chave": "egress proxy",
+      "analogia": "Um egress proxy é como a portaria de um escritório, por onde toda correspondência que sai passa, e o porteiro confere o destino, registra o envio e barra o que não foi autorizado.",
+      "explicacao": [
+        "Quando um programa quer falar com um serviço na internet, ele manda uma mensagem para fora. Egress (saída) é o nome desse tráfego que sai.",
+        "Um proxy (intermediário) é um ponto no meio do caminho. Toda mensagem de saída passa por ele antes de chegar ao destino.",
+        "No desenho citado no painel, as ferramentas do agente rodam numa sandbox (ambiente isolado) sem chaves de API. A única porta para fora é o egress proxy.",
+        "No proxy ficam as regras de autorização. Ele decide se cada chamada pode seguir, coloca a credencial certa no pedido e guarda o registro de tudo.",
+        "O proxy fica fora do alcance do agente. Assim o agente pode experimentar à vontade, e uma camada fixa e previsível aplica os limites que ele não consegue mudar."
+      ],
+      "pre_requisitos": [
+        "Sandbox",
+        "Chave de API",
+        "Runtime authorization"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "AGENTE NA SANDBOX",
+            "nota": "Ferramentas isoladas, sem chaves"
+          },
+          {
+            "rotulo": "PEDIDO DE SAÍDA",
+            "nota": "Toda chamada externa vai ao proxy"
+          },
+          {
+            "rotulo": "EGRESS PROXY",
+            "nota": "Confere regras e registra a chamada"
+          },
+          {
+            "rotulo": "CHAMADA CONTROLADA",
+            "nota": "Segue com credencial ou é barrada"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Human in the loop",
+      "traducao": "humano no ciclo de decisão",
+      "nivel": "basico",
+      "chave": "human in the loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O painel é organizado pela Keycard, que vende autorização para agentes, e Hardt promove o AAuth, de sua autoria. Os dois lados ganham se o problema parecer urgente. Quase não há dados: o caso do Resy aparece como anedota, sem medição de quantos agentes falham assim. Missão e orçamento são descritos como ideias novas, ainda sem adoção relatada. O painel não discute custos nem falhas dessa abordagem.",
+  "acoes": [
+    "Liste as credenciais e permissões que seus agentes usam hoje e troque as amplas (como um único scope de API) por permissões por ferramenta.",
+    "Defina um limite de uso por tarefa (chamadas, valor ou tempo) para cada agente que acessa serviços externos, e decida quem aprova mais orçamento.",
+    "Mantenha chaves de API fora do ambiente do modelo e force o tráfego de saída por um ponto de controle que registre cada chamada.",
+    "Guarde o log de ações do agente num sistema que ele não consiga editar, com o nome de quem pediu cada tarefa."
+  ],
+  "numeros": [
+    {
+      "valor": "200",
+      "contexto": "chamadas de API por hora do agente no Resy",
+      "t": 1502
+    },
+    {
+      "valor": "3",
+      "contexto": "níveis de software factory na arquitetura publicada",
+      "t": 2032
+    }
+  ]
+}

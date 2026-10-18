@@ -1,0 +1,174 @@
+{
+  "id": "KtBivPzmOM8",
+  "titulo": "Memory-Aware Agent Harnesses for Anti-Money Laundering — Nacho Martinez, Oracle",
+  "titulo_curto": "Memory-Aware Agent Harnesses for Anti-Money Laundering",
+  "palestrante": "Nacho Martinez, Oracle",
+  "url": "https://www.youtube.com/watch?v=KtBivPzmOM8",
+  "duracao": 3108,
+  "publicado_ts": 1792220425,
+  "edicao": "2026-10-17",
+  "tese": "O modelo vem pronto da fronteira. O ganho que você controla está no harness: memória, contexto, skills e o loop do agente.",
+  "tldr": [
+    "Nacho Martinez, da Oracle, defende que o harness (a estrutura em volta do modelo) decide o que um agente consegue fazer, e que a equipe controla o harness, não o modelo.",
+    "Ele percorre as peças do harness: loop do agente, memória de curto e longo prazo, compactação de contexto, repositório de skills e tools buscado por embeddings, e destilação de skills.",
+    "O workshop aplica tudo a um agente que marca transações suspeitas de lavagem de dinheiro num banco fictício, deixando a decisão final para um humano revisar."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "O harness é a parte que você controla",
+      "texto": "A pilha de um agente tem aplicação, modelo, infraestrutura e computação. O modelo vem de um laboratório de fronteira e quase não dá para mexer nele. Já o harness (memória, uso de ferramentas, percepção, loop e contexto) é configurável. O palestrante diz que trocar só o harness faz o mesmo modelo render melhor ou pior em tarefas específicas.",
+      "t": 352,
+      "legenda": "A camada de dados e o harness são onde o engenheiro tem controle.",
+      "print": "img/KtBivPzmOM8/0.jpg"
+    },
+    {
+      "titulo": "Arquivos ou banco de dados para a memória",
+      "texto": "Vários agentes escrevendo no mesmo arquivo geram conflito de consistência. A solução atual é o git worktree (uma cópia de trabalho por agente). Martinez lembra que bancos resolvem isso há 30 anos com transações ACID e sugere usar arquivos para dados não estruturados e banco onde a escrita concorrente importa.",
+      "t": 821,
+      "legenda": "Worktrees contornam um problema que transações de banco já resolvem.",
+      "print": "img/KtBivPzmOM8/1.jpg"
+    },
+    {
+      "titulo": "Quatro tipos de memória do agente",
+      "texto": "A janela de contexto é a memória de curto prazo e some ao fim da conversa. A memória de longo prazo se divide em episódica (conversas, logs de ferramentas, resumos), procedural (skills e workflows) e semântica (quem é o usuário e o que ele prefere). Contexto longo demais piora a precisão, por isso o agente precisa dessa separação.",
+      "t": 1038,
+      "legenda": "A taxonomia de memória usada para organizar o harness do workshop.",
+      "print": "img/KtBivPzmOM8/2.jpg"
+    },
+    {
+      "titulo": "Skills e tools buscadas por similaridade",
+      "texto": "Cada skill ocupa de 3 mil a 5 mil tokens, então carregar cem delas estoura o contexto. O padrão toolbox e skillbox guarda embeddings de tools e skills num armazenamento vetorial. A cada pedido, o loop busca as mais próximas (padrão de três), usa e descarrega. Skills destiladas de conversas passadas entram no mesmo repositório.",
+      "t": 1286,
+      "legenda": "O loop recupera só as skills relevantes em vez de carregar todas.",
+      "print": "img/KtBivPzmOM8/3.jpg"
+    },
+    {
+      "titulo": "Demo: agente de AML rodando 24 horas",
+      "texto": "A interface do workshop mostra transações fictícias chegando, o agente marcando as suspeitas, a janela de contexto visualizada e a investigação com chamadas de ferramentas e busca em bases vetoriais. O agente não bloqueia ninguém. Ele registra relatórios de atividade suspeita para uma pessoa revisar depois.",
+      "t": 1832,
+      "legenda": "O agente sinaliza transações e um humano revisa depois.",
+      "print": "img/KtBivPzmOM8/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Agent harness",
+      "traducao": "estrutura de suporte do agente",
+      "nivel": "intermediario",
+      "chave": "agent harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Agent loop",
+      "traducao": "loop do agente",
+      "nivel": "intermediario",
+      "chave": "agent loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Memória de curto e longo prazo",
+      "traducao": "short-term e long-term memory",
+      "nivel": "basico",
+      "chave": "memória de curto e longo prazo",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Memória semântica, episódica e procedural",
+      "traducao": "tipos de memória de longo prazo",
+      "nivel": "intermediario",
+      "chave": "memória semântica, episódica e procedural",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Compactação de contexto",
+      "traducao": "compaction e summarization",
+      "nivel": "intermediario",
+      "chave": "compactação de contexto",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Skill",
+      "traducao": "instrução reutilizável do agente",
+      "nivel": "basico",
+      "chave": "skill",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Busca híbrida",
+      "traducao": "semântica mais palavra-chave",
+      "nivel": "intermediario",
+      "chave": "busca híbrida",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Hierarquia de instruções",
+      "traducao": "instruction hierarchy",
+      "nivel": "intermediario",
+      "chave": "hierarquia de instruções",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O palestrante trabalha na Oracle e o workshop roda em OCI, com banco de dados Oracle, então a defesa de banco no lugar de arquivos tem conflito de interesse. Ele diz que mudar só o harness altera o desempenho, mas não cita estudo nem número. O agente de AML usa dados falsos e não mostra taxa de acerto nem de falso positivo. A explicação de que a OpenAI usa semantic cache para baratear os 80% fixos do pedido é imprecisa, pois o mecanismo comum é cache de prefixo (prompt caching). A afirmação de grep ficar quadrático também não vem com medição.",
+  "acoes": [
+    "Meça quantos tokens suas skills e tools ocupam no começo de cada requisição e corte o que o agente raramente usa.",
+    "Teste memória em duas camadas, curto e longo prazo: promova o que vale guardar para texto simples e só depois indexe com embeddings.",
+    "Limite o loop do agente com número máximo de iterações e tempo por passo, como o exemplo de 8 passos, para controlar custo.",
+    "Em tarefas de risco, como finanças, faça o agente registrar a decisão para um humano revisar em vez de agir sozinho."
+  ],
+  "numeros": [
+    {
+      "valor": "8 passos",
+      "contexto": "máximo de iterações do loop; 60 s por iteração",
+      "t": 1224
+    },
+    {
+      "valor": "3 a 5 mil",
+      "contexto": "tokens por skill, segundo o palestrante",
+      "t": 1256
+    },
+    {
+      "valor": "6 mil",
+      "contexto": "tokens iniciais do harness Pi; outros usam 30 a 40 mil",
+      "t": 2262
+    },
+    {
+      "valor": "3",
+      "contexto": "skills ou tools recuperadas por busca (padrão do workshop)",
+      "t": 2333
+    }
+  ]
+}
