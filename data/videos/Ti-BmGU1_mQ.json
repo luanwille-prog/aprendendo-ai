@@ -1,0 +1,174 @@
+{
+  "id": "Ti-BmGU1_mQ",
+  "titulo": "The AI Bill Is Too Damn High: Tokenomics 101 — Eugene Cheah, Featherless AI",
+  "titulo_curto": "The AI Bill Is Too Damn High: Tokenomics 101",
+  "palestrante": "Eugene Cheah, Featherless AI",
+  "url": "https://www.youtube.com/watch?v=Ti-BmGU1_mQ",
+  "duracao": 3324,
+  "publicado_ts": 1792227627,
+  "edicao": "2026-10-18",
+  "tese": "Cortar a conta de tokens começa por medir, passa por escolher o modelo e a velocidade certos para cada tarefa e termina em revisar processos.",
+  "tldr": [
+    "Eugene Cheah, da Featherless AI (empresa que vende inferência), propõe quatro passos para cortar o custo de IA em escala: medir, ajustar o tamanho do modelo, comprar capacidade de GPU com critério e revisar os processos.",
+    "Ele separa cargas agênticas (longas, com muito cache) de cargas de processo (alto volume, contexto curto), e mostra casos em que modelos abertos menores ou classificadores baratos substituíram modelos de fronteira com a conta caindo de US$ 250 mil para US$ 7,6 mil por mês.",
+    "Na parte final ele alerta que token gasto não é trabalho entregue: código e slides gerados em massa empurram a revisão para outra pessoa, e o dono de cada entrega precisa responder por ela."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Sem chave de API separada, não há como medir",
+      "texto": "Cheah pergunta à plateia quem sabe o gasto total, por departamento, por time e por caso de uso. A mão desce a cada nível. Entre 30% e 40% dos clientes que o procuram usam uma única chave compartilhada. Separar chaves por time e por uso é o primeiro passo e, segundo ele, onde está o maior retorno.",
+      "t": 217,
+      "legenda": "Metade da sala não sabe o gasto por time; a causa comum é uma chave única.",
+      "print": "img/Ti-BmGU1_mQ/0.jpg"
+    },
+    {
+      "titulo": "Duas cargas, duas economias",
+      "texto": "Agentes de código rodam por muito tempo, reaproveitam contexto e geram só cerca de 1% de tokens de saída. Automações de processo (call center, filtro de mensagens, documentos) têm contexto curto e volume enorme. Cada uma pede medição e modelo próprios. Um time de 5 devs com 8 agentes contínuos gastava US$ 150 mil por mês no Opus e caiu para menos de US$ 10 mil com um modelo aberto.",
+      "t": 311,
+      "legenda": "As duas cargas têm perfis de custo opostos e exigem acompanhamento separado.",
+      "print": "img/Ti-BmGU1_mQ/1.jpg"
+    },
+    {
+      "titulo": "Dê rótulos de modelo aos times, não nomes",
+      "texto": "Finanças e suporte não sabem comparar modelos. A recomendação é oferecer rótulos como rápido, inteligente ou agente financeiro, e trocar o modelo por trás sem avisar ninguém. Isso permite dividir tráfego e testar. Para fazer o time migrar de verdade, o incentivo que funciona é velocidade, não preço: o modelo barato precisa ser mais rápido.",
+      "t": 1150,
+      "legenda": "O rótulo dá controle de troca sem custo de comunicação com o time.",
+      "print": "img/Ti-BmGU1_mQ/2.jpg"
+    },
+    {
+      "titulo": "Dobrar a velocidade custa o triplo",
+      "texto": "Pela regra de bolso do palestrante, cada 2x de velocidade por requisição custa 3x e o efeito se acumula. No exemplo com um nó de GPU, uma requisição sozinha roda a 112 tokens por segundo. Com 16 em paralelo, cada uma cai para cerca de metade, mas a saída total sobe cerca de 10x e o custo cai na mesma proporção. Agentes de fundo e CI não precisam de velocidade alta.",
+      "t": 1808,
+      "legenda": "Menos velocidade por requisição multiplica a vazão total e reduz o custo.",
+      "print": "img/Ti-BmGU1_mQ/3.jpg"
+    },
+    {
+      "titulo": "Slop grenade e a fórmula de resultado",
+      "texto": "Gerar muito código, slide ou relatório e deixar a verificação para outro é o que ele chama de slop grenade (granada de lixo gerado). Em um caso, o revisor jogou fora o código do agente e refez à mão. A regra é cada pessoa assumir o que entrega e medir resultados, não uso. Ele cita a fórmula tokens vezes preço dividido por resultados realmente usados, e admite que é uma medida falha.",
+      "t": 2579,
+      "legenda": "Custo útil se mede por resultado adotado, não por volume de tokens.",
+      "print": "img/Ti-BmGU1_mQ/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Throughput",
+      "traducao": "vazão: tokens totais por segundo no servidor",
+      "nivel": "intermediario",
+      "chave": "throughput",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Model routing",
+      "traducao": "roteamento de modelos por tarefa ou por turno",
+      "nivel": "intermediario",
+      "chave": "model routing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Prompt caching",
+      "traducao": "reaproveitar o prefixo já processado do prompt",
+      "nivel": "intermediario",
+      "chave": "prompt caching",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Open weights",
+      "traducao": "modelos abertos que você pode hospedar",
+      "nivel": "basico",
+      "chave": "open weights",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Fine-tuning",
+      "traducao": "ajuste fino de um modelo para uma tarefa",
+      "nivel": "intermediario",
+      "chave": "fine-tuning",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Destilação",
+      "traducao": "treinar um modelo menor com saídas de um maior",
+      "nivel": "avancado",
+      "chave": "destilação",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação com casos de teste da sua tarefa",
+      "nivel": "basico",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Golden dataset",
+      "traducao": "conjunto de exemplos de ouro, revisados",
+      "nivel": "intermediario",
+      "chave": "golden dataset",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O palestrante vende inferência e admite isso, então os casos de economia (US$ 250 mil para US$ 7,6 mil, US$ 150 mil para menos de US$ 10 mil) vêm de clientes dele, sem metodologia, sem medida de qualidade e sem comparação independente. A regra 2x de velocidade igual a 3x de custo é uma estimativa de bolso. A fórmula de resultado é apresentada como falha pelo próprio autor. A parte sobre processos, slop grenade e revisão vem de observação, sem dados.",
+  "acoes": [
+    "Separe uma chave de API por time e por caso de uso e some o gasto mensal de cada uma antes de qualquer outra otimização.",
+    "Monte um eval pequeno com exemplos reais da sua tarefa e teste modelos mais baratos ou abertos, começando pelo mais barato que passa na maioria dos casos.",
+    "Use o modelo forte para planejar e revisar e um modelo rápido e barato para implementar, e dê a ele velocidade maior como incentivo de troca.",
+    "Exija que quem gera código, slide ou relatório com IA assuma o conteúdo e entregue em partes pequenas e testadas, para não empurrar a revisão para o colega."
+  ],
+  "numeros": [
+    {
+      "valor": "2 tri/dia",
+      "contexto": "Tokens por dia de um cliente grande da Featherless",
+      "t": 63
+    },
+    {
+      "valor": "US$ 150 mil",
+      "contexto": "Gasto mensal de 5 devs com agentes, depois abaixo de US$ 10 mil",
+      "t": 374
+    },
+    {
+      "valor": "US$ 7,6 mil",
+      "contexto": "Custo mensal de telco após sair de US$ 250 mil",
+      "t": 1338
+    },
+    {
+      "valor": "2x = 3x",
+      "contexto": "Regra de bolso: dobrar velocidade triplica o custo",
+      "t": 1808
+    }
+  ]
+}

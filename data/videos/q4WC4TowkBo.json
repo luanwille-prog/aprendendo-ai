@@ -1,0 +1,174 @@
+{
+  "id": "q4WC4TowkBo",
+  "titulo": "Teach Your Agent to Prove It's Done — Nick Nisi & Zack Proser, WorkOS",
+  "titulo_curto": "Teach Your Agent to Prove It's Done",
+  "palestrante": "Nick Nisi & Zack Proser, WorkOS",
+  "url": "https://www.youtube.com/watch?v=q4WC4TowkBo",
+  "duracao": 3664,
+  "publicado_ts": 1792306817,
+  "edicao": "2026-10-18",
+  "tese": "Quem manda o agente provar que terminou, com um script repetível, revisa menos código e entrega mais PRs.",
+  "tldr": [
+    "Os palestrantes da WorkOS mostram que o relato do agente ('terminei, os testes passam') não basta, como prova um app que exibe sucesso na tela mas não grava o e-mail.",
+    "A solução proposta é dar ao agente uma CLI própria do app, com comandos para subir, interagir, inspecionar e provar o resultado, de modo que cada falha vire o próximo conserto sem passar por você.",
+    "Para o que não dá para comparar texto a texto, entra um modelo rápido como juiz, e os resultados de cada execução viram 'recibos' que servem de base para evals (avaliações) futuras."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Sucesso na tela não prova persistência",
+      "texto": "No app de demonstração, o formulário mostra 'sucesso' ao cadastrar um e-mail, mas ao recarregar a página o dado sumiu. O teste só olhou a interface e ignorou a outra metade, o armazenamento. Quando você gerencia vários agentes ao mesmo tempo, esse tipo de bug sutil passa batido, porque o agente afirma que o build roda e os testes passam.",
+      "t": 312,
+      "legenda": "A tela confirma o cadastro, mas o dado não foi gravado em lugar nenhum.",
+      "print": null
+    },
+    {
+      "titulo": "Um verificador central que o agente consulta",
+      "texto": "Zack criou o CTX, um app web que concentra a autoridade de verificação. O agente conclui o trabalho, chama o CTX via MCP e pergunta se terminou. O CTX roda um verificador conhecido, por exemplo checar na API do GitHub se o PR existe e se todas as checagens passaram. Só então marca a etapa como satisfeita. Se falhar, devolve ao agente o que ainda está quebrado.",
+      "t": 842,
+      "legenda": "O status vem de um verificador externo, não da palavra do modelo.",
+      "print": "img/q4WC4TowkBo/1.jpg"
+    },
+    {
+      "titulo": "Uma CLI do app como ferramenta do agente",
+      "texto": "O comando snack sobe e derruba o app, roda um 'doctor' de saúde, entra na lista de espera, recarrega, tira snapshot, lê storage, console e rede, tira screenshot e roda prove e judge. Uma única chamada com saída determinística substitui parágrafos de instrução e dá a todos os agentes o mesmo resultado. Os autores avisam que não existe ferramenta genérica, cada time monta a sua.",
+      "t": 1243,
+      "legenda": "Os comandos da CLI dão olhos e mãos ao agente para testar o próprio trabalho.",
+      "print": "img/q4WC4TowkBo/2.jpg"
+    },
+    {
+      "titulo": "O momento em que o agente descobre que não terminou",
+      "texto": "Rodando doctor, join e storage em sequência, o storage volta vazio, ou seja, o e-mail não foi persistido. É nesse ponto que o agente percebe a falha e volta a consertar em vez de entregar. O ciclo é o de TDD (red, green, refactor): reproduzir, corrigir e mostrar a prova. Mensagens de erro claras ajudam o agente a se corrigir sozinho.",
+      "t": 2207,
+      "legenda": "A prova automática expõe a falha que a interface escondia.",
+      "print": "img/q4WC4TowkBo/3.jpg"
+    },
+    {
+      "titulo": "Juiz rápido para o que não bate texto a texto",
+      "texto": "Depois do conserto, a página pode dizer 'você está dentro, vaga confirmada' quando o correto era 'lista de espera'. Comparar texto exato acopla o teste à tela. Um modelo rápido ('sistema 1') avalia se o texto cumpre o contrato. No jogo do sabotador e detetive, o resultado é classificado em categorias como 'achou o bug com prova', 'disse que funciona mas não funciona' ou 'sem evidência'.",
+      "t": 2396,
+      "legenda": "O juiz LLM pega uma promessa exagerada que o teste fixo não pegaria.",
+      "print": "img/q4WC4TowkBo/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Verifier",
+      "traducao": "verificador",
+      "nivel": "intermediario",
+      "chave": "verifier",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação",
+      "nivel": "intermediario",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo de linguagem como juiz",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Hill climbing",
+      "traducao": "subida de colina (melhorar por tentativas medidas)",
+      "nivel": "avancado",
+      "chave": "hill climbing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Recursive self-improvement",
+      "traducao": "autoaperfeiçoamento recursivo",
+      "nivel": "avancado",
+      "chave": "recursive self-improvement",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Red-green-refactor",
+      "traducao": "ciclo de teste que falha, passa e é refinado",
+      "nivel": "intermediario",
+      "chave": "red-green-refactor",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Teste de regressão",
+      "traducao": "teste que garante que o antigo continua funcionando",
+      "nivel": "basico",
+      "chave": "teste de regressão",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Receipts",
+      "traducao": "recibos (registros de cada execução do agente)",
+      "nivel": "intermediario",
+      "chave": "receipts",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é um workshop da WorkOS e as afirmações de ganho são anedóticas: 900 PRs por mês 'sem incidentes' vem de relato, sem metodologia nem comparação. Os exemplos são um app de brinquedo e um bug plantado de propósito, então não mostram o custo de montar verificadores em sistemas reais. Os palestrantes admitem que a CLI não é reutilizável e que o próprio exemplo de verificação precisa de testes. Um deles confia numa nota 5/5 de revisor automático, o que admite deixar passar código inútil. Os autores também promovem as próprias ferramentas e a tese de que se escreve menos código.",
+  "acoes": [
+    "Antes de delegar uma tarefa, escreva o critério de pronto como um comando que retorna sucesso ou falha, em vez de pedir 'verifique no navegador'.",
+    "Crie uma CLI pequena para o seu app com saúde, ação principal e inspeção de estado (storage, console, rede), e peça ao agente que a rode antes de dizer que terminou.",
+    "Exija prova junto do PR, como screenshot, vídeo do fluxo ou saída do teste, e confira se o screenshot mostra o caminho completo e não só o estado final.",
+    "Registre no AGENTS.md quando rodar a verificação e reforce no CI, e guarde os resultados de cada execução para virar eval depois."
+  ],
+  "numeros": [
+    {
+      "valor": "9 segundos",
+      "contexto": "tempo em que um agente apagou bancos de produção, segundo um tweet citado",
+      "t": 32
+    },
+    {
+      "valor": "900 PRs/mês",
+      "contexto": "ritmo de pessoas do time, sem incidentes, segundo os palestrantes",
+      "t": 655
+    },
+    {
+      "valor": "18 a 30 abas",
+      "contexto": "terminais abertos num dia médio de Zack",
+      "t": 748
+    },
+    {
+      "valor": "10 a 15 agentes",
+      "contexto": "agentes que Nick roda em paralelo num dia normal",
+      "t": 3407
+    }
+  ]
+}

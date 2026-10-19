@@ -1,0 +1,174 @@
+{
+  "id": "obfPzbapMIM",
+  "titulo": "Evals for High-Stakes AI Agents — Doneyli De Jesus & Annabell Schäfer, Langfuse",
+  "titulo_curto": "Evals for High-Stakes AI Agents",
+  "palestrante": "Doneyli De Jesus & Annabell Schäfer, Langfuse",
+  "url": "https://www.youtube.com/watch?v=obfPzbapMIM",
+  "duracao": 3212,
+  "publicado_ts": 1792310406,
+  "edicao": "2026-10-18",
+  "tese": "Em área regulada, o agente só vai para produção com rastreio, dataset curado por especialista e um gate de CI que barra mudança de prompt quando a nota cai.",
+  "tldr": [
+    "Agentes de IA podem falhar enquanto as métricas de sistema ficam verdes, como o agente que diz ter feito um reembolso sem chamar a ferramenta.",
+    "O workshop usa um assistente bancário para percorrer o ciclo completo: tracing com máscara de PII, dataset, revisão por especialista, evaluators (LLM judge e código), CI com gate e dashboards.",
+    "A recomendação final é automatizar instrumentação, busca de falhas e execução de evals com um coding agent, mas manter humanos no gosto e na curadoria do dataset."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "O agente pode mentir com tudo verde",
+      "texto": "Annabelle mostra um agente de suporte que diz ter emitido um reembolso, mas nunca chamou a ferramenta. Latência e erros ficam normais, então a observabilidade tradicional não vê o problema. O usuário só descobre semanas depois. Por isso o time precisa procurar sinais de falha de forma contínua.",
+      "t": 136,
+      "legenda": "Status verde não prova que o agente fez o que disse.",
+      "print": "img/obfPzbapMIM/0.jpg"
+    },
+    {
+      "titulo": "Máscara de PII antes de gravar o trace",
+      "texto": "No demo bancário, o usuário digita o número do cartão em texto puro. Uma função de masking redige o dado antes de ele ser salvo no Langfuse. Instituições financeiras exigem que dados sensíveis fiquem nos sistemas de registro, e o trace mostra a pergunta já com o número oculto.",
+      "t": 976,
+      "legenda": "O número do cartão chega ao log já mascarado.",
+      "print": null
+    },
+    {
+      "titulo": "Especialista comenta, o LLM cria as categorias",
+      "texto": "O especialista de domínio revisa uma amostra numa annotation queue e deixa notas curtas, de preferência ditadas. Depois um LLM agrupa os comentários em failure modes, como citação ausente ou registro informal. Esses modos viram os scores que o sistema mede. A tarefa humana fica leve e o LLM faz o que sabe fazer, achar padrões em texto.",
+      "t": 1628,
+      "legenda": "O especialista escreve em segundos e o LLM agrupa os padrões.",
+      "print": "img/obfPzbapMIM/2.jpg"
+    },
+    {
+      "titulo": "Mudou o prompt, o CI roda os evals",
+      "texto": "Promover uma versão do prompt para produção dispara uma automação que lança um job de CI no GitHub. O job roda o experimento contra o dataset e compara cada score com um mínimo definido. Se algum ficar abaixo, a mudança não passa. O time ganha um registro de evidência em vez de decidir por impressão.",
+      "t": 2253,
+      "legenda": "A mudança de prompt só passa se todos os scores cruzam o mínimo.",
+      "print": "img/obfPzbapMIM/3.jpg"
+    },
+    {
+      "titulo": "Equilíbrio entre automação e gosto humano",
+      "texto": "Annabelle desenha dois eixos, tempo investido e qualidade do sistema. Mandar o coding agent 'consertar tudo' leva a baixa qualidade. Fazer tudo à mão gasta tempo à toa. O ponto bom automatiza instrumentação, busca de falhas e experimentos, e deixa com humanos o dataset e a direção do produto.",
+      "t": 2790,
+      "legenda": "Automação total gera baixa qualidade, e a zona ideal mistura agente e gosto humano.",
+      "print": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Trace",
+      "traducao": "rastro de execução do agente",
+      "nivel": "basico",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Golden dataset",
+      "traducao": "conjunto de casos de teste validados",
+      "nivel": "intermediario",
+      "chave": "golden dataset",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Annotation queue",
+      "traducao": "fila de anotação para revisão humana",
+      "nivel": "intermediario",
+      "chave": "annotation queue",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Error analysis",
+      "traducao": "análise de erros nos traces",
+      "nivel": "intermediario",
+      "chave": "error analysis",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação automática da qualidade do agente",
+      "nivel": "basico",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "LLM que avalia a saída de outro LLM",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Evaluator baseado em código",
+      "traducao": "avaliador determinístico em código",
+      "nivel": "intermediario",
+      "chave": "evaluator baseado em código",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Quality gate",
+      "traducao": "portão de qualidade no CI",
+      "nivel": "intermediario",
+      "chave": "quality gate",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É um workshop de produto da Langfuse, então o fluxo inteiro passa pela ferramenta da própria empresa. O demo usa dados fictícios e um agente simples. Os números do dashboard (1.400 interações, menos de US$ 7) vêm de uma conta rápida de cabeça, sem metodologia e sem comparar com o custo de operar o agente. Os comentários sobre calibrar o LLM judge contra rótulos humanos ficam só na sessão de perguntas, sem exemplo prático.",
+  "acoes": [
+    "Registre traces de todo agente em produção e mascare dados sensíveis antes de gravar.",
+    "Peça a um especialista de domínio para anotar 50 a 100 traces em uma hora e use um LLM para agrupar os comentários em failure modes.",
+    "Combine evaluators de LLM judge com checagens determinísticas em código, para não depender só de um juiz que erra às vezes.",
+    "Ligue a troca de prompt ou modelo a um job de CI que roda o dataset e bloqueia a mudança se algum score ficar abaixo do mínimo."
+  ],
+  "numeros": [
+    {
+      "valor": "1.400",
+      "contexto": "interações em 7 dias sem passar a humano",
+      "t": 2408
+    },
+    {
+      "valor": "< US$ 7",
+      "contexto": "custo dessas interações em 7 dias",
+      "t": 2439
+    },
+    {
+      "valor": "18%",
+      "contexto": "respostas com polegar para baixo no dashboard",
+      "t": 2629
+    },
+    {
+      "valor": "89",
+      "contexto": "casos de pedido de conselho de investimento em 7 dias",
+      "t": 2629
+    }
+  ]
+}

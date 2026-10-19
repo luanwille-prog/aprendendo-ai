@@ -1,0 +1,236 @@
+{
+  "id": "7T-gldvgfpo",
+  "titulo": "Stop Telling Agents How — Dan Barrett, Raymond Weitekamp & Jose Montes de Oca, OpenProse",
+  "titulo_curto": "Stop Telling Agents How",
+  "palestrante": "Dan Barrett, Raymond Weitekamp & Jose Montes de Oca, OpenProse",
+  "url": "https://www.youtube.com/watch?v=7T-gldvgfpo",
+  "duracao": 2975,
+  "publicado_ts": 1792350005,
+  "edicao": "2026-10-18",
+  "tese": "Descreva o resultado que você quer num contrato em markdown e deixe o agente decidir o caminho. Troque o 'como' pelo 'o quê' e ganhe custo e reuso.",
+  "tldr": [
+    "A equipe do OpenProse propõe escrever workflows de vários agentes como contratos em markdown, que declaram o resultado esperado, e deixar o harness (o programa que roda o agente) descobrir os passos.",
+    "Esses contratos rodam em qualquer harness com subagentes, como Claude Code ou Codex, e disparam por eventos como pull request, webhook ou agenda, em vez de depender de conversa.",
+    "As demos mostram um revisor de PR 'ranzinza' e a documentação de modelos quantitativos de bancos, mas o talk traz poucos dados de qualidade e é, em boa parte, apresentação do próprio produto."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Declare o resultado, não os passos",
+      "texto": "Um contrato descreve objetivo, entradas, saídas e o que precisa ser verdade no fim. O agente escolhe como chegar lá. Quem dita o passo a passo desperdiça inteligência do modelo e impede o uso de um modelo mais barato para a mesma tarefa.",
+      "t": 1160,
+      "legenda": "Um workflow inteiro é um arquivo markdown com contrato, agentes e skills.",
+      "print": "img/7T-gldvgfpo/0.jpg"
+    },
+    {
+      "titulo": "Job é contrato mais gatilho",
+      "texto": "Na plataforma hospedada, um job junta um contrato a um gatilho. Os gatilhos prontos são webhook (Slack e GitHub entram aí) e cron job (agenda). Assim o workflow roda sozinho quando chega um issue, um PR ou chega a hora marcada, sem ninguém abrir um chat.",
+      "t": 1319,
+      "legenda": "Tela de criação de job que liga um contrato a um gatilho de PR.",
+      "print": "img/7T-gldvgfpo/1.jpg"
+    },
+    {
+      "titulo": "Revisão por sessões novas contra o contrato",
+      "texto": "Cada PR dispara agentes revisores em sessões limpas, comparados ao contrato. Isso evita que o mesmo modelo avalie o próprio trabalho com excesso de confiança. O palestrante diz que alguns PRs passaram em uma rodada e outros precisaram de 14 até os revisores concordarem.",
+      "t": 1379,
+      "legenda": "Histórico de runs mostra o volume de PRs e as rodadas de revisão por PR.",
+      "print": "img/7T-gldvgfpo/2.jpg"
+    },
+    {
+      "titulo": "Fixe o 'como' depois que o agente acertar",
+      "texto": "Você começa com contrato aberto e um modelo caro. Quando uma execução dá certo, o trace dela vira instruções mais específicas. O custo cai porque o caminho já foi descoberto. O processo vai do 'o quê' em direção ao 'como' aos poucos.",
+      "t": 940,
+      "legenda": "Explicação de como transformar uma execução boa em workflow reutilizável.",
+      "print": null
+    },
+    {
+      "titulo": "Kernel público mais contrato de regulador",
+      "texto": "Na demo do banco, o Codex recebe só o kernel (um markdown que funciona como bootloader) e um programa com os requisitos de reguladores e auditores. O agente produz a documentação de um modelo da curva SOFR, que é público. O texto regulatório já funciona como um programa em prosa.",
+      "t": 2129,
+      "legenda": "Os requisitos regulatórios escritos em prosa são o próprio contrato do workflow.",
+      "print": "img/7T-gldvgfpo/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Programação declarativa",
+      "traducao": "descrever o resultado desejado em vez de cada passo (imperativo)",
+      "nivel": "basico",
+      "chave": "programação declarativa",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Contrato",
+      "traducao": "descrição do estado final, das entradas e das saídas que o agente deve cumprir",
+      "nivel": "basico",
+      "chave": "contrato",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Harness",
+      "traducao": "programa que roda o modelo, as ferramentas e os subagentes",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Webhook",
+      "traducao": "aviso automático de outro sistema que dispara uma ação",
+      "nivel": "basico",
+      "chave": "webhook",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Cron job",
+      "traducao": "tarefa agendada para horários fixos",
+      "nivel": "basico",
+      "chave": "cron job",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Adversarial review",
+      "traducao": "revisão feita por um agente separado, independente de quem escreveu",
+      "nivel": "intermediario",
+      "chave": "adversarial review",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "DSPy",
+      "traducao": "framework que isola cada chamada de LLM atrás de interfaces tipadas",
+      "nivel": "avancado",
+      "chave": "dspy",
+      "analogia": "DSPy é como uma linha de montagem em que cada funcionário recebe um formulário com campos fixos e só pode devolver o formulário preenchido.",
+      "explicacao": [
+        "Um programa com IA costuma fazer várias perguntas ao modelo em sequência. O DSPy organiza essas perguntas dentro de um código normal.",
+        "Cada chamada ao LLM (large language model, o modelo de linguagem) fica isolada, como uma caixa-preta com uma tarefa só.",
+        "Você define uma interface tipada (typed interface, um molde que diz o tipo de cada entrada e saída), e o modelo só preenche esse molde.",
+        "O resto do fluxo roda em código determinístico, que sempre faz a mesma coisa. O código decide a ordem dos passos e quando parar.",
+        "No talk, o OpenProse tem a mesma intenção de criar uma camada acima dos workflows, mas faz o oposto e deixa o próprio agente decidir quase tudo."
+      ],
+      "pre_requisitos": [
+        "LLM",
+        "Prompt",
+        "Programação declarativa"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "MOLDE TIPADO",
+            "nota": "Define entradas e saídas de cada tarefa"
+          },
+          {
+            "rotulo": "CHAMADA ISOLADA",
+            "nota": "O modelo preenche só aquele molde"
+          },
+          {
+            "rotulo": "CÓDIGO ORQUESTRA",
+            "nota": "Código fixo liga as chamadas em ordem"
+          },
+          {
+            "rotulo": "SAÍDA PREVISÍVEL",
+            "nota": "Menos espaço para o modelo improvisar"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "DAG de contratos",
+      "traducao": "grafo sem ciclos em que cada contrato cumprido libera o seguinte",
+      "nivel": "avancado",
+      "chave": "dag de contratos",
+      "analogia": "Um DAG de contratos é como uma obra em que o pedreiro só começa a parede quando a fundação passa na vistoria, e ninguém volta para a etapa anterior.",
+      "explicacao": [
+        "Um trabalho grande pode ser dividido em etapas menores, cada uma com um resultado combinado.",
+        "Cada etapa tem um contrato, que descreve o que precisa estar pronto no fim dela. O agente escolhe como chegar lá.",
+        "Os contratos ficam ligados num DAG (directed acyclic graph, grafo dirigido sem ciclos). As setas só andam para frente e nunca formam um laço.",
+        "Quando um contrato é cumprido, ele funciona como checkpoint (ponto de controle) e libera o próximo contrato da fila.",
+        "Assim você controla parte do caminho pela ordem dos contratos e ainda deixa o agente livre dentro de cada etapa."
+      ],
+      "pre_requisitos": [
+        "Contrato",
+        "Subagente",
+        "Workflow"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "CONTRATO 1",
+            "nota": "Ex.: pesquisa reunida e conferida"
+          },
+          {
+            "rotulo": "CHECKPOINT",
+            "nota": "Contrato cumprido libera o próximo"
+          },
+          {
+            "rotulo": "CONTRATO 2",
+            "nota": "Ex.: rascunho no estilo pedido"
+          },
+          {
+            "rotulo": "CONTRATO 3",
+            "nota": "Ex.: revisão final do texto"
+          },
+          {
+            "rotulo": "RESULTADO FINAL",
+            "nota": "Artigo pronto sem voltar etapas"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "Em boa parte é pitch do OpenProse e da plataforma run.prose.md. A qualidade do documento do banco é 'chocantemente boa' sem métrica nem comparação. A estimativa de US$ 10 a 50 milhões por ano vem do palestrante, sem fonte. Raymond admite a fraqueza central: o agente declara sozinho que cumpriu o contrato, e o resultado muda entre modelos. O custo das 14 rodadas não aparece. A demo usou modelo barato e dado público, e a aprovação de auditores ficou para depois.",
+  "acoes": [
+    "Escolha uma tarefa repetida no seu trabalho e reescreva o pedido ao agente como contrato com objetivo, entradas, saídas e critérios de aceite, sem listar os passos.",
+    "Na revisão de código ou de texto por IA, use uma sessão nova com os critérios escritos, em vez de pedir que o mesmo agente confira o que acabou de fazer.",
+    "Guarde a melhor sessão de um agente como workflow reutilizável e compare o custo depois de fixar os passos que funcionaram.",
+    "Antes de adotar uma ferramenta assim, defina uma checagem independente do 'terminei' do agente, como um verificador separado ou revisão humana por amostragem."
+  ],
+  "numeros": [
+    {
+      "valor": "70-80 mil",
+      "contexto": "tokens do prompt-base (skill) do OpenProse, segundo Raymond",
+      "t": 1064
+    },
+    {
+      "valor": "14 rodadas",
+      "contexto": "revisão em alguns PRs até os revisores concordarem",
+      "t": 1411
+    },
+    {
+      "valor": "4.000",
+      "contexto": "modelos quant em um banco grande, redocumentados por ano",
+      "t": 2221
+    },
+    {
+      "valor": "US$ 10-50 mi",
+      "contexto": "valor anual do problema em bancos maiores, estimativa de Dan",
+      "t": 2221
+    }
+  ]
+}
