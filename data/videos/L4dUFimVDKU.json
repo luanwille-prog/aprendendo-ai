@@ -1,0 +1,163 @@
+{
+  "id": "L4dUFimVDKU",
+  "titulo": "Backtest Your Agent Against Yesterday's Web — Ryan Ahern, Exa",
+  "titulo_curto": "Backtest Your Agent Against Yesterday's Web",
+  "palestrante": "Ryan Ahern, Exa",
+  "url": "https://www.youtube.com/watch?v=L4dUFimVDKU",
+  "duracao": 1601,
+  "publicado_ts": 1792393239,
+  "edicao": "2026-10-19",
+  "tese": "Para provar que um agente de busca acerta, teste-o contra a web como ela era antes do desfecho, e guarde dados separados para não se enganar.",
+  "tldr": [
+    "Ryan Ahern, da Exa, apresenta o Exa Snapshot, um recurso que versiona a web e permite buscar como se fosse uma data do passado.",
+    "Isso serve para fazer backtest (teste com dados históricos) de agentes e modelos preditivos sem vazar informação do futuro, por exemplo prever aquisições de empresas.",
+    "Na dinâmica ao vivo, os vencedores sobreajustaram as 10 empresas do teste, o que mostra por que é preciso um conjunto de validação separado (holdout)."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "A web versionada: duas formas de voltar no tempo",
+      "texto": "A Exa guarda versões de cada página que rastreia. Com content versioning, você informa uma URL e uma data e recebe o conteúdo daquele dia ou da data anterior mais próxima. Com version search, você roda uma busca inteira como se estivesse no passado. Assim o agente enxerga só o que existia na época.",
+      "t": 380,
+      "legenda": "O Snapshot oferece versão de uma URL e busca completa em data passada.",
+      "print": "img/L4dUFimVDKU/0.jpg"
+    },
+    {
+      "titulo": "Busca ao vivo vaza o futuro para o teste",
+      "texto": "Uma busca atual sempre traz a informação mais recente. Se o seu preditor de aquisições lê a notícia de que a empresa foi comprada, ele acerta sem esforço. Fixar a data do snapshot logo antes do anúncio impede esse vazamento (look-ahead bias, viés de olhar para frente) e deixa o teste honesto.",
+      "t": 625,
+      "legenda": "Data do snapshot antes do desfecho evita que o teste já conheça a resposta.",
+      "print": "img/L4dUFimVDKU/1.jpg"
+    },
+    {
+      "titulo": "Três padrões de backtest, do modelo clássico ao agente completo",
+      "texto": "No primeiro padrão, você usa o Snapshot só para recuperar features históricas de um modelo que já tem. No segundo, o agente busca na web e transforma texto em sinal estruturado para um modelo tradicional. No terceiro, o sistema inteiro é agêntico e decide quando buscar, sempre limitado ao que existia na data.",
+      "t": 830,
+      "legenda": "Três níveis de autonomia, todos testáveis com busca congelada no tempo.",
+      "print": "img/L4dUFimVDKU/2.jpg"
+    },
+    {
+      "titulo": "Demo: testar features de aquisição em 10 empresas",
+      "texto": "Cada feature é uma pergunta de sim ou não, como se a empresa perdeu o CEO ou se está explorando uma venda. O sistema busca 1, 7 e 30 dias antes da aquisição e pontua acertos e falsos alarmes. Combinar features com OR capta mais aquisições e gera mais alarmes falsos. Com AND, o placar melhora.",
+      "t": 1240,
+      "legenda": "Cada feature é avaliada por empresa, com acertos e falsos positivos visíveis.",
+      "print": "img/L4dUFimVDKU/3.jpg"
+    },
+    {
+      "titulo": "Overfitting ao vivo: os vencedores decoraram o conjunto",
+      "texto": "O primeiro colocado usou features que citavam nomes de empresas específicas do conjunto de teste. Ryan admite que removeu o holdout (conjunto separado, não usado no ajuste) por simplicidade e usa o caso como lição. Sem validação em dados novos, o placar alto não indica que o modelo funcionaria no futuro.",
+      "t": 1420,
+      "legenda": "Features vencedoras citam empresas do próprio teste, sinal claro de overfitting.",
+      "print": "img/L4dUFimVDKU/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Backtest",
+      "traducao": "teste com dados históricos",
+      "nivel": "intermediario",
+      "chave": "backtest",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Look-ahead bias",
+      "traducao": "viés de olhar para frente",
+      "nivel": "intermediario",
+      "chave": "look-ahead bias",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Data leakage",
+      "traducao": "vazamento de dados",
+      "nivel": "intermediario",
+      "chave": "data leakage",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Overfitting",
+      "traducao": "sobreajuste",
+      "nivel": "intermediario",
+      "chave": "overfitting",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Holdout set",
+      "traducao": "conjunto de validação separado",
+      "nivel": "intermediario",
+      "chave": "holdout set",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Agentic web search",
+      "traducao": "busca na web feita por agentes",
+      "nivel": "basico",
+      "chave": "agentic web search",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Falso positivo",
+      "traducao": "alarme falso",
+      "nivel": "basico",
+      "chave": "falso positivo",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é também pitch da Exa, que vende o Snapshot como recurso enterprise e cita ganhos de qualidade, custo e latência sem mostrar dados. Não há medida de quão fiel é o arquivo histórico, nem quão completo ele é para páginas que mudam. A demo usa só 10 empresas e o próprio palestrante reconhece que dispensou o holdout. O exemplo prova o conceito, não a eficácia de prever aquisições.",
+  "acoes": [
+    "Ao avaliar um agente que depende de busca, congele a data das fontes antes do desfecho que você quer prever, para não contaminar o teste.",
+    "Separe um holdout com casos positivos e negativos que você nunca use para ajustar prompts ou features.",
+    "Desconfie de datas de publicação de artigos como feature, pois elas são atualizadas com frequência por motivos de SEO.",
+    "Teste uma feature do agente por vez e compare placares com e sem ela, em vez de mudar várias coisas juntas."
+  ],
+  "numeros": [
+    {
+      "valor": "100 bilhões",
+      "contexto": "documentos no índice da Exa",
+      "t": 372
+    },
+    {
+      "valor": "300 ms",
+      "contexto": "latência mínima citada para a busca",
+      "t": 310
+    },
+    {
+      "valor": "3.212",
+      "contexto": "publishers de games achados em uma busca de 20 minutos",
+      "t": 310
+    },
+    {
+      "valor": "10",
+      "contexto": "empresas no conjunto de teste da demo",
+      "t": 1204
+    }
+  ]
+}

@@ -1,0 +1,164 @@
+{
+  "id": "_4Ph2dhmUFI",
+  "titulo": "How to Know When an AI Agent Can Work Unsupervised — Evan Kormos, Coinbase",
+  "titulo_curto": "How to Know When an AI Agent Can Work Unsupervised",
+  "palestrante": "Evan Kormos, Coinbase",
+  "url": "https://www.youtube.com/watch?v=_4Ph2dhmUFI",
+  "duracao": 1052,
+  "publicado_ts": 1792450808,
+  "edicao": "2026-10-19",
+  "tese": "Um agente só trabalha sem supervisão quando a checagem do resultado merece mais confiança do que o próprio agente.",
+  "tldr": [
+    "Evan Kormos, do Coinbase, propõe mapear processos regulados como grafos: fluxo externo determinístico e, dentro de cada etapa, um loop adaptativo em que pessoas e agentes trabalham juntos.",
+    "O loop só é tão confiável quanto a checagem que decide se o trabalho está bom. Por isso ele defende evals (avaliações) e traces (registros de execução) como o equivalente dos testes unitários para agentes, que são probabilísticos.",
+    "A autonomia chega em três estágios. Primeiro, humanos verificam tudo. Depois, verificam uma amostra. No fim, tratam só as exceções, sempre que a confiança medida passar de um limite definido pela política."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Política é o prompt de sistema original",
+      "texto": "Kormos trata a política da empresa como a intenção institucional original, algo como o system prompt (instrução de base) do negócio. Ele separa o estado de construção, em que a política muda, do estado de execução, em que o sistema roda e evolui sempre dentro dos limites dessa política.",
+      "t": 43,
+      "legenda": "A política vem antes do sistema e define o que o agente pode fazer.",
+      "print": "img/_4Ph2dhmUFI/0.jpg"
+    },
+    {
+      "titulo": "Processos como DAGs, etapas como loops",
+      "texto": "Um DAG (grafo acíclico dirigido) representa etapas e dependências sem voltar atrás. Agentes permitem rodar revisões independentes em paralelo e manter os controles obrigatórios. Dentro de cada nó há um loop de trabalho, checagem e feedback, que forma um grafo com ciclos (DCG). A receita dele: determinístico por fora, adaptativo por dentro.",
+      "t": 354,
+      "legenda": "Dentro de cada etapa do DAG existe um loop que itera até o trabalho passar.",
+      "print": "img/_4Ph2dhmUFI/1.jpg"
+    },
+    {
+      "titulo": "Acelerar uma etapa desloca o gargalo",
+      "texto": "Quando agentes revisam código mais rápido, o volume se desloca para as etapas vizinhas, como design e scan de segurança. Kormos diz que a visibilidade operacional do processo importa mais do que a ferramenta para criar o workflow, e que é preciso desenhar fluxos de exceção sem tentar cobrir todo caso raro.",
+      "t": 480,
+      "legenda": "Paralelizar uma etapa cria gargalos nas outras e exige métricas do processo.",
+      "print": "img/_4Ph2dhmUFI/2.jpg"
+    },
+    {
+      "titulo": "Evals substituem a comparação exata",
+      "texto": "Software tradicional ganha confiança com testes unitários. Agentes são probabilísticos, então a mesma entrada gera respostas diferentes e várias podem estar corretas. A saída é montar datasets representativos, definir o que é bom e rodar as avaliações em série, como análise estatística, junto com traces de execução.",
+      "t": 707,
+      "legenda": "Evals e traces formam o mecanismo de confiança que complementa os testes clássicos.",
+      "print": "img/_4Ph2dhmUFI/3.jpg"
+    },
+    {
+      "titulo": "Supervisionado, amostrado, só exceções",
+      "texto": "No primeiro dia, humanos verificam toda saída e ajudam a refinar os datasets com especialistas do domínio. Quando a confiança medida atinge o limite da política, a revisão passa a ser por amostra, com avaliação sistemática via traces. Superado outro limite, humanos tratam só as exceções.",
+      "t": 869,
+      "legenda": "A supervisão diminui por etapas, cada uma liberada por um limite de confiança medido.",
+      "print": "img/_4Ph2dhmUFI/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "DAG (grafo acíclico dirigido)",
+      "traducao": "grafo de etapas que avança sem voltar",
+      "nivel": "intermediario",
+      "chave": "dag (grafo acíclico dirigido)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Loop",
+      "traducao": "ciclo de trabalho, checagem e feedback",
+      "nivel": "basico",
+      "chave": "loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Bottleneck",
+      "traducao": "gargalo",
+      "nivel": "basico",
+      "chave": "bottleneck",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação automatizada de qualidade",
+      "nivel": "intermediario",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Trace",
+      "traducao": "registro de execução do agente",
+      "nivel": "intermediario",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Hill climbing",
+      "traducao": "melhoria gradual contra uma métrica",
+      "nivel": "avancado",
+      "chave": "hill climbing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Human in the loop",
+      "traducao": "humano no ciclo de decisão",
+      "nivel": "basico",
+      "chave": "human in the loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sistema determinístico",
+      "traducao": "mesma entrada gera sempre a mesma saída",
+      "nivel": "intermediario",
+      "chave": "sistema determinístico",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "A palestra é conceitual e curta. Não traz dados do Coinbase, como taxa de erro, tamanho de amostra ou limite de confiança usado, nem nenhum caso real de agente operando sem supervisão. Os exemplos (crédito comercial, listagem de token, entrega de software) são ilustrações. Ele não explica como medir o limite de confiança que libera a próxima fase. Há também um viés de ofício: o palestrante vende a ideia de adoção de agentes dentro de uma empresa que quer essa adoção.",
+  "acoes": [
+    "Desenhe um processo do seu trabalho como lista de etapas e dependências. Marque quais etapas poderiam rodar em paralelo e quais precisam de aprovação humana.",
+    "Para cada etapa candidata a agente, responda: dá para checar contra a política, rodar em loop limitado, rastrear e voltar para um humano? Só automatize onde as quatro respostas forem sim.",
+    "Antes de soltar um agente, monte um conjunto pequeno de casos reais com a resposta esperada definida por quem conhece o domínio, e rode várias vezes para ver a variação.",
+    "Comece com revisão humana de 100% das saídas, registre os erros e só passe para amostragem quando tiver um limite de aceitação escrito."
+  ],
+  "numeros": [
+    {
+      "valor": "20 anos",
+      "contexto": "tempo do palestrante construindo software",
+      "t": 12
+    },
+    {
+      "valor": "15 anos",
+      "contexto": "desses, em serviços financeiros corporativos",
+      "t": 12
+    }
+  ]
+}

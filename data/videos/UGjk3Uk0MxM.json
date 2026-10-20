@@ -1,0 +1,174 @@
+{
+  "id": "UGjk3Uk0MxM",
+  "titulo": "The Model Swap Workshop: GPT-5.5 vs Kimi vs DeepSeek vs Mistral — Pamela Fox, Microsoft",
+  "titulo_curto": "The Model Swap Workshop: GPT-5.5 vs Kimi vs DeepSeek vs Mistral",
+  "palestrante": "Pamela Fox, Microsoft",
+  "url": "https://www.youtube.com/watch?v=UGjk3Uk0MxM",
+  "duracao": 3097,
+  "publicado_ts": 1792418813,
+  "edicao": "2026-10-19",
+  "tese": "Benchmark não prevê o seu app. Troque o modelo, rode seus cenários e meça com evals antes de decidir.",
+  "tldr": [
+    "Pamela Fox roda os mesmos cenários em GPT-5.5, Kimi K2.6, DeepSeek V4 Flash e Mistral Large 3 e mostra que eles divergem em contagem, RAG, imagem e tool calling.",
+    "Prompt engineering corrige parte das falhas (contagem, groundedness), mas não corrige entendimento de imagem, e agentes são os mais difíceis de avaliar.",
+    "Para medir de forma repetível ela usa checagem de strings, LLM-as-a-judge, a ferramenta ASSERT para gerar casos de teste a partir de uma spec e DSPy para achar um prompt que o modelo barato aguente."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "A mesma pergunta simples gera respostas diferentes",
+      "texto": "Na contagem de letras E em uma frase, GPT-5.5 e Kimi acertam 13, DeepSeek responde 6 e Mistral responde 8. Com um prompt que manda separar por palavras, contar por palavra e somar, o Mistral acerta. A lição é que o modelo e o prompt mudam o resultado.",
+      "t": 417,
+      "legenda": "Quatro modelos, três respostas diferentes para a mesma contagem.",
+      "print": "img/UGjk3Uk0MxM/0.jpg"
+    },
+    {
+      "titulo": "RAG: o modelo admite que não sabe?",
+      "texto": "Com uma base só sobre abelhas carpinteiras, a pergunta pede também as abelhas-de-mel. GPT-5.5, Kimi e DeepSeek dizem que a fonte não cobre o tema. O Mistral responde com o que sabe dos pesos, e mesmo com prompt mais rígido ainda deixa passar informação fora da fonte.",
+      "t": 640,
+      "legenda": "O Mistral inventou conteúdo fora das fontes fornecidas.",
+      "print": "img/UGjk3Uk0MxM/1.jpg"
+    },
+    {
+      "titulo": "Agentes diferem em eficiência e em paralelismo",
+      "texto": "No agente de viagens em LangChain v1, o GPT-5.5 chama busca de voos e hotéis em paralelo no primeiro turno. Kimi e DeepSeek não paralelizam, e o Mistral para cedo e esquece o passo final. Medir só a resposta final esconde custo e latência extras.",
+      "t": 1616,
+      "legenda": "O log mostra quem paralelizou as chamadas e quantas rodadas cada modelo gastou.",
+      "print": "img/UGjk3Uk0MxM/2.jpg"
+    },
+    {
+      "titulo": "LLM como juiz precisa de contexto e calibração",
+      "texto": "O juiz recebe a pergunta, a resposta e o contexto, e devolve aprovado ou reprovado com uma razão. Cada caso custa duas chamadas de LLM, então a avaliação fica lenta. Ela recomenda pré-gerar as respostas para mudar o juiz sem rodar o app de novo, e calibrar o juiz com rótulos humanos.",
+      "t": 2148,
+      "legenda": "O juiz devolve veredito e justificativa estruturados para cada caso.",
+      "print": "img/UGjk3Uk0MxM/3.jpg"
+    },
+    {
+      "titulo": "DSPy escreve o prompt para o modelo barato",
+      "texto": "Em DSPy o programador declara restrições e checagens, e o otimizador GEPA (algoritmo genético de prompts) busca instruções que as satisfaçam. Ela otimizou para o Mistral, o modelo mais difícil, em cerca de 6 minutos. A promessa é migrar para modelos menores sem reescrever prompts à mão.",
+      "t": 2866,
+      "legenda": "O prompt de sistema final é um resultado do otimizador, não texto escrito à mão.",
+      "print": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Tool calling",
+      "traducao": "chamada de ferramenta",
+      "nivel": "intermediario",
+      "chave": "tool calling",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "RAG",
+      "traducao": "geração aumentada por recuperação",
+      "nivel": "basico",
+      "chave": "rag",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Grounding",
+      "traducao": "ancoragem nas fontes",
+      "nivel": "intermediario",
+      "chave": "grounding",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Chain of thought",
+      "traducao": "raciocínio passo a passo",
+      "nivel": "basico",
+      "chave": "chain of thought",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação automatizada",
+      "nivel": "intermediario",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "LLM como juiz",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Harness",
+      "traducao": "laço que roda o agente e as ferramentas",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "DSPy",
+      "traducao": "framework que gera prompts a partir de uma spec",
+      "nivel": "avancado",
+      "chave": "dspy",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "É um workshop de uma funcionária da Microsoft, rodado na Microsoft Foundry, que vende o próprio ecossistema (Foundry e ASSERT, ferramenta com uma semana de vida que ela mesma diz mal conhecer). Os testes são casos únicos, sem repetição nem estatística, com um modelo por rodada, então não provam que um modelo é melhor que outro. O juiz e os resultados do ASSERT foram vistos só de relance. Ela cita Dropbox e Shopify com DSPy sem mostrar números.",
+  "acoes": [
+    "Monte um conjunto pequeno de casos reais do seu uso (inclua um idioma diferente e um caso sem resposta nas fontes) e rode em dois modelos antes de trocar o provedor.",
+    "Em RAG, inclua uma pergunta que a base não responde e verifique se o modelo admite que não sabe.",
+    "Em agentes, meça número de chamadas e paralelismo, além da resposta final.",
+    "Antes de confiar em um juiz LLM, compare o veredito dele com rótulos de uma pessoa do domínio em uma amostra."
+  ],
+  "numeros": [
+    {
+      "valor": "13",
+      "contexto": "letras E corretas na frase (GPT-5.5 e Kimi acertam)",
+      "t": 386
+    },
+    {
+      "valor": "6",
+      "contexto": "resposta do DeepSeek V4 Flash para a mesma contagem",
+      "t": 417
+    },
+    {
+      "valor": "200 a 800",
+      "contexto": "casos de teste típicos para avaliar um RAG",
+      "t": 2241
+    },
+    {
+      "valor": "6 min",
+      "contexto": "tempo da otimização DSPy no exemplo",
+      "t": 2835
+    }
+  ]
+}
