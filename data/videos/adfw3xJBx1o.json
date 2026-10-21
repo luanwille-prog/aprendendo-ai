@@ -1,0 +1,163 @@
+{
+  "id": "adfw3xJBx1o",
+  "titulo": "A Bank Built Its Own Coding Agent. It Took Off — Felipe Felisola Caso & Francesco Galletta, Monzo",
+  "titulo_curto": "A Bank Built Its Own Coding Agent. It Took Off",
+  "palestrante": "Felipe Felisola Caso & Francesco Galletta, Monzo",
+  "url": "https://www.youtube.com/watch?v=adfw3xJBx1o",
+  "duracao": 930,
+  "publicado_ts": 1792522834,
+  "edicao": "2026-10-20",
+  "tese": "O agente do Monzo decolou porque a plataforma interna já tinha muitas peças prontas. O modelo de IA sozinho teria rendido pouco.",
+  "tldr": [
+    "O Monzo, um banco digital, criou o Agent Chip, um agente de código que começou como um emoji no Slack e hoje escreve mais de 10% dos pull requests integrados nas equipes de tecnologia.",
+    "Os palestrantes atribuem o sucesso a vários multiplicadores que já existiam: alertas, ambiente de staging, filas, deploy simples, um gateway MCP para ferramentas internas e um sandbox isolado para rodar o agente.",
+    "Como o agente virou uma peça reutilizável, ele passou a atuar em incidentes, na triagem de alertas de qualidade de dados e em pedidos de pessoas que não são engenheiras, sempre com revisão humana antes do deploy."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Um emoji no Slack virou o ponto de entrada",
+      "texto": "O Agent Chip ficou viral dentro do Monzo porque qualquer pessoa pode reagir a uma mensagem com um emoji e transformá-la em prompt. Depois ele virou um colega sempre disponível no Slack. Responde dúvidas de arquitetura, revisa código e recebe tarefas do Linear. A barreira de entrada baixa explica boa parte da adoção.",
+      "t": 100,
+      "legenda": "O gatilho do agente é uma reação com emoji, sem interface nova.",
+      "print": "img/adfw3xJBx1o/0.jpg"
+    },
+    {
+      "titulo": "Lots of little multipliers: a plataforma vem antes do agente",
+      "texto": "Os palestrantes dizem que LLMs, neste caso, significa lots of little multipliers (muitos pequenos multiplicadores). O agente aproveitou capacidades que o banco já tinha: alertas, monitoramento, integrações com terceiros, staging, filas, deploy fácil e abstrações de banco de dados. Sem essa base, reagir com um emoji não geraria resultado útil.",
+      "t": 255,
+      "legenda": "O ganho vem das peças de plataforma que o banco já tinha.",
+      "print": null
+    },
+    {
+      "titulo": "Gateway MCP como porta controlada para o contexto",
+      "texto": "O Monzo colocou serviços internos e fontes de conhecimento atrás de um servidor MCP próprio. Ele decide de forma determinística o que os agentes podem ver e cuida de autenticação e autorização. A ideia começou com agentes de código locais e serve depois ao agente remoto. Mais contexto, dado com segurança, melhora o resultado.",
+      "t": 318,
+      "legenda": "O gateway centraliza o acesso e as permissões dos agentes.",
+      "print": "img/adfw3xJBx1o/2.jpg"
+    },
+    {
+      "titulo": "Sandbox isolado para conter o não determinismo",
+      "texto": "Por ser banco regulado, o Monzo roda os agentes em pods dentro de um namespace isolado. A imagem do agente define as ferramentas, e um proxy libera só a saída de rede escolhida. O não determinismo fica na caixa mais interna, onde o agente pode agir à vontade, separada da infraestrutura de produção.",
+      "t": 440,
+      "legenda": "Camadas de isolamento deixam o agente livre sem tocar a produção.",
+      "print": "img/adfw3xJBx1o/3.jpg"
+    },
+    {
+      "titulo": "O agente como peça de construção: incidentes e não engenheiros",
+      "texto": "Com o agente reutilizável, o banco criou outros usos. Em incidentes, o Agent Chip entra no canal e investiga logs, traces e código, mantendo sinal alto. Ele também faz triagem de alertas de qualidade de dados e rascunha respostas entre squads. Pessoas de fora de engenharia pedem mudanças, recebem um rascunho testado em staging e só então chamam um engenheiro para revisar.",
+      "t": 600,
+      "legenda": "O agente investiga o incidente ao lado dos humanos, com controle de quanto fala.",
+      "print": "img/adfw3xJBx1o/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Agente de código autônomo",
+      "traducao": "agente que escreve e propõe código sozinho",
+      "nivel": "basico",
+      "chave": "agente de código autônomo",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Pull request",
+      "traducao": "pedido de integração de código",
+      "nivel": "basico",
+      "chave": "pull request",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP gateway",
+      "traducao": "porta de entrada única para ferramentas via MCP",
+      "nivel": "intermediario",
+      "chave": "mcp gateway",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado de execução",
+      "nivel": "intermediario",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Network egress",
+      "traducao": "saída de rede controlada",
+      "nivel": "intermediario",
+      "chave": "network egress",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Human in the loop",
+      "traducao": "humano no circuito de decisão",
+      "nivel": "basico",
+      "chave": "human in the loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Triage",
+      "traducao": "triagem de alertas e problemas",
+      "nivel": "basico",
+      "chave": "triage",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk mostra um caso interno e não traz avaliação independente. Os números de adoção (10% dos PRs, 1.800 tarefas por dia) aparecem sem comparação com um período anterior, sem taxa de aceitação, sem custo e sem dado de qualidade ou retrabalho. Não se sabe se esses PRs são pequenos ou se exigem muita correção na revisão. A conclusão de que a plataforma foi o motivo do sucesso é plausível, mas não foi testada. O argumento de manter o agente em casa soa como justificativa de uma decisão já tomada. Os benefícios em incidentes e para não engenheiros vêm só de exemplos, sem métricas.",
+  "acoes": [
+    "Liste as capacidades que sua equipe já tem (alertas, staging, filas, deploy) e verifique se um agente consegue usá-las antes de comprar ou construir algo novo.",
+    "Se for expor sistemas internos a agentes, centralize o acesso em um gateway com autenticação e autorização por agente, em vez de dar credenciais diretas.",
+    "Rode agentes em ambiente isolado e libere só a saída de rede necessária, mantendo revisão humana antes de qualquer deploy.",
+    "Ofereça um ponto de entrada simples, como um comando ou emoji no chat da equipe, e meça quantas tarefas e PRs integrados vêm dele."
+  ],
+  "numeros": [
+    {
+      "valor": "3.000",
+      "contexto": "serviços de back-end mantidos pelas equipes",
+      "t": 32
+    },
+    {
+      "valor": "13.000",
+      "contexto": "modelos no data warehouse",
+      "t": 32
+    },
+    {
+      "valor": "10%",
+      "contexto": "dos PRs integrados vêm do Agent Chip",
+      "t": 157
+    },
+    {
+      "valor": "1.800",
+      "contexto": "tarefas por dia executadas pelo agente",
+      "t": 187
+    }
+  ]
+}

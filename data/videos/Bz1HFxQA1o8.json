@@ -1,0 +1,174 @@
+{
+  "id": "Bz1HFxQA1o8",
+  "titulo": "Shipping AI Into 5 Major Banks Without a 12-Month Compliance Wait — Al Chen, Cisco",
+  "titulo_curto": "Shipping AI Into 5 Major Banks Without a 12-Month Compliance Wait",
+  "palestrante": "Al Chen, Cisco",
+  "url": "https://www.youtube.com/watch?v=Bz1HFxQA1o8",
+  "duracao": 1061,
+  "publicado_ts": 1792486806,
+  "edicao": "2026-10-20",
+  "tese": "Banco só aprova IA quando o fornecedor mostra a prova. Versão atualizada e job rodado não bastam, é preciso evidência de que o problema sumiu.",
+  "tldr": [
+    "Al Chen, da Cisco, descreve como sua equipe leva software de observabilidade de IA para dentro de grandes bancos e tenta reduzir o prazo de produção de cerca de um ano para algumas semanas.",
+    "Ele organiza o trabalho em três pilares: pipeline de build com correção de CVEs (vulnerabilidades conhecidas), recuperação de desastre com backup verificado e vazamento de dados sensíveis por LLM judges (modelos que avaliam outros modelos).",
+    "A ideia que une tudo é mostrar o trabalho, como numa prova de matemática. Cada correção vem com um teste de exploit, uma checagem de dados ou uma segunda chamada de LLM que garante a ausência de vazamento."
+  ],
+  "tema": "engenharia-de-software",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Scanner de CVE só confere a versão do pacote",
+      "texto": "Ferramentas como Sysdig, Wiz e Prisma verificam se o pacote foi atualizado. Elas não dizem se o exploit ainda funciona no código da aplicação. Chen usa um agente que escreve um exploit contra a versão antiga e um teste para ver se ele ainda passa na versão nova. A evidência vai para o time de segurança do banco.",
+      "t": 342,
+      "legenda": "Estrutura da tarefa que faz o agente provar se o CVE foi corrigido",
+      "print": "img/Bz1HFxQA1o8/0.jpg"
+    },
+    {
+      "titulo": "Backup que rodou não prova dado correto",
+      "texto": "O ClickHouse não tem failover gerenciado entre regiões, então o banco monta o seu: backup para um bucket e restauração na região de recuperação. O log mostra que o job rodou, mas disco ruim, migração falha ou atraso de replicação deixam o dado velho. Chen propõe comparar contagem de linhas e verificar se as réplicas convergiram.",
+      "t": 501,
+      "legenda": "O status do job de backup não prova a correção dos dados",
+      "print": "img/Bz1HFxQA1o8/1.jpg"
+    },
+    {
+      "titulo": "Replicar para um bucket também decide residência de dados",
+      "texto": "O bucket não sabe se está em Oregon ou Virgínia, mas a lei de residência de dados sabe. Quem desenha o backup toma uma decisão jurisdicional mesmo sem querer. A saída citada é replicar só IDs e metadados entre regiões e manter os dados centrais dos traces em uma região.",
+      "t": 562,
+      "legenda": "Metadados cruzam regiões, o trace completo fica onde nasceu",
+      "print": null
+    },
+    {
+      "titulo": "O juiz LLM pode desfazer a redação de PII",
+      "texto": "A interface mostra os dados do cliente mascarados, mas o judge lê o trace bruto e pode citar PII (dado pessoal) ou MNPI (informação material não pública) na explicação do score. Uma linha de prompt que pede explicação para o revisor humano basta para o vazamento. Chen sugere guardar só o score ou rodar um segundo judge sobre entrada já redigida.",
+      "t": 656,
+      "legenda": "Uma linha inocente do prompt faz o judge expor dados sensíveis",
+      "print": "img/Bz1HFxQA1o8/3.jpg"
+    },
+    {
+      "titulo": "Vazamento zero tem custo",
+      "texto": "O segundo judge com entrada redigida custa uma chamada de LLM extra por requisição. Chen diz que zero vazamento e soberania de dados não saem de graça. Ele também observa que os fatores que mais atrasam o deploy em banco são organizacionais, como aprovação para baixar imagens e compra de GPUs.",
+      "t": 752,
+      "legenda": "Fluxo com segundo judge, ao custo de uma chamada extra de LLM",
+      "print": "img/Bz1HFxQA1o8/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "CVE (common vulnerabilities and exposures)",
+      "traducao": "lista pública de vulnerabilidades conhecidas",
+      "nivel": "basico",
+      "chave": "cve (common vulnerabilities and exposures)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Harness",
+      "traducao": "ambiente controlado para o agente testar",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado de execução",
+      "nivel": "intermediario",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "On premise",
+      "traducao": "software rodando na infraestrutura do cliente",
+      "nivel": "basico",
+      "chave": "on premise",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Disaster recovery",
+      "traducao": "recuperação de desastre",
+      "nivel": "intermediario",
+      "chave": "disaster recovery",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Data residency",
+      "traducao": "residência de dados",
+      "nivel": "intermediario",
+      "chave": "data residency",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Redação de PII",
+      "traducao": "mascarar dados pessoais",
+      "nivel": "intermediario",
+      "chave": "redação de pii",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo que avalia a saída de outro",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O talk é, em parte, pitch da Cisco e de seu produto de observabilidade, e cita concorrentes e bancos sem nomes. Não há dados medidos sobre o prazo de um ano para semanas, nem sobre quantos CVEs o agente corrigiu ou quantas vezes o judge vazou PII. O exemplo do ClickHouse vem com ressalva de que a comparação é feita por quem vende o produto. As recomendações fazem sentido, mas dependem de evidência que o palestrante não apresenta.",
+  "acoes": [
+    "Revise o system prompt dos seus LLM judges e confira se alguma instrução pede para citar dados do cliente na explicação.",
+    "Ao corrigir uma vulnerabilidade, peça a um agente um teste de exploit que falhe na versão nova e guarde o resultado como evidência.",
+    "Verifique backups com contagem de linhas e convergência de réplicas, e não só com o status do job.",
+    "Mapeie onde cada região armazena dados antes de ativar replicação, para respeitar regras de residência."
+  ],
+  "numeros": [
+    {
+      "valor": "4ª casa",
+      "contexto": "decimal exigida pelo professor de matemática na prova",
+      "t": 1
+    },
+    {
+      "valor": "1 ano",
+      "contexto": "prazo típico reduzido para algumas semanas",
+      "t": 92
+    },
+    {
+      "valor": "3 pilares",
+      "contexto": "build, recuperação de desastre e vazamento de dados",
+      "t": 124
+    },
+    {
+      "valor": "2.6.2",
+      "contexto": "versão do pacote testada contra o exploit",
+      "t": 342
+    }
+  ]
+}
