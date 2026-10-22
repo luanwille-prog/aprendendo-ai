@@ -1,0 +1,163 @@
+{
+  "id": "uA4ah-dVHvU",
+  "titulo": "AI Cut Our Research Time From 7 Days to 15 Minutes — Gareth Yoder, Vanguard",
+  "titulo_curto": "AI Cut Our Research Time From 7 Days to 15 Minutes",
+  "palestrante": "Gareth Yoder, Vanguard",
+  "url": "https://www.youtube.com/watch?v=uA4ah-dVHvU",
+  "duracao": 938,
+  "publicado_ts": 1792569637,
+  "edicao": "2026-10-21",
+  "tese": "Quem expõe o código legado a uma IA via MCP encurta a pesquisa de dias para minutos e destrava a migração inteira.",
+  "tldr": [
+    "A Vanguard modernizou o ledger (livro-razão) de caixa das contas de corretagem, que recebe até 30 milhões de chamadas por dia, migrando dados, produtores e consumidores em paralelo.",
+    "O ponto de virada foi expor o código legado a ferramentas de IA por um servidor MCP, o que cortou a pesquisa de um engenheiro de mainframe de 7 dias para 15 minutos, segundo o palestrante.",
+    "Ele fecha com cinco lições, entre elas tratar a documentação de migração como produto, reimaginar em vez de copiar o legado e nunca abrir mão de observabilidade."
+  ],
+  "tema": "engenharia-de-software",
+  "complexidade": 2,
+  "ideias": [
+    {
+      "titulo": "Código legado consultável por IA via MCP",
+      "texto": "Antes, descobrir como o sistema antigo funcionava exigia pedir a um engenheiro de mainframe ou a um arquiteto, e a resposta levava 7 dias. Com o código legado exposto a ferramentas de IA por um servidor MCP (protocolo que conecta a IA a fontes de dados), a mesma pergunta virou um prompt de 15 minutos.",
+      "t": 158,
+      "legenda": "O ganho citado: feedback de 7 dias para 15 minutos.",
+      "print": "img/uA4ah-dVHvU/0.jpg"
+    },
+    {
+      "titulo": "Três migrações em paralelo",
+      "texto": "O time dividiu o trabalho em dados, produtores (quem grava no ledger) e consumidores (quem lê). Por ser prioridade da empresa, as três frentes andaram juntas. Na migração de dados, usaram CDC (captura de mudanças) e auditorias diárias que comparavam contagem de linhas e cada coluna entre o banco antigo e o novo.",
+      "t": 94,
+      "legenda": "A estrutura das três migrações simultâneas.",
+      "print": null
+    },
+    {
+      "titulo": "Documentação de migração vira produto",
+      "texto": "Eram 35 produtores para migrar. A documentação começou manual, foi para a wiki da empresa e depois foi exposta pelo mesmo servidor MCP. Os produtores tiravam dúvidas direto no prompt, e o volume de conversas de suporte com o time caiu bastante, segundo o palestrante.",
+      "t": 314,
+      "legenda": "A documentação na wiki servida por MCP reduziu o suporte manual.",
+      "print": "img/uA4ah-dVHvU/2.jpg"
+    },
+    {
+      "titulo": "Consumidores por tempo real, lote e streaming",
+      "texto": "Cada consumidor acessa o ledger por um destes caminhos, todos com schema registry (catálogo central de formatos de dado). Tempo real usa GraphQL, onde cada um assina só os atributos de que precisa. Lote usa views no data warehouse. Streaming usa tópicos Kafka com entrega ao menos uma vez e operações idempotentes, para que repetir uma tarefa não duplique ledgers.",
+      "t": 408,
+      "legenda": "Três formas de consumir o mesmo ledger com um esquema único.",
+      "print": "img/uA4ah-dVHvU/3.jpg"
+    },
+    {
+      "titulo": "Justificativa de negócio como metadado",
+      "texto": "No cadastro de 50 consumidores, o time pediu, além do código de aplicação, uma descrição do caso de uso e o impacto de quebrar o SLA. A IA agrupa essas descrições e responde quais funções de negócio dependem do ledger. Em incidente, isso mostra se há horas (lote) ou minutos (API em tempo real) para agir.",
+      "t": 600,
+      "legenda": "Metadados de negócio permitem priorizar incidentes por impacto.",
+      "print": "img/uA4ah-dVHvU/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "MCP",
+      "traducao": "Model Context Protocol (protocolo de contexto para modelos)",
+      "nivel": "basico",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Ledger",
+      "traducao": "livro-razão, registro de movimentações de dinheiro",
+      "nivel": "basico",
+      "chave": "ledger",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Change data capture (CDC)",
+      "traducao": "captura de mudanças de dados",
+      "nivel": "intermediario",
+      "chave": "change data capture (cdc)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Idempotência",
+      "traducao": "repetir a operação não muda o resultado",
+      "nivel": "intermediario",
+      "chave": "idempotência",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Schema registry",
+      "traducao": "catálogo central de formatos de dados",
+      "nivel": "intermediario",
+      "chave": "schema registry",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Observability",
+      "traducao": "observabilidade",
+      "nivel": "intermediario",
+      "chave": "observability",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Multi-agent",
+      "traducao": "fluxos com vários agentes",
+      "nivel": "intermediario",
+      "chave": "multi-agent",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é um relato interno de uma empresa que apresenta o próprio projeto como sucesso. O ganho de 7 dias para 15 minutos vem de um exemplo citado, sem amostra, método de medição ou comparação de qualidade das respostas da IA. O palestrante não fala de erros do servidor MCP nem de quem revisa as respostas. O número de 90% de engenheiros usando IA também não traz fonte ou definição de uso. A divulgação da carreira da empresa e o contexto de palco de liderança favorecem o tom otimista.",
+  "acoes": [
+    "Liste as perguntas que hoje dependem de um especialista do sistema antigo e teste expor o código ou a documentação a uma ferramenta de IA, medindo o tempo antes e depois.",
+    "Publique a documentação de migração ou integração onde a IA possa lê-la, por exemplo wiki exposta via MCP, e conte quantas dúvidas deixam de chegar por chat.",
+    "No cadastro de quem usa seus dados ou APIs, peça a justificativa de negócio e o impacto de uma falha, para priorizar incidentes.",
+    "Antes de migrar um sistema, pergunte se vale reimaginar o desenho em vez de copiar o legado tal como está."
+  ],
+  "numeros": [
+    {
+      "valor": "30 milhões",
+      "contexto": "chamadas por dia recebidas pelos serviços do ledger",
+      "t": 94
+    },
+    {
+      "valor": "7 dias a 15 min",
+      "contexto": "tempo de pesquisa no código legado, antes e depois da IA",
+      "t": 158
+    },
+    {
+      "valor": "50",
+      "contexto": "consumidores internos de dados do ledger a cadastrar",
+      "t": 532
+    },
+    {
+      "valor": "90%",
+      "contexto": "engenheiros do programa que usam IA todo dia",
+      "t": 692
+    }
+  ]
+}

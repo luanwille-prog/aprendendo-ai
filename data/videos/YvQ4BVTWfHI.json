@@ -1,0 +1,174 @@
+{
+  "id": "YvQ4BVTWfHI",
+  "titulo": "Is a Faster Model Actually Faster? Test the Whole Job — Morgan Suo, MiniMax",
+  "titulo_curto": "Is a Faster Model Actually Faster? Test the Whole Job",
+  "palestrante": "Morgan Suo, MiniMax",
+  "url": "https://www.youtube.com/watch?v=YvQ4BVTWfHI",
+  "duracao": 1062,
+  "publicado_ts": 1792566034,
+  "edicao": "2026-10-21",
+  "tese": "Modelo mais rápido só vale a troca se o relatório final chega certo, verificável e no prazo. Meça o trabalho inteiro, incluindo retrabalho.",
+  "tldr": [
+    "Morgan Suo, da MiniMax, usa uma tarefa real de pesquisa financeira para testar as otimizações do modelo M3.1 Flash.",
+    "Cada truque de velocidade (sparse attention, KV cache em 4 bits, experts de baixa precisão, speculative decoding, mais carga no servidor, menos raciocínio) economiza computação e pode custar precisão ou espera.",
+    "Para decidir uma troca de modelo, ela propõe checar fontes e cálculos, somar o custo de um relatório utilizável e registrar versões para repetir o teste."
+  ],
+  "tema": "modelos",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "A tarefa define o que é bom desempenho",
+      "texto": "O caso é um analista que pergunta se fornecedores de placas de circuito impresso (PCB) transformam a demanda por servidores de IA em caixa. O modelo precisa achar os relatórios certos, alinhar períodos e separar negócios. Um relatório só conta como pronto quando o analista consegue abrir a fonte e refazer o cálculo. Lucro pode subir enquanto o fluxo de caixa conta outra história, e o modelo precisa apontar a nota de rodapé certa.",
+      "t": 268,
+      "legenda": "Cada otimização do modelo mexe numa parte diferente do trabalho",
+      "print": "img/YvQ4BVTWfHI/0.jpg"
+    },
+    {
+      "titulo": "Atenção esparsa precisa achar a nota de rodapé",
+      "texto": "Sparse attention (atenção esparsa) pontua blocos de texto e calcula a atenção só nos selecionados, mais o texto vizinho. Isso reduz trabalho em entradas longas. O risco é pular um trecho curto que muda a conclusão. A MiniMax relata que o modelo passou em 39 pedidos de recuperação com entradas de até cerca de 830 mil tokens. A palestrante sugere mover a passagem importante para posições diferentes e repetir a pergunta.",
+      "t": 331,
+      "legenda": "O modelo lê só os blocos selecionados, e a seleção muda com a pergunta",
+      "print": "img/YvQ4BVTWfHI/1.jpg"
+    },
+    {
+      "titulo": "A média esconde o erro que o usuário sente",
+      "texto": "O KV cache (memória interna do texto já lido) passou de 8 para 4 bits nas chaves e valores. A média dos benchmarks ficou quase igual, mas uma das pontuações caiu 6,6 pontos. Os experts do modelo MoE também passaram a usar 4 bits, e a ordem de escalar e restaurar os números afeta a resposta. Confira fontes, cálculos e coerência da explicação no seu próprio caso.",
+      "t": 486,
+      "legenda": "Média quase igual com uma pontuação caindo 6,6 pontos",
+      "print": "img/YvQ4BVTWfHI/2.jpg"
+    },
+    {
+      "titulo": "Mais vazão no servidor pode multiplicar a espera",
+      "texto": "Num teste de serving, dobrar os pedidos simultâneos de 32 para 64 aumentou a saída total por segundo em cerca de 1,9 vez. O tempo até o primeiro token no percentil 95 subiu de cerca de 1,5 para 11,3 segundos. A mediana quase não mudou, por isso olhar só para ela engana. Speculative decoding também ajuda, desde que você conte o tempo gasto rejeitando rascunhos.",
+      "t": 707,
+      "legenda": "Vazão sobe 1,9 vez enquanto a espera no P95 fica cerca de oito vezes maior",
+      "print": "img/YvQ4BVTWfHI/3.jpg"
+    },
+    {
+      "titulo": "Orçamento de raciocínio muda a precisão",
+      "texto": "O padrão do esforço de raciocínio é max quando o campo fica vazio. Num teste de código, o nível high gastou menos tokens, mas a precisão caiu de 80% para 68%. A recomendação é comparar níveis nos mesmos relatórios, anotar o nível escolhido e, na hora de trocar de modelo, fixar perguntas, fontes e critério de aceite antes de rodar a comparação.",
+      "t": 834,
+      "legenda": "Menos tokens de raciocínio levaram a precisão de 80% para 68%",
+      "print": "img/YvQ4BVTWfHI/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Sparse attention",
+      "traducao": "atenção esparsa",
+      "nivel": "avancado",
+      "chave": "sparse attention",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "KV cache",
+      "traducao": "cache de chaves e valores",
+      "nivel": "avancado",
+      "chave": "kv cache",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Quantization",
+      "traducao": "quantização (menos bits por número)",
+      "nivel": "intermediario",
+      "chave": "quantization",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Mixture of experts",
+      "traducao": "mistura de especialistas",
+      "nivel": "avancado",
+      "chave": "mixture of experts",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Speculative decoding",
+      "traducao": "decodificação especulativa",
+      "nivel": "avancado",
+      "chave": "speculative decoding",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Throughput",
+      "traducao": "vazão",
+      "nivel": "intermediario",
+      "chave": "throughput",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Time to first token (TTFT)",
+      "traducao": "tempo até o primeiro token",
+      "nivel": "intermediario",
+      "chave": "time to first token (ttft)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Thinking budget",
+      "traducao": "orçamento de raciocínio",
+      "nivel": "intermediario",
+      "chave": "thinking budget",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "A palestrante é da MiniMax e apresenta um modelo da própria empresa às vésperas do lançamento, e o fim vira demo do modelo de vídeo. Os números vêm de revisão interna e testes separados, sem metodologia ou comparação com concorrentes. A tarefa de pesquisa com 14 relatórios é descrita, mas o talk não mostra o resultado dela com o modelo. O teste de recuperação tem só 39 pedidos. Ela mesma admite que a tabela do KV cache não isola qual mudança causou cada variação.",
+  "acoes": [
+    "Antes de trocar de modelo, escolha uma tarefa real do seu trabalho, fixe as fontes e escreva o que torna o resultado aceitável.",
+    "Meça o custo do resultado utilizável, somando tentativas falhas, chamadas de ferramenta e o tempo de quem corrige o texto.",
+    "Olhe o tempo de espera no percentil 95 com a carga de usuários esperada, além da mediana.",
+    "Registre versão do modelo, nível de raciocínio, prompt e fontes, faça uma implantação pequena e mantenha um caminho para voltar ao modelo anterior."
+  ],
+  "numeros": [
+    {
+      "valor": "6,6 pontos",
+      "contexto": "queda numa pontuação com KV cache em 4 bits",
+      "t": 486
+    },
+    {
+      "valor": "1,9x",
+      "contexto": "ganho de vazão ao subir de 32 para 64 pedidos simultâneos",
+      "t": 707
+    },
+    {
+      "valor": "1,5 s → 11,3 s",
+      "contexto": "P95 do tempo até o primeiro token com 64 pedidos",
+      "t": 707
+    },
+    {
+      "valor": "80% → 68%",
+      "contexto": "precisão ao trocar raciocínio max por high",
+      "t": 834
+    }
+  ]
+}
