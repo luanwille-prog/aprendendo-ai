@@ -1,0 +1,174 @@
+{
+  "id": "ImnZ7s68jw8",
+  "titulo": "What Does an AI Engineer Do Now? - Aparna Dhinakaran, Arize AI",
+  "titulo_curto": "What Does an AI Engineer Do Now? - Aparna Dhinakaran, Arize AI",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=ImnZ7s68jw8",
+  "duracao": 927,
+  "publicado_ts": 1792954832,
+  "edicao": "2026-10-25",
+  "tese": "O engenheiro de IA deixa de escrever a feature e passa a construir o ciclo (loop) em que agentes leem telemetria, avaliam e corrigem.",
+  "tldr": [
+    "Aparna Dhinakaran, da Arize, diz que o trabalho do engenheiro de IA mudou de escrever funcionalidades para montar o ciclo de construir, avaliar, publicar, monitorar e melhorar, rodado por agentes.",
+    "Ela mostra o Signal, agente sempre ligado da Arize que lê traces, guarda memória de problemas, abre PRs e roda em sandbox descartável, com estado salvo fora dela para se recuperar de falhas.",
+    "A parte que ela mais valoriza no trabalho humano é escrever evals alinhadas ao julgamento humano, avaliar os próprios avaliadores e rastrear tudo, inclusive os agentes de código que construíram o sistema."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Construir o ciclo, não a feature",
+      "texto": "O papel muda em três frentes. Em vez de escrever a feature, você monta o ciclo que a escreve. Em vez de ler o diff, você configura agentes que fazem code review e evals que julgam trabalho não determinístico. Em vez de olhar métricas, você faz agentes lerem a observabilidade.",
+      "t": 153,
+      "legenda": "O slide resume a troca de escrever feature por construir o ciclo.",
+      "print": "img/ImnZ7s68jw8/0.jpg"
+    },
+    {
+      "titulo": "Telemetria feita para agentes lerem",
+      "texto": "Segundo ela, os principais consumidores de telemetria passam a ser agentes, não pessoas. O dado de observabilidade vira o gatilho que acorda agentes sempre ligados, seja por cadência (a cada 3 ou 6 horas), por evento (mensagem no Slack, reclamação de usuário) ou por métrica.",
+      "t": 319,
+      "legenda": "Mostra o que acorda um agente sempre ligado.",
+      "print": "img/ImnZ7s68jw8/1.jpg"
+    },
+    {
+      "titulo": "Anatomia de uma execução do Signal",
+      "texto": "A cada gatilho, o sistema monta uma sandbox (ambiente isolado) com traces, logs de APM, acesso ao repositório e chaves. Um único proxy controla a entrada e a saída. Tudo é rastreado. Ao fim, ficam na memória os problemas achados e as skills aprendidas. Sandbox, credenciais e acesso ao repo são destruídos.",
+      "t": 398,
+      "legenda": "Mostra o que persiste e o que é descartado após cada execução.",
+      "print": "img/ImnZ7s68jw8/2.jpg"
+    },
+    {
+      "titulo": "Agente durável e independente de modelo",
+      "texto": "O estado fica salvo fora da sandbox. Se a sandbox ou o harness falhar, uma nova sobe e retoma do passo interrompido. O Signal roda em Claude Code, Cursor e Codex, com vários modelos. Isso ajuda a comparar qualidade e a controlar custo.",
+      "t": 524,
+      "legenda": "Prova que o estado fica fora da sandbox e que o harness é trocável.",
+      "print": "img/ImnZ7s68jw8/3.jpg"
+    },
+    {
+      "titulo": "Avaliar os avaliadores",
+      "texto": "Evals precisam concordar com o julgamento humano. A equipe monta golden datasets (conjuntos de referência rotulados por humanos), compara a saída do juiz com a humana e só lança um novo avaliador quando os dois concordam. Depois a eval roda offline e online.",
+      "t": 713,
+      "legenda": "Mostra o processo de validar o avaliador antes de publicá-lo.",
+      "print": "img/ImnZ7s68jw8/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Signal",
+      "traducao": "agente sempre ligado da Arize que lê traces e abre PRs",
+      "nivel": "intermediario",
+      "chave": "signal",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Trace",
+      "traducao": "registro passo a passo do que o agente fez",
+      "nivel": "intermediario",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado e descartável de execução",
+      "nivel": "intermediario",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Durable execution",
+      "traducao": "execução durável, retomada do ponto da falha",
+      "nivel": "avancado",
+      "chave": "durable execution",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Harness",
+      "traducao": "software que envolve o modelo e roda o agente",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação automática da qualidade da saída",
+      "nivel": "intermediario",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Golden dataset",
+      "traducao": "conjunto de referência rotulado por humanos",
+      "nivel": "intermediario",
+      "chave": "golden dataset",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Observabilidade de agentes",
+      "traducao": "telemetria lida por agentes, não só por pessoas",
+      "nivel": "intermediario",
+      "chave": "observabilidade de agentes",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é também um pitch do Signal e da Arize, que vende observabilidade e evals, e termina convidando para o estande. Não há dado de resultado: nenhuma taxa de PRs aceitos, de falsos positivos ou de economia de custo. A afirmação sobre os cerca de 5.000 usuários vem de um tweet citado de memória. A visão de que agentes são os principais consumidores de telemetria favorece o produto dela.",
+  "acoes": [
+    "Registre traces dos seus agentes e também dos agentes de código usados no desenvolvimento, e reserve tempo semanal para ler os erros mais comuns.",
+    "Monte um golden dataset pequeno com casos reais rotulados por uma pessoa e meça a concordância do seu LLM juiz com esses rótulos antes de confiar nele.",
+    "Ao desenhar um agente recorrente, defina o gatilho, o que fica salvo em memória e o que é descartado ao fim de cada execução.",
+    "Teste o mesmo agente em mais de um modelo para comparar qualidade e custo antes de fixar a escolha."
+  ],
+  "numeros": [
+    {
+      "valor": "6 bilhões+",
+      "contexto": "usuários que já usaram um LLM, no funil citado",
+      "t": 32
+    },
+    {
+      "valor": "20 milhões",
+      "contexto": "profissionais que aceleraram trabalho de semanas para dias",
+      "t": 62
+    },
+    {
+      "valor": "5.000",
+      "contexto": "usuários que rodam milhares de agentes ao mesmo tempo",
+      "t": 62
+    },
+    {
+      "valor": "3 ou 6 horas",
+      "contexto": "cadência configurável de execução do Signal",
+      "t": 306
+    }
+  ]
+}

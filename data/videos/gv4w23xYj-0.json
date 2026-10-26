@@ -1,0 +1,184 @@
+{
+  "id": "gv4w23xYj-0",
+  "titulo": "How to Write Your First AI Eval - SallyAnn DeLucia, Arize AI",
+  "titulo_curto": "How to Write Your First AI Eval - SallyAnn DeLucia, Arize AI",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=gv4w23xYj-0",
+  "duracao": 2119,
+  "publicado_ts": 1792969227,
+  "edicao": "2026-10-25",
+  "tese": "Troque o palpite por critérios concretos de pass/fail, leia os traces e comece com um juiz LLM pequeno para uma qualidade só.",
+  "tldr": [
+    "SallyAnn DeLucia, da Arize, mostra por que testar agentes só pelo \"achismo\" (vibe check) não escala e como uma eval (avaliação) difere de um teste unitário, já que um agente tem muitas respostas válidas.",
+    "Ela ensina a ler um trace (registro dos passos do agente), a escrever critérios concretos de aprovação e falha e a transformá-los em um prompt de LLM as a judge (modelo que avalia outro modelo).",
+    "No fim, monta ao vivo um juiz no playground da Arize com um dataset de traces de um agente de viagens e indica próximos passos: alinhamento com humanos, evals online e começar com 20 traces."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Vibe check não detecta regressão",
+      "texto": "Sem eval, você muda o prompt, acha que melhorou e só descobre uma semana depois que outro caso quebrou. Evals permitem detectar regressões, comparar versões de prompt e de modelo e criar portões de qualidade no CI (integração contínua).",
+      "t": 154,
+      "legenda": "Sem eval não há como provar que algo foi corrigido ou quebrou.",
+      "print": "img/gv4w23xYj-0/0.jpg"
+    },
+    {
+      "titulo": "Traces são os logs, evals são os testes",
+      "texto": "Um teste unitário tem uma entrada e uma saída correta. Em um agente, a lógica só aparece depois, nos traces, e a saída tem vários jeitos válidos (roteiro, orçamento). Por isso você precisa de observabilidade antes de poder avaliar.",
+      "t": 249,
+      "legenda": "Um trace mostra cada passo do agente que um teste unitário não captura.",
+      "print": "img/gv4w23xYj-0/1.jpg"
+    },
+    {
+      "titulo": "Como ler um trace",
+      "texto": "O root span (parent ID nulo) guarda a entrada e a saída final. Abaixo dele, cada span é uma unidade de trabalho: agente, ferramenta ou chamada de LLM. Duas chamadas de LLM seguidas costumam ser a escolha da ferramenta e depois o resumo do resultado dela.",
+      "t": 869,
+      "legenda": "A árvore do trace mostra cada unidade de trabalho do agente.",
+      "print": "img/gv4w23xYj-0/2.jpg"
+    },
+    {
+      "titulo": "Critérios concretos e uma qualidade por eval",
+      "texto": "Troque \"resposta útil e boa\" por critérios verificáveis: segue as perguntas do usuário, respeita o número de dias e fica dentro do orçamento. Para juiz LLM, avalie uma qualidade por vez e acrescente evals com o tempo. A Arize foi de poucas evals para 32 no agente Alex.",
+      "t": 1145,
+      "legenda": "Critério concreto vira prompt de juiz; critério vago não.",
+      "print": "img/gv4w23xYj-0/3.jpg"
+    },
+    {
+      "titulo": "Do critério ao juiz no playground",
+      "texto": "Você filtra os spans, salva em um dataset, cola os bullets de pass/fail em um template de prompt e define os rótulos (correct/incorrect). Rode no playground, leia as explicações e itere o prompt até concordar com o juiz.",
+      "t": 1699,
+      "legenda": "O template do juiz nasce dos bullets de pass e fail escritos antes.",
+      "print": "img/gv4w23xYj-0/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Eval",
+      "traducao": "avaliação automática da qualidade de um agente",
+      "nivel": "basico",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Trace",
+      "traducao": "registro de todos os passos que o agente deu",
+      "nivel": "basico",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Span",
+      "traducao": "uma unidade de trabalho dentro do trace",
+      "nivel": "intermediario",
+      "chave": "span",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM as a judge",
+      "traducao": "um segundo modelo que dá nota a uma saída",
+      "nivel": "intermediario",
+      "chave": "llm as a judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Decision model",
+      "traducao": "modelo barato que devolve rótulo e probabilidade",
+      "nivel": "avancado",
+      "chave": "decision model",
+      "analogia": "Decision model é como um fiscal de catraca que só olha o bilhete e diz sim ou não bem rápido, sem explicar o motivo.",
+      "explicacao": [
+        "Imagine uma pergunta com resposta curta, como \"esta resposta está correta?\". Um decision model (modelo de decisão) responde só isso, sem escrever texto longo.",
+        "A saída é um rótulo, como verdadeiro ou falso, junto com uma probabilidade. A probabilidade mostra o quanto o modelo está confiante naquele rótulo.",
+        "Como ele não gera explicação, custa pouco e responde rápido. Dá para rodar em muitos traces sem gastar quase nada.",
+        "O custo é a falta de justificativa. Um LLM as a judge (modelo que avalia outro modelo) devolve rótulo e explicação, e a explicação ajuda a entender o porquê da nota.",
+        "Segundo a palestrante, a OpenAI lançou uma API desse tipo na semana anterior. Ela aposta que esses modelos terão um papel grande nas evals futuras, mas o vídeo não mostra comparação de resultados."
+      ],
+      "pre_requisitos": [
+        "Eval",
+        "LLM as a judge",
+        "Probabilidade"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Evaluator baseado em código",
+      "traducao": "eval determinística escrita em código",
+      "nivel": "intermediario",
+      "chave": "evaluator baseado em código",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Multi-agent system",
+      "traducao": "sistema com vários agentes que dividem tarefas",
+      "nivel": "intermediario",
+      "chave": "multi-agent system",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Online scoring",
+      "traducao": "avaliar traces continuamente em produção",
+      "nivel": "intermediario",
+      "chave": "online scoring",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É um workshop de produto da Arize, então o fluxo inteiro depende da plataforma deles (playground, eval hub, Alex, Signal). A afirmação de que juízes LLM só funcionam bem com um critério por vez cita \"muita pesquisa\" sem apontar estudos. Não há medida de quão bem o juiz concorda com humanos; o alinhamento aparece só como próximo passo. O exemplo é um agente de viagens de demonstração, sem dados de produção. Os decision models são apresentados como o futuro sem benchmark no vídeo.",
+  "acoes": [
+    "Abra 10 a 20 traces reais do seu agente e anote o que você aprovaria ou não compartilharia com um cliente.",
+    "Escreva seus critérios em três bullets de pass e três de fail, com itens verificáveis como número de dias ou limite de orçamento.",
+    "Monte um juiz LLM para uma única qualidade, peça rótulo e explicação, e leia as explicações antes de confiar na nota.",
+    "Compare o juiz com sua opinião em um conjunto pequeno antes de rodá-lo continuamente em produção."
+  ],
+  "numeros": [
+    {
+      "valor": "32",
+      "contexto": "evals rodando hoje no agente Alex da Arize",
+      "t": 1236
+    },
+    {
+      "valor": "20 traces",
+      "contexto": "ponto de partida sugerido, com um juiz e uma dimensão",
+      "t": 2039
+    },
+    {
+      "valor": "US$ 800",
+      "contexto": "orçamento do pedido de viagem a Praga em 3 dias",
+      "t": 683
+    },
+    {
+      "valor": "4 anos",
+      "contexto": "tempo da palestrante na Arize",
+      "t": 1
+    }
+  ]
+}

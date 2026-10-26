@@ -1,0 +1,174 @@
+{
+  "id": "c_SPW__jF9w",
+  "titulo": "How to Test AI Agents When No Benchmark Exists — Nathanael Weill, Air Canada",
+  "titulo_curto": "How to Test AI Agents When No Benchmark Exists",
+  "palestrante": "Nathanael Weill, Air Canada",
+  "url": "https://www.youtube.com/watch?v=c_SPW__jF9w",
+  "duracao": 1190,
+  "publicado_ts": 1792656001,
+  "edicao": "2026-10-25",
+  "tese": "Sem benchmark e sem especialista disponível, comece pela resposta e gere a entrada a partir dela. O código corrige o teste.",
+  "tldr": [
+    "Nathanael Weill, da Air Canada, conta que times de IA muitas vezes não têm benchmark público nem acesso a especialistas para avaliar um agente específico do negócio.",
+    "A solução dele é inverter o problema: partir de uma resposta conhecida, gerar a entrada (pergunta ou contrato) e checar com código se o agente encontra a resposta de volta.",
+    "Em um projeto de RAG, isso levou de uma avaliação por semana a dezenas por dia. No agente de contratos, ele usa cinco técnicas de geração de testes e evita LLM como juiz sempre que o código resolve."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Escreva a resposta primeiro",
+      "texto": "Num projeto de RAG (busca em documentos para responder perguntas), o time pegava uma página, pedia a um LLM uma pergunta sobre ela e checava se o agente achava a mesma página. O código faz a correção, sem opinião de especialista. A avaliação passou de uma por semana para dezenas por dia.",
+      "t": 344,
+      "legenda": "O teste nasce da resposta e a correção é feita por código.",
+      "print": "img/c_SPW__jF9w/0.jpg"
+    },
+    {
+      "titulo": "Revisão semanal com especialistas trava o ritmo",
+      "texto": "O time mudava o agente em minutos, mas só avaliava uma vez por semana, numa reunião com cinco chatbots lado a lado e especialistas que discordavam entre si. O orçamento era uma tentativa por semana. Com testes automáticos, a complexidade desnecessária foi removida e a acurácia subiu ao longo das semanas.",
+      "t": 283,
+      "legenda": "O gargalo era a revisão humana, não a mudança no agente.",
+      "print": "img/c_SPW__jF9w/1.jpg"
+    },
+    {
+      "titulo": "Plantar violações de regra e remover cláusulas",
+      "texto": "No agente de revisão de contratos de fornecedores, o time parte de uma regra (por exemplo, teto acima de US$ 1 milhão), gera um contrato que a viola e espera que o agente a sinalize. Também pega um contrato assinado, remove uma cláusula e mistura com contratos limpos. Foram 275 testes de regras, e o agente deixou passar a maioria das cláusulas removidas.",
+      "t": 774,
+      "legenda": "Violação plantada dá o gabarito sem depender de especialista.",
+      "print": "img/c_SPW__jF9w/2.jpg"
+    },
+    {
+      "titulo": "Mudanças que não deveriam mudar o resultado",
+      "texto": "Trocar nome ou endereço do fornecedor, reordenar cláusulas ou rodar o mesmo contrato várias vezes não deveria alterar o número de alertas. Isso testa consistência e se verifica só com código. Contratos modelo com lacunas preenchidas por combinações conhecidas geram muitos casos com gabarito.",
+      "t": 897,
+      "legenda": "Testes de invariância e templates geram volume sem LLM juiz.",
+      "print": "img/c_SPW__jF9w/3.jpg"
+    },
+    {
+      "titulo": "Evite LLM como juiz quando o código resolve",
+      "texto": "Weill mostra uma escala de correção: correspondência exata e código são rápidos e confiáveis. O LLM como juiz traz ruído comparável ao do próprio agente, e afinar o juiz dá quase tanto trabalho quanto resolver o problema. O feedback de especialistas serve para gerar testes melhores, não para consertar o agente direto.",
+      "t": 989,
+      "legenda": "Quanto mais perto do código, mais barato e estável o teste.",
+      "print": "img/c_SPW__jF9w/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Eval",
+      "traducao": "avaliação automática do agente",
+      "nivel": "basico",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "RAG",
+      "traducao": "busca de documentos para embasar a resposta",
+      "nivel": "intermediario",
+      "chave": "rag",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Benchmark",
+      "traducao": "conjunto padrão de testes para comparar sistemas",
+      "nivel": "basico",
+      "chave": "benchmark",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Ground truth",
+      "traducao": "resposta conhecida usada como gabarito",
+      "nivel": "intermediario",
+      "chave": "ground truth",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo de linguagem usado como avaliador",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Chunking",
+      "traducao": "divisão dos documentos em pedaços para busca",
+      "nivel": "intermediario",
+      "chave": "chunking",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "BM25",
+      "traducao": "algoritmo clássico de busca por palavras-chave",
+      "nivel": "avancado",
+      "chave": "bm25",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Teste de regressão",
+      "traducao": "teste que detecta o que quebrou após uma mudança",
+      "nivel": "intermediario",
+      "chave": "teste de regressão",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O relato é de experiência própria, sem números de acurácia, sem comparação controlada e sem dados sobre o agente de contratos além de 275 testes de regra. Weill admite que não sabe por que o projeto de RAG venceu os concorrentes. Testes sintéticos cobrem só o que o time sabe inventar e podem ser fáceis demais. Ele mesmo diz que isso não decide se o produto pode ir ao ar. A menção final a ferramentas de avaliação (Arize) é breve e soa como agradecimento, sem pitch forte.",
+  "acoes": [
+    "Para o seu agente, liste três respostas que você já conhece e gere a entrada a partir delas. Veja se o agente chega de volta ao gabarito.",
+    "Crie testes de invariância: mude nome, ordem ou formatação de uma entrada e confira por código que o resultado não muda.",
+    "Troque o LLM como juiz por uma checagem em código (correspondência exata, regra, contagem) sempre que a resposta puder ser verificada assim.",
+    "Use o feedback do especialista para escrever testes melhores, não para corrigir o agente direto, e guarde cada caso novo no conjunto de testes."
+  ],
+  "numeros": [
+    {
+      "valor": "10.000",
+      "contexto": "documentos no projeto de telecomunicações",
+      "t": 125
+    },
+    {
+      "valor": "275",
+      "contexto": "testes gerados com violações de regra plantadas",
+      "t": 804
+    },
+    {
+      "valor": "4 semanas",
+      "contexto": "ciclo de feedback com templates, contra 5 minutos por script",
+      "t": 989
+    },
+    {
+      "valor": "1 por semana",
+      "contexto": "avaliações antes, contra dezenas por dia depois",
+      "t": 405
+    }
+  ]
+}

@@ -1,0 +1,230 @@
+{
+  "id": "UB6hoWyh3B0",
+  "titulo": "A Bank Trained Its Own Foundation Model to Catch Fraud — Freddy Lecue, Wells Fargo",
+  "titulo_curto": "A Bank Trained Its Own Foundation Model to Catch Fraud",
+  "palestrante": "Freddy Lecue, Wells Fargo",
+  "url": "https://www.youtube.com/watch?v=UB6hoWyh3B0",
+  "duracao": 1060,
+  "publicado_ts": 1792746035,
+  "edicao": "2026-10-25",
+  "tese": "A Wells Fargo treinou do zero um transformer que prevê a próxima transação e o reaproveita para fraude, crédito e lavagem de dinheiro.",
+  "tldr": [
+    "A Wells Fargo pré-treinou do zero um foundation model (modelo de base) com bilhões de transações de cartão, cheque e canais digitais, no lugar de palavras.",
+    "A parte difícil foi a tokenização, ou seja, decidir como transformar valores, horários, comerciantes e CEPs em tokens com um vocabulário de tamanho controlado.",
+    "Ajustado para detectar fraude, o modelo pegou mais fraudes com menos alarmes falsos que o XGBoost em produção e respondeu dentro do limite de 250 ms da aprovação de cartão."
+  ],
+  "tema": "modelos",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "Um modelo de base para vários usos do banco",
+      "texto": "Cada área do banco costuma manter seu próprio modelo, com features (variáveis de entrada) montadas à mão. A proposta é treinar uma única base que aprende a representação dos clientes a partir das transações. Depois, cada área faz fine-tuning (ajuste fino) dessa base para sua tarefa: fraude, aumento de limite, prevenção à lavagem de dinheiro ou marketing.",
+      "t": 202,
+      "legenda": "A mesma receita dos LLMs, com transações no lugar de palavras.",
+      "print": "img/UB6hoWyh3B0/0.jpg"
+    },
+    {
+      "titulo": "Cinco dimensões e cerca de 100 features brutas",
+      "texto": "O time organizou cada transação em quem, o quê, como, quando e onde. Em vez de herdar milhares de features feitas à mão para modelos antigos, eles buscaram as unidades mínimas de informação e chegaram a cerca de 100. A ideia é deixar a atenção do transformer descobrir as relações entre elas.",
+      "t": 440,
+      "legenda": "As features brutas que alimentam o modelo, separadas por dimensão.",
+      "print": "img/UB6hoWyh3B0/1.jpg"
+    },
+    {
+      "titulo": "Tokenizar dados tabulares é o trabalho principal",
+      "texto": "Dados de banco misturam números, categorias, intervalos de tempo, IP e CEP. Criar um token para cada CEP deixaria o vocabulário grande demais e o treino instável. Por isso eles agrupam valores, por exemplo CEPs por distribuição, e depois mapeiam cada campo para um ID e um embedding (vetor numérico). O palestrante chama essa etapa e o pós-treino de receita secreta do projeto.",
+      "t": 545,
+      "legenda": "Cada tipo de dado tabular pede uma estratégia própria de tokenização.",
+      "print": "img/UB6hoWyh3B0/2.jpg"
+    },
+    {
+      "titulo": "Modelo pequeno com muitos dados por parâmetro",
+      "texto": "Eles usaram as contas do Chinchilla, uma lei de escala que relaciona parâmetros e volume de dados, como ponto de partida. A arquitetura é decoder-only (só decodificador), com 1 bilhão de parâmetros. A regra inicial de 20 tokens por parâmetro se mostrou insuficiente para transações, e os experimentos pediram bem mais dados por parâmetro.",
+      "t": 640,
+      "legenda": "Um transformer de 1 bilhão de parâmetros, longe da escala dos LLMs de mercado.",
+      "print": "img/UB6hoWyh3B0/3.jpg"
+    },
+    {
+      "titulo": "Fraude detectada com o histórico do cliente",
+      "texto": "O XGBoost avalia cada transação quase isolada, e codificar o histórico nele é trabalhoso. O transformer olha a sequência das transações anteriores com atenção. Segundo o palestrante, isso aumentou a taxa de detecção e reduziu os falsos positivos, que geram ligações ao atendimento e vendas perdidas.",
+      "t": 937,
+      "legenda": "Mais fraudes sinalizadas e menos bloqueios indevidos que o modelo anterior.",
+      "print": "img/UB6hoWyh3B0/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Foundation model",
+      "traducao": "modelo de base reaproveitado em várias tarefas",
+      "nivel": "intermediario",
+      "chave": "foundation model",
+      "analogia": "Um foundation model é como um funcionário que fez um treinamento geral longo na empresa e depois recebe um curso rápido para cada área, como atendimento ou financeiro.",
+      "explicacao": [
+        "Foundation model (modelo de base) é um modelo treinado uma vez, com muitos dados, para aprender o jeito geral dos dados. Depois ele serve para várias tarefas.",
+        "O treino inicial é o pré-treino (pre-training). Na Wells Fargo, o modelo aprendeu a prever a próxima transação a partir de bilhões de registros de cartão, cheque e canais digitais.",
+        "Cada área pega essa base e faz um ajuste fino (fine-tuning), um treino curto com dados da sua tarefa, como fraude, aumento de limite, lavagem de dinheiro ou marketing.",
+        "O ganho é trocar muitos modelos isolados, cada um com variáveis montadas à mão, por uma só base que aprendeu a representação dos clientes e é reaproveitada por todos."
+      ],
+      "pre_requisitos": [
+        "Pré-treino",
+        "Fine-tuning",
+        "Transformer"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "DADOS BRUTOS",
+            "nota": "bilhões de transações"
+          },
+          {
+            "rotulo": "PRÉ-TREINO",
+            "nota": "prever a próxima transação"
+          },
+          {
+            "rotulo": "MODELO DE BASE",
+            "nota": "aprende o perfil dos clientes"
+          },
+          {
+            "rotulo": "AJUSTE FINO",
+            "nota": "fraude, crédito, lavagem, marketing"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "XGBoost",
+      "traducao": "modelo de árvores de decisão muito usado em dados tabulares",
+      "nivel": "intermediario",
+      "chave": "xgboost",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Pre-training e post-training",
+      "traducao": "pré-treino e pós-treino",
+      "nivel": "intermediario",
+      "chave": "pre-training e post-training",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Tokenizer",
+      "traducao": "tokenizador, que converte dados em tokens",
+      "nivel": "intermediario",
+      "chave": "tokenizer",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Embedding",
+      "traducao": "representação vetorial",
+      "nivel": "intermediario",
+      "chave": "embedding",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Scaling law",
+      "traducao": "lei de escala (Chinchilla)",
+      "nivel": "avancado",
+      "chave": "scaling law",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Decoder-only",
+      "traducao": "arquitetura só com decodificador",
+      "nivel": "avancado",
+      "chave": "decoder-only",
+      "analogia": "Um modelo decoder-only é como alguém que completa a frase do colega: lê tudo o que já foi dito e chuta a próxima palavra, sem nunca olhar o que vem depois.",
+      "explicacao": [
+        "Decoder-only (só decodificador) é um tipo de transformer que só sabe fazer uma coisa: olhar o que já veio e prever o que vem a seguir.",
+        "Os dados entram como uma fila de tokens, que são pedaços pequenos de informação. No texto, um token é uma palavra ou parte dela. Na Wells Fargo, é um campo de uma transação.",
+        "Cada token só enxerga os que vieram antes dele. Isso se chama atenção causal, e impede o modelo de colar a resposta do futuro.",
+        "No pré-treino, o modelo erra e acerta a próxima transação bilhões de vezes. Com isso, aprende padrões do histórico do cliente, que depois servem para detectar fraude."
+      ],
+      "pre_requisitos": [
+        "Transformer",
+        "Token",
+        "Atenção"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "HISTÓRICO",
+            "nota": "transações anteriores do cliente"
+          },
+          {
+            "rotulo": "ATENÇÃO CAUSAL",
+            "nota": "cada token olha só para trás"
+          },
+          {
+            "rotulo": "PRÓXIMO TOKEN",
+            "nota": "o modelo prevê o que vem a seguir"
+          },
+          {
+            "rotulo": "REPRESENTAÇÃO",
+            "nota": "base pronta para ajuste fino"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Falso positivo",
+      "traducao": "alarme falso",
+      "nivel": "basico",
+      "chave": "falso positivo",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk não dá nenhum número do resultado em fraude. Fala em mais detecção e menos falsos positivos, sem percentuais, período de teste ou amostra, e a economia vira \"milhões de dólares\" sem conta. O palestrante apresenta o projeto do próprio time. Ele pula os detalhes de tokenização e o custo de GPU, a parte que outro banco precisaria. Crédito, lavagem de dinheiro e marketing ainda estão em teste. Sobre latência, a legenda diz \"10 vezes mais lento\", provavelmente era mais rápido.",
+  "acoes": [
+    "Antes de mandar dados tabulares para um LLM de texto, teste um baseline como XGBoost e compare os dois na mesma métrica.",
+    "Ao avaliar um modelo de fraude ou classificação, acompanhe taxa de detecção e taxa de falso positivo juntas, e calcule o custo de cada alarme falso.",
+    "Se sua empresa tem dados sequenciais de clientes, mapeie as dimensões quem, o quê, como, quando e onde antes de escolher features ou modelo.",
+    "Defina o limite de latência do processo (como os 250 ms de aprovação de cartão) antes de propor um modelo maior em produção."
+  ],
+  "numeros": [
+    {
+      "valor": "100",
+      "contexto": "features brutas escolhidas entre milhares disponíveis",
+      "t": 410
+    },
+    {
+      "valor": "1 bilhão",
+      "contexto": "parâmetros do modelo de transações da Wells Fargo",
+      "t": 657
+    },
+    {
+      "valor": "20x",
+      "contexto": "tokens por parâmetro da regra inicial, que se mostrou insuficiente",
+      "t": 688
+    },
+    {
+      "valor": "250 ms",
+      "contexto": "limite de tempo para decidir se aprova a transação de cartão",
+      "t": 907
+    }
+  ]
+}

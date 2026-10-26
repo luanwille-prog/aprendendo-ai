@@ -1,0 +1,174 @@
+{
+  "id": "A3FL_zTQKU0",
+  "titulo": "Don't Trust Your AI Agents. Test Them Like a Scientist — Stephanie Jarmak, Omni Analytics",
+  "titulo_curto": "Don't Trust Your AI Agents. Test Them Like a Scientist",
+  "palestrante": "Stephanie Jarmak, Omni Analytics",
+  "url": "https://www.youtube.com/watch?v=A3FL_zTQKU0",
+  "duracao": 1031,
+  "publicado_ts": 1792738808,
+  "edicao": "2026-10-25",
+  "tese": "Resultado de eval de agente engana fácil. Teste como cientista: tarefas reais, várias execuções, traces completos e a métrica certa.",
+  "tldr": [
+    "Stephanie Jarmak mostra que trocar só o harness (a estrutura que roda o modelo) mudou o resultado em mais de 30%, então benchmark público serve para montar uma lista curta e não para decidir.",
+    "Ela propõe desenhar evals como experimento: cobrir os tipos de tarefa, repetir as execuções, guardar todos os traces e medir o que importa para o seu negócio.",
+    "Alertar não basta, o gate precisa bloquear o trabalho, a revisão humana tem limite de capacidade, o registro do agente pode mentir e só a produção dá a resposta final."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "O harness muda o vencedor",
+      "texto": "Em uma comparação de terceiros com cerca de 63 tarefas no Terminal Bench, um modelo ganhou com o harness Open Hands. Ao trocar só o harness, o outro modelo ficou muito melhor, uma diferença de mais de 30%. Avalie a configuração mais próxima da que você vai usar.",
+      "t": 186,
+      "legenda": "Trocar só o harness inverte qual modelo vence.",
+      "print": "img/A3FL_zTQKU0/0.jpg"
+    },
+    {
+      "titulo": "Benchmark público é para lista curta",
+      "texto": "Benchmark público ajuda a entender o cenário e escolher candidatos. A decisão sai de um eval seu, feito com tarefas parecidas com o seu trabalho. Um escritório de advocacia ganha pouco olhando resultado de benchmark de código.",
+      "t": 250,
+      "legenda": "Benchmark orienta a busca, o eval próprio decide.",
+      "print": "img/A3FL_zTQKU0/1.jpg"
+    },
+    {
+      "titulo": "Rastreie o pipeline inteiro",
+      "texto": "Quando o agente ignorou a ferramenta, ela só podia ser diagnosticada olhando cada etapa: a ferramenta estava disponível, foi chamada, o que retornou, o resultado mudou? Consertar o uso da ferramenta pode não mexer no resultado final da tarefa.",
+      "t": 432,
+      "legenda": "Cada etapa do pipeline precisa de seu próprio ponto de checagem.",
+      "print": "img/A3FL_zTQKU0/2.jpg"
+    },
+    {
+      "titulo": "Meça o que você quer otimizar",
+      "texto": "Na busca com grep, o agente trouxe 295 arquivos quando só precisava de 6. Recall perfeito esconde a falta de precisão. Ela usou F1, que equilibra precisão e recall, porque o objetivo era outro. Pergunte o que o validador de um benchmark realmente mede.",
+      "t": 527,
+      "legenda": "Um recall alto sozinho esconde ruído enorme no resultado.",
+      "print": "img/A3FL_zTQKU0/3.jpg"
+    },
+    {
+      "titulo": "Gate que bloqueia, alarme que cabe no humano",
+      "texto": "O agente percebeu o problema, mas nada o impedia de continuar. Sinalizar e bloquear são mecanismos separados no código. Um juiz LLM com 1% de falsos alarmes geraria 10.000 revisões humanas, e poucas equipes têm especialistas para isso.",
+      "t": 653,
+      "legenda": "Sem enforcement no código, o alerta do agente não para nada.",
+      "print": "img/A3FL_zTQKU0/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Harness",
+      "traducao": "estrutura que cerca o modelo (ferramentas, prompts, loop)",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Benchmark",
+      "traducao": "conjunto padrão de tarefas para comparar sistemas",
+      "nivel": "basico",
+      "chave": "benchmark",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação",
+      "nivel": "basico",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Trace",
+      "traducao": "registro passo a passo da execução do agente",
+      "nivel": "intermediario",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Precision e recall",
+      "traducao": "precisão e cobertura",
+      "nivel": "intermediario",
+      "chave": "precision e recall",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Quality gate",
+      "traducao": "portão de qualidade que bloqueia o avanço",
+      "nivel": "intermediario",
+      "chave": "quality gate",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo de linguagem usado como avaliador",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Shadow deployment",
+      "traducao": "rodar a mudança em paralelo sem afetar o usuário",
+      "nivel": "avancado",
+      "chave": "shadow deployment",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é curto e mistura vários temas em poucos minutos. Os exemplos vêm de fontes de terceiros ou de projetos da própria palestrante, sem dados abertos, amostra ou método detalhado. O resultado de 30% do harness é de uma comparação com cerca de 63 tarefas, amostra pequena. Há leve divulgação do repositório de skills e do arquivo de 300 páginas dela, sem evidência de que funcionem.",
+  "acoes": [
+    "Teste modelo e harness juntos, na configuração que você vai usar, antes de aceitar o ranking de um benchmark público.",
+    "Monte um conjunto pequeno de tarefas reais do seu trabalho, agrupadas por tipo, e rode cada uma várias vezes para ver a variação.",
+    "Guarde os traces e, quando o agente ignorar uma ferramenta, cheque etapa por etapa: disponível, chamada, retorno, resultado.",
+    "Faça o gate bloquear de verdade no código e estime quantas revisões humanas o seu alarme geraria antes de ligá-lo."
+  ],
+  "numeros": [
+    {
+      "valor": "28%",
+      "contexto": "redução de custo após mudar o prompt, sem uso da ferramenta",
+      "t": 93
+    },
+    {
+      "valor": "63",
+      "contexto": "tarefas aproximadas na comparação de terceiros no Terminal Bench",
+      "t": 156
+    },
+    {
+      "valor": "30%+",
+      "contexto": "diferença de efetividade ao trocar só o harness",
+      "t": 186
+    },
+    {
+      "valor": "295 vs 6",
+      "contexto": "arquivos retornados pelo grep contra os necessários",
+      "t": 527
+    }
+  ]
+}

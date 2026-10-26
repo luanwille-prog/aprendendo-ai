@@ -1,0 +1,163 @@
+{
+  "id": "DZ24Xbm9Joc",
+  "titulo": "How to Build Financial Agents That Work Across the Web - Jay Sahnan & Arik Bird, Browserbase",
+  "titulo_curto": "How to Build Financial Agents That Work Across the Web - Jay Sahnan & Arik Bird, Browserbase",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=DZ24Xbm9Joc",
+  "duracao": 1177,
+  "publicado_ts": 1792918810,
+  "edicao": "2026-10-25",
+  "tese": "Agente que precisa de sites sem API precisa de um navegador que não pareça robô e de um controle que não quebre quando a página muda.",
+  "tldr": [
+    "A Browserbase mostra como agentes de navegador buscam dados financeiros em portais com login e proteção anti-bot, usando Ramp (recibos), Bill (pagamentos) e Stripe (verificação KYC) como casos.",
+    "A empresa explica que criou um fork do Chromium para a nuvem, com bandeira de automação removida, identidade de Chrome comum e processo mantido vivo, para reduzir bloqueios em data center.",
+    "O Stagehand, SDK open source, controla o navegador com os comandos act, extract e observe, e envia ao modelo uma árvore de acessibilidade enxuta em vez do HTML bruto."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Navegador é a ferramenta para sites sem API",
+      "texto": "Quando um site não tem API nem MCP, o agente só chega aos dados por um navegador. Ramp, Bill e Stripe lidam com portais de login e proteção anti-bot, e antes dos agentes pagavam times de pessoas para clicar nessas telas.",
+      "t": 100,
+      "legenda": "Os três casos dependem de dados atrás de login e anti-bot.",
+      "print": "img/DZ24Xbm9Joc/0.jpg"
+    },
+    {
+      "titulo": "Por que o Chromium comum é barrado no data center",
+      "texto": "Num servidor, cada execução do navegador sem interface (headless) gera uma impressão digital nova, cookies vazios e um IP de data center. O site lê isso como robô. Trocar de proxy ajuda pouco, porque o Chromium continua o mesmo.",
+      "t": 252,
+      "legenda": "O site reconhece um humano pela impressão digital e pelo histórico.",
+      "print": "img/DZ24Xbm9Joc/1.jpg"
+    },
+    {
+      "titulo": "Fork do Chromium com três mudanças",
+      "texto": "A Browserbase mantém um fork do Chromium. Ela troca o sinal webdriver de verdadeiro para falso, muda a identidade de headless Chrome para Chrome e mantém o processo vivo, fechando só as janelas. O Chromium muda a cada duas semanas, então o fork exige manutenção constante.",
+      "t": 406,
+      "legenda": "Remover flag de automação, alinhar identidade e manter o processo vivo.",
+      "print": "img/DZ24Xbm9Joc/2.jpg"
+    },
+    {
+      "titulo": "Stagehand corta o HTML de 122 mil para 4 mil tokens",
+      "texto": "O Playwright quebra quando um botão muda de lugar ou um campo muda de nome. O Stagehand aceita comandos em linguagem natural e converte o DOM em árvore de acessibilidade antes de chamar o modelo. Isso reduz custo e contexto e acelera a resposta.",
+      "t": 807,
+      "legenda": "A árvore de acessibilidade envia uma fração dos tokens do HTML.",
+      "print": null
+    },
+    {
+      "titulo": "Demo em paralelo: 20 empresas, o mesmo código",
+      "texto": "Na demo final, o mesmo código usa extract para pesquisar site, relações com investidores, SEC e bolsa de Nova York de 20 empresas ao mesmo tempo. O palestrante diz que a visualização ao vivo serve para desenvolvimento, não para produção.",
+      "t": 1086,
+      "legenda": "Um único código roda em vários sites em paralelo na nuvem.",
+      "print": "img/DZ24Xbm9Joc/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Browser agent",
+      "traducao": "agente de navegador",
+      "nivel": "basico",
+      "chave": "browser agent",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Anti-bot e proxy residencial",
+      "traducao": "proteção contra robôs e IP de casa",
+      "nivel": "intermediario",
+      "chave": "anti-bot e proxy residencial",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Accessibility tree",
+      "traducao": "árvore de acessibilidade",
+      "nivel": "intermediario",
+      "chave": "accessibility tree",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Screen scraping",
+      "traducao": "extração de dados de telas",
+      "nivel": "basico",
+      "chave": "screen scraping",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "CAPTCHA",
+      "traducao": "teste para distinguir humano de robô",
+      "nivel": "basico",
+      "chave": "captcha",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Schema de extração",
+      "traducao": "formato fixo dos dados extraídos (Zod)",
+      "nivel": "intermediario",
+      "chave": "schema de extração",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Latência",
+      "traducao": "tempo de espera entre pedido e resposta",
+      "nivel": "intermediario",
+      "chave": "latência",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é pitch da Browserbase, que vende a infraestrutura e o Stagehand. Os números de Ramp (30 mil horas, escala 5x) vêm do palestrante, sem método nem fonte externa. Não há taxa de sucesso, custo por tarefa nem dados de bloqueio. A promessa de menos CAPTCHAs e do fork que evita detecção não tem teste comparativo. Burlar anti-bot pode violar termos de uso de sites, e o talk não discute isso. Os casos de Bill e Stripe ficam só no nível da ideia, sem demo.",
+  "acoes": [
+    "Liste tarefas do seu trabalho que dependem de portais sem API e hoje exigem cliques manuais, como baixar recibos ou checar cadastros.",
+    "Antes de automatizar, confira os termos de uso do site e use API ou MCP oficial quando existir.",
+    "Se testar Stagehand, comece pelo extract com um schema fixo e rode em poucos sites antes de escalar.",
+    "Meça taxa de sucesso e custo por tarefa no seu caso, em vez de confiar nos números do fornecedor."
+  ],
+  "numeros": [
+    {
+      "valor": "30.000 h",
+      "contexto": "horas manuais economizadas pela Ramp",
+      "t": 593
+    },
+    {
+      "valor": "5x",
+      "contexto": "aumento de escala da Ramp, segundo o palestrante",
+      "t": 593
+    },
+    {
+      "valor": "122 mil",
+      "contexto": "tokens do HTML bruto no exemplo",
+      "t": 807
+    },
+    {
+      "valor": "4.000",
+      "contexto": "tokens com a árvore de acessibilidade",
+      "t": 807
+    }
+  ]
+}

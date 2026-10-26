@@ -1,0 +1,174 @@
+{
+  "id": "uTrY8slys0w",
+  "titulo": "How to Let AI Agents Sign Up for Your App Safely — Isabelle Williams, WorkOS",
+  "titulo_curto": "How to Let AI Agents Sign Up for Your App Safely",
+  "palestrante": "Isabelle Williams, WorkOS",
+  "url": "https://www.youtube.com/watch?v=uTrY8slys0w",
+  "duracao": 1113,
+  "publicado_ts": 1792742439,
+  "edicao": "2026-10-25",
+  "tese": "Agente também é usuário. Seu app precisa deixá-lo entrar com um arquivo aberto, uma identidade assinada e um token próprio com teto de permissões.",
+  "tldr": [
+    "Isabelle Williams, da WorkOS, usa o app de viagens Waypoint para mostrar como receber agentes como usuários, com um arquivo auth.md que explica ao agente como se cadastrar.",
+    "O agente pode testar o app em modo anônimo e depois o usuário reivindica o trabalho com um código, ou entrar direto sem formulário usando uma ID-JAG, uma identidade assinada pelo provedor do agente.",
+    "Para agentes dentro do app, o servidor emite um token próprio cujas permissões são a interseção entre o usuário e um teto definido para o agente, o que permite auditar, limitar e revogar."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "auth.md: a porta de entrada para agentes",
+      "texto": "O auth.md é um arquivo markdown que o app hospeda para o agente ler. Ele descreve como obter acesso, criar conta e chamar a API. O arquivo só descreve. Quem aplica as regras de acesso continua sendo o app, no caso o Waypoint.",
+      "t": 154,
+      "legenda": "O auth.md é lido pelo agente e descreve acesso, conta e API.",
+      "print": "img/uTrY8slys0w/0.jpg"
+    },
+    {
+      "titulo": "Modo anônimo e reivindicação do trabalho",
+      "texto": "O agente começa sem conta e recebe um access token e um claim token. Quando o usuário quer assumir o que o agente fez, recebe um link e um código de uso único. Ele entra no app, digita o código e o trabalho passa para a conta dele. Esse fluxo ainda exige cadastro e verificação de e-mail, onde o app perde usuários.",
+      "t": 247,
+      "legenda": "O fluxo de claim move as ações do agente para a conta do usuário.",
+      "print": "img/uTrY8slys0w/1.jpg"
+    },
+    {
+      "titulo": "ID-JAG: o provedor do agente atesta quem é o usuário",
+      "texto": "A ID-JAG é uma afirmação de identidade assinada pelo provedor do agente e endereçada a um app específico. Traz nome, e-mail, se o e-mail foi verificado e a validade. O app verifica a assinatura e decide se cria conta, vincula a uma existente e quais permissões entrega no token.",
+      "t": 467,
+      "legenda": "O payload mostra emissor, destinatário e dados do usuário.",
+      "print": "img/uTrY8slys0w/2.jpg"
+    },
+    {
+      "titulo": "Demo: o agente se cadastra e reserva jantar sozinho",
+      "texto": "Num agent harness (ambiente que roda o agente), o usuário pede um roteiro em Nova York. O agente tenta outras ferramentas, que exigem cadastro no navegador ou chave de API, e escolhe o Waypoint. Depois do consentimento, cria a conta, monta o roteiro e reserva o jantar sem mais interação.",
+      "t": 656,
+      "legenda": "O agente criou a conta e fechou o roteiro sem ação manual.",
+      "print": "img/uTrY8slys0w/3.jpg"
+    },
+    {
+      "titulo": "Token de agente com teto de permissões",
+      "texto": "Em vez de entregar o token do usuário, o app emite um token do agente. As permissões são a interseção entre as do usuário e o teto definido no blueprint do agente. O token identifica o agente e o usuário em nome de quem age. Assim dá para auditar, revogar o agente sem derrubar a sessão do usuário e impedir que ele mude o orçamento.",
+      "t": 907,
+      "legenda": "O token do agente tem só a interseção das permissões.",
+      "print": "img/uTrY8slys0w/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "auth.md",
+      "traducao": "arquivo aberto que ensina o agente a se cadastrar",
+      "nivel": "intermediario",
+      "chave": "auth.md",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "ID-JAG",
+      "traducao": "afirmação de identidade assinada pelo provedor do agente",
+      "nivel": "avancado",
+      "chave": "id-jag",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "OAuth",
+      "traducao": "protocolo de autorização por tokens",
+      "nivel": "intermediario",
+      "chave": "oauth",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Cross App Access (XAA)",
+      "traducao": "acesso entre apps, mesma base da ID-JAG",
+      "nivel": "avancado",
+      "chave": "cross app access (xaa)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Identidade de agente",
+      "traducao": "credencial própria do agente, separada da do usuário",
+      "nivel": "intermediario",
+      "chave": "identidade de agente",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Princípio do menor privilégio",
+      "traducao": "dar ao agente só as permissões necessárias",
+      "nivel": "basico",
+      "chave": "princípio do menor privilégio",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Audit trail",
+      "traducao": "registro rastreável do que o agente fez",
+      "nivel": "basico",
+      "chave": "audit trail",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Agent harness",
+      "traducao": "ambiente que roda o agente e suas ferramentas",
+      "nivel": "intermediario",
+      "chave": "agent harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "A palestra é pitch de produto. A palestrante é gerente de produto da WorkOS e fecha apontando o WorkOS agent auth como a forma de construir o que mostrou. Os demos usam um app próprio e um harness que ela mesma construiu, então não provam adoção real do auth.md nem de provedores de agentes que emitam ID-JAG. Não há dados de abuso, spam de cadastros ou fraude, nem custo de implantação. Ela admite que o app decide em quem confiar, mas não discute como evitar contas falsas criadas em massa por agentes.",
+  "acoes": [
+    "Liste os pontos de entrada do seu produto (cadastro, chave de API, MCP) e anote onde um agente trava, como cadastro só no navegador.",
+    "Nunca entregue o token do usuário a um agente. Emita um token separado, com escopo menor e que dê para revogar.",
+    "Defina para cada agente um teto de permissões e confira que o token final é a interseção com as do usuário.",
+    "Leia o auth.md e a especificação ID-JAG antes de desenhar o fluxo, e decida que dados de identidade você aceita e que acesso inicial concede."
+  ],
+  "numeros": [
+    {
+      "valor": "3.000",
+      "contexto": "clientes da WorkOS, segundo a palestrante",
+      "t": 1
+    },
+    {
+      "valor": "US$ 70",
+      "contexto": "orçamento disponível da equipe antes do agente",
+      "t": 876
+    },
+    {
+      "valor": "US$ 250",
+      "contexto": "falta no orçamento de Alex",
+      "t": 968
+    },
+    {
+      "valor": "US$ 2.000",
+      "contexto": "novo orçamento definido pelo usuário Jordan",
+      "t": 1000
+    }
+  ]
+}

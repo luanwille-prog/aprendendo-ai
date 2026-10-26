@@ -1,0 +1,237 @@
+{
+  "id": "u_jvuCjuvEk",
+  "titulo": "Can Your AI Analyst Keep a Secret? - Aaron Linsky, Bridgewater & Nikhil Benesch, turbopuffer",
+  "titulo_curto": "Can Your AI Analyst Keep a Secret? - Aaron Linsky, Bridgewater & Nikhil Benesch, turbopuffer",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=u_jvuCjuvEk",
+  "duracao": 1076,
+  "publicado_ts": 1792940433,
+  "edicao": "2026-10-25",
+  "tese": "Busca com permissões só escala quando o filtro de acesso entra dentro do índice vetorial, e não antes nem depois dele.",
+  "tldr": [
+    "Um analista de IA precisa buscar em documentos privados, e cada documento tem permissões próprias. Isso quebrou a primeira busca do Bridgewater quando o acervo, o Vault, chegou a cerca de 100 milhões de documentos.",
+    "Filtrar depois da busca perde resultados que o usuário podia ver. Filtrar antes obriga a varrer milhões de documentos e fica lento.",
+    "A turbopuffer combina os dois com o native filtering (filtragem nativa): descarta os clusters do índice sem acesso e varre só os restantes, com P90 de 120 ms no cenário apresentado."
+  ],
+  "tema": "dados-e-rag",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Cada documento privado tem permissões diferentes",
+      "texto": "Na web pública, todos veem os mesmos documentos e o agente pode usar qualquer um. Dentro de uma empresa, cada e-mail, ata e relatório tem grupos e permissões individuais. O agente só pode citar o que quem perguntou tem direito de ver.",
+      "t": 92,
+      "legenda": "Cada cor é um conjunto de permissões distinto por documento.",
+      "print": "img/u_jvuCjuvEk/0.jpg"
+    },
+    {
+      "titulo": "A conta de guardanapo mostra por que a força bruta falha",
+      "texto": "Com 1 KB por documento e memória a cerca de 20 GB por segundo, varrer 100 milhões de documentos leva 5 segundos. O alvo da maioria das buscas é perto de 100 ms. Se os dados estiverem no S3 e não no cache, a varredura passa de um minuto.",
+      "t": 529,
+      "legenda": "A varredura simples estoura o orçamento de 100 ms.",
+      "print": "img/u_jvuCjuvEk/1.jpg"
+    },
+    {
+      "titulo": "Post-filtering e pre-filtering falham de jeitos opostos",
+      "texto": "No post-filtering, a busca pega os vetores mais próximos e depois descarta os sem permissão. Sobram poucos resultados e o recall (cobertura dos resultados relevantes) cai. No pre-filtering, o filtro vem primeiro e sobra uma varredura sequencial, que é lenta se o usuário vê metade do acervo.",
+      "t": 715,
+      "legenda": "Os vizinhos mais próximos de Q muitas vezes não passam no filtro.",
+      "print": "img/u_jvuCjuvEk/2.jpg"
+    },
+    {
+      "titulo": "Filtragem nativa descarta clusters inteiros",
+      "texto": "O índice agrupa vetores parecidos em clusters. Para cada usuário, a turbopuffer elimina os clusters em que ele não tem acesso a nenhum documento, busca nos mais próximos dos restantes e varre só dentro deles. Cada cluster tem cerca de 200 documentos hoje.",
+      "t": 837,
+      "legenda": "Clusters sem documentos permitidos saem da busca antes da varredura.",
+      "print": null
+    },
+    {
+      "titulo": "A regra de permissão vira um filtro direto",
+      "texto": "O resultado apresentado é P90 de 120 ms sobre 400 milhões de vetores. No código, a regra de permissão vira uma expressão simples: o usuário está em viewers, ou algum dos seus grupos está em groups. O planejamento da consulta fica a cargo do mecanismo de busca.",
+      "t": 963,
+      "legenda": "A regra de acesso se traduz em poucas linhas de filtro.",
+      "print": "img/u_jvuCjuvEk/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Busca vetorial",
+      "traducao": "busca por similaridade de significado",
+      "nivel": "intermediario",
+      "chave": "busca vetorial",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Embedding",
+      "traducao": "representação numérica de um conceito",
+      "nivel": "intermediario",
+      "chave": "embedding",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Filtro por metadados",
+      "traducao": "restringir a busca por atributos do documento",
+      "nivel": "intermediario",
+      "chave": "filtro por metadados",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Post-filtering e pre-filtering",
+      "traducao": "filtrar depois ou antes da busca vetorial",
+      "nivel": "avancado",
+      "chave": "post-filtering e pre-filtering",
+      "analogia": "Post-filtering é como pedir ao garçom os 10 pratos mais populares do cardápio e só depois descobrir que você é vegetariano e que sobraram dois. Pre-filtering é ler o cardápio inteiro, prato por prato, só para achar os vegetarianos.",
+      "explicacao": [
+        "Uma busca por similaridade devolve os documentos mais parecidos com a pergunta. Com permissões, o usuário só pode receber os que tem direito de ver.",
+        "No post-filtering (filtrar depois), a busca pega os vetores mais próximos e descarta os sem permissão. Se a maioria dos vizinhos é proibida, sobram poucos resultados.",
+        "Isso derruba o recall (cobertura dos resultados relevantes): o usuário sabe que o documento existe e a busca não o encontra.",
+        "No pre-filtering (filtrar antes), o sistema separa os documentos permitidos e varre todos em sequência. Os resultados são completos, mas o índice vetorial não ajuda.",
+        "Se o usuário vê 50 milhões de 100 milhões de documentos, a varredura leva segundos ou minutos, longe dos 100 ms que a maioria das buscas exige."
+      ],
+      "pre_requisitos": [
+        "Busca vetorial",
+        "Filtro por metadados",
+        "Recall",
+        "Latência"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "POST-FILTERING",
+            "nota": "Busca primeiro, descarta depois"
+          },
+          {
+            "rotulo": "SOBRAM POUCOS",
+            "nota": "Vizinhos próximos são proibidos"
+          },
+          {
+            "rotulo": "PRE-FILTERING",
+            "nota": "Filtra primeiro, varre tudo"
+          },
+          {
+            "rotulo": "LENTO",
+            "nota": "Varredura sequencial de milhões"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Native filtering",
+      "traducao": "filtragem nativa dentro do índice vetorial",
+      "nivel": "avancado",
+      "chave": "native filtering",
+      "analogia": "Native filtering é como procurar um livro numa biblioteca em que o bibliotecário já fechou as salas onde você não pode entrar, e você só folheia as estantes mais perto do assunto nas salas abertas.",
+      "explicacao": [
+        "O problema é buscar rápido sem mostrar o que o usuário não pode ver. Filtrar antes é lento e filtrar depois perde resultados.",
+        "O índice vetorial agrupa vetores parecidos em clusters (grupos de vizinhança). Hoje, cada cluster da turbopuffer tem cerca de 200 documentos.",
+        "Para cada usuário, o sistema descarta os clusters em que ele não tem acesso a nenhum documento.",
+        "Depois escolhe os clusters mais próximos da pergunta entre os que sobraram e varre em sequência só dentro deles, aplicando o filtro de permissão.",
+        "Combina o melhor do pre-filtering e do post-filtering. No cenário apresentado, o P90 (90% das buscas) ficou em 120 ms sobre cerca de 400 milhões de vetores."
+      ],
+      "pre_requisitos": [
+        "Busca vetorial",
+        "Post-filtering e pre-filtering",
+        "Embedding",
+        "Latência"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "CLUSTERS",
+            "nota": "Índice agrupa vetores parecidos"
+          },
+          {
+            "rotulo": "DESCARTA",
+            "nota": "Remove clusters sem acesso"
+          },
+          {
+            "rotulo": "ESCOLHE PRÓXIMOS",
+            "nota": "Os mais perto da pergunta"
+          },
+          {
+            "rotulo": "VARRE DENTRO",
+            "nota": "Cerca de 200 docs por cluster"
+          },
+          {
+            "rotulo": "RESULTADO",
+            "nota": "P90 de 120 ms com permissões"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Recall",
+      "traducao": "cobertura dos resultados relevantes",
+      "nivel": "intermediario",
+      "chave": "recall",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Latência",
+      "traducao": "tempo de resposta (aqui, P90)",
+      "nivel": "basico",
+      "chave": "latência",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Object storage",
+      "traducao": "armazenamento de objetos (S3, GCS, Azure Blob)",
+      "nivel": "intermediario",
+      "chave": "object storage",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é co-apresentado por um cliente e pelo fornecedor, então tem tom de pitch da turbopuffer. O único número de desempenho é a latência P90 de 120 ms, sem comparação com outras soluções, sem medida de recall e sem custo. A legenda automática e a fala trazem 450 e 400 milhões de vetores para a mesma medida, e o relato diz tanto 100 milhões de documentos quanto 1 a 200 ms. O orador admite que grupos aninhados complicam a solução. O Bridgewater não detalha por que o setup anterior falhou.",
+  "acoes": [
+    "Se o seu agente busca em documentos internos, defina quem pode ver cada documento antes de indexar e aplique essa regra dentro da busca, não só na resposta final.",
+    "Teste a busca com um usuário de acesso restrito e confira se ele recebe a quantidade esperada de resultados. Se vierem poucos, o filtro está sendo aplicado depois (post-filtering).",
+    "Antes de escolher uma ferramenta, faça a conta de guardanapo: tamanho por documento vezes número de documentos, dividido pela velocidade de leitura, e compare com seu limite de latência."
+  ],
+  "numeros": [
+    {
+      "valor": "100 milhões",
+      "contexto": "documentos no Vault do Bridgewater",
+      "t": 249
+    },
+    {
+      "valor": "5 s",
+      "contexto": "varrer 100 milhões de docs de 1 KB em memória",
+      "t": 529
+    },
+    {
+      "valor": "200",
+      "contexto": "documentos por cluster hoje na turbopuffer",
+      "t": 900
+    },
+    {
+      "valor": "120 ms",
+      "contexto": "latência P90 com filtragem nativa",
+      "t": 930
+    }
+  ]
+}

@@ -1,0 +1,174 @@
+{
+  "id": "dZgA6btnb_s",
+  "titulo": "Do Not Let Models Invent Numbers - Vinoo Ganesh, Kepler",
+  "titulo_curto": "Do Not Let Models Invent Numbers - Vinoo Ganesh, Kepler",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=dZgA6btnb_s",
+  "duracao": 1258,
+  "publicado_ts": 1792915212,
+  "edicao": "2026-10-25",
+  "tese": "Em finanças, o modelo aponta para o número, mas quem escreve e calcula é o código; o que não tem fonte verificável sai da resposta.",
+  "tldr": [
+    "A Kepler, empresa de pesquisa financeira com IA, deixa o modelo de linguagem planejar e citar números, mas nunca escrevê-los. Busca encontra a fonte, código determinístico faz a conta e um filtro final remove o que não tem origem comprovada.",
+    "Para isso, a empresa indexou mais de 30 milhões de documentos da SEC (regulador do mercado americano) em um registro de citações. Cada fato carrega valor, unidade, escala e período, e a busca combina BM25, embeddings e re-ranking no turbopuffer.",
+    "Nos evals (avaliações) da empresa, o filtro recusou 10.981 citações de um RAG simples, e cerca de 3.810 eram números errados. O palestrante admite que o modelo ainda alucina e que a garantia vale só para os números exibidos."
+  ],
+  "tema": "dados-e-rag",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "O modelo cita o número, nunca o escreve",
+      "texto": "A arquitetura tem três partes. A busca (retrieval) acha a fonte certa, código determinístico escrito por humanos faz as contas e um filtro de pós-processamento remove qualquer número sem origem. Assim o modelo só planeja e aponta para fatos já registrados.",
+      "t": 248,
+      "legenda": "Os três pilares que impedem o modelo de inventar números.",
+      "print": "img/dZgA6btnb_s/0.jpg"
+    },
+    {
+      "titulo": "Registro de citações com valor, unidade, escala e período",
+      "texto": "Um número solto como 17 não diz nada. A Kepler guarda cada fato com valor, unidade, escala e período. Um bilhão citado no 10-K de 2025 pode ser dado de 2023. O XBRL (formato estruturado de relatórios) erra cerca de 10% das vezes, então ele não basta.",
+      "t": 497,
+      "legenda": "Um número só vira fato citável quando tem unidade, escala e período.",
+      "print": null
+    },
+    {
+      "titulo": "Busca híbrida e re-ranking em duas etapas",
+      "texto": "O namespace no turbopuffer combina embeddings de 1280 dimensões, vizinhos aproximados (ANN) e BM25. Uma fusão por rank recíproco traz cerca de 60 documentos. Depois, um re-ranking por confiança na fonte e um cross encoder ordenam o resultado. A estratégia é buscar amplo e depois reordenar.",
+      "t": 591,
+      "legenda": "O pipeline de recuperação inteiro em um único diagrama.",
+      "print": "img/dZgA6btnb_s/2.jpg"
+    },
+    {
+      "titulo": "Se não há correspondência, o número é removido",
+      "texto": "Durante a geração, o modelo emite referências que o sistema resolve no registro, como quem segue um ponteiro. Sem correspondência, o número é cortado. O custo é uma ferramenta menos criativa e inútil para quem quer especulação. Em alguns casos o sistema tenta reparar a citação antes de cortar.",
+      "t": 900,
+      "legenda": "O filtro final troca criatividade por rastreabilidade.",
+      "print": "img/dZgA6btnb_s/3.jpg"
+    },
+    {
+      "titulo": "RAG simples deixa passar milhares de números errados",
+      "texto": "Nos evals da Kepler, o filtro recusou 10.981 citações de um fluxo nativo com Claude ou ChatGPT mais RAG. Cerca de 3.810 eram números claramente errados. Na demo, cada número é clicável e mostra o documento de origem e a conta feita, como um aumento de 6,4%.",
+      "t": 1025,
+      "legenda": "Evidência da própria empresa de que RAG puro não garante precisão numérica.",
+      "print": "img/dZgA6btnb_s/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "RAG",
+      "traducao": "geração aumentada por recuperação",
+      "nivel": "intermediario",
+      "chave": "rag",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Hallucination",
+      "traducao": "alucinação",
+      "nivel": "basico",
+      "chave": "hallucination",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sistema determinístico",
+      "traducao": "código que sempre dá o mesmo resultado para a mesma entrada",
+      "nivel": "basico",
+      "chave": "sistema determinístico",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Provenance",
+      "traducao": "proveniência, a origem rastreável de um dado",
+      "nivel": "intermediario",
+      "chave": "provenance",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Busca híbrida",
+      "traducao": "mistura de busca por palavra-chave e por significado",
+      "nivel": "intermediario",
+      "chave": "busca híbrida",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Reciprocal rank fusion (RRF)",
+      "traducao": "fusão de rankings por posição recíproca",
+      "nivel": "avancado",
+      "chave": "reciprocal rank fusion (rrf)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Re-ranker",
+      "traducao": "modelo que reordena os resultados da busca",
+      "nivel": "intermediario",
+      "chave": "re-ranker",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Multi-tenancy",
+      "traducao": "isolamento de dados entre clientes no mesmo sistema",
+      "nivel": "intermediario",
+      "chave": "multi-tenancy",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "É palestra de patrocínio do turbopuffer e pitch da Kepler. Os números de evals (10.981 recusadas, 3.810 erradas) vêm da própria empresa, sem dados sobre o benchmark, o modelo usado ou a taxa de falsos positivos do filtro. O palestrante também admite que o modelo ainda alucina e que a garantia vale só para números exibidos. Afirmações como 'a rastreabilidade mais granular do mercado' não têm comparação.",
+  "acoes": [
+    "Se você usa IA com dados numéricos, peça sempre a fonte (documento e página) ao lado de cada número e confira por amostragem antes de repassar.",
+    "Mande contas, somas e percentuais para planilha ou código, e use o modelo só para localizar os valores e explicar.",
+    "Ao montar um RAG interno, guarde junto de cada número a unidade, a escala e o período, para evitar confundir milhões com bilhões.",
+    "Meça no seu próprio caso quantos números do RAG simples estão errados antes de confiar nele em decisões."
+  ],
+  "numeros": [
+    {
+      "valor": "30 milhões",
+      "contexto": "documentos da SEC processados no registro de citações",
+      "t": 248
+    },
+    {
+      "valor": "10%",
+      "contexto": "taxa aproximada de erro do XBRL, segundo o palestrante",
+      "t": 528
+    },
+    {
+      "valor": "10.981",
+      "contexto": "citações recusadas pelo filtro nos evals",
+      "t": 993
+    },
+    {
+      "valor": "3.810",
+      "contexto": "das recusadas eram números claramente errados",
+      "t": 1025
+    }
+  ]
+}

@@ -1,0 +1,174 @@
+{
+  "id": "v5tm5EAzsAs",
+  "titulo": "Your Agent Fix Just Broke Something Else - Sofia Jakovcevic, Arize AI",
+  "titulo_curto": "Your Agent Fix Just Broke Something Else - Sofia Jakovcevic, Arize AI",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=v5tm5EAzsAs",
+  "duracao": 1164,
+  "publicado_ts": 1792868409,
+  "edicao": "2026-10-25",
+  "tese": "Agente quebra em runtime, não no diff. Só traces de produção, evals e experimentos em CI mostram se uma correção estragou outra coisa.",
+  "tldr": [
+    "Uma linha no prompt de um agente de suporte subiu a segurança das ações em 17 pontos e derrubou a conclusão de tarefas em 17, e a média ficou zero.",
+    "Sofia Jakovcevic, da Arize, propõe um loop de regressão em cinco passos: dataset de traces reais, evaluators, experimento de baseline, comparação de mudanças e bloqueio de merge no CI.",
+    "Ela fecha dizendo que toda falha deve virar teste e que o próximo passo é deixar coding agents lerem os traces e proporem as correções sozinhos."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Melhorar uma dimensão não melhora o agente",
+      "texto": "Uma linha pedia ao agente para confirmar antes de agir. A segurança das ações subiu 17 pontos, mas a conclusão de tarefas caiu 17, porque usuários abandonavam a sessão antes do fim. A média das duas métricas ficou em zero. Sem um conjunto de evals com várias métricas, a mudança teria sido aprovada.",
+      "t": 219,
+      "legenda": "Duas métricas se movem em sentidos opostos e a média fica em zero.",
+      "print": "img/v5tm5EAzsAs/0.jpg"
+    },
+    {
+      "titulo": "O diff mostra o que mudou, o trace mostra o que aconteceu",
+      "texto": "O revisor de código vê uma linha num arquivo markdown. Em produção, essa linha muda o número de passos, a conversa com subagentes e as chamadas de ferramentas. Essas trajetórias não existem no código estático, só nos traces. Por isso a palestrante trata o trace como nova fonte de verdade.",
+      "t": 313,
+      "legenda": "Mudança local no código, efeito global no comportamento.",
+      "print": "img/v5tm5EAzsAs/1.jpg"
+    },
+    {
+      "titulo": "O dataset precisa de quatro tipos de caso",
+      "texto": "O dataset sai de traces reais, sem dados sintéticos. Ele deve incluir fluxos comuns, falhas conhecidas, casos de borda e fluxos bem-sucedidos que você quer proteger. O quarto tipo costuma ser esquecido, e é ele que detecta a regressão.",
+      "t": 436,
+      "legenda": "Casos que já funcionam entram no teste para detectar regressões.",
+      "print": "img/v5tm5EAzsAs/2.jpg"
+    },
+    {
+      "titulo": "LLM como juiz transforma critério subjetivo em nota",
+      "texto": "Métricas como alucinação, eficiência de passos e conclusão de tarefa dependem de julgamento. Um LLM recebe um guia e classifica cada trace, por exemplo em completo ou incompleto, ou em nota de 0 a 5. Checagens determinísticas ficam melhor com evaluators em código.",
+      "t": 532,
+      "legenda": "Um rótulo binário transforma julgamento humano em métrica automatizável.",
+      "print": "img/v5tm5EAzsAs/3.jpg"
+    },
+    {
+      "titulo": "Comparar prompts e modelos lado a lado antes de publicar",
+      "texto": "Na plataforma da Arize, o playground roda o mesmo dataset de 100 linhas em duas versões de prompt e aplica os evals escolhidos. A tabela de experimentos mostra o saldo de cada variante contra o baseline. O mesmo método serve para decidir se vale pagar por um modelo mais caro.",
+      "t": 716,
+      "legenda": "Cada linha é uma variante testada, com o saldo de cada métrica.",
+      "print": "img/v5tm5EAzsAs/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Trace",
+      "traducao": "registro estruturado do que o agente fez, passo a passo",
+      "nivel": "basico",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Observabilidade de agentes",
+      "traducao": "capacidade de ver o que o agente faz em produção",
+      "nivel": "basico",
+      "chave": "observabilidade de agentes",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação",
+      "nivel": "basico",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "LLM usado como avaliador",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Teste de regressão",
+      "traducao": "teste que verifica se uma mudança quebrou algo que funcionava",
+      "nivel": "basico",
+      "chave": "teste de regressão",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Baseline",
+      "traducao": "resultado de referência antes da mudança",
+      "nivel": "intermediario",
+      "chave": "baseline",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "CI (integração contínua)",
+      "traducao": "checagens automáticas rodadas a cada pull request",
+      "nivel": "intermediario",
+      "chave": "ci (integração contínua)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Agent skills",
+      "traducao": "pacotes de instruções e contexto que conectam coding agents a sistemas externos",
+      "nivel": "intermediario",
+      "chave": "agent skills",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "A palestrante trabalha na Arize e o talk apresenta o produto dela na demo e nas skills. O exemplo de +17 e -17 é ilustrativo e não traz amostra, método de medição nem fonte, e a palestra não diz se é um caso real. O talk não mostra dados sobre agentes que corrigem a si mesmos, só afirma que esse é o rumo. Os evals por LLM juiz também têm viés e custo, e isso não foi discutido.",
+  "acoes": [
+    "Antes de mudar um prompt de agente, rode os mesmos casos reais em duas versões e compare ao menos duas métricas em tensão, como segurança e conclusão de tarefa.",
+    "Monte um dataset pequeno com falhas conhecidas, casos de borda, fluxos comuns e fluxos que já funcionam e que você quer proteger.",
+    "Transforme cada falha encontrada em produção em um novo caso do dataset de regressão.",
+    "Se o time usa GitHub Actions, rode o experimento em cada pull request e bloqueie o merge se uma métrica cair abaixo do limite combinado."
+  ],
+  "numeros": [
+    {
+      "valor": "+17 pontos",
+      "contexto": "ganho em segurança das ações após a mudança de uma linha",
+      "t": 188
+    },
+    {
+      "valor": "-17 pontos",
+      "contexto": "queda na conclusão de tarefas com a mesma mudança",
+      "t": 219
+    },
+    {
+      "valor": "5 vezes",
+      "contexto": "custo citado de um modelo mais caro a ser testado",
+      "t": 624
+    },
+    {
+      "valor": "100 linhas",
+      "contexto": "tamanho do dataset usado na demo",
+      "t": 780
+    }
+  ]
+}
