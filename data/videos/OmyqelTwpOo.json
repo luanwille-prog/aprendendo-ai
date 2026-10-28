@@ -1,0 +1,174 @@
+{
+  "id": "OmyqelTwpOo",
+  "titulo": "How to Build Voice Agents That Don't Fall Apart When You Interrupt - Jesse Hall, LiveKit",
+  "titulo_curto": "How to Build Voice Agents That Don't Fall Apart When You Interrupt - Jesse Hall, LiveKit",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=OmyqelTwpOo",
+  "duracao": 1255,
+  "publicado_ts": 1792998026,
+  "edicao": "2026-10-27",
+  "tese": "Agente de voz se escolhe testando a conversa inteira com chamadores simulados, porque ranking de modelo e métrica de componente enganam.",
+  "tldr": [
+    "Jesse Hall, da LiveKit, diz que leaderboards (rankings) pontuam modelos isolados, mas o produto final é uma conversa em que erros de transcrição, latência e interrupções se somam.",
+    "Ele propõe medir o que o chamador ouve (tempo até o primeiro áudio e até a primeira frase), esconder ferramentas lentas com chamadas assíncronas e usar detecção de fim de turno que ouve o áudio, não só o texto.",
+    "Para escolher a stack, ele roda um agente real contra chamadores simulados com ruído e interrupções, pontua o resultado final e troca os modelos no mesmo cenário, montando um benchmark próprio."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Leaderboard pontua peça, você entrega conversa",
+      "texto": "O ranking avalia speech-to-text, LLM e text-to-speech separados e com áudio limpo. Na ligação real, um erro de transcrição (ouvir dia 30 em vez de dia 3) contamina tudo adiante, e o chamador fala no viva-voz, no trânsito. A pergunta certa é qual stack entregar para o seu caso.",
+      "t": 314,
+      "legenda": "Um erro no primeiro modelo desce pela cadeia, e o ranking não vê isso.",
+      "print": "img/OmyqelTwpOo/0.jpg"
+    },
+    {
+      "titulo": "Meça o que o ouvido percebe",
+      "texto": "Time to first byte (primeiro byte) pode parecer ótimo e ainda assim vir seguido de silêncio. Para voz, vale medir tempo até o primeiro áudio. Do mesmo modo, o TTS precisa de uma frase inteira para falar, então o LLM mais rápido em tokens nem sempre entrega a primeira frase primeiro.",
+      "t": 408,
+      "legenda": "Primeiro byte rápido não garante que o chamador ouça algo logo.",
+      "print": "img/OmyqelTwpOo/1.jpg"
+    },
+    {
+      "titulo": "Uma linha separa conversa e ferramenta lenta",
+      "texto": "Uma ferramenta de back end pode levar segundos. Em vez de calar, o agente deve seguir a conversa como uma pessoa faria, e uma chamada assíncrona (async) solta o diálogo da ferramenta. No demo do hotel, o agente salvava dados enquanto continuava perguntando e aceitou interrupções.",
+      "t": 566,
+      "legenda": "Uma linha de código desacopla a conversa da chamada de ferramenta.",
+      "print": "img/OmyqelTwpOo/2.jpg"
+    },
+    {
+      "titulo": "Detecção de fim de turno com áudio",
+      "texto": "Detectores só de texto concluem que o chamador terminou ao ver uma pausa depois de 'quinhentos'. Um detector que também ouve ritmo e entonação espera o resto do valor. O palestrante cita taxa de interrupção indevida menor que a da alternativa, mas a medição é da própria empresa.",
+      "t": 758,
+      "legenda": "Taxa de interrupção indevida: 4,5% contra 9,9% da alternativa.",
+      "print": "img/OmyqelTwpOo/3.jpg"
+    },
+    {
+      "titulo": "Benchmark próprio com chamadores simulados",
+      "texto": "Pegue um agente completo com back end real, aplique usuários simulados que mudam de ideia, interrompem e falam com ruído. Pontue o estado final (reserva certa no banco, valor certo cobrado) e os passos usados, para pegar trapaça. Depois troque só os modelos e repita com entrada idêntica.",
+      "t": 1105,
+      "legenda": "O mesmo modelo muda de posição conforme o provedor que o serve.",
+      "print": "img/OmyqelTwpOo/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Voice agent",
+      "traducao": "agente de voz",
+      "nivel": "basico",
+      "chave": "voice agent",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Pipeline em cascata",
+      "traducao": "speech-to-text, LLM e text-to-speech em sequência",
+      "nivel": "intermediario",
+      "chave": "pipeline em cascata",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Time to first audio",
+      "traducao": "tempo até o primeiro áudio",
+      "nivel": "intermediario",
+      "chave": "time to first audio",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Time to first sentence",
+      "traducao": "tempo até a primeira frase",
+      "nivel": "intermediario",
+      "chave": "time to first sentence",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Detecção de fim de turno",
+      "traducao": "turn detection",
+      "nivel": "intermediario",
+      "chave": "detecção de fim de turno",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Orçamento de latência",
+      "traducao": "latency budget",
+      "nivel": "intermediario",
+      "chave": "orçamento de latência",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Simulated user",
+      "traducao": "usuário simulado",
+      "nivel": "intermediario",
+      "chave": "simulated user",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Teste de regressão",
+      "traducao": "regression test",
+      "nivel": "basico",
+      "chave": "teste de regressão",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk também é pitch da LiveKit: os números de turn detection (4,5% contra 9,9%) são da própria empresa, sem a alternativa nomeada nem o tamanho da amostra. O benchmark do hotel mostra a LiveKit Inference à frente do mesmo modelo em outro provedor, o que favorece quem vende. O agente de hotel é um caso simples, e o tema financeiro do início não ganha nenhum teste financeiro real. O método de simulação é razoável e aberto, mas vale rodá-lo no seu caso.",
+  "acoes": [
+    "Meça tempo até o primeiro áudio e até a primeira frase no seu agente de voz, não o tempo até o primeiro byte ou token.",
+    "Defina um orçamento de latência de cerca de 1,5 segundo entre a última sílaba do chamador e a primeira resposta audível.",
+    "Faça ferramentas lentas rodarem em modo assíncrono e treine o agente a dizer 'um segundo, estou verificando' em vez de ficar mudo.",
+    "Monte de 10 a 20 cenários com chamadores simulados (mudança de valor, interrupção, ruído), pontue o estado final e transforme cada falha em teste de regressão."
+  ],
+  "numeros": [
+    {
+      "valor": "210 ms",
+      "contexto": "time to first byte de um TTS no painel",
+      "t": 408
+    },
+    {
+      "valor": "9,9% vs 4,5%",
+      "contexto": "cortes indevidos: alternativa líder contra LiveKit",
+      "t": 758
+    },
+    {
+      "valor": "1,5 s",
+      "contexto": "janela de latência em que a conversa ainda se sustenta",
+      "t": 885
+    },
+    {
+      "valor": "500-600 ms",
+      "contexto": "intervalo entre turnos que soa humano",
+      "t": 885
+    }
+  ]
+}

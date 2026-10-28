@@ -1,0 +1,169 @@
+{
+  "id": "dAoOYFx7ZYw",
+  "titulo": "Stop Giving Your Agent Tools. Give It a Sandbox - Mikyo King, Arize AI",
+  "titulo_curto": "Stop Giving Your Agent Tools. Give It a Sandbox - Mikyo King, Arize AI",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=dAoOYFx7ZYw",
+  "duracao": 878,
+  "publicado_ts": 1793127627,
+  "edicao": "2026-10-27",
+  "tese": "Em vez de entupir o agente com dezenas de ferramentas, dê a ele um sandbox onde escreve código para buscar e combinar só o que precisa.",
+  "tldr": [
+    "O agente clássico recebe um catálogo grande de ferramentas e empilha cada resposta na janela de contexto, o que aumenta custo, latência e número de turnos.",
+    "No code mode, o agente busca a ferramenta que precisa e a executa dentro de um sandbox (ambiente isolado de execução de código), devolvendo ao modelo só o resultado útil.",
+    "A Arize mediu o efeito com evals no framework Harbor e relata 43% menos tokens e 31% menos custo, mas o código gerado traz custos de segredos, permissões e durabilidade."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "O agente clássico incha o contexto",
+      "texto": "No modelo tradicional, o agente recebe um catálogo enorme de ferramentas. Cada chamada devolve dados que entram no contexto, às vezes com lixo ou paginação. O resultado é context rot (degradação do contexto), muitos turnos e necessidade de compactação.",
+      "t": 125,
+      "legenda": "Cada chamada de ferramenta empurra mais texto para o contexto.",
+      "print": "img/dAoOYFx7ZYw/0.jpg"
+    },
+    {
+      "titulo": "Code mode: buscar, executar e compor em código",
+      "texto": "O agente ganha uma ferramenta de busca e um ambiente de programação. Ele roda ferramentas em sequência, em paralelo ou com condicionais, num único turno. Só o que for necessário volta ao contexto do modelo.",
+      "t": 218,
+      "legenda": "Menos turnos e menos texto no contexto, na comparação dos dois desenhos.",
+      "print": "img/dAoOYFx7ZYw/1.jpg"
+    },
+    {
+      "titulo": "Quatro motivos para funcionar",
+      "texto": "O palestrante lista descoberta progressiva de ferramentas, composição (paralelo, fan out, encadeamento), eficiência de tokens e comportamento emergente. O último permite ao agente criar a própria ferramenta, por exemplo para remover dados pessoais sem passá-los pelo contexto.",
+      "t": 281,
+      "legenda": "Os quatro argumentos centrais a favor do code mode.",
+      "print": "img/dAoOYFx7ZYw/2.jpg"
+    },
+    {
+      "titulo": "Como o Phoenix usa code mode",
+      "texto": "O agente do Phoenix começou com Bash e depois ganhou um sandbox Python, os endpoints REST de CRUD e SQL para consultas agregadas, como latência P95. Há também um paradigma de programação ligado à interface, rodando em um web worker, que muda o intervalo de tempo e lê dados no front end.",
+      "t": 374,
+      "legenda": "As quatro superfícies de código que o agente do Phoenix recebe.",
+      "print": null
+    },
+    {
+      "titulo": "Custos escondidos e resultado nos evals",
+      "texto": "Código gerado por LLM traz risco de rede, segredos que vazam para o contexto, permissões amplas, falhas de boot e depuração mais difícil. Nos evals do Harbor, a Arize relata queda de 43% nos tokens e 31% no custo, com latência estável.",
+      "t": 778,
+      "legenda": "Tokens e custo caem após o code mode, e a latência quase não muda.",
+      "print": "img/dAoOYFx7ZYw/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Code Mode",
+      "traducao": "modo código",
+      "nivel": "intermediario",
+      "chave": "code mode",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado de execução",
+      "nivel": "basico",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Tool calling",
+      "traducao": "chamada de ferramentas",
+      "nivel": "basico",
+      "chave": "tool calling",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Janela de contexto",
+      "traducao": "memória de trabalho do modelo",
+      "nivel": "basico",
+      "chave": "janela de contexto",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Progressive disclosure",
+      "traducao": "revelação progressiva de ferramentas",
+      "nivel": "intermediario",
+      "chave": "progressive disclosure",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Network egress",
+      "traducao": "saída de rede do sandbox",
+      "nivel": "avancado",
+      "chave": "network egress",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "pass@k e pass^k",
+      "traducao": "taxa de acerto em k tentativas",
+      "nivel": "avancado",
+      "chave": "pass@k e pass^k",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Hill climbing",
+      "traducao": "melhoria iterativa guiada por eval",
+      "nivel": "intermediario",
+      "chave": "hill climbing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é de uma empresa que vende observabilidade e avaliação e fecha pedindo que o público use as ferramentas dela. Os 43% e 31% vêm dos próprios evals da Arize, sem detalhar quantas tarefas, quais modelos ou qual margem de variação. O palestrante admite custos reais (segredos, permissões, durabilidade) sem medi-los. Também não mostra casos em que o code mode piora o resultado, só cita de passagem que a eficiência às vezes cai com uma ferramenta nova.",
+  "acoes": [
+    "Meça quantos tokens suas ferramentas atuais consomem por tarefa antes de mudar a arquitetura, para ter uma linha de base.",
+    "Teste um sandbox com rede desligada e segredos fora do contexto antes de dar ao agente a capacidade de rodar código.",
+    "Rode a mesma tarefa várias vezes e registre a taxa de acerto, porque agentes variam de trajetória a cada execução.",
+    "Para dados sensíveis, peça ao agente que escreva um script de limpeza em vez de colar os dados no chat."
+  ],
+  "numeros": [
+    {
+      "valor": "43%",
+      "contexto": "menos tokens com code mode nos evals do Harbor",
+      "t": 778
+    },
+    {
+      "valor": "31%",
+      "contexto": "queda de custo com code mode",
+      "t": 778
+    },
+    {
+      "valor": "30 anos",
+      "contexto": "janela de história do software citada na abertura",
+      "t": 32
+    }
+  ]
+}

@@ -1,0 +1,1193 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Agentes em produção: controle, sandbox e testes reais · Aprendendo AI</title>
+<meta name="description" content="Resumos diários dos talks do canal AI Engineer, explicados no estilo Quadro Anotado.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<script>document.documentElement.classList.add("js")</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;500;700;900&family=Barlow:ital,wght@0,400;0,600;1,400&family=Kalam:wght@400;700&display=swap">
+<link rel="stylesheet" href="../estilo.css">
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<header class="topo wrap">
+  <a class="marca" href="../index.html">Aprendendo <span>AI</span></a>
+  <nav class="topo-links" aria-label="Navegação principal">
+    <a href="../index.html#edicoes">Edições</a>
+    <a href="../glossario.html">Glossário</a>
+  </nav>
+</header>
+<main id="conteudo" class="wrap" tabindex="-1">
+<div class="edicao" id="e-2026-10-27">
+  <header class="edicao-head">
+    <h1 class="h-edicao">Agentes em produção: controle, sandbox e testes reais</h1>
+    <p class="meta">Edição de terça, 27 out 2026 · 11 vídeos · 4 h 40 min de talks</p>
+<p class="abertura">Onze talks sobre o que acontece quando agentes saem do protótipo. O dia começa pela governança: tratar agente como funcionário, aprender com um erro bancário de 900 milhões de dólares e ver o que uma empresa de 60 pessoas descobriu ao vigiar seus 300 agentes. Depois vem a construção: o harness que sobreviveu a dois anos de reconstrução, o sandbox no lugar de dezenas de ferramentas e os agentes gerenciados na nuvem do Google. Em seguida, dois casos aplicados, revisão de código e agentes de voz, antes de fechar com testes em tarefas reais, um loop que melhora o agente sozinho e a plataforma que leva modelos novos aos traders no mesmo dia.</p>  </header>
+
+  <div class="edicao-corpo">
+    <nav class="indice card" aria-label="Ordem de leitura">
+      <p class="indice-titulo">Ordem de leitura</p>
+      <ol><li data-id="h8jgniNJcbQ"><a href="#v-h8jgniNJcbQ" lang="en">Why Are We Still Governing AI Agents Like Software? - Tim Tyler, Gravitee</a> <span class="muted">18:12</span></li><li data-id="iniryju23Sk"><a href="#v-iniryju23Sk" lang="en">What a $900M Bank Error Teaches Us About AI Agents - John Feminella, Two Sigma</a> <span class="muted">18:56</span></li><li data-id="BgLdvF7Qkh8"><a href="#v-BgLdvF7Qkh8" lang="en">300 Agents, 60 People: How We Secured Our Own AI Agents - Aiden Sochowski, Runlayer</a> <span class="muted">16:38</span></li><li data-id="YIhvrvHtonk"><a href="#v-YIhvrvHtonk" lang="en">We Kept Rebuilding Our AI Agent. Here&#39;s What Survived - Fuad Ali, Arize AI</a> <span class="muted">20:06</span></li><li data-id="dAoOYFx7ZYw"><a href="#v-dAoOYFx7ZYw" lang="en">Stop Giving Your Agent Tools. Give It a Sandbox - Mikyo King, Arize AI</a> <span class="muted">14:38</span></li><li data-id="Y_p3y6zP5QE"><a href="#v-Y_p3y6zP5QE" lang="en">Build Your Own Team of Managed Agents - Jack Wotherspoon, Google DeepMind</a> <span class="muted">19:43</span></li><li data-id="4UtrRVtUN_g"><a href="#v-4UtrRVtUN_g" lang="en">How to Build an AI Code Review Agent - Daksh Gupta, Greptile</a> <span class="muted">18:27</span></li><li data-id="OmyqelTwpOo"><a href="#v-OmyqelTwpOo" lang="en">How to Build Voice Agents That Don&#39;t Fall Apart When You Interrupt - Jesse Hall, LiveKit</a> <span class="muted">20:55</span></li><li data-id="kRJjSOYqW0I"><a href="#v-kRJjSOYqW0I" lang="en">How to Test Your Agents on Real Tasks With Harbor - Xander Song, Arize AI</a> <span class="muted">56:01</span></li><li data-id="UGuNt2_Oz8s"><a href="#v-UGuNt2_Oz8s" lang="en">Agents That Self Improve While You Sleep - Fuad Ali, Arize AI</a> <span class="muted">53:04</span></li><li data-id="aGIUg8zKI8A"><a href="#v-aGIUg8zKI8A" lang="en">How a Trading Firm Ships New AI Models the Same Day - Noyan Tokgozoglu, Optiver</a> <span class="muted">23:22</span></li></ol>
+      <span class="progresso" data-ids="h8jgniNJcbQ iniryju23Sk BgLdvF7Qkh8 YIhvrvHtonk dAoOYFx7ZYw Y_p3y6zP5QE 4UtrRVtUN_g OmyqelTwpOo kRJjSOYqW0I UGuNt2_Oz8s aGIUg8zKI8A"></span>
+    </nav>
+
+    <div class="talks">
+<article class="video" id="v-h8jgniNJcbQ" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">01</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Why Are We Still Governing AI Agents Like Software? - Tim Tyler, Gravitee</h2>
+      <p class="tese">Trate cada agente como funcionário: crachá, chefe nomeado, cargo definido, acesso mínimo e supervisão constante.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">18:12</span>
+    <span class="chip" role="img" aria-label="Complexidade 2 de 5">nível ●●○○○</span>
+    <a class="chip chip-link" href="https://www.youtube.com/watch?v=h8jgniNJcbQ" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Tim Tyler, da Gravitee, propõe governar agentes de IA como uma força de trabalho digital, copiando o que empresas já fazem com funcionários humanos.</p><p>O modelo tem três etapas. Atribuição dá identidade única e um responsável nomeado. Alinhamento define cargo, missão e acesso mínimo. Administração mede o desempenho e aplica sanções graduais.</p><p>A supervisão precisa rodar em velocidade de máquina, com agentes guardiões e regras de confiança que levam de correção a bloqueio, porque revisão trimestral chega tarde demais.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-identidade-de-agente"><strong>Identidade de agente</strong> <span>ID único do agente em um cadastro compartilhado</span></a></li><li><a href="../glossario.html#g-principio-do-menor-privilegio"><strong>Princípio do menor privilégio</strong> <span>dar só o acesso mínimo para a tarefa</span></a></li><li><a href="../glossario.html#g-delegation-chain"><strong>Delegation chain</strong> <span>cadeia de delegação entre agentes e pessoa</span></a></li><li><a href="../glossario.html#g-mission"><strong>Mission</strong> <span>missão: o que o agente faz naquele momento</span></a></li><li><a href="../glossario.html#g-sistema-deterministico"><strong>Sistema determinístico</strong> <span>regras fixas com resultado previsível</span></a></li><li><a href="../glossario.html#g-confidence-score"><strong>Confidence score</strong> <span>nota de confiança da avaliação</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-human-in-the-loop"><strong>Human in the loop</strong> <span>pessoa que aprova ou revisa antes da ação</span></a></li><li><a href="../glossario.html#g-guardrails-de-entrada-e-saida"><strong>Guardrails de entrada e saída</strong> <span>barreiras que filtram o que entra e sai do agente</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Todo agente tem identidade e um responsável</h3>
+    <p>O agente recebe um ID único, registrado em um cadastro central, e um patrocinador humano com nome. No exemplo, o agente 409 responde a Sven, que define o propósito, responde pelo custo e atende o telefone se algo der errado. Tyler compara com o hábito de olhar nos olhos de outro adulto e perguntar &#39;você está com as crianças?&#39; na piscina.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/h8jgniNJcbQ/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Cada agente aponta para uma pessoa que responde por ele.</span><a class="minuto" href="https://www.youtube.com/watch?v=h8jgniNJcbQ&amp;t=283s" target="_blank" rel="noopener" aria-label="Assistir a partir de 04:43 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:43</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Acesso do agente nunca passa do acesso de quem delega</h3>
+    <p>Sven acessa A, B, C e D. O agente 203 tem C e D. O agente 409 tem D, E e F. Quando o 203 delega uma tarefa ao 409 em nome de Sven, o 409 só devolve o que todos os três enxergam, ou seja, D. O poder nunca cresce ao longo da cadeia.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/h8jgniNJcbQ/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A interseção dos escopos limita o que volta pela cadeia.</span><a class="minuto" href="https://www.youtube.com/watch?v=h8jgniNJcbQ&amp;t=528s" target="_blank" rel="noopener" aria-label="Assistir a partir de 08:48 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:48</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Alinhamento herdado não está sob seu controle</h3>
+    <p>O modelo, o contexto de equipe e agentes externos trazem regras que o patrocinador não controla e que podem mudar sem aviso. Por isso Tyler separa o que é herdado do que é definido por Sven: regras determinísticas como piso e intenções probabilísticas como meta. O alinhamento definido vira um contrato para o agente.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/h8jgniNJcbQ/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Parte do alinhamento vem de fora e pode mudar sem aviso.</span><a class="minuto" href="https://www.youtube.com/watch?v=h8jgniNJcbQ&amp;t=590s" target="_blank" rel="noopener" aria-label="Assistir a partir de 09:50 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:50</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Avaliação em scorecard: regras checadas, intenções julgadas</h3>
+    <p>Comportar-se bem não garante entregar resultado. Regras claras, como o limite de valor de fatura, são checadas. Metas como a precisão no casamento de faturas são julgadas com um nível de confiança. Os pesos do scorecard vêm das definições de cargo e autoridade.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=h8jgniNJcbQ&amp;t=745s" target="_blank" rel="noopener" aria-label="Assistir a partir de 12:25 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:25</a> Um scorecard mistura regras duras e metas avaliadas por confiança.</p>  </div>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Sanção gradual por nível de confiança</h3>
+    <p>Com um score de confiança, o julgamento probabilístico vira ação determinística. Confiança alta pede apenas redigir o conteúdo. Confiança média escala para um humano. Confiança baixa bloqueia. Para violações de acesso, a escada vai de restringir a suspender, e o controle começa pesado e afrouxa com sucessos repetidos.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/h8jgniNJcbQ/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Faixas de confiança associadas a ações de redigir, escalar e bloquear.</span><a class="minuto" href="https://www.youtube.com/watch?v=h8jgniNJcbQ&amp;t=931s" target="_blank" rel="noopener" aria-label="Assistir a partir de 15:31 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:31</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=h8jgniNJcbQ&amp;t=745s" target="_blank" rel="noopener"><strong>US$ 40 mil</strong><span>limite de fatura aprovável, exemplo de regra clara</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:25</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=h8jgniNJcbQ&amp;t=900s" target="_blank" rel="noopener"><strong>90%</strong><span>confiança alta: apenas redigir o conteúdo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:00</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=h8jgniNJcbQ&amp;t=931s" target="_blank" rel="noopener"><strong>50%</strong><span>abaixo disso, escalar para humano</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:31</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=h8jgniNJcbQ&amp;t=931s" target="_blank" rel="noopener"><strong>20%</strong><span>abaixo disso, bloquear a ação</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:31</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>A palestra é pitch da Gravitee, que vende gestão de agentes, e promove o framework do próprio palestrante. Não há dado, estudo de caso ou métrica de redução de incidentes. As faixas de 90%, 50% e 20% são exemplos, sem base empírica de que a confiança do avaliador seja calibrada. Falta dizer como medir &#39;intenção&#39; de forma confiável e quanto custam os agentes guardiões.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Liste os agentes que sua equipe usa e dê a cada um um nome único e um responsável humano registrado.</li><li>Revise o acesso de cada agente e corte tudo que a tarefa não exige. Evite credenciais compartilhadas.</li><li>Escreva para cada agente uma descrição de cargo curta com propósito, responsabilidades e como medir sucesso.</li><li>Defina uma escada de ação para falhas: corrigir, restringir acesso, escalar para uma pessoa e, por último, suspender.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="h8jgniNJcbQ" aria-label="Marcar Why Are We Still Governing AI Agents Like Software? - Tim Tyler, Gravitee como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-iniryju23Sk">Próximo talk <span lang="en">What a $900M Bank Error Teaches Us About AI Agents - John Feminella, Two Sigma</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-iniryju23Sk" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">02</span>
+    <div class="sec-titulo">
+      <h2 lang="en">What a $900M Bank Error Teaches Us About AI Agents - John Feminella, Two Sigma</h2>
+      <p class="tese">Agente com autonomia real pede controles proporcionais ao risco, porque uma fila única de aprovação acaba contornada por todo mundo.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">18:56</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+    <a class="chip chip-link" href="https://www.youtube.com/watch?v=iniryju23Sk" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>John Feminella, da Two Sigma, conta o erro de US$ 900 milhões do Citibank com a Revlon para mostrar que um procedimento com três aprovadores e um alerta ainda falhou.</p><p>Ele propõe cinco controles que se combinam: registro de agentes, revisão por risco, ferramentas ligadas ao propósito declarado, evals compartilhados e classificadores que filtram o que vai para humanos.</p><p>A ideia de fundo é que freios existem para você andar rápido e parar com segurança, então bloquear tudo só empurra as equipes para caminhos sem governança.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-iniryju23Sk-classificador-de-aprovacao"><strong>Classificador de aprovação</strong> <span>classificador que decide o que vai a humanos</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-agent-registry"><strong>Agent registry</strong> <span>registro de agentes</span></a></li><li><a href="../glossario.html#g-risk-based-review"><strong>Risk-based review</strong> <span>revisão baseada em risco</span></a></li><li><a href="../glossario.html#g-allow-list"><strong>Allow list</strong> <span>lista de permissões</span></a></li><li><a href="../glossario.html#g-eval"><strong>Eval</strong> <span>avaliação</span></a></li><li><a href="../glossario.html#g-human-in-the-loop"><strong>Human in the loop</strong> <span>humano no loop</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-compactacao-de-contexto"><strong>Compactação de contexto</strong> <span>compaction</span></a></li><li><a href="../glossario.html#g-shadow-it"><strong>Shadow IT</strong> <span>TI paralela, fora da governança</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>O erro do Citibank e a falha de controles</h3>
+    <p>Em agosto de 2020, o Citibank enviou cerca de US$ 900 milhões aos credores da Revlon em vez de US$ 8 milhões de juros. Um alerta apareceu, três aprovadores confirmaram e os operadores ignoraram o aviso, porque dinheiro realmente deveria sair. Todos seguiram o procedimento e o erro passou.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/iniryju23Sk/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Mostra como o procedimento correto levou ao pagamento errado.</span><a class="minuto" href="https://www.youtube.com/watch?v=iniryju23Sk&amp;t=187s" target="_blank" rel="noopener" aria-label="Assistir a partir de 03:07 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:07</a></figcaption>
+  </figure>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Registro de agentes e revisão por risco</h3>
+    <p>Sem visibilidade, ninguém sabe quem é dono de cada agente nem quais ferramentas ele usa. O registro guarda ferramentas, endpoints, produto e responsável, e é preenchido automaticamente pelos frameworks aprovados. Com isso, um resumidor de tickets não espera na mesma fila que um agente que mexe em produção.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=iniryju23Sk&amp;t=527s" target="_blank" rel="noopener" aria-label="Assistir a partir de 08:47 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:47</a> O registro torna agentes legíveis sem exigir esforço extra.</p>  </div>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Ferramentas seguem o propósito declarado</h3>
+    <p>Agentes de empresa costumam ter propósito restrito. O autor do agente declara quais ferramentas precisa, entre centenas disponíveis. Na inicialização, o ambiente gerenciado lê a política no registro e a converte em regras de acesso a hosts e recursos. Ninguém abre ticket para mudar permissões dentro do risco aprovado.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/iniryju23Sk/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Cada agente recebe só as ferramentas que declarou.</span><a class="minuto" href="https://www.youtube.com/watch?v=iniryju23Sk&amp;t=807s" target="_blank" rel="noopener" aria-label="Assistir a partir de 13:27 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:27</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Evals compartilhados pela empresa</h3>
+    <p>Trocar de modelo muda a qualidade das respostas, como uma dependência de runtime. Por isso evals (avaliações) funcionam como testes unitários de agentes. A empresa oferece uma base comum para as partes repetidas, e cada time escreve só o que é específico do seu agente.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=iniryju23Sk&amp;t=931s" target="_blank" rel="noopener" aria-label="Assistir a partir de 15:31 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:31</a> Evals compartilhados evitam que cada time reinvente a mesma estrutura.</p>  </div>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Fim da fadiga de aprovação</h3>
+    <p>Pedir aprovação humana para cada ação leva ao clique reflexo. Feminella cita o caso de uma executiva cujo agente OpenClaw compactou o contexto, esqueceu a ordem de esperar aprovação e apagou centenas de e-mails. A proposta é usar regras determinísticas para casos claros, classificadores para os ambíguos e humanos só para o que importa.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/iniryju23Sk/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Mostra quem decide cada tipo de requisição.</span><a class="minuto" href="https://www.youtube.com/watch?v=iniryju23Sk&amp;t=1053s" target="_blank" rel="noopener" aria-label="Assistir a partir de 17:33 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>17:33</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=iniryju23Sk&amp;t=249s" target="_blank" rel="noopener"><strong>US$ 900 mi</strong><span>enviados por engano em vez de US$ 8 mi de juros</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:09</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=iniryju23Sk&amp;t=95s" target="_blank" rel="noopener"><strong>300+</strong><span>credores no empréstimo da Revlon</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:35</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=iniryju23Sk&amp;t=218s" target="_blank" rel="noopener"><strong>3</strong><span>aprovadores que confirmaram a transação errada</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:38</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=iniryju23Sk&amp;t=249s" target="_blank" rel="noopener"><strong>60 centavos</strong><span>valor de mercado do empréstimo por dólar de face</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:09</span></a>
+  </div>
+
+  <div class="casper" id="a-iniryju23Sk-classificador-de-aprovacao">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Classificador de aprovação (classificador que decide o que vai a humanos).</strong> Um classificador de aprovação é como a secretária de um diretor, que resolve sozinha os pedidos de rotina, recusa os absurdos e só bate na porta do chefe quando o assunto é incerto ou grave.</p>
+    <ol class="passos"><li>Um agente de IA pede permissão muitas vezes por dia para agir, e uma pessoa que aprova tudo acaba clicando em sim sem ler.</li><li>O classificador é um filtro automático que olha cada pedido e decide para onde ele vai, sem cansar e sem pressa.</li><li>Pedidos com regra clara seguem um caminho rápido e fixo, chamado determinístico, que sempre dá a mesma resposta: liberar ou negar.</li><li>Quando nenhuma regra se aplica, o classificador, um modelo treinado para separar categorias, avalia o risco e aprova o que é rotina ou nega o que é claramente perigoso.</li><li>Só os pedidos ambíguos ou de alto impacto chegam ao humano, que assim revisa poucos casos e presta atenção de verdade em cada um.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>PEDIDO DO AGENTE</strong><span>O agente quer executar uma ação</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>REGRA EXPLÍCITA</strong><span>Caso claro: libera ou nega na hora</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>CLASSIFICADOR</strong><span>Caso ambíguo: avalia o risco</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>HUMANO DECIDE</strong><span>Recebe só o incerto ou o grave</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>REVISÃO SEM FADIGA</strong><span>Poucos pedidos, atenção real</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-human-in-the-loop">Human in the loop</a>, <a href="../glossario.html#g-agente-de-ia">Agente de IA</a>, <a href="../glossario.html#g-regra-deterministica">Regra determinística</a>, <a href="../glossario.html#g-fadiga-de-aprovacao">Fadiga de aprovação</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk descreve a abordagem interna da Two Sigma sem mostrar dados: não há taxa de incidentes, tempo de revisão antes e depois, nem acurácia dos classificadores. O palestrante não diz como validar que o classificador deixa passar pouco erro perigoso. O caso Revlon é bem contado, mas é um erro humano e de software tradicional, então a ponte para agentes é por analogia. A empresa também não vende produto aqui, mas o relato é de uma firma grande e regulada, difícil de replicar em times pequenos.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Liste os agentes e automações que seu time usa, com dono, ferramentas acessadas e finalidade. Uma planilha já cria o registro mínimo.</li><li>Classifique cada agente por risco e dê revisão leve aos que só leem ou resumem, reservando a revisão pesada para os que alteram sistemas.</li><li>Escreva evals simples para tarefas recorrentes e rode antes de trocar de modelo ou mexer no prompt.</li><li>Troque aprovações constantes por regras claras de permitir e negar, e peça confirmação humana só nos casos ambíguos ou de alto impacto.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="iniryju23Sk" aria-label="Marcar What a $900M Bank Error Teaches Us About AI Agents - John Feminella, Two Sigma como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-BgLdvF7Qkh8">Próximo talk <span lang="en">300 Agents, 60 People: How We Secured Our Own AI Agents - Aiden Sochowski, Runlayer</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-BgLdvF7Qkh8" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">03</span>
+    <div class="sec-titulo">
+      <h2 lang="en">300 Agents, 60 People: How We Secured Our Own AI Agents - Aiden Sochowski, Runlayer</h2>
+      <p class="tese">Sem um gateway que registre cada sessão e chamada de ferramenta, ninguém sabe o que seus agentes fazem, nem o que custam.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">16:38</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+    <a class="chip chip-link" href="https://www.youtube.com/watch?v=BgLdvF7Qkh8" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>A Runlayer, empresa de 50 a 60 pessoas, roda mais de 300 agentes por dia. Ela colocou um gateway (ponto central por onde passa o tráfego) na frente deles e registrou toda sessão e chamada de ferramenta.</p><p>O registro mostrou ataques por e-mail, agente revisor de PR convencido a aprovar, bot com permissão demais, um agente contaminando outros e um MCP server mal escrito que queimava tokens.</p><p>A empresa respondeu com classificadores treinados por ela, escopo menor de permissões com base no histórico de uso, limites de taxa e orçamentos de custo.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-mcp"><strong>MCP</strong> <span>Model Context Protocol, protocolo que liga agentes a ferramentas e dados</span></a></li><li><a href="../glossario.html#g-blast-radius"><strong>Blast radius</strong> <span>raio de impacto: o estrago possível se o agente errar ou for atacado</span></a></li><li><a href="../glossario.html#g-prompt-injection"><strong>Prompt injection</strong> <span>instrução maliciosa escondida em dado que o agente lê</span></a></li><li><a href="../glossario.html#g-excessive-agency"><strong>Excessive agency</strong> <span>agente com mais permissões do que a tarefa exige</span></a></li><li><a href="../glossario.html#g-principio-do-menor-privilegio"><strong>Princípio do menor privilégio</strong> <span>dar ao agente só o acesso necessário para a tarefa</span></a></li><li><a href="../glossario.html#g-context-poisoning"><strong>Context poisoning</strong> <span>contaminação do contexto de um agente por dado malicioso</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-rate-limiting"><strong>Rate limiting</strong> <span>limite de chamadas por período</span></a></li><li><a href="../glossario.html#g-audit-trail"><strong>Audit trail</strong> <span>registro auditável de cada ação do agente</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Há mais agentes do que pessoas</h3>
+    <p>Com 50 a 60 funcionários, a empresa conta mais de 300 agentes rodando todo dia, muitos disparados por gatilhos e apps, não por uma pessoa. Cada chamada de ferramenta é uma superfície de ataque: lê dado hostil, age de forma destrutiva ou vaza informação. O primeiro passo foi só enxergar tudo.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/BgLdvF7Qkh8/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Mapa interno de agentes e execuções mostra a superfície de ataque.</span><a class="minuto" href="https://www.youtube.com/watch?v=BgLdvF7Qkh8&amp;t=157s" target="_blank" rel="noopener" aria-label="Assistir a partir de 02:37 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:37</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Injeção por e-mail e permissão demais</h3>
+    <p>Um atacante manda um e-mail pedindo a lista de prospects. Se o agente for ingênuo e tiver acesso à agenda, ele pode entregar o dado. Pedir que cada usuário defina o escopo das ferramentas não funciona bem. Regras como classificador de instruções, bloqueio de PII por regex ou bloqueio de fonte privada ajudam, mas nenhuma é 100% eficaz.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/BgLdvF7Qkh8/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Camadas de política (classificador, regex, bloqueio de fonte) para o mesmo ataque.</span><a class="minuto" href="https://www.youtube.com/watch?v=BgLdvF7Qkh8&amp;t=252s" target="_blank" rel="noopener" aria-label="Assistir a partir de 04:12 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:12</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Ataques que se desenrolam na sessão inteira</h3>
+    <p>Um agente revisor de PR pode aprovar mudança sensível depois que o autor argumenta nos comentários. Perguntado dez vezes, ele pode ceder. Uma regra por chamada não pega isso. A empresa treinou classificadores que olham a sessão inteira e checam se cada chamada ainda segue o objetivo original do agente.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/BgLdvF7Qkh8/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O desvio de intenção aparece só ao longo da sessão, não numa chamada isolada.</span><a class="minuto" href="https://www.youtube.com/watch?v=BgLdvF7Qkh8&amp;t=437s" target="_blank" rel="noopener" aria-label="Assistir a partir de 07:17 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:17</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Usar o histórico para reduzir permissões</h3>
+    <p>Um bot de recrutamento acessa ATS (sistema de candidatos), notas de reunião, agenda e mensagens. O histórico de chamadas mostra o uso normal. Chamada fora do padrão sinaliza execução de risco cedo, e modelos próprios sugerem quais acessos retirar do agente.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/BgLdvF7Qkh8/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O padrão de uso real define quais permissões podem ser cortadas.</span><a class="minuto" href="https://www.youtube.com/watch?v=BgLdvF7Qkh8&amp;t=562s" target="_blank" rel="noopener" aria-label="Assistir a partir de 09:22 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:22</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Custo: MCP quebrado e troca de modelo</h3>
+    <p>Um MCP server feito por vibe coding (programar pedindo ao modelo) falhava em formatação, e o agente tentava de novo, pagando tokens a cada erro. Outro time trocou para um modelo mais caro e o custo subiu mais de 100 vezes em uma semana. A resposta foi limite de taxa, orçamento e padrões sensatos.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/BgLdvF7Qkh8/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Custo de tokens disparou após trocar para um modelo mais caro.</span><a class="minuto" href="https://www.youtube.com/watch?v=BgLdvF7Qkh8&amp;t=848s" target="_blank" rel="noopener" aria-label="Assistir a partir de 14:08 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:08</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=BgLdvF7Qkh8&amp;t=96s" target="_blank" rel="noopener"><strong>50 a 60</strong><span>pessoas na empresa</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:36</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=BgLdvF7Qkh8&amp;t=96s" target="_blank" rel="noopener"><strong>300+</strong><span>agentes rodando todo dia</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:36</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=BgLdvF7Qkh8&amp;t=437s" target="_blank" rel="noopener"><strong>10 vezes</strong><span>pedidos até o agente revisor ceder</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:17</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=BgLdvF7Qkh8&amp;t=844s" target="_blank" rel="noopener"><strong>100x</strong><span>aumento de custo em uma semana após trocar de modelo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:04</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é de uma empresa que vende gateway de segurança para agentes, e a conclusão (monitore tudo) favorece o produto. Faltam números de detecção, falsos positivos e custo dos classificadores próprios. Os casos vêm de uma única empresa pequena, sem amostra comparável. A troca de modelo com custo 100x não traz nome claro nem valores absolutos.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Liste todos os agentes e automações do seu time, quem os criou, quais ferramentas e dados cada um acessa.</li><li>Corte as permissões de cada agente ao mínimo para a tarefa dele, principalmente leitura de e-mail com acesso a agenda ou dados de clientes.</li><li>Não deixe agente revisor aprovar mudanças sensíveis sozinho. Exija uma pessoa na aprovação de código crítico.</li><li>Defina orçamento e alerta de custo por agente antes de trocar de modelo. Teste a troca em uma tarefa e compare custo e qualidade.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="BgLdvF7Qkh8" aria-label="Marcar 300 Agents, 60 People: How We Secured Our Own AI Agents - Aiden Sochowski, Runlayer como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-YIhvrvHtonk">Próximo talk <span lang="en">We Kept Rebuilding Our AI Agent. Here&#39;s What Survived - Fuad Ali, Arize AI</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-YIhvrvHtonk" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">04</span>
+    <div class="sec-titulo">
+      <h2 lang="en">We Kept Rebuilding Our AI Agent. Here&#39;s What Survived - Fuad Ali, Arize AI</h2>
+      <p class="tese">Quase tudo que sobreviveu a dois anos de reconstrução do agente Alex foi código do harness; framework e modelo novo pesaram pouco.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">20:06</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+    <a class="chip chip-link" href="https://www.youtube.com/watch?v=YIhvrvHtonk" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>A Arize reconstruiu o Alex, agente embutido no produto, várias vezes entre 2023 e 2026, sem framework e sem treinar modelo. Todo o ganho veio de código próprio: loop, plano, regra de parada e memória.</p><p>As decisões que ficaram foram simples: o harness guarda o plano, o fim do turno é um portão explícito, resultados grandes viram arquivo, e um arquivo de 8.000 caracteres por usuário venceu grafo de conhecimento.</p><p>Sessões reais de produção viram casos de teste, e juízes automáticos precisam de gabarito humano. Velocidade contra qualidade continua sendo decisão de pessoa.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-harness"><strong>Harness</strong> <span>código que cerca o modelo (loop, plano, regras de parada)</span></a></li><li><a href="../glossario.html#g-memory-pointer"><strong>Memory pointer</strong> <span>ponteiro para resultado guardado fora do contexto</span></a></li><li><a href="../glossario.html#g-compactacao-de-contexto"><strong>Compactação de contexto</strong> <span>resumir o histórico num checkpoint</span></a></li><li><a href="../glossario.html#g-sub-agent"><strong>Sub-agent</strong> <span>agente especialista chamado por outro agente</span></a></li><li><a href="../glossario.html#g-skills"><strong>Skills</strong> <span>instruções e ferramentas carregadas sob demanda</span></a></li><li><a href="../glossario.html#g-model-routing"><strong>Model routing</strong> <span>escolher o modelo por tarefa</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-trace"><strong>Trace</strong> <span>registro passo a passo da execução do agente</span></a></li><li><a href="../glossario.html#g-golden-dataset"><strong>Golden dataset</strong> <span>conjunto de referência rotulado por pessoas</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>O plano passou a morar no harness</h3>
+    <p>A primeira versão deu ao modelo uma ferramenta de lista de tarefas. Ele gastou chamadas só atualizando a lista e perdeu o foco após mais de 20 iterações. A equipe moveu o plano para o harness aos poucos e hoje testa sem a ferramenta de to-do, com o plano renderizado como mensagem a cada chamada.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/YIhvrvHtonk/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O plano passou da ferramenta do modelo para o estado mantido pelo harness.</span><a class="minuto" href="https://www.youtube.com/watch?v=YIhvrvHtonk&amp;t=435s" target="_blank" rel="noopener" aria-label="Assistir a partir de 07:15 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:15</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Terminar o turno vira um portão</h3>
+    <p>Tratar texto sem chamada de ferramenta como &#39;terminei&#39; quebrou em modelos que anunciam o passo num turno e chamam a ferramenta no próximo. Agora existe uma chamada explícita de finish. Se há itens do plano em aberto, o harness a devolve até três vezes, avisa um passo antes do limite de iterações e força o fim no limite.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/YIhvrvHtonk/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A regra de parada fica no harness para funcionar com qualquer modelo que o cliente escolha.</span><a class="minuto" href="https://www.youtube.com/watch?v=YIhvrvHtonk&amp;t=560s" target="_blank" rel="noopener" aria-label="Assistir a partir de 09:20 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:20</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Resultado grande de ferramenta vira arquivo</h3>
+    <p>Um JSON enorme de trace estoura a janela de contexto. O harness trunca o resultado e deixa o agente buscar o que precisa com código (jq). É a mesma ideia de deixar uma anotação na mesa apontando para o livro na estante. O histórico da própria sessão também é resumido num checkpoint com orçamento fixo de tokens.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/YIhvrvHtonk/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Ponteiro mais busca por código evita encher o contexto com saída bruta.</span><a class="minuto" href="https://www.youtube.com/watch?v=YIhvrvHtonk&amp;t=651s" target="_blank" rel="noopener" aria-label="Assistir a partir de 10:51 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:51</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Um arquivo pequeno venceu o grafo de conhecimento</h3>
+    <p>Testaram busca vetorial, memória episódica e semântica e grafos temporais. Ficaram com um markdown por usuário, limitado a 8.000 caracteres, carregado em toda requisição e escrito por um job em segundo plano ao fim da sessão. É exato, barato e um humano consegue auditar.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/YIhvrvHtonk/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A memória escolhida foi um arquivo auditável de 8.000 caracteres.</span><a class="minuto" href="https://www.youtube.com/watch?v=YIhvrvHtonk&amp;t=745s" target="_blank" rel="noopener" aria-label="Assistir a partir de 12:25 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:25</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Sessões de produção viram testes</h3>
+    <p>O Alex é rastreado na própria plataforma da Arize. Consultas reais entram em datasets de regressão, e uma sessão inteira pode ser reexecutada turno a turno. Bugs de agente raramente aparecem como erro explícito, por isso a equipe usa o agente Signal para achar padrões como 43 chamadas idênticas no mesmo turno.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/YIhvrvHtonk/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Os traces do próprio agente alimentam os datasets de regressão.</span><a class="minuto" href="https://www.youtube.com/watch?v=YIhvrvHtonk&amp;t=931s" target="_blank" rel="noopener" aria-label="Assistir a partir de 15:31 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:31</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=YIhvrvHtonk&amp;t=187s" target="_blank" rel="noopener"><strong>50%</strong><span>alucinação do protótipo de 2023 com modelos 3.5</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:07</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=YIhvrvHtonk&amp;t=560s" target="_blank" rel="noopener"><strong>3 vezes</strong><span>limite de devoluções do finish com itens abertos</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:20</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=YIhvrvHtonk&amp;t=745s" target="_blank" rel="noopener"><strong>8.000</strong><span>caracteres máximos do arquivo de memória por usuário</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:25</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=YIhvrvHtonk&amp;t=993s" target="_blank" rel="noopener"><strong>43</strong><span>chamadas de ferramenta idênticas num mesmo turno</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>16:33</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O palestrante é product manager da Arize, e o Alex é vitrine da própria plataforma de observabilidade, então o talk também vende o produto. Não há medição que sustente as conclusões, como taxa de acerto antes e depois de cada reconstrução ou comparação entre memória em arquivo e grafo. A frase de 50% de alucinação é um comentário de um engenheiro. Os resultados valem como relato de um caso, não como prova geral.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Se seu agente usa lista de tarefas, teste manter o plano no código que chama o modelo e injetá-lo como mensagem, em vez de deixar o modelo atualizar a lista.</li><li>Troque a regra &#39;texto sem ferramenta significa fim&#39; por uma chamada explícita de finish que recuse o encerramento enquanto houver itens abertos.</li><li>Antes de montar vetor ou grafo para memória, tente um arquivo de texto curto por usuário com limite de tamanho e revisão humana.</li><li>Salve conversas reais com falha como casos de regressão e rode a cada troca de modelo ou de prompt.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="YIhvrvHtonk" aria-label="Marcar We Kept Rebuilding Our AI Agent. Here&#39;s What Survived - Fuad Ali, Arize AI como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-dAoOYFx7ZYw">Próximo talk <span lang="en">Stop Giving Your Agent Tools. Give It a Sandbox - Mikyo King, Arize AI</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-dAoOYFx7ZYw" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">05</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Stop Giving Your Agent Tools. Give It a Sandbox - Mikyo King, Arize AI</h2>
+      <p class="tese">Em vez de entupir o agente com dezenas de ferramentas, dê a ele um sandbox onde escreve código para buscar e combinar só o que precisa.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">14:38</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+    <a class="chip chip-link" href="https://www.youtube.com/watch?v=dAoOYFx7ZYw" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>O agente clássico recebe um catálogo grande de ferramentas e empilha cada resposta na janela de contexto, o que aumenta custo, latência e número de turnos.</p><p>No code mode, o agente busca a ferramenta que precisa e a executa dentro de um sandbox (ambiente isolado de execução de código), devolvendo ao modelo só o resultado útil.</p><p>A Arize mediu o efeito com evals no framework Harbor e relata 43% menos tokens e 31% menos custo, mas o código gerado traz custos de segredos, permissões e durabilidade.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-code-mode"><strong>Code Mode</strong> <span>modo código</span></a></li><li><a href="../glossario.html#g-sandbox"><strong>Sandbox</strong> <span>ambiente isolado de execução</span></a></li><li><a href="../glossario.html#g-tool-calling"><strong>Tool calling</strong> <span>chamada de ferramentas</span></a></li><li><a href="../glossario.html#g-janela-de-contexto"><strong>Janela de contexto</strong> <span>memória de trabalho do modelo</span></a></li><li><a href="../glossario.html#g-progressive-disclosure"><strong>Progressive disclosure</strong> <span>revelação progressiva de ferramentas</span></a></li><li><a href="../glossario.html#g-network-egress"><strong>Network egress</strong> <span>saída de rede do sandbox</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-pass-k-e-pass-k"><strong>pass@k e pass^k</strong> <span>taxa de acerto em k tentativas</span></a></li><li><a href="../glossario.html#g-hill-climbing"><strong>Hill climbing</strong> <span>melhoria iterativa guiada por eval</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>O agente clássico incha o contexto</h3>
+    <p>No modelo tradicional, o agente recebe um catálogo enorme de ferramentas. Cada chamada devolve dados que entram no contexto, às vezes com lixo ou paginação. O resultado é context rot (degradação do contexto), muitos turnos e necessidade de compactação.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/dAoOYFx7ZYw/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Cada chamada de ferramenta empurra mais texto para o contexto.</span><a class="minuto" href="https://www.youtube.com/watch?v=dAoOYFx7ZYw&amp;t=125s" target="_blank" rel="noopener" aria-label="Assistir a partir de 02:05 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:05</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Code mode: buscar, executar e compor em código</h3>
+    <p>O agente ganha uma ferramenta de busca e um ambiente de programação. Ele roda ferramentas em sequência, em paralelo ou com condicionais, num único turno. Só o que for necessário volta ao contexto do modelo.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/dAoOYFx7ZYw/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Menos turnos e menos texto no contexto, na comparação dos dois desenhos.</span><a class="minuto" href="https://www.youtube.com/watch?v=dAoOYFx7ZYw&amp;t=218s" target="_blank" rel="noopener" aria-label="Assistir a partir de 03:38 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:38</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Quatro motivos para funcionar</h3>
+    <p>O palestrante lista descoberta progressiva de ferramentas, composição (paralelo, fan out, encadeamento), eficiência de tokens e comportamento emergente. O último permite ao agente criar a própria ferramenta, por exemplo para remover dados pessoais sem passá-los pelo contexto.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/dAoOYFx7ZYw/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Os quatro argumentos centrais a favor do code mode.</span><a class="minuto" href="https://www.youtube.com/watch?v=dAoOYFx7ZYw&amp;t=281s" target="_blank" rel="noopener" aria-label="Assistir a partir de 04:41 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:41</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Como o Phoenix usa code mode</h3>
+    <p>O agente do Phoenix começou com Bash e depois ganhou um sandbox Python, os endpoints REST de CRUD e SQL para consultas agregadas, como latência P95. Há também um paradigma de programação ligado à interface, rodando em um web worker, que muda o intervalo de tempo e lê dados no front end.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=dAoOYFx7ZYw&amp;t=374s" target="_blank" rel="noopener" aria-label="Assistir a partir de 06:14 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:14</a> As quatro superfícies de código que o agente do Phoenix recebe.</p>  </div>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Custos escondidos e resultado nos evals</h3>
+    <p>Código gerado por LLM traz risco de rede, segredos que vazam para o contexto, permissões amplas, falhas de boot e depuração mais difícil. Nos evals do Harbor, a Arize relata queda de 43% nos tokens e 31% no custo, com latência estável.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/dAoOYFx7ZYw/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Tokens e custo caem após o code mode, e a latência quase não muda.</span><a class="minuto" href="https://www.youtube.com/watch?v=dAoOYFx7ZYw&amp;t=778s" target="_blank" rel="noopener" aria-label="Assistir a partir de 12:58 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:58</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=dAoOYFx7ZYw&amp;t=778s" target="_blank" rel="noopener"><strong>43%</strong><span>menos tokens com code mode nos evals do Harbor</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:58</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=dAoOYFx7ZYw&amp;t=778s" target="_blank" rel="noopener"><strong>31%</strong><span>queda de custo com code mode</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:58</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=dAoOYFx7ZYw&amp;t=32s" target="_blank" rel="noopener"><strong>30 anos</strong><span>janela de história do software citada na abertura</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>00:32</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é de uma empresa que vende observabilidade e avaliação e fecha pedindo que o público use as ferramentas dela. Os 43% e 31% vêm dos próprios evals da Arize, sem detalhar quantas tarefas, quais modelos ou qual margem de variação. O palestrante admite custos reais (segredos, permissões, durabilidade) sem medi-los. Também não mostra casos em que o code mode piora o resultado, só cita de passagem que a eficiência às vezes cai com uma ferramenta nova.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Meça quantos tokens suas ferramentas atuais consomem por tarefa antes de mudar a arquitetura, para ter uma linha de base.</li><li>Teste um sandbox com rede desligada e segredos fora do contexto antes de dar ao agente a capacidade de rodar código.</li><li>Rode a mesma tarefa várias vezes e registre a taxa de acerto, porque agentes variam de trajetória a cada execução.</li><li>Para dados sensíveis, peça ao agente que escreva um script de limpeza em vez de colar os dados no chat.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="dAoOYFx7ZYw" aria-label="Marcar Stop Giving Your Agent Tools. Give It a Sandbox - Mikyo King, Arize AI como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-Y_p3y6zP5QE">Próximo talk <span lang="en">Build Your Own Team of Managed Agents - Jack Wotherspoon, Google DeepMind</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-Y_p3y6zP5QE" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">06</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Build Your Own Team of Managed Agents - Jack Wotherspoon, Google DeepMind</h2>
+      <p class="tese">Agente de código na nuvem vira uma chamada de API: sandbox, ferramentas e segredos já vêm prontos, e o ambiente compartilhado liga um agente ao outro.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">19:43</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+    <a class="chip chip-link" href="https://www.youtube.com/watch?v=Y_p3y6zP5QE" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Jack Wotherspoon, do Google DeepMind, apresenta os Gemini Managed Agents, agentes de código que rodam em sandbox (ambiente isolado) na nuvem a partir de uma única chamada de API.</p><p>O pacote inclui o harness (estrutura que controla o agente) Antigravity, ambiente de arquivos reaproveitável, skills, credenciais protegidas por proxy e gatilhos agendados.</p><p>A demo encadeia três agentes sobre o mesmo ambiente, um pesquisador de relatórios da SEC, um analista quantitativo e um redator de relatório, sem mostrar métricas de qualidade.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-sandbox"><strong>Sandbox</strong> <span>ambiente isolado de execução</span></a></li><li><a href="../glossario.html#g-harness"><strong>Harness</strong> <span>estrutura que decide as chamadas de ferramenta do agente</span></a></li><li><a href="../glossario.html#g-interactions-api"><strong>Interactions API</strong> <span>API do Gemini pensada para agentes com vários passos</span></a></li><li><a href="../glossario.html#g-ambiente-compartilhado"><strong>Ambiente compartilhado</strong> <span>sistema de arquivos reutilizado por vários agentes</span></a></li><li><a href="../glossario.html#g-claude-md-agents-md"><strong>CLAUDE.md / AGENTS.md</strong> <span>arquivo de instruções do projeto para o agente</span></a></li><li><a href="../glossario.html#g-segredo-por-placeholder"><strong>Segredo por placeholder</strong> <span>token falso no sandbox, troca pelo real no proxy</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-scheduled-task"><strong>Scheduled task</strong> <span>tarefa agendada (gatilho por horário)</span></a></li><li><a href="../glossario.html#g-trace"><strong>Trace</strong> <span>registro passo a passo do que o agente fez</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Uma chamada de API substitui a infraestrutura</h3>
+    <p>Montar sozinho exige subir container ou VM, construir o harness, configurar rede e firewall. No managed agent, você chama o agente base Antigravity com environment igual a remote e o Google cria o sandbox. Para escalar, basta fazer mais chamadas.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/Y_p3y6zP5QE/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A configuração de sandbox, harness e rede cabe em uma chamada de API.</span><a class="minuto" href="https://www.youtube.com/watch?v=Y_p3y6zP5QE&amp;t=190s" target="_blank" rel="noopener" aria-label="Assistir a partir de 03:10 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:10</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Interações e ambientes são estados separados</h3>
+    <p>A interação guarda a conversa e o ambiente guarda os arquivos do sandbox. Como são separados, um segundo agente pode receber o ID do ambiente, começar com contexto limpo e continuar o trabalho sobre os arquivos do primeiro.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/Y_p3y6zP5QE/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O ID do ambiente passa o trabalho de um agente para o outro.</span><a class="minuto" href="https://www.youtube.com/watch?v=Y_p3y6zP5QE&amp;t=595s" target="_blank" rel="noopener" aria-label="Assistir a partir de 09:55 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:55</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>O proxy mantém o segredo fora do sandbox</h3>
+    <p>O agente recebe um token falso. Quando ele chama, por exemplo, a API do GitHub, o proxy reconhece o destino e injeta o token real. Assim o agente não consegue ler nem usar a credencial por conta própria.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/Y_p3y6zP5QE/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O token real nunca entra no sandbox, só um substituto.</span><a class="minuto" href="https://www.youtube.com/watch?v=Y_p3y6zP5QE&amp;t=748s" target="_blank" rel="noopener" aria-label="Assistir a partir de 12:28 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:28</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Três agentes especializados em cadeia</h3>
+    <p>Na demo, um agente pesquisa a Nvidia nos relatórios da SEC e grava metrics.json. Um agente quant lê o arquivo, roda Python e prevê o preço da ação. Um terceiro transforma a pesquisa em relatório. Cada um tem um propósito estreito.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/Y_p3y6zP5QE/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O segundo agente continua a partir do arquivo deixado pelo primeiro.</span><a class="minuto" href="https://www.youtube.com/watch?v=Y_p3y6zP5QE&amp;t=936s" target="_blank" rel="noopener" aria-label="Assistir a partir de 15:36 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:36</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Agentes dentro de um app em AI Studio</h3>
+    <p>O exemplo do ticker agent usa vários managed agents para analisar um fundo, mostra o raciocínio em streaming e entrega um PDF com gráficos e links das fontes. O palestrante diz que o streaming serve só para visualizar e pode sair do seu app.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/Y_p3y6zP5QE/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Um app de usuário final pode esconder o agente e mostrar só o relatório.</span><a class="minuto" href="https://www.youtube.com/watch?v=Y_p3y6zP5QE&amp;t=1130s" target="_blank" rel="noopener" aria-label="Assistir a partir de 18:50 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>18:50</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=Y_p3y6zP5QE&amp;t=497s" target="_blank" rel="noopener"><strong>64K</strong><span>teto comum de tokens de saída dos modelos</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:17</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=Y_p3y6zP5QE&amp;t=497s" target="_blank" rel="noopener"><strong>1 milhão</strong><span>tokens de limite do Gemini 4, divididos entre entrada, raciocínio e saída</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:17</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=Y_p3y6zP5QE&amp;t=372s" target="_blank" rel="noopener"><strong>8h30</strong><span>exemplo de horário do gatilho antes da abertura do mercado</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:12</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>É um talk de produto do Google DeepMind sobre o próprio produto, e o palestrante lança o Gemini 4 Argon no dia anterior e o recomenda. As afirmações de que o modelo é bom em finanças e de que avança benchmarks matemáticos vêm sem dados. As demos são de um caso só, a Nvidia e um fundo, sem taxa de erro, custo ou tempo de execução. A previsão de preço da ação não tem verificação.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Liste as tarefas que você roda hoje no seu laptop com um agente de código e marque as que poderiam rodar em um sandbox na nuvem, como pesquisa e verificação com testes.</li><li>Divida um fluxo grande em agentes de propósito único que passam arquivos entre si, por exemplo pesquisa, análise e relatório, em vez de um agente com tarefa ampla.</li><li>Ao testar qualquer agente na nuvem, confirme se ele guarda credenciais fora do sandbox, como o proxy com token falso descrito aqui.</li><li>Escreva seu AGENTS.md e suas skills como arquivos versionados, para poder subir os mesmos playbooks em qualquer agente.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="Y_p3y6zP5QE" aria-label="Marcar Build Your Own Team of Managed Agents - Jack Wotherspoon, Google DeepMind como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-4UtrRVtUN_g">Próximo talk <span lang="en">How to Build an AI Code Review Agent - Daksh Gupta, Greptile</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-4UtrRVtUN_g" data-tema="engenharia-de-software">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">07</span>
+    <div class="sec-titulo">
+      <h2 lang="en">How to Build an AI Code Review Agent - Daksh Gupta, Greptile</h2>
+      <p class="tese">Revisor de código útil precisa de dataset de incidentes, modelo diferente do autor, contexto do repositório e modelo certo por tarefa.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Engenharia de software</span>
+    <span class="chip">18:27</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+    <a class="chip chip-link" href="https://www.youtube.com/watch?v=4UtrRVtUN_g" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>O palestrante, cofundador da Greptile, diz que a versão simples (sandbox, agente e webhook de pull request) perde bugs, perde contexto, custa de US$ 3 a US$ 25 por PR e enche o código de comentários pedantes.</p><p>Ele propõe prompts por tipo de bug, dataset de PRs com incidentes, revisão por outro modelo, contexto do repositório, testes em sandbox e modelos baratos nas subtarefas simples.</p><p>Ele afirma que inverter o modelo captura cerca de 10% mais bugs e que a Greptile usa modelos de fronteira em cerca de 20% dos tokens, mas não mostra os dados por trás dessas afirmações.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-pull-request"><strong>Pull request</strong> <span>pedido de integração de código</span></a></li><li><a href="../glossario.html#g-webhook"><strong>Webhook</strong> <span>aviso automático enviado quando um evento acontece</span></a></li><li><a href="../glossario.html#g-sandbox"><strong>Sandbox</strong> <span>ambiente isolado para rodar o agente</span></a></li><li><a href="../glossario.html#g-nitpick"><strong>Nitpick</strong> <span>comentário correto, mas pedante</span></a></li><li><a href="../glossario.html#g-inversao-de-modelo"><strong>Inversão de modelo</strong> <span>revisar o código com um modelo diferente do que o escreveu</span></a></li><li><a href="../glossario.html#g-golden-dataset"><strong>Golden dataset</strong> <span>conjunto de casos conhecidos para medir o agente</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-computer-use"><strong>Computer use</strong> <span>agente que opera a interface como uma pessoa</span></a></li><li><a href="../glossario.html#g-model-routing"><strong>Model routing</strong> <span>escolher o modelo certo para cada subtarefa</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>A versão simples falha de quatro jeitos</h3>
+    <p>O arranjo básico é um sandbox com um agente, um webhook do GitHub e um prompt que pede revisão. Ele entrega feedback em cerca de 5 minutos, mas perde bugs, perde contexto do código, custa de US$ 3 a US$ 25 por PR e gera nitpicks (comentários corretos, mas pedantes). Os nitpicks pioram o código, porque agentes de código tentam resolver todos os comentários e escrevem código defensivo demais.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/4UtrRVtUN_g/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O desenho básico do revisor e os quatro problemas que ele cria</span><a class="minuto" href="https://www.youtube.com/watch?v=4UtrRVtUN_g&amp;t=219s" target="_blank" rel="noopener" aria-label="Assistir a partir de 03:39 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:39</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Prompt por tipo de bug e dataset de incidentes</h3>
+    <p>Ele recomenda levantar os incidentes passados, catalogar os tipos de bug que a equipe mais produz e pedir esses tipos no prompt, além de definir o que é nitpick e proibi-lo. Como mudanças pequenas no prompt alteram muito o número de comentários, ele propõe rodar o agente sobre PRs que causaram incidentes e medir quantos ele pega. O dataset precisa ser atualizado, porque agentes de código cometem erros novos.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/4UtrRVtUN_g/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Um conjunto de incidentes passados serve de teste para cada versão do prompt</span><a class="minuto" href="https://www.youtube.com/watch?v=4UtrRVtUN_g&amp;t=464s" target="_blank" rel="noopener" aria-label="Assistir a partir de 07:44 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:44</a></figcaption>
+  </figure>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Inversão de modelo</h3>
+    <p>Segundo o palestrante, modelos Claude e GPT cometem tipos diferentes de bug: Claude erra mais por um (off-by-one) e GPT gera mais bypass de autenticação. Revisar o código com o mesmo modelo que o escreveu repete os pontos cegos. Ele sugere detectar o modelo autor por pistas como o nome de branch codex/ ou o Co-authored-by Claude, o que funciona em cerca de 80% dos casos, e revisar com a família oposta.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=4UtrRVtUN_g&amp;t=557s" target="_blank" rel="noopener" aria-label="Assistir a partir de 09:17 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:17</a> Modelos diferentes erram de formas diferentes, então o revisor deve ser outro</p>  </div>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Contexto do repositório e wiki viva</h3>
+    <p>Ele critica o uso de grep como solução de contexto, por ser impreciso e gastar muitos tokens em leitura de arquivos. A Greptile mantém uma base de conhecimento que cataloga partes do código (por exemplo, autenticação, fluxos e arquivos envolvidos) e uma wiki que também junta docs, tickets e telemetria de produção. Isso ajuda a revisar se o código cumpre a intenção, não só se compila sem bug.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=4UtrRVtUN_g&amp;t=712s" target="_blank" rel="noopener" aria-label="Assistir a partir de 11:52 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>11:52</a> Um índice do código e dos docs substitui a busca cega por grep</p>  </div>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Teste autônomo e roteamento de modelos</h3>
+    <p>Para mudanças de interface, o agente sobe a aplicação num sandbox com dependências e usa visão computacional para testar fluxos, achando, por exemplo, um botão escondido no iPhone. Mesmo assim o custo fica entre US$ 3 e US$ 20 por review. Para baixá-lo, a Greptile usa modelo pequeno para achar contexto, modelo leve para testar fluxos e modelo de fronteira só para analisar bugs, com 20 subtarefas e um modelo escolhido para cada uma.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=4UtrRVtUN_g&amp;t=989s" target="_blank" rel="noopener" aria-label="Assistir a partir de 16:29 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>16:29</a> Modelo pequeno busca contexto e modelo de fronteira analisa bugs</p>  </div>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=4UtrRVtUN_g&amp;t=32s" target="_blank" rel="noopener"><strong>~1%</strong><span>dos PRs do GitHub passam pela Greptile</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>00:32</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=4UtrRVtUN_g&amp;t=279s" target="_blank" rel="noopener"><strong>US$ 3 a 25</strong><span>custo por PR revisado com agentes de código</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:39</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=4UtrRVtUN_g&amp;t=434s" target="_blank" rel="noopener"><strong>1 em 1.000</strong><span>PRs com bug catastrófico, segundo ele</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:14</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=4UtrRVtUN_g&amp;t=621s" target="_blank" rel="noopener"><strong>10%</strong><span>mais bugs capturados ao inverter o modelo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:21</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O palestrante é cofundador da Greptile e vende o produto que o talk diz ser melhor do que a versão interna, com o argumento de ter mais dados e subtarefas afinadas. Os números não vêm com método: os 10% a mais de bugs capturados com inversão de modelo, a diferença de três vezes em erros por um e a taxa de 1 catastrófico por 1.000 PRs são citados sem amostra ou fonte. A frase sobre grep e PIB é retórica. A afirmação de que o teste de ponta a ponta está quase resolvido vem sem evidência.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Liste os incidentes dos últimos meses, ligue cada um ao PR que o causou e use essa lista para testar qualquer prompt ou ferramenta de revisão antes de adotá-lo.</li><li>Escreva no prompt de revisão os tipos de bug que sua equipe mais produz e uma definição explícita de nitpick que o agente deve ignorar.</li><li>Se o código é escrito por Claude, teste uma revisão feita por um modelo GPT (ou o contrário) em alguns PRs e compare os bugs encontrados.</li><li>Meça o custo por PR revisado e teste modelos menores nas subtarefas simples, como buscar contexto, confirmando no dataset que a captura de bugs não caiu.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="4UtrRVtUN_g" aria-label="Marcar How to Build an AI Code Review Agent - Daksh Gupta, Greptile como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-OmyqelTwpOo">Próximo talk <span lang="en">How to Build Voice Agents That Don&#39;t Fall Apart When You Interrupt - Jesse Hall, LiveKit</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-OmyqelTwpOo" data-tema="evals">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">08</span>
+    <div class="sec-titulo">
+      <h2 lang="en">How to Build Voice Agents That Don&#39;t Fall Apart When You Interrupt - Jesse Hall, LiveKit</h2>
+      <p class="tese">Agente de voz se escolhe testando a conversa inteira com chamadores simulados, porque ranking de modelo e métrica de componente enganam.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Evals</span>
+    <span class="chip">20:55</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+    <a class="chip chip-link" href="https://www.youtube.com/watch?v=OmyqelTwpOo" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Jesse Hall, da LiveKit, diz que leaderboards (rankings) pontuam modelos isolados, mas o produto final é uma conversa em que erros de transcrição, latência e interrupções se somam.</p><p>Ele propõe medir o que o chamador ouve (tempo até o primeiro áudio e até a primeira frase), esconder ferramentas lentas com chamadas assíncronas e usar detecção de fim de turno que ouve o áudio, não só o texto.</p><p>Para escolher a stack, ele roda um agente real contra chamadores simulados com ruído e interrupções, pontua o resultado final e troca os modelos no mesmo cenário, montando um benchmark próprio.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-voice-agent"><strong>Voice agent</strong> <span>agente de voz</span></a></li><li><a href="../glossario.html#g-pipeline-em-cascata"><strong>Pipeline em cascata</strong> <span>speech-to-text, LLM e text-to-speech em sequência</span></a></li><li><a href="../glossario.html#g-time-to-first-audio"><strong>Time to first audio</strong> <span>tempo até o primeiro áudio</span></a></li><li><a href="../glossario.html#g-time-to-first-sentence"><strong>Time to first sentence</strong> <span>tempo até a primeira frase</span></a></li><li><a href="../glossario.html#g-deteccao-de-fim-de-turno"><strong>Detecção de fim de turno</strong> <span>turn detection</span></a></li><li><a href="../glossario.html#g-orcamento-de-latencia"><strong>Orçamento de latência</strong> <span>latency budget</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-simulated-user"><strong>Simulated user</strong> <span>usuário simulado</span></a></li><li><a href="../glossario.html#g-teste-de-regressao"><strong>Teste de regressão</strong> <span>regression test</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Leaderboard pontua peça, você entrega conversa</h3>
+    <p>O ranking avalia speech-to-text, LLM e text-to-speech separados e com áudio limpo. Na ligação real, um erro de transcrição (ouvir dia 30 em vez de dia 3) contamina tudo adiante, e o chamador fala no viva-voz, no trânsito. A pergunta certa é qual stack entregar para o seu caso.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/OmyqelTwpOo/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Um erro no primeiro modelo desce pela cadeia, e o ranking não vê isso.</span><a class="minuto" href="https://www.youtube.com/watch?v=OmyqelTwpOo&amp;t=314s" target="_blank" rel="noopener" aria-label="Assistir a partir de 05:14 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:14</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Meça o que o ouvido percebe</h3>
+    <p>Time to first byte (primeiro byte) pode parecer ótimo e ainda assim vir seguido de silêncio. Para voz, vale medir tempo até o primeiro áudio. Do mesmo modo, o TTS precisa de uma frase inteira para falar, então o LLM mais rápido em tokens nem sempre entrega a primeira frase primeiro.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/OmyqelTwpOo/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Primeiro byte rápido não garante que o chamador ouça algo logo.</span><a class="minuto" href="https://www.youtube.com/watch?v=OmyqelTwpOo&amp;t=408s" target="_blank" rel="noopener" aria-label="Assistir a partir de 06:48 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:48</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Uma linha separa conversa e ferramenta lenta</h3>
+    <p>Uma ferramenta de back end pode levar segundos. Em vez de calar, o agente deve seguir a conversa como uma pessoa faria, e uma chamada assíncrona (async) solta o diálogo da ferramenta. No demo do hotel, o agente salvava dados enquanto continuava perguntando e aceitou interrupções.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/OmyqelTwpOo/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Uma linha de código desacopla a conversa da chamada de ferramenta.</span><a class="minuto" href="https://www.youtube.com/watch?v=OmyqelTwpOo&amp;t=566s" target="_blank" rel="noopener" aria-label="Assistir a partir de 09:26 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:26</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Detecção de fim de turno com áudio</h3>
+    <p>Detectores só de texto concluem que o chamador terminou ao ver uma pausa depois de &#39;quinhentos&#39;. Um detector que também ouve ritmo e entonação espera o resto do valor. O palestrante cita taxa de interrupção indevida menor que a da alternativa, mas a medição é da própria empresa.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/OmyqelTwpOo/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Taxa de interrupção indevida: 4,5% contra 9,9% da alternativa.</span><a class="minuto" href="https://www.youtube.com/watch?v=OmyqelTwpOo&amp;t=758s" target="_blank" rel="noopener" aria-label="Assistir a partir de 12:38 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:38</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Benchmark próprio com chamadores simulados</h3>
+    <p>Pegue um agente completo com back end real, aplique usuários simulados que mudam de ideia, interrompem e falam com ruído. Pontue o estado final (reserva certa no banco, valor certo cobrado) e os passos usados, para pegar trapaça. Depois troque só os modelos e repita com entrada idêntica.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/OmyqelTwpOo/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O mesmo modelo muda de posição conforme o provedor que o serve.</span><a class="minuto" href="https://www.youtube.com/watch?v=OmyqelTwpOo&amp;t=1105s" target="_blank" rel="noopener" aria-label="Assistir a partir de 18:25 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>18:25</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=OmyqelTwpOo&amp;t=408s" target="_blank" rel="noopener"><strong>210 ms</strong><span>time to first byte de um TTS no painel</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:48</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=OmyqelTwpOo&amp;t=758s" target="_blank" rel="noopener"><strong>9,9% vs 4,5%</strong><span>cortes indevidos: alternativa líder contra LiveKit</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:38</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=OmyqelTwpOo&amp;t=885s" target="_blank" rel="noopener"><strong>1,5 s</strong><span>janela de latência em que a conversa ainda se sustenta</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:45</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=OmyqelTwpOo&amp;t=885s" target="_blank" rel="noopener"><strong>500-600 ms</strong><span>intervalo entre turnos que soa humano</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:45</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk também é pitch da LiveKit: os números de turn detection (4,5% contra 9,9%) são da própria empresa, sem a alternativa nomeada nem o tamanho da amostra. O benchmark do hotel mostra a LiveKit Inference à frente do mesmo modelo em outro provedor, o que favorece quem vende. O agente de hotel é um caso simples, e o tema financeiro do início não ganha nenhum teste financeiro real. O método de simulação é razoável e aberto, mas vale rodá-lo no seu caso.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Meça tempo até o primeiro áudio e até a primeira frase no seu agente de voz, não o tempo até o primeiro byte ou token.</li><li>Defina um orçamento de latência de cerca de 1,5 segundo entre a última sílaba do chamador e a primeira resposta audível.</li><li>Faça ferramentas lentas rodarem em modo assíncrono e treine o agente a dizer &#39;um segundo, estou verificando&#39; em vez de ficar mudo.</li><li>Monte de 10 a 20 cenários com chamadores simulados (mudança de valor, interrupção, ruído), pontue o estado final e transforme cada falha em teste de regressão.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="OmyqelTwpOo" aria-label="Marcar How to Build Voice Agents That Don&#39;t Fall Apart When You Interrupt - Jesse Hall, LiveKit como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-kRJjSOYqW0I">Próximo talk <span lang="en">How to Test Your Agents on Real Tasks With Harbor - Xander Song, Arize AI</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-kRJjSOYqW0I" data-tema="evals">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">09</span>
+    <div class="sec-titulo">
+      <h2 lang="en">How to Test Your Agents on Real Tasks With Harbor - Xander Song, Arize AI</h2>
+      <p class="tese">Teste o agente em tarefas reais, com verificadores que olham só o resultado final, e mude prompt e ferramentas com evidência.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Evals</span>
+    <span class="chip">56:01</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+    <a class="chip chip-link" href="https://www.youtube.com/watch?v=kRJjSOYqW0I" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Xander Song, da Arize AI, apresenta o Harbor, um framework open source que roda o agente em sandboxes (ambientes isolados) com dados reais e confere o resultado com scripts verificadores.</p><p>O time do Phoenix usa o Harbor para testar três formas de agente (Claude Code com CLI, com MCP e o agente próprio Pixie) contra um arquivo SQLite realista dentro do Docker.</p><p>No estudo de caso, uma pequena mudança de prompt levou os agentes a usar uma ferramenta SQL e reduziu as chamadas de ferramenta, com a taxa de acerto estável.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-kRJjSOYqW0I-atif"><strong>ATIF</strong> <span>formato de trajetória do agente (agent trajectory interchange format)</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-verifier"><strong>Verifier</strong> <span>verificador</span></a></li><li><a href="../glossario.html#g-oracle"><strong>Oracle</strong> <span>solução de referência que valida o teste</span></a></li><li><a href="../glossario.html#g-sandbox"><strong>Sandbox</strong> <span>ambiente isolado de execução</span></a></li><li><a href="../glossario.html#g-container-docker"><strong>Container Docker</strong> <span>contêiner Docker</span></a></li><li><a href="../glossario.html#g-trial-e-job"><strong>Trial e job</strong> <span>tentativa e execução completa do conjunto de tarefas</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-pass-k-e-pass-k"><strong>pass@k e pass^k</strong> <span>taxa de acerto em k tentativas</span></a></li><li><a href="../glossario.html#g-openinference"><strong>OpenInference</strong> <span>convenções semânticas de traces para IA, sobre OpenTelemetry</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Tarefa, ambiente e verificador</h3>
+    <p>Cada tarefa tem uma instrução em markdown, um ambiente em Docker com os dados e scripts que checam o efeito deixado pelo agente. O verificador produz uma recompensa, como 0 ou 1. Com tarefa e verificador fixos, você troca o agente e vê se melhorou ou piorou.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/kRJjSOYqW0I/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Uma tarefa do Harbor é instrução, ambiente e verificador.</span><a class="minuto" href="https://www.youtube.com/watch?v=kRJjSOYqW0I&amp;t=251s" target="_blank" rel="noopener" aria-label="Assistir a partir de 04:11 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:11</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Oracle valida o teste antes de gastar tokens</h3>
+    <p>O oracle é um script que resolve a tarefa. Rodá-lo antes do agente mostra se os dados, o ambiente e os verificadores funcionam, sem pagar por tokens. Song usa isso para confiar nos verificadores sem revisar cada linha.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/kRJjSOYqW0I/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A solução de referência confirma que o verificador está certo.</span><a class="minuto" href="https://www.youtube.com/watch?v=kRJjSOYqW0I&amp;t=536s" target="_blank" rel="noopener" aria-label="Assistir a partir de 08:56 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:56</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Execução em paralelo e pass@k</h3>
+    <p>Cada trial roda em um container separado, então tudo escala na horizontal em provedores como Daytona. O time roda cerca de 200 workers em paralelo e calcula métricas como pass@k, que mede se o agente acertou em k tentativas.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/kRJjSOYqW0I/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Trials independentes viram uma métrica agregada por tarefa.</span><a class="minuto" href="https://www.youtube.com/watch?v=kRJjSOYqW0I&amp;t=946s" target="_blank" rel="noopener" aria-label="Assistir a partir de 15:46 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:46</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Testar o sistema inteiro junto com o agente</h3>
+    <p>O time do Phoenix não ajusta o Claude Code. Ele ajusta o conjunto formado pelo agente, o servidor MCP, o CLI e as skills. Por isso coloca o servidor, o SQLite e as skills no mesmo container e avalia tudo como uma unidade.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/kRJjSOYqW0I/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O ambiente de teste inclui o produto inteiro, não só o agente.</span><a class="minuto" href="https://www.youtube.com/watch?v=kRJjSOYqW0I&amp;t=1259s" target="_blank" rel="noopener" aria-label="Assistir a partir de 20:59 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>20:59</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Mudança de prompt medida em antes e depois</h3>
+    <p>O prompt passou a orientar o uso de SQL para contagens e agrupamentos, em vez de GraphQL. Na comparação por tarefa, chamadas de GraphQL, turnos e chamadas de ferramenta caíram, e a recompensa ficou igual. Era uma otimização, não uma correção de erro.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/kRJjSOYqW0I/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Menos chamadas de ferramenta, mesma taxa de acerto.</span><a class="minuto" href="https://www.youtube.com/watch?v=kRJjSOYqW0I&amp;t=2692s" target="_blank" rel="noopener" aria-label="Assistir a partir de 44:52 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>44:52</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=kRJjSOYqW0I&amp;t=916s" target="_blank" rel="noopener"><strong>200</strong><span>workers concorrentes no Daytona</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:16</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=kRJjSOYqW0I&amp;t=884s" target="_blank" rel="noopener"><strong>3</strong><span>trials por tarefa no exemplo (k = 1, 2, 3)</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:44</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=kRJjSOYqW0I&amp;t=884s" target="_blank" rel="noopener"><strong>4</strong><span>tarefas no conjunto de exemplo do diagrama</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:44</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=kRJjSOYqW0I&amp;t=1383s" target="_blank" rel="noopener"><strong>3</strong><span>formas de agente que o time precisa testar</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>23:03</span></a>
+  </div>
+
+  <div class="casper" id="a-kRJjSOYqW0I-atif">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>ATIF (formato de trajetória do agente (agent trajectory interchange format)).</strong> ATIF é como o diário de bordo de um motorista de entregas, que anota cada parada do caminho e não só a entrega final.</p>
+    <ol class="passos"><li>Um agente de IA resolve uma tarefa em vários passos. Ele pensa, usa ferramentas e muda arquivos até chegar ao resultado.</li><li>Sem um registro desses passos, você vê só o que sobrou no fim. Fica difícil saber por que o agente acertou ou errou.</li><li>ATIF (agent trajectory interchange format, formato de troca de trajetória do agente) é o padrão do Harbor para gravar esse caminho, chamado de trajetória.</li><li>A trajetória fica em um arquivo JSON, um texto organizado em campos. Cada passo vira um item, como uma chamada ao modelo ou uma chamada de ferramenta.</li><li>O recurso é opcional e serve para depurar e guardar logs. O Phoenix converte o ATIF para o formato OpenInference e mostra os passos em uma tela própria.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>AGENTE EXECUTA</strong><span>Resolve a tarefa no container</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>PASSOS REGISTRADOS</strong><span>Chamadas ao modelo e às ferramentas</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>ARQUIVO ATIF</strong><span>Trajetória em JSON para depurar</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-agente-de-ia">Agente de IA</a>, <a href="../glossario.html#g-chamada-de-ferramenta">Chamada de ferramenta</a>, <a href="../glossario.html#g-json">JSON</a>, <a href="../glossario.html#g-trace">Trace</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O palestrante trabalha na Arize e mantém o Phoenix e o OpenInference, e usa parte do talk para mostrar o Phoenix. Ele avisa que não mantém o Harbor. O estudo de caso usa um conjunto pequeno de perguntas sintéticas geradas pelo Claude, com checagem por amostragem, e ele mesmo diz que a queda nas chamadas é modesta. Não há número de acerto no vídeo. A arquitetura simples vale para um servidor de nó único, e ele admite que sistemas distribuídos seriam mais difíceis.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Escolha 5 a 10 tarefas reais do seu agente e escreva para cada uma um script que confira o resultado final, sem olhar como o agente chegou lá.</li><li>Antes de rodar o agente, rode uma solução de referência contra cada verificador para achar erros no teste sem gastar tokens.</li><li>Ao mudar um prompt ou uma ferramenta, rode várias tentativas por tarefa e compare métricas antes e depois, como acerto, turnos e chamadas de ferramenta.</li><li>Monte o ambiente de teste com o produto inteiro (servidor, CLI, skills e dados) quando você otimiza o conjunto e não só o modelo.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="kRJjSOYqW0I" aria-label="Marcar How to Test Your Agents on Real Tasks With Harbor - Xander Song, Arize AI como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-UGuNt2_Oz8s">Próximo talk <span lang="en">Agents That Self Improve While You Sleep - Fuad Ali, Arize AI</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-UGuNt2_Oz8s" data-tema="evals">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">10</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Agents That Self Improve While You Sleep - Fuad Ali, Arize AI</h2>
+      <p class="tese">Deixe o agente ler os traces e propor correções, e reserve o humano para desenhar evals, curar dados e revisar o fix.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Evals</span>
+    <span class="chip">53:04</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+    <a class="chip chip-link" href="https://www.youtube.com/watch?v=UGuNt2_Oz8s" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Fuad Ali, da Arize, mostra um ciclo de autoaperfeiçoamento para agentes: registrar traces, deixar um agente chamado Signal agrupar falhas, transformar cada falha em eval e dataset, e provar o conserto com um experimento.</p><p>Na demo, um agente de loja de brinquedos tem um bug plantado de caixa alta e baixa no filtro. O Signal acha a causa em 6 minutos, abre um PR e o experimento marca 88,9% nos casos que antes falhavam.</p><p>O humano continua em três pontos: desenhar o eval, decidir quais falhas entram no dataset e revisar o PR. Modelos de decisão, que devolvem uma nota de confiança, mandam os casos duvidosos para uma fila de revisão.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-trace"><strong>Trace</strong> <span>registro passo a passo da execução do agente</span></a></li><li><a href="../glossario.html#g-eval"><strong>Eval</strong> <span>avaliação automática do comportamento do agente</span></a></li><li><a href="../glossario.html#g-llm-as-a-judge"><strong>LLM-as-a-judge</strong> <span>modelo que dá nota à saída de outro modelo</span></a></li><li><a href="../glossario.html#g-decision-model"><strong>Decision model</strong> <span>modelo pequeno que classifica e devolve confiança</span></a></li><li><a href="../glossario.html#g-teste-de-regressao"><strong>Teste de regressão</strong> <span>teste que garante que um erro corrigido não volta</span></a></li><li><a href="../glossario.html#g-annotation-queue"><strong>Annotation queue</strong> <span>fila de casos para revisão humana</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-confidence-score"><strong>Confidence score</strong> <span>nota de confiança do modelo na resposta</span></a></li><li><a href="../glossario.html#g-sandbox"><strong>Sandbox</strong> <span>ambiente isolado para rodar o agente</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Um agente lê os traces no seu lugar</h3>
+    <p>Ninguém consegue ler milhares de traces às 4h da manhã. O Signal roda em agenda (padrão de 6 em 6 horas), agrupa falhas parecidas em um único issue e evita centenas de tickets repetidos. Você resolve, ignora ou deixa ele deduplicar.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/UGuNt2_Oz8s/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O Signal agrupa as falhas em um issue só, com análise e proposta de correção.</span><a class="minuto" href="https://www.youtube.com/watch?v=UGuNt2_Oz8s&amp;t=813s" target="_blank" rel="noopener" aria-label="Assistir a partir de 13:33 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:33</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Do trace ao PR com a causa raiz</h3>
+    <p>Conectado ao GitHub, o Signal lê o código do agente junto com os traces. Na demo, achou que as categorias ficam como slugs em minúsculas, mas o modelo enviava nomes com maiúsculas e espaços. A busca não retornava nada e o agente varria todos os produtos, o que gerou picos de latência.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/UGuNt2_Oz8s/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O agente trabalhou 6 minutos e entregou diagnóstico e PR.</span><a class="minuto" href="https://www.youtube.com/watch?v=UGuNt2_Oz8s&amp;t=908s" target="_blank" rel="noopener" aria-label="Assistir a partir de 15:08 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:08</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Falha vira eval e dataset vivo</h3>
+    <p>Cada falha pode virar um eval (avaliação) com um clique e entrar em um dataset que cresce com o tempo. Esse conjunto funciona como teste de regressão: o mesmo erro não passa duas vezes. O eval criado checa se search_products foi chamado mais de uma vez na trajetória.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/UGuNt2_Oz8s/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O prompt do eval codifica a falha vista nos traces.</span><a class="minuto" href="https://www.youtube.com/watch?v=UGuNt2_Oz8s&amp;t=1531s" target="_blank" rel="noopener" aria-label="Assistir a partir de 25:31 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>25:31</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Experimento prova que o conserto funciona</h3>
+    <p>O agente é reexecutado nos casos que falharam e o resultado é pontuado pelos evals. Se passar do limite que você define, o PR chega com evidência. Também se confere que os outros evals não pioraram, porque mexer em um prompt pode quebrar outra ferramenta.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/UGuNt2_Oz8s/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O experimento reexecuta as falhas com a correção e mede o resultado.</span><a class="minuto" href="https://www.youtube.com/watch?v=UGuNt2_Oz8s&amp;t=1718s" target="_blank" rel="noopener" aria-label="Assistir a partir de 28:38 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>28:38</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Confiança baixa vai para uma pessoa</h3>
+    <p>Modelos de decisão devolvem uma nota de confiança junto com a classificação. Os casos duvidosos caem automaticamente em uma fila de anotação humana. O limite certo depende do caso de uso, e o palestrante avisa que 80% não serve para todo mundo.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/UGuNt2_Oz8s/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Poucos casos duvidosos vão para revisão humana, o resto passa direto.</span><a class="minuto" href="https://www.youtube.com/watch?v=UGuNt2_Oz8s&amp;t=2029s" target="_blank" rel="noopener" aria-label="Assistir a partir de 33:49 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>33:49</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=UGuNt2_Oz8s&amp;t=750s" target="_blank" rel="noopener"><strong>6 horas</strong><span>intervalo padrão de leitura dos traces pelo Signal</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:30</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=UGuNt2_Oz8s&amp;t=1718s" target="_blank" rel="noopener"><strong>88,9%</strong><span>resultado do experimento do fix nos casos que falharam</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>28:38</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=UGuNt2_Oz8s&amp;t=2029s" target="_blank" rel="noopener"><strong>4,6%</strong><span>casos do teste de spam com confiança entre 0,3 e 0,7</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>33:49</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=UGuNt2_Oz8s&amp;t=2029s" target="_blank" rel="noopener"><strong>99,5%</strong><span>acurácia nos demais casos do teste de spam</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>33:49</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>É um workshop de produto da Arize, e a demo roda em uma plataforma paga (com plano gratuito). O bug foi plantado pelo próprio palestrante e é simples, então o caso fácil prova pouco sobre falhas qualitativas. Os 88,9% não vêm com amostra nem comparação. Os números de confiança do teste de spam vêm de benchmark interno. Ele mesmo admite que não há como medir o valor do Signal além da taxa de merge dos PRs e que você não deve confiar em todo issue.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Ligue tracing no seu agente antes de qualquer outra coisa. Sem trace não há como agrupar falhas nem criar eval.</li><li>Guarde cada falha real de produção em um dataset e rode esse conjunto antes de cada merge, como teste de regressão obrigatório.</li><li>Use código para checar o que é determinístico (filtro aplicado, JSON válido) e reserve LLM como juiz para o que é qualitativo, com amostragem para controlar custo.</li><li>Defina um limite de confiança e mande os casos abaixo dele para revisão humana. Mantenha a revisão do PR e o desenho do eval com pessoas.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="UGuNt2_Oz8s" aria-label="Marcar Agents That Self Improve While You Sleep - Fuad Ali, Arize AI como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-aGIUg8zKI8A">Próximo talk <span lang="en">How a Trading Firm Ships New AI Models the Same Day - Noyan Tokgozoglu, Optiver</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-aGIUg8zKI8A" data-tema="infraestrutura">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">11</span>
+    <div class="sec-titulo">
+      <h2 lang="en">How a Trading Firm Ships New AI Models the Same Day - Noyan Tokgozoglu, Optiver</h2>
+      <p class="tese">Com o lucro medido em horas, a Optiver trata IA como plataforma própria: gateway, golden sets e controle de custo desde o primeiro dia.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Infraestrutura</span>
+    <span class="chip">23:22</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+    <a class="chip chip-link" href="https://www.youtube.com/watch?v=aGIUg8zKI8A" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>A Optiver, firma de trading que vê o impacto no lucro em poucas horas, montou uma plataforma de IA própria e on premise (em infraestrutura da empresa) para adotar modelos novos no mesmo dia.</p><p>Um gateway de inferência concentra roteamento, orçamento e logs, e uma camada chamada meta harness deixa cada time trocar de modelo e de ferramenta sem refazer o trabalho.</p><p>O gasto com IA disparou depois dos lançamentos de verão e voltou ao controle com busca de ferramentas sob demanda, ajuste de cache, limites por time, modelos abertos e roteamento.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-ai-gateway"><strong>AI gateway</strong> <span>gateway de inferência: ponto único por onde passam as chamadas aos modelos</span></a></li><li><a href="../glossario.html#g-golden-dataset"><strong>Golden dataset</strong> <span>conjunto de referência com casos reais para medir modelos</span></a></li><li><a href="../glossario.html#g-harness"><strong>Harness</strong> <span>software que cerca o modelo com ferramentas, regras e contexto</span></a></li><li><a href="../glossario.html#g-on-premise"><strong>On premise</strong> <span>em infraestrutura própria, fora da nuvem de terceiros</span></a></li><li><a href="../glossario.html#g-progressive-tool-discovery"><strong>Progressive tool discovery</strong> <span>carregar ferramentas só quando o agente precisa, em vez de todas de início</span></a></li><li><a href="../glossario.html#g-prompt-caching"><strong>Prompt caching</strong> <span>reaproveitar parte do prompt já processada para pagar menos</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-model-routing"><strong>Model routing</strong> <span>enviar cada pedido ao modelo mais barato que dê conta</span></a></li><li><a href="../glossario.html#g-record-and-replay"><strong>Record and replay</strong> <span>gravar chamadas de ferramentas para reexecutá-las depois em avaliações</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Feedback em horas muda as decisões</h3>
+    <p>Na Optiver o balanço zera todo dia e o impacto de uma mudança aparece no lucro em horas. Isso cria pressão para decidir rápido, medir bem e ter viés de ação, porque perder uma oportunidade custa caro. A plataforma de IA nasce desse ritmo.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/aGIUg8zKI8A/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O lucro do dia mostra o efeito de uma mudança de IA no mesmo dia.</span><a class="minuto" href="https://www.youtube.com/watch?v=aGIUg8zKI8A&amp;t=95s" target="_blank" rel="noopener" aria-label="Assistir a partir de 01:35 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:35</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Pilha da plataforma de IA</h3>
+    <p>O slide mostra camadas: modelos de terceiros e próprios na base, um inference gateway (gateway de inferência) com roteamento e orçamento, uma plataforma de agentes com skills e plugins, um agent gateway que funciona como registro único e, por cima, as interfaces de uso. O gateway também dá resiliência, porque troca de provedor se um cair.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/aGIUg8zKI8A/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A pilha completa, com gateway de inferência e gateway de agentes.</span><a class="minuto" href="https://www.youtube.com/watch?v=aGIUg8zKI8A&amp;t=313s" target="_blank" rel="noopener" aria-label="Assistir a partir de 05:13 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:13</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Modelo novo em produção no mesmo dia</h3>
+    <p>Quando um modelo de fronteira sai, o time o roda nos golden sets (conjuntos de referência) dos times de trading e compartilha as métricas. Também libera o modelo no gateway, ajusta custos, atualiza os harnesses e mantém suporte em várias regiões. Tudo o que passa pelo gateway é registrado e vai para o sistema de avaliação.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/aGIUg8zKI8A/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O fluxo de adoção depende de uma avaliação interna madura.</span><a class="minuto" href="https://www.youtube.com/watch?v=aGIUg8zKI8A&amp;t=437s" target="_blank" rel="noopener" aria-label="Assistir a partir de 07:17 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:17</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Gasto de IA disparou e foi contido</h3>
+    <p>O gráfico, sem valores, mostra o gasto subindo em dezembro e saltando nos lançamentos de verão. Sessões novas chegavam a 200 mil tokens de contexto por padrão. A equipe reduziu isso com busca de ferramentas MCP, CLIs que empacotam MCPs, ajuste de cache, limites por time, modelos abertos e roteamento para modelos mais baratos.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/aGIUg8zKI8A/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Gasto sobe com os lançamentos e volta ao controle com otimizações.</span><a class="minuto" href="https://www.youtube.com/watch?v=aGIUg8zKI8A&amp;t=622s" target="_blank" rel="noopener" aria-label="Assistir a partir de 10:22 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:22</a></figcaption>
+  </figure>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Avaliar agentes exige congelar o estado do mundo</h3>
+    <p>Reexecutar um agente em outro modelo falha quando as ferramentas dependem do estado do mundo naquele momento. A Optiver tenta tirar snapshots (retratos do estado) e atribui uma nota de confiança a cada chamada. Um banco de backtest permite voltar no tempo com facilidade, mas o Slack não. Ela admite que o problema segue aberto.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=aGIUg8zKI8A&amp;t=1184s" target="_blank" rel="noopener" aria-label="Assistir a partir de 19:44 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>19:44</a> Ele admite que reproduzir o estado de ferramentas externas segue sem solução perfeita.</p>  </div>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=aGIUg8zKI8A&amp;t=32s" target="_blank" rel="noopener"><strong>10 mi+</strong><span>negociações por dia na Optiver</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>00:32</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=aGIUg8zKI8A&amp;t=32s" target="_blank" rel="noopener"><strong>10+</strong><span>escritórios da firma pelo mundo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>00:32</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=aGIUg8zKI8A&amp;t=652s" target="_blank" rel="noopener"><strong>200 mil</strong><span>tokens de contexto mínimo em sessões novas, às vezes mais</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:52</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk descreve uma arquitetura sem mostrar números de gasto, de latência ou de ganho em lucro. O gráfico de custo vem sem eixo. A afirmação de que labs de fronteira pedem para a Optiver explicar como ela faz agentes gerenciados não tem prova. O palestrante diz que a abordagem não serve para todos. A crítica a fornecedores de gateway e o contraste com o Codex vêm de uma única experiência. A empresa também usa o talk para atrair candidatos, com convite a evento no estande.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Meça o contexto inicial de uma sessão nova com seus agentes. Se passar de dezenas de milhares de tokens, reduza MCPs e instruções carregadas por padrão.</li><li>Monte um golden set pequeno com tarefas reais do seu trabalho e rode qualquer modelo novo nele antes de trocar o que você usa.</li><li>Mostre aos times quanto cada um gasta com IA e deixe-os definir os próprios limites e alertas de consumo.</li><li>Evite depender de um único provedor de modelo. Passe as chamadas por uma camada que permita trocar de modelo se houver queda ou aumento de preço.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="aGIUg8zKI8A" aria-label="Marcar How a Trading Firm Ships New AI Models the Same Day - Noyan Tokgozoglu, Optiver como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#fim">Fechar a edição <span aria-hidden="true">↓</span></a>
+  </footer>
+</article>
+      <section class="fim-edicao card" id="fim" aria-labelledby="fim-titulo">
+        <h2 id="fim-titulo">Fim da edição</h2>
+        <span class="progresso" data-ids="h8jgniNJcbQ iniryju23Sk BgLdvF7Qkh8 YIhvrvHtonk dAoOYFx7ZYw Y_p3y6zP5QE 4UtrRVtUN_g OmyqelTwpOo kRJjSOYqW0I UGuNt2_Oz8s aGIUg8zKI8A"></span>
+        <p>Termos novos no glossário:
+<a href="../glossario.html#g-classificador-de-aprovacao">Classificador de aprovação</a>, <a href="../glossario.html#g-atif">ATIF</a>.
+        </p>
+        <nav class="paginacao" aria-label="Outras edições">
+<a rel="prev" href="2026-10-25.html"><span class="paginacao-dir">← Edição anterior</span><strong>IA nas finanças, evals e o novo trabalho do engenheiro</strong><span class="muted">domingo, 25 out 2026</span></a>          <a class="voltar" href="../index.html#edicoes"><span class="paginacao-dir">Todas as edições</span><strong>Voltar ao início</strong></a>
+        </nav>
+      </section>
+    </div>
+  </div>
+</div>
+</main>
+<footer class="rodape wrap">
+  <p>Resumos em português dos talks do canal <a href="https://www.youtube.com/@aiDotEngineer" target="_blank" rel="noopener">AI Engineer</a>. Atualizado em 28 out 2026, 09:06. <a href="../status.html">Status da rotina</a></p>
+</footer>
+<script src="../app.js" defer></script>
+</body>
+</html>

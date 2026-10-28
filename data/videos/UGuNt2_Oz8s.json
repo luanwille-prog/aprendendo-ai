@@ -1,0 +1,174 @@
+{
+  "id": "UGuNt2_Oz8s",
+  "titulo": "Agents That Self Improve While You Sleep - Fuad Ali, Arize AI",
+  "titulo_curto": "Agents That Self Improve While You Sleep - Fuad Ali, Arize AI",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=UGuNt2_Oz8s",
+  "duracao": 3184,
+  "publicado_ts": 1793055639,
+  "edicao": "2026-10-27",
+  "tese": "Deixe o agente ler os traces e propor correções, e reserve o humano para desenhar evals, curar dados e revisar o fix.",
+  "tldr": [
+    "Fuad Ali, da Arize, mostra um ciclo de autoaperfeiçoamento para agentes: registrar traces, deixar um agente chamado Signal agrupar falhas, transformar cada falha em eval e dataset, e provar o conserto com um experimento.",
+    "Na demo, um agente de loja de brinquedos tem um bug plantado de caixa alta e baixa no filtro. O Signal acha a causa em 6 minutos, abre um PR e o experimento marca 88,9% nos casos que antes falhavam.",
+    "O humano continua em três pontos: desenhar o eval, decidir quais falhas entram no dataset e revisar o PR. Modelos de decisão, que devolvem uma nota de confiança, mandam os casos duvidosos para uma fila de revisão."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Um agente lê os traces no seu lugar",
+      "texto": "Ninguém consegue ler milhares de traces às 4h da manhã. O Signal roda em agenda (padrão de 6 em 6 horas), agrupa falhas parecidas em um único issue e evita centenas de tickets repetidos. Você resolve, ignora ou deixa ele deduplicar.",
+      "t": 813,
+      "legenda": "O Signal agrupa as falhas em um issue só, com análise e proposta de correção.",
+      "print": "img/UGuNt2_Oz8s/0.jpg"
+    },
+    {
+      "titulo": "Do trace ao PR com a causa raiz",
+      "texto": "Conectado ao GitHub, o Signal lê o código do agente junto com os traces. Na demo, achou que as categorias ficam como slugs em minúsculas, mas o modelo enviava nomes com maiúsculas e espaços. A busca não retornava nada e o agente varria todos os produtos, o que gerou picos de latência.",
+      "t": 908,
+      "legenda": "O agente trabalhou 6 minutos e entregou diagnóstico e PR.",
+      "print": "img/UGuNt2_Oz8s/1.jpg"
+    },
+    {
+      "titulo": "Falha vira eval e dataset vivo",
+      "texto": "Cada falha pode virar um eval (avaliação) com um clique e entrar em um dataset que cresce com o tempo. Esse conjunto funciona como teste de regressão: o mesmo erro não passa duas vezes. O eval criado checa se search_products foi chamado mais de uma vez na trajetória.",
+      "t": 1531,
+      "legenda": "O prompt do eval codifica a falha vista nos traces.",
+      "print": "img/UGuNt2_Oz8s/2.jpg"
+    },
+    {
+      "titulo": "Experimento prova que o conserto funciona",
+      "texto": "O agente é reexecutado nos casos que falharam e o resultado é pontuado pelos evals. Se passar do limite que você define, o PR chega com evidência. Também se confere que os outros evals não pioraram, porque mexer em um prompt pode quebrar outra ferramenta.",
+      "t": 1718,
+      "legenda": "O experimento reexecuta as falhas com a correção e mede o resultado.",
+      "print": "img/UGuNt2_Oz8s/3.jpg"
+    },
+    {
+      "titulo": "Confiança baixa vai para uma pessoa",
+      "texto": "Modelos de decisão devolvem uma nota de confiança junto com a classificação. Os casos duvidosos caem automaticamente em uma fila de anotação humana. O limite certo depende do caso de uso, e o palestrante avisa que 80% não serve para todo mundo.",
+      "t": 2029,
+      "legenda": "Poucos casos duvidosos vão para revisão humana, o resto passa direto.",
+      "print": "img/UGuNt2_Oz8s/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Trace",
+      "traducao": "registro passo a passo da execução do agente",
+      "nivel": "basico",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação automática do comportamento do agente",
+      "nivel": "basico",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo que dá nota à saída de outro modelo",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Decision model",
+      "traducao": "modelo pequeno que classifica e devolve confiança",
+      "nivel": "intermediario",
+      "chave": "decision model",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Teste de regressão",
+      "traducao": "teste que garante que um erro corrigido não volta",
+      "nivel": "basico",
+      "chave": "teste de regressão",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Annotation queue",
+      "traducao": "fila de casos para revisão humana",
+      "nivel": "intermediario",
+      "chave": "annotation queue",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Confidence score",
+      "traducao": "nota de confiança do modelo na resposta",
+      "nivel": "intermediario",
+      "chave": "confidence score",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado para rodar o agente",
+      "nivel": "intermediario",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É um workshop de produto da Arize, e a demo roda em uma plataforma paga (com plano gratuito). O bug foi plantado pelo próprio palestrante e é simples, então o caso fácil prova pouco sobre falhas qualitativas. Os 88,9% não vêm com amostra nem comparação. Os números de confiança do teste de spam vêm de benchmark interno. Ele mesmo admite que não há como medir o valor do Signal além da taxa de merge dos PRs e que você não deve confiar em todo issue.",
+  "acoes": [
+    "Ligue tracing no seu agente antes de qualquer outra coisa. Sem trace não há como agrupar falhas nem criar eval.",
+    "Guarde cada falha real de produção em um dataset e rode esse conjunto antes de cada merge, como teste de regressão obrigatório.",
+    "Use código para checar o que é determinístico (filtro aplicado, JSON válido) e reserve LLM como juiz para o que é qualitativo, com amostragem para controlar custo.",
+    "Defina um limite de confiança e mande os casos abaixo dele para revisão humana. Mantenha a revisão do PR e o desenho do eval com pessoas."
+  ],
+  "numeros": [
+    {
+      "valor": "6 horas",
+      "contexto": "intervalo padrão de leitura dos traces pelo Signal",
+      "t": 750
+    },
+    {
+      "valor": "88,9%",
+      "contexto": "resultado do experimento do fix nos casos que falharam",
+      "t": 1718
+    },
+    {
+      "valor": "4,6%",
+      "contexto": "casos do teste de spam com confiança entre 0,3 e 0,7",
+      "t": 2029
+    },
+    {
+      "valor": "99,5%",
+      "contexto": "acurácia nos demais casos do teste de spam",
+      "t": 2029
+    }
+  ]
+}

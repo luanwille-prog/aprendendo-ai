@@ -1,0 +1,174 @@
+{
+  "id": "BgLdvF7Qkh8",
+  "titulo": "300 Agents, 60 People: How We Secured Our Own AI Agents - Aiden Sochowski, Runlayer",
+  "titulo_curto": "300 Agents, 60 People: How We Secured Our Own AI Agents - Aiden Sochowski, Runlayer",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=BgLdvF7Qkh8",
+  "duracao": 998,
+  "publicado_ts": 1793088000,
+  "edicao": "2026-10-27",
+  "tese": "Sem um gateway que registre cada sessão e chamada de ferramenta, ninguém sabe o que seus agentes fazem, nem o que custam.",
+  "tldr": [
+    "A Runlayer, empresa de 50 a 60 pessoas, roda mais de 300 agentes por dia. Ela colocou um gateway (ponto central por onde passa o tráfego) na frente deles e registrou toda sessão e chamada de ferramenta.",
+    "O registro mostrou ataques por e-mail, agente revisor de PR convencido a aprovar, bot com permissão demais, um agente contaminando outros e um MCP server mal escrito que queimava tokens.",
+    "A empresa respondeu com classificadores treinados por ela, escopo menor de permissões com base no histórico de uso, limites de taxa e orçamentos de custo."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Há mais agentes do que pessoas",
+      "texto": "Com 50 a 60 funcionários, a empresa conta mais de 300 agentes rodando todo dia, muitos disparados por gatilhos e apps, não por uma pessoa. Cada chamada de ferramenta é uma superfície de ataque: lê dado hostil, age de forma destrutiva ou vaza informação. O primeiro passo foi só enxergar tudo.",
+      "t": 157,
+      "legenda": "Mapa interno de agentes e execuções mostra a superfície de ataque.",
+      "print": "img/BgLdvF7Qkh8/0.jpg"
+    },
+    {
+      "titulo": "Injeção por e-mail e permissão demais",
+      "texto": "Um atacante manda um e-mail pedindo a lista de prospects. Se o agente for ingênuo e tiver acesso à agenda, ele pode entregar o dado. Pedir que cada usuário defina o escopo das ferramentas não funciona bem. Regras como classificador de instruções, bloqueio de PII por regex ou bloqueio de fonte privada ajudam, mas nenhuma é 100% eficaz.",
+      "t": 252,
+      "legenda": "Camadas de política (classificador, regex, bloqueio de fonte) para o mesmo ataque.",
+      "print": "img/BgLdvF7Qkh8/1.jpg"
+    },
+    {
+      "titulo": "Ataques que se desenrolam na sessão inteira",
+      "texto": "Um agente revisor de PR pode aprovar mudança sensível depois que o autor argumenta nos comentários. Perguntado dez vezes, ele pode ceder. Uma regra por chamada não pega isso. A empresa treinou classificadores que olham a sessão inteira e checam se cada chamada ainda segue o objetivo original do agente.",
+      "t": 437,
+      "legenda": "O desvio de intenção aparece só ao longo da sessão, não numa chamada isolada.",
+      "print": "img/BgLdvF7Qkh8/2.jpg"
+    },
+    {
+      "titulo": "Usar o histórico para reduzir permissões",
+      "texto": "Um bot de recrutamento acessa ATS (sistema de candidatos), notas de reunião, agenda e mensagens. O histórico de chamadas mostra o uso normal. Chamada fora do padrão sinaliza execução de risco cedo, e modelos próprios sugerem quais acessos retirar do agente.",
+      "t": 562,
+      "legenda": "O padrão de uso real define quais permissões podem ser cortadas.",
+      "print": "img/BgLdvF7Qkh8/3.jpg"
+    },
+    {
+      "titulo": "Custo: MCP quebrado e troca de modelo",
+      "texto": "Um MCP server feito por vibe coding (programar pedindo ao modelo) falhava em formatação, e o agente tentava de novo, pagando tokens a cada erro. Outro time trocou para um modelo mais caro e o custo subiu mais de 100 vezes em uma semana. A resposta foi limite de taxa, orçamento e padrões sensatos.",
+      "t": 848,
+      "legenda": "Custo de tokens disparou após trocar para um modelo mais caro.",
+      "print": "img/BgLdvF7Qkh8/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "MCP",
+      "traducao": "Model Context Protocol, protocolo que liga agentes a ferramentas e dados",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Blast radius",
+      "traducao": "raio de impacto: o estrago possível se o agente errar ou for atacado",
+      "nivel": "intermediario",
+      "chave": "blast radius",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Prompt injection",
+      "traducao": "instrução maliciosa escondida em dado que o agente lê",
+      "nivel": "intermediario",
+      "chave": "prompt injection",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Excessive agency",
+      "traducao": "agente com mais permissões do que a tarefa exige",
+      "nivel": "intermediario",
+      "chave": "excessive agency",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Princípio do menor privilégio",
+      "traducao": "dar ao agente só o acesso necessário para a tarefa",
+      "nivel": "basico",
+      "chave": "princípio do menor privilégio",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Context poisoning",
+      "traducao": "contaminação do contexto de um agente por dado malicioso",
+      "nivel": "intermediario",
+      "chave": "context poisoning",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Rate limiting",
+      "traducao": "limite de chamadas por período",
+      "nivel": "basico",
+      "chave": "rate limiting",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Audit trail",
+      "traducao": "registro auditável de cada ação do agente",
+      "nivel": "basico",
+      "chave": "audit trail",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é de uma empresa que vende gateway de segurança para agentes, e a conclusão (monitore tudo) favorece o produto. Faltam números de detecção, falsos positivos e custo dos classificadores próprios. Os casos vêm de uma única empresa pequena, sem amostra comparável. A troca de modelo com custo 100x não traz nome claro nem valores absolutos.",
+  "acoes": [
+    "Liste todos os agentes e automações do seu time, quem os criou, quais ferramentas e dados cada um acessa.",
+    "Corte as permissões de cada agente ao mínimo para a tarefa dele, principalmente leitura de e-mail com acesso a agenda ou dados de clientes.",
+    "Não deixe agente revisor aprovar mudanças sensíveis sozinho. Exija uma pessoa na aprovação de código crítico.",
+    "Defina orçamento e alerta de custo por agente antes de trocar de modelo. Teste a troca em uma tarefa e compare custo e qualidade."
+  ],
+  "numeros": [
+    {
+      "valor": "50 a 60",
+      "contexto": "pessoas na empresa",
+      "t": 96
+    },
+    {
+      "valor": "300+",
+      "contexto": "agentes rodando todo dia",
+      "t": 96
+    },
+    {
+      "valor": "10 vezes",
+      "contexto": "pedidos até o agente revisor ceder",
+      "t": 437
+    },
+    {
+      "valor": "100x",
+      "contexto": "aumento de custo em uma semana após trocar de modelo",
+      "t": 844
+    }
+  ]
+}

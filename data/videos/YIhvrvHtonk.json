@@ -1,0 +1,174 @@
+{
+  "id": "YIhvrvHtonk",
+  "titulo": "We Kept Rebuilding Our AI Agent. Here's What Survived - Fuad Ali, Arize AI",
+  "titulo_curto": "We Kept Rebuilding Our AI Agent. Here's What Survived - Fuad Ali, Arize AI",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=YIhvrvHtonk",
+  "duracao": 1206,
+  "publicado_ts": 1793142006,
+  "edicao": "2026-10-27",
+  "tese": "Quase tudo que sobreviveu a dois anos de reconstrução do agente Alex foi código do harness; framework e modelo novo pesaram pouco.",
+  "tldr": [
+    "A Arize reconstruiu o Alex, agente embutido no produto, várias vezes entre 2023 e 2026, sem framework e sem treinar modelo. Todo o ganho veio de código próprio: loop, plano, regra de parada e memória.",
+    "As decisões que ficaram foram simples: o harness guarda o plano, o fim do turno é um portão explícito, resultados grandes viram arquivo, e um arquivo de 8.000 caracteres por usuário venceu grafo de conhecimento.",
+    "Sessões reais de produção viram casos de teste, e juízes automáticos precisam de gabarito humano. Velocidade contra qualidade continua sendo decisão de pessoa."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "O plano passou a morar no harness",
+      "texto": "A primeira versão deu ao modelo uma ferramenta de lista de tarefas. Ele gastou chamadas só atualizando a lista e perdeu o foco após mais de 20 iterações. A equipe moveu o plano para o harness aos poucos e hoje testa sem a ferramenta de to-do, com o plano renderizado como mensagem a cada chamada.",
+      "t": 435,
+      "legenda": "O plano passou da ferramenta do modelo para o estado mantido pelo harness.",
+      "print": "img/YIhvrvHtonk/0.jpg"
+    },
+    {
+      "titulo": "Terminar o turno vira um portão",
+      "texto": "Tratar texto sem chamada de ferramenta como 'terminei' quebrou em modelos que anunciam o passo num turno e chamam a ferramenta no próximo. Agora existe uma chamada explícita de finish. Se há itens do plano em aberto, o harness a devolve até três vezes, avisa um passo antes do limite de iterações e força o fim no limite.",
+      "t": 560,
+      "legenda": "A regra de parada fica no harness para funcionar com qualquer modelo que o cliente escolha.",
+      "print": "img/YIhvrvHtonk/1.jpg"
+    },
+    {
+      "titulo": "Resultado grande de ferramenta vira arquivo",
+      "texto": "Um JSON enorme de trace estoura a janela de contexto. O harness trunca o resultado e deixa o agente buscar o que precisa com código (jq). É a mesma ideia de deixar uma anotação na mesa apontando para o livro na estante. O histórico da própria sessão também é resumido num checkpoint com orçamento fixo de tokens.",
+      "t": 651,
+      "legenda": "Ponteiro mais busca por código evita encher o contexto com saída bruta.",
+      "print": "img/YIhvrvHtonk/2.jpg"
+    },
+    {
+      "titulo": "Um arquivo pequeno venceu o grafo de conhecimento",
+      "texto": "Testaram busca vetorial, memória episódica e semântica e grafos temporais. Ficaram com um markdown por usuário, limitado a 8.000 caracteres, carregado em toda requisição e escrito por um job em segundo plano ao fim da sessão. É exato, barato e um humano consegue auditar.",
+      "t": 745,
+      "legenda": "A memória escolhida foi um arquivo auditável de 8.000 caracteres.",
+      "print": "img/YIhvrvHtonk/3.jpg"
+    },
+    {
+      "titulo": "Sessões de produção viram testes",
+      "texto": "O Alex é rastreado na própria plataforma da Arize. Consultas reais entram em datasets de regressão, e uma sessão inteira pode ser reexecutada turno a turno. Bugs de agente raramente aparecem como erro explícito, por isso a equipe usa o agente Signal para achar padrões como 43 chamadas idênticas no mesmo turno.",
+      "t": 931,
+      "legenda": "Os traces do próprio agente alimentam os datasets de regressão.",
+      "print": "img/YIhvrvHtonk/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Harness",
+      "traducao": "código que cerca o modelo (loop, plano, regras de parada)",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Memory pointer",
+      "traducao": "ponteiro para resultado guardado fora do contexto",
+      "nivel": "intermediario",
+      "chave": "memory pointer",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Compactação de contexto",
+      "traducao": "resumir o histórico num checkpoint",
+      "nivel": "intermediario",
+      "chave": "compactação de contexto",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Sub-agent",
+      "traducao": "agente especialista chamado por outro agente",
+      "nivel": "intermediario",
+      "chave": "sub-agent",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Skills",
+      "traducao": "instruções e ferramentas carregadas sob demanda",
+      "nivel": "intermediario",
+      "chave": "skills",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Model routing",
+      "traducao": "escolher o modelo por tarefa",
+      "nivel": "intermediario",
+      "chave": "model routing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Trace",
+      "traducao": "registro passo a passo da execução do agente",
+      "nivel": "basico",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Golden dataset",
+      "traducao": "conjunto de referência rotulado por pessoas",
+      "nivel": "intermediario",
+      "chave": "golden dataset",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O palestrante é product manager da Arize, e o Alex é vitrine da própria plataforma de observabilidade, então o talk também vende o produto. Não há medição que sustente as conclusões, como taxa de acerto antes e depois de cada reconstrução ou comparação entre memória em arquivo e grafo. A frase de 50% de alucinação é um comentário de um engenheiro. Os resultados valem como relato de um caso, não como prova geral.",
+  "acoes": [
+    "Se seu agente usa lista de tarefas, teste manter o plano no código que chama o modelo e injetá-lo como mensagem, em vez de deixar o modelo atualizar a lista.",
+    "Troque a regra 'texto sem ferramenta significa fim' por uma chamada explícita de finish que recuse o encerramento enquanto houver itens abertos.",
+    "Antes de montar vetor ou grafo para memória, tente um arquivo de texto curto por usuário com limite de tamanho e revisão humana.",
+    "Salve conversas reais com falha como casos de regressão e rode a cada troca de modelo ou de prompt."
+  ],
+  "numeros": [
+    {
+      "valor": "50%",
+      "contexto": "alucinação do protótipo de 2023 com modelos 3.5",
+      "t": 187
+    },
+    {
+      "valor": "3 vezes",
+      "contexto": "limite de devoluções do finish com itens abertos",
+      "t": 560
+    },
+    {
+      "valor": "8.000",
+      "contexto": "caracteres máximos do arquivo de memória por usuário",
+      "t": 745
+    },
+    {
+      "valor": "43",
+      "contexto": "chamadas de ferramenta idênticas num mesmo turno",
+      "t": 993
+    }
+  ]
+}

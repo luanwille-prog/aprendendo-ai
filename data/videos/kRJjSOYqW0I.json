@@ -1,0 +1,200 @@
+{
+  "id": "kRJjSOYqW0I",
+  "titulo": "How to Test Your Agents on Real Tasks With Harbor - Xander Song, Arize AI",
+  "titulo_curto": "How to Test Your Agents on Real Tasks With Harbor - Xander Song, Arize AI",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=kRJjSOYqW0I",
+  "duracao": 3361,
+  "publicado_ts": 1793041225,
+  "edicao": "2026-10-27",
+  "tese": "Teste o agente em tarefas reais, com verificadores que olham só o resultado final, e mude prompt e ferramentas com evidência.",
+  "tldr": [
+    "Xander Song, da Arize AI, apresenta o Harbor, um framework open source que roda o agente em sandboxes (ambientes isolados) com dados reais e confere o resultado com scripts verificadores.",
+    "O time do Phoenix usa o Harbor para testar três formas de agente (Claude Code com CLI, com MCP e o agente próprio Pixie) contra um arquivo SQLite realista dentro do Docker.",
+    "No estudo de caso, uma pequena mudança de prompt levou os agentes a usar uma ferramenta SQL e reduziu as chamadas de ferramenta, com a taxa de acerto estável."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Tarefa, ambiente e verificador",
+      "texto": "Cada tarefa tem uma instrução em markdown, um ambiente em Docker com os dados e scripts que checam o efeito deixado pelo agente. O verificador produz uma recompensa, como 0 ou 1. Com tarefa e verificador fixos, você troca o agente e vê se melhorou ou piorou.",
+      "t": 251,
+      "legenda": "Uma tarefa do Harbor é instrução, ambiente e verificador.",
+      "print": "img/kRJjSOYqW0I/0.jpg"
+    },
+    {
+      "titulo": "Oracle valida o teste antes de gastar tokens",
+      "texto": "O oracle é um script que resolve a tarefa. Rodá-lo antes do agente mostra se os dados, o ambiente e os verificadores funcionam, sem pagar por tokens. Song usa isso para confiar nos verificadores sem revisar cada linha.",
+      "t": 536,
+      "legenda": "A solução de referência confirma que o verificador está certo.",
+      "print": "img/kRJjSOYqW0I/1.jpg"
+    },
+    {
+      "titulo": "Execução em paralelo e pass@k",
+      "texto": "Cada trial roda em um container separado, então tudo escala na horizontal em provedores como Daytona. O time roda cerca de 200 workers em paralelo e calcula métricas como pass@k, que mede se o agente acertou em k tentativas.",
+      "t": 946,
+      "legenda": "Trials independentes viram uma métrica agregada por tarefa.",
+      "print": "img/kRJjSOYqW0I/2.jpg"
+    },
+    {
+      "titulo": "Testar o sistema inteiro junto com o agente",
+      "texto": "O time do Phoenix não ajusta o Claude Code. Ele ajusta o conjunto formado pelo agente, o servidor MCP, o CLI e as skills. Por isso coloca o servidor, o SQLite e as skills no mesmo container e avalia tudo como uma unidade.",
+      "t": 1259,
+      "legenda": "O ambiente de teste inclui o produto inteiro, não só o agente.",
+      "print": "img/kRJjSOYqW0I/3.jpg"
+    },
+    {
+      "titulo": "Mudança de prompt medida em antes e depois",
+      "texto": "O prompt passou a orientar o uso de SQL para contagens e agrupamentos, em vez de GraphQL. Na comparação por tarefa, chamadas de GraphQL, turnos e chamadas de ferramenta caíram, e a recompensa ficou igual. Era uma otimização, não uma correção de erro.",
+      "t": 2692,
+      "legenda": "Menos chamadas de ferramenta, mesma taxa de acerto.",
+      "print": "img/kRJjSOYqW0I/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Verifier",
+      "traducao": "verificador",
+      "nivel": "intermediario",
+      "chave": "verifier",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Oracle",
+      "traducao": "solução de referência que valida o teste",
+      "nivel": "intermediario",
+      "chave": "oracle",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado de execução",
+      "nivel": "basico",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Container Docker",
+      "traducao": "contêiner Docker",
+      "nivel": "intermediario",
+      "chave": "container docker",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Trial e job",
+      "traducao": "tentativa e execução completa do conjunto de tarefas",
+      "nivel": "intermediario",
+      "chave": "trial e job",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "pass@k e pass^k",
+      "traducao": "taxa de acerto em k tentativas",
+      "nivel": "intermediario",
+      "chave": "pass@k e pass^k",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "ATIF",
+      "traducao": "formato de trajetória do agente (agent trajectory interchange format)",
+      "nivel": "avancado",
+      "chave": "atif",
+      "analogia": "ATIF é como o diário de bordo de um motorista de entregas, que anota cada parada do caminho e não só a entrega final.",
+      "explicacao": [
+        "Um agente de IA resolve uma tarefa em vários passos. Ele pensa, usa ferramentas e muda arquivos até chegar ao resultado.",
+        "Sem um registro desses passos, você vê só o que sobrou no fim. Fica difícil saber por que o agente acertou ou errou.",
+        "ATIF (agent trajectory interchange format, formato de troca de trajetória do agente) é o padrão do Harbor para gravar esse caminho, chamado de trajetória.",
+        "A trajetória fica em um arquivo JSON, um texto organizado em campos. Cada passo vira um item, como uma chamada ao modelo ou uma chamada de ferramenta.",
+        "O recurso é opcional e serve para depurar e guardar logs. O Phoenix converte o ATIF para o formato OpenInference e mostra os passos em uma tela própria."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "Chamada de ferramenta",
+        "JSON",
+        "Trace"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "AGENTE EXECUTA",
+            "nota": "Resolve a tarefa no container"
+          },
+          {
+            "rotulo": "PASSOS REGISTRADOS",
+            "nota": "Chamadas ao modelo e às ferramentas"
+          },
+          {
+            "rotulo": "ARQUIVO ATIF",
+            "nota": "Trajetória em JSON para depurar"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "OpenInference",
+      "traducao": "convenções semânticas de traces para IA, sobre OpenTelemetry",
+      "nivel": "avancado",
+      "chave": "openinference",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O palestrante trabalha na Arize e mantém o Phoenix e o OpenInference, e usa parte do talk para mostrar o Phoenix. Ele avisa que não mantém o Harbor. O estudo de caso usa um conjunto pequeno de perguntas sintéticas geradas pelo Claude, com checagem por amostragem, e ele mesmo diz que a queda nas chamadas é modesta. Não há número de acerto no vídeo. A arquitetura simples vale para um servidor de nó único, e ele admite que sistemas distribuídos seriam mais difíceis.",
+  "acoes": [
+    "Escolha 5 a 10 tarefas reais do seu agente e escreva para cada uma um script que confira o resultado final, sem olhar como o agente chegou lá.",
+    "Antes de rodar o agente, rode uma solução de referência contra cada verificador para achar erros no teste sem gastar tokens.",
+    "Ao mudar um prompt ou uma ferramenta, rode várias tentativas por tarefa e compare métricas antes e depois, como acerto, turnos e chamadas de ferramenta.",
+    "Monte o ambiente de teste com o produto inteiro (servidor, CLI, skills e dados) quando você otimiza o conjunto e não só o modelo."
+  ],
+  "numeros": [
+    {
+      "valor": "200",
+      "contexto": "workers concorrentes no Daytona",
+      "t": 916
+    },
+    {
+      "valor": "3",
+      "contexto": "trials por tarefa no exemplo (k = 1, 2, 3)",
+      "t": 884
+    },
+    {
+      "valor": "4",
+      "contexto": "tarefas no conjunto de exemplo do diagrama",
+      "t": 884
+    },
+    {
+      "valor": "3",
+      "contexto": "formas de agente que o time precisa testar",
+      "t": 1383
+    }
+  ]
+}

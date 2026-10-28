@@ -1,0 +1,174 @@
+{
+  "id": "4UtrRVtUN_g",
+  "titulo": "How to Build an AI Code Review Agent - Daksh Gupta, Greptile",
+  "titulo_curto": "How to Build an AI Code Review Agent - Daksh Gupta, Greptile",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=4UtrRVtUN_g",
+  "duracao": 1107,
+  "publicado_ts": 1793005223,
+  "edicao": "2026-10-27",
+  "tese": "Revisor de código útil precisa de dataset de incidentes, modelo diferente do autor, contexto do repositório e modelo certo por tarefa.",
+  "tldr": [
+    "O palestrante, cofundador da Greptile, diz que a versão simples (sandbox, agente e webhook de pull request) perde bugs, perde contexto, custa de US$ 3 a US$ 25 por PR e enche o código de comentários pedantes.",
+    "Ele propõe prompts por tipo de bug, dataset de PRs com incidentes, revisão por outro modelo, contexto do repositório, testes em sandbox e modelos baratos nas subtarefas simples.",
+    "Ele afirma que inverter o modelo captura cerca de 10% mais bugs e que a Greptile usa modelos de fronteira em cerca de 20% dos tokens, mas não mostra os dados por trás dessas afirmações."
+  ],
+  "tema": "engenharia-de-software",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "A versão simples falha de quatro jeitos",
+      "texto": "O arranjo básico é um sandbox com um agente, um webhook do GitHub e um prompt que pede revisão. Ele entrega feedback em cerca de 5 minutos, mas perde bugs, perde contexto do código, custa de US$ 3 a US$ 25 por PR e gera nitpicks (comentários corretos, mas pedantes). Os nitpicks pioram o código, porque agentes de código tentam resolver todos os comentários e escrevem código defensivo demais.",
+      "t": 219,
+      "legenda": "O desenho básico do revisor e os quatro problemas que ele cria",
+      "print": "img/4UtrRVtUN_g/0.jpg"
+    },
+    {
+      "titulo": "Prompt por tipo de bug e dataset de incidentes",
+      "texto": "Ele recomenda levantar os incidentes passados, catalogar os tipos de bug que a equipe mais produz e pedir esses tipos no prompt, além de definir o que é nitpick e proibi-lo. Como mudanças pequenas no prompt alteram muito o número de comentários, ele propõe rodar o agente sobre PRs que causaram incidentes e medir quantos ele pega. O dataset precisa ser atualizado, porque agentes de código cometem erros novos.",
+      "t": 464,
+      "legenda": "Um conjunto de incidentes passados serve de teste para cada versão do prompt",
+      "print": "img/4UtrRVtUN_g/1.jpg"
+    },
+    {
+      "titulo": "Inversão de modelo",
+      "texto": "Segundo o palestrante, modelos Claude e GPT cometem tipos diferentes de bug: Claude erra mais por um (off-by-one) e GPT gera mais bypass de autenticação. Revisar o código com o mesmo modelo que o escreveu repete os pontos cegos. Ele sugere detectar o modelo autor por pistas como o nome de branch codex/ ou o Co-authored-by Claude, o que funciona em cerca de 80% dos casos, e revisar com a família oposta.",
+      "t": 557,
+      "legenda": "Modelos diferentes erram de formas diferentes, então o revisor deve ser outro",
+      "print": null
+    },
+    {
+      "titulo": "Contexto do repositório e wiki viva",
+      "texto": "Ele critica o uso de grep como solução de contexto, por ser impreciso e gastar muitos tokens em leitura de arquivos. A Greptile mantém uma base de conhecimento que cataloga partes do código (por exemplo, autenticação, fluxos e arquivos envolvidos) e uma wiki que também junta docs, tickets e telemetria de produção. Isso ajuda a revisar se o código cumpre a intenção, não só se compila sem bug.",
+      "t": 712,
+      "legenda": "Um índice do código e dos docs substitui a busca cega por grep",
+      "print": null
+    },
+    {
+      "titulo": "Teste autônomo e roteamento de modelos",
+      "texto": "Para mudanças de interface, o agente sobe a aplicação num sandbox com dependências e usa visão computacional para testar fluxos, achando, por exemplo, um botão escondido no iPhone. Mesmo assim o custo fica entre US$ 3 e US$ 20 por review. Para baixá-lo, a Greptile usa modelo pequeno para achar contexto, modelo leve para testar fluxos e modelo de fronteira só para analisar bugs, com 20 subtarefas e um modelo escolhido para cada uma.",
+      "t": 989,
+      "legenda": "Modelo pequeno busca contexto e modelo de fronteira analisa bugs",
+      "print": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Pull request",
+      "traducao": "pedido de integração de código",
+      "nivel": "basico",
+      "chave": "pull request",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Webhook",
+      "traducao": "aviso automático enviado quando um evento acontece",
+      "nivel": "intermediario",
+      "chave": "webhook",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado para rodar o agente",
+      "nivel": "intermediario",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Nitpick",
+      "traducao": "comentário correto, mas pedante",
+      "nivel": "basico",
+      "chave": "nitpick",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Inversão de modelo",
+      "traducao": "revisar o código com um modelo diferente do que o escreveu",
+      "nivel": "intermediario",
+      "chave": "inversão de modelo",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Golden dataset",
+      "traducao": "conjunto de casos conhecidos para medir o agente",
+      "nivel": "intermediario",
+      "chave": "golden dataset",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Computer use",
+      "traducao": "agente que opera a interface como uma pessoa",
+      "nivel": "intermediario",
+      "chave": "computer use",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Model routing",
+      "traducao": "escolher o modelo certo para cada subtarefa",
+      "nivel": "intermediario",
+      "chave": "model routing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O palestrante é cofundador da Greptile e vende o produto que o talk diz ser melhor do que a versão interna, com o argumento de ter mais dados e subtarefas afinadas. Os números não vêm com método: os 10% a mais de bugs capturados com inversão de modelo, a diferença de três vezes em erros por um e a taxa de 1 catastrófico por 1.000 PRs são citados sem amostra ou fonte. A frase sobre grep e PIB é retórica. A afirmação de que o teste de ponta a ponta está quase resolvido vem sem evidência.",
+  "acoes": [
+    "Liste os incidentes dos últimos meses, ligue cada um ao PR que o causou e use essa lista para testar qualquer prompt ou ferramenta de revisão antes de adotá-lo.",
+    "Escreva no prompt de revisão os tipos de bug que sua equipe mais produz e uma definição explícita de nitpick que o agente deve ignorar.",
+    "Se o código é escrito por Claude, teste uma revisão feita por um modelo GPT (ou o contrário) em alguns PRs e compare os bugs encontrados.",
+    "Meça o custo por PR revisado e teste modelos menores nas subtarefas simples, como buscar contexto, confirmando no dataset que a captura de bugs não caiu."
+  ],
+  "numeros": [
+    {
+      "valor": "~1%",
+      "contexto": "dos PRs do GitHub passam pela Greptile",
+      "t": 32
+    },
+    {
+      "valor": "US$ 3 a 25",
+      "contexto": "custo por PR revisado com agentes de código",
+      "t": 279
+    },
+    {
+      "valor": "1 em 1.000",
+      "contexto": "PRs com bug catastrófico, segundo ele",
+      "t": 434
+    },
+    {
+      "valor": "10%",
+      "contexto": "mais bugs capturados ao inverter o modelo",
+      "t": 621
+    }
+  ]
+}

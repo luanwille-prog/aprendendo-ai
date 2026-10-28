@@ -1,0 +1,169 @@
+{
+  "id": "Y_p3y6zP5QE",
+  "titulo": "Build Your Own Team of Managed Agents - Jack Wotherspoon, Google DeepMind",
+  "titulo_curto": "Build Your Own Team of Managed Agents - Jack Wotherspoon, Google DeepMind",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=Y_p3y6zP5QE",
+  "duracao": 1183,
+  "publicado_ts": 1793001611,
+  "edicao": "2026-10-27",
+  "tese": "Agente de código na nuvem vira uma chamada de API: sandbox, ferramentas e segredos já vêm prontos, e o ambiente compartilhado liga um agente ao outro.",
+  "tldr": [
+    "Jack Wotherspoon, do Google DeepMind, apresenta os Gemini Managed Agents, agentes de código que rodam em sandbox (ambiente isolado) na nuvem a partir de uma única chamada de API.",
+    "O pacote inclui o harness (estrutura que controla o agente) Antigravity, ambiente de arquivos reaproveitável, skills, credenciais protegidas por proxy e gatilhos agendados.",
+    "A demo encadeia três agentes sobre o mesmo ambiente, um pesquisador de relatórios da SEC, um analista quantitativo e um redator de relatório, sem mostrar métricas de qualidade."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Uma chamada de API substitui a infraestrutura",
+      "texto": "Montar sozinho exige subir container ou VM, construir o harness, configurar rede e firewall. No managed agent, você chama o agente base Antigravity com environment igual a remote e o Google cria o sandbox. Para escalar, basta fazer mais chamadas.",
+      "t": 190,
+      "legenda": "A configuração de sandbox, harness e rede cabe em uma chamada de API.",
+      "print": "img/Y_p3y6zP5QE/0.jpg"
+    },
+    {
+      "titulo": "Interações e ambientes são estados separados",
+      "texto": "A interação guarda a conversa e o ambiente guarda os arquivos do sandbox. Como são separados, um segundo agente pode receber o ID do ambiente, começar com contexto limpo e continuar o trabalho sobre os arquivos do primeiro.",
+      "t": 595,
+      "legenda": "O ID do ambiente passa o trabalho de um agente para o outro.",
+      "print": "img/Y_p3y6zP5QE/1.jpg"
+    },
+    {
+      "titulo": "O proxy mantém o segredo fora do sandbox",
+      "texto": "O agente recebe um token falso. Quando ele chama, por exemplo, a API do GitHub, o proxy reconhece o destino e injeta o token real. Assim o agente não consegue ler nem usar a credencial por conta própria.",
+      "t": 748,
+      "legenda": "O token real nunca entra no sandbox, só um substituto.",
+      "print": "img/Y_p3y6zP5QE/2.jpg"
+    },
+    {
+      "titulo": "Três agentes especializados em cadeia",
+      "texto": "Na demo, um agente pesquisa a Nvidia nos relatórios da SEC e grava metrics.json. Um agente quant lê o arquivo, roda Python e prevê o preço da ação. Um terceiro transforma a pesquisa em relatório. Cada um tem um propósito estreito.",
+      "t": 936,
+      "legenda": "O segundo agente continua a partir do arquivo deixado pelo primeiro.",
+      "print": "img/Y_p3y6zP5QE/3.jpg"
+    },
+    {
+      "titulo": "Agentes dentro de um app em AI Studio",
+      "texto": "O exemplo do ticker agent usa vários managed agents para analisar um fundo, mostra o raciocínio em streaming e entrega um PDF com gráficos e links das fontes. O palestrante diz que o streaming serve só para visualizar e pode sair do seu app.",
+      "t": 1130,
+      "legenda": "Um app de usuário final pode esconder o agente e mostrar só o relatório.",
+      "print": "img/Y_p3y6zP5QE/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado de execução",
+      "nivel": "basico",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Harness",
+      "traducao": "estrutura que decide as chamadas de ferramenta do agente",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Interactions API",
+      "traducao": "API do Gemini pensada para agentes com vários passos",
+      "nivel": "intermediario",
+      "chave": "interactions api",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Ambiente compartilhado",
+      "traducao": "sistema de arquivos reutilizado por vários agentes",
+      "nivel": "intermediario",
+      "chave": "ambiente compartilhado",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "CLAUDE.md / AGENTS.md",
+      "traducao": "arquivo de instruções do projeto para o agente",
+      "nivel": "basico",
+      "chave": "claude.md / agents.md",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Segredo por placeholder",
+      "traducao": "token falso no sandbox, troca pelo real no proxy",
+      "nivel": "intermediario",
+      "chave": "segredo por placeholder",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Scheduled task",
+      "traducao": "tarefa agendada (gatilho por horário)",
+      "nivel": "basico",
+      "chave": "scheduled task",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Trace",
+      "traducao": "registro passo a passo do que o agente fez",
+      "nivel": "intermediario",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É um talk de produto do Google DeepMind sobre o próprio produto, e o palestrante lança o Gemini 4 Argon no dia anterior e o recomenda. As afirmações de que o modelo é bom em finanças e de que avança benchmarks matemáticos vêm sem dados. As demos são de um caso só, a Nvidia e um fundo, sem taxa de erro, custo ou tempo de execução. A previsão de preço da ação não tem verificação.",
+  "acoes": [
+    "Liste as tarefas que você roda hoje no seu laptop com um agente de código e marque as que poderiam rodar em um sandbox na nuvem, como pesquisa e verificação com testes.",
+    "Divida um fluxo grande em agentes de propósito único que passam arquivos entre si, por exemplo pesquisa, análise e relatório, em vez de um agente com tarefa ampla.",
+    "Ao testar qualquer agente na nuvem, confirme se ele guarda credenciais fora do sandbox, como o proxy com token falso descrito aqui.",
+    "Escreva seu AGENTS.md e suas skills como arquivos versionados, para poder subir os mesmos playbooks em qualquer agente."
+  ],
+  "numeros": [
+    {
+      "valor": "64K",
+      "contexto": "teto comum de tokens de saída dos modelos",
+      "t": 497
+    },
+    {
+      "valor": "1 milhão",
+      "contexto": "tokens de limite do Gemini 4, divididos entre entrada, raciocínio e saída",
+      "t": 497
+    },
+    {
+      "valor": "8h30",
+      "contexto": "exemplo de horário do gatilho antes da abertura do mercado",
+      "t": 372
+    }
+  ]
+}
