@@ -1,0 +1,994 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Código barato, confiança cara: verificar o que os agentes escrevem · Aprendendo AI</title>
+<meta name="description" content="Resumos diários dos talks do canal AI Engineer, explicados no estilo Quadro Anotado.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<script>document.documentElement.classList.add("js")</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;500;700;900&family=Barlow:ital,wght@0,400;0,600;1,400&family=Kalam:wght@400;700&display=swap">
+<link rel="stylesheet" href="../estilo.css">
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<header class="topo wrap">
+  <a class="marca" href="../index.html">Aprendendo <span>AI</span></a>
+  <nav class="topo-links" aria-label="Navegação principal">
+    <a href="../index.html#edicoes">Edições</a>
+    <a href="../glossario.html">Glossário</a>
+  </nav>
+</header>
+<main id="conteudo" class="wrap" tabindex="-1">
+<div class="edicao" id="e-2026-10-29">
+  <header class="edicao-head">
+    <h1 class="h-edicao">Código barato, confiança cara: verificar o que os agentes escrevem</h1>
+    <p class="meta">Edição de quinta, 29 out 2026 · 9 vídeos · 2 h 51 min de talks</p>
+<p class="abertura">Nove talks sobre o novo gargalo da engenharia: agentes escrevem código mais rápido do que qualquer equipe consegue revisar. O dia começa pela conversa entre Sonar e Anthropic sobre os 30 mil merges diários e pela fórmula de confiança do CEO da Sonar. Segue com revisores automáticos que leem o sistema inteiro e com um agente que caça bugs de lógica antes dos atacantes. Depois vêm identidade e credenciais para agentes e execução durável para fluxos que falham todo dia. No fim, a infraestrutura: medir configs do vLLM e o caso da Revolut, que trocou modelos de fronteira por modelos abertos hospedados em casa.</p>  </header>
+
+  <div class="edicao-corpo">
+    <nav class="indice card" aria-label="Ordem de leitura">
+      <p class="indice-titulo">Ordem de leitura</p>
+      <ol><li data-id="AnsXWH2_EBU"><a href="#v-AnsXWH2_EBU" lang="en">How Anthropic Merges 30,000 Code Changes a Day - Manish Kapur, Sonar &amp; Addy Osmani, Anthropic</a> <span class="muted">18:52</span></li><li data-id="LQW_Wvqhp04"><a href="#v-LQW_Wvqhp04" lang="en">Why Humans Can&#39;t Keep Up With AI-Written Code - Tariq Shaukat, Sonar</a> <span class="muted">16:34</span></li><li data-id="YqxpPI7YUjE"><a href="#v-YqxpPI7YUjE" lang="en">Why a One-Line Change Can Break Your Whole Stack - Cole Gannaway, Qodo</a> <span class="muted">14:50</span></li><li data-id="wP3P89YB9fA"><a href="#v-wP3P89YB9fA" lang="en">Catch the Bugs Your Code Review Misses - Killian Carlsen-Phelan &amp; Taylor Luttrell-Williams, Sonar</a> <span class="muted">38:07</span></li><li data-id="UW8Qkk7MG8A"><a href="#v-UW8Qkk7MG8A" lang="en">AI That Hunts Logic Bugs Before Attackers Do - Taylor Luttrell-Williams, Sonar</a> <span class="muted">14:09</span></li><li data-id="58ulJViGFgU"><a href="#v-58ulJViGFgU" lang="en">Who Is Making This Request? Agent Auth 101 - Kamil Potrec, Keycard</a> <span class="muted">18:35</span></li><li data-id="mJ7q8CuVmbw"><a href="#v-mJ7q8CuVmbw" lang="en">We Trust AI Agents That Break Every Day - Shy Ruparel, Temporal</a> <span class="muted">21:32</span></li><li data-id="P_0_Th_ZzIg"><a href="#v-P_0_Th_ZzIg" lang="en">Stop Guessing Your vLLM Config: Benchmarking LLMs on Runpod - Chris Vela, Runpod</a> <span class="muted">16:29</span></li><li data-id="Ok6QdZHCcI8"><a href="#v-Ok6QdZHCcI8" lang="en">How Revolut Cut AI Coding Costs 90% With Self-Hosted Open Models - David Abitbol, Revolut</a> <span class="muted">11:47</span></li></ol>
+      <span class="progresso" data-ids="AnsXWH2_EBU LQW_Wvqhp04 YqxpPI7YUjE wP3P89YB9fA UW8Qkk7MG8A 58ulJViGFgU mJ7q8CuVmbw P_0_Th_ZzIg Ok6QdZHCcI8"></span>
+    </nav>
+
+    <div class="talks">
+<article class="video" id="v-AnsXWH2_EBU" data-tema="engenharia-de-software">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">01</span>
+    <div class="sec-titulo">
+      <h2 lang="en">How Anthropic Merges 30,000 Code Changes a Day - Manish Kapur, Sonar &amp; Addy Osmani, Anthropic</h2>
+      <p class="tese">Escrever código ficou barato; o gargalo agora é verificar. Autonomia na fábrica de software se conquista com verificação independente em cada loop.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Engenharia de software</span>
+    <span class="chip">18:52</span>
+    <span class="chip" role="img" aria-label="Complexidade 2 de 5">nível ●●○○○</span>
+    <a class="chip chip-link" href="https://www.youtube.com/watch?v=AnsXWH2_EBU" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Agentes de código abrem pull requests (PRs, pedidos de mudança) mais rápido do que qualquer pessoa consegue revisar, e parte dos merges falha. Para os palestrantes, o que falta é confiança no código.</p><p>Addy Osmani conta que a Anthropic passou de cerca de 2.500 para 30.000 mudanças mescladas por dia. O Claude faz uma primeira revisão, testa a mudança como um usuário real e entrega evidências (vídeos, capturas de tela) para a pessoa checar.</p><p>Manish Kapur, da Sonar, defende verificação em camadas: análise determinística, revisão por agente e segurança da cadeia de suprimentos. Ele defende também controles, permissões e sandbox, e rótulo nos PRs escritos por agentes.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-software-factory"><strong>Software factory</strong> <span>fábrica de software</span></a></li><li><a href="../glossario.html#g-pull-request"><strong>Pull request</strong> <span>pedido de mudança de código</span></a></li><li><a href="../glossario.html#g-sandbox"><strong>Sandbox</strong> <span>ambiente isolado de execução</span></a></li><li><a href="../glossario.html#g-hooks"><strong>Hooks</strong> <span>gatilhos automáticos</span></a></li><li><a href="../glossario.html#g-claude-md-agents-md"><strong>CLAUDE.md / AGENTS.md</strong> <span>arquivo de instruções do agente</span></a></li><li><a href="../glossario.html#g-sql-injection"><strong>SQL injection</strong> <span>injeção de SQL</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-cve-common-vulnerabilities-and-exposures"><strong>CVE (common vulnerabilities and exposures)</strong> <span>vulnerabilidade pública catalogada</span></a></li><li><a href="../glossario.html#g-throughput"><strong>Throughput</strong> <span>volume entregue por período</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Fábrica de luz acesa e fábrica no escuro</h3>
+    <p>Software factory (fábrica de software) é um conjunto de loops de agentes em escala. Na versão de luz acesa, agentes planejam, constroem, checam e entregam, mas uma pessoa aplica julgamento e gosto. Na versão no escuro, a pessoa só define a intenção e entra nas exceções. A maioria das equipes está no meio desse espectro.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/AnsXWH2_EBU/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Define o espectro de autonomia que organiza o resto da conversa.</span><a class="minuto" href="https://www.youtube.com/watch?v=AnsXWH2_EBU&amp;t=169s" target="_blank" rel="noopener" aria-label="Assistir a partir de 02:49 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:49</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Throughput sobe, merges falham</h3>
+    <p>Segundo dados do CircleCI citados no início, o throughput (volume de trabalho entregue) subiu cerca de 59%, mas três em cada dez tentativas de levar código para produção falham. Na pesquisa da Sonar, 76% dos desenvolvedores dizem que o código de IA sai rápido demais para ser verificado.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/AnsXWH2_EBU/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Mostra o descompasso entre velocidade de escrita e sucesso do merge.</span><a class="minuto" href="https://www.youtube.com/watch?v=AnsXWH2_EBU&amp;t=123s" target="_blank" rel="noopener" aria-label="Assistir a partir de 02:03 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:03</a></figcaption>
+  </figure>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Como a Anthropic revisa 30 mil mudanças por dia</h3>
+    <p>O Claude faz a primeira revisão e tenta usar a mudança como um usuário: abre o navegador, roda testes ponta a ponta e linters. Hooks (gatilhos automáticos) rodam a cada edição e corrigem o PR em loop. Padrões da equipe ficam em CLAUDE.md ou AGENTS.md. As pessoas checam as evidências, como vídeos e capturas de tela.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=AnsXWH2_EBU&amp;t=408s" target="_blank" rel="noopener" aria-label="Assistir a partir de 06:48 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:48</a> Resume o fluxo de revisão com evidência que sustenta o volume.</p>  </div>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Verificação em três camadas</h3>
+    <p>A Sonar propõe uma abordagem de zero trust (confiança zero). A camada 1 é determinística e pega bugs e falhas como SQL injection. A camada 2 é revisão por agente, que pega erros de lógica e de intenção. A camada 3 protege a cadeia de suprimentos contra CVEs e pacotes maliciosos. Cada loop precisa dessa verificação.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/AnsXWH2_EBU/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Cada camada pega um tipo diferente de problema.</span><a class="minuto" href="https://www.youtube.com/watch?v=AnsXWH2_EBU&amp;t=746s" target="_blank" rel="noopener" aria-label="Assistir a partir de 12:26 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:26</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Rotular PRs de agente e manter um dono</h3>
+    <p>Ambos defendem rotular PRs escritos por agentes, por auditabilidade e para saber quais checagens extras aplicar. Addy diz que, mesmo ao disparar uma execução do Claude, continua responsável se algo der errado. Para eles, o PR é seguro para mesclar quando a confiança é total ou o risco foi mitigado ao máximo.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/AnsXWH2_EBU/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Resume a posição dos dois sobre rótulo e responsabilidade humana.</span><a class="minuto" href="https://www.youtube.com/watch?v=AnsXWH2_EBU&amp;t=932s" target="_blank" rel="noopener" aria-label="Assistir a partir de 15:32 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:32</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=AnsXWH2_EBU&amp;t=123s" target="_blank" rel="noopener"><strong>59%</strong><span>alta de throughput em 28 milhões de workflows (CircleCI)</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:03</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=AnsXWH2_EBU&amp;t=344s" target="_blank" rel="noopener"><strong>30.000</strong><span>mudanças mescladas por dia na Anthropic, ante cerca de 2.500</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:44</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=AnsXWH2_EBU&amp;t=218s" target="_blank" rel="noopener"><strong>76%</strong><span>devs dizem que o código de IA sai rápido demais para verificar</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:38</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=AnsXWH2_EBU&amp;t=591s" target="_blank" rel="noopener"><strong>5%</strong><span>empresas usam software factories hoje, projeção de 34%</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:51</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>A Sonar vende ferramentas de verificação de código e fala em um painel patrocinado, e Addy Osmani representa a Anthropic, que vende o Claude Code e um produto de code review. Ambos têm interesse em dizer que mais verificação por ferramentas é a resposta. Os números da pesquisa State of Code ainda não foram publicados, e a amostra é de pouco mais de mil desenvolvedores. O dado do CircleCI não explica por que os merges falham. O talk não mostra taxa de bugs nem de reversão na Anthropic após os 30 mil merges por dia.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Peça ao agente evidências a cada PR: teste rodado, captura de tela ou vídeo do fluxo no navegador. Revise essas evidências antes do código.</li><li>Registre o padrão de qualidade da equipe em um arquivo CLAUDE.md ou AGENTS.md, para o agente consultar durante a revisão.</li><li>Rotule os PRs escritos por agentes e nomeie uma pessoa responsável por cada um.</li><li>Liste os tipos de teste que você já tem (ponta a ponta, de propriedade, visuais) e identifique a lacuna antes de deixar o agente aprovar merges sozinho.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="AnsXWH2_EBU" aria-label="Marcar How Anthropic Merges 30,000 Code Changes a Day - Manish Kapur, Sonar &amp; Addy Osmani, Anthropic como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-LQW_Wvqhp04">Próximo talk <span lang="en">Why Humans Can&#39;t Keep Up With AI-Written Code - Tariq Shaukat, Sonar</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-LQW_Wvqhp04" data-tema="engenharia-de-software">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">02</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Why Humans Can&#39;t Keep Up With AI-Written Code - Tariq Shaukat, Sonar</h2>
+      <p class="tese">Agentes tornaram o código abundante. O gargalo agora é ter confiança de que ele funciona, e isso exige verificação independente e evidência.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Engenharia de software</span>
+    <span class="chip">16:34</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+    <a class="chip chip-link" href="https://www.youtube.com/watch?v=LQW_Wvqhp04" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>O CEO da Sonar usa a fábrica da Toyota e da Lexus como metáfora: qualidade se projeta no processo desde o começo, em vez de ser consertada no fim.</p><p>Ele aponta cinco problemas dos agentes: revisão humana que não escala, bases de código grandes, erros que se acumulam, juízes LLM instáveis e tempo de exploração quase zero.</p><p>Sua resposta é a fórmula de confiança no código, que multiplica intenção, guide rails, verificação e evidência, com resultados de clientes apresentados no fim.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-software-factory"><strong>Software factory</strong> <span>fábrica de software</span></a></li><li><a href="../glossario.html#g-human-in-the-loop"><strong>Human in the loop</strong> <span>humano no ciclo de revisão</span></a></li><li><a href="../glossario.html#g-cognitive-surrender"><strong>Cognitive surrender</strong> <span>rendição cognitiva</span></a></li><li><a href="../glossario.html#g-risco-composto-por-passo"><strong>Risco composto por passo</strong> <span>erros que se acumulam em tarefas longas</span></a></li><li><a href="../glossario.html#g-llm-judge"><strong>LLM judge</strong> <span>modelo que avalia a saída de outro modelo</span></a></li><li><a href="../glossario.html#g-guide-rails"><strong>Guide rails</strong> <span>trilhos de orientação</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-sistema-deterministico"><strong>Sistema determinístico</strong> <span>verificação por regras fixas, sem LLM</span></a></li><li><a href="../glossario.html#g-quality-gate"><strong>Quality gate</strong> <span>portão de qualidade</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Código barato não vira entrega</h3>
+    <p>Um estudo citado mostra linhas de código subindo 2.450% e commits subindo 240% com agentes assíncronos, mas releases subiram só 30%. Produzir ficou fácil. Revisar, testar e entregar não acompanhou.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/LQW_Wvqhp04/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Código e commits explodem, releases quase não saem do lugar.</span><a class="minuto" href="https://www.youtube.com/watch?v=LQW_Wvqhp04&amp;t=190s" target="_blank" rel="noopener" aria-label="Assistir a partir de 03:10 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:10</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Humano no loop concorda com IA errada</h3>
+    <p>Segundo um estudo citado, pessoas concordam com a IA 93% das vezes quando ela acerta e em 4 de cada 5 vezes quando ela erra. Ele chama isso de cognitive surrender (rendição cognitiva). Por isso, dizer que há humano revisando não basta como governança.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/LQW_Wvqhp04/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A revisão humana falha justamente quando a IA erra.</span><a class="minuto" href="https://www.youtube.com/watch?v=LQW_Wvqhp04&amp;t=373s" target="_blank" rel="noopener" aria-label="Assistir a partir de 06:13 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:13</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Agentes perdem precisão em tarefas longas</h3>
+    <p>Em tradução de código, a acurácia era de 91% com 10 mil linhas e desabou perto de 50 mil. O custo em tokens varia até 30 vezes na mesma tarefa, porque o agente gasta tokens para se orientar. Na curva da METR, subir a exigência de 50% para 80% de acerto achata o horizonte de tarefas.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/LQW_Wvqhp04/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Exigir mais acerto encolhe bastante a duração das tarefas que o agente cumpre.</span><a class="minuto" href="https://www.youtube.com/watch?v=LQW_Wvqhp04&amp;t=497s" target="_blank" rel="noopener" aria-label="Assistir a partir de 08:17 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:17</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Perguntar a um LLM não é verificação confiável</h3>
+    <p>Pesquisa citada da PayPal mostra de 7% a 17% dos veredictos mudando em réplicas idênticas. Outro estudo, da Meta, mostra o modelo mudando de ideia de 7% a 34% das vezes quando alguém pergunta se ele tem certeza. Juiz LLM sozinho dá resultado instável.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/LQW_Wvqhp04/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O mesmo juiz LLM dá respostas diferentes para a mesma pergunta.</span><a class="minuto" href="https://www.youtube.com/watch?v=LQW_Wvqhp04&amp;t=558s" target="_blank" rel="noopener" aria-label="Assistir a partir de 09:18 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:18</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Fórmula de confiança: quatro fatores multiplicados</h3>
+    <p>Intenção clara, guide rails, verificação independente e evidência entram multiplicados. Se um fator for zero, a confiança vai a zero. Fazer tudo sem produzir evidência auditável deixa o resultado sem confiança.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/LQW_Wvqhp04/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Qualquer fator zerado derruba a confiança inteira.</span><a class="minuto" href="https://www.youtube.com/watch?v=LQW_Wvqhp04&amp;t=690s" target="_blank" rel="noopener" aria-label="Assistir a partir de 11:30 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>11:30</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=LQW_Wvqhp04&amp;t=187s" target="_blank" rel="noopener"><strong>2.450%</strong><span>aumento de linhas de código com agentes assíncronos</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:07</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=LQW_Wvqhp04&amp;t=373s" target="_blank" rel="noopener"><strong>4 em 5</strong><span>vezes que humanos concordam com a IA quando ela erra</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:13</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=LQW_Wvqhp04&amp;t=527s" target="_blank" rel="noopener"><strong>36%</strong><span>acurácia após 20 passos com 95% por passo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:47</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=LQW_Wvqhp04&amp;t=776s" target="_blank" rel="noopener"><strong>92%</strong><span>redução de issues no commit, segundo a Sonar</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:56</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O palestrante é CEO da Sonar e vende SonarQube e o Sonar Vortex, então o talk é em boa parte pitch. Os resultados de clientes (36% menos tokens, 92% menos issues no commit, 81% mais chance de impacto positivo em segurança) não trazem amostra, método nem grupo de comparação. A pesquisa com 1.000 clientes mede percepção de quem já usa o produto, o que pode refletir viés de seleção. Estudos externos são citados de memória, sem links. A seção de problemas é útil, mas o desenho da solução favorece o portfólio da empresa.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Meça a razão entre código gerado e código entregue na sua equipe. Se os commits sobem e as releases não, o gargalo está na revisão e nos testes.</li><li>Não use um LLM sozinho como juiz. Combine com checagens determinísticas, como testes, linters e análise estática, e rode o juiz mais de uma vez.</li><li>Defina a intenção por escrito antes de pedir código ao agente e registre em arquivos de instruções do projeto as regras que o agente deve seguir.</li><li>Guarde evidência de cada mudança feita por agente, como testes passados e resultado do quality gate, para poder mostrar a auditoria depois.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="LQW_Wvqhp04" aria-label="Marcar Why Humans Can&#39;t Keep Up With AI-Written Code - Tariq Shaukat, Sonar como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-YqxpPI7YUjE">Próximo talk <span lang="en">Why a One-Line Change Can Break Your Whole Stack - Cole Gannaway, Qodo</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-YqxpPI7YUjE" data-tema="engenharia-de-software">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">03</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Why a One-Line Change Can Break Your Whole Stack - Cole Gannaway, Qodo</h2>
+      <p class="tese">Com código gerado em massa, o gargalo é a revisão, e revisar bem exige grafo de dependências, regras da equipe e um revisor independente.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Engenharia de software</span>
+    <span class="chip">14:50</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+    <a class="chip chip-link" href="https://www.youtube.com/watch?v=YqxpPI7YUjE" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Cole Gannaway, da Qodo, diz que a geração de código acelerou tanto que o gargalo passou para a revisão de pull requests.</p><p>Ele mostra uma mudança de uma linha no Bitwarden que passa em build, testes e linters, mas afeta servidor, web, mobile, CLI e MCP.</p><p>A proposta da Qodo combina grafo de software, regras personalizadas, revisão antes do PR por um agente separado do que escreveu o código e checagem contra o ticket.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-pull-request"><strong>Pull request</strong> <span>pull request (pedido de integração de código)</span></a></li><li><a href="../glossario.html#g-blast-radius"><strong>Blast radius</strong> <span>raio de impacto de uma mudança</span></a></li><li><a href="../glossario.html#g-code-graph"><strong>Code graph</strong> <span>grafo de software dos repositórios</span></a></li><li><a href="../glossario.html#g-software-factory"><strong>Software factory</strong> <span>fábrica de software com agentes</span></a></li><li><a href="../glossario.html#g-mcp"><strong>MCP</strong> <span>Model Context Protocol (protocolo de contexto para modelos)</span></a></li><li><a href="../glossario.html#g-harness"><strong>Harness</strong> <span>estrutura que cerca o modelo e executa o agente</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-adversarial-review"><strong>Adversarial review</strong> <span>revisão adversarial por agentes independentes</span></a></li><li><a href="../glossario.html#g-skill"><strong>Skill</strong> <span>skill (instrução reutilizável para o agente)</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Uma linha que passa em tudo e quebra vários clientes</h3>
+    <p>O exemplo é uma renomeação no modelo de dados do Bitwarden. Build, testes unitários e linters ficam verdes, então um desenvolvedor aprovaria. Só que o servidor alimenta clientes web, mobile, CLI e servidores MCP, e todos são afetados. Esse tipo de falha costuma aparecer só em produção.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/YqxpPI7YUjE/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Uma linha alterada atinge vários repositórios ao mesmo tempo.</span><a class="minuto" href="https://www.youtube.com/watch?v=YqxpPI7YUjE&amp;t=221s" target="_blank" rel="noopener" aria-label="Assistir a partir de 03:41 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:41</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Grafo de software para medir o blast radius</h3>
+    <p>A Qodo monta automaticamente um grafo dos repositórios da equipe, com a superfície de integração. Não basta saber que o servidor se conecta ao Android. É preciso saber quais componentes se conectam. Com isso, o revisor humano ou agente recebe o alerta de que o raio de impacto da mudança é grande.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/YqxpPI7YUjE/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O grafo permite avisar o revisor sobre o impacto antes do merge.</span><a class="minuto" href="https://www.youtube.com/watch?v=YqxpPI7YUjE&amp;t=532s" target="_blank" rel="noopener" aria-label="Assistir a partir de 08:52 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:52</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Regras personalizadas e conhecimento tribal</h3>
+    <p>Parte da revisão depende de gosto e de experiência sênior. Um exemplo de regra: ao mudar uma API pública, exigir flag de depreciação ou revisão extra. A Qodo também sugere uma regra a partir de um comentário feito em um PR, para aplicar em todos os PRs futuros.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/YqxpPI7YUjE/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Comentário de revisão vira regra automática para os próximos PRs.</span><a class="minuto" href="https://www.youtube.com/watch?v=YqxpPI7YUjE&amp;t=532s" target="_blank" rel="noopener" aria-label="Assistir a partir de 08:52 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:52</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Quem escreveu o código não deve avaliá-lo</h3>
+    <p>O agente de implementação já carrega contexto de depuração e exploração, e contexto grande ainda deixa informação soterrada. Ele também tem viés próprio. Gannaway sugere trocar o modelo e o harness e usar revisores adversariais. Se vários revisores acham o mesmo problema, o sinal é forte. Se acham coisas diferentes, vale investigar.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/YqxpPI7YUjE/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Revisão independente reduz o viés do agente que escreveu o código.</span><a class="minuto" href="https://www.youtube.com/watch?v=YqxpPI7YUjE&amp;t=439s" target="_blank" rel="noopener" aria-label="Assistir a partir de 07:19 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:19</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Revisar contra o ticket, também antes do PR</h3>
+    <p>Na demo, o PR vem ligado a um ticket do Jira ou Linear com critérios de aceitação, e a ferramenta destaca lacunas de requisitos. Os clientes também instalam uma skill que roda a revisão aos 25%, 50% e 75% da geração. O agente revisor funciona como um gerente que evita o desvio de intenção e o excesso de engenharia.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/YqxpPI7YUjE/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A revisão confere se o PR cumpre o ticket, não só se o código funciona.</span><a class="minuto" href="https://www.youtube.com/watch?v=YqxpPI7YUjE&amp;t=751s" target="_blank" rel="noopener" aria-label="Assistir a partir de 12:31 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:31</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=YqxpPI7YUjE&amp;t=128s" target="_blank" rel="noopener"><strong>1 linha</strong><span>Mudança no modelo de dados do Bitwarden</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:08</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=YqxpPI7YUjE&amp;t=782s" target="_blank" rel="noopener"><strong>25%, 50%, 75%</strong><span>Pontos da geração em que se roda a revisão</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:02</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>É palestra de vendas da Qodo, e o palestrante é engenheiro de soluções. Não há dado sobre quantos bugs a ferramenta pega, taxa de falsos positivos ou comparação com outras. O caso do Bitwarden é ilustrativo, sem medição. A ideia de usar modelos diferentes para reduzir viés é plausível, mas não vem com evidência no vídeo. A promessa de merge sem humano fica só como direção futura.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Antes de aprovar um PR com mudança em modelo de dados ou API pública, liste quais outros repositórios e clientes consomem essa parte.</li><li>Transforme comentários de revisão repetidos em regras escritas, como um arquivo de convenções que o agente de código leia.</li><li>Peça a revisão a um agente ou modelo diferente do que escreveu o código, e compare os achados.</li><li>Anexe o ticket com critérios de aceitação ao PR e peça que a revisão confira cada critério.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="YqxpPI7YUjE" aria-label="Marcar Why a One-Line Change Can Break Your Whole Stack - Cole Gannaway, Qodo como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-wP3P89YB9fA">Próximo talk <span lang="en">Catch the Bugs Your Code Review Misses - Killian Carlsen-Phelan &amp; Taylor Luttrell-Williams, Sonar</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-wP3P89YB9fA" data-tema="engenharia-de-software">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">04</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Catch the Bugs Your Code Review Misses - Killian Carlsen-Phelan &amp; Taylor Luttrell-Williams, Sonar</h2>
+      <p class="tese">Código escrito por agente passa no teste e ainda quebra o negócio. Um revisor de IA que lê o contexto inteiro cobre esse buraco.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Engenharia de software</span>
+    <span class="chip">38:07</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+    <a class="chip chip-link" href="https://www.youtube.com/watch?v=wP3P89YB9fA" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>A Sonar mostra o Gitar, um agente que verifica pull requests (propostas de mudança no código) e compara a mudança com o resto do sistema, não só com o diff.</p><p>Em três PRs de um app de ingressos, ele acha um bug fora do diff, aplica uma regra de negócio escrita em arquivo de configuração e corrige uma falha de CI até o merge automático.</p><p>O pitch é que revisão humana não acompanha o volume de código dos agentes, então a verificação precisa ser automática e ter contexto.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-pull-request"><strong>Pull request</strong> <span>proposta de mudança no código para revisão</span></a></li><li><a href="../glossario.html#g-ci-integracao-continua"><strong>CI (integração contínua)</strong> <span>pipeline que roda testes a cada mudança</span></a></li><li><a href="../glossario.html#g-autofix"><strong>Autofix</strong> <span>correção aplicada pelo agente no próprio PR</span></a></li><li><a href="../glossario.html#g-falso-positivo"><strong>Falso positivo</strong> <span>alerta que aponta um problema inexistente</span></a></li><li><a href="../glossario.html#g-sast"><strong>SAST</strong> <span>análise estática de segurança do código</span></a></li><li><a href="../glossario.html#g-teste-flaky"><strong>Teste flaky</strong> <span>teste que falha de forma intermitente sem causa real</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 1 termo</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-regra-de-negocio"><strong>Regra de negócio</strong> <span>norma da empresa que o código precisa respeitar</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Bug que o diff não mostra</h3>
+    <p>A PR permite transferir um ingresso a um amigo e os testes passam. O Gitar avisa que o comprador original ainda pode cancelar e reembolsar o ingresso depois de transferi-lo. O erro está em orders.py, arquivo que a PR nem toca. Um revisor que olha só o diff não veria isso.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/wP3P89YB9fA/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O achado aponta para orders.py, fora das linhas alteradas na PR.</span><a class="minuto" href="https://www.youtube.com/watch?v=wP3P89YB9fA&amp;t=1093s" target="_blank" rel="noopener" aria-label="Assistir a partir de 18:13 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>18:13</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Análise estática não infere intenção</h3>
+    <p>Killian separa duas camadas. Ferramentas como o SonarQube pegam falhas como SQL injection percorrendo muitos arquivos. Elas não leem título e descrição da PR para checar se a lógica de negócio faz sentido. O Gitar cobre essa segunda parte, e o palestrante defende usar as duas juntas.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/wP3P89YB9fA/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Testes verdes não provam que a regra de negócio está certa.</span><a class="minuto" href="https://www.youtube.com/watch?v=wP3P89YB9fA&amp;t=1031s" target="_blank" rel="noopener" aria-label="Assistir a partir de 17:11 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>17:11</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Regras de negócio em arquivos do repositório</h3>
+    <p>A pasta .gitar/review recebe arquivos Markdown com contexto que orienta as revisões. A pasta .gitar/rules guarda regras que disparam uma ação quando a PR cumpre um critério. No exemplo, qualquer mudança em preços gera uma lista dos campos visíveis ao cliente e a checagem se mostram o preço final. Uma taxa de 3,50 sobre um ingresso de 50 vira alerta.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/wP3P89YB9fA/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A regra do preço final fica versionada no repositório, ao lado do código.</span><a class="minuto" href="https://www.youtube.com/watch?v=wP3P89YB9fA&amp;t=1405s" target="_blank" rel="noopener" aria-label="Assistir a partir de 23:25 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>23:25</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Diagnóstico de falha de CI e merge automático</h3>
+    <p>Na terceira PR, um teste falha porque a refatoração deixou o ingresso ser escaneado duas vezes. O Gitar lê os logs do CI, explica a causa e empurra correções até a pipeline passar. Dois comandos de comentário, auto apply on e auto merge on, liberam as correções sem clique e o merge no fim.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/wP3P89YB9fA/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O agente lê o log do CI e nomeia o teste e o comportamento errado.</span><a class="minuto" href="https://www.youtube.com/watch?v=wP3P89YB9fA&amp;t=1779s" target="_blank" rel="noopener" aria-label="Assistir a partir de 29:39 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>29:39</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Verificação entre repositórios e entre PRs</h3>
+    <p>No final, Taylor cita análise entre repositórios, que acha mudanças que passam sozinhas mas quebram código em outro repo. Cita também análise entre PRs em andamento, porque duas PRs podem passar isoladas e quebrar produção juntas. Só foi mostrado de relance no dashboard.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/wP3P89YB9fA/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Cada achado traz onde ocorre, a correção e por que importa.</span><a class="minuto" href="https://www.youtube.com/watch?v=wP3P89YB9fA&amp;t=2152s" target="_blank" rel="noopener" aria-label="Assistir a partir de 35:52 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>35:52</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=wP3P89YB9fA&amp;t=32s" target="_blank" rel="noopener"><strong>14 dias</strong><span>duração do trial pro gratuito do Gitar</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>00:32</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=wP3P89YB9fA&amp;t=160s" target="_blank" rel="noopener"><strong>3 PRs</strong><span>cenários preparados para a demonstração</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:40</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=wP3P89YB9fA&amp;t=1341s" target="_blank" rel="noopener"><strong>US$ 3,50</strong><span>taxa de serviço por ingresso no exemplo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>22:21</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=wP3P89YB9fA&amp;t=1341s" target="_blank" rel="noopener"><strong>US$ 53,50</strong><span>preço final de um ingresso de US$ 50 com a taxa</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>22:21</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>É um workshop de produto da Sonar, dona do SonarQube, que vende o Gitar. Os três cenários são montados pelos palestrantes e o app de ingressos é de brinquedo. Não há taxa de acerto, de falso positivo ou de custo em repositórios reais, embora o pitch fale em alto sinal e menos ruído. Auto merge sem revisão humana exige pipeline de testes forte, e o próprio talk admite isso. A pergunta final sobre integrações ficou sem resposta firme.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Reproduza o exemplo no seu repositório: escreva em Markdown uma regra de negócio importante, como preço final ao cliente, e veja se o revisor de IA a aplica.</li><li>Ao revisar PR de agente, procure o efeito em código que a PR não toca, como cancelamento, reembolso ou permissões.</li><li>Habilite correção e merge automáticos só em repositórios com testes e regras de branch obrigatórias.</li><li>Meça falsos positivos de qualquer revisor de IA por algumas semanas antes de confiar nele.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="wP3P89YB9fA" aria-label="Marcar Catch the Bugs Your Code Review Misses - Killian Carlsen-Phelan &amp; Taylor Luttrell-Williams, Sonar como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-UW8Qkk7MG8A">Próximo talk <span lang="en">AI That Hunts Logic Bugs Before Attackers Do - Taylor Luttrell-Williams, Sonar</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-UW8Qkk7MG8A" data-tema="engenharia-de-software">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">05</span>
+    <div class="sec-titulo">
+      <h2 lang="en">AI That Hunts Logic Bugs Before Attackers Do - Taylor Luttrell-Williams, Sonar</h2>
+      <p class="tese">Scanner por padrão acha código ruim. Bug de intenção, com código válido e regra de negócio quebrada, exige um agente que entenda o repositório inteiro.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Engenharia de software</span>
+    <span class="chip">14:09</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+    <a class="chip chip-link" href="https://www.youtube.com/watch?v=UW8Qkk7MG8A" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>A Sonar apresenta o Hunter Agent, que mapeia o repositório, roda três agentes especialistas e valida cada achado de forma adversarial antes de mostrá-lo.</p><p>Na demo, um app Python rende 46 problemas em três classes: controle de acesso quebrado, lógica de negócio e autenticação e sessão, entre eles um usuário que se torna admin e um desvio de MFA.</p><p>A palestrante anuncia a entrada da Sonar no programa de parceiros de cibersegurança Daybreak da OpenAI e a correção automática dos achados por um agente de remediação.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-UW8Qkk7MG8A-idor"><strong>IDOR</strong> <span>referência direta insegura a objeto</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-sast"><strong>SAST</strong> <span>análise estática de segurança</span></a></li><li><a href="../glossario.html#g-vulnerabilidade-de-logica-de-negocio"><strong>Vulnerabilidade de lógica de negócio</strong> <span>falha em que o código roda certo, mas a regra do negócio é violada</span></a></li><li><a href="../glossario.html#g-broken-access-control"><strong>Broken access control</strong> <span>controle de acesso quebrado</span></a></li><li><a href="../glossario.html#g-validacao-adversarial"><strong>Validação adversarial</strong> <span>etapa que tenta refutar cada achado antes de exibi-lo</span></a></li><li><a href="../glossario.html#g-sub-agent"><strong>Sub-agent</strong> <span>subagente especialista</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-falso-positivo"><strong>Falso positivo</strong> <span>alerta que não é um problema real</span></a></li><li><a href="../glossario.html#g-quality-gate"><strong>Quality gate</strong> <span>portão de qualidade que bloqueia código antes da produção</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>SAST acha padrão, não intenção</h3>
+    <p>Um scanner SAST procura padrões conhecidos de código inseguro. Ele não sabe o que o sistema deveria fazer. Um código tecnicamente correto pode contradizer a regra de negócio, e é essa lacuna que o Hunter Agent tenta cobrir.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/UW8Qkk7MG8A/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Código válido pode ter intenção errada, e o SAST não vê isso.</span><a class="minuto" href="https://www.youtube.com/watch?v=UW8Qkk7MG8A&amp;t=93s" target="_blank" rel="noopener" aria-label="Assistir a partir de 01:33 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:33</a></figcaption>
+  </figure>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Mapa global, três especialistas e validação adversarial</h3>
+    <p>Um agente mapeia o repositório todo. Com esse mapa, três agentes especialistas, um por classe de problema, buscam falhas nas relações entre componentes. Uma etapa adversarial tenta derrubar cada achado, e filtros de ruído descartam o que é pouco válido ou intencional.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=UW8Qkk7MG8A&amp;t=157s" target="_blank" rel="noopener" aria-label="Assistir a partir de 02:37 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:37</a> O fluxo do Hunter Agent, do mapa do repositório ao achado validado.</p>  </div>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>46 achados em três classes</h3>
+    <p>Na demo, o scan do app Python leva cerca de uma hora e gera 46 issues abertas. Elas se dividem em controle de acesso quebrado (IDOR, escalada de privilégio, CSRF), lógica de negócio (pular etapas, falta de rate limit) e autenticação e sessão (fixação de sessão, falta de MFA).</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/UW8Qkk7MG8A/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>46 issues abertas, separadas nas três classes que o agente cobre.</span><a class="minuto" href="https://www.youtube.com/watch?v=UW8Qkk7MG8A&amp;t=509s" target="_blank" rel="noopener" aria-label="Assistir a partir de 08:29 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:29</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Um achado por dentro: usuário vira admin</h3>
+    <p>O achado de severidade alta mostra que qualquer usuário logado passa na checagem de admin, porque consegue escrever o próprio campo de papel (role). A tela mostra o local no código, a explicação, a sugestão de correção e o histórico. A issue entra na mesma lista do SonarQube e pode ser aceita, confirmada ou marcada como falso positivo.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/UW8Qkk7MG8A/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Qualquer usuário logado escreve o próprio role e passa na checagem de admin.</span><a class="minuto" href="https://www.youtube.com/watch?v=UW8Qkk7MG8A&amp;t=621s" target="_blank" rel="noopener" aria-label="Assistir a partir de 10:21 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:21</a></figcaption>
+  </figure>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Scans agendados e correção automática</h3>
+    <p>O scan roda sob demanda ou em agenda diária, semanal ou mensal, em um branch à escolha. Os achados podem ser atribuídos ao agente de remediação do SonarQube, que propõe a correção, inclusive de forma agendada.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=UW8Qkk7MG8A&amp;t=749s" target="_blank" rel="noopener" aria-label="Assistir a partir de 12:29 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:29</a> A agenda de scans é configurável por frequência e branch.</p>  </div>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=UW8Qkk7MG8A&amp;t=494s" target="_blank" rel="noopener"><strong>46</strong><span>issues abertas encontradas no app Python da demo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:14</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=UW8Qkk7MG8A&amp;t=431s" target="_blank" rel="noopener"><strong>1 hora</strong><span>duração aproximada do scan completo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:11</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=UW8Qkk7MG8A&amp;t=153s" target="_blank" rel="noopener"><strong>3</strong><span>agentes especialistas, um por classe de problema</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:33</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=UW8Qkk7MG8A&amp;t=685s" target="_blank" rel="noopener"><strong>5</strong><span>achados de lógica de negócio na demo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>11:25</span></a>
+  </div>
+
+  <div class="casper" id="a-UW8Qkk7MG8A-idor">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>IDOR (referência direta insegura a objeto).</strong> IDOR é como um guarda-volumes que entrega qualquer mochila a quem disser o número da ficha, sem conferir se a ficha é sua.</p>
+    <ol class="passos"><li>Num sistema, cada coisa guardada recebe um número de identificação, como o pedido 1001 ou a fatura 2045.</li><li>Quando você abre uma página, o endereço ou a requisição costuma levar esse número, por exemplo /faturas/2045.</li><li>IDOR (Insecure Direct Object Reference, ou referência direta insegura a objeto) acontece quando o sistema confere que você fez login, mas não confere se aquele número pertence a você.</li><li>Basta trocar 2045 por 2046 para ver a fatura de outra pessoa. O código funciona sem erro, por isso um scanner que procura padrões de código inseguro raramente acha a falha.</li><li>A correção é checar a autorização em cada acesso, ligando o objeto pedido ao dono dele. Na demo, o Hunter Agent põe o IDOR na classe de controle de acesso quebrado.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>USUÁRIO FAZ LOGIN</strong><span>O sistema sabe quem ele é</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>PEDE /FATURAS/2045</strong><span>A própria fatura, tudo certo</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>TROCA PARA 2046</strong><span>Muda só o número no endereço</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>SEM CHECAGEM DE DONO</strong><span>O sistema não confere o dono</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>DADO ALHEIO EXPOSTO</strong><span>Vê a fatura de outra pessoa</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-autenticacao-e-autorizacao">Autenticação e autorização</a>, <a href="../glossario.html#g-identificador-de-registro-id">Identificador de registro (ID)</a>, <a href="../glossario.html#g-requisicao-http">Requisição HTTP</a>, <a href="../glossario.html#g-broken-access-control">Broken access control</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>É uma apresentação de produto da própria Sonar, com anúncio de parceria e de novo recurso no mesmo palco. A demo usa um único app Python da palestrante, sem dado sobre taxa de falso positivo, achados reais perdidos ou comparação com pentest humano. Os 46 achados vêm sem informação de quantos foram confirmados como válidos. Termos como precisos e repetíveis aparecem sem medição. O custo em unidades de scan e a hora de duração também não são detalhados.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Liste as regras de negócio críticas do seu sistema (quem pode virar admin, quais etapas são obrigatórias) e verifique se o scanner atual consegue testá-las.</li><li>Peça a um agente de código que revise um repositório procurando checagens de autorização e campos como role que o usuário consegue escrever.</li><li>Ao avaliar uma ferramenta de segurança com IA, exija o número de achados confirmados contra os descartados, não só o total de issues.</li><li>Se já usa SonarQube, teste o scan em um projeto pequeno e agende a rotina em um branch fora do principal antes de ampliar.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="UW8Qkk7MG8A" aria-label="Marcar AI That Hunts Logic Bugs Before Attackers Do - Taylor Luttrell-Williams, Sonar como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-58ulJViGFgU">Próximo talk <span lang="en">Who Is Making This Request? Agent Auth 101 - Kamil Potrec, Keycard</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-58ulJViGFgU" data-tema="agentes">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">06</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Who Is Making This Request? Agent Auth 101 - Kamil Potrec, Keycard</h2>
+      <p class="tese">Agente age em seu nome com suas chaves; sem identidade própria e credencial curta, ninguém sabe quem fez o quê.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Agentes</span>
+    <span class="chip">18:35</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+    <a class="chip chip-link" href="https://www.youtube.com/watch?v=58ulJViGFgU" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Hoje agentes usam tokens pessoais, chaves estáticas e contas de serviço com permissão demais. O servidor só vê o usuário e não distingue se quem agiu foi ele ou o agente.</p><p>Kamil Potrec, da Keycard, propõe identidade por agente, delegação explícita, credenciais curtas e com escopo, políticas e auditoria. Ele afirma que SDKs não bastam porque o agente pode alcançar a credencial.</p><p>A saída que ele defende é um gateway que guarda as credenciais fora do alcance do agente e as injeta na requisição. O gateway traz custos de latência, risco de alvo único e complexidade operacional.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-58ulJViGFgU-workload-identity-federation"><strong>Workload identity federation</strong> <span>federação de identidade de carga de trabalho</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-identidade-de-agente"><strong>Identidade de agente</strong> <span>identidade própria do agente, separada do usuário</span></a></li><li><a href="../glossario.html#g-oauth"><strong>OAuth</strong> <span>padrão aberto para emitir acesso delegado e limitado</span></a></li><li><a href="../glossario.html#g-credencial-de-curta-duracao"><strong>Credencial de curta duração</strong> <span>token com escopo restrito que expira logo</span></a></li><li><a href="../glossario.html#g-service-account"><strong>Service account</strong> <span>conta de serviço usada por software, não por pessoa</span></a></li><li><a href="../glossario.html#g-delegation-chain"><strong>Delegation chain</strong> <span>cadeia de delegação entre usuário e agentes</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-mcp-gateway"><strong>MCP gateway</strong> <span>proxy que intermedeia as chamadas dos agentes</span></a></li><li><a href="../glossario.html#g-audit-trail"><strong>Audit trail</strong> <span>registro de quem autorizou e executou cada ação</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Quem fez a requisição: Alice ou o agente?</h3>
+    <p>Agente recebe um token do usuário e o repassa ao servidor MCP, que só enxerga o usuário. No exemplo da fatura pendente, o agente decide por conta própria enviá-la a alguém. Nada no log mostra se foi Alice ou o modelo. Por isso o agente é um ator novo, não determinístico, e não um programa comum.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/58ulJViGFgU/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O serviço de faturas não distingue a ação de Alice da ação do agente.</span><a class="minuto" href="https://www.youtube.com/watch?v=58ulJViGFgU&amp;t=186s" target="_blank" rel="noopener" aria-label="Assistir a partir de 03:06 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:06</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>O que é o problema das credenciais espalhadas</h3>
+    <p>Tokens pessoais não têm dono nem revogação fácil. Alice pode levar o token para a máquina pessoal, fora das proteções da empresa. Agentes acumulam chaves ao longo do tempo. Contas de serviço viram um balde de permissões amplo demais. Antes dos agentes o setor aceitava o risco; agora há um ator que age em nome da pessoa.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/58ulJViGFgU/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Lista dos quatro riscos do modelo atual de credenciais.</span><a class="minuto" href="https://www.youtube.com/watch?v=58ulJViGFgU&amp;t=226s" target="_blank" rel="noopener" aria-label="Assistir a partir de 03:46 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:46</a></figcaption>
+  </figure>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Cinco requisitos de autenticação para agentes</h3>
+    <p>Identidade por agente (até por sessão), separada de quem o lançou. Delegação: quais usuários autorizam quais agentes. Credenciais curtas e com escopo, sem chave-mestra. Federação e um broker para sistemas legados. Políticas de aprovação humana e auditoria de quem autorizou cada ação.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=58ulJViGFgU&amp;t=501s" target="_blank" rel="noopener" aria-label="Assistir a partir de 08:21 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:21</a> Checklist do que um sistema de auth para agentes precisa entregar.</p>  </div>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Uma interação simples exige muitos passos</h3>
+    <p>Para um agente falar com um servidor MCP, o servidor publica metadados, o cliente descobre, o agente obtém credencial e se autentica. O servidor valida assinatura, emissor e token, aplica política, pode pedir outra credencial a um sistema externo e registra tudo em log. O palestrante pergunta se um LLM acerta isso sempre e a plateia concorda que não.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/58ulJViGFgU/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Cada chamada de ferramenta envolve pelo menos oito etapas de segurança.</span><a class="minuto" href="https://www.youtube.com/watch?v=58ulJViGFgU&amp;t=592s" target="_blank" rel="noopener" aria-label="Assistir a partir de 09:52 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:52</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Gateway tira a credencial do alcance do agente</h3>
+    <p>O agente pede ao gateway um alvo, como o GitHub. O gateway autentica o agente, consulta a autorização em tempo de execução, busca a credencial no cofre e a injeta na requisição. Isso permite revogação instantânea e bloquear ações específicas, como enviar e-mail mas não ler. Custos: um salto a mais, necessidade de forçar todo o tráfego por ele e um alvo único para ataque.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/58ulJViGFgU/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O agente nunca vê o token; o gateway o injeta na chamada.</span><a class="minuto" href="https://www.youtube.com/watch?v=58ulJViGFgU&amp;t=779s" target="_blank" rel="noopener" aria-label="Assistir a partir de 12:59 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:59</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=58ulJViGFgU&amp;t=1s" target="_blank" rel="noopener"><strong>18 min</strong><span>duração prevista do talk, citada como insuficiente</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>00:01</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=58ulJViGFgU&amp;t=435s" target="_blank" rel="noopener"><strong>centenas</strong><span>de APIs com formas diferentes de autenticar</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:15</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=58ulJViGFgU&amp;t=531s" target="_blank" rel="noopener"><strong>100</strong><span>sistemas existentes que não dá para reescrever</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:51</span></a>
+  </div>
+
+  <div class="casper" id="a-58ulJViGFgU-workload-identity-federation">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Workload identity federation (federação de identidade de carga de trabalho).</strong> Workload identity federation é como a portaria de um prédio que entrega um crachá de visitante válido só por hoje a quem mostra o crachá oficial de uma empresa parceira, sem precisar guardar uma chave do prédio no bolso.</p>
+    <ol class="passos"><li>Um programa, como um agente, precisa provar quem é antes de entrar num sistema, do mesmo jeito que uma pessoa faz login.</li><li>O jeito comum é dar ao programa uma chave fixa (static key, chave estática) ou uma conta de serviço. Se essa chave vazar, ela continua valendo até alguém lembrar de trocá-la.</li><li>Na federação, o lugar onde o programa roda, como a nuvem ou o servidor de automação, emite um documento assinado que diz qual carga de trabalho (workload, o programa em execução) está pedindo acesso.</li><li>O sistema de destino confia nesse emissor, confere a assinatura e troca o documento por um token (credencial de acesso) curto, com escopo limitado e prazo para expirar.</li><li>O palestrante cita também chave privada e certificados. Para ele, o mecanismo importa menos. O essencial é o agente se autenticar e pedir uma credencial nova a cada servidor remoto, sem permissões fixas guardadas.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>AMBIENTE ATESTA</strong><span>Nuvem assina quem é o agente</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>AGENTE APRESENTA PROVA</strong><span>Envia o documento assinado</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>EMISSOR CONFERE</strong><span>Valida assinatura e confiança</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>TOKEN CURTO</strong><span>Acesso com escopo que logo expira</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-autenticacao-e-autorizacao">Autenticação e autorização</a>, <a href="../glossario.html#g-service-account">Service account</a>, <a href="../glossario.html#g-token-de-acesso">Token de acesso</a>, <a href="../glossario.html#g-credencial-de-curta-duracao">Credencial de curta duração</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>Kamil trabalha na Keycard, que vende exatamente o plano de controle, os SDKs e o gateway descritos, e o final do talk é pitch (t=966). Não há dado de incidentes, medição de latência do gateway nem comparação com alternativas. A afirmação de que agentes contornam controles em SDKs é apresentada sem exemplo concreto. Os requisitos listados são razoáveis e valem mesmo sem comprar a ferramenta.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Liste quais tokens pessoais e chaves estáticas seus agentes usam hoje e quem consegue revogá-los.</li><li>Troque contas de serviço amplas por credenciais com escopo e prazo curto sempre que o sistema suportar OAuth.</li><li>Registre nos logs qual agente e qual usuário fizeram cada chamada, para responder quem fez a ação.</li><li>Ao avaliar um gateway para agentes, teste latência, bloqueio de tráfego que o contorne e quem opera as rotas e políticas.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="58ulJViGFgU" aria-label="Marcar Who Is Making This Request? Agent Auth 101 - Kamil Potrec, Keycard como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-mJ7q8CuVmbw">Próximo talk <span lang="en">We Trust AI Agents That Break Every Day - Shy Ruparel, Temporal</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-mJ7q8CuVmbw" data-tema="infraestrutura">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">07</span>
+    <div class="sec-titulo">
+      <h2 lang="en">We Trust AI Agents That Break Every Day - Shy Ruparel, Temporal</h2>
+      <p class="tese">Agente vai falhar todo dia. O trabalho do engenheiro é fazer a falha sair de graça, com estado salvo e sem repetir chamadas.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Infraestrutura</span>
+    <span class="chip">21:32</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+    <a class="chip chip-link" href="https://www.youtube.com/watch?v=mJ7q8CuVmbw" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Uma pesquisa da Temporal com 554 engenheiros mostra que 80,8% usam agentes todo dia, mas só 49,1% os rodam em produção.</p><p>Os maiores bloqueios citados são rastrear estado e depurar falhas, não a qualidade do modelo, e a confiança no resultado convive com falhas diárias.</p><p>Na demo, um pagamento de US$ 2.500 com um modelo local sobrevive à morte dos workers porque cada passo fica gravado em um histórico de eventos e não é repetido.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-durable-execution"><strong>Durable execution</strong> <span>execução durável</span></a></li><li><a href="../glossario.html#g-workflow-activity-e-worker"><strong>Workflow, activity e worker</strong> <span>fluxo, atividade e processo executor</span></a></li><li><a href="../glossario.html#g-wait-condition-e-signal"><strong>Wait condition e signal</strong> <span>espera e sinal externo</span></a></li><li><a href="../glossario.html#g-replay-de-event-history"><strong>Replay de event history</strong> <span>reexecução a partir do histórico de eventos</span></a></li><li><a href="../glossario.html#g-human-in-the-loop"><strong>Human in the loop</strong> <span>humano no ciclo de decisão</span></a></li><li><a href="../glossario.html#g-retry-policy"><strong>Retry policy</strong> <span>política de nova tentativa</span></a></li>    </ul>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Usar agente não é o mesmo que colocar em produção</h3>
+    <p>Na pesquisa State of Development, o uso diário de agentes passou de 47,3% para 80,8% em um ano. Só 49,1% dizem rodar agentes em produção ou tê-los como parte central da entrega. A diferença de cerca de 30 pontos é o primeiro dos quatro gaps que o palestrante apresenta.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/mJ7q8CuVmbw/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Quase metade de quem usa agente todo dia ainda não o coloca em produção.</span><a class="minuto" href="https://www.youtube.com/watch?v=mJ7q8CuVmbw&amp;t=254s" target="_blank" rel="noopener" aria-label="Assistir a partir de 04:14 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:14</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Confiança alta, falhas diárias</h3>
+    <p>85,5% confiam ao menos um pouco na saída do agente, mas 41,1% enfrentam problemas todo dia ou com mais frequência, e 16,4% a cada hora. Times que se dizem bem-sucedidos relatam mais falhas, e a Temporal supõe que eles apenas procuram falhas com mais cuidado. A conclusão do palestrante é planejar para a falha, em vez de buscar zero falhas.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/mJ7q8CuVmbw/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Muito rosa para um grupo em que 85% confia no agente.</span><a class="minuto" href="https://www.youtube.com/watch?v=mJ7q8CuVmbw&amp;t=317s" target="_blank" rel="noopener" aria-label="Assistir a partir de 05:17 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:17</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>O gargalo é estado e depuração, não o modelo</h3>
+    <p>Quando perguntados o que limita a produtividade, os respondentes citaram primeiro rastrear estado entre serviços (35,7%) e depois depurar problemas (30,9%). 22,2% perdem progresso e refazem trabalho por quedas e reinícios. Só 13% confiam muito em observar e depurar fluxos de IA em escala.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/mJ7q8CuVmbw/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Estado e depuração aparecem à frente de qualquer problema do modelo.</span><a class="minuto" href="https://www.youtube.com/watch?v=mJ7q8CuVmbw&amp;t=566s" target="_blank" rel="noopener" aria-label="Assistir a partir de 09:26 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:26</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Demo: matar o worker no meio do pagamento</h3>
+    <p>O workflow de pagamento tem nove etapas e um agente de investigação de fraude rodando num modelo local. O palestrante derruba o worker, aprova a transação enquanto não há nenhum worker ativo e depois religa o processo. A aprovação fica registrada como signal, e o fluxo segue do último passo concluído.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/mJ7q8CuVmbw/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>A aprovação foi registrada mesmo sem nenhum worker rodando.</span><a class="minuto" href="https://www.youtube.com/watch?v=mJ7q8CuVmbw&amp;t=942s" target="_blank" rel="noopener" aria-label="Assistir a partir de 15:42 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:42</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>O histórico de eventos evita gastar tokens de novo</h3>
+    <p>Cada passo do agente, como escolher a investigação, consultar o cliente e redigir o resumo, é uma activity com resultado gravado. Depois do crash, as chamadas de IA aparecem uma vez só no histórico, sem nova execução. O código do workflow decide o que vem a seguir e o modelo só aconselha, então uma falha do modelo não derrubaria o pagamento.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/mJ7q8CuVmbw/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Cada chamada de IA rodou uma vez, sem retrabalho nem novo custo de tokens.</span><a class="minuto" href="https://www.youtube.com/watch?v=mJ7q8CuVmbw&amp;t=1038s" target="_blank" rel="noopener" aria-label="Assistir a partir de 17:18 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>17:18</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=mJ7q8CuVmbw&amp;t=190s" target="_blank" rel="noopener"><strong>80,8%</strong><span>usam agentes diariamente (47,3% no ano anterior)</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:10</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=mJ7q8CuVmbw&amp;t=223s" target="_blank" rel="noopener"><strong>49,1%</strong><span>rodam agentes em produção ou como parte central</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:43</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=mJ7q8CuVmbw&amp;t=286s" target="_blank" rel="noopener"><strong>85,5%</strong><span>confiam ao menos um pouco na saída do agente</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:46</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=mJ7q8CuVmbw&amp;t=317s" target="_blank" rel="noopener"><strong>41,1%</strong><span>têm problemas com agentes todo dia ou mais</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:17</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é de um developer advocate da Temporal e a pesquisa é da própria empresa, que vende a solução apresentada. A amostra tem 554 pessoas já ligadas a agentes, sem detalhe de como foram recrutadas. O palestrante admite que comparações entre pesquisas de anos diferentes não formam tendência e que a explicação para times bem-sucedidos relatarem mais falhas é só palpite. A demo usa um fluxo sintético de nove etapas, o vídeo ao vivo falhou e foi trocado por gravação, e não há comparação com outras ferramentas de durabilidade.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Liste os passos de um fluxo com agente no seu trabalho e marque quais gastam tokens ou mexem em dinheiro, para saber o que não pode ser repetido depois de uma queda.</li><li>Teste a queda de propósito: interrompa o processo no meio de um fluxo e veja se ele retoma sem perder estado nem refazer chamadas ao modelo.</li><li>Deixe o agente só aconselhar e mantenha a decisão e o estado crítico em código determinístico, para que uma falha do modelo não pare o processo.</li><li>Pergunte à sua equipe de TI se o histórico usado para depurar é o mesmo que serve para recuperar o fluxo, ou se são dois registros separados.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="mJ7q8CuVmbw" aria-label="Marcar We Trust AI Agents That Break Every Day - Shy Ruparel, Temporal como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-P_0_Th_ZzIg">Próximo talk <span lang="en">Stop Guessing Your vLLM Config: Benchmarking LLMs on Runpod - Chris Vela, Runpod</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-P_0_Th_ZzIg" data-tema="infraestrutura">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">08</span>
+    <div class="sec-titulo">
+      <h2 lang="en">Stop Guessing Your vLLM Config: Benchmarking LLMs on Runpod - Chris Vela, Runpod</h2>
+      <p class="tese">Receita padrão do vLLM serve para começar. Para produção, meça cada config sob a sua carga e escolha pelo dado.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Infraestrutura</span>
+    <span class="chip">16:29</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+    <a class="chip chip-link" href="https://www.youtube.com/watch?v=P_0_Th_ZzIg" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>Chris Vela, engenheiro da Runpod, diz que a maioria das equipes sobe um modelo aberto novo com a receita padrão do vLLM (servidor open source de inferência) e torce para dar certo.</p><p>Ele mostra o BenchPod, um painel sobre o vLLM que troca a config e roda benchmarks sem reiniciar o servidor, e testa o Kimi K3 numa GPU B300 com 1, 8, 64 e 192 usuários simultâneos.</p><p>No teste, aumentar o máximo de tokens por lote quase não mexeu no tempo até o primeiro token, mas reduziu a latência entre tokens, e ele fecha sugerindo que um modelo menor pode bastar.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-vllm"><strong>vLLM</strong> <span>servidor open source para rodar LLMs com eficiência</span></a></li><li><a href="../glossario.html#g-kv-cache"><strong>KV cache</strong> <span>memória de atenção reaproveitada entre tokens</span></a></li><li><a href="../glossario.html#g-cuda"><strong>CUDA</strong> <span>plataforma da Nvidia para programar GPUs</span></a></li><li><a href="../glossario.html#g-cold-start"><strong>Cold start</strong> <span>tempo para subir o servidor e carregar o modelo</span></a></li><li><a href="../glossario.html#g-time-to-first-token-ttft"><strong>Time to first token (TTFT)</strong> <span>tempo até o primeiro token da resposta</span></a></li><li><a href="../glossario.html#g-inter-token-latency-itl"><strong>Inter-token latency (ITL)</strong> <span>tempo entre um token e o seguinte</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-benchmark"><strong>Benchmark</strong> <span>teste de desempenho com carga controlada</span></a></li><li><a href="../glossario.html#g-serverless-gpu"><strong>Serverless GPU</strong> <span>GPU alocada sob demanda, sem gerir servidores</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Comece pelo caso de uso e pela concorrência</h3>
+    <p>Antes de mexer em parâmetros, o palestrante pergunta o que o modelo fará (agente de código ou resumos simples) e quantos usuários o usarão ao mesmo tempo. Contexto de 1 milhão de tokens nem sempre é necessário. Com mais usuários simultâneos, o uso do KV cache (memória de atenção do modelo) passa a pesar na escolha da GPU.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/P_0_Th_ZzIg/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>As perguntas a fazer antes de escolher a config.</span><a class="minuto" href="https://www.youtube.com/watch?v=P_0_Th_ZzIg&amp;t=95s" target="_blank" rel="noopener" aria-label="Assistir a partir de 01:35 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:35</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Versão e CUDA quebram modelos novos</h3>
+    <p>Modelos recém-lançados como o Kimi K3 exigem a versão certa do vLLM, às vezes a nightly (build diário), e a versão certa do CUDA (software que faz a GPU Nvidia rodar o modelo). Ele cita um caso que falha no CUDA 12.8 e funciona no 13.0. Também não recomenda pôr em produção no dia seguinte ao lançamento, por causa do código ainda imaturo.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/P_0_Th_ZzIg/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O painel mostra versão do CUDA e métricas de GPU lado a lado.</span><a class="minuto" href="https://www.youtube.com/watch?v=P_0_Th_ZzIg&amp;t=404s" target="_blank" rel="noopener" aria-label="Assistir a partir de 06:44 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:44</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Trocar config sem reiniciar o servidor</h3>
+    <p>Cada mudança de config costuma exigir reiniciar a imagem e esperar o download dos pesos e o carregamento na GPU, algo como 30 minutos para o Kimi. O BenchPod aplica o YAML do vLLM e reinicia rápido, guarda os experimentos e expõe tudo por API (FastAPI), de modo que um agente também pode rodar os testes.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/P_0_Th_ZzIg/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Config aplicada pelo painel, com métricas ao vivo e histórico salvo.</span><a class="minuto" href="https://www.youtube.com/watch?v=P_0_Th_ZzIg&amp;t=559s" target="_blank" rel="noopener" aria-label="Assistir a partir de 09:19 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:19</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Mais tokens por lote reduz a latência entre tokens</h3>
+    <p>No demo, ele variou o máximo de batch tokens e comparou as rodadas com 1, 8, 64 e 192 usuários simultâneos. O tempo até o primeiro token mudou pouco. A latência entre tokens (ITL) caiu bastante, e tarefas longas terminaram mais rápido que na receita padrão do vLLM.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/P_0_Th_ZzIg/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>TTFT quase igual entre rodadas, ITL menor com mais batch tokens.</span><a class="minuto" href="https://www.youtube.com/watch?v=P_0_Th_ZzIg&amp;t=652s" target="_blank" rel="noopener" aria-label="Assistir a partir de 10:52 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:52</a></figcaption>
+  </figure>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Talvez você não precise do modelo de fronteira</h3>
+    <p>Ele lembra que um nó com B200 custa cerca de 40 mil dólares por mês na plataforma. Diz que roda o DeepSeek em 4 H200 com bom resultado e reserva o Kimi para tarefas longas e detalhadas. Sugere escolher o modelo pelo que a equipe precisa, não pelo ranking.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=P_0_Th_ZzIg&amp;t=875s" target="_blank" rel="noopener" aria-label="Assistir a partir de 14:35 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:35</a> Custo mensal de um nó B200 como argumento por modelos menores.</p>  </div>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=P_0_Th_ZzIg&amp;t=248s" target="_blank" rel="noopener"><strong>30 minutos</strong><span>espera para baixar e carregar os pesos do Kimi</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:08</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=P_0_Th_ZzIg&amp;t=559s" target="_blank" rel="noopener"><strong>9 minutos</strong><span>cold start do Kimi K3 citado na demo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:19</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=P_0_Th_ZzIg&amp;t=622s" target="_blank" rel="noopener"><strong>1, 8, 64, 192</strong><span>usuários simultâneos nos benchmarks</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:22</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=P_0_Th_ZzIg&amp;t=875s" target="_blank" rel="noopener"><strong>40 mil/mês</strong><span>custo citado de um nó B200 na plataforma</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:35</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é também pitch da Runpod: o BenchPod ainda não foi lançado (previsto para o fim do mês) e o palestrante vende créditos no final. Mostra um único teste, variando só o máximo de batch tokens, sem valores numéricos de latência nem número de repetições. Não compara outras configs nem a qualidade das respostas. A ideia de medir antes de ir para produção vale, mas os ganhos citados não são verificáveis a partir do vídeo. Os números de custo vêm da própria empresa.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Antes de subir um modelo aberto, anote o caso de uso e o número de usuários simultâneos esperados, e escolha a GPU e o contexto a partir disso.</li><li>Teste a config padrão do vLLM contra pelo menos uma variação, como o máximo de batch tokens, com 1, 8, 64 e carga alta de usuários.</li><li>Decida qual métrica otimizar (TTFT, ITL ou throughput) conforme o produto: chat precisa de TTFT baixo, tarefas longas se beneficiam de ITL baixo.</li><li>Compare o custo mensal de um modelo menor com o de um modelo de fronteira antes de contratar GPUs para servir o segundo.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="P_0_Th_ZzIg" aria-label="Marcar Stop Guessing Your vLLM Config: Benchmarking LLMs on Runpod - Chris Vela, Runpod como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#v-Ok6QdZHCcI8">Próximo talk <span lang="en">How Revolut Cut AI Coding Costs 90% With Self-Hosted Open Models - David Abitbol, Revolut</span> <span aria-hidden="true">↓</span></a>
+  </footer>
+</article><article class="video" id="v-Ok6QdZHCcI8" data-tema="infraestrutura">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">09</span>
+    <div class="sec-titulo">
+      <h2 lang="en">How Revolut Cut AI Coding Costs 90% With Self-Hosted Open Models - David Abitbol, Revolut</h2>
+      <p class="tese">Com token ilimitado em modelo aberto hospedado por conta própria, a Revolut diz ter reduzido a fatura de IA para um décimo e acelerado a entrega.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <span class="chip">Infraestrutura</span>
+    <span class="chip">11:47</span>
+    <span class="chip" role="img" aria-label="Complexidade 4 de 5">nível ●●●●○</span>
+    <a class="chip chip-link" href="https://www.youtube.com/watch?v=Ok6QdZHCcI8" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+  </div>
+
+  <section class="card resumo" aria-label="Resumo">
+    <h3>Em 3 frases</h3>
+<p>A Revolut mediu 2.000 engenheiros e viu que o ganho com um modelo aberto GLM, hospedado em GPUs próprias, superou o do Claude Code com limite de orçamento.</p><p>Para servir esse modelo, a empresa usa 56 GPUs B200, mira latência abaixo de 3 segundos até o primeiro token e ajustou parâmetros até ficar 88% mais rápida com o mesmo hardware.</p><p>Como é um banco regulado na UE, a empresa usa sandbox com regras de aprovação, humano no loop, dados em países com equivalência e telemetria forte para manter a conformidade.</p>  </section>
+
+  <section class="antes-de-ler" aria-label="Antes de ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-open-weights"><strong>Open weights</strong> <span>modelo de pesos abertos</span></a></li><li><a href="../glossario.html#g-lead-time"><strong>Lead time</strong> <span>tempo de entrega, do início da tarefa até o merge</span></a></li><li><a href="../glossario.html#g-time-to-first-token-ttft"><strong>Time to first token (TTFT)</strong> <span>tempo até o primeiro token</span></a></li><li><a href="../glossario.html#g-quantization"><strong>Quantization</strong> <span>quantização, uso de números de menor precisão</span></a></li><li><a href="../glossario.html#g-kv-cache"><strong>KV cache</strong> <span>memória de atenção reaproveitada entre tokens</span></a></li><li><a href="../glossario.html#g-speculative-decoding"><strong>Speculative decoding</strong> <span>decodificação especulativa</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-sandbox"><strong>Sandbox</strong> <span>ambiente isolado com regras de permissão</span></a></li><li><a href="../glossario.html#g-human-in-the-loop"><strong>Human in the loop</strong> <span>humano no ciclo de decisão</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Token ilimitado muda o ganho medido</h3>
+    <p>Com o Gemini, o lead time caiu 10% e o tempo de codificação 20%. O Claude Code lançado com orçamento rígido teve pouco impacto. Com o GLM hospedado e sem limite, vieram 60% a menos no tempo de codificação e 70% no lead time. O palestrante atribui parte do efeito à liberdade de usar IA em tarefas além de código.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/Ok6QdZHCcI8/0.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Linha do tempo de adoção de IA com 2.000 engenheiros da Revolut.</span><a class="minuto" href="https://www.youtube.com/watch?v=Ok6QdZHCcI8&amp;t=123s" target="_blank" rel="noopener" aria-label="Assistir a partir de 02:03 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:03</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Código não é o gargalo da engenharia</h3>
+    <p>O lead time melhorou mais que o tempo de codificação. Para o palestrante, isso indica que parte do tempo se perde em caixa de entrada, Jira e Confluence. Sem preocupação com o custo de tokens, os engenheiros usam a IA nessas tarefas também, sem guardar tokens para o fim do trimestre.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/Ok6QdZHCcI8/1.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>O ganho em lead time supera o ganho em coding time.</span><a class="minuto" href="https://www.youtube.com/watch?v=Ok6QdZHCcI8&amp;t=184s" target="_blank" rel="noopener" aria-label="Assistir a partir de 03:04 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:04</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Metas de latência e custo do self-hosting</h3>
+    <p>Para atender 2.000 engenheiros, a Revolut usa cerca de 56 GPUs B200 com um modelo de 800 bilhões de parâmetros. A meta é abaixo de 3 segundos até o primeiro token, pois acima de 5 segundos o Slack dele lota. 200 tokens por segundo bastam, porque as pessoas rodam tarefas em paralelo. O custo misto fica em 30 centavos de dólar por milhão de tokens.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/Ok6QdZHCcI8/2.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Números de capacidade e custo do GLM hospedado.</span><a class="minuto" href="https://www.youtube.com/watch?v=Ok6QdZHCcI8&amp;t=277s" target="_blank" rel="noopener" aria-label="Assistir a partir de 04:37 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:37</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Mesmo hardware, 88% mais rápido</h3>
+    <p>De abril a agosto a equipe manteve as 56 GPUs. O tempo até o primeiro token caiu de mais de 10 segundos para cerca de 1,6, enquanto a demanda subiu de cerca de 3 para mais de 7 requisições por segundo. O ganho veio de ajustes de configuração, não de comprar mais máquinas.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <img src="../img/Ok6QdZHCcI8/3.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Demanda sobe e o tempo até o primeiro token cai com as mesmas GPUs.</span><a class="minuto" href="https://www.youtube.com/watch?v=Ok6QdZHCcI8&amp;t=368s" target="_blank" rel="noopener" aria-label="Assistir a partir de 06:08 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:08</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Parâmetros que mais pesaram</h3>
+    <p>Contexto longo é desperdício, e 256 mil tokens bastam. Quantização em FP4 em GPUs Blackwell economiza cerca de 40% de GPU frente a FP8, segundo ele sem perda de precisão. Tensor parallelism em 8 GPUs deixa mais espaço para KV cache. Em coding, o cache hit precisa passar de 90%.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <img src="../img/Ok6QdZHCcI8/4.jpg" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <figcaption><span>Lista de parâmetros de ajuste do servidor de inferência.</span><a class="minuto" href="https://www.youtube.com/watch?v=Ok6QdZHCcI8&amp;t=430s" target="_blank" rel="noopener" aria-label="Assistir a partir de 07:10 no YouTube (abre em nova aba)"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:10</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=Ok6QdZHCcI8&amp;t=246s" target="_blank" rel="noopener"><strong>56 B200</strong><span>GPUs para atender 2.000 engenheiros com GLM</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:06</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=Ok6QdZHCcI8&amp;t=308s" target="_blank" rel="noopener"><strong>US$ 0,30</strong><span>custo misto por milhão de tokens no self-hosting</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:08</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=Ok6QdZHCcI8&amp;t=399s" target="_blank" rel="noopener"><strong>88%</strong><span>melhora de desempenho com as mesmas GPUs</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:39</span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=Ok6QdZHCcI8&amp;t=184s" target="_blank" rel="noopener"><strong>70%</strong><span>melhora no lead time com o GLM hospedado</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:04</span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>É palestra de caso interno, sem dados abertos nem metodologia. Os ganhos de 60% e 70% coincidem no tempo com a retirada dos limites de orçamento, então não separam o efeito do modelo do efeito do uso ilimitado. A comparação de custo (um décimo da fatura) ignora, pelo que se ouve, o gasto com 56 GPUs B200 e com a equipe de operação. A Revolut mantém Codex e Gemini como exceção, o que sugere paridade incompleta. O palestrante lidera operações de IA da empresa e defende a própria decisão.</p>
+  </div>
+
+  <section class="card painel" aria-label="O que fazer com isso">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Meça lead time (da tarefa ao merge) e tempo de codificação separadamente na sua equipe antes de avaliar qualquer ferramenta de IA.</li><li>Se você paga por token, compare o custo com limites de orçamento rígidos contra um plano fixo, pois o limite pode esconder o ganho real.</li><li>Ao hospedar um modelo, defina uma meta de tempo até o primeiro token (por exemplo, abaixo de 3 segundos) e acompanhe junto com a demanda.</li><li>Em setor regulado, documente sandbox com regras de aprovação e telemetria para mostrar ao regulador que há humano supervisionando.</li></ul>
+  </section>
+
+  <footer class="talk-fim">
+    <label class="estudei js-only"><input type="checkbox" data-id="Ok6QdZHCcI8" aria-label="Marcar How Revolut Cut AI Coding Costs 90% With Self-Hosted Open Models - David Abitbol, Revolut como estudado"> Marquei como estudado</label>
+    <a class="proximo" href="#fim">Fechar a edição <span aria-hidden="true">↓</span></a>
+  </footer>
+</article>
+      <section class="fim-edicao card" id="fim" aria-labelledby="fim-titulo">
+        <h2 id="fim-titulo">Fim da edição</h2>
+        <span class="progresso" data-ids="AnsXWH2_EBU LQW_Wvqhp04 YqxpPI7YUjE wP3P89YB9fA UW8Qkk7MG8A 58ulJViGFgU mJ7q8CuVmbw P_0_Th_ZzIg Ok6QdZHCcI8"></span>
+        <p>Termos novos no glossário:
+<a href="../glossario.html#g-idor">IDOR</a>, <a href="../glossario.html#g-workload-identity-federation">Workload identity federation</a>.
+        </p>
+        <nav class="paginacao" aria-label="Outras edições">
+<a rel="prev" href="2026-10-27.html"><span class="paginacao-dir">← Edição anterior</span><strong>Agentes em produção: controle, sandbox e testes reais</strong><span class="muted">terça, 27 out 2026</span></a>          <a class="voltar" href="../index.html#edicoes"><span class="paginacao-dir">Todas as edições</span><strong>Voltar ao início</strong></a>
+        </nav>
+      </section>
+    </div>
+  </div>
+</div>
+</main>
+<footer class="rodape wrap">
+  <p>Resumos em português dos talks do canal <a href="https://www.youtube.com/@aiDotEngineer" target="_blank" rel="noopener">AI Engineer</a>. Atualizado em 30 out 2026, 07:19. <a href="../status.html">Status da rotina</a></p>
+</footer>
+<script src="../app.js" defer></script>
+</body>
+</html>

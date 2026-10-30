@@ -1,0 +1,208 @@
+{
+  "id": "UW8Qkk7MG8A",
+  "titulo": "AI That Hunts Logic Bugs Before Attackers Do - Taylor Luttrell-Williams, Sonar",
+  "titulo_curto": "AI That Hunts Logic Bugs Before Attackers Do - Taylor Luttrell-Williams, Sonar",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=UW8Qkk7MG8A",
+  "duracao": 849,
+  "publicado_ts": 1793214015,
+  "edicao": "2026-10-29",
+  "tese": "Scanner por padrão acha código ruim. Bug de intenção, com código válido e regra de negócio quebrada, exige um agente que entenda o repositório inteiro.",
+  "tldr": [
+    "A Sonar apresenta o Hunter Agent, que mapeia o repositório, roda três agentes especialistas e valida cada achado de forma adversarial antes de mostrá-lo.",
+    "Na demo, um app Python rende 46 problemas em três classes: controle de acesso quebrado, lógica de negócio e autenticação e sessão, entre eles um usuário que se torna admin e um desvio de MFA.",
+    "A palestrante anuncia a entrada da Sonar no programa de parceiros de cibersegurança Daybreak da OpenAI e a correção automática dos achados por um agente de remediação."
+  ],
+  "tema": "engenharia-de-software",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "SAST acha padrão, não intenção",
+      "texto": "Um scanner SAST procura padrões conhecidos de código inseguro. Ele não sabe o que o sistema deveria fazer. Um código tecnicamente correto pode contradizer a regra de negócio, e é essa lacuna que o Hunter Agent tenta cobrir.",
+      "t": 93,
+      "legenda": "Código válido pode ter intenção errada, e o SAST não vê isso.",
+      "print": "img/UW8Qkk7MG8A/0.jpg"
+    },
+    {
+      "titulo": "Mapa global, três especialistas e validação adversarial",
+      "texto": "Um agente mapeia o repositório todo. Com esse mapa, três agentes especialistas, um por classe de problema, buscam falhas nas relações entre componentes. Uma etapa adversarial tenta derrubar cada achado, e filtros de ruído descartam o que é pouco válido ou intencional.",
+      "t": 157,
+      "legenda": "O fluxo do Hunter Agent, do mapa do repositório ao achado validado.",
+      "print": null
+    },
+    {
+      "titulo": "46 achados em três classes",
+      "texto": "Na demo, o scan do app Python leva cerca de uma hora e gera 46 issues abertas. Elas se dividem em controle de acesso quebrado (IDOR, escalada de privilégio, CSRF), lógica de negócio (pular etapas, falta de rate limit) e autenticação e sessão (fixação de sessão, falta de MFA).",
+      "t": 509,
+      "legenda": "46 issues abertas, separadas nas três classes que o agente cobre.",
+      "print": "img/UW8Qkk7MG8A/2.jpg"
+    },
+    {
+      "titulo": "Um achado por dentro: usuário vira admin",
+      "texto": "O achado de severidade alta mostra que qualquer usuário logado passa na checagem de admin, porque consegue escrever o próprio campo de papel (role). A tela mostra o local no código, a explicação, a sugestão de correção e o histórico. A issue entra na mesma lista do SonarQube e pode ser aceita, confirmada ou marcada como falso positivo.",
+      "t": 621,
+      "legenda": "Qualquer usuário logado escreve o próprio role e passa na checagem de admin.",
+      "print": "img/UW8Qkk7MG8A/3.jpg"
+    },
+    {
+      "titulo": "Scans agendados e correção automática",
+      "texto": "O scan roda sob demanda ou em agenda diária, semanal ou mensal, em um branch à escolha. Os achados podem ser atribuídos ao agente de remediação do SonarQube, que propõe a correção, inclusive de forma agendada.",
+      "t": 749,
+      "legenda": "A agenda de scans é configurável por frequência e branch.",
+      "print": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "SAST",
+      "traducao": "análise estática de segurança",
+      "nivel": "intermediario",
+      "chave": "sast",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Vulnerabilidade de lógica de negócio",
+      "traducao": "falha em que o código roda certo, mas a regra do negócio é violada",
+      "nivel": "intermediario",
+      "chave": "vulnerabilidade de lógica de negócio",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Broken access control",
+      "traducao": "controle de acesso quebrado",
+      "nivel": "intermediario",
+      "chave": "broken access control",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "IDOR",
+      "traducao": "referência direta insegura a objeto",
+      "nivel": "avancado",
+      "chave": "idor",
+      "analogia": "IDOR é como um guarda-volumes que entrega qualquer mochila a quem disser o número da ficha, sem conferir se a ficha é sua.",
+      "explicacao": [
+        "Num sistema, cada coisa guardada recebe um número de identificação, como o pedido 1001 ou a fatura 2045.",
+        "Quando você abre uma página, o endereço ou a requisição costuma levar esse número, por exemplo /faturas/2045.",
+        "IDOR (Insecure Direct Object Reference, ou referência direta insegura a objeto) acontece quando o sistema confere que você fez login, mas não confere se aquele número pertence a você.",
+        "Basta trocar 2045 por 2046 para ver a fatura de outra pessoa. O código funciona sem erro, por isso um scanner que procura padrões de código inseguro raramente acha a falha.",
+        "A correção é checar a autorização em cada acesso, ligando o objeto pedido ao dono dele. Na demo, o Hunter Agent põe o IDOR na classe de controle de acesso quebrado."
+      ],
+      "pre_requisitos": [
+        "Autenticação e autorização",
+        "Identificador de registro (ID)",
+        "Requisição HTTP",
+        "Broken access control"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "USUÁRIO FAZ LOGIN",
+            "nota": "O sistema sabe quem ele é"
+          },
+          {
+            "rotulo": "PEDE /FATURAS/2045",
+            "nota": "A própria fatura, tudo certo"
+          },
+          {
+            "rotulo": "TROCA PARA 2046",
+            "nota": "Muda só o número no endereço"
+          },
+          {
+            "rotulo": "SEM CHECAGEM DE DONO",
+            "nota": "O sistema não confere o dono"
+          },
+          {
+            "rotulo": "DADO ALHEIO EXPOSTO",
+            "nota": "Vê a fatura de outra pessoa"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Validação adversarial",
+      "traducao": "etapa que tenta refutar cada achado antes de exibi-lo",
+      "nivel": "intermediario",
+      "chave": "validação adversarial",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sub-agent",
+      "traducao": "subagente especialista",
+      "nivel": "intermediario",
+      "chave": "sub-agent",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Falso positivo",
+      "traducao": "alerta que não é um problema real",
+      "nivel": "basico",
+      "chave": "falso positivo",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Quality gate",
+      "traducao": "portão de qualidade que bloqueia código antes da produção",
+      "nivel": "intermediario",
+      "chave": "quality gate",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É uma apresentação de produto da própria Sonar, com anúncio de parceria e de novo recurso no mesmo palco. A demo usa um único app Python da palestrante, sem dado sobre taxa de falso positivo, achados reais perdidos ou comparação com pentest humano. Os 46 achados vêm sem informação de quantos foram confirmados como válidos. Termos como precisos e repetíveis aparecem sem medição. O custo em unidades de scan e a hora de duração também não são detalhados.",
+  "acoes": [
+    "Liste as regras de negócio críticas do seu sistema (quem pode virar admin, quais etapas são obrigatórias) e verifique se o scanner atual consegue testá-las.",
+    "Peça a um agente de código que revise um repositório procurando checagens de autorização e campos como role que o usuário consegue escrever.",
+    "Ao avaliar uma ferramenta de segurança com IA, exija o número de achados confirmados contra os descartados, não só o total de issues.",
+    "Se já usa SonarQube, teste o scan em um projeto pequeno e agende a rotina em um branch fora do principal antes de ampliar."
+  ],
+  "numeros": [
+    {
+      "valor": "46",
+      "contexto": "issues abertas encontradas no app Python da demo",
+      "t": 494
+    },
+    {
+      "valor": "1 hora",
+      "contexto": "duração aproximada do scan completo",
+      "t": 431
+    },
+    {
+      "valor": "3",
+      "contexto": "agentes especialistas, um por classe de problema",
+      "t": 153
+    },
+    {
+      "valor": "5",
+      "contexto": "achados de lógica de negócio na demo",
+      "t": 685
+    }
+  ]
+}

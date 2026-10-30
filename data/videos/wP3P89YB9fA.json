@@ -1,0 +1,163 @@
+{
+  "id": "wP3P89YB9fA",
+  "titulo": "Catch the Bugs Your Code Review Misses - Killian Carlsen-Phelan & Taylor Luttrell-Williams, Sonar",
+  "titulo_curto": "Catch the Bugs Your Code Review Misses - Killian Carlsen-Phelan & Taylor Luttrell-Williams, Sonar",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=wP3P89YB9fA",
+  "duracao": 2287,
+  "publicado_ts": 1793314804,
+  "edicao": "2026-10-29",
+  "tese": "Código escrito por agente passa no teste e ainda quebra o negócio. Um revisor de IA que lê o contexto inteiro cobre esse buraco.",
+  "tldr": [
+    "A Sonar mostra o Gitar, um agente que verifica pull requests (propostas de mudança no código) e compara a mudança com o resto do sistema, não só com o diff.",
+    "Em três PRs de um app de ingressos, ele acha um bug fora do diff, aplica uma regra de negócio escrita em arquivo de configuração e corrige uma falha de CI até o merge automático.",
+    "O pitch é que revisão humana não acompanha o volume de código dos agentes, então a verificação precisa ser automática e ter contexto."
+  ],
+  "tema": "engenharia-de-software",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Bug que o diff não mostra",
+      "texto": "A PR permite transferir um ingresso a um amigo e os testes passam. O Gitar avisa que o comprador original ainda pode cancelar e reembolsar o ingresso depois de transferi-lo. O erro está em orders.py, arquivo que a PR nem toca. Um revisor que olha só o diff não veria isso.",
+      "t": 1093,
+      "legenda": "O achado aponta para orders.py, fora das linhas alteradas na PR.",
+      "print": "img/wP3P89YB9fA/0.jpg"
+    },
+    {
+      "titulo": "Análise estática não infere intenção",
+      "texto": "Killian separa duas camadas. Ferramentas como o SonarQube pegam falhas como SQL injection percorrendo muitos arquivos. Elas não leem título e descrição da PR para checar se a lógica de negócio faz sentido. O Gitar cobre essa segunda parte, e o palestrante defende usar as duas juntas.",
+      "t": 1031,
+      "legenda": "Testes verdes não provam que a regra de negócio está certa.",
+      "print": "img/wP3P89YB9fA/1.jpg"
+    },
+    {
+      "titulo": "Regras de negócio em arquivos do repositório",
+      "texto": "A pasta .gitar/review recebe arquivos Markdown com contexto que orienta as revisões. A pasta .gitar/rules guarda regras que disparam uma ação quando a PR cumpre um critério. No exemplo, qualquer mudança em preços gera uma lista dos campos visíveis ao cliente e a checagem se mostram o preço final. Uma taxa de 3,50 sobre um ingresso de 50 vira alerta.",
+      "t": 1405,
+      "legenda": "A regra do preço final fica versionada no repositório, ao lado do código.",
+      "print": "img/wP3P89YB9fA/2.jpg"
+    },
+    {
+      "titulo": "Diagnóstico de falha de CI e merge automático",
+      "texto": "Na terceira PR, um teste falha porque a refatoração deixou o ingresso ser escaneado duas vezes. O Gitar lê os logs do CI, explica a causa e empurra correções até a pipeline passar. Dois comandos de comentário, auto apply on e auto merge on, liberam as correções sem clique e o merge no fim.",
+      "t": 1779,
+      "legenda": "O agente lê o log do CI e nomeia o teste e o comportamento errado.",
+      "print": "img/wP3P89YB9fA/3.jpg"
+    },
+    {
+      "titulo": "Verificação entre repositórios e entre PRs",
+      "texto": "No final, Taylor cita análise entre repositórios, que acha mudanças que passam sozinhas mas quebram código em outro repo. Cita também análise entre PRs em andamento, porque duas PRs podem passar isoladas e quebrar produção juntas. Só foi mostrado de relance no dashboard.",
+      "t": 2152,
+      "legenda": "Cada achado traz onde ocorre, a correção e por que importa.",
+      "print": "img/wP3P89YB9fA/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Pull request",
+      "traducao": "proposta de mudança no código para revisão",
+      "nivel": "basico",
+      "chave": "pull request",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "CI (integração contínua)",
+      "traducao": "pipeline que roda testes a cada mudança",
+      "nivel": "basico",
+      "chave": "ci (integração contínua)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Autofix",
+      "traducao": "correção aplicada pelo agente no próprio PR",
+      "nivel": "intermediario",
+      "chave": "autofix",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Falso positivo",
+      "traducao": "alerta que aponta um problema inexistente",
+      "nivel": "basico",
+      "chave": "falso positivo",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "SAST",
+      "traducao": "análise estática de segurança do código",
+      "nivel": "intermediario",
+      "chave": "sast",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Teste flaky",
+      "traducao": "teste que falha de forma intermitente sem causa real",
+      "nivel": "intermediario",
+      "chave": "teste flaky",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Regra de negócio",
+      "traducao": "norma da empresa que o código precisa respeitar",
+      "nivel": "basico",
+      "chave": "regra de negócio",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É um workshop de produto da Sonar, dona do SonarQube, que vende o Gitar. Os três cenários são montados pelos palestrantes e o app de ingressos é de brinquedo. Não há taxa de acerto, de falso positivo ou de custo em repositórios reais, embora o pitch fale em alto sinal e menos ruído. Auto merge sem revisão humana exige pipeline de testes forte, e o próprio talk admite isso. A pergunta final sobre integrações ficou sem resposta firme.",
+  "acoes": [
+    "Reproduza o exemplo no seu repositório: escreva em Markdown uma regra de negócio importante, como preço final ao cliente, e veja se o revisor de IA a aplica.",
+    "Ao revisar PR de agente, procure o efeito em código que a PR não toca, como cancelamento, reembolso ou permissões.",
+    "Habilite correção e merge automáticos só em repositórios com testes e regras de branch obrigatórias.",
+    "Meça falsos positivos de qualquer revisor de IA por algumas semanas antes de confiar nele."
+  ],
+  "numeros": [
+    {
+      "valor": "14 dias",
+      "contexto": "duração do trial pro gratuito do Gitar",
+      "t": 32
+    },
+    {
+      "valor": "3 PRs",
+      "contexto": "cenários preparados para a demonstração",
+      "t": 160
+    },
+    {
+      "valor": "US$ 3,50",
+      "contexto": "taxa de serviço por ingresso no exemplo",
+      "t": 1341
+    },
+    {
+      "valor": "US$ 53,50",
+      "contexto": "preço final de um ingresso de US$ 50 com a taxa",
+      "t": 1341
+    }
+  ]
+}

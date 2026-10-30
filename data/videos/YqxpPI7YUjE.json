@@ -1,0 +1,164 @@
+{
+  "id": "YqxpPI7YUjE",
+  "titulo": "Why a One-Line Change Can Break Your Whole Stack - Cole Gannaway, Qodo",
+  "titulo_curto": "Why a One-Line Change Can Break Your Whole Stack - Cole Gannaway, Qodo",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=YqxpPI7YUjE",
+  "duracao": 890,
+  "publicado_ts": 1793257225,
+  "edicao": "2026-10-29",
+  "tese": "Com código gerado em massa, o gargalo é a revisão, e revisar bem exige grafo de dependências, regras da equipe e um revisor independente.",
+  "tldr": [
+    "Cole Gannaway, da Qodo, diz que a geração de código acelerou tanto que o gargalo passou para a revisão de pull requests.",
+    "Ele mostra uma mudança de uma linha no Bitwarden que passa em build, testes e linters, mas afeta servidor, web, mobile, CLI e MCP.",
+    "A proposta da Qodo combina grafo de software, regras personalizadas, revisão antes do PR por um agente separado do que escreveu o código e checagem contra o ticket."
+  ],
+  "tema": "engenharia-de-software",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Uma linha que passa em tudo e quebra vários clientes",
+      "texto": "O exemplo é uma renomeação no modelo de dados do Bitwarden. Build, testes unitários e linters ficam verdes, então um desenvolvedor aprovaria. Só que o servidor alimenta clientes web, mobile, CLI e servidores MCP, e todos são afetados. Esse tipo de falha costuma aparecer só em produção.",
+      "t": 221,
+      "legenda": "Uma linha alterada atinge vários repositórios ao mesmo tempo.",
+      "print": "img/YqxpPI7YUjE/0.jpg"
+    },
+    {
+      "titulo": "Grafo de software para medir o blast radius",
+      "texto": "A Qodo monta automaticamente um grafo dos repositórios da equipe, com a superfície de integração. Não basta saber que o servidor se conecta ao Android. É preciso saber quais componentes se conectam. Com isso, o revisor humano ou agente recebe o alerta de que o raio de impacto da mudança é grande.",
+      "t": 532,
+      "legenda": "O grafo permite avisar o revisor sobre o impacto antes do merge.",
+      "print": "img/YqxpPI7YUjE/1.jpg"
+    },
+    {
+      "titulo": "Regras personalizadas e conhecimento tribal",
+      "texto": "Parte da revisão depende de gosto e de experiência sênior. Um exemplo de regra: ao mudar uma API pública, exigir flag de depreciação ou revisão extra. A Qodo também sugere uma regra a partir de um comentário feito em um PR, para aplicar em todos os PRs futuros.",
+      "t": 532,
+      "legenda": "Comentário de revisão vira regra automática para os próximos PRs.",
+      "print": "img/YqxpPI7YUjE/2.jpg"
+    },
+    {
+      "titulo": "Quem escreveu o código não deve avaliá-lo",
+      "texto": "O agente de implementação já carrega contexto de depuração e exploração, e contexto grande ainda deixa informação soterrada. Ele também tem viés próprio. Gannaway sugere trocar o modelo e o harness e usar revisores adversariais. Se vários revisores acham o mesmo problema, o sinal é forte. Se acham coisas diferentes, vale investigar.",
+      "t": 439,
+      "legenda": "Revisão independente reduz o viés do agente que escreveu o código.",
+      "print": "img/YqxpPI7YUjE/3.jpg"
+    },
+    {
+      "titulo": "Revisar contra o ticket, também antes do PR",
+      "texto": "Na demo, o PR vem ligado a um ticket do Jira ou Linear com critérios de aceitação, e a ferramenta destaca lacunas de requisitos. Os clientes também instalam uma skill que roda a revisão aos 25%, 50% e 75% da geração. O agente revisor funciona como um gerente que evita o desvio de intenção e o excesso de engenharia.",
+      "t": 751,
+      "legenda": "A revisão confere se o PR cumpre o ticket, não só se o código funciona.",
+      "print": "img/YqxpPI7YUjE/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Pull request",
+      "traducao": "pull request (pedido de integração de código)",
+      "nivel": "basico",
+      "chave": "pull request",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Blast radius",
+      "traducao": "raio de impacto de uma mudança",
+      "nivel": "intermediario",
+      "chave": "blast radius",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Code graph",
+      "traducao": "grafo de software dos repositórios",
+      "nivel": "intermediario",
+      "chave": "code graph",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Software factory",
+      "traducao": "fábrica de software com agentes",
+      "nivel": "intermediario",
+      "chave": "software factory",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP",
+      "traducao": "Model Context Protocol (protocolo de contexto para modelos)",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Harness",
+      "traducao": "estrutura que cerca o modelo e executa o agente",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Adversarial review",
+      "traducao": "revisão adversarial por agentes independentes",
+      "nivel": "intermediario",
+      "chave": "adversarial review",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Skill",
+      "traducao": "skill (instrução reutilizável para o agente)",
+      "nivel": "intermediario",
+      "chave": "skill",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É palestra de vendas da Qodo, e o palestrante é engenheiro de soluções. Não há dado sobre quantos bugs a ferramenta pega, taxa de falsos positivos ou comparação com outras. O caso do Bitwarden é ilustrativo, sem medição. A ideia de usar modelos diferentes para reduzir viés é plausível, mas não vem com evidência no vídeo. A promessa de merge sem humano fica só como direção futura.",
+  "acoes": [
+    "Antes de aprovar um PR com mudança em modelo de dados ou API pública, liste quais outros repositórios e clientes consomem essa parte.",
+    "Transforme comentários de revisão repetidos em regras escritas, como um arquivo de convenções que o agente de código leia.",
+    "Peça a revisão a um agente ou modelo diferente do que escreveu o código, e compare os achados.",
+    "Anexe o ticket com critérios de aceitação ao PR e peça que a revisão confira cada critério."
+  ],
+  "numeros": [
+    {
+      "valor": "1 linha",
+      "contexto": "Mudança no modelo de dados do Bitwarden",
+      "t": 128
+    },
+    {
+      "valor": "25%, 50%, 75%",
+      "contexto": "Pontos da geração em que se roda a revisão",
+      "t": 782
+    }
+  ]
+}

@@ -1,0 +1,174 @@
+{
+  "id": "P_0_Th_ZzIg",
+  "titulo": "Stop Guessing Your vLLM Config: Benchmarking LLMs on Runpod - Chris Vela, Runpod",
+  "titulo_curto": "Stop Guessing Your vLLM Config: Benchmarking LLMs on Runpod - Chris Vela, Runpod",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=P_0_Th_ZzIg",
+  "duracao": 989,
+  "publicado_ts": 1793178020,
+  "edicao": "2026-10-29",
+  "tese": "Receita padrão do vLLM serve para começar. Para produção, meça cada config sob a sua carga e escolha pelo dado.",
+  "tldr": [
+    "Chris Vela, engenheiro da Runpod, diz que a maioria das equipes sobe um modelo aberto novo com a receita padrão do vLLM (servidor open source de inferência) e torce para dar certo.",
+    "Ele mostra o BenchPod, um painel sobre o vLLM que troca a config e roda benchmarks sem reiniciar o servidor, e testa o Kimi K3 numa GPU B300 com 1, 8, 64 e 192 usuários simultâneos.",
+    "No teste, aumentar o máximo de tokens por lote quase não mexeu no tempo até o primeiro token, mas reduziu a latência entre tokens, e ele fecha sugerindo que um modelo menor pode bastar."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Comece pelo caso de uso e pela concorrência",
+      "texto": "Antes de mexer em parâmetros, o palestrante pergunta o que o modelo fará (agente de código ou resumos simples) e quantos usuários o usarão ao mesmo tempo. Contexto de 1 milhão de tokens nem sempre é necessário. Com mais usuários simultâneos, o uso do KV cache (memória de atenção do modelo) passa a pesar na escolha da GPU.",
+      "t": 95,
+      "legenda": "As perguntas a fazer antes de escolher a config.",
+      "print": "img/P_0_Th_ZzIg/0.jpg"
+    },
+    {
+      "titulo": "Versão e CUDA quebram modelos novos",
+      "texto": "Modelos recém-lançados como o Kimi K3 exigem a versão certa do vLLM, às vezes a nightly (build diário), e a versão certa do CUDA (software que faz a GPU Nvidia rodar o modelo). Ele cita um caso que falha no CUDA 12.8 e funciona no 13.0. Também não recomenda pôr em produção no dia seguinte ao lançamento, por causa do código ainda imaturo.",
+      "t": 404,
+      "legenda": "O painel mostra versão do CUDA e métricas de GPU lado a lado.",
+      "print": "img/P_0_Th_ZzIg/1.jpg"
+    },
+    {
+      "titulo": "Trocar config sem reiniciar o servidor",
+      "texto": "Cada mudança de config costuma exigir reiniciar a imagem e esperar o download dos pesos e o carregamento na GPU, algo como 30 minutos para o Kimi. O BenchPod aplica o YAML do vLLM e reinicia rápido, guarda os experimentos e expõe tudo por API (FastAPI), de modo que um agente também pode rodar os testes.",
+      "t": 559,
+      "legenda": "Config aplicada pelo painel, com métricas ao vivo e histórico salvo.",
+      "print": "img/P_0_Th_ZzIg/2.jpg"
+    },
+    {
+      "titulo": "Mais tokens por lote reduz a latência entre tokens",
+      "texto": "No demo, ele variou o máximo de batch tokens e comparou as rodadas com 1, 8, 64 e 192 usuários simultâneos. O tempo até o primeiro token mudou pouco. A latência entre tokens (ITL) caiu bastante, e tarefas longas terminaram mais rápido que na receita padrão do vLLM.",
+      "t": 652,
+      "legenda": "TTFT quase igual entre rodadas, ITL menor com mais batch tokens.",
+      "print": "img/P_0_Th_ZzIg/3.jpg"
+    },
+    {
+      "titulo": "Talvez você não precise do modelo de fronteira",
+      "texto": "Ele lembra que um nó com B200 custa cerca de 40 mil dólares por mês na plataforma. Diz que roda o DeepSeek em 4 H200 com bom resultado e reserva o Kimi para tarefas longas e detalhadas. Sugere escolher o modelo pelo que a equipe precisa, não pelo ranking.",
+      "t": 875,
+      "legenda": "Custo mensal de um nó B200 como argumento por modelos menores.",
+      "print": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "vLLM",
+      "traducao": "servidor open source para rodar LLMs com eficiência",
+      "nivel": "intermediario",
+      "chave": "vllm",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "KV cache",
+      "traducao": "memória de atenção reaproveitada entre tokens",
+      "nivel": "avancado",
+      "chave": "kv cache",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "CUDA",
+      "traducao": "plataforma da Nvidia para programar GPUs",
+      "nivel": "intermediario",
+      "chave": "cuda",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Cold start",
+      "traducao": "tempo para subir o servidor e carregar o modelo",
+      "nivel": "intermediario",
+      "chave": "cold start",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Time to first token (TTFT)",
+      "traducao": "tempo até o primeiro token da resposta",
+      "nivel": "intermediario",
+      "chave": "time to first token (ttft)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Inter-token latency (ITL)",
+      "traducao": "tempo entre um token e o seguinte",
+      "nivel": "intermediario",
+      "chave": "inter-token latency (itl)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Benchmark",
+      "traducao": "teste de desempenho com carga controlada",
+      "nivel": "basico",
+      "chave": "benchmark",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Serverless GPU",
+      "traducao": "GPU alocada sob demanda, sem gerir servidores",
+      "nivel": "intermediario",
+      "chave": "serverless gpu",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é também pitch da Runpod: o BenchPod ainda não foi lançado (previsto para o fim do mês) e o palestrante vende créditos no final. Mostra um único teste, variando só o máximo de batch tokens, sem valores numéricos de latência nem número de repetições. Não compara outras configs nem a qualidade das respostas. A ideia de medir antes de ir para produção vale, mas os ganhos citados não são verificáveis a partir do vídeo. Os números de custo vêm da própria empresa.",
+  "acoes": [
+    "Antes de subir um modelo aberto, anote o caso de uso e o número de usuários simultâneos esperados, e escolha a GPU e o contexto a partir disso.",
+    "Teste a config padrão do vLLM contra pelo menos uma variação, como o máximo de batch tokens, com 1, 8, 64 e carga alta de usuários.",
+    "Decida qual métrica otimizar (TTFT, ITL ou throughput) conforme o produto: chat precisa de TTFT baixo, tarefas longas se beneficiam de ITL baixo.",
+    "Compare o custo mensal de um modelo menor com o de um modelo de fronteira antes de contratar GPUs para servir o segundo."
+  ],
+  "numeros": [
+    {
+      "valor": "30 minutos",
+      "contexto": "espera para baixar e carregar os pesos do Kimi",
+      "t": 248
+    },
+    {
+      "valor": "9 minutos",
+      "contexto": "cold start do Kimi K3 citado na demo",
+      "t": 559
+    },
+    {
+      "valor": "1, 8, 64, 192",
+      "contexto": "usuários simultâneos nos benchmarks",
+      "t": 622
+    },
+    {
+      "valor": "40 mil/mês",
+      "contexto": "custo citado de um nó B200 na plataforma",
+      "t": 875
+    }
+  ]
+}

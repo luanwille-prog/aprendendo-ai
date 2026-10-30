@@ -1,0 +1,174 @@
+{
+  "id": "Ok6QdZHCcI8",
+  "titulo": "How Revolut Cut AI Coding Costs 90% With Self-Hosted Open Models - David Abitbol, Revolut",
+  "titulo_curto": "How Revolut Cut AI Coding Costs 90% With Self-Hosted Open Models - David Abitbol, Revolut",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=Ok6QdZHCcI8",
+  "duracao": 707,
+  "publicado_ts": 1793264421,
+  "edicao": "2026-10-29",
+  "tese": "Com token ilimitado em modelo aberto hospedado por conta própria, a Revolut diz ter reduzido a fatura de IA para um décimo e acelerado a entrega.",
+  "tldr": [
+    "A Revolut mediu 2.000 engenheiros e viu que o ganho com um modelo aberto GLM, hospedado em GPUs próprias, superou o do Claude Code com limite de orçamento.",
+    "Para servir esse modelo, a empresa usa 56 GPUs B200, mira latência abaixo de 3 segundos até o primeiro token e ajustou parâmetros até ficar 88% mais rápida com o mesmo hardware.",
+    "Como é um banco regulado na UE, a empresa usa sandbox com regras de aprovação, humano no loop, dados em países com equivalência e telemetria forte para manter a conformidade."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "Token ilimitado muda o ganho medido",
+      "texto": "Com o Gemini, o lead time caiu 10% e o tempo de codificação 20%. O Claude Code lançado com orçamento rígido teve pouco impacto. Com o GLM hospedado e sem limite, vieram 60% a menos no tempo de codificação e 70% no lead time. O palestrante atribui parte do efeito à liberdade de usar IA em tarefas além de código.",
+      "t": 123,
+      "legenda": "Linha do tempo de adoção de IA com 2.000 engenheiros da Revolut.",
+      "print": "img/Ok6QdZHCcI8/0.jpg"
+    },
+    {
+      "titulo": "Código não é o gargalo da engenharia",
+      "texto": "O lead time melhorou mais que o tempo de codificação. Para o palestrante, isso indica que parte do tempo se perde em caixa de entrada, Jira e Confluence. Sem preocupação com o custo de tokens, os engenheiros usam a IA nessas tarefas também, sem guardar tokens para o fim do trimestre.",
+      "t": 184,
+      "legenda": "O ganho em lead time supera o ganho em coding time.",
+      "print": "img/Ok6QdZHCcI8/1.jpg"
+    },
+    {
+      "titulo": "Metas de latência e custo do self-hosting",
+      "texto": "Para atender 2.000 engenheiros, a Revolut usa cerca de 56 GPUs B200 com um modelo de 800 bilhões de parâmetros. A meta é abaixo de 3 segundos até o primeiro token, pois acima de 5 segundos o Slack dele lota. 200 tokens por segundo bastam, porque as pessoas rodam tarefas em paralelo. O custo misto fica em 30 centavos de dólar por milhão de tokens.",
+      "t": 277,
+      "legenda": "Números de capacidade e custo do GLM hospedado.",
+      "print": "img/Ok6QdZHCcI8/2.jpg"
+    },
+    {
+      "titulo": "Mesmo hardware, 88% mais rápido",
+      "texto": "De abril a agosto a equipe manteve as 56 GPUs. O tempo até o primeiro token caiu de mais de 10 segundos para cerca de 1,6, enquanto a demanda subiu de cerca de 3 para mais de 7 requisições por segundo. O ganho veio de ajustes de configuração, não de comprar mais máquinas.",
+      "t": 368,
+      "legenda": "Demanda sobe e o tempo até o primeiro token cai com as mesmas GPUs.",
+      "print": "img/Ok6QdZHCcI8/3.jpg"
+    },
+    {
+      "titulo": "Parâmetros que mais pesaram",
+      "texto": "Contexto longo é desperdício, e 256 mil tokens bastam. Quantização em FP4 em GPUs Blackwell economiza cerca de 40% de GPU frente a FP8, segundo ele sem perda de precisão. Tensor parallelism em 8 GPUs deixa mais espaço para KV cache. Em coding, o cache hit precisa passar de 90%.",
+      "t": 430,
+      "legenda": "Lista de parâmetros de ajuste do servidor de inferência.",
+      "print": "img/Ok6QdZHCcI8/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Open weights",
+      "traducao": "modelo de pesos abertos",
+      "nivel": "basico",
+      "chave": "open weights",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Lead time",
+      "traducao": "tempo de entrega, do início da tarefa até o merge",
+      "nivel": "basico",
+      "chave": "lead time",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Time to first token (TTFT)",
+      "traducao": "tempo até o primeiro token",
+      "nivel": "intermediario",
+      "chave": "time to first token (ttft)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Quantization",
+      "traducao": "quantização, uso de números de menor precisão",
+      "nivel": "avancado",
+      "chave": "quantization",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "KV cache",
+      "traducao": "memória de atenção reaproveitada entre tokens",
+      "nivel": "avancado",
+      "chave": "kv cache",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Speculative decoding",
+      "traducao": "decodificação especulativa",
+      "nivel": "avancado",
+      "chave": "speculative decoding",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado com regras de permissão",
+      "nivel": "intermediario",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Human in the loop",
+      "traducao": "humano no ciclo de decisão",
+      "nivel": "basico",
+      "chave": "human in the loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É palestra de caso interno, sem dados abertos nem metodologia. Os ganhos de 60% e 70% coincidem no tempo com a retirada dos limites de orçamento, então não separam o efeito do modelo do efeito do uso ilimitado. A comparação de custo (um décimo da fatura) ignora, pelo que se ouve, o gasto com 56 GPUs B200 e com a equipe de operação. A Revolut mantém Codex e Gemini como exceção, o que sugere paridade incompleta. O palestrante lidera operações de IA da empresa e defende a própria decisão.",
+  "acoes": [
+    "Meça lead time (da tarefa ao merge) e tempo de codificação separadamente na sua equipe antes de avaliar qualquer ferramenta de IA.",
+    "Se você paga por token, compare o custo com limites de orçamento rígidos contra um plano fixo, pois o limite pode esconder o ganho real.",
+    "Ao hospedar um modelo, defina uma meta de tempo até o primeiro token (por exemplo, abaixo de 3 segundos) e acompanhe junto com a demanda.",
+    "Em setor regulado, documente sandbox com regras de aprovação e telemetria para mostrar ao regulador que há humano supervisionando."
+  ],
+  "numeros": [
+    {
+      "valor": "56 B200",
+      "contexto": "GPUs para atender 2.000 engenheiros com GLM",
+      "t": 246
+    },
+    {
+      "valor": "US$ 0,30",
+      "contexto": "custo misto por milhão de tokens no self-hosting",
+      "t": 308
+    },
+    {
+      "valor": "88%",
+      "contexto": "melhora de desempenho com as mesmas GPUs",
+      "t": 399
+    },
+    {
+      "valor": "70%",
+      "contexto": "melhora no lead time com o GLM hospedado",
+      "t": 184
+    }
+  ]
+}

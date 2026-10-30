@@ -1,0 +1,152 @@
+{
+  "id": "mJ7q8CuVmbw",
+  "titulo": "We Trust AI Agents That Break Every Day - Shy Ruparel, Temporal",
+  "titulo_curto": "We Trust AI Agents That Break Every Day - Shy Ruparel, Temporal",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=mJ7q8CuVmbw",
+  "duracao": 1292,
+  "publicado_ts": 1793260826,
+  "edicao": "2026-10-29",
+  "tese": "Agente vai falhar todo dia. O trabalho do engenheiro é fazer a falha sair de graça, com estado salvo e sem repetir chamadas.",
+  "tldr": [
+    "Uma pesquisa da Temporal com 554 engenheiros mostra que 80,8% usam agentes todo dia, mas só 49,1% os rodam em produção.",
+    "Os maiores bloqueios citados são rastrear estado e depurar falhas, não a qualidade do modelo, e a confiança no resultado convive com falhas diárias.",
+    "Na demo, um pagamento de US$ 2.500 com um modelo local sobrevive à morte dos workers porque cada passo fica gravado em um histórico de eventos e não é repetido."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Usar agente não é o mesmo que colocar em produção",
+      "texto": "Na pesquisa State of Development, o uso diário de agentes passou de 47,3% para 80,8% em um ano. Só 49,1% dizem rodar agentes em produção ou tê-los como parte central da entrega. A diferença de cerca de 30 pontos é o primeiro dos quatro gaps que o palestrante apresenta.",
+      "t": 254,
+      "legenda": "Quase metade de quem usa agente todo dia ainda não o coloca em produção.",
+      "print": "img/mJ7q8CuVmbw/0.jpg"
+    },
+    {
+      "titulo": "Confiança alta, falhas diárias",
+      "texto": "85,5% confiam ao menos um pouco na saída do agente, mas 41,1% enfrentam problemas todo dia ou com mais frequência, e 16,4% a cada hora. Times que se dizem bem-sucedidos relatam mais falhas, e a Temporal supõe que eles apenas procuram falhas com mais cuidado. A conclusão do palestrante é planejar para a falha, em vez de buscar zero falhas.",
+      "t": 317,
+      "legenda": "Muito rosa para um grupo em que 85% confia no agente.",
+      "print": "img/mJ7q8CuVmbw/1.jpg"
+    },
+    {
+      "titulo": "O gargalo é estado e depuração, não o modelo",
+      "texto": "Quando perguntados o que limita a produtividade, os respondentes citaram primeiro rastrear estado entre serviços (35,7%) e depois depurar problemas (30,9%). 22,2% perdem progresso e refazem trabalho por quedas e reinícios. Só 13% confiam muito em observar e depurar fluxos de IA em escala.",
+      "t": 566,
+      "legenda": "Estado e depuração aparecem à frente de qualquer problema do modelo.",
+      "print": "img/mJ7q8CuVmbw/2.jpg"
+    },
+    {
+      "titulo": "Demo: matar o worker no meio do pagamento",
+      "texto": "O workflow de pagamento tem nove etapas e um agente de investigação de fraude rodando num modelo local. O palestrante derruba o worker, aprova a transação enquanto não há nenhum worker ativo e depois religa o processo. A aprovação fica registrada como signal, e o fluxo segue do último passo concluído.",
+      "t": 942,
+      "legenda": "A aprovação foi registrada mesmo sem nenhum worker rodando.",
+      "print": "img/mJ7q8CuVmbw/3.jpg"
+    },
+    {
+      "titulo": "O histórico de eventos evita gastar tokens de novo",
+      "texto": "Cada passo do agente, como escolher a investigação, consultar o cliente e redigir o resumo, é uma activity com resultado gravado. Depois do crash, as chamadas de IA aparecem uma vez só no histórico, sem nova execução. O código do workflow decide o que vem a seguir e o modelo só aconselha, então uma falha do modelo não derrubaria o pagamento.",
+      "t": 1038,
+      "legenda": "Cada chamada de IA rodou uma vez, sem retrabalho nem novo custo de tokens.",
+      "print": "img/mJ7q8CuVmbw/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Durable execution",
+      "traducao": "execução durável",
+      "nivel": "intermediario",
+      "chave": "durable execution",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Workflow, activity e worker",
+      "traducao": "fluxo, atividade e processo executor",
+      "nivel": "intermediario",
+      "chave": "workflow, activity e worker",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Wait condition e signal",
+      "traducao": "espera e sinal externo",
+      "nivel": "intermediario",
+      "chave": "wait condition e signal",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Replay de event history",
+      "traducao": "reexecução a partir do histórico de eventos",
+      "nivel": "avancado",
+      "chave": "replay de event history",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Human in the loop",
+      "traducao": "humano no ciclo de decisão",
+      "nivel": "basico",
+      "chave": "human in the loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Retry policy",
+      "traducao": "política de nova tentativa",
+      "nivel": "intermediario",
+      "chave": "retry policy",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é de um developer advocate da Temporal e a pesquisa é da própria empresa, que vende a solução apresentada. A amostra tem 554 pessoas já ligadas a agentes, sem detalhe de como foram recrutadas. O palestrante admite que comparações entre pesquisas de anos diferentes não formam tendência e que a explicação para times bem-sucedidos relatarem mais falhas é só palpite. A demo usa um fluxo sintético de nove etapas, o vídeo ao vivo falhou e foi trocado por gravação, e não há comparação com outras ferramentas de durabilidade.",
+  "acoes": [
+    "Liste os passos de um fluxo com agente no seu trabalho e marque quais gastam tokens ou mexem em dinheiro, para saber o que não pode ser repetido depois de uma queda.",
+    "Teste a queda de propósito: interrompa o processo no meio de um fluxo e veja se ele retoma sem perder estado nem refazer chamadas ao modelo.",
+    "Deixe o agente só aconselhar e mantenha a decisão e o estado crítico em código determinístico, para que uma falha do modelo não pare o processo.",
+    "Pergunte à sua equipe de TI se o histórico usado para depurar é o mesmo que serve para recuperar o fluxo, ou se são dois registros separados."
+  ],
+  "numeros": [
+    {
+      "valor": "80,8%",
+      "contexto": "usam agentes diariamente (47,3% no ano anterior)",
+      "t": 190
+    },
+    {
+      "valor": "49,1%",
+      "contexto": "rodam agentes em produção ou como parte central",
+      "t": 223
+    },
+    {
+      "valor": "85,5%",
+      "contexto": "confiam ao menos um pouco na saída do agente",
+      "t": 286
+    },
+    {
+      "valor": "41,1%",
+      "contexto": "têm problemas com agentes todo dia ou mais",
+      "t": 317
+    }
+  ]
+}

@@ -1,0 +1,199 @@
+{
+  "id": "58ulJViGFgU",
+  "titulo": "Who Is Making This Request? Agent Auth 101 - Kamil Potrec, Keycard",
+  "titulo_curto": "Who Is Making This Request? Agent Auth 101 - Kamil Potrec, Keycard",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=58ulJViGFgU",
+  "duracao": 1115,
+  "publicado_ts": 1793174437,
+  "edicao": "2026-10-29",
+  "tese": "Agente age em seu nome com suas chaves; sem identidade própria e credencial curta, ninguém sabe quem fez o quê.",
+  "tldr": [
+    "Hoje agentes usam tokens pessoais, chaves estáticas e contas de serviço com permissão demais. O servidor só vê o usuário e não distingue se quem agiu foi ele ou o agente.",
+    "Kamil Potrec, da Keycard, propõe identidade por agente, delegação explícita, credenciais curtas e com escopo, políticas e auditoria. Ele afirma que SDKs não bastam porque o agente pode alcançar a credencial.",
+    "A saída que ele defende é um gateway que guarda as credenciais fora do alcance do agente e as injeta na requisição. O gateway traz custos de latência, risco de alvo único e complexidade operacional."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Quem fez a requisição: Alice ou o agente?",
+      "texto": "Agente recebe um token do usuário e o repassa ao servidor MCP, que só enxerga o usuário. No exemplo da fatura pendente, o agente decide por conta própria enviá-la a alguém. Nada no log mostra se foi Alice ou o modelo. Por isso o agente é um ator novo, não determinístico, e não um programa comum.",
+      "t": 186,
+      "legenda": "O serviço de faturas não distingue a ação de Alice da ação do agente.",
+      "print": "img/58ulJViGFgU/0.jpg"
+    },
+    {
+      "titulo": "O que é o problema das credenciais espalhadas",
+      "texto": "Tokens pessoais não têm dono nem revogação fácil. Alice pode levar o token para a máquina pessoal, fora das proteções da empresa. Agentes acumulam chaves ao longo do tempo. Contas de serviço viram um balde de permissões amplo demais. Antes dos agentes o setor aceitava o risco; agora há um ator que age em nome da pessoa.",
+      "t": 226,
+      "legenda": "Lista dos quatro riscos do modelo atual de credenciais.",
+      "print": "img/58ulJViGFgU/1.jpg"
+    },
+    {
+      "titulo": "Cinco requisitos de autenticação para agentes",
+      "texto": "Identidade por agente (até por sessão), separada de quem o lançou. Delegação: quais usuários autorizam quais agentes. Credenciais curtas e com escopo, sem chave-mestra. Federação e um broker para sistemas legados. Políticas de aprovação humana e auditoria de quem autorizou cada ação.",
+      "t": 501,
+      "legenda": "Checklist do que um sistema de auth para agentes precisa entregar.",
+      "print": null
+    },
+    {
+      "titulo": "Uma interação simples exige muitos passos",
+      "texto": "Para um agente falar com um servidor MCP, o servidor publica metadados, o cliente descobre, o agente obtém credencial e se autentica. O servidor valida assinatura, emissor e token, aplica política, pode pedir outra credencial a um sistema externo e registra tudo em log. O palestrante pergunta se um LLM acerta isso sempre e a plateia concorda que não.",
+      "t": 592,
+      "legenda": "Cada chamada de ferramenta envolve pelo menos oito etapas de segurança.",
+      "print": "img/58ulJViGFgU/3.jpg"
+    },
+    {
+      "titulo": "Gateway tira a credencial do alcance do agente",
+      "texto": "O agente pede ao gateway um alvo, como o GitHub. O gateway autentica o agente, consulta a autorização em tempo de execução, busca a credencial no cofre e a injeta na requisição. Isso permite revogação instantânea e bloquear ações específicas, como enviar e-mail mas não ler. Custos: um salto a mais, necessidade de forçar todo o tráfego por ele e um alvo único para ataque.",
+      "t": 779,
+      "legenda": "O agente nunca vê o token; o gateway o injeta na chamada.",
+      "print": "img/58ulJViGFgU/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Identidade de agente",
+      "traducao": "identidade própria do agente, separada do usuário",
+      "nivel": "intermediario",
+      "chave": "identidade de agente",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "OAuth",
+      "traducao": "padrão aberto para emitir acesso delegado e limitado",
+      "nivel": "intermediario",
+      "chave": "oauth",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Credencial de curta duração",
+      "traducao": "token com escopo restrito que expira logo",
+      "nivel": "intermediario",
+      "chave": "credencial de curta duração",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Service account",
+      "traducao": "conta de serviço usada por software, não por pessoa",
+      "nivel": "basico",
+      "chave": "service account",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Workload identity federation",
+      "traducao": "federação de identidade de carga de trabalho",
+      "nivel": "avancado",
+      "chave": "workload identity federation",
+      "analogia": "Workload identity federation é como a portaria de um prédio que entrega um crachá de visitante válido só por hoje a quem mostra o crachá oficial de uma empresa parceira, sem precisar guardar uma chave do prédio no bolso.",
+      "explicacao": [
+        "Um programa, como um agente, precisa provar quem é antes de entrar num sistema, do mesmo jeito que uma pessoa faz login.",
+        "O jeito comum é dar ao programa uma chave fixa (static key, chave estática) ou uma conta de serviço. Se essa chave vazar, ela continua valendo até alguém lembrar de trocá-la.",
+        "Na federação, o lugar onde o programa roda, como a nuvem ou o servidor de automação, emite um documento assinado que diz qual carga de trabalho (workload, o programa em execução) está pedindo acesso.",
+        "O sistema de destino confia nesse emissor, confere a assinatura e troca o documento por um token (credencial de acesso) curto, com escopo limitado e prazo para expirar.",
+        "O palestrante cita também chave privada e certificados. Para ele, o mecanismo importa menos. O essencial é o agente se autenticar e pedir uma credencial nova a cada servidor remoto, sem permissões fixas guardadas."
+      ],
+      "pre_requisitos": [
+        "Autenticação e autorização",
+        "Service account",
+        "Token de acesso",
+        "Credencial de curta duração"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "AMBIENTE ATESTA",
+            "nota": "Nuvem assina quem é o agente"
+          },
+          {
+            "rotulo": "AGENTE APRESENTA PROVA",
+            "nota": "Envia o documento assinado"
+          },
+          {
+            "rotulo": "EMISSOR CONFERE",
+            "nota": "Valida assinatura e confiança"
+          },
+          {
+            "rotulo": "TOKEN CURTO",
+            "nota": "Acesso com escopo que logo expira"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Delegation chain",
+      "traducao": "cadeia de delegação entre usuário e agentes",
+      "nivel": "avancado",
+      "chave": "delegation chain",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "MCP gateway",
+      "traducao": "proxy que intermedeia as chamadas dos agentes",
+      "nivel": "intermediario",
+      "chave": "mcp gateway",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Audit trail",
+      "traducao": "registro de quem autorizou e executou cada ação",
+      "nivel": "basico",
+      "chave": "audit trail",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "Kamil trabalha na Keycard, que vende exatamente o plano de controle, os SDKs e o gateway descritos, e o final do talk é pitch (t=966). Não há dado de incidentes, medição de latência do gateway nem comparação com alternativas. A afirmação de que agentes contornam controles em SDKs é apresentada sem exemplo concreto. Os requisitos listados são razoáveis e valem mesmo sem comprar a ferramenta.",
+  "acoes": [
+    "Liste quais tokens pessoais e chaves estáticas seus agentes usam hoje e quem consegue revogá-los.",
+    "Troque contas de serviço amplas por credenciais com escopo e prazo curto sempre que o sistema suportar OAuth.",
+    "Registre nos logs qual agente e qual usuário fizeram cada chamada, para responder quem fez a ação.",
+    "Ao avaliar um gateway para agentes, teste latência, bloqueio de tráfego que o contorne e quem opera as rotas e políticas."
+  ],
+  "numeros": [
+    {
+      "valor": "18 min",
+      "contexto": "duração prevista do talk, citada como insuficiente",
+      "t": 1
+    },
+    {
+      "valor": "centenas",
+      "contexto": "de APIs com formas diferentes de autenticar",
+      "t": 435
+    },
+    {
+      "valor": "100",
+      "contexto": "sistemas existentes que não dá para reescrever",
+      "t": 531
+    }
+  ]
+}
