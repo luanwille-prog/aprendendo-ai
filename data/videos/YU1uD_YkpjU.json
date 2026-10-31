@@ -1,0 +1,174 @@
+{
+  "id": "YU1uD_YkpjU",
+  "titulo": "Your Agent Just Paid for Nothing: 6 Attacks on x402 Payments - Ishween Kaur, SoFi",
+  "titulo_curto": "Your Agent Just Paid for Nothing: 6 Attacks on x402 Payments - Ishween Kaur, SoFi",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=YU1uD_YkpjU",
+  "duracao": 1003,
+  "publicado_ts": 1793350831,
+  "edicao": "2026-10-30",
+  "tese": "Pagamento de agente pode parecer correto e dar o resultado errado, então cada pagamento precisa de guarda antes de assinar e antes de entregar.",
+  "tldr": [
+    "O protocolo x402 deixa agentes pagarem por dados e APIs com micropagamentos on-chain via HTTP 402. Ishween Kaur (SoFi) atacou o protocolo de 20 formas em ambiente de teste e detalhou seis.",
+    "Os ataques mexem no preço do cabeçalho, repetem o pagamento, pegam dados sem pagar, reaproveitam um pagamento em várias páginas, imitam vendedores e usam prompt injection para o agente pagar de novo. Cada um tem uma guarda simples que o bloqueou.",
+    "Para colocar em produção, ela propõe rastrear um único ID de pagamento, rodar em modo sombra com 20 a 25 casos de sucesso e falha, analisar os erros e só então ativar guardas e alertas."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Compare o preço listado com o preço cobrado",
+      "texto": "O vendedor anuncia 5 centavos no diretório, mas o cabeçalho da resposta 402 pode pedir outro valor. Sem guarda, o agente pagou 50 centavos. Uma checagem de código entre os dois campos bloqueou. Carteira e rede também mudam, então esses campos entram na checagem.",
+      "t": 277,
+      "legenda": "Sem guarda o agente pagou 50 centavos por um item listado a 5.",
+      "print": "img/YU1uD_YkpjU/0.jpg"
+    },
+    {
+      "titulo": "Um número de pagamento, uma entrega",
+      "texto": "A verificação só confere a assinatura, então o mesmo número de pagamento enviado cinco vezes parece válido e libera os dados cinco vezes. Na liquidação só um passa. A correção é um armazenamento compartilhado de números já usados, que também serve para ligar o pagamento à página entregue (erro 409) e evita cobrança em retries.",
+      "t": 337,
+      "legenda": "Verificar não basta: duplicatas só caem na liquidação.",
+      "print": "img/YU1uD_YkpjU/1.jpg"
+    },
+    {
+      "titulo": "Entregar na verificação ou na liquidação",
+      "texto": "Entregar o dado quando o facilitator diz 'válido' é rápido, mas o pagamento pode reverter por falta de saldo. Esperar a liquidação protege dados caros ou confidenciais ao custo de latência. Testar todo endpoint pago deve devolver 402, e o cache deve usar Cache-Control no-store ou ficar atrás do paywall.",
+      "t": 432,
+      "legenda": "O dado saiu, o dinheiro não chegou: o trade-off entre latência e risco.",
+      "print": "img/YU1uD_YkpjU/2.jpg"
+    },
+    {
+      "titulo": "Vendedores parecidos e lista de probation",
+      "texto": "O diretório Bazaar confirma que o serviço funciona, mas não quem é o dono da carteira. Um vendedor falso com nome parecido e preço menor atrai o agente. Ela sugere allow list, block list e uma lista de probation para vendedores novos, revisada por humano.",
+      "t": 651,
+      "legenda": "Vendedores novos entram em probation antes de entrar na allow list.",
+      "print": "img/YU1uD_YkpjU/3.jpg"
+    },
+    {
+      "titulo": "Limite o plano em vez de adivinhar a injeção",
+      "texto": "Uma resposta do vendedor sugeriu um 'resumo premium' e o agente, com Llama 3.2, pagou de novo: 55 centavos em vez de 5. Filtro de palavras não pega dicas sutis e um modelo juiz falha em alguns casos. Travar o plano para uma única chamada paga bloqueou o pagamento extra e levou os ataques a zero.",
+      "t": 743,
+      "legenda": "O agente decidiu pagar de novo; a guarda de plano único bloqueou.",
+      "print": "img/YU1uD_YkpjU/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "x402",
+      "traducao": "protocolo de pagamento por HTTP para agentes",
+      "nivel": "intermediario",
+      "chave": "x402",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "HTTP 402",
+      "traducao": "código 'pagamento necessário'",
+      "nivel": "basico",
+      "chave": "http 402",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Microtransação",
+      "traducao": "pagamento de centavos ou frações de centavo",
+      "nivel": "basico",
+      "chave": "microtransação",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Idempotência",
+      "traducao": "repetir a mesma operação sem cobrar duas vezes",
+      "nivel": "intermediario",
+      "chave": "idempotência",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Prompt injection",
+      "traducao": "texto externo que induz o agente a agir",
+      "nivel": "intermediario",
+      "chave": "prompt injection",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Allow list",
+      "traducao": "lista de vendedores aprovados",
+      "nivel": "basico",
+      "chave": "allow list",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Trace",
+      "traducao": "registro passo a passo de uma execução",
+      "nivel": "intermediario",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Shadow mode",
+      "traducao": "rodar guardas só observando, sem bloquear",
+      "nivel": "intermediario",
+      "chave": "shadow mode",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é demonstração caseira na rede de teste Base Sepolia com Llama 3.2 e poucos cenários, sem taxa de falha ou repetição estatística. A palestrante diz que o x402 ainda é imaturo. Os resultados valem como mapa de riscos, não como prova de que as guardas bastam em produção. A SoFi aparece só como afiliação, sem relato de uso real. O handbook com o código é citado, mas não detalhado.",
+  "acoes": [
+    "Antes de liberar pagamento a um agente, defina um orçamento por tarefa e compare preço listado, preço cobrado, carteira e rede antes de assinar.",
+    "Use um identificador único por pagamento e reutilize o mesmo nas retentativas, guardando-o em armazenamento compartilhado para recusar duplicatas.",
+    "Mantenha uma allow list de fornecedores e uma probation list com revisão humana para os novos.",
+    "Trate respostas de terceiros como dados: limite no código quantas chamadas pagas o agente pode fazer por turno."
+  ],
+  "numeros": [
+    {
+      "valor": "20 formas",
+      "contexto": "maneiras como ela quebrou a sequência de pagamento",
+      "t": 215
+    },
+    {
+      "valor": "50 vs 5 cent",
+      "contexto": "pago sem guarda contra preço listado",
+      "t": 277
+    },
+    {
+      "valor": "55 cents",
+      "contexto": "custo após o agente pagar o resumo premium",
+      "t": 743
+    },
+    {
+      "valor": "20 a 25",
+      "contexto": "casos de sucesso e falha na fase sombra",
+      "t": 899
+    }
+  ]
+}

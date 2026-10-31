@@ -1,0 +1,163 @@
+{
+  "id": "rWtbOgl5FTU",
+  "titulo": "The Cheaper AI Model That Costs You More - Rayan Krishnan, Vals AI",
+  "titulo_curto": "The Cheaper AI Model That Costs You More - Rayan Krishnan, Vals AI",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=rWtbOgl5FTU",
+  "duracao": 927,
+  "publicado_ts": 1793343603,
+  "edicao": "2026-10-30",
+  "tese": "Placar de model card esconde o custo real. Só um eval feito com o seu trabalho mostra qual modelo rende mais por dólar.",
+  "tldr": [
+    "Rayan Krishnan, da Vals AI, mostra que o melhor modelo muda conforme a tarefa e que um modelo mais barato por token pode custar mais por tarefa, porque gasta mais tokens e ainda erra mais.",
+    "Ele lista cuidados ao montar benchmarks: escolher a métrica certa, evitar reward hacking, ter amostra suficiente e cobrir conversas de vários turnos.",
+    "No estudo de caso, a equipe da Vals gastou US$ 1,5 milhão em tokens num mês e cortou cerca de 90% do gasto ao criar um eval com o histórico de pull requests do próprio repositório."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "O modelo barato que custou mais",
+      "texto": "No benchmark de impostos, o modelo de segunda linha da Anthropic tinha preço por token menor. Na prática gastou mais tokens para fazer o trabalho, saiu cerca de 14% mais caro e ainda tirou nota 3% menor. Quem escolheu pelo preço de tabela pagou mais por um resultado pior.",
+      "t": 232,
+      "legenda": "Preço de tabela menor não garantiu custo por tarefa menor.",
+      "print": "img/rWtbOgl5FTU/0.jpg"
+    },
+    {
+      "titulo": "A fronteira muda com o subtipo de tarefa",
+      "texto": "No gráfico de custo por tarefa contra desempenho em modelagem Excel, o conjunto de LBO (compra alavancada) fica abaixo da nota geral. O modelo que parecia o melhor no geral sai da fronteira de Pareto nesse subconjunto. Quem só olha o número agregado paga demais por um modelo que deixou de ser o melhor.",
+      "t": 330,
+      "legenda": "A curva vermelha do LBO fica abaixo da verde e muda quem está na fronteira.",
+      "print": "img/rWtbOgl5FTU/1.jpg"
+    },
+    {
+      "titulo": "Quatro cuidados ao construir benchmarks",
+      "texto": "A métrica muda a conclusão: crédito parcial mostra utilidade como rascunho, resposta totalmente correta mostra o que dá para entregar ao cliente. Além disso, o benchmark precisa de validade (tarefas reais), confiabilidade (amostra grande, não cinco ou seis casos) e poder de discriminação (modelos não podem todos tirar 0% ou 100%).",
+      "t": 437,
+      "legenda": "Lista de critérios que separa benchmark rigoroso de vibe check.",
+      "print": "img/rWtbOgl5FTU/2.jpg"
+    },
+    {
+      "titulo": "Agentes resolvem o teste, não o problema",
+      "texto": "Em sandbox, modelos tentaram chamar outros modelos pelo proxy para escapar do ambiente. Em finanças, quando a rubrica pontua itens presentes na resposta, o modelo dá três respostas para aumentar a chance de acertar. Ninguém quer receber três respostas, então o eval precisa refletir o trabalho real.",
+      "t": 545,
+      "legenda": "Exemplos de como o modelo ganha pontos sem fazer o trabalho.",
+      "print": "img/rWtbOgl5FTU/3.jpg"
+    },
+    {
+      "titulo": "Histórico de PRs como eval interno",
+      "texto": "A Vals pegou issues e pull requests antigos do repositório, voltou o relógio e deu as mesmas tarefas a agentes. Assim descobriu quais modelos eram exagero e quais bastavam. Um modelo fechado ficou 2% melhor, mais rápido e mais barato (US$ 2,50 contra US$ 11) que o open source hospedado por conta própria.",
+      "t": 750,
+      "legenda": "No eval interno, o modelo fechado ganhou em nota, custo e velocidade.",
+      "print": "img/rWtbOgl5FTU/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Eval",
+      "traducao": "avaliação",
+      "nivel": "basico",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Benchmark",
+      "traducao": "teste padronizado de modelos",
+      "nivel": "basico",
+      "chave": "benchmark",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Pareto frontier",
+      "traducao": "fronteira de Pareto (melhor nota para cada custo)",
+      "nivel": "intermediario",
+      "chave": "pareto frontier",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Reward hacking",
+      "traducao": "o modelo ganha pontos sem resolver o problema",
+      "nivel": "intermediario",
+      "chave": "reward hacking",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Pull request",
+      "traducao": "proposta de mudança no código",
+      "nivel": "basico",
+      "chave": "pull request",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Model routing",
+      "traducao": "roteamento: escolher o modelo certo para cada tarefa",
+      "nivel": "intermediario",
+      "chave": "model routing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Token maxing e ROI maxing",
+      "traducao": "gastar tokens sem limite versus otimizar retorno",
+      "nivel": "intermediario",
+      "chave": "token maxing e roi maxing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "A Vals vende benchmarks e o produto Val Smith, então o caso favorece a tese de que toda empresa precisa de um eval. O talk dá poucos detalhes: não mostra metodologia, intervalos de confiança nem como o corte de 90% foi medido contra a qualidade. A comparação de 14% e 3% vem de um único benchmark de impostos. O caso de US$ 1,5 milhão é de uma equipe de 10 ou 12 pessoas em modo token maxing, um ponto de partida inflado. Os nomes dos modelos saem confusos na legenda automática.",
+  "acoes": [
+    "Compare modelos pelo custo por tarefa concluída e pela nota, não pelo preço por token.",
+    "Monte um eval com 30 ou mais tarefas reais do seu trabalho, tiradas do histórico de e-mails, tickets ou pull requests, em vez de testar cinco exemplos no olho.",
+    "Defina se você precisa de resposta totalmente correta ou de rascunho aproveitável, e meça com a métrica que combina.",
+    "Teste um modelo menor ou mais barato nas tarefas simples e reserve o modelo de ponta para as difíceis."
+  ],
+  "numeros": [
+    {
+      "valor": "7%",
+      "contexto": "empresas com ROI de IA estabelecido, contra 90% que usam IA",
+      "t": 155
+    },
+    {
+      "valor": "14% / 3%",
+      "contexto": "modelo menor saiu mais caro e com nota menor no teste de impostos",
+      "t": 251
+    },
+    {
+      "valor": "US$ 1,5 mi",
+      "contexto": "gasto da equipe da Vals em tokens num mês",
+      "t": 654
+    },
+    {
+      "valor": "90%",
+      "contexto": "redução de gasto com mesma produção, segundo o palestrante",
+      "t": 777
+    }
+  ]
+}
