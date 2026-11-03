@@ -71,6 +71,7 @@ def test_home_com_destaque_e_cartoes(tmp_path):
     assert 'data-temas="evals"' in html  # filtro por tema entre edições
     assert 'data-ids="bbbbbbbbbbb aaaaaaaaaaa"' in html  # progresso segue a ordem de leitura
     assert 'id="continuar"' in html and "edicoes/2026-09-28.html#v-bbbbbbbbbbb" in html
+    assert '"e": "2026-09-28", "d": "28 set"' in html  # progresso agrupado por edição
     assert 'href="glossario.html"' in html
     assert 'class="video"' not in html  # a home não carrega os blocos completos
     for arq in ("estilo.css", "app.js", ".nojekyll", "favicon.svg"):
@@ -97,7 +98,6 @@ def test_bloco_de_video_orienta_a_leitura(tmp_path):
     bloco = html[html.index('id="v-aaaaaaaaaaa"'):]
     assert '<h2 lang="en">Talk aaaaaaaaaaa</h2>' in bloco
     assert bloco.index("Antes de ler") < bloco.index("Critério")  # termos antes das ideias
-    assert 'aria-label="Marcar Talk aaaaaaaaaaa como estudado"' in bloco
     assert 'role="img" aria-label="Complexidade 4 de 5"' in bloco
     # o primeiro talk da ordem (bbb) aponta para o próximo (aaa)
     primeiro = html[html.index('id="v-bbbbbbbbbbb"'):html.index('id="v-aaaaaaaaaaa"')]
@@ -179,3 +179,59 @@ def test_letra_de_mao_legivel_e_tese_em_fonte_de_texto(tmp_path):
     assert '<p class="tese">' in html  # tese longa sai da letra de mão
     css = ler(site / "estilo.css")
     assert '--hand:"Kalam"' in css and "Covered By Your Grace" not in css
+
+
+def ancoras_quebradas(site: Path) -> list[str]:
+    """Links internos (página#âncora) cujo id não existe na página de destino."""
+    import re
+    ids, quebrados = {}, []
+    paginas = [p for p in site.rglob("*.html") if not p.name.startswith(".")]
+    for p in paginas:
+        ids[p.resolve()] = set(re.findall(r'id="([^"]+)"', ler(p)))
+    for p in paginas:
+        for alvo, ancora in re.findall(r'href="([^"#:]*\.html|)#([^"]+)"', ler(p)):
+            destino = (p.parent / alvo).resolve() if alvo else p.resolve()
+            if destino in ids and ancora not in ids[destino]:
+                quebrados.append(f"{p.name} -> {alvo}#{ancora}")
+    return quebrados
+
+
+def test_nenhuma_ancora_interna_quebrada(tmp_path):
+    data = preparar(tmp_path)
+    v = video("fffffffffff", "2026-09-27")
+    v["conceitos"][0]["pre_requisitos"] = ["eval", "Agente de IA"]  # o segundo não está no glossário
+    gravar_json(data / "videos" / "fffffffffff.json", v)
+    site = tmp_path / "site"
+    montar_site.montar(data, site)
+    assert ancoras_quebradas(site) == []
+    html = ler(site / "edicoes" / "2026-09-27.html")
+    assert 'glossario.html#g-agente-de-ia' not in html and "Agente de IA" in html
+    assert 'href="../glossario.html#g-eval">eval</a>' in html
+
+
+def test_palestrante_sai_do_titulo_com_hifen(tmp_path):
+    data = preparar(tmp_path)
+    gravar_json(data / "videos" / "ggggggggggg.json", video(
+        "ggggggggggg", "2026-09-27", titulo="Ship It Faster - Bia Souza, Acme",
+        titulo_curto="Ship It Faster - Bia Souza, Acme", palestrante=None))
+    site = tmp_path / "site"
+    montar_site.montar(data, site)
+    html = ler(site / "edicoes" / "2026-09-27.html")
+    assert '<h2 lang="en">Ship It Faster</h2>' in html
+    assert '<span class="chip">Bia Souza, Acme</span>' in html
+
+
+def test_rotulo_do_checkbox_igual_ao_texto_visivel(tmp_path):
+    data, site = preparar(tmp_path), tmp_path / "site"
+    montar_site.montar(data, site)
+    html = ler(site / "edicoes" / "2026-09-28.html")
+    assert 'aria-label="Marcar' not in html
+    assert 'Marquei como estudado<span class="sr">: <span lang="en">Talk aaaaaaaaaaa</span></span>' in html
+
+
+def test_pagina_404(tmp_path):
+    data, site = preparar(tmp_path), tmp_path / "site"
+    montar_site.montar(data, site)
+    html = ler(site / "404.html")
+    assert "Página não encontrada" in html
+    assert "/aprendendo-ai/edicoes/2026-09-28.html" in html  # links absolutos: o 404 vale para qualquer caminho

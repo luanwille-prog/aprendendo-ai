@@ -20,6 +20,8 @@ TEMPLATES = RAIZ / "templates"
 TZ = ZoneInfo("America/Sao_Paulo")
 CANAL_ID = "UCLKPca3kwwd-B59HNr-_lvA"
 CANAL_URL = "https://www.youtube.com/@aiDotEngineer/videos"
+SITE_URL = "https://luanwille-prog.github.io/aprendendo-ai/"
+SITE_CAMINHO = "/aprendendo-ai/"
 
 TEMAS = {
     "agentes": "Agentes",
@@ -89,10 +91,16 @@ def fmt_datahora(iso: str) -> str:
 
 
 def titulo_e_palestrante(titulo: str) -> tuple[str, str | None]:
+    """Separa "Título — Nome, Empresa". O YouTube também usa " - " e " | ": nesses casos só separa
+    quando o lado direito tem vírgula (Nome, Empresa), para não cortar títulos com hífen."""
     base, sep, autor = titulo.rpartition(" — ")
-    if not sep or not base.strip():
-        return titulo.strip(), None
-    return base.strip(), autor.strip()
+    if sep and base.strip():
+        return base.strip(), autor.strip()
+    for separador in (" | ", " - "):
+        base, sep, autor = titulo.rpartition(separador)
+        if sep and base.strip() and "," in autor and len(autor) <= 90:
+            return base.strip(), autor.strip()
+    return titulo.strip(), None
 
 
 def chave(nome: str) -> str:

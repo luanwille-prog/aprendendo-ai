@@ -13,18 +13,41 @@
       el.innerHTML = `<span class="barra" aria-hidden="true"><i style="width:${pct}%"></i></span><span>${feitos} de ${ids.length} estudados</span>`;
     });
     document.querySelectorAll(".indice li[data-id]").forEach((li) => li.classList.toggle("feito", estudado(li.dataset.id)));
+    atualizarContinuar();
+  }
+
+  // "Continuar": retoma a edição mais recente que ficou pela metade, não a primeira com talk pendente.
+  // As outras edições começadas aparecem como pendências, com opção de arquivar sem culpa.
+  const arquivada = (e) => { try { return localStorage.getItem("arquivei:" + e) === "1"; } catch (x) { return false; } };
+  function atualizarContinuar() {
     const cont = document.getElementById("continuar");
-    if (cont) {
-      let talks = [];
-      try { talks = JSON.parse(cont.dataset.talks || "[]"); } catch (e) {}
-      const alguem = talks.some((t) => estudado(t.id));
-      const proximo = talks.find((t) => !estudado(t.id));
-      cont.hidden = !alguem || !proximo;
-      if (proximo) {
-        cont.href = proximo.href;
-        cont.textContent = "Continuar: " + proximo.titulo;
-      }
+    if (!cont) return;
+    let eds = [];
+    try { eds = JSON.parse(cont.dataset.talks || "[]"); } catch (e) {}
+    const resumo = eds.map((ed) => ({ ...ed, feitos: ed.t.filter((t) => estudado(t.id)).length }));
+    const andamento = resumo.filter((ed) => ed.feitos > 0 && ed.feitos < ed.t.length && !arquivada(ed.e));
+    const alguem = resumo.some((ed) => ed.feitos > 0);
+    // em andamento primeiro; senão, a edição mais nova ainda não começada
+    const alvo = andamento[0] || resumo.find((ed) => ed.feitos === 0 && !arquivada(ed.e));
+    const proximo = alvo && alvo.t.find((t) => !estudado(t.id));
+    cont.hidden = !alguem || !proximo;
+    if (proximo) {
+      cont.href = proximo.h;
+      cont.textContent = "Continuar: " + proximo.n;
     }
+    const caixa = document.getElementById("pendencias");
+    if (!caixa) return;
+    const outras = andamento.filter((ed) => ed !== alvo);
+    caixa.hidden = !outras.length;
+    caixa.innerHTML = outras.length ? `<p class="pendencias-titulo">Ficou pela metade</p><ul>${outras.map((ed) => {
+      const falta = ed.t.length - ed.feitos;
+      const prox = ed.t.find((t) => !estudado(t.id));
+      return `<li><a href="${prox.h}">${falta} ${falta === 1 ? "talk" : "talks"} de ${ed.d}</a> <button type="button" class="arquivar" data-edicao="${ed.e}">Arquivar<span class="sr"> a edição de ${ed.d}</span></button></li>`;
+    }).join("")}</ul>` : "";
+    caixa.querySelectorAll(".arquivar").forEach((b) => b.addEventListener("click", () => {
+      try { localStorage.setItem("arquivei:" + b.dataset.edicao, "1"); } catch (x) {}
+      atualizarContinuar();
+    }));
   }
 
   document.querySelectorAll("input[data-id]").forEach((caixa) => {

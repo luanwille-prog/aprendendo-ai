@@ -24,7 +24,7 @@
         <span class="progresso" data-ids="{{ videos|map(attribute='id')|join(' ') }}"></span>
         {% if dia and dia.conceitos_novos %}
         <p>Termos novos no glossário:
-          {% for c in dia.conceitos_novos %}<a href="{{ raiz }}glossario.html#g-{{ c|lower|slug }}">{{ c }}</a>{% if not loop.last %}, {% endif %}{% endfor %}.
+          {% for c in dia.conceitos_novos %}{% set alvo = ancora_glossario(c) %}{% if alvo %}<a href="{{ raiz }}glossario.html#{{ alvo }}">{{ c }}</a>{% else %}{{ c }}{% endif %}{% if not loop.last %}, {% endif %}{% endfor %}.
         </p>
         {% endif %}
         <nav class="paginacao" aria-label="Outras edições">

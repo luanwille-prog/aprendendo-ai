@@ -45,6 +45,13 @@ def test_titulo_e_palestrante():
     assert titulo_e_palestrante("Get Out of the Model's Way — Kevin Hou, Google Antigravity") == (
         "Get Out of the Model's Way", "Kevin Hou, Google Antigravity")
     assert titulo_e_palestrante("Keynote sem autor") == ("Keynote sem autor", None)
+    # o YouTube usa hífen simples; só separa quando o lado direito parece "Nome, Empresa"
+    assert titulo_e_palestrante("How to Write Your First AI Eval - SallyAnn DeLucia, Arize AI") == (
+        "How to Write Your First AI Eval", "SallyAnn DeLucia, Arize AI")
+    assert titulo_e_palestrante("Docs Readers - Hahnbee Lee, Mintlify & Lincoln Murr, Coinbase") == (
+        "Docs Readers", "Hahnbee Lee, Mintlify & Lincoln Murr, Coinbase")
+    assert titulo_e_palestrante("Self-Driving Agents - Part Two") == ("Self-Driving Agents - Part Two", None)
+    assert titulo_e_palestrante("Fix the Pipeline, Not the Model") == ("Fix the Pipeline, Not the Model", None)
 
 
 def test_chave_e_slug():

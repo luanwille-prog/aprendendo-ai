@@ -14,8 +14,8 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from comum import (DATA, MESES, SITE, TEMAS, TEMPLATES, chave, fmt_data, fmt_datahora, fmt_tempo, ler_json,
-                   listar_json, slug)
+from comum import (DATA, MESES, SITE, SITE_CAMINHO, TEMAS, TEMPLATES, chave, fmt_data, fmt_datahora, fmt_tempo,
+                   ler_json, listar_json, slug, titulo_e_palestrante)
 from estado import MAX_TENTATIVAS, Estado
 
 
@@ -38,6 +38,11 @@ def _duracao_fmt(segundos: int) -> str:
     minutos = round(segundos / 60)
     h, m = divmod(minutos, 60)
     return f"{h} h {m:02d} min" if h else f"{m} min"
+
+
+def _data_curta(iso: str) -> str:
+    d = date.fromisoformat(iso)
+    return f"{d.day} {MESES[d.month - 1]}"
 
 
 def _semanas(edicoes: list[dict]) -> list[dict]:
@@ -65,12 +70,29 @@ def _glossario(entradas: list[dict]) -> list[dict]:
     return [{"letra": letra, "termos": grupos[letra]} for letra in sorted(grupos, key=lambda x: (x == "#", x))]
 
 
+def _normalizar_video(v: dict) -> dict:
+    """Corrige na renderização o que a extração antiga deixou passar (palestrante grudado no título)."""
+    if not v.get("palestrante"):
+        curto, palestrante = titulo_e_palestrante(v.get("titulo_curto") or v["titulo"])
+        if palestrante:
+            v["titulo_curto"], v["palestrante"] = curto, palestrante
+    return v
+
+
 def montar(pasta_data: Path, pasta_site: Path) -> list[str]:
     pasta_data, pasta_site = Path(pasta_data), Path(pasta_site)
     env = _ambiente()
+    glossario = ler_json(pasta_data / "glossario.json", {})
+
+    def ancora_glossario(nome: str) -> str | None:
+        """Âncora do termo no glossário, ou None quando o termo não tem entrada (vira texto simples)."""
+        k = chave(nome)
+        return f"g-{slug(k)}" if k in glossario else None
+
+    env.globals["ancora_glossario"] = ancora_glossario
     por_edicao: dict[str, list] = defaultdict(list)
     for arq in listar_json(pasta_data / "videos"):
-        v = ler_json(arq)
+        v = _normalizar_video(ler_json(arq))
         por_edicao[v["edicao"]].append(v)
     dias = {arq.stem: ler_json(arq) for arq in listar_json(pasta_data / "dias")}
 
@@ -80,7 +102,7 @@ def montar(pasta_data: Path, pasta_site: Path) -> list[str]:
         videos = _ordenar(por_edicao[e], dia)
         temas_ids = list(dict.fromkeys(v["tema"] for v in videos))
         edicoes.append({
-            "edicao": e, "data_fmt": fmt_data(e), "dia": dia, "videos": videos,
+            "edicao": e, "data_fmt": fmt_data(e), "data_curta": _data_curta(e), "dia": dia, "videos": videos,
             "titulo": (dia or {}).get("titulo") or "Talks do dia",
             "temas": [TEMAS.get(t, t) for t in temas_ids], "temas_ids": temas_ids,
             "duracao_fmt": _duracao_fmt(sum(v.get("duracao") or 0 for v in videos)),
@@ -105,16 +127,21 @@ def montar(pasta_data: Path, pasta_site: Path) -> list[str]:
             proxima=edicoes[i - 1] if i > 0 else None, **comum)
         (pasta_site / "edicoes" / f"{ed['edicao']}.html").write_text(html, encoding="utf-8")
 
-    # "continuar de onde parei": talks da mais nova para a mais antiga, na ordem de leitura
-    talks = [{"id": v["id"], "href": f"edicoes/{ed['edicao']}.html#v-{v['id']}", "titulo": v["titulo_curto"]}
-             for ed in edicoes for v in ed["videos"]]
+    # "continuar de onde parei": edições da mais nova para a mais antiga, talks na ordem de leitura
+    talks = [{"e": ed["edicao"], "d": ed["data_curta"],
+              "t": [{"id": v["id"], "h": f"edicoes/{ed['edicao']}.html#v-{v['id']}", "n": v["titulo_curto"]}
+                    for v in ed["videos"]]} for ed in edicoes]
     anteriores = edicoes[1:]
     index = env.get_template("index.html.j2").render(
         raiz="", pagina="home", atual=edicoes[0] if edicoes else None, semanas=_semanas(anteriores),
         temas_todos=sorted({t for ed in anteriores for t in ed["temas_ids"]}), talks=talks, **comum)
     (pasta_site / "index.html").write_text(index, encoding="utf-8")
 
-    entradas = list(ler_json(pasta_data / "glossario.json", {}).values())
+    titulos = {v["id"]: v["titulo_curto"] for ed in edicoes for v in ed["videos"]}
+    entradas = list(glossario.values())
+    for g in entradas:
+        for a in g.get("aparicoes") or []:
+            a["video_titulo"] = titulos.get(a["video_id"], a["video_titulo"])
     html = env.get_template("glossario.html.j2").render(
         raiz="", pagina="glossario", grupos=_glossario(entradas), total=len(entradas),
         com_analogia=sum(1 for g in entradas if g.get("analogia")), **comum)
@@ -126,6 +153,10 @@ def montar(pasta_data: Path, pasta_site: Path) -> list[str]:
         abandonados=[{"id": vid, **p} for vid, p in estado.abandonados().items()],
         total_videos=sum(len(ed["videos"]) for ed in edicoes), total_edicoes=len(edicoes), **comum)
     (pasta_site / "status.html").write_text(html, encoding="utf-8")
+
+    html = env.get_template("404.html.j2").render(
+        raiz=SITE_CAMINHO, pagina="404", atual=edicoes[0] if edicoes else None, **comum)
+    (pasta_site / "404.html").write_text(html, encoding="utf-8")
 
     for estatico in ("estilo.css", "app.js", "favicon.svg"):
         shutil.copy(TEMPLATES / estatico, pasta_site / estatico)
