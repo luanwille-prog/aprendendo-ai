@@ -21,35 +21,40 @@
       "texto": "Agentes não são determinísticos. O sistema pode parecer saudável enquanto as respostas estão erradas. O loop tem cinco passos, divididos em online (tracing e monitoramento) e offline (datasets, experimentos e avaliação). Equipes fora de setores de alto risco podem começar só pela parte online e já corrigir muita coisa.",
       "t": 170,
       "legenda": "O ciclo de cinco passos, com tracing e monitoramento como ponto de partida.",
-      "print": "img/BOCjybvJYM4/0.jpg"
+      "print": "img/BOCjybvJYM4/0.jpg",
+      "descricao": "Slide 'The AI Engineering loop' com as etapas Trace, Monitor, Datasets, Experiment e Evaluate em sequência, com o ciclo marcado."
     },
     {
       "titulo": "Tudo começa pelo trace",
       "texto": "Um trace é composto por observations (observações): chamadas ao modelo, chamadas a ferramentas e etapas aninhadas. Cada uma carrega dados como duração, tokens, custo, modelo e versão do prompt. Se o trace for ruim, o monitoramento perde casos, o dataset fica pior e as decisões de avaliação se baseiam em pouco.",
       "t": 855,
       "legenda": "Um trace real do agente Specs, com cada passo como uma observação.",
-      "print": "img/BOCjybvJYM4/1.jpg"
+      "print": "img/BOCjybvJYM4/1.jpg",
+      "descricao": "Langfuse com a lista de traces à esquerda e a árvore do trace dad-it-support-chat-turn à direita, com o fluxo de observações em diagrama."
     },
     {
       "titulo": "Monitores sob medida para as falhas do seu app",
       "texto": "Annabell cria três evaluators (avaliadores) para o agente de suporte. Um juiz LLM detecta discordância do usuário. Um código em Python detecta texto em caixa alta, sinal de frustração. Um terceiro compara o system prompt com o pedido para achar solicitações fora do escopo. Ela insiste que o ponto é pensar nos modos de falha do seu caso, não copiar templates.",
       "t": 1170,
       "legenda": "O mapeamento de variáveis define qual parte do trace o avaliador enxerga.",
-      "print": "img/BOCjybvJYM4/2.jpg"
+      "print": "img/BOCjybvJYM4/2.jpg",
+      "descricao": "Tela 'Set up evaluator' com o prompt do juiz de discordância do usuário e o mapeamento de variáveis conversation_history e last_user_message."
     },
     {
       "titulo": "Scores viram filtro para achar o que importa",
       "texto": "Depois de rodar o agente com uma discordância e um pedido em caixa alta, o trace raiz aparece marcado com user disagreement verdadeiro. Esses scores permitem filtrar milhares de traces e olhar só os suspeitos. Os avaliadores automáticos escalam, mas só pegam o que você previu. Feedback humano pega o que você não previu.",
       "t": 1620,
       "legenda": "O score aparece direto no trace e serve de filtro.",
-      "print": "img/BOCjybvJYM4/3.jpg"
+      "print": "img/BOCjybvJYM4/3.jpg",
+      "descricao": "Trace aberto no Langfuse em zoom 110%, com o score User Disagreement marcado como True no cabeçalho do trace."
     },
     {
       "titulo": "Agente de código investiga os traces",
       "texto": "Com a CLI e a skill do Langfuse instaladas, o Codex lê traces e scores da produção. O relatório aponta uma falha silenciosa na ferramenta de busca de ajuda, retries que aumentam latência e custo, e uma lacuna de cobertura dos avaliadores. Depois o agente propõe remover a ferramenta que não ajuda, já editando o código do repositório.",
       "t": 2228,
       "legenda": "O relatório lista falhas que nenhum monitor manual cobria.",
-      "print": "img/BOCjybvJYM4/4.jpg"
+      "print": "img/BOCjybvJYM4/4.jpg",
+      "descricao": "Relatório markdown 'Langfuse Issue Detection Triage' no Cursor, com escopo, contagem de traces e tabela de métricas principais."
     }
   ],
   "conceitos": [
@@ -195,5 +200,36 @@
       "contexto": "passos do workshop completo no site",
       "t": 2534
     }
-  ]
+  ],
+  "rotulo": "Monitorar agentes em produção com traces e evaluators",
+  "objetivo": "criar avaliadores sob medida para os modos de falha do seu agente e usar traces de produção para achar falhas silenciosas",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que três monitores o workshop cria para o agente de suporte Specs?",
+      "resposta": "Discordância do usuário, detectada por um juiz LLM, frustração em caixa alta, detectada por código em Python, e pedido fora do escopo, detectado comparando o system prompt com o pedido."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você começaria a monitorar um agente seu em produção?",
+      "resposta": "Conferir se os traces registram entrada, saída, ferramentas, versão do prompt, custo e latência. Depois listar de três a cinco modos de falha e criar um avaliador para cada, e revisar traces toda semana."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que o resultado do agente de código sobre os traces não prova ganho em produção?",
+      "resposta": "O app é de brinquedo, com traces semeados por script, e o relatório parece pré-preparado. A amostra é de 70 a 120 traces, o workshop vem de uma empresa que vende o Langfuse e a correção proposta não foi testada na tela."
+    }
+  ],
+  "experimento": {
+    "titulo": "Três avaliadores para um agente seu",
+    "minutos": 40,
+    "precisa": "Um agente com logs de conversas ou traces e Python, ou uma conta gratuita de uma ferramenta de tracing",
+    "passos": [
+      "Reúna vinte conversas reais ou simuladas do seu agente com entrada, saída e chamadas de ferramenta.",
+      "Liste três modos de falha seus e escreva um avaliador para cada.",
+      "Use código para checagens exatas, como caixa alta, e um juiz LLM só para sinais implícitos.",
+      "Filtre as conversas marcadas e leia à mão as que o avaliador sinalizou."
+    ],
+    "sucesso": "Os avaliadores marcam casos que você confirma ao ler a conversa, e você leva pelo menos um caso interessante para um dataset de testes."
+  }
 }

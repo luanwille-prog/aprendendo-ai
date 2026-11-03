@@ -21,35 +21,40 @@
       "texto": "Quem busca macarrão sem glúten pode receber espaguete comum, porque ele vende muito. O talk propõe relevância graduada em três níveis (0, 1 e 2): macarrão sem glúten de verdade no topo, substituto como o de grão-de-bico no meio, espaguete comum embaixo. Cliques e conversões sofrem viés de posição, preço e promoção, então não servem sozinhos como régua.",
       "t": 207,
       "legenda": "Mostra por que popularidade não substitui relevância graduada",
-      "print": "img/ACPEpji5NV4/0.jpg"
+      "print": "img/ACPEpji5NV4/0.jpg",
+      "descricao": "Slide com exemplo de gluten-free pasta mostrando itens em três níveis de relevância, comparando ranking por engajamento versus ranking graduado"
     },
     {
       "titulo": "Rotulador LLM offline alimenta retrieval e ranking",
       "texto": "O time monta um conjunto semente com rótulos humanos, audita casos suspeitos com um LLM mais forte e reconcilia com modelos de taxonomia. Esse conjunto ouro ajusta um LLM leve (o exemplo dado foi um GPT-4o mini), que rotula o catálogo inteiro offline. Os rótulos viram alvo comum para retrieval (busca de candidatos) e ranking.",
       "t": 295,
       "legenda": "Mostra o pipeline que transforma poucos rótulos humanos em rótulos para todo o catálogo",
-      "print": "img/ACPEpji5NV4/1.jpg"
+      "print": "img/ACPEpji5NV4/1.jpg",
+      "descricao": "Diagrama do pipeline em dois estágios: rótulos humanos, auditoria por LLM forte, ajuste do rotulador leve, aplicação em catálogo com estatísticas"
     },
     {
       "titulo": "Destilar em vez de substituir o ranker",
       "texto": "No retrieval, um treino contrastivo em dois estágios usa hard negatives (itens que o modelo confunde) e elevou o NDCG de relevância em 2,3%. No ranking, uma nova torre ordinal de relevância divide as camadas de baixo com as torres de clique, add to cart e conversão. Uma função de valor mistura relevância e engajamento por superfície.",
       "t": 515,
       "legenda": "Mostra onde o sinal do LLM entra no ranker sem trocar a arquitetura",
-      "print": "img/ACPEpji5NV4/2.jpg"
+      "print": "img/ACPEpji5NV4/2.jpg",
+      "descricao": "Arquitetura do ranker multitarefa com torre de relevância ordinal ao lado de torres de engajamento, compartilhando camadas de baixo"
     },
     {
       "titulo": "Semantic IDs como taxonomia aprendida",
       "texto": "Cada item recebe um código hierárquico: o prefixo marca a vizinhança ampla e os tokens finais marcam distinções finas, como molhos de pimenta mexicanos, caribenhos e coreanos. O código ajuda em comparações entre categorias, itens novos (cold start) e itens raros. Também alimentou a reformulação de queries, com ganho de 4 a 5% de MRR no ranking.",
       "t": 671,
       "legenda": "Mostra a estrutura hierárquica surgindo dos dados sem rótulos humanos",
-      "print": "img/ACPEpji5NV4/3.jpg"
+      "print": "img/ACPEpji5NV4/3.jpg",
+      "descricao": "Mapa hierárquico de hot sauces ilustrando semantic IDs: prefixos compartilhados e divisão por especialidade regional sem rótulos humanos"
     },
     {
       "titulo": "Memória do consumidor em três escalas de tempo",
       "texto": "A memória tem três camadas: longo prazo (pedidos, buscas, suporte), contexto em tempo real (carrinho e buscas ativas) e preferências declaradas (como no Ask DoorDash). Cada consumidor vira blocos de memória em texto, vetores e grafos, que modelos de ML e LLMs usam sem reinterpretar. Coleções geradas offline usam isso e elevaram a taxa de pedidos em perto de 1% em pets.",
       "t": 1024,
       "legenda": "Mostra como texto, vetores e grafo formam um objeto de memória reutilizável",
-      "print": "img/ACPEpji5NV4/4.jpg"
+      "print": "img/ACPEpji5NV4/4.jpg",
+      "descricao": "Diagrama de representação de memória do consumidor em três formas: texto, embeddings semânticos, grafo de contexto reutilizável"
     }
   ],
   "conceitos": [
@@ -237,5 +242,36 @@
       "contexto": "Aumento de usuários ativos em pets",
       "t": 1228
     }
-  ]
+  ],
+  "rotulo": "Destilar o LLM para busca e recomendação",
+  "objetivo": "usar um LLM como rotulador offline com escala de 0 a 2 e servir modelos menores em vez de chamar o LLM a cada requisição",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que cliques e conversões não bastam como régua de relevância na busca do DoorDash?",
+      "resposta": "Eles sofrem viés de posição, preço e promoção. Quem busca macarrão sem glúten pode receber espaguete comum só porque ele vende muito, por isso o time usa relevância graduada em três níveis."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você mantém uma busca e quer usar um LLM sem pagar uma chamada por requisição. Qual o plano?",
+      "resposta": "Use o LLM como rotulador offline numa amostra de pares consulta e item, com escala de 0 a 2, e compare com rótulos humanos. Depois escale e sirva modelos menores treinados com esses rótulos."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que informações faltam nos ganhos de 2,3% de NDCG e de 4 a 5% de MRR?",
+      "resposta": "Faltam metodologia de teste A/B, tamanho de amostra, intervalos de confiança e base de comparação. NDCG e MRR são métricas offline que nem sempre viram receita, e faltam custos e riscos de privacidade."
+    }
+  ],
+  "experimento": {
+    "titulo": "Rotule pares de busca e item com um LLM",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT e uma planilha com 20 pares de busca e item",
+    "passos": [
+      "Monte 20 pares de busca e item, como a busca por um produto e o título do resultado.",
+      "Dê você mesmo uma nota 0, 1 ou 2 a cada par, em que 2 é o item certo e 1 é um substituto.",
+      "Peça ao modelo que dê as mesmas notas, com a definição de cada nível.",
+      "Compare as notas e liste os pares em que vocês discordaram."
+    ],
+    "sucesso": "Você tem a taxa de concordância entre você e o LLM e uma lista de casos para refinar a definição das notas."
+  }
 }

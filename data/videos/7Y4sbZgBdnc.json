@@ -21,7 +21,8 @@
       "texto": "O harness é o que envolve o modelo, o conduz e o liga ao mundo. A camada de runtime controla onde o loop do agente roda e como o estado é guardado para retomar o trabalho. É engenharia de software tradicional. A camada de contexto e orquestração decide quais modelos são chamados e o que veem: prompts, ferramentas, memória e compactação.",
       "t": 124,
       "legenda": "As duas camadas do harness, runtime e contexto/orquestração.",
-      "print": "img/7Y4sbZgBdnc/0.jpg"
+      "print": "img/7Y4sbZgBdnc/0.jpg",
+      "descricao": "Diagrama do agent harness com Environments, Inference, Apps e Connectors ao redor, e as camadas Context & Orchestration e Runtime."
     },
     {
       "titulo": "Estudos mostram que o harness importa pouco no código",
@@ -35,21 +36,24 @@
       "texto": "O harness traz tarefas mais difíceis ao alcance. Mais usuários as tentam com agentes e compartilham mais dados de código com os laboratórios. Os modelos aprendem a habilidade e o harness apaga o remendo. Quando o modelo absorve uma capacidade, o harness abre outra fronteira e o ciclo recomeça.",
       "t": 378,
       "legenda": "O ciclo que faz o modelo absorver o que o harness fazia.",
-      "print": "img/7Y4sbZgBdnc/2.jpg"
+      "print": "img/7Y4sbZgBdnc/2.jpg",
+      "descricao": "Slide com o título Harness unlocks capabilities e o rótulo Data flywheel; o diagrama circular não aparece."
     },
     {
       "titulo": "Grokbot põe de volta o que o Cursor tirou",
       "texto": "O Grokbot usa coordenadores de longa duração que orquestram uma frota de agentes trabalhadores, como um advogado que delega a paralegais. Nesse domínio novo (slides, viagens, comunicação, agir ou perguntar, memória) os modelos ainda erram. A equipe está adicionando prompts e guardrails, o oposto do que fez no Cursor.",
       "t": 502,
       "legenda": "Coordenador e frota de workers, com guardrails de volta ao harness.",
-      "print": "img/7Y4sbZgBdnc/3.jpg"
+      "print": "img/7Y4sbZgBdnc/3.jpg",
+      "descricao": "Diagrama de árvore com um coordenador no topo e quatro agentes trabalhadores coloridos abaixo, ligados por linhas."
     },
     {
       "titulo": "Primitivas e shims rastreados",
       "texto": "Primitivas são interfaces-base que se compõem em recursos novos. O exemplo é subscriptions, uma ferramenta única para o agente acordar com eventos de Slack, CI vermelho ou horário. Os remendos determinísticos, chamados shims, são registrados num painel. Um bot abre um PR para apagar o shim que parou de disparar.",
       "t": 967,
       "legenda": "Como apagar remendos do harness quando o modelo melhora.",
-      "print": "img/7Y4sbZgBdnc/4.jpg"
+      "print": "img/7Y4sbZgBdnc/4.jpg",
+      "descricao": "Slide Designing agent primitives com Subscriptions no centro (permissions, route, dedupe, wake the agent) e cinco gatilhos à esquerda."
     }
   ],
   "conceitos": [
@@ -57,7 +61,7 @@
       "nome": "Agent harness",
       "traducao": "estrutura que envolve o modelo",
       "nivel": "basico",
-      "chave": "agent harness",
+      "chave": "harness",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -170,5 +174,35 @@
       "contexto": "parcela do trabalho de agentes fora do notebook, previsão",
       "t": 1029
     }
-  ]
+  ],
+  "rotulo": "O que sobra do harness quando o modelo melhora",
+  "objetivo": "decidir quais partes do harness ainda valem a pena e quais são remendos que o próximo modelo absorve",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que resultado os estudos de Berkeley e de Apple e EPFL mostram sobre o harness em tarefas de código?",
+      "resposta": "No estudo de Berkeley, com sete modelos de fronteira, a escolha do harness não mudou o score de forma significativa nos modelos mais novos no SWE-bench Lite. O estudo de Apple e EPFL chegou a conclusão parecida. Os dois medem só código."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você identificaria os remendos do seu harness que podem sumir na próxima versão do modelo?",
+      "resposta": "Marcando no código cada remendo feito para compensar o modelo, comparando um harness simples com o modelo mais recente no seu conjunto de tarefas e revisando a lista a cada troca de versão."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que alegações do talk ficam sem evidência?",
+      "resposta": "O palestrante promove o Grokbot sem mostrar dados do produto, a redução de custo sem perda de qualidade não traz número e a previsão de 90% do trabalho fora do notebook em 6 meses não tem evidência. A tese de nuvem convém a quem vende agentes em nuvem."
+    }
+  ],
+  "experimento": {
+    "titulo": "Harness simples contra harness elaborado",
+    "minutos": 45,
+    "precisa": "Um agente de código e 5 a 10 tarefas suas já resolvidas",
+    "passos": [
+      "Escolha 5 a 10 tarefas de código pequenas com resultado conhecido.",
+      "Rode todas com o agente em configuração padrão e depois com seu harness elaborado, com skills e prompts longos.",
+      "Registre acertos, tempo e custo por tarefa nas duas configurações."
+    ],
+    "sucesso": "Você tem uma tabela com acertos e custo nas duas configurações e uma lista de componentes do harness que não mudaram o resultado."
+  }
 }

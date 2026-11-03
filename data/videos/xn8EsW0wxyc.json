@@ -21,35 +21,40 @@
       "texto": "No fluxo comum, o runtime busca a senha no cofre (1Password, HashiCorp Vault) e a entrega à camada de raciocínio. Se o LLM monta uma tool call, ele pode mandar esse segredo para qualquer servidor, inclusive o de um atacante. Segundo o palestrante, o segredo ainda pode parar em dados de treino.",
       "t": 354,
       "legenda": "O segredo viaja do cofre até o LLM, que decide para onde enviá-lo.",
-      "print": "img/xn8EsW0wxyc/0.jpg"
+      "print": "img/xn8EsW0wxyc/0.jpg",
+      "descricao": "Slide 'How secrets flow through an agent' com diagrama: user request, agent runtime, secret store 1Password/Vault, LLM reasoning layer e external APIs"
     },
     {
       "titulo": "Chave dividida e hash reduzem o dano",
       "texto": "A Venice guarda hashes no lugar de identificadores pessoais, por exemplo para limitar o uso por usuário. Os dados criptografados ficam em um enclave com custódia de chave dividida em duas metades. O atacante precisa das duas para decifrar, e a própria equipe também não acessa os dados sozinha.",
       "t": 415,
       "legenda": "Duas metades de chave: uma só não abre os dados.",
-      "print": "img/xn8EsW0wxyc/1.jpg"
+      "print": "img/xn8EsW0wxyc/1.jpg",
+      "descricao": "Slide 'Privacy preserving patterns that work' com hashes de IDs, enclave com split key custody, handles revogáveis e prompts"
     },
     {
       "titulo": "Escopo estreito: uma ferramenta, não vinte",
       "texto": "Um servidor MCP pode expor 15 a 20 ferramentas, mas a tarefa usa uma. Carregar tudo, junto com a chave de API, aumenta a chance de exfiltração. Menos ferramentas também deixam a janela de contexto mais vazia, o que o palestrante associa a melhor desempenho do agente.",
       "t": 507,
       "legenda": "Poucas ferramentas reduzem o risco e o ruído de contexto.",
-      "print": "img/xn8EsW0wxyc/2.jpg"
+      "print": "img/xn8EsW0wxyc/2.jpg",
+      "descricao": "Slide 'Protecting agent-handled data' (miniatura pequena) com bullets sobre escopo estreito do agente e classificação de prompt injection"
     },
     {
       "titulo": "Cofre ligado à execução, não ao raciocínio",
       "texto": "O LLM gera entradas não determinísticas. Se o cofre se conecta ao runtime, o runtime vira uma camada de execução determinística. Ela faz o login no site ou chama a API externa sem que a senha apareça no prompt. Ali dá para aplicar regras de segurança que não funcionam dentro do LLM.",
       "t": 664,
       "legenda": "O LLM pede a ação, a camada de execução usa a credencial.",
-      "print": "img/xn8EsW0wxyc/3.jpg"
+      "print": "img/xn8EsW0wxyc/3.jpg",
+      "descricao": "Slide 'Keeping secrets out of the model' com diagrama: LLM gera action plan, agent runtime fala com secret store e browser/HTTP client"
     },
     {
       "titulo": "Computação confidencial com atestação",
       "texto": "Em um ambiente de execução confiável (TEE), a inferência roda isolada no nível do hardware. A Venice devolve junto da resposta uma atestação, que o usuário confere em um verificador. Tool calls totalmente criptografadas continuam sem solução prática, segundo o próprio palestrante.",
       "t": 793,
       "legenda": "A atestação prova criptograficamente onde a inferência rodou.",
-      "print": "img/xn8EsW0wxyc/4.jpg"
+      "print": "img/xn8EsW0wxyc/4.jpg",
+      "descricao": "Slide 'Privacy at the hardware level' (miniatura pequena) com bullets de confidential compute, TEE, attestation verificável e tool calls confidenciais"
     }
   ],
   "conceitos": [
@@ -232,5 +237,36 @@
       "contexto": "Compatibilidade declarada com a API da OpenAI",
       "t": 44
     }
-  ]
+  ],
+  "rotulo": "Onde os segredos vazam em agentes de IA",
+  "objetivo": "auditar logs, credenciais e ferramentas de um agente para achar onde segredos e dados pessoais podem vazar",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Onde o palestrante diz que ficam os maiores riscos de vazamento?",
+      "resposta": "No sistema ao redor do modelo, como logs que guardam prompts, cofres de senha ligados direto ao LLM e ferramentas demais. O cofre deve ficar na camada de execução, não na de raciocínio."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como um agente seu deve usar uma chave de API sem expô-la ao modelo?",
+      "resposta": "O código de execução lê a credencial e o modelo só pede a ação. A chave nunca entra no prompt, e o servidor MCP expõe só as ferramentas necessárias, com credencial de escopo mínimo e revogável."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que afirmações do talk ficam sem prova?",
+      "resposta": "Prompts não armazenados e atestação aparecem sem auditoria externa. Não há demo nem caso real, e a ligação entre segredo no LLM e dados de treino vem sem fonte. A Venice vende privacidade."
+    }
+  ],
+  "experimento": {
+    "titulo": "Caça a segredos nos logs do seu agente",
+    "minutos": 25,
+    "precisa": "Logs ou histórico de um agente seu e um terminal ou editor com busca",
+    "passos": [
+      "Abra os logs ou o histórico de um agente que você usa.",
+      "Procure padrões como sk-, Bearer, password e chaves de API.",
+      "Anote o que está gravado sem filtro, incluindo respostas de ferramentas.",
+      "Escreva uma regra para mascarar ou não gravar cada tipo de dado encontrado."
+    ],
+    "sucesso": "Você sabe quais segredos aparecem nos logs, ou confirmou por busca que não há nenhum, e tem uma regra escrita para cada achado."
+  }
 }

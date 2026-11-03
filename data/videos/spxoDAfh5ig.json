@@ -21,35 +21,40 @@
       "texto": "Ao embutir a frase \"PRs que eu mergeei semana passada\", a busca vetorial devolve PRs que falam de merge, mas ignora autor, estado e data. O resultado pode ser um PR semanticamente perfeito e mergeado três anos atrás. A recuperação tem duas metades: a semântica e a estruturada.",
       "t": 333,
       "legenda": "Mostra por que similaridade sozinha erra perguntas com filtro temporal.",
-      "print": "img/spxoDAfh5ig/0.jpg"
+      "print": "img/spxoDAfh5ig/0.jpg",
+      "descricao": "Slide 'But the real questions' listando 'PRs I merged last week', 'Who reviewed payments the most' e outras perguntas com filtro"
     },
     {
       "titulo": "O modelo escreve a query, não a resposta",
       "texto": "O plano de consulta passa o schema ao modelo, força uma chamada de ferramenta para extrair nomes e inclui a data atual no prompt. Assim o modelo gera um filtro de banco, por exemplo mapeando \"Peter\" para o login do GitHub dele. A execução fica a cargo do banco.",
       "t": 960,
       "legenda": "A query gerada troca o nome falado pelo login real do autor.",
-      "print": "img/spxoDAfh5ig/1.jpg"
+      "print": "img/spxoDAfh5ig/1.jpg",
+      "descricao": "Playground com a query gerada à esquerda e o resultado em JSON à direita; legibilidade baixa, mas mostra a query do PR por autor"
     },
     {
       "titulo": "Validação com allow list, nunca deny list",
       "texto": "A saída do modelo é entrada não confiável. Cláusulas como where ou function podem rodar JavaScript no servidor, o que abre um ponto de prompt injection. Por isso o código procedural libera só operadores permitidos e apaga campos ocultos, como o tenant ID, para reinjetar o valor correto.",
       "t": 1147,
       "legenda": "A validação nega por padrão e barra o operador não permitido.",
-      "print": "img/spxoDAfh5ig/2.jpg"
+      "print": "img/spxoDAfh5ig/2.jpg",
+      "descricao": "Playground com a query e área de resultado/erro em tela escura; texto pequeno, sem mensagem de erro legível"
     },
     {
       "titulo": "Loop de retentativa com o erro como feedback",
       "texto": "Quando a query falha na validação ou na execução, o erro volta ao modelo, que tenta de novo até um limite de tentativas. No exemplo, a terceira tentativa caiu em match exato e não achou nada, o que mostrou a necessidade de busca full text. Peter chama esse loop de uma das peças mais importantes.",
       "t": 1271,
       "legenda": "O modelo precisou de várias tentativas e esbarrou no match exato.",
-      "print": "img/spxoDAfh5ig/3.jpg"
+      "print": "img/spxoDAfh5ig/3.jpg",
+      "descricao": "Terminal com logs de várias tentativas da query, cada uma com correção após erro"
     },
     {
       "titulo": "O mesmo motor serve ao agente de chat",
       "texto": "A aba de chat usa o mesmo motor do playground. A pergunta \"trabalhamos em algo de autenticação semana passada?\" faz o agente gerar a query, buscar os dados e raciocinar sobre eles. A diferença é que o chat raciocina e o playground só consulta.",
       "t": 1390,
       "legenda": "O agente gera a query e raciocina sobre o resultado.",
-      "print": "img/spxoDAfh5ig/4.jpg"
+      "print": "img/spxoDAfh5ig/4.jpg",
+      "descricao": "Aba de chat com resposta em tópicos sobre autenticação na semana passada, com a query gerada acima"
     }
   ],
   "conceitos": [
@@ -170,5 +175,37 @@
       "contexto": "caracteres que o algoritmo aceita como tipo",
       "t": 1935
     }
-  ]
+  ],
+  "rotulo": "Quando o RAG falha e o modelo precisa escrever a query",
+  "objetivo": "montar um fluxo em que o modelo gera uma query estruturada, validada por allow list, para perguntas com data, autor ou estado",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que a busca por similaridade erra a pergunta 'PRs que eu mergeei semana passada'?",
+      "resposta": "Ela devolve PRs que falam de merge, mas ignora autor, estado e data. Pode vir um PR perfeito em conteúdo e mergeado três anos atrás."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "No seu produto, que pergunta pede filtro estruturado, e o que entra no prompt para o modelo gerar a query?",
+      "resposta": "Pergunta com data, autor, estado ou contagem pede filtro. No prompt entram o schema, a data atual e a resolução do nome para o identificador real, como o login do autor."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites o próprio palestrante admite na solução?",
+      "resposta": "O algoritmo de schema é hacky, a amostra de 300 documentos veio de tentativa e erro e a validação precisa de reforço antes de uso interno. Em produção a Unblocked usa schemas estáticos."
+    }
+  ],
+  "experimento": {
+    "titulo": "Modelo gera o filtro e o código valida",
+    "minutos": 40,
+    "precisa": "Python, uma API de modelo e uma lista de registros com autor, data e status",
+    "passos": [
+      "Monte uma lista pequena de registros com autor, data e status.",
+      "Mande ao modelo o schema, a data de hoje e a pergunta, pedindo só um filtro em JSON.",
+      "Escreva código que aceite apenas campos e operadores de uma allow list e rejeite o resto.",
+      "Se a validação falhar, devolva o erro ao modelo e tente de novo até 3 vezes.",
+      "Aplique o filtro e compare com o resultado esperado de 3 perguntas."
+    ],
+    "sucesso": "As 3 perguntas retornam os registros certos e um filtro com campo fora da lista é barrado pelo código."
+  }
 }

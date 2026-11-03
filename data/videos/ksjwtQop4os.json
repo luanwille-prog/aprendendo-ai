@@ -35,14 +35,16 @@
       "texto": "Ajustar pesos é difícil e não há receita pronta. Uma alternativa prática é criar search templates (modelos de busca) com RRF, combinação linear ou reranker, e deixar um LLM ou uma regra simples escolher o modelo conforme a pergunta. Eles chamam isso de autotuning dos pobres. Judgment sets (consultas com os documentos esperados) medem qual configuração acerta mais.",
       "t": 2512,
       "legenda": "Rotear consultas entre estratégias de busca com templates",
-      "print": "img/ksjwtQop4os/2.jpg"
+      "print": "img/ksjwtQop4os/2.jpg",
+      "descricao": "Tabela verde tipo heatmap do notebook de avaliação, comparando configurações de busca (judgment set), com palestrante ao lado"
     },
     {
       "titulo": "Um agente cita fontes quando o dado traz a fonte",
       "texto": "Modelos não consultam uma tabela, eles geram tokens. Por isso, entregar os documentos ao LLM e pedir citação permite que o leitor confira a resposta. Na demo, o agente carrega uma skill, busca com ES|QL, explica que o exit code 137 vem do gerenciador de falta de memória e aponta ajustes de JVM, com links para a documentação.",
       "t": 3821,
       "legenda": "Resposta do agente com trilha de passos e fontes clicáveis",
-      "print": "img/ksjwtQop4os/3.jpg"
+      "print": "img/ksjwtQop4os/3.jpg",
+      "descricao": "Interface do Agent Builder com a trilha de passos do agente e a resposta à direita, com palestrante ao lado"
     },
     {
       "titulo": "Reranker só quando a ordem exata importa",
@@ -204,5 +206,36 @@
       "contexto": "documentos retornados na busca da demo do agente",
       "t": 3821
     }
-  ]
+  ],
+  "rotulo": "Busca híbrida para agentes com BM25 e vetores",
+  "objetivo": "comparar busca por palavra-chave, semântica e híbrida com um judgment set pequeno e escolher a combinação",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Em que casos a busca vetorial falha e em que casos o BM25 falha?",
+      "resposta": "A busca vetorial erra identificadores exatos, como códigos e IDs. O BM25 erra paráfrases, em que a palavra da consulta não aparece no texto. Por isso se combinam."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Seu agente responde mal sobre erros de infraestrutura. Por onde investigar?",
+      "resposta": "Olhe primeiro os documentos recuperados, não o modelo. Teste busca por palavra-chave e semântica separadas com códigos de erro, monte um judgment set de 20 a 30 perguntas e compare RRF, pesos lineares e reranker."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que sinais mostram que o workshop é também pitch de produto?",
+      "resposta": "A Elastic vende a busca, e a tese de que a híbrida é a resposta favorece o produto. Não há medição comparativa de relevância, latência ou custo. O dataset é pequeno e sintético, e a demo do exit code 137 é um caso favorável."
+    }
+  ],
+  "experimento": {
+    "titulo": "Judgment set para comparar três buscas",
+    "minutos": 45,
+    "precisa": "Uma base de documentos sua em texto e Python ou uma planilha",
+    "passos": [
+      "Escreva 20 perguntas reais, incluindo pelo menos 5 com códigos de erro ou IDs, e anote o documento esperado de cada uma.",
+      "Rode cada pergunta em busca por palavra-chave (BM25) e em busca semântica, e anote em que posição o documento esperado aparece.",
+      "Combine as duas listas com RRF e meça a posição do esperado de novo.",
+      "Compare as três buscas com a média da posição e o número de acertos no top 5."
+    ],
+    "sucesso": "Você tem uma tabela de 20 perguntas com a posição do documento esperado em cada busca e sabe qual combinação ganha."
+  }
 }

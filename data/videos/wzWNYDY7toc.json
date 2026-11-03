@@ -21,35 +21,40 @@
       "texto": "O caso é uma fabricante que quer um chatbot jurídico sobre contratos. Com 40 arquivos pré-selecionados, parsing, chunking, OCR e embeddings dão boas respostas. Com 80 mil arquivos, ninguém sabe quais servem, onde estão os dados sensíveis e se o conteúdo é confiável.",
       "t": 409,
       "legenda": "O acervo real mistura formatos e ninguém sabe quais arquivos são jurídicos.",
-      "print": "img/wzWNYDY7toc/0.jpg"
+      "print": "img/wzWNYDY7toc/0.jpg",
+      "descricao": "Interface Collibra mostrando 339 arquivos ingeridos com categorias, filtros e metadados de documentos"
     },
     {
       "titulo": "Taxonomia de tags com evidência e confiança",
       "texto": "Uma taxonomia é uma árvore de tags. O LLM classifica cada arquivo, por exemplo contrato ou documento de engenharia, e mostra o trecho que justifica a tag e uma nota de confiança. Com polegar para cima ou para baixo, o usuário dá exemplos (few-shot) que melhoram as próximas classificações.",
       "t": 564,
       "legenda": "Cada tag vem com o trecho do documento que a justifica.",
-      "print": "img/wzWNYDY7toc/1.jpg"
+      "print": "img/wzWNYDY7toc/1.jpg",
+      "descricao": "Tela de metadados com categorias de documentos, filtros e tags, exibindo arquivos de diferentes tipos e confiança"
     },
     {
       "titulo": "Qualidade de documento é duplicata, conflito e frescor",
       "texto": "Para documentos, qualidade de dados vira três perguntas. Há informação repetida? Há versões que se contradizem? O arquivo está atualizado? O painel agrupa duplicatas e conflitos, sugere qual manter e permite filtrar por data. O resultado é uma fatia de dados (data slice) com só os arquivos úteis, reatualizada em agenda.",
       "t": 659,
       "legenda": "O painel agrupa duplicatas e conflitos e sugere qual versão manter.",
-      "print": "img/wzWNYDY7toc/2.jpg"
+      "print": "img/wzWNYDY7toc/2.jpg",
+      "descricao": "Diagrama de fluxo DeasyLabs explicando a qualidade de dados: avaliar relevância e frescor do acervo"
     },
     {
       "titulo": "Dado velho ocupa o top-k do RAG",
       "texto": "Se versões antigas e repetidas ficam na base, a busca devolve esses trechos no top-k e deixa pouco espaço para o que importa. Leo diz que, com 30% de arquivos velhos ou duplicados, até 80% do contexto pode ser inútil. Em avaliação de RAG multi-hop, a limpeza teria dobrado o recall@1 e subido a conclusão de tarefas em 10 a 15%.",
       "t": 1003,
       "legenda": "Poucos arquivos ruins podem ocupar a maior parte do contexto recuperado.",
-      "print": "img/wzWNYDY7toc/3.jpg"
+      "print": "img/wzWNYDY7toc/3.jpg",
+      "descricao": "Slide 'Context pollution is real' com gráficos mostrando impacto de dados velhos no recall de recuperação"
     },
     {
       "titulo": "Arquivo de contexto por pasta para agentes de código",
       "texto": "Na demo ao vivo, o SDK gera um arquivo de contexto (context MD) espelhando as pastas do SharePoint. Cada pasta ganha tipos de documento, tópicos, quando usar e perguntas de exemplo. O agente lê o índice em vez de abrir 23 arquivos, o que reduz custo de tokens.",
       "t": 1164,
       "legenda": "O índice diz ao agente o que há em cada pasta antes de ele abrir qualquer arquivo.",
-      "print": "img/wzWNYDY7toc/4.jpg"
+      "print": "img/wzWNYDY7toc/4.jpg",
+      "descricao": "Arquivo context.md gerado em VS Code com folder index descrevendo pastas, arquivos e propósito de cada uma"
     }
   ],
   "conceitos": [
@@ -200,5 +205,36 @@
       "contexto": "recall@1 em RAG multi-hop após limpeza",
       "t": 1035
     }
-  ]
+  ],
+  "rotulo": "Limpar o acervo antes de indexar para RAG",
+  "objetivo": "avaliar a qualidade de um acervo de documentos (duplicatas, versões velhas, dados sensíveis) antes de montar um RAG",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que um chatbot que funciona com 40 arquivos quebra com 80 mil?",
+      "resposta": "Com 80 mil ninguém sabe quais servem, onde estão os dados sensíveis e se o conteúdo é confiável. Duplicatas, conflitos e arquivos vencidos enchem o contexto de lixo."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que passos tomar no seu acervo antes de indexar?",
+      "resposta": "Meça a fração de arquivos duplicados e desatualizados, grave metadados (data, tipo, versão) em cada trecho e use-os como filtro. Exija evidência e confiança nas classificações do LLM e revise as de baixa confiança."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que os números de 80% de contexto inútil e recall dobrado merecem cautela?",
+      "resposta": "Não trazem metodologia, base de teste nem comparação com um simples script de deduplicação, e vêm de uma empresa que vende a ferramenta. A ideia de limpar antes de indexar vale de qualquer forma."
+    }
+  ],
+  "experimento": {
+    "titulo": "Medir duplicatas e arquivos velhos de uma pasta",
+    "minutos": 30,
+    "precisa": "Uma pasta com 50 a 500 documentos seus e Python",
+    "passos": [
+      "Liste os arquivos com data de modificação e tamanho.",
+      "Calcule um hash do conteúdo para achar duplicatas exatas.",
+      "Conte quantos arquivos têm mais de 2 anos.",
+      "Calcule a fração de duplicados e de arquivos velhos."
+    ],
+    "sucesso": "Você tem a fração de arquivos duplicados e desatualizados e decide o que sairia do índice."
+  }
 }

@@ -21,35 +21,40 @@
       "texto": "O demo tem um agente de frota, um de cliente e um de despacho. Frota e cliente pesquisam (Google Maps, Google Search) e o despacho decide com o resultado. A Temporal registra o estado de tudo em um workflow pai, com histórico de eventos visível na interface.",
       "t": 76,
       "legenda": "Vários agentes rodando juntos, com o estado rastreado em um único histórico.",
-      "print": "img/jc3kbZkuHTo/0.jpg"
+      "print": "img/jc3kbZkuHTo/0.jpg",
+      "descricao": "Diagrama de três agentes coordenados por workflow, mostrando fluxo de pedido com notificação de mudança de cliente"
     },
     {
       "titulo": "Worker, workflow e activity",
       "texto": "O worker roda o código. O workflow guarda os passos e é onde o loop do agente vive. A activity cobre tudo que fala com o mundo externo, como chamadas ao modelo e às ferramentas. Essa divisão decide onde cada pedaço do código fica.",
       "t": 386,
       "legenda": "Chamada de modelo e de ferramenta viram activities; o loop fica no workflow.",
-      "print": "img/jc3kbZkuHTo/1.jpg"
+      "print": "img/jc3kbZkuHTo/1.jpg",
+      "descricao": "Slide dos três primitivos da Temporal: worker executa, workflow coordena, activity chama modelo ou ferramenta"
     },
     {
       "titulo": "Chamada bloqueante perde o humano; wait e signal não",
       "texto": "Se o agente chama o humano como uma função comum, a chamada bloqueia e se perde quando o serviço cai. Com wait condition o fluxo pausa e o estado fica salvo na camada durável. O humano responde por um signal quando puder, e só aquele workflow espera.",
       "t": 481,
       "legenda": "Duas primitivas bastam para pausar por minutos ou semanas sem segurar thread.",
-      "print": "img/jc3kbZkuHTo/2.jpg"
+      "print": "img/jc3kbZkuHTo/2.jpg",
+      "descricao": "Diagrama com wait_condition e signal, mostrando como workflow fica durável enquanto worker pode cair"
     },
     {
       "titulo": "Matar o worker e voltar sem perder trabalho",
       "texto": "No demo, ela derruba o worker, aprova o pedido enquanto ele está offline e sobe o worker de novo. O evento ficou na fila do armazenamento da Temporal. O agente reexecuta o log até o último ponto, vê a aprovação e entrega o pedido.",
       "t": 950,
       "legenda": "Replay do log recupera o estado; nada é refeito.",
-      "print": "img/jc3kbZkuHTo/3.jpg"
+      "print": "img/jc3kbZkuHTo/3.jpg",
+      "descricao": "Demo do sistema MELTDOWN em ação, mostrando interface Temporal com mapa de entrega e controles de frota"
     },
     {
       "titulo": "Quando o humano deve entrar no loop",
       "texto": "O critério central é o custo de errar, principalmente em segurança. Do outro lado há a fadiga de alerta, quando a pessoa passa a aprovar tudo sem ler. Ela admite que a resposta depende do caso e que os modelos continuam probabilísticos.",
       "t": 1011,
       "legenda": "A decisão de pôr humano no loop equilibra custo de erro e cansaço de quem aprova.",
-      "print": "img/jc3kbZkuHTo/4.jpg"
+      "print": "img/jc3kbZkuHTo/4.jpg",
+      "descricao": "Slide final: custo de errar versus fadiga de alerta, com critérios para trazer humano no loop"
     }
   ],
   "conceitos": [
@@ -212,5 +217,37 @@
       "contexto": "Tempo de resposta que um humano não costuma ter",
       "t": 884
     }
-  ]
+  ],
+  "rotulo": "Agente que espera por um humano sem travar",
+  "objetivo": "desenhar um fluxo de agente com aprovação humana usando estado durável, evento de retomada e timeout",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que a chamada bloqueante perde a resposta do humano e wait condition com signal não perde?",
+      "resposta": "A chamada bloqueante some quando o serviço cai. Com wait condition o fluxo pausa com o estado salvo na camada durável, e o humano responde por um signal quando puder."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como decidir quais ações do seu agente exigem aprovação humana?",
+      "resposta": "Liste as ações por custo de erro e peça aprovação só nas caras ou de risco de segurança. Aprovar tudo gera fadiga de alerta, e o revisor passa a aceitar no automático."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites tem o demo da Temporal?",
+      "resposta": "É um demo controlado, com poucos pedidos, sem métrica de custo, latência ou taxa de falha. Ela fala em milhões de workflows parados sem dados e não compara com filas ou bancos com estado."
+    }
+  ],
+  "experimento": {
+    "titulo": "Pausa durável com aprovação humana",
+    "minutos": 40,
+    "precisa": "Python e um arquivo JSON ou SQLite para guardar o estado",
+    "passos": [
+      "Escreva um script que cria um pedido e salva o estado aguardando aprovação num arquivo.",
+      "Encerre o processo.",
+      "Escreva um segundo comando que registra a aprovação no mesmo arquivo.",
+      "Reinicie o script para retomar do estado salvo e concluir o pedido.",
+      "Adicione um timeout que cancela o pedido se a aprovação não chegar."
+    ],
+    "sucesso": "O script encerra no meio, retoma depois da aprovação a partir do ponto salvo e cancela sozinho quando o prazo vence."
+  }
 }

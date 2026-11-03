@@ -21,35 +21,40 @@
       "texto": "Uma hora de vídeo vira cerca de 1 milhão de tokens visuais, mas a loss (função de erro) cai só sobre uns 2% deles, porque a referência é a transcrição ou poucos quadros rotulados. Prever cada pixel também falha, pois dá o mesmo peso ao fundo e à ponta da garra. A Perceptron diz usar um objetivo perceptivo que aprende sozinho quais percepções importam, sem revelar como.",
       "t": 248,
       "legenda": "Só cerca de 2% dos tokens de um vídeo de uma hora geram sinal de aprendizado.",
-      "print": "img/ZZcE0HeO-Hc/0.jpg"
+      "print": "img/ZZcE0HeO-Hc/0.jpg",
+      "descricao": "Slide com comparação: 1 hora de vídeo gera 1 milhão de tokens, mas apenas 2% recebem sinal de treino."
     },
     {
       "titulo": "O modelo escolhe quais tokens ler",
       "texto": "Câmeras que nunca desligam enchem o contexto. Fazer média de patches comprime até 10 vezes, mas o palestrante chama isso de gambiarra. A saída publicada foi o data sparse mixture of experts, em que um roteador decide, camada a camada, que tokens processar e quais pular. Sem regra fixa, o modelo passa a olhar o gráfico dentro de uma figura e gasta mais tokens nas frutas quando a tarefa é segmentar frutas.",
       "t": 467,
       "legenda": "O roteador concentra tokens no que é relevante para a tarefa pedida.",
-      "print": "img/ZZcE0HeO-Hc/1.jpg"
+      "print": "img/ZZcE0HeO-Hc/1.jpg",
+      "descricao": "Visualização de cômputo esparso mostrando mapas de atenção focados em gráficos e frutas relevantes para a tarefa."
     },
     {
       "titulo": "Detecção de objeto vira tarefa de agente",
       "texto": "Treinado com 1 petabyte de texto, imagem, vídeo e trajetórias de uso de desktop e de videogame, o modelo passou a tratar visão computacional clássica como tarefa agêntica. Para achar um pássaro escondido, ele divide a imagem em blocos, aumenta o contraste, escreve código e propõe caixas até acertar.",
       "t": 621,
       "legenda": "O modelo usa ferramentas em várias etapas para detectar um objeto difícil.",
-      "print": "img/ZZcE0HeO-Hc/2.jpg"
+      "print": "img/ZZcE0HeO-Hc/2.jpg",
+      "descricao": "Demo do modelo detectando pássaro camuflado em etapas: recorte de blocos, aumento de contraste, desenho da caixa."
     },
     {
       "titulo": "Vídeo barato no lugar de teleoperação cara",
       "texto": "Teleop (dados de robô guiado por humano) custa na ordem de US$ 100 por hora. Treinando percepção, raciocínio e controle juntos, a empresa diz que 10 vezes mais vídeo de pré-treino substitui 10 vezes menos teleop, dentro do cômputo que ela tem. Políticas puras (VLA) também escalam, mas ganham menos.",
       "t": 838,
       "legenda": "Modelos unificados trocam horas de teleoperação por vídeo de pré-treino.",
-      "print": "img/ZZcE0HeO-Hc/3.jpg"
+      "print": "img/ZZcE0HeO-Hc/3.jpg",
+      "descricao": "Gráfico de scaling law: curvas de VLAs puras (pontinhos acima) e modelos perceptivos unificados (linhas abaixo)."
     },
     {
       "titulo": "Um modelo que lê o livro e o guarda",
       "texto": "A demo final mostra um único modelo emitindo tokens de controle para separar livros. Ele precisa ler o título, saber o gênero e pôr o livro na caixa certa. O movimento ainda treme, e a promessa é abrir os pesos de um modelo menor em julho.",
       "t": 900,
       "legenda": "Percepção e controle na mesma rede resolvem uma tarefa de várias etapas.",
-      "print": "img/ZZcE0HeO-Hc/4.jpg"
+      "print": "img/ZZcE0HeO-Hc/4.jpg",
+      "descricao": "Braço robótico lendo capas de livros e colocando cada um na caixa correta, resolvendo tarefa de várias etapas."
     }
   ],
   "conceitos": [
@@ -319,5 +324,36 @@
       "contexto": "mais vídeo de pré-treino compensa 10x menos teleop",
       "t": 838
     }
-  ]
+  ],
+  "rotulo": "Um só modelo que vê, raciocina e controla robôs",
+  "objetivo": "descrever por que vídeo longo desperdiça sinal de treino e como um roteador de tokens reduz o custo de câmeras sempre ligadas",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que uma hora de vídeo gera pouco sinal de aprendizado em um modelo de visão?",
+      "resposta": "Uma hora vira cerca de 1 milhão de tokens visuais, mas a loss cai só sobre uns 2% deles, porque a referência é a transcrição ou poucos quadros rotulados."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você precisa mandar vídeo longo de uma câmera fixa a um modelo de visão. O que faria para economizar contexto?",
+      "resposta": "Corte os trechos parados ou envie só quadros-chave, e peça ao modelo que recorte ou amplie a região de interesse antes de responder."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Como tratar a scaling law em que 10 vezes mais vídeo compensa 10 vezes menos teleoperação?",
+      "resposta": "Como hipótese. O CEO apresenta o próprio produto, a lei vale só no cômputo da empresa e ficou para ser detalhada no Twitter. O objetivo perceptivo é chamado de propriedade intelectual e não é explicado."
+    }
+  ],
+  "experimento": {
+    "titulo": "Reduza o custo de um vídeo longo no modelo",
+    "minutos": 30,
+    "precisa": "Um vídeo de 5 a 10 minutos e um assistente que aceite imagens, como Claude, ChatGPT ou Gemini",
+    "passos": [
+      "Escolha um vídeo com longos trechos parados e escreva três perguntas sobre ele.",
+      "Extraia um quadro a cada 10 segundos com ffmpeg ou por capturas de tela.",
+      "Envie só os quadros ao assistente e faça as três perguntas.",
+      "Compare as respostas com o que você sabe do vídeo e anote quantas imagens usou."
+    ],
+    "sucesso": "Você responde às três perguntas usando só uma fração do vídeo e sabe quantos quadros bastaram."
+  }
 }

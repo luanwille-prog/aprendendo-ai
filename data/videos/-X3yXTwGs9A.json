@@ -21,35 +21,40 @@
       "texto": "Antes, o limite era a velocidade com que uma pessoa digitava código. Com agentes, o limite passou a ser a velocidade com que humanos revisam o que a IA escreve. Há mais PRs, eles são maiores e a pressão por entregar faz parte deles ir ao ar sem revisão real.",
       "t": 160,
       "legenda": "O gargalo saiu de escrever código e foi para revisar.",
-      "print": "img/-X3yXTwGs9A/0.jpg"
+      "print": "img/-X3yXTwGs9A/0.jpg",
+      "descricao": "Slide 'Story Time' com quatro tópicos, incluindo 'Code Review Becomes Bottleneck' (revisão de código vira gargalo)."
     },
     {
       "titulo": "Incidentes sem contexto sobrecarregam o SRE",
       "texto": "O SRE precisa resolver incidentes em código que nenhum humano leu, sem runbook. Problemas entre serviços são difíceis de rastrear, e a correção de um repositório costuma valer para centenas de outros. Contratar mais gente não resolve, porque os incidentes crescem mais rápido que as contratações.",
       "t": 250,
       "legenda": "A cadeia que leva do código de IA ao incidente em produção.",
-      "print": "img/-X3yXTwGs9A/1.jpg"
+      "print": "img/-X3yXTwGs9A/1.jpg",
+      "descricao": "Slide 'Story Time' mostrando a cadeia: mais desenvolvimento com IA, revisão gargalo, incidentes iniciados por IA, SREs sobrecarregados."
     },
     {
       "titulo": "Dados do setor sobre PRs e confiança",
       "texto": "Segundo o palestrante, organizações veem quase o dobro de PRs mesclados, PRs mais que duplicados em tamanho e quase o dobro de tempo gasto em revisão. Quase todo desenvolvedor diz desconfiar do código de IA, e quase metade admite nem sempre verificá-lo. A fonte dos dados não é citada.",
       "t": 466,
       "legenda": "Números do setor sobre volume de PRs e falta de verificação.",
-      "print": "img/-X3yXTwGs9A/2.jpg"
+      "print": "img/-X3yXTwGs9A/2.jpg",
+      "descricao": "Slide 'The Code Review Challenge' com +98% PRs mesclados, +154% tamanho dos PRs, +91% tempo de revisão e 38% desconfiança."
     },
     {
       "titulo": "IA rende mais em domínios delimitados",
       "texto": "A IA vai melhor em tarefas com escopo claro e contexto completo: correção de vulnerabilidades, varreduras de segurança, migrações em larga escala. Times de SRE e plataforma já trabalham assim, com runbooks semiautônomos. Por isso medem a qualidade do código de IA pelo número de incidentes e também aproveitam mais a IA.",
       "t": 595,
       "legenda": "Tarefas delimitadas são onde a IA funciona hoje.",
-      "print": "img/-X3yXTwGs9A/3.jpg"
+      "print": "img/-X3yXTwGs9A/3.jpg",
+      "descricao": "Slide apenas com o título 'So Where is AI Actually Winning?', sem conteúdo além da pergunta que introduz o tema."
     },
     {
       "titulo": "Investigar, prevenir e corrigir",
       "texto": "A empresa organiza o uso para SRE em três frentes. Investigação usa busca determinística em todos os repositórios e branches, e a Deep Search para respostas com citação. Prevenção usa monitores que alertam sobre padrões de risco. Correção usa mudanças em lote em todos os repositórios.",
       "t": 808,
       "legenda": "Os três usos do produto no fluxo de trabalho do SRE.",
-      "print": "img/-X3yXTwGs9A/4.jpg"
+      "print": "img/-X3yXTwGs9A/4.jpg",
+      "descricao": "Slide 'How Sourcegraph can help' com as três colunas: Investigation, Prevention e Remediation, com perguntas para SREs."
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "tempo que a Sourcegraph apoia desenvolvedores humanos",
       "t": 32
     }
-  ]
+  ],
+  "rotulo": "Quando a IA escreve mais código do que o time revisa",
+  "objetivo": "identificar o gargalo de revisão em times com agentes de código e definir limites de tamanho de PR e de escopo para a IA",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Onde está o gargalo do desenvolvimento segundo Norrish, e como isso afeta o SRE?",
+      "resposta": "O limite saiu da digitação e foi para a revisão humana. Há mais PRs, maiores, e parte vai ao ar sem revisão real. O SRE resolve incidentes em código que ninguém leu e sem runbook, e contratar mais gente não acompanha o ritmo."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que limite de tamanho e que regra de revisão você aplicaria aos PRs gerados por IA no seu time?",
+      "resposta": "Definir um tamanho máximo para PRs de IA e exigir revisão humana quando a mudança toca vários serviços. Começar a IA por tarefas delimitadas, como correção de vulnerabilidades e migrações."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites tem a evidência apresentada no talk?",
+      "resposta": "O talk é pitch da Sourcegraph. As estatísticas de PRs, confiança e incidentes vêm sem fonte, os exemplos de clientes não trazem métricas de resultado e falta comparação com testes e gates de revisão."
+    }
+  ],
+  "experimento": {
+    "titulo": "Medir o gargalo de revisão do seu repositório",
+    "minutos": 30,
+    "precisa": "Um repositório no GitHub com histórico de PRs e o CLI gh ou a interface web",
+    "passos": [
+      "Liste os últimos 30 PRs mesclados e anote o tamanho (linhas alteradas) e o tempo até a aprovação.",
+      "Marque quais foram escritos com ajuda de agente de código.",
+      "Compare o tamanho médio e o tempo de revisão dos dois grupos.",
+      "Escreva uma regra de uma linha com o limite de tamanho para PRs de IA."
+    ],
+    "sucesso": "Você tem a comparação de tamanho e tempo de revisão entre os dois grupos e uma regra escrita de limite de PR."
+  }
 }

@@ -21,35 +21,40 @@
       "texto": "Tandon mostra que a perda do modelo cai de forma previsível quando crescem dados, computação e tamanho, exatamente como no paper de scaling laws de 2020. Ele cita os papers HSTU (2024 e a continuação deste ano) do Meta como evidência offline. No produto, Instagram Reels teve 30% de alta anual em tempo assistido, com modelos maiores e históricos de interação mais longos.",
       "t": 191,
       "legenda": "A qualidade da recomendação melhora de forma previsível com escala.",
-      "print": "img/lIgdnF0s0kQ/0.jpg"
+      "print": "img/lIgdnF0s0kQ/0.jpg",
+      "descricao": "Gráfico de curva de escala log-linear mostrando perda caindo com dados, computação e tamanho."
     },
     {
       "titulo": "Quatro curvas em S da recomendação",
       "texto": "O setor sobe quatro curvas em paralelo. A primeira é a recsys tradicional, com engenharia de features e redes two tower. A segunda é a inspirada em LLM (HSTU, OneRec). A terceira é a nativa de LLM (TIGER, PLUM), que adapta um modelo base que já raciocina. A quarta é a agêntica, em que LLMs orquestram planejamento, busca, ranqueamento e crítica em loop.",
       "t": 382,
       "legenda": "A maior parte da indústria está na curva 2 e tenta chegar à 3.",
-      "print": "img/lIgdnF0s0kQ/1.jpg"
+      "print": "img/lIgdnF0s0kQ/1.jpg",
+      "descricao": "Slide das quatro curvas em S: tradicional, inspirada em LLM, nativa de LLM e agêntica."
     },
     {
       "titulo": "Semantic IDs comprimem um Reel em cerca de 10 tokens",
       "texto": "Um vídeo de três minutos viraria uns 10.000 tokens e estouraria a janela de contexto. Com semantic IDs, ele vira cerca de 10. Vídeos parecidos compartilham o prefixo: os primeiros tokens indicam esporte e tênis, e o último distingue o vídeo. Isso dá ao modelo uma representação estável, em vez de um hash que ele só decora.",
       "t": 610,
       "legenda": "Conteúdo parecido gera IDs com prefixo em comum.",
-      "print": "img/lIgdnF0s0kQ/2.jpg"
+      "print": "img/lIgdnF0s0kQ/2.jpg",
+      "descricao": "Exemplos de Reels de tênis com semantic IDs compartilhando prefixo, comprimindo 10k para 10 tokens."
     },
     {
       "titulo": "Re-ranker com chain of thought que dá para ler",
       "texto": "No pós-treino, o modelo recebe dados do usuário e 30 vídeos candidatos e devolve os 5 melhores. Como ele entende inglês e recomendação, escreve o raciocínio: interesses do usuário, estilo de engajamento e afinidade com criadores. Isso permite inspecionar por que o feed decidiu algo e abre espaço para feeds que o usuário controla com linguagem natural, como o Your Algorithm do Instagram.",
       "t": 700,
       "legenda": "O raciocínio do ranqueador aparece em texto e pode ser auditado.",
-      "print": "img/lIgdnF0s0kQ/3.jpg"
+      "print": "img/lIgdnF0s0kQ/3.jpg",
+      "descricao": "Chain of thought do re-ranker listando interesses, estilo de engajamento e afinidade com criadores."
     },
     {
       "titulo": "Por que feed custa até 100x menos que chat",
       "texto": "Feeds usam modelos de 1 a 10 bilhões de parâmetros ativos e produzem um semantic ID, que aponta para conteúdo enviado por criadores. Apps de chat usam 10 a 100 bilhões e geram milhares de tokens por turno, todos fabricados na hora. Por hora de engajamento, Tandon estima que o feed gasta até 100 vezes menos computação.",
       "t": 925,
       "legenda": "A saída de um feed é um ponteiro, a de um chat é texto gerado.",
-      "print": "img/lIgdnF0s0kQ/4.jpg"
+      "print": "img/lIgdnF0s0kQ/4.jpg",
+      "descricao": "Tabela comparando feeds (IG, TikTok) com chat (Gemini, ChatGPT) em tamanho e custo de tokens."
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "apps mais usados do mundo que são feeds de conteúdo",
       "t": 980
     }
-  ]
+  ],
+  "rotulo": "Por que recomendadores com LLM vão escalar",
+  "objetivo": "explicar como semantic IDs comprimem um vídeo em cerca de 10 tokens e tratar a comparação de custo de 100x como hipótese",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Como os semantic IDs reduzem um Reel de três minutos?",
+      "resposta": "Um vídeo de três minutos viraria uns 10.000 tokens e estouraria a janela de contexto. Com semantic IDs vira cerca de 10, e vídeos parecidos compartilham o prefixo, com o último token distinguindo cada vídeo."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Sua empresa tem um catálogo de produtos e usa IDs em hash. O que estudaria?",
+      "resposta": "Estudaria semantic IDs como alternativa, que dão ao modelo uma representação estável em que itens parecidos compartilham prefixo. Pediria também ao fornecedor o raciocínio do ranqueamento em texto para auditar."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que tratar a comparação de até 100x menos custo como hipótese?",
+      "resposta": "Ela vem sem método, fonte ou custos reais, de alguém que lidera pesquisa de recomendação no Meta e vende a tese. Ignora o catálogo de criadores e anos de infraestrutura, e os 30% em Reels misturam várias mudanças."
+    }
+  ],
+  "experimento": {
+    "titulo": "Crie um semantic ID simples por agrupamento",
+    "minutos": 45,
+    "precisa": "Python com sentence-transformers e scikit-learn e uma lista de 30 títulos de produtos ou vídeos",
+    "passos": [
+      "Reúna 30 títulos de itens de um catálogo seu ou público.",
+      "Gere embeddings dos títulos com sentence-transformers.",
+      "Agrupe em 5 grupos com k-means e subdivida cada grupo em 3, dando a cada item um código de dois níveis.",
+      "Confira se itens parecidos receberam o mesmo primeiro código."
+    ],
+    "sucesso": "Itens parecidos compartilham o primeiro código e você consegue explicar como um prefixo funciona como um semantic ID simples."
+  }
 }

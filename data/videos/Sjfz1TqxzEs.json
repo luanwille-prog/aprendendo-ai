@@ -21,35 +21,40 @@
       "texto": "Dados de robô são raros, então a Dyna mistura três camadas. Na base, dados sem robô, como vídeos de humanos com câmera, bases públicas e simulação. No meio, tarefas variadas feitas no robô. No topo, dados de implantação real, que reduzem a diferença entre o laboratório e o cliente. O pipeline soma mais de 200 mil horas.",
       "t": 200,
       "legenda": "As três fontes de dado que sustentam o pré-treino do modelo.",
-      "print": "img/Sjfz1TqxzEs/0.jpg"
+      "print": "img/Sjfz1TqxzEs/0.jpg",
+      "descricao": "Slide da pirâmide de pré-treino com as três camadas de dados"
     },
     {
       "titulo": "A nota de progresso cai quando o robô erra",
       "texto": "O reward model olha o vídeo e dá uma nota de 0 a 1 para o avanço da tarefa. Enquanto o robô dobra bem, a curva sobe de forma constante. Quando ele erra, como no nono guardanapo, a curva mostra uma queda. Essa queda vira o sinal automático de falha.",
       "t": 752,
       "legenda": "A queda na curva marca o instante exato do erro do robô.",
-      "print": "img/Sjfz1TqxzEs/1.jpg"
+      "print": "img/Sjfz1TqxzEs/1.jpg",
+      "descricao": "Gráfico de estimativa de progresso ao lado do vídeo do robô dobrando"
     },
     {
       "titulo": "Supervisão escalável e active learning",
       "texto": "Acima de 90% de acerto, vigiar o robô à mão fica ineficiente. O reward model roda em segundo plano e sinaliza os vídeos em que o modelo falha. A equipe grava dados de recuperação só para esses casos, refaz o fine-tuning e repete. Depois de alguns ciclos, o modelo se recupera de erros variados.",
       "t": 812,
       "legenda": "O ciclo que sai de 80% e chega perto de 100% de sucesso.",
-      "print": "img/Sjfz1TqxzEs/2.jpg"
+      "print": "img/Sjfz1TqxzEs/2.jpg",
+      "descricao": "Ciclo de aprendizado contínuo com reward model detectando erros"
     },
     {
       "titulo": "Recuperação de erro que ninguém gravou",
       "texto": "Um guardanapo é um objeto deformável, com estados quase infinitos, e não dá para coletar dado de todo erro possível. Mesmo assim, o robô derrubou a pilha inteira e se recuperou puxando e esticando os guardanapos. Ma atribui isso à generalização de comportamentos de recuperação aprendidos em outras tarefas.",
       "t": 905,
       "legenda": "O robô se recupera de um erro grande que não aparece nos dados de treino.",
-      "print": "img/Sjfz1TqxzEs/3.jpg"
+      "print": "img/Sjfz1TqxzEs/3.jpg",
+      "descricao": "Robô em teste autônomo, tratamento de erros extremos com 10x velocidade"
     },
     {
       "titulo": "Três dias de camisetas num local novo",
       "texto": "Até aqui a Dyna coletava dados no próprio cliente. No CoRL 2025, na Coreia, o robô foi posto no estande e dobrou camisetas por 3 dias sem dados do local, mesmo com visitantes tentando atrapalhar e cobrindo a câmera. A meta de mercado é ligar o robô no cliente e ele funcionar.",
       "t": 1035,
       "legenda": "A demonstração mostra generalização para um ambiente que o robô nunca viu.",
-      "print": "img/Sjfz1TqxzEs/4.jpg"
+      "print": "img/Sjfz1TqxzEs/4.jpg",
+      "descricao": "Demonstração zero-shot no estande do CORL 2025 com robô e plateia"
     }
   ],
   "conceitos": [
@@ -199,5 +204,36 @@
       "contexto": "dobra de camisetas seguidos no CoRL, sem dados do local",
       "t": 1060
     }
-  ]
+  ],
+  "rotulo": "Como levar um robô de 80% a 99,4% de sucesso",
+  "objetivo": "usar um sinal automático de falha para achar erros, montar dados dirigidos e repetir o ciclo até a confiabilidade subir",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Como o reward model da Dyna ajuda a achar os erros do robô?",
+      "resposta": "Ele assiste ao vídeo e dá uma nota de 0 a 1 para o progresso da tarefa. Quando a nota cai, há um erro, e a equipe coleta dados de recuperação só para aquele caso e refaz o fine-tuning."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você tem um agente que acerta uns 85% das vezes. Como aplicaria o ciclo da Dyna?",
+      "resposta": "Rode a tarefa muitas vezes, crie um avaliador ou checagem automática de resultado para achar as falhas, monte exemplos dirigidos a esses casos, refaça o teste e repita o ciclo."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que problemas há nas provas e nas contas do talk?",
+      "resposta": "Os 99,4% vêm de uma tarefa só, com quatro testes de 24 horas, na apresentação da própria empresa. A conta de 80 a 90% por etapa não fecha com os 0,1% citados, e não há dados sobre o reward model errar."
+    }
+  ],
+  "experimento": {
+    "titulo": "Meça a confiabilidade de uma tarefa em 20 repetições",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT e uma planilha",
+    "passos": [
+      "Escolha uma tarefa de formato fixo, como extrair data e valor de e-mails ou textos.",
+      "Rode o mesmo prompt em 20 entradas diferentes e marque acerto ou erro de cada uma.",
+      "Agrupe os erros por tipo e escreva uma checagem automática para o tipo mais comum.",
+      "Ajuste o prompt para esse tipo de erro e rode de novo nas mesmas 20 entradas."
+    ],
+    "sucesso": "Você tem a taxa de acerto antes e depois do ajuste e sabe qual tipo de erro foi corrigido."
+  }
 }

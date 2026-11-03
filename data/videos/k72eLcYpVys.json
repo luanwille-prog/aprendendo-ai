@@ -220,5 +220,36 @@
       "contexto": "resultado atribuído a estudo de Berkeley em benchmarks, com exploits",
       "t": 815
     }
-  ]
+  ],
+  "rotulo": "Mil tarefas de agente num sandbox remoto",
+  "objetivo": "testar um sandbox com fluxos reais de agente e separar falhas de interface de falhas do ambiente",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Em que duas camadas caíram os defeitos encontrados no sandbox da AWS?",
+      "resposta": "Na interface, como o bug de codificação com byte nulo no servidor MCP, e no sandbox, como memória, permissões de arquivo e chamadas de sistema bloqueadas."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você vai migrar um agente de código para um ambiente remoto. O que testar antes?",
+      "resposta": "Peça a um agente de código para gerar centenas de fluxos reais (instalar pacote, gravar e ler arquivo, abrir processo) e rode no ambiente remoto. Compare ferramentas e permissões do local com as do remoto."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que não dá para concluir a taxa de falha do sandbox a partir deste talk?",
+      "resposta": "Não há taxa de falha, número de bugs nem comparação com outro método, só três exemplos escolhidos. Os mil testes foram gerados por um LLM com número arbitrário, e a citação de Berkeley vem sem título ou link."
+    }
+  ],
+  "experimento": {
+    "titulo": "Fuzz test de um sandbox com um agente",
+    "minutos": 40,
+    "precisa": "Acesso a um sandbox ou container onde agentes rodam e um agente de código",
+    "passos": [
+      "Peça ao agente de código para gerar 30 fluxos reais, como instalar pacote, gravar e ler arquivo e abrir processo.",
+      "Rode os fluxos no ambiente alvo e grave cada resultado em um SQLite com campos de camada da falha e mensagem.",
+      "Classifique cada falha como de interface (codificação, formato) ou de sandbox (memória, permissão).",
+      "Resuma quais falhas são suas para corrigir e quais pertencem ao sandbox."
+    ],
+    "sucesso": "Você tem um banco com 30 resultados, cada falha classificada por camada, e uma lista do que corrigir."
+  }
 }

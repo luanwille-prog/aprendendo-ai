@@ -21,21 +21,24 @@
       "texto": "Quem planeja numa sessão e revisa em outra, com Claude ou Codex, mantém dois agentes com estado trabalhando na mesma tarefa. A pessoa copia mensagens de um para o outro, como um roteador de rede. O loop engineering apenas entrega esse papel a um script em Python ou TypeScript.",
       "t": 124,
       "legenda": "O humano faz o papel de roteador entre dois agentes.",
-      "print": "img/toq-jyGLZDk/0.jpg"
+      "print": "img/toq-jyGLZDk/0.jpg",
+      "descricao": "Chat da plataforma BAND com três agentes (Pirate Captain, Treasure Hunter, Weather Agent) trocando mensagens numa sessão compartilhada."
     },
     {
       "titulo": "Por que um agente só não basta",
       "texto": "O palestrante cita limites da arquitetura de transformer: viés de confirmação, diluição de atenção, fragmentação e perda de recall do contexto. Segundo ele, contexto de 1 ou 2 milhões de tokens não resolve isso. Por isso se usam vários agentes, um conferindo o outro. Ele afirma sem mostrar medições.",
       "t": 215,
       "legenda": "Lista dos motivos citados para dividir o trabalho entre agentes.",
-      "print": "img/toq-jyGLZDk/1.jpg"
+      "print": "img/toq-jyGLZDk/1.jpg",
+      "descricao": "Slide 'The Single Agent Bottleneck' com quatro limites: confirmation bias, attention dilution, context fragmentation e recall degradation."
     },
     {
       "titulo": "Chat de empresa dá só conversa agente-humano",
       "texto": "Conectar um agente ao Telegram leva 5 passos, ao Slack 8 e ao WhatsApp 11, segundo o slide. No fim o agente conversa apenas com uma pessoa, não com outro agente. Essas plataformas foram feitas para humanos e bloqueiam bot falando com bot.",
       "t": 276,
       "legenda": "Contagem de passos manuais por plataforma de mensagens.",
-      "print": "img/toq-jyGLZDk/2.jpg"
+      "print": "img/toq-jyGLZDk/2.jpg",
+      "descricao": "Slide de passos por plataforma: Telegram 5 steps e Discord 7 steps, legível. Slack e WhatsApp não aparecem no frame."
     },
     {
       "titulo": "MCP e A2A deixam lacunas",
@@ -49,7 +52,8 @@
       "texto": "Para ligar LangGraph a Codex ou a CrewAI, é preciso mapear thread ID, session ID, execution ID e run ID entre os agentes. Sem isso eles não trabalham como grupo. Na demo gravada, dois agentes entram na plataforma em segundos, recebem um agent card e só trocam contato após consentimento dos dois lados.",
       "t": 746,
       "legenda": "Agentes surgem no registro e se conectam após consentimento bilateral.",
-      "print": "img/toq-jyGLZDk/4.jpg"
+      "print": "img/toq-jyGLZDk/4.jpg",
+      "descricao": "Demo gravada da plataforma com grade de cartões de agentes; resolução baixa, texto pouco legível."
     }
   ],
   "conceitos": [
@@ -169,5 +173,36 @@
       "contexto": "Código de script de loop que a BAND diz dispensar",
       "t": 935
     }
-  ]
+  ],
+  "rotulo": "Por que agentes ainda não conversam entre si",
+  "objetivo": "identificar onde você faz papel de roteador entre agentes e que requisitos exigir de uma camada de comunicação entre eles",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que lacunas o palestrante aponta em MCP e A2A?",
+      "resposta": "MCP faz chamadas sem estado, então não dá para perguntar ao agente o que aconteceu. A2A é cliente-servidor de mão única, e quem quer os dois sentidos implementa cliente e servidor nos dois lados. Faltam ainda descoberta e filas."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você planeja em uma sessão de IA e revisa em outra. Como achar o que automatizar?",
+      "resposta": "Liste as tarefas que usam duas sessões e anote onde você copia texto à mão. Esses pontos são candidatos a automação. A camada escolhida deve guardar estado, entregar em ordem e mostrar as ferramentas chamadas."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que afirmações do talk ficam sem evidência?",
+      "resposta": "A de que um agente só sofre de viés de confirmação e atenção diluída, as contagens de passos para conectar plataformas e as críticas a MCP e A2A vêm sem estudo ou fonte. O palestrante é cofundador da BAND e as demos são gravadas."
+    }
+  ],
+  "experimento": {
+    "titulo": "Dois agentes trocando mensagens por arquivo",
+    "minutos": 30,
+    "precisa": "Claude Code e outra IA (ou duas sessões), mais uma pasta de trabalho",
+    "passos": [
+      "Escolha uma tarefa pequena, como escrever uma função, com os papéis de autor e revisor.",
+      "Rode o autor e salve sua saída em um arquivo mensagem.md.",
+      "Rode o revisor lendo esse arquivo e gravando os comentários em outro arquivo.",
+      "Anote cada ponto em que você precisou copiar, esperar ou corrigir algo à mão."
+    ],
+    "sucesso": "Você completou um ciclo de autor e revisor e tem uma lista dos pontos de atrito que uma camada de comunicação teria de resolver."
+  }
 }

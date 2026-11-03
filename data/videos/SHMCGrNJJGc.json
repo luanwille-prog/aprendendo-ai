@@ -21,35 +21,40 @@
       "texto": "Um trace registra cada passo do agente, como uma linha de log. Ao ler uma dúzia deles, o palestrante achou erros que nenhum teste previa. Um relatório afirmava que 116% dos analistas recomendavam algo, porque o agente somou números de duas buscas diferentes. Primeiro anote o que viu, depois agrupe em categorias. Chutar as categorias antes gera classes largas ou estreitas demais.",
       "t": 2628,
       "legenda": "Um erro de raciocínio confiante que só aparece lendo o trace.",
-      "print": "img/SHMCGrNJJGc/0.jpg"
+      "print": "img/SHMCGrNJJGc/0.jpg",
+      "descricao": "Phoenix com o trace financial_report da Tesla e o relatório com consenso 50% buy, 52,6% hold, 13,1% sell (soma 116%)"
     },
     {
       "titulo": "Escolher o eval certo vale mais que ajustá-lo",
       "texto": "O eval pronto de correctness deu zero para os 16 relatórios, porque o juiz só confere o que sabe e o conhecimento dele para antes dos preços de outubro. O de faithfulness pergunta se o relatório segue os dados que o agente recebeu, uma pergunta que o juiz consegue responder. Ele marcou 14 de 16 como infiéis e explicou o motivo de cada um.",
       "t": 3633,
       "legenda": "Correctness reprova tudo e não informa nada. Faithfulness aponta falhas reais.",
-      "print": "img/SHMCGrNJJGc/1.jpg"
+      "print": "img/SHMCGrNJJGc/1.jpg",
+      "descricao": "Tabela de spans no Phoenix com coluna de annotations de actionability; a coluna de correctness não aparece"
     },
     {
       "titulo": "Um eval com divisão equilibrada é uma colina para subir",
       "texto": "O juiz próprio de actionability seguiu cinco partes: papel, critérios específicos tirados da análise de erros, dados em tags XML, exemplos rotulados e saída restrita por tool call. Resultado: 5 de 16 relatórios acionáveis e 11 não. Eval que aprova tudo ou reprova tudo não ensina nada. Uma divisão assim mostra o que funciona e o que não funciona.",
       "t": 4836,
       "legenda": "A explicação do juiz aponta a falta de recomendação buy, hold ou sell.",
-      "print": "img/SHMCGrNJJGc/2.jpg"
+      "print": "img/SHMCGrNJJGc/2.jpg",
+      "descricao": "Filtro 'not actionable' no Phoenix com tooltip da explicação do juiz para o relatório do JPM"
     },
     {
       "titulo": "Teste o juiz contra um conjunto rotulado por humano",
       "texto": "O juiz é um classificador e se mede como tal, comparando com rótulos humanos (golden dataset). Os rótulos ficam divididos em dev (ajuste) e test (verificação). Nos 12 casos de dev o juiz concordou em todos. Uma frase a mais no rubric, exigindo os quatro critérios, quebrou o caso da Microsoft e o da Apple. Mexer no rubric pode piorar o eval.",
       "t": 5444,
       "legenda": "Concordância de 12 em 12 no dev, com amostra pequena demais para concluir.",
-      "print": "img/SHMCGrNJJGc/3.jpg"
+      "print": "img/SHMCGrNJJGc/3.jpg",
+      "descricao": "Terminal com npm run meta: 16 relatórios rotulados por humano e experimento judge-vs-human-dev com 12 exemplos; tabela de concordância não aparece"
     },
     {
       "titulo": "Experimentos e CI trocam 'acho que funciona' por número",
       "texto": "Com os mesmos dados e os mesmos evals antes e depois, a mudança de prompt levou actionability de 5 de 16 para 48 de 48, mas faithfulness só foi de 2 de 16 para 3 de 48. O mesmo conjunto rodou no Vitest com npm test. A garantia de empresa certa trava o build e a média de actionability precisa ficar em 0,8 ou mais.",
       "t": 6363,
       "legenda": "Actionability chega a 48 de 48 e faithfulness quase não se move.",
-      "print": "img/SHMCGrNJJGc/4.jpg"
+      "print": "img/SHMCGrNJJGc/4.jpg",
+      "descricao": "Slide 'Compare the runs': mentions_ticker 15/16 para 48/48, actionability 5/16 para 48/48, faithfulness 2/16 para 3/48"
     }
   ],
   "conceitos": [
@@ -170,5 +175,35 @@
       "contexto": "respostas 'hold' do Haiku 5.5",
       "t": 6581
     }
-  ]
+  ],
+  "rotulo": "Do trace ao CI: evals para um agente",
+  "objetivo": "montar um ciclo de avaliação de agente que vai da leitura de traces até um gate de CI",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que o eval pronto de correctness reprovou os 16 relatórios do agente analista?",
+      "resposta": "Porque o juiz só confere o que sabe, e o conhecimento dele para antes dos preços de outubro. Faithfulness e um juiz próprio de actionability fizeram perguntas que o juiz consegue responder."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você validaria um juiz LLM para o seu agente antes de confiar nas notas?",
+      "resposta": "Rotulando 30 a 50 casos com um especialista do domínio, com os mesmos critérios do juiz, separando parte para ajuste (dev) e parte para teste, e medindo a concordância no conjunto de teste."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que a concordância de 12 em 12 no conjunto de dev não prova que o juiz é bom?",
+      "resposta": "A amostra é de 16 relatórios, rotulados por uma só pessoa que admite ter sido frouxa no critério. Com tão poucos casos a concordância total diz pouco, e o workshop vende o Phoenix, ferramenta da empresa do palestrante."
+    }
+  ],
+  "experimento": {
+    "titulo": "Leia 12 traces antes de escrever evals",
+    "minutos": 40,
+    "precisa": "Um agente seu com tracing ativo (Phoenix, Langfuse ou log em arquivo)",
+    "passos": [
+      "Ative o registro de traces e rode seu agente em 12 entradas variadas.",
+      "Leia cada trace de ponta a ponta e anote em linguagem natural o que deu errado.",
+      "Agrupe as anotações em três a cinco tipos de falha e escreva um eval em código para a falha mais frequente."
+    ],
+    "sucesso": "Você tem uma lista de tipos de falha tirada dos traces e um eval em código que reprova pelo menos um dos casos que anotou."
+  }
 }

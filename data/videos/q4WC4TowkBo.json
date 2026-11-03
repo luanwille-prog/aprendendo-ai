@@ -28,28 +28,32 @@
       "texto": "Zack criou o CTX, um app web que concentra a autoridade de verificação. O agente conclui o trabalho, chama o CTX via MCP e pergunta se terminou. O CTX roda um verificador conhecido, por exemplo checar na API do GitHub se o PR existe e se todas as checagens passaram. Só então marca a etapa como satisfeita. Se falhar, devolve ao agente o que ainda está quebrado.",
       "t": 842,
       "legenda": "O status vem de um verificador externo, não da palavra do modelo.",
-      "print": "img/q4WC4TowkBo/1.jpg"
+      "print": "img/q4WC4TowkBo/1.jpg",
+      "descricao": "Slide com o diagrama do verificador: gate 'todos os PRs mergeados', ramos satisfied/failed e conector que consulta o GitHub."
     },
     {
       "titulo": "Uma CLI do app como ferramenta do agente",
       "texto": "O comando snack sobe e derruba o app, roda um 'doctor' de saúde, entra na lista de espera, recarrega, tira snapshot, lê storage, console e rede, tira screenshot e roda prove e judge. Uma única chamada com saída determinística substitui parágrafos de instrução e dá a todos os agentes o mesmo resultado. Os autores avisam que não existe ferramenta genérica, cada time monta a sua.",
       "t": 1243,
       "legenda": "Os comandos da CLI dão olhos e mãos ao agente para testar o próprio trabalho.",
-      "print": "img/q4WC4TowkBo/2.jpg"
+      "print": "img/q4WC4TowkBo/2.jpg",
+      "descricao": "Slide 'Meet snack' listando os comandos agrupados em HEALTH, DRIVE, LOOK e PROVE (doctor, join, storage, judge etc.)."
     },
     {
       "titulo": "O momento em que o agente descobre que não terminou",
       "texto": "Rodando doctor, join e storage em sequência, o storage volta vazio, ou seja, o e-mail não foi persistido. É nesse ponto que o agente percebe a falha e volta a consertar em vez de entregar. O ciclo é o de TDD (red, green, refactor): reproduzir, corrigir e mostrar a prova. Mensagens de erro claras ajudam o agente a se corrigir sozinho.",
       "t": 2207,
       "legenda": "A prova automática expõe a falha que a interface escondia.",
-      "print": "img/q4WC4TowkBo/3.jpg"
+      "print": "img/q4WC4TowkBo/3.jpg",
+      "descricao": "Terminal com 'tsx lab/snack.ts storage' retornando localStorage vazio, e a saída de snack com status waitlisted acima."
     },
     {
       "titulo": "Juiz rápido para o que não bate texto a texto",
       "texto": "Depois do conserto, a página pode dizer 'você está dentro, vaga confirmada' quando o correto era 'lista de espera'. Comparar texto exato acopla o teste à tela. Um modelo rápido ('sistema 1') avalia se o texto cumpre o contrato. No jogo do sabotador e detetive, o resultado é classificado em categorias como 'achou o bug com prova', 'disse que funciona mas não funciona' ou 'sem evidência'.",
       "t": 2396,
       "legenda": "O juiz LLM pega uma promessa exagerada que o teste fixo não pegaria.",
-      "print": "img/q4WC4TowkBo/4.jpg"
+      "print": "img/q4WC4TowkBo/4.jpg",
+      "descricao": "Terminal com saída do juiz e trecho destacado em amarelo sobre a mensagem de confirmação; resolução baixa, texto difícil de ler."
     }
   ],
   "conceitos": [
@@ -170,5 +174,35 @@
       "contexto": "agentes que Nick roda em paralelo num dia normal",
       "t": 3407
     }
-  ]
+  ],
+  "rotulo": "Ensine o agente a provar que terminou",
+  "objetivo": "escrever um critério de pronto executável e uma CLI mínima que o agente rode antes de dizer que concluiu",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que bug o app de demonstração tinha e por que o teste não o pegou?",
+      "resposta": "O formulário mostrava 'sucesso' ao cadastrar um e-mail, mas ao recarregar a página o dado sumia. O teste só olhou a interface e ignorou a outra metade, o armazenamento."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você definiria o critério de pronto de uma tarefa que vai delegar a um agente?",
+      "resposta": "Como um comando que retorna sucesso ou falha, em vez de pedir para 'verificar no navegador'. Uma CLI do app com saúde, ação principal e inspeção de storage, console e rede dá ao agente a prova antes de entregar."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que o relato de 900 PRs por mês sem incidentes não prova o método?",
+      "resposta": "Vem de relato dos palestrantes, sem metodologia nem comparação. Os exemplos são um app de brinquedo e um bug plantado, e eles admitem que a CLI não é reutilizável e que a própria verificação precisa de testes."
+    }
+  ],
+  "experimento": {
+    "titulo": "CLI mínima de prova para um app",
+    "minutos": 40,
+    "precisa": "Um app web pequeno seu, ou um formulário simples, e um agente de código",
+    "passos": [
+      "Peça ao agente que crie uma CLI com três comandos: subir o app, executar a ação principal e ler o estado salvo.",
+      "Escreva um comando 'prove' que retorna falha se o dado da ação não estiver salvo depois de recarregar.",
+      "Introduza um bug que não persista o dado e peça ao agente que só diga 'pronto' depois de rodar a CLI."
+    ],
+    "sucesso": "O comando prove falha com o bug, o agente o conserta sozinho e só encerra quando o comando passa."
+  }
 }

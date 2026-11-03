@@ -21,7 +21,8 @@
       "texto": "A arquitetura tem três partes. A busca (retrieval) acha a fonte certa, código determinístico escrito por humanos faz as contas e um filtro de pós-processamento remove qualquer número sem origem. Assim o modelo só planeja e aponta para fatos já registrados.",
       "t": 248,
       "legenda": "Os três pilares que impedem o modelo de inventar números.",
-      "print": "img/dZgA6btnb_s/0.jpg"
+      "print": "img/dZgA6btnb_s/0.jpg",
+      "descricao": "Slide 'The model cites numbers. It never writes them.' com três caixas: retrieval acha a fonte, código faz a conta, filtro checa."
     },
     {
       "titulo": "Registro de citações com valor, unidade, escala e período",
@@ -35,21 +36,24 @@
       "texto": "O namespace no turbopuffer combina embeddings de 1280 dimensões, vizinhos aproximados (ANN) e BM25. Uma fusão por rank recíproco traz cerca de 60 documentos. Depois, um re-ranking por confiança na fonte e um cross encoder ordenam o resultado. A estratégia é buscar amplo e depois reordenar.",
       "t": 591,
       "legenda": "O pipeline de recuperação inteiro em um único diagrama.",
-      "print": "img/dZgA6btnb_s/2.jpg"
+      "print": "img/dZgA6btnb_s/2.jpg",
+      "descricao": "Slide 'Search wide, then rerank with a cross-encoder': pipeline com embedding, ANN e BM25, RRF k=60 e re-ranking zerank-2."
     },
     {
       "titulo": "Se não há correspondência, o número é removido",
       "texto": "Durante a geração, o modelo emite referências que o sistema resolve no registro, como quem segue um ponteiro. Sem correspondência, o número é cortado. O custo é uma ferramenta menos criativa e inútil para quem quer especulação. Em alguns casos o sistema tenta reparar a citação antes de cortar.",
       "t": 900,
       "legenda": "O filtro final troca criatividade por rastreabilidade.",
-      "print": "img/dZgA6btnb_s/3.jpg"
+      "print": "img/dZgA6btnb_s/3.jpg",
+      "descricao": "Diagrama do filtro: tokens do LLM, registro de fontes, match em verde ou texto puro, com tabela de checagens por tipo de âncora."
     },
     {
       "titulo": "RAG simples deixa passar milhares de números errados",
       "texto": "Nos evals da Kepler, o filtro recusou 10.981 citações de um fluxo nativo com Claude ou ChatGPT mais RAG. Cerca de 3.810 eram números claramente errados. Na demo, cada número é clicável e mostra o documento de origem e a conta feita, como um aumento de 6,4%.",
       "t": 1025,
       "legenda": "Evidência da própria empresa de que RAG puro não garante precisão numérica.",
-      "print": "img/dZgA6btnb_s/4.jpg"
+      "print": "img/dZgA6btnb_s/4.jpg",
+      "descricao": "Gráfico de barras: filtro recusou 10.981 citações e 3.810 eram números errados, com as causas por categoria."
     }
   ],
   "conceitos": [
@@ -170,5 +174,36 @@
       "contexto": "das recusadas eram números claramente errados",
       "t": 1025
     }
-  ]
+  ],
+  "rotulo": "Como impedir o modelo de inventar números",
+  "objetivo": "desenhar um fluxo em que o modelo aponta para o número, o código calcula e um filtro remove o que não tem fonte",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são as três partes da arquitetura da Kepler para evitar números inventados?",
+      "resposta": "A busca acha a fonte certa, código determinístico escrito por humanos faz as contas e um filtro de pós-processamento remove qualquer número sem origem comprovada. O modelo só planeja e cita."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você usa IA para resumir relatórios com números. O que muda no seu processo?",
+      "resposta": "Pedir a fonte (documento e página) ao lado de cada número, mandar somas e percentuais para planilha ou código, guardar unidade, escala e período com cada valor e conferir amostras antes de repassar."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que os números de 10.981 citações recusadas e 3.810 erradas merecem cautela?",
+      "resposta": "Vêm dos evals da própria Kepler, sem dados sobre benchmark, modelo usado ou falsos positivos do filtro. A palestra é patrocinada pelo turbopuffer, e o palestrante admite que o modelo ainda alucina."
+    }
+  ],
+  "experimento": {
+    "titulo": "Filtro de números com fonte em Python",
+    "minutos": 40,
+    "precisa": "Python, um texto de relatório com números e acesso a um LLM",
+    "passos": [
+      "Extraia 10 números do relatório e guarde cada um com valor, unidade, período e trecho de origem.",
+      "Peça ao LLM um resumo do relatório e liste os números que ele escreveu.",
+      "Escreva um script que marque como sem fonte todo número do resumo que não esteja na sua lista.",
+      "Calcule em código uma variação percentual e compare com a que o LLM escreveu."
+    ],
+    "sucesso": "O script aponta os números do resumo sem fonte e você tem a taxa de números do LLM que batem com o relatório."
+  }
 }

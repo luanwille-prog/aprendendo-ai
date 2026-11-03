@@ -21,7 +21,8 @@
       "texto": "Antes, quem usava o Gemini precisava reenviar o histórico e as thought signatures, códigos opacos do raciocínio do modelo. Um espaço em branco a mais podia quebrar o cache. Agora a resposta traz um interaction ID e você o devolve em previous_interaction_id no turno seguinte. O servidor preserva o contexto, e sem as signatures o desempenho cai.",
       "t": 351,
       "legenda": "O ID da primeira resposta carrega o contexto para o segundo turno.",
-      "print": "img/8aVbXXvJUY4/0.jpg"
+      "print": "img/8aVbXXvJUY4/0.jpg",
+      "descricao": "Código mostrando dois turnos de chamada à API: primeiro turno com input 'Hi, my name is Phil' e segundo turno usando o interaction ID."
     },
     {
       "titulo": "Encadear imagem, vídeo e áudio com o mesmo contexto",
@@ -35,21 +36,24 @@
       "texto": "O exemplo combina Google Search, leitura de páginas (URL context) e uma função própria chamada file_incident. O modelo decide sozinho quais usar e responde em uma única chamada de API. O formato de steps substitui o antigo array de outputs e marca cada passo: raciocínio, chamada de função e conteúdo.",
       "t": 503,
       "legenda": "Ferramentas nativas e custom convivem em uma só requisição.",
-      "print": "img/8aVbXXvJUY4/2.jpg"
+      "print": "img/8aVbXXvJUY4/2.jpg",
+      "descricao": "Código listando três ferramentas em uma só requisição: google_search, url_context e função customizada file_incident."
     },
     {
       "titulo": "Managed Agent: sandbox persistente em uma chamada",
       "texto": "O agente Antigravity sobe um sandbox remoto, lista arquivos, lê o repositório e gera um relatório sem intervenção. O interaction ID preserva o contexto e o environment ID devolve você ao mesmo sandbox, com pacotes e arquivos intactos. Fontes podem vir de GCS, GitHub ou arquivos inline.",
       "t": 636,
       "legenda": "Um agente investiga um repositório inteiro dentro de um sandbox remoto.",
-      "print": "img/8aVbXXvJUY4/3.jpg"
+      "print": "img/8aVbXXvJUY4/3.jpg",
+      "descricao": "Slide sobre Antigravity como Remote Agent com código mostrando chamada ao agente nomeado em sandbox remoto persistente."
     },
     {
       "titulo": "Proxy que injeta o token no lugar do modelo",
       "texto": "Um proxy man-in-the-middle fica entre o agente e as APIs externas e troca cabeçalhos nas chamadas de saída. O token do GitHub entra na requisição depois, fora do alcance do modelo. Se houver prompt injection, o agente não tem o segredo para vazar.",
       "t": 846,
       "legenda": "O token é injetado fora do modelo, então não há segredo para vazar.",
-      "print": "img/8aVbXXvJUY4/4.jpg"
+      "print": "img/8aVbXXvJUY4/4.jpg",
+      "descricao": "Slide 'Network Proxies' mostrando como o proxy injeta token do GitHub via header 'Authorization' sem expor segredo ao modelo."
     }
   ],
   "conceitos": [
@@ -258,5 +262,35 @@
       "contexto": "Limite de agentes nomeados suportados",
       "t": 908
     }
-  ]
+  ],
+  "rotulo": "Interactions API do Gemini e Managed Agents",
+  "objetivo": "explicar como estado no servidor e proxy de credenciais simplificam agentes e testar um fluxo multi-turno com interaction ID",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que muda ao usar o interaction ID na Interactions API do Gemini?",
+      "resposta": "O servidor guarda o contexto e as thought signatures. Você devolve só o ID em previous_interaction_id no turno seguinte, sem reenviar o histórico."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você evitaria que o seu agente tenha acesso direto a um token do GitHub?",
+      "resposta": "Com um proxy ou cofre que injeta a credencial na requisição de saída, fora do alcance do modelo. Numa prompt injection, o agente não tem o segredo para vazar."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que afirmações do talk precisam de checagem independente?",
+      "resposta": "O ganho de desempenho por preservar thought signatures, afirmado sem medição, e a ideia de pagar só pelo modelo e não pelo sandbox. O proxy também não impede o uso indevido do token contra a API."
+    }
+  ],
+  "experimento": {
+    "titulo": "Histórico reenviado contra estado no servidor",
+    "minutos": 35,
+    "precisa": "Uma chave de API do Gemini sua e Python",
+    "passos": [
+      "Escreva um fluxo de 5 turnos que reenvia todo o histórico a cada chamada.",
+      "Repita o fluxo usando previous_interaction_id.",
+      "Compare tokens de entrada, tempo e qualidade das respostas nos dois modos."
+    ],
+    "sucesso": "Você tem uma tabela com tokens e tempo dos dois modos e sabe se a diferença justifica migrar."
+  }
 }

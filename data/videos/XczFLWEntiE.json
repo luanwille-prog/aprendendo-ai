@@ -21,14 +21,16 @@
       "texto": "Em app de IA serverless, cada mudança no código exige build da imagem, push para o registro e nova execução. O palestrante estima cerca de 15 minutos por volta. A proposta do Flash é cortar esse caminho para escrever, executar e ver o resultado.",
       "t": 44,
       "legenda": "O ciclo que o Flash promete eliminar, com estimativa de 15 minutos.",
-      "print": "img/XczFLWEntiE/0.jpg"
+      "print": "img/XczFLWEntiE/0.jpg",
+      "descricao": "slide 'Developing a serverless AI application' com o ciclo: write code, build Dockerfile, push to docker hub, execute"
     },
     {
       "titulo": "Live serverless na prática",
       "texto": "Com o comando flash dev, sobe uma API local que dispara a função numa GPU remota. A primeira função só consulta o torch e devolve a placa usada. O resultado mostra uma RTX 4090, depois de uma espera de cold start (partida a frio do worker).",
       "t": 302,
       "legenda": "Função local rodando de fato numa GPU remota, após o cold start.",
-      "print": "img/XczFLWEntiE/1.jpg"
+      "print": "img/XczFLWEntiE/1.jpg",
+      "descricao": "Swagger do Flash em loading e terminal com 'no workers available' (cold start). O resultado com RTX 4090 não aparece"
     },
     {
       "titulo": "Dependências instaladas na hora",
@@ -42,14 +44,16 @@
       "texto": "Depois da geração de imagem, o flash deploy empacota o app, envia aos servidores da Runpod e expõe um endpoint de produção. A demo chamou esse endpoint com um novo prompt e recebeu a imagem em base64. O palestrante repete que não há Docker no caminho.",
       "t": 649,
       "legenda": "Saída do flash deploy: empacota, envia e sobe o endpoint.",
-      "print": "img/XczFLWEntiE/3.jpg"
+      "print": "img/XczFLWEntiE/3.jpg",
+      "descricao": "VS Code com o curl do endpoint e terminal rodando 'flash deploy' (creating archive), antes do ID do endpoint"
     },
     {
       "titulo": "Chamadas entre endpoints e volumes",
       "texto": "Um endpoint pode chamar outro como se fosse uma função local, sem o dev precisar saber o endereço de cada servidor. Volumes de rede com cache aquecido levam o cache junto quando o endpoint escala. A parte está listada em slide e não foi demonstrada.",
       "t": 170,
       "legenda": "Lista de recursos anunciados, sem demo ao vivo.",
-      "print": "img/XczFLWEntiE/4.jpg"
+      "print": "img/XczFLWEntiE/4.jpg",
+      "descricao": "slide 'What can you do in Flash today?' listando endpoints, endpoint-to-endpoint, network volumes e deploy"
     }
   ],
   "conceitos": [
@@ -148,5 +152,36 @@
       "contexto": "crédito oferecido ao criar conta na Runpod",
       "t": 773
     }
-  ]
+  ],
+  "rotulo": "Rodar Python em GPU na nuvem sem Docker",
+  "objetivo": "medir o tempo do seu ciclo de build e deploy de um app com GPU e comparar com uma alternativa sem imagem própria",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Qual gargalo o Runpod Flash quer eliminar?",
+      "resposta": "O loop de escrever código, montar a imagem Docker, enviar ao registro e executar, estimado em cerca de 15 minutos por iteração. No Flash, a função Python roda em GPU remota e o deploy sai com flash deploy."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que cuidado você tomaria ao usar endpoints serverless com GPU na experiência do usuário?",
+      "resposta": "Planejar o cold start, porque a demo mostrou a espera já na primeira chamada. Convém também medir o tempo real do seu ciclo antes de migrar."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que os 15 minutos do loop Docker não provam a vantagem do Flash?",
+      "resposta": "É experiência pessoal de um funcionário da Runpod, sem benchmark nem o tempo do Flash. A demo teve cold start, rollout travado encerrado à mão e imagem fora do pedido, e endpoint-to-endpoint e warm caching só apareceram em slide."
+    }
+  ],
+  "experimento": {
+    "titulo": "Cronometrar o ciclo de build e deploy do seu app",
+    "minutos": 30,
+    "precisa": "Docker instalado e um app Python pequeno, ou um projeto seu já em container",
+    "passos": [
+      "Pegue um app pequeno com uma função simples, como devolver a versão do Python.",
+      "Cronometre 3 ciclos de mudar uma linha, construir a imagem, rodar o container e ver o resultado.",
+      "Calcule a média e anote qual etapa mais demora.",
+      "Leia a documentação de uma alternativa sem imagem própria e liste o que mudaria no seu fluxo."
+    ],
+    "sucesso": "Você tem a média em minutos do seu ciclo, a etapa mais lenta e uma lista do que a alternativa mudaria."
+  }
 }

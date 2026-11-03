@@ -21,35 +21,40 @@
       "texto": "O termo vem de Simon Willison. Um agente num laptop tem acesso a dados privados (arquivos, credenciais, bancos de dados), lê conteúdo da internet e consegue enviar dados para fora. Patterson diz que uma peça isolada não preocupa, mas duas já são inaceitáveis em empresa e as três juntas levam a um incidente.",
       "t": 356,
       "legenda": "As três condições que, juntas, tornam o agente explorável.",
-      "print": "img/abw_m-DRi1k/0.jpg"
+      "print": "img/abw_m-DRi1k/0.jpg",
+      "descricao": "slide 'What is the Lethal Trifecta?' com os três vértices: acesso a dados privados, exposição a conteúdo não confiável, comunicação externa"
     },
     {
       "titulo": "Fontes confiáveis viram vetor de ataque",
       "texto": "Mensagens de erro, tickets de suporte e logs de CI/CD parecem seguros, mas qualquer pessoa pode escrever instruções maliciosas neles. O agente trata o texto como verdade (prompt injection). O mesmo vale para documentação e dados adulterados (context poisoning). Como o agente costuma ter acesso amplo, o ataque escala privilégios e pode apagar tabelas ou publicar dados.",
       "t": 418,
       "legenda": "Os três cenários de ataque que o palestrante usa como exemplo.",
-      "print": "img/abw_m-DRi1k/1.jpg"
+      "print": "img/abw_m-DRi1k/1.jpg",
+      "descricao": "slide 'Real Attack Scenarios' mostrando só a coluna de prompt injection, com o texto de exemplo; as outras colunas ainda não aparecem"
     },
     {
       "titulo": "Três pilares de segurança para agentes",
       "texto": "O palestrante resume a defesa em controlar o acesso a dados, restringir a comunicação externa e travar permissões e credenciais. Defende que isso se parece com segurança comum: máquina separada, ambiente protegido, tráfego interceptado e alerta quando o agente sai do perímetro.",
       "t": 480,
       "legenda": "O modelo de defesa que organiza o resto da palestra.",
-      "print": "img/abw_m-DRi1k/2.jpg"
+      "print": "img/abw_m-DRi1k/2.jpg",
+      "descricao": "slide 'Trifecta of Agent Security' com três círculos (dados, interceptação, comunicação) e três tópicos de controle ao lado"
     },
     {
       "titulo": "Shadow AI e o que trava a adoção",
       "texto": "Sem aprovação do CISO (chefe de segurança) e do DevOps, muita gente usa assinaturas pessoais no laptop da empresa. Patterson chama isso de shadow AI e cita um termo emergente, ninja AI, para o mesmo problema em escala. Ele lista também as dúvidas de quem opera: observabilidade, alert fatigue e repetibilidade. Engenheiros seniores temem dívida técnica e responsabilização.",
       "t": 670,
       "legenda": "Por que times usam agentes às escondidas quando a empresa não libera.",
-      "print": "img/abw_m-DRi1k/3.jpg"
+      "print": "img/abw_m-DRi1k/3.jpg",
+      "descricao": "slide 'Challenges to Expect' com a lista 'Before Adoption' sobre bloqueios de segurança, shadow AI e dúvidas de DevOps"
     },
     {
       "titulo": "Três guardrails de arquitetura",
       "texto": "O primeiro é rodar o agente num ambiente de desenvolvimento na nuvem, com credenciais e dados limitados ao que foi colocado lá. O segundo é um model proxy entre o agente e o provedor de LLM, que registra tudo e remove dados sensíveis. O terceiro é um agent firewall que olha os processos e nega comandos como gh repo delete ou drop table.",
       "t": 1102,
       "legenda": "O desenho do model proxy entre agente e provedor de LLM.",
-      "print": "img/abw_m-DRi1k/4.jpg"
+      "print": "img/abw_m-DRi1k/4.jpg",
+      "descricao": "diagrama de arquitetura com o agente, o model proxy e o provedor de LLM, com caixas coloridas e rótulos de fluxo"
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "ingredientes da trifecta já seriam inaceitáveis em empresa",
       "t": 356
     }
-  ]
+  ],
+  "rotulo": "A tríade letal de agentes de código no seu laptop",
+  "objetivo": "avaliar um agente de código pelos três ingredientes da lethal trifecta e remover pelo menos um deles",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são os três ingredientes da lethal trifecta?",
+      "resposta": "Acesso a dados privados, leitura de conteúdo não confiável e comunicação com a internet, tudo ao mesmo tempo. Com os três juntos, prompt injection pode vazar dados."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você usa um agente de código no laptop do trabalho. Que mudanças reduzem o risco?",
+      "resposta": "Rodar o agente em VM ou container sem seus arquivos pessoais, com credenciais de escopo mínimo e só os domínios necessários liberados. Também não colar dados de clientes ou segredos nos prompts."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que fragilidades a palestra deixa sem resposta sobre o agent firewall e sobre os casos citados?",
+      "resposta": "A Coder vende ambientes remotos, e as soluções apontam para eles. Não há dados de incidentes nem teste dos guardrails. O caso do banco apagado vem de um post sem verificação, e a lista de comandos permitidos pode ser contornada."
+    }
+  ],
+  "experimento": {
+    "titulo": "Mapeie a tríade nos seus agentes",
+    "minutos": 20,
+    "precisa": "Lista dos agentes de código ou assistentes de IA que você usa hoje",
+    "passos": [
+      "Liste cada agente que você usa e escreva três colunas: dados privados, conteúdo não confiável e saída para a internet.",
+      "Marque com um X quais ingredientes cada agente tem hoje, conferindo as permissões reais nas configurações.",
+      "Para cada agente com os três, escolha um ingrediente para remover, como bloquear domínios ou tirar acesso a uma pasta.",
+      "Aplique a mudança em um dos agentes e confirme que ele ainda faz a tarefa."
+    ],
+    "sucesso": "Cada agente tem a tabela preenchida e pelo menos um deles perdeu um dos três ingredientes sem deixar de funcionar."
+  }
 }

@@ -21,28 +21,32 @@
       "texto": "O agente só é útil se alcança muitas ferramentas, serviços e dados. Sem limites rígidos, o dano possível não tem teto. Firewall e regra estática não percebem quando o objetivo do agente foi sequestrado. Por isso o caso do agente que deu 17.600 ações em quatro dias e meio sem ninguém notar abre o talk.",
       "t": 125,
       "legenda": "Quanto mais alcance o agente tem, maior o dano se o objetivo for sequestrado.",
-      "print": "img/5O6jLtoeKrg/0.jpg"
+      "print": "img/5O6jLtoeKrg/0.jpg",
+      "descricao": "slide 'Autonomy vs. Blast Radius' com a lista de três motivos que tornam o problema difícil"
     },
     {
       "titulo": "Regra de dois para decidir quando exigir humano",
       "texto": "Um agente combina três coisas: entrada não confiável, dados sensíveis e ação externa. Pode ter até duas. Se precisar das três, exige aprovação humana. O exemplo é a avaliação falsa em um marketplace automatizado, que mandou o agente estocar um produto.",
       "t": 351,
       "legenda": "Duas das três propriedades passam. As três juntas pedem assinatura humana.",
-      "print": "img/5O6jLtoeKrg/1.jpg"
+      "print": "img/5O6jLtoeKrg/1.jpg",
+      "descricao": "slide 'The Agents Rule of Two' com a regra 'pick at most two'; o diagrama de círculos ainda não aparece na tela"
     },
     {
       "titulo": "Guardrail não pega o que o broker determinístico barra",
       "texto": "Instruções escondidas em código Morse passaram pelos guardrails, foram decodificadas e esvaziaram uma carteira. O remédio é um broker de invocação determinístico, com limites de taxa e orçamento, que valida toda chamada de ferramenta fora do modelo.",
       "t": 461,
       "legenda": "Filtro baseado em texto falhou. Controle em código e limites rígidos resolvem.",
-      "print": "img/5O6jLtoeKrg/2.jpg"
+      "print": "img/5O6jLtoeKrg/2.jpg",
+      "descricao": "slide do incidente Morse com o fluxo de ataque até a carteira e a nota de que o filtro checou os pontos, não a ordem decodificada"
     },
     {
       "titulo": "A sandbox sem web ainda vazou por DNS",
       "texto": "A sandbox bloqueava a web, mas esqueceram o DNS. Um prompt escondido mandou o agente codificar dados em consultas DNS, e alguém leu os logs. A correção é negar todo tráfego de saída por padrão, DNS incluído. Depois veio o caso que une isso a instruções dormentes na memória do agente.",
       "t": 518,
       "legenda": "Canal de DNS aberto anulou uma sandbox sem acesso à web.",
-      "print": "img/5O6jLtoeKrg/3.jpg"
+      "print": "img/5O6jLtoeKrg/3.jpg",
+      "descricao": "diagrama das camadas com a Layer 4 'Execution Isolation' destacada: sandboxed execution, egress control, ephemeral runtime"
     },
     {
       "titulo": "Promessa do agente não é controle",
@@ -170,5 +174,36 @@
       "contexto": "versões limpas antes do pacote MCP malicioso",
       "t": 755
     }
-  ]
+  ],
+  "rotulo": "Ataques reais a agentes e controles que os param",
+  "objetivo": "aplicar a regra de dois e controles fora do modelo, como credenciais curtas e saída de rede negada, para limitar o dano de um agente",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Qual é a regra de dois para agentes?",
+      "resposta": "Um agente combina entrada não confiável, dados sensíveis e ação externa. Pode ter até duas dessas coisas. Se precisar das três, exige aprovação humana."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Pegue um agente que você usa. Que credenciais e saídas de rede ele tem e o que você mudaria?",
+      "resposta": "Liste as credenciais e quando expiram, e troque chaves longas por tokens curtos com escopo. Verifique se o ambiente consegue consultar DNS e negue todo tráfego de saída por padrão. Exija aprovação humana quando juntar as três condições."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limite tem o talk como fonte de evidência?",
+      "resposta": "É uma curadoria de incidentes quase sem fonte citada. Ele não nomeia o laboratório, os alvos nem os links, então o leitor não confere datas, causas ou valores como as 17.600 ações. Os controles são boas práticas sem dados de eficácia."
+    }
+  ],
+  "experimento": {
+    "titulo": "Auditar as credenciais dos seus agentes",
+    "minutos": 25,
+    "precisa": "A lista de agentes ou ferramentas de IA que você usa e acesso às configurações deles",
+    "passos": [
+      "Liste cada agente ou ferramenta de IA que você usa.",
+      "Anote para cada um as credenciais, o escopo e quando expiram.",
+      "Aplique a regra de dois e marque os que reúnem entrada não confiável, dado sensível e ação externa.",
+      "Troque uma chave longa por um token curto e com escopo, e registre a mudança."
+    ],
+    "sucesso": "Você tem a tabela completa e ao menos um agente com credencial reduzida ou aprovação humana adicionada."
+  }
 }

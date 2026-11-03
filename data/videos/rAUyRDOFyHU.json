@@ -21,21 +21,24 @@
       "texto": "O Orbit define cada agente em um único arquivo YAML. Passos de código buscam dados, classificam risco e publicam resultados. O modelo entra só no meio, onde é preciso raciocinar. Isso deixa o processo previsível, barato e fácil de revisar.",
       "t": 257,
       "legenda": "O YAML mostra onde termina o código e onde começa o modelo.",
-      "print": "img/rAUyRDOFyHU/0.jpg"
+      "print": "img/rAUyRDOFyHU/0.jpg",
+      "descricao": "Slide 'One YAML file defines each agent' com trecho de code_review_agent.yaml e ícones de trigger, passos determinísticos e LLM steps."
     },
     {
       "titulo": "Permissões por passo, visíveis no YAML",
       "texto": "Em cada passo de modelo, a equipe restringe rede, ferramentas, skills e servidores MCP, até as ferramentas permitidas em cada servidor. O passo de code review lê e busca código, mas não edita nem faz push. O acesso fica revisável como qualquer código.",
       "t": 688,
       "legenda": "O acesso de cada passo fica declarado e passa por revisão.",
-      "print": "img/rAUyRDOFyHU/1.jpg"
+      "print": "img/rAUyRDOFyHU/1.jpg",
+      "descricao": "Slide 'We reuse the Claude Agent SDK, with limits' listando restrições por passo: rede, ferramentas, skills e servidores MCP."
     },
     {
       "titulo": "Arquitetura separada e guard rails",
       "texto": "A primeira versão rodava orquestração e ambiente de execução no mesmo contêiner. Depois eles foram separados em orquestração, runtime e estado de sessão. Um erro no orquestrador não derruba o sandbox. Timeouts, limites de taxa e locks contra execução duplicada controlam o uso.",
       "t": 509,
       "legenda": "Três componentes separados permitem escalar e isolar falhas.",
-      "print": "img/rAUyRDOFyHU/2.jpg"
+      "print": "img/rAUyRDOFyHU/2.jpg",
+      "descricao": "Slide 'From one container to separate layers' comparando o container ECS Fargate com Orchestration, Agent runtime e Session state."
     },
     {
       "titulo": "Comece pela skill, depois vire workflow",
@@ -49,7 +52,8 @@
       "texto": "Cada passo de modelo responde em JSON Schema, e o fluxo se ramifica por esse resultado, sem parsing de texto. Se a validação falha, há nova tentativa. Na avaliação, um novo agente recebe poucos testes com casos reais. Golden datasets rodam sob demanda e avaliação online ainda está em construção.",
       "t": 876,
       "legenda": "A avaliação ainda é manual, com golden datasets sob demanda.",
-      "print": "img/rAUyRDOFyHU/4.jpg"
+      "print": "img/rAUyRDOFyHU/4.jpg",
+      "descricao": "Slide 'From vibe check to golden dataset' com as etapas vibe check, real traces, golden dataset e improve."
     }
   ],
   "conceitos": [
@@ -170,5 +174,36 @@
       "contexto": "engenheiros de software na Flywire",
       "t": 61
     }
-  ]
+  ],
+  "rotulo": "Workflows com código e modelo só onde há julgamento",
+  "objetivo": "desenhar um workflow que usa código comum nos passos previsíveis e chama o modelo só onde há julgamento, com permissões declaradas",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que papel o modelo tem dentro de um workflow do Orbit?",
+      "resposta": "Entra só nos passos curtos que pedem julgamento. Buscar dados, classificar risco e publicar resultados ficam em código comum, definido num arquivo YAML revisado como qualquer código."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Pegue uma tarefa repetitiva do seu time. Como você dividiria os passos entre código e modelo?",
+      "resposta": "Buscar dados, filtrar, formatar e publicar ficam em código. O modelo faz só o passo de interpretar ou decidir, com saída em JSON Schema e permissões listadas, por exemplo leitura sem escrita."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que significa o 99% de sucesso em mais de 11.000 execuções, e o que ele não mostra?",
+      "resposta": "Mede execuções que terminaram, não respostas corretas. A avaliação de novos agentes usa poucos casos reais e a avaliação online ainda não existe."
+    }
+  ],
+  "experimento": {
+    "titulo": "Divida uma tarefa em passos de código e de modelo",
+    "minutos": 30,
+    "precisa": "Python ou Claude Code, e uma API de modelo ou um chat",
+    "passos": [
+      "Escolha uma tarefa repetitiva, como resumir as issues abertas da semana.",
+      "Escreva um script que busca e formata os dados sem usar o modelo.",
+      "Chame o modelo uma única vez, só para o julgamento, pedindo saída em JSON com campos fixos.",
+      "Valide o JSON no código e rode em 5 casos reais."
+    ],
+    "sucesso": "O script roda do começo ao fim, o modelo aparece em um único passo e o JSON passa na validação nos 5 casos."
+  }
 }

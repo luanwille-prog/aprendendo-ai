@@ -21,14 +21,16 @@
       "texto": "O arranjo básico é um sandbox com um agente, um webhook do GitHub e um prompt que pede revisão. Ele entrega feedback em cerca de 5 minutos, mas perde bugs, perde contexto do código, custa de US$ 3 a US$ 25 por PR e gera nitpicks (comentários corretos, mas pedantes). Os nitpicks pioram o código, porque agentes de código tentam resolver todos os comentários e escrevem código defensivo demais.",
       "t": 219,
       "legenda": "O desenho básico do revisor e os quatro problemas que ele cria",
-      "print": "img/4UtrRVtUN_g/0.jpg"
+      "print": "img/4UtrRVtUN_g/0.jpg",
+      "descricao": "slide 'Basic workflow' com GitHub, webhook de PR, agente no sandbox e comentários de review de volta ao GitHub"
     },
     {
       "titulo": "Prompt por tipo de bug e dataset de incidentes",
       "texto": "Ele recomenda levantar os incidentes passados, catalogar os tipos de bug que a equipe mais produz e pedir esses tipos no prompt, além de definir o que é nitpick e proibi-lo. Como mudanças pequenas no prompt alteram muito o número de comentários, ele propõe rodar o agente sobre PRs que causaram incidentes e medir quantos ele pega. O dataset precisa ser atualizado, porque agentes de código cometem erros novos.",
       "t": 464,
       "legenda": "Um conjunto de incidentes passados serve de teste para cada versão do prompt",
-      "print": "img/4UtrRVtUN_g/1.jpg"
+      "print": "img/4UtrRVtUN_g/1.jpg",
+      "descricao": "slide 'A dataset of historical PRs': PRs com bugs conhecidos, agente de review, comparação e ajuste do prompt"
     },
     {
       "titulo": "Inversão de modelo",
@@ -170,5 +172,36 @@
       "contexto": "mais bugs capturados ao inverter o modelo",
       "t": 621
     }
-  ]
+  ],
+  "rotulo": "Como montar um agente de revisão de código",
+  "objetivo": "listar o que falta à versão simples de um revisor de código e testar prompt, modelo revisor e custo com um dataset de incidentes",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "De que jeitos falha a versão simples de um agente revisor de pull request?",
+      "resposta": "Perde bugs, perde contexto do repositório, custa de US$ 3 a US$ 25 por PR e gera nitpicks, que são comentários corretos mas pedantes."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você testaria uma ferramenta de revisão antes de adotá-la no seu time?",
+      "resposta": "Liste os incidentes recentes, ligue cada um ao PR que o causou e veja se a ferramenta o teria apontado. Defina nitpick no prompt, liste os tipos de bug mais comuns da equipe e meça o custo por PR."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que números do talk estão sem método e por que isso importa?",
+      "resposta": "Os 10% a mais de bugs com inversão de modelo, a diferença de três vezes em erros por um e a taxa de 1 catastrófico por 1.000 PRs vêm sem amostra ou fonte, e o palestrante é cofundador da Greptile, que vende o produto."
+    }
+  ],
+  "experimento": {
+    "titulo": "Revisão cruzada de modelos em PRs antigos",
+    "minutos": 40,
+    "precisa": "Um repositório com 5 PRs antigos que tiveram bug e dois assistentes de IA (por exemplo Claude e ChatGPT)",
+    "passos": [
+      "Escolha 5 PRs passados em que um bug foi achado depois e anote o bug de cada um.",
+      "Peça a cada modelo que revise o diff de cada PR, com um prompt que lista tipos de bug e proíbe nitpicks.",
+      "Marque se cada modelo apontou o bug real e quantos comentários inúteis fez.",
+      "Compare os resultados dos dois modelos e a soma deles."
+    ],
+    "sucesso": "Você tem uma tabela com bugs achados e comentários inúteis por modelo e sabe se usar dois modelos achou mais do que um só."
+  }
 }

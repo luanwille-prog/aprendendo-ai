@@ -21,35 +21,40 @@
       "texto": "Em uma comparação de terceiros com cerca de 63 tarefas no Terminal Bench, um modelo ganhou com o harness Open Hands. Ao trocar só o harness, o outro modelo ficou muito melhor, uma diferença de mais de 30%. Avalie a configuração mais próxima da que você vai usar.",
       "t": 186,
       "legenda": "Trocar só o harness inverte qual modelo vence.",
-      "print": "img/A3FL_zTQKU0/0.jpg"
+      "print": "img/A3FL_zTQKU0/0.jpg",
+      "descricao": "Slide 'The ranking changes with the harness': gráfico de barras com Claude Opus 5 e GPT-6 Astra em OpenHands e PI, 63 tarefas"
     },
     {
       "titulo": "Benchmark público é para lista curta",
       "texto": "Benchmark público ajuda a entender o cenário e escolher candidatos. A decisão sai de um eval seu, feito com tarefas parecidas com o seu trabalho. Um escritório de advocacia ganha pouco olhando resultado de benchmark de código.",
       "t": 250,
       "legenda": "Benchmark orienta a busca, o eval próprio decide.",
-      "print": "img/A3FL_zTQKU0/1.jpg"
+      "print": "img/A3FL_zTQKU0/1.jpg",
+      "descricao": "Slide 'Public benchmarks and internal evaluation': fluxo de shortlist, comparação no trabalho-alvo e mudança de processo"
     },
     {
       "titulo": "Rastreie o pipeline inteiro",
       "texto": "Quando o agente ignorou a ferramenta, ela só podia ser diagnosticada olhando cada etapa: a ferramenta estava disponível, foi chamada, o que retornou, o resultado mudou? Consertar o uso da ferramenta pode não mexer no resultado final da tarefa.",
       "t": 432,
       "legenda": "Cada etapa do pipeline precisa de seu próprio ponto de checagem.",
-      "print": "img/A3FL_zTQKU0/2.jpg"
+      "print": "img/A3FL_zTQKU0/2.jpg",
+      "descricao": "Slide 'Trace where evidence becomes a conclusion': etapas Available, Called, Returned, Interpreted e testes de busca"
     },
     {
       "titulo": "Meça o que você quer otimizar",
       "texto": "Na busca com grep, o agente trouxe 295 arquivos quando só precisava de 6. Recall perfeito esconde a falta de precisão. Ela usou F1, que equilibra precisão e recall, porque o objetivo era outro. Pergunte o que o validador de um benchmark realmente mede.",
       "t": 527,
       "legenda": "Um recall alto sozinho esconde ruído enorme no resultado.",
-      "print": "img/A3FL_zTQKU0/3.jpg"
+      "print": "img/A3FL_zTQKU0/3.jpg",
+      "descricao": "Slide 'Audit the scoring rule': 295 arquivos retornados, 6 de referência, recall 1.0 e precisão 0,020339"
     },
     {
       "titulo": "Gate que bloqueia, alarme que cabe no humano",
       "texto": "O agente percebeu o problema, mas nada o impedia de continuar. Sinalizar e bloquear são mecanismos separados no código. Um juiz LLM com 1% de falsos alarmes geraria 10.000 revisões humanas, e poucas equipes têm especialistas para isso.",
       "t": 653,
       "legenda": "Sem enforcement no código, o alerta do agente não para nada.",
-      "print": "img/A3FL_zTQKU0/4.jpg"
+      "print": "img/A3FL_zTQKU0/4.jpg",
+      "descricao": "Slide 'Test whether the gate changes execution': fluxo Request, Approval + required checks, Execution, Observed effect. Sem o número 10.000"
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "arquivos retornados pelo grep contra os necessários",
       "t": 527
     }
-  ]
+  ],
+  "rotulo": "Testar agentes como cientista, com evals próprios",
+  "objetivo": "montar um eval pequeno com tarefas reais, várias execuções e traces, e escolher a métrica certa antes de aceitar um benchmark público",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que aconteceu na comparação do Terminal Bench quando só o harness foi trocado?",
+      "resposta": "Em uma comparação de terceiros com cerca de 63 tarefas, um modelo ganhou com o harness Open Hands. Ao trocar só o harness, o outro modelo ficou mais de 30% melhor."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você montaria um eval para o seu agente?",
+      "resposta": "Monte um conjunto pequeno de tarefas reais agrupadas por tipo, rode cada uma várias vezes para ver a variação, guarde os traces e teste modelo e harness juntos, na configuração que vai usar."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que a diferença de 30% do harness não é prova definitiva?",
+      "resposta": "Vem de uma comparação de terceiros com cerca de 63 tarefas, amostra pequena. O talk mistura vários temas em poucos minutos, usa exemplos sem dados abertos ou método detalhado e divulga o repositório dela sem evidência de que funcione."
+    }
+  ],
+  "experimento": {
+    "titulo": "Eval de cinco tarefas rodadas três vezes",
+    "minutos": 40,
+    "precisa": "Claude Code ou Python com uma API de LLM, e cinco tarefas reais suas",
+    "passos": [
+      "Escreva cinco tarefas reais do seu trabalho e o critério de acerto de cada uma.",
+      "Rode cada tarefa três vezes e salve a saída completa.",
+      "Marque acerto ou erro de cada rodada em uma planilha.",
+      "Nos erros, leia o trace e anote em qual etapa a falha ocorreu."
+    ],
+    "sucesso": "Você tem a taxa de acerto por tarefa e viu se a mesma tarefa varia entre rodadas."
+  }
 }

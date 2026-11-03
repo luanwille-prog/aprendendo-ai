@@ -21,35 +21,40 @@
       "texto": "A primeira versão deu ao modelo uma ferramenta de lista de tarefas. Ele gastou chamadas só atualizando a lista e perdeu o foco após mais de 20 iterações. A equipe moveu o plano para o harness aos poucos e hoje testa sem a ferramenta de to-do, com o plano renderizado como mensagem a cada chamada.",
       "t": 435,
       "legenda": "O plano passou da ferramenta do modelo para o estado mantido pelo harness.",
-      "print": "img/YIhvrvHtonk/0.jpg"
+      "print": "img/YIhvrvHtonk/0.jpg",
+      "descricao": "Slide 'We gave the model a todo tool, and it planned instead of working': 27 chamadas de LLM e lista de problemas antes do plano no harness."
     },
     {
       "titulo": "Terminar o turno vira um portão",
       "texto": "Tratar texto sem chamada de ferramenta como 'terminei' quebrou em modelos que anunciam o passo num turno e chamam a ferramenta no próximo. Agora existe uma chamada explícita de finish. Se há itens do plano em aberto, o harness a devolve até três vezes, avisa um passo antes do limite de iterações e força o fim no limite.",
       "t": 560,
       "legenda": "A regra de parada fica no harness para funcionar com qualquer modelo que o cliente escolha.",
-      "print": "img/YIhvrvHtonk/1.jpg"
+      "print": "img/YIhvrvHtonk/1.jpg",
+      "descricao": "Slide 'Finishing became a gate the harness enforces': texto sem ferramenta vs. finish explícito, nudge, guarda de progresso e aviso antes do limite."
     },
     {
       "titulo": "Resultado grande de ferramenta vira arquivo",
       "texto": "Um JSON enorme de trace estoura a janela de contexto. O harness trunca o resultado e deixa o agente buscar o que precisa com código (jq). É a mesma ideia de deixar uma anotação na mesa apontando para o livro na estante. O histórico da própria sessão também é resumido num checkpoint com orçamento fixo de tokens.",
       "t": 651,
       "legenda": "Ponteiro mais busca por código evita encher o contexto com saída bruta.",
-      "print": "img/YIhvrvHtonk/2.jpg"
+      "print": "img/YIhvrvHtonk/2.jpg",
+      "descricao": "Slide 'Memory turned out to be four problems': tabela por escopo com resultado de ferramenta truncado, preview com id e consulta via jq."
     },
     {
       "titulo": "Um arquivo pequeno venceu o grafo de conhecimento",
       "texto": "Testaram busca vetorial, memória episódica e semântica e grafos temporais. Ficaram com um markdown por usuário, limitado a 8.000 caracteres, carregado em toda requisição e escrito por um job em segundo plano ao fim da sessão. É exato, barato e um humano consegue auditar.",
       "t": 745,
       "legenda": "A memória escolhida foi um arquivo auditável de 8.000 caracteres.",
-      "print": "img/YIhvrvHtonk/3.jpg"
+      "print": "img/YIhvrvHtonk/3.jpg",
+      "descricao": "Slide 'For long-term memory, a small file beat a knowledge graph': o que foi testado, arquivo de 8.000 caracteres e métricas 44/48, 16/18, 9/9."
     },
     {
       "titulo": "Sessões de produção viram testes",
       "texto": "O Alex é rastreado na própria plataforma da Arize. Consultas reais entram em datasets de regressão, e uma sessão inteira pode ser reexecutada turno a turno. Bugs de agente raramente aparecem como erro explícito, por isso a equipe usa o agente Signal para achar padrões como 43 chamadas idênticas no mesmo turno.",
       "t": 931,
       "legenda": "Os traces do próprio agente alimentam os datasets de regressão.",
-      "print": "img/YIhvrvHtonk/4.jpg"
+      "print": "img/YIhvrvHtonk/4.jpg",
+      "descricao": "Slide 'Good production sessions became our tests' (testes nível 1 e 2). Não mostra a tela de traces da Arize pedida na descrição."
     }
   ],
   "conceitos": [
@@ -101,7 +106,7 @@
       "nome": "Skills",
       "traducao": "instruções e ferramentas carregadas sob demanda",
       "nivel": "intermediario",
-      "chave": "skills",
+      "chave": "skill",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -170,5 +175,36 @@
       "contexto": "chamadas de ferramenta idênticas num mesmo turno",
       "t": 993
     }
-  ]
+  ],
+  "rotulo": "O que sobreviveu a dois anos reconstruindo um agente",
+  "objetivo": "escolher quais partes do harness de um agente merecem código próprio, como plano, regra de parada e memória",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que problema apareceu quando o plano do agente era uma ferramenta de lista de tarefas que o próprio modelo atualizava?",
+      "resposta": "O modelo gastava chamadas só atualizando a lista e perdia o foco depois de mais de 20 iterações. Por isso o plano passou a morar no harness e a ser injetado como mensagem a cada chamada."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "No agente que você mantém ou imagina, como você decidiria quando um turno terminou?",
+      "resposta": "Com uma chamada explícita de finish, como no Alex. Se ainda houver itens abertos no plano, o harness recusa o encerramento (até três vezes), em vez de tratar texto sem ferramenta como 'terminei'."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites da evidência você apontaria antes de copiar as decisões da Arize?",
+      "resposta": "O palestrante é da Arize e o Alex é vitrine da plataforma deles. Não há taxa de acerto antes e depois de cada reconstrução nem comparação entre memória em arquivo e grafo. Vale como relato de um caso, não como prova geral."
+    }
+  ],
+  "experimento": {
+    "titulo": "Plano no código e finish explícito",
+    "minutos": 40,
+    "precisa": "Python, uma chave de API de modelo e um agente simples de poucas ferramentas",
+    "passos": [
+      "Escreva um loop de agente com duas ou três ferramentas e uma lista de passos mantida em uma variável do seu código.",
+      "Injete o plano atual como mensagem a cada chamada ao modelo, sem dar ao modelo uma ferramenta de to-do.",
+      "Crie uma ferramenta finish que o harness recusa enquanto houver passos abertos, com limite de três recusas.",
+      "Rode a mesma tarefa de cinco ou mais passos com e sem o finish explícito e anote quantas vezes o agente parou cedo."
+    ],
+    "sucesso": "Você tem duas execuções lado a lado e consegue dizer em qual o agente completou todos os passos do plano."
+  }
 }

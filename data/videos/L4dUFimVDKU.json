@@ -21,35 +21,40 @@
       "texto": "A Exa guarda versões de cada página que rastreia. Com content versioning, você informa uma URL e uma data e recebe o conteúdo daquele dia ou da data anterior mais próxima. Com version search, você roda uma busca inteira como se estivesse no passado. Assim o agente enxerga só o que existia na época.",
       "t": 380,
       "legenda": "O Snapshot oferece versão de uma URL e busca completa em data passada.",
-      "print": "img/L4dUFimVDKU/0.jpg"
+      "print": "img/L4dUFimVDKU/0.jpg",
+      "descricao": "slide Exa Snapshot com Content Versioning (snapshotAsOf) e Versioned Search (search date) ao lado do texto"
     },
     {
       "titulo": "Busca ao vivo vaza o futuro para o teste",
       "texto": "Uma busca atual sempre traz a informação mais recente. Se o seu preditor de aquisições lê a notícia de que a empresa foi comprada, ele acerta sem esforço. Fixar a data do snapshot logo antes do anúncio impede esse vazamento (look-ahead bias, viés de olhar para frente) e deixa o teste honesto.",
       "t": 625,
       "legenda": "Data do snapshot antes do desfecho evita que o teste já conheça a resposta.",
-      "print": "img/L4dUFimVDKU/1.jpg"
+      "print": "img/L4dUFimVDKU/1.jpg",
+      "descricao": "slide 'Versioning makes search-powered systems backtestable' comparando live search e snapshot antes do deal announced"
     },
     {
       "titulo": "Três padrões de backtest, do modelo clássico ao agente completo",
       "texto": "No primeiro padrão, você usa o Snapshot só para recuperar features históricas de um modelo que já tem. No segundo, o agente busca na web e transforma texto em sinal estruturado para um modelo tradicional. No terceiro, o sistema inteiro é agêntico e decide quando buscar, sempre limitado ao que existia na data.",
       "t": 830,
       "legenda": "Três níveis de autonomia, todos testáveis com busca congelada no tempo.",
-      "print": "img/L4dUFimVDKU/2.jpg"
+      "print": "img/L4dUFimVDKU/2.jpg",
+      "descricao": "slide 'How systems are being backtested with Snapshot' com os três padrões: modelos tradicionais, features agênticas e modelos agênticos"
     },
     {
       "titulo": "Demo: testar features de aquisição em 10 empresas",
       "texto": "Cada feature é uma pergunta de sim ou não, como se a empresa perdeu o CEO ou se está explorando uma venda. O sistema busca 1, 7 e 30 dias antes da aquisição e pontua acertos e falsos alarmes. Combinar features com OR capta mais aquisições e gera mais alarmes falsos. Com AND, o placar melhora.",
       "t": 1240,
       "legenda": "Cada feature é avaliada por empresa, com acertos e falsos positivos visíveis.",
-      "print": "img/L4dUFimVDKU/3.jpg"
+      "print": "img/L4dUFimVDKU/3.jpg",
+      "descricao": "demo Snapshot Arena com feature 'Executive leadership turnover', placar de hits e falsos alarmes e lista de 10 empresas"
     },
     {
       "titulo": "Overfitting ao vivo: os vencedores decoraram o conjunto",
       "texto": "O primeiro colocado usou features que citavam nomes de empresas específicas do conjunto de teste. Ryan admite que removeu o holdout (conjunto separado, não usado no ajuste) por simplicidade e usa o caso como lição. Sem validação em dados novos, o placar alto não indica que o modelo funcionaria no futuro.",
       "t": 1420,
       "legenda": "Features vencedoras citam empresas do próprio teste, sinal claro de overfitting.",
-      "print": "img/L4dUFimVDKU/4.jpg"
+      "print": "img/L4dUFimVDKU/4.jpg",
+      "descricao": "placar final do Snapshot Arena com o 1º colocado (Zane Neelin); mostra o ranking, não o texto das features com exclusão por nome"
     }
   ],
   "conceitos": [
@@ -159,5 +164,35 @@
       "contexto": "empresas no conjunto de teste da demo",
       "t": 1204
     }
-  ]
+  ],
+  "rotulo": "Backtest de agentes com a web do passado",
+  "objetivo": "montar um backtest de agente de busca com data congelada e um holdout para evitar vazamento do futuro",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que uma busca ao vivo contamina o backtest de um preditor de aquisições?",
+      "resposta": "Porque a busca atual traz a informação mais recente. Se o preditor lê a notícia de que a empresa foi comprada, acerta sem esforço. Fixar a data do snapshot antes do anúncio impede esse look-ahead bias."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você montaria um teste do seu agente de busca com um holdout?",
+      "resposta": "Reservando casos positivos e negativos que nunca são usados para ajustar prompts ou features, congelando a data das fontes antes do desfecho e testando uma feature por vez, com e sem ela."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que a demo de 10 empresas prova e o que não prova?",
+      "resposta": "Prova o conceito, não a eficácia de prever aquisições. Os vencedores sobreajustaram as 10 empresas, o palestrante dispensou o holdout, não há medida de fidelidade do arquivo histórico e a Exa vende o Snapshot."
+    }
+  ],
+  "experimento": {
+    "titulo": "Backtest com perguntas de sim ou não",
+    "minutos": 45,
+    "precisa": "Uma lista de 20 eventos passados com data conhecida e um arquivo da web por data, como o Wayback Machine",
+    "passos": [
+      "Escolha 20 eventos passados, 10 que aconteceram e 10 que não, e escreva 3 perguntas de sim ou não que um agente responderia antes do desfecho.",
+      "Para cada caso, ofereça ao agente só páginas arquivadas de até 7 dias antes da data do desfecho.",
+      "Separe 5 casos como holdout, ajuste as perguntas nos outros 15 e pontue acertos e falsos alarmes nos dois grupos."
+    ],
+    "sucesso": "Você tem placares de acertos e falsos alarmes para o grupo de ajuste e para o holdout, e vê se o desempenho cai fora da amostra."
+  }
 }

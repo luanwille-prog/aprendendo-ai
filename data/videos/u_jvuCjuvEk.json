@@ -21,21 +21,24 @@
       "texto": "Na web pública, todos veem os mesmos documentos e o agente pode usar qualquer um. Dentro de uma empresa, cada e-mail, ata e relatório tem grupos e permissões individuais. O agente só pode citar o que quem perguntou tem direito de ver.",
       "t": 92,
       "legenda": "Cada cor é um conjunto de permissões distinto por documento.",
-      "print": "img/u_jvuCjuvEk/0.jpg"
+      "print": "img/u_jvuCjuvEk/0.jpg",
+      "descricao": "slide 'what is an AI analyst?' com usuário, LLM e blocos de documentos da web pública versus documentos privados"
     },
     {
       "titulo": "A conta de guardanapo mostra por que a força bruta falha",
       "texto": "Com 1 KB por documento e memória a cerca de 20 GB por segundo, varrer 100 milhões de documentos leva 5 segundos. O alvo da maioria das buscas é perto de 100 ms. Se os dados estiverem no S3 e não no cache, a varredura passa de um minuto.",
       "t": 529,
       "legenda": "A varredura simples estoura o orçamento de 100 ms.",
-      "print": "img/u_jvuCjuvEk/1.jpg"
+      "print": "img/u_jvuCjuvEk/1.jpg",
+      "descricao": "slide 'search over 100M docs' com tabela de latência por memória, SSD e S3; 100M docs de 1 KB dão 5 s em memória"
     },
     {
       "titulo": "Post-filtering e pre-filtering falham de jeitos opostos",
       "texto": "No post-filtering, a busca pega os vetores mais próximos e depois descarta os sem permissão. Sobram poucos resultados e o recall (cobertura dos resultados relevantes) cai. No pre-filtering, o filtro vem primeiro e sobra uma varredura sequencial, que é lenta se o usuário vê metade do acervo.",
       "t": 715,
       "legenda": "Os vizinhos mais próximos de Q muitas vezes não passam no filtro.",
-      "print": "img/u_jvuCjuvEk/2.jpg"
+      "print": "img/u_jvuCjuvEk/2.jpg",
+      "descricao": "slide 'vector index' com gráfico 2D, consulta Q e sinais de mais (com acesso) e menos (sem acesso) ao redor"
     },
     {
       "titulo": "Filtragem nativa descarta clusters inteiros",
@@ -49,7 +52,8 @@
       "texto": "O resultado apresentado é P90 de 120 ms sobre 400 milhões de vetores. No código, a regra de permissão vira uma expressão simples: o usuário está em viewers, ou algum dos seus grupos está em groups. O planejamento da consulta fica a cargo do mecanismo de busca.",
       "t": 963,
       "legenda": "A regra de acesso se traduz em poucas linhas de filtro.",
-      "print": "img/u_jvuCjuvEk/4.jpg"
+      "print": "img/u_jvuCjuvEk/4.jpg",
+      "descricao": "slide 'the takeaway' com código ns.query e filtro viewers/groups destacado, além da lista de limitações"
     }
   ],
   "conceitos": [
@@ -233,5 +237,36 @@
       "contexto": "latência P90 com filtragem nativa",
       "t": 930
     }
-  ]
+  ],
+  "rotulo": "Busca com permissões: o filtro dentro do índice",
+  "objetivo": "explicar por que filtrar depois ou antes da busca falha e testar se a busca do seu agente respeita permissões",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Como o post-filtering e o pre-filtering falham, de jeitos opostos?",
+      "resposta": "No post-filtering a busca pega os vetores mais próximos e depois descarta os sem permissão, então sobram poucos resultados e o recall cai. No pre-filtering o filtro vem primeiro e sobra uma varredura sequencial, lenta com milhões de documentos."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como testar se a busca do seu agente interno aplica o filtro de acesso corretamente?",
+      "resposta": "Teste com um usuário de acesso restrito e confira se recebe a quantidade esperada de resultados. Se vierem poucos, o filtro provavelmente está sendo aplicado depois da busca (post-filtering)."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites tem o número de 120 ms apresentado?",
+      "resposta": "A palestra é co-apresentada por cliente e fornecedor, com tom de pitch. O único número é o P90 de 120 ms, sem comparação, sem medida de recall e sem custo, e legenda e fala divergem entre 400 e 450 milhões de vetores."
+    }
+  ],
+  "experimento": {
+    "titulo": "Detectar post-filtering numa busca vetorial",
+    "minutos": 40,
+    "precisa": "Python, uma biblioteca de busca vetorial local (Chroma, por exemplo) e 1.000 textos curtos gerados por script",
+    "passos": [
+      "Gere 1.000 textos curtos e marque 90% como acessíveis só ao grupo A e 10% ao grupo B.",
+      "Indexe os embeddings, busque os 10 mais próximos de uma pergunta e descarte depois os sem permissão para o grupo B.",
+      "Repita aplicando o filtro de permissão dentro da busca, usando o filtro por metadados da biblioteca.",
+      "Compare quantos resultados o usuário do grupo B recebe nos dois casos."
+    ],
+    "sucesso": "Você vê que o post-filtering devolve menos de 10 resultados para o grupo B e a busca com filtro integrado devolve os 10."
+  }
 }

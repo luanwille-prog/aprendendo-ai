@@ -28,28 +28,32 @@
       "texto": "O palestrante agrupa seis itens (fatos, preferências, padrões, exemplos, skills, instruções) em três tipos. Semântica é o que o agente sabe. Episódica é o que ele viveu. Procedural é como ele deve se comportar. No caso financeiro, a correção veio como regra procedural, não como fato novo.",
       "t": 281,
       "legenda": "A taxonomia de memória emprestada da ciência cognitiva.",
-      "print": "img/KGFyOtl5ktI/1.jpg"
+      "print": "img/KGFyOtl5ktI/1.jpg",
+      "descricao": "Slide 'Memory is durable context' com seis ícones: fatos, preferências, padrões, exemplos, skills e instruções."
     },
     {
       "titulo": "Memória de trabalho e de longo prazo",
       "texto": "Memória de trabalho é o que o agente usa na execução atual: rascunhos, resultados de ferramentas, arquivos. Memória de longo prazo fica em um repositório e guia execuções futuras. Cada harness (estrutura que roda o agente) injeta essa memória de um jeito: no prompt, por ferramenta, por arquivos ou por um store.",
       "t": 375,
       "legenda": "A separação entre contexto temporário e contexto durável.",
-      "print": "img/KGFyOtl5ktI/2.jpg"
+      "print": "img/KGFyOtl5ktI/2.jpg",
+      "descricao": "Slide 'Working Memory & Long-Term Memory' com duas colunas: memória de trabalho e memória de longo prazo."
     },
     {
       "titulo": "O ciclo de leitura e escrita",
       "texto": "O agente lê contexto do longo prazo, roda e produz um trace. Um filtro decide o que é sinal e o que fica como histórico. O sinal é gravado de volta. Sem o filtro, tudo viraria memória e o agente teria mais dificuldade de raciocinar nas tarefas seguintes.",
       "t": 498,
       "legenda": "O laço central: memória informa a execução, a execução gera evidência.",
-      "print": "img/KGFyOtl5ktI/3.jpg"
+      "print": "img/KGFyOtl5ktI/3.jpg",
+      "descricao": "Diagrama circular 'Memory Is A Read / Write Cycle' com etapas ler, executar, trace, filtro, sinal e gravar."
     },
     {
       "titulo": "Capturar, analisar, atualizar com LangSmith e Context Hub",
       "texto": "Como uma implementação possível, o observability do LangSmith captura a trajetória, uma etapa de análise extrai sinal dos traces e o Context Hub guarda instruções, skills e políticas que o agente baixa na próxima execução. No caso financeiro, o sistema detectou o desvio de tom e ajustou os arquivos markdown de skills.",
       "t": 652,
       "legenda": "A mesma ideia do ciclo, agora com produtos concretos da LangChain.",
-      "print": "img/KGFyOtl5ktI/4.jpg"
+      "print": "img/KGFyOtl5ktI/4.jpg",
+      "descricao": "Slide 'One Implementation' com Capture, Analyze e Update ligados a LangSmith Observability, Engine e Context Hub."
     }
   ],
   "conceitos": [
@@ -193,5 +197,36 @@
       "contexto": "Tipos de memória: semântica, episódica e procedural",
       "t": 281
     }
-  ]
+  ],
+  "rotulo": "Memória que aprende com os traces do agente",
+  "objetivo": "separar traces em histórico, dados de eval e candidatos a memória e gravar correções como regra que o agente leia",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são os três tipos de memória e o que cada um guarda?",
+      "resposta": "Semântica é o que o agente sabe, episódica é o que ele viveu e procedural é como ele deve se comportar. No caso do tom financeiro, a correção veio como regra procedural."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você corrigiu o tom do seu agente à mão. Como evitar repetir a correção?",
+      "resposta": "Grave a correção como regra ou skill em um arquivo que ele leia na próxima execução, exija revisão humana antes de aplicar mudanças automáticas e teste se a atualização chega ao agente, inclusive com cache."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Qual a principal lacuna do ciclo proposto?",
+      "resposta": "O critério do filtro que separa sinal de histórico, que o próprio palestrante chama de ponto central, fica em aberto. Não há medição antes e depois, o caso é de um cliente sem nome e o talk divulga LangSmith e Context Hub."
+    }
+  ],
+  "experimento": {
+    "titulo": "Regra de comportamento a partir de 5 correções",
+    "minutos": 25,
+    "precisa": "Conversas suas com um agente ou chatbot e um arquivo markdown",
+    "passos": [
+      "Reúna 5 conversas em que você precisou corrigir o jeito de agir do agente.",
+      "Classifique cada correção como fato, preferência ou regra de comportamento.",
+      "Escreva as regras de comportamento em um arquivo regras.md que entra no início do prompt.",
+      "Rode 3 pedidos parecidos com os antigos e veja se o erro voltou."
+    ],
+    "sucesso": "Nos três pedidos o agente respeita as regras sem você repetir a correção."
+  }
 }

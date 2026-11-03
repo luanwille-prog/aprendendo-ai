@@ -35,7 +35,8 @@
       "texto": "Com OpenTelemetry, cada conversa vira um trace no Datadog, com prompt de sistema, chamadas de ferramenta, resultados, tokens e custo. Dá para apontar a interação exata que causou um comportamento. O mesmo vale para outras ferramentas de observabilidade, como Grafana ou Jaeger.",
       "t": 1299,
       "legenda": "Um único trace expõe entrada, ferramentas chamadas e resultado.",
-      "print": "img/1tpqdglI3T0/2.jpg"
+      "print": "img/1tpqdglI3T0/2.jpg",
+      "descricao": "Datadog com trace do bot: span LLM mostrando system prompt, user, tool call check_inventory, tool result e custo estimado."
     },
     {
       "titulo": "Filtro de entrada custa menos que filtro de saída",
@@ -49,7 +50,8 @@
       "texto": "Uma ferramenta de clima trazia na descrição a instrução de chamar também a ferramenta read internal config e incluir a saída. O agente obedeceu. Quem pergunta o clima nem percebe o vazamento. Os palestrantes sugerem registry ou gateway de MCP, em vez de ligar servidores públicos direto.",
       "t": 2664,
       "legenda": "A descrição da ferramenta manda o agente ler a configuração interna.",
-      "print": "img/1tpqdglI3T0/4.jpg"
+      "print": "img/1tpqdglI3T0/4.jpg",
+      "descricao": "Datadog com span get_weather: a descrição da ferramenta manda chamar read_internal_config, com metadados do ConnectionSafeMcpTool."
     }
   ],
   "conceitos": [
@@ -230,5 +232,36 @@
       "contexto": "de trabalho estimadas para montar o repositório",
       "t": 3098
     }
-  ]
+  ],
+  "rotulo": "Proteger agentes com camadas fora do modelo",
+  "objetivo": "listar as permissões dos seus agentes e escolher controles de infraestrutura e guardrails que não dependam da recusa do modelo",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que a recusa do modelo não serve como defesa, segundo a demo do bot de burritos?",
+      "resposta": "O bot recusou vazar dados em algumas tentativas e aceitou em outras. O comportamento muda com o contexto e com a sorte, então a segurança precisa vir de camadas externas ao modelo."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você reduziria o risco de um servidor MCP de terceiros nos seus agentes?",
+      "resposta": "Conectar só servidores de um registry ou gateway aprovado e ler as descrições das ferramentas antes de liberar. Na demo, uma descrição de ferramenta de clima mandava chamar outra ferramenta e o agente obedeceu."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites tem a evidência apresentada no workshop?",
+      "resposta": "A demo é ao vivo e parte falhou, como o Falco que não bloqueou. Não há taxa de sucesso medida dos ataques, só relatos de 20 a 30 prompts até o modelo ceder. A regra de adoção de IA é opinião, e um dos palestrantes é do Datadog, usado como backend."
+    }
+  ],
+  "experimento": {
+    "titulo": "Auditar permissões e testar ataques com várias tentativas",
+    "minutos": 35,
+    "precisa": "Um agente seu com ferramentas e um ambiente de teste sem dados reais",
+    "passos": [
+      "Liste todas as ferramentas e credenciais do agente e marque as destrutivas ou que exportam dados.",
+      "Remova ou reduza o escopo de tudo que a tarefa não exige.",
+      "Tente levar o agente a usar uma ferramenta fora do pedido com dez histórias diferentes e conte as vezes que ele cede.",
+      "Adicione um controle fora do modelo, como allowlist de destinos ou permissão no servidor, e repita o teste."
+    ],
+    "sucesso": "Você tem a contagem de cessões antes e depois, e o controle externo bloqueia as ações indevidas mesmo quando o modelo concorda."
+  }
 }

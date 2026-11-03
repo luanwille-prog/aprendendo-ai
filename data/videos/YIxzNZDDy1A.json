@@ -21,35 +21,40 @@
       "texto": "O resultado depende de seis camadas: benchmark, runner, sandbox, agente, modelo com seu provedor e as configurações. Trocar qualquer uma gera um experimento novo. Por isso o autor fixa a versão do Terminal Bench 2.0 e a do Harbor, mesmo sabendo que existe a 2.1.",
       "t": 601,
       "legenda": "Seis camadas definem o que o placar realmente mede",
-      "print": "img/YIxzNZDDy1A/0.jpg"
+      "print": "img/YIxzNZDDy1A/0.jpg",
+      "descricao": "slide 'Six swappable layers' com as seis camadas: benchmark, eval harness, sandbox, agent harness, modelo e settings, legível"
     },
     {
       "titulo": "Média, piso e teto contam histórias diferentes",
       "texto": "No leaderboard, a base escura da barra é a fração de tarefas resolvidas em todas as cinco rodadas (consistência). A média fica no meio e as setas marcam a melhor e a pior rodada. O teto é o que resolveu ao menos uma vez. Dois modelos com média parecida podem ter bases 6 pontos percentuais distantes.",
       "t": 2322,
       "legenda": "Cada barra traz base consistente, média e teto",
-      "print": "img/YIxzNZDDy1A/1.jpg"
+      "print": "img/YIxzNZDDy1A/1.jpg",
+      "descricao": "leaderboard do WolfBench no navegador, barras por modelo com valores de nota e a configuração Terminus-2; as faixas de consistência e setas não aparecem"
     },
     {
       "titulo": "Modelo barato pode sair mais caro",
       "texto": "O Gemini 3.5 Flash chegou perto do GPT 5.5 em nota, mas consumiu muito mais tokens e custou mais no total. Olhar só a nota ou só o preço por token leva a uma escolha ruim. O custo da rodada inteira precisa aparecer ao lado do resultado.",
       "t": 2512,
       "legenda": "Menos preço por token não garantiu menor custo total",
-      "print": "img/YIxzNZDDy1A/2.jpg"
+      "print": "img/YIxzNZDDy1A/2.jpg",
+      "descricao": "visão 3D de barras do WolfBench com rótulos de percentual e de tokens por modelo e nível de raciocínio, recortada e sem nomes de modelo"
     },
     {
       "titulo": "Mais raciocínio pode derrubar a nota",
       "texto": "Com o Opus, subir o esforço de raciocínio para o máximo piorou o resultado. Nos traces, o modelo gastava minutos pensando antes de cada comando e esgotava a hora da tarefa. Com o raciocínio desligado, tentava, errava e corrigia em mais turnos. Nos modelos GPT, mais raciocínio melhorou a nota.",
       "t": 2729,
       "legenda": "Raciocínio máximo ficou abaixo do desligado no Opus",
-      "print": "img/YIxzNZDDy1A/3.jpg"
+      "print": "img/YIxzNZDDy1A/3.jpg",
+      "descricao": "miniatura pequena e de baixa resolução do gráfico WolfBench com barras de Thinking; os rótulos quase não são legíveis"
     },
     {
       "titulo": "A barra é a afirmação, o trace é a prova",
       "texto": "Cada barra do leaderboard leva ao Weave, com as cinco rodadas e as 89 tarefas. Dá para abrir a mensagem inicial, a análise do modelo, cada comando e a recompensa final. É assim que se descobre por que um modelo caro falhou, por exemplo por recusas ou por ignorar a instrução.",
       "t": 2887,
       "legenda": "Clicar na barra abre os traces que a sustentam",
-      "print": "img/YIxzNZDDy1A/4.jpg"
+      "print": "img/YIxzNZDDy1A/4.jpg",
+      "descricao": "tabela do Weave com as rodadas do Terminal-Bench (taxa de sucesso, recompensa, duração e tokens), cursor sobre a primeira linha clicável"
     }
   ],
   "conceitos": [
@@ -90,7 +95,7 @@
       "nome": "Agent harness",
       "traducao": "software que conecta o modelo às ferramentas e ao terminal",
       "nivel": "intermediario",
-      "chave": "agent harness",
+      "chave": "harness",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -170,5 +175,36 @@
       "contexto": "Gasto para testar o Fable, com 13 recusas",
       "t": 2636
     }
-  ]
+  ],
+  "rotulo": "Avaliar agentes, do benchmark ao leaderboard confiável",
+  "objetivo": "ler um placar de benchmark checando camadas, rodadas, custo e traces, e reportar média, pior caso e consistência",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que seis camadas definem uma avaliação de agente?",
+      "resposta": "Benchmark, runner, sandbox, agente, modelo com seu provedor e configurações. Trocar qualquer uma gera um experimento novo, por isso o autor fixa a versão de cada uma."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você compararia dois modelos para o seu agente?",
+      "resposta": "Rode cada teste várias vezes (ele usa cinco), registre média, pior caso e quantas tarefas passam sempre, e compare pelo custo total da tarefa, que é tokens gastos vezes preço, e não pelo preço por token."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites o contexto impõe aos resultados do leaderboard?",
+      "resposta": "Cinco rodadas é pouco e diferenças pequenas podem ser variância. O efeito do raciocínio máximo vale para o limite de uma hora escolhido, os custos usam preços publicados e ele trabalha na Weights & Biases, que vende o Weave."
+    }
+  ],
+  "experimento": {
+    "titulo": "Avaliar duas configurações com rodadas repetidas",
+    "minutos": 40,
+    "precisa": "Claude ou ChatGPT, com dois modelos ou dois prompts, e 4 tarefas pequenas com resposta certa conhecida",
+    "passos": [
+      "Escreva 4 tarefas com resposta correta conhecida, como extrair um campo de um texto.",
+      "Rode cada tarefa 3 vezes em duas configurações, que podem ser dois modelos ou dois prompts.",
+      "Para cada configuração, anote a média de acertos, a pior rodada e quantas tarefas acertou nas 3 vezes.",
+      "Leia as respostas erradas e classifique cada falha como erro do modelo ou problema da tarefa."
+    ],
+    "sucesso": "Você tem média, pior caso e consistência para cada configuração e ao menos uma falha classificada."
+  }
 }

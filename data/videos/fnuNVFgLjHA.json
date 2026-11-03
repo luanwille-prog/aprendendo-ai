@@ -21,35 +21,40 @@
       "texto": "Na fase 1, uma pessoa lê o painel e escreve o código da correção. Na fase 2, a pessoa escreve um prompt para corrigir. Na fase 3, o agente de código lê a telemetria sozinho. Ali compara com um foguete que se corrige a cada milissegundo usando os próprios dados. O ponto é que, com milhares de agentes, nenhum humano consegue ler tudo.",
       "t": 168,
       "legenda": "O leitor da telemetria passa de humano para agente de código.",
-      "print": "img/fnuNVFgLjHA/0.jpg"
+      "print": "img/fnuNVFgLjHA/0.jpg",
+      "descricao": "Slide 'The evolution of software engineering' com as fases 1.0, 2.0 e 3.0 e o fluxo app, telemetria, agente de código, humano."
     },
     {
       "titulo": "O bug do filtro de preço",
       "texto": "O assistente Wonder Toys, feito com o OpenAI Agents SDK e rastreado na Arize, devolve presentes acima de 30 dólares quando o usuário pede algo abaixo de 30. O agente responde com confiança e não verifica o produto. Esse tipo de falha não aparece em staging (ambiente de teste), porque ninguém escreveu o teste para um caso que ainda não conhecia.",
       "t": 417,
       "legenda": "A aplicação de exemplo usada para provocar e corrigir a falha.",
-      "print": "img/fnuNVFgLjHA/1.jpg"
+      "print": "img/fnuNVFgLjHA/1.jpg",
+      "descricao": "Interface do assistente Wonder Toys com a lista de produtos e o chat do agente, em miniatura pouco legível."
     },
     {
       "titulo": "Signal agrupa falhas e abre PR",
       "texto": "O Signal roda em segundo plano sobre os traces de produção. Ele agrupa falhas por causa raiz, lê o repositório no GitHub, escreve uma investigação com hipótese e evidências e abre um pull request. No demo, a revisão do código continua com um humano. A alternativa sob demanda é usar o Claude Code com as skills da Arize dentro do repositório.",
       "t": 1289,
       "legenda": "O Signal lista as falhas agrupadas, a investigação e o PR sugerido.",
-      "print": "img/fnuNVFgLjHA/2.jpg"
+      "print": "img/fnuNVFgLjHA/2.jpg",
+      "descricao": "Tela do Signal com gráfico de tendência, tabela de clusters de falha e painel de investigação com PR sugerido."
     },
     {
       "titulo": "Harness como juiz",
       "texto": "O LLM-as-a-judge (modelo que avalia respostas) usa uma rubrica fixa e só pega problemas já conhecidos. O harness as a judge é um agente com ferramentas. Ele lê a árvore do trace, consulta sistemas externos e abre o código. No exemplo, a regra é em linguagem simples. Passa se todo preço retornado estiver dentro da faixa pedida, e falha se algum passar do orçamento.",
       "t": 1628,
       "legenda": "O juiz com harness consulta ferramentas e código, não só entrada e saída.",
-      "print": "img/fnuNVFgLjHA/3.jpg"
+      "print": "img/fnuNVFgLjHA/3.jpg",
+      "descricao": "Slide 'Evaluate agents using agents' comparando A fixed rubric (LLM as a judge) com Adaptive analysis (harness)."
     },
     {
       "titulo": "Validar o conserto com falhas reais",
       "texto": "Os agent experiments sobem a versão corrigida atrás de um endpoint de desenvolvimento. Eles disparam um dataset de traces que falharam e pontuam as respostas com o mesmo juiz usado em produção. Depois comparam antes e depois em qualidade, latência e custo. No fim, o agente entrega ao humano um PR já testado.",
       "t": 2038,
       "legenda": "O ciclo fecha com validação automática contra falhas reais antes da revisão humana.",
-      "print": "img/fnuNVFgLjHA/4.jpg"
+      "print": "img/fnuNVFgLjHA/4.jpg",
+      "descricao": "Slide 'The fix, measured across the dataset' com tabela de métricas antes e depois e trecho de código."
     }
   ],
   "conceitos": [
@@ -90,7 +95,7 @@
       "nome": "Skills",
       "traducao": "pacotes de instruções que ensinam um agente de código a usar uma ferramenta",
       "nivel": "intermediario",
-      "chave": "skills",
+      "chave": "skill",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -204,5 +209,36 @@
       "contexto": "ganho de desempenho no avaliador, dado como exemplo",
       "t": 2038
     }
-  ]
+  ],
+  "rotulo": "Agente que usa a própria telemetria para se consertar",
+  "objetivo": "montar um dataset de falhas de um agente e usar um juiz de uma frase para testar um conserto proposto",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Qual era o bug do assistente de compras e como as duas rotas o encontraram?",
+      "resposta": "O assistente ignorava o filtro de preço. O Signal e o Claude Code com skills cruzaram traces e código para achar a causa e abrir um PR."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Seu agente de busca de produtos mostra itens acima do orçamento. Como escrever o juiz e validar o conserto?",
+      "resposta": "Escreva a regra em uma frase sobre o resultado final, como todos os preços estarem dentro do orçamento pedido. Depois repita as falhas reais num endpoint de desenvolvimento e compare qualidade, latência e custo."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que a demo do bug do filtro de preço prova e o que ela não prova?",
+      "resposta": "O bug foi plantado pelo próprio palestrante, então a demo prova o caminho, não a taxa de acerto em casos reais. O ganho de 36% é só exemplo, sem dataset nem metodologia, e o workshop vende a Arize."
+    }
+  ],
+  "experimento": {
+    "titulo": "Juiz de uma frase para um agente seu",
+    "minutos": 30,
+    "precisa": "Um agente com 10 saídas registradas e acesso a Claude ou ChatGPT",
+    "passos": [
+      "Junte 10 saídas do seu agente, incluindo pelo menos 3 que você sabe que estão erradas.",
+      "Escreva uma regra de uma frase que verifique o resultado final, por exemplo se todos os preços estão dentro do orçamento pedido.",
+      "Peça a um modelo que aplique a regra em cada saída e responda só certo ou errado, com uma justificativa curta.",
+      "Compare o veredito do modelo com o seu e anote as divergências."
+    ],
+    "sucesso": "O juiz acertou as 3 saídas erradas conhecidas e você entendeu cada divergência com o seu julgamento."
+  }
 }

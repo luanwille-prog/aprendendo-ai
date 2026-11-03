@@ -21,35 +21,40 @@
       "texto": "Um processo cuida da entrada e saída HTTP ou gRPC. Outros tokenizam o texto e o devolvem em texto no fim. No centro ficam o scheduler, que monta lotes de pedidos, e os processos que rodam o modelo na GPU. Frye diz que montar algo que recebe e devolve tokens leva uma ou duas horas com PyTorch. A parte difícil é extrair desempenho, e isso define a arquitetura.",
       "t": 150,
       "legenda": "O trabalho pesado fica no scheduler e no código que roda na GPU",
-      "print": "img/woIYJYd_etI/0.jpg"
+      "print": "img/woIYJYd_etI/0.jpg",
+      "descricao": "Diagrama de blocos do motor de inferência: Server I/O, Tokenizador, Detokenizador, Scheduler e Model Forward Passes"
     },
     {
       "titulo": "Cada tipo de carga pede um deploy diferente",
       "texto": "Frye separa três cargas. O chatbot com ferramentas tem muito prefixo reaproveitado, saídas curtas e pouca tolerância a atraso. O agente em segundo plano reaproveita prefixo, mas pode levar minutos ou horas. O processador de documentos lê textos sempre novos, gera saídas curtas e precisa de vazão. As métricas são time to first token (tempo até o primeiro token) e inter-token latency (tempo entre tokens).",
       "t": 790,
       "legenda": "Chatbot, agente em segundo plano e processador de dados têm perfis de desempenho distintos",
-      "print": "img/woIYJYd_etI/1.jpg"
+      "print": "img/woIYJYd_etI/1.jpg",
+      "descricao": "Slide com três arquétipos de aplicação LLM: Chatbot, Background Agent e Data Processor, com suas características"
     },
     {
       "titulo": "O scheduler controla o acesso à GPU",
       "texto": "A GPU é a peça cara e faz quase toda a conta. O scheduler roda em uma única thread, em Python, e decide o que entra em cada lote. Se ele atrasar, a GPU fica parada. Por isso Frye aponta o scheduler como bom candidato a ser reescrito em Rust. Conforme as GPUs ficam mais rápidas, a pressão sobre esse componente aumenta.",
       "t": 1292,
       "legenda": "Um processo de uma thread só decide todo o trabalho que a GPU executa",
-      "print": "img/woIYJYd_etI/2.jpg"
+      "print": "img/woIYJYd_etI/2.jpg",
+      "descricao": "Arquitetura destacando o Scheduler como bottleneck single-threaded entre pré-processamento e GPU"
     },
     {
       "titulo": "KV cache e CUDA graphs reduzem trabalho repetido",
       "texto": "O KV cache guarda contas já feitas da atenção e permite reaproveitar prefixos comuns, como um system prompt longo compartilhado entre usuários. A gestão em páginas ou árvore radix migrou para kernels como o FlashAttention 4. Ao motor resta gerir a capacidade e o layout do cache. CUDA graphs juntam todos os kernels de uma passada do modelo em um grafo lançado de uma vez, o que corta o trabalho da CPU.",
       "t": 3030,
       "legenda": "Um só lançamento na CPU dispara todos os kernels da passada do modelo",
-      "print": "img/woIYJYd_etI/3.jpg"
+      "print": "img/woIYJYd_etI/3.jpg",
+      "descricao": "Trace de host overhead mostrando kernels lançados um a um e depois em paralelo com CUDA graphs"
     },
     {
       "titulo": "Speculative decoding troca passos sequenciais por checagem em paralelo",
       "texto": "Na fase de decode, cada token exige ler os pesos do modelo inteiro da memória. Um modelo menor, o speculator, chuta os próximos tokens. O modelo principal confere todos de uma vez, e a rejection sampling (amostragem por rejeição) mantém a mesma saída. Frye afirma que um speculator melhor dá ganho quase linear na vazão, enquanto outras otimizações rendem poucos pontos percentuais cada.",
       "t": 3090,
       "legenda": "O decode vira uma série de pequenos prefills verificados em paralelo",
-      "print": "img/woIYJYd_etI/4.jpg"
+      "print": "img/woIYJYd_etI/4.jpg",
+      "descricao": "Diagrama do speculative decoding: Speculator propõe tokens e Target LLM verifica em paralelo"
     }
   ],
   "conceitos": [
@@ -230,5 +235,36 @@
       "contexto": "Ganho de vazão no decode com um speculator melhor",
       "t": 3171
     }
-  ]
+  ],
+  "rotulo": "O que há dentro de um motor de inferência",
+  "objetivo": "descrever o caminho de um pedido num motor de inferência e escolher metas de latência conforme o tipo de carga",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por quais etapas passa um pedido num motor de inferência?",
+      "resposta": "Servidor, tokenizador, scheduler, execução do modelo na GPU e detokenizador. O scheduler monta lotes e pode virar gargalo mesmo fazendo pouca conta."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como definir metas para o seu deploy?",
+      "resposta": "Classifique a carga (conversa com pessoa, agente em segundo plano ou documentos em lote), defina metas de time to first token e de tempo entre tokens e meça as duas no painel do provedor."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Quais afirmações do talk estão sem prova?",
+      "resposta": "O ganho de 2x a 8x do speculative decoding vem sem benchmark, e a regra dos 20 bilhões de parâmetros para o tokenizador vem de terceiros. A demo não mostra números e o talk divulga produto e vagas da Modal."
+    }
+  ],
+  "experimento": {
+    "titulo": "Medir TTFT e tempo entre tokens",
+    "minutos": 30,
+    "precisa": "Uma API de LLM ou modelo local e Python",
+    "passos": [
+      "Escreva um script que chama um modelo com streaming.",
+      "Meça o tempo até o primeiro token e o tempo médio entre tokens.",
+      "Rode com um prompt curto e com um system prompt longo e fixo no início.",
+      "Registre os números numa tabela."
+    ],
+    "sucesso": "Você tem uma tabela com time to first token e tempo entre tokens nos dois casos."
+  }
 }

@@ -21,21 +21,24 @@
       "texto": "Um contrato descreve objetivo, entradas, saídas e o que precisa ser verdade no fim. O agente escolhe como chegar lá. Quem dita o passo a passo desperdiça inteligência do modelo e impede o uso de um modelo mais barato para a mesma tarefa.",
       "t": 1160,
       "legenda": "Um workflow inteiro é um arquivo markdown com contrato, agentes e skills.",
-      "print": "img/7T-gldvgfpo/0.jpg"
+      "print": "img/7T-gldvgfpo/0.jpg",
+      "descricao": "Editor run.prose.md com o contrato em markdown: lista de inputs declarados e cabeçalho 'AGI-Pilled Junior Pull Request Review' com Goal e Parameters."
     },
     {
       "titulo": "Job é contrato mais gatilho",
       "texto": "Na plataforma hospedada, um job junta um contrato a um gatilho. Os gatilhos prontos são webhook (Slack e GitHub entram aí) e cron job (agenda). Assim o workflow roda sozinho quando chega um issue, um PR ou chega a hora marcada, sem ninguém abrir um chat.",
       "t": 1319,
       "legenda": "Tela de criação de job que liga um contrato a um gatilho de PR.",
-      "print": "img/7T-gldvgfpo/1.jpg"
+      "print": "img/7T-gldvgfpo/1.jpg",
+      "descricao": "Aba Jobs do run.prose.md com o formulário 'New job': gatilho (On a schedule), repositório, frequência, contrato .prose.md e modelo."
     },
     {
       "titulo": "Revisão por sessões novas contra o contrato",
       "texto": "Cada PR dispara agentes revisores em sessões limpas, comparados ao contrato. Isso evita que o mesmo modelo avalie o próprio trabalho com excesso de confiança. O palestrante diz que alguns PRs passaram em uma rodada e outros precisaram de 14 até os revisores concordarem.",
       "t": 1379,
       "legenda": "Histórico de runs mostra o volume de PRs e as rodadas de revisão por PR.",
-      "print": "img/7T-gldvgfpo/2.jpg"
+      "print": "img/7T-gldvgfpo/2.jpg",
+      "descricao": "Lista de PRs fechados e mesclados do repo openprose/run-prose, com comentários por PR. Mostra o volume, mas não as rodadas de revisão."
     },
     {
       "titulo": "Fixe o 'como' depois que o agente acertar",
@@ -49,7 +52,8 @@
       "texto": "Na demo do banco, o Codex recebe só o kernel (um markdown que funciona como bootloader) e um programa com os requisitos de reguladores e auditores. O agente produz a documentação de um modelo da curva SOFR, que é público. O texto regulatório já funciona como um programa em prosa.",
       "t": 2129,
       "legenda": "Os requisitos regulatórios escritos em prosa são o próprio contrato do workflow.",
-      "print": "img/7T-gldvgfpo/4.jpg"
+      "print": "img/7T-gldvgfpo/4.jpg",
+      "descricao": "README do kernel OpenProse (pkg.prose.md, v0.4.6) em markdown: 'an operating agreement for executing programs'. Não é o programa de documentação quant."
     }
   ],
   "conceitos": [
@@ -232,5 +236,35 @@
       "contexto": "valor anual do problema em bancos maiores, estimativa de Dan",
       "t": 2221
     }
-  ]
+  ],
+  "rotulo": "Workflows de agentes como contratos em markdown",
+  "objetivo": "reescrever um pedido repetido a um agente como contrato com resultado e critérios, sem listar os passos",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que um contrato declara e o que fica por conta do agente?",
+      "resposta": "O contrato descreve objetivo, entradas, saídas e o que precisa ser verdade no fim. O agente escolhe o caminho. Depois que uma execução acerta, o trace dela pode virar instruções mais específicas e baratas."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você usaria sessões novas de revisão numa tarefa sua, em vez de pedir ao mesmo agente que se confira?",
+      "resposta": "Escrevendo os critérios de aceite num contrato e abrindo agentes revisores em sessões limpas, que comparam o resultado ao contrato. Isso evita que o mesmo modelo avalie o próprio trabalho com excesso de confiança."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Qual fraqueza central o próprio palestrante admite?",
+      "resposta": "O agente declara sozinho que cumpriu o contrato, e o resultado muda entre modelos. Além disso, boa parte do talk é pitch do OpenProse, a qualidade 'chocantemente boa' não tem métrica e o custo das 14 rodadas de revisão não aparece."
+    }
+  ],
+  "experimento": {
+    "titulo": "Reescreva uma tarefa como contrato",
+    "minutos": 30,
+    "precisa": "Claude ou Claude Code e uma tarefa que você repete, como revisão de PR ou resumo de reunião",
+    "passos": [
+      "Escreva um contrato em markdown com objetivo, entradas, saídas e critérios de aceite, sem listar passos.",
+      "Rode o contrato num agente e anote o resultado e o custo.",
+      "Abra uma sessão nova só como revisora, entregue o contrato e o resultado e peça que aponte o que não cumpre os critérios."
+    ],
+    "sucesso": "Você tem um contrato reutilizável e um relatório do revisor que aponta cumprimento ou falha de cada critério."
+  }
 }

@@ -28,28 +28,32 @@
       "texto": "Por 20 ou 30 anos a web tentou barrar tráfego automatizado. Formulários, CAPTCHA, verificação de e-mail, escolha de plano e cópia de chave de API pressupõem uma pessoa. O MCP resolve a conexão e as ferramentas, mas o login ainda exige um humano dando consentimento.",
       "t": 507,
       "legenda": "Lista de etapas de cadastro que um agente não consegue cumprir.",
-      "print": "img/nSkmXakJ6eo/1.jpg"
+      "print": "img/nSkmXakJ6eo/1.jpg",
+      "descricao": "Mockup de formulário de cadastro (campos e botão roxo) em tela preta. Não é a lista de etapas, mas ilustra o formulário."
     },
     {
       "titulo": "O que o auth.md declara",
       "texto": "O arquivo diz o que o serviço faz, quais provas de identidade aceita, quais fluxos de autenticação suporta, quais escopos e limites de plano gratuito existem, e como um humano ou organização assume a conta depois. Grinich diz que o foco é só o passo de registro, sem resolver identidade, permissões e conexões de longa duração.",
       "t": 722,
       "legenda": "Campos que um serviço declara para receber agentes.",
-      "print": "img/nSkmXakJ6eo/2.jpg"
+      "print": "img/nSkmXakJ6eo/2.jpg",
+      "descricao": "Slide com o texto 'auth.md tells agents how they can become legitimate users' e a meta de cadastro nativo para agentes. Sem lista de campos."
     },
     {
       "titulo": "Demo: do localhost ao deploy na Cloudflare",
       "texto": "O agente percebe que o app só roda na máquina local, procura serviços que publicam auth.md e escolhe a Cloudflare. Ele gera uma assertion de identidade, recebe uma conta temporária e usa o Wrangler (CLI da Cloudflare) para publicar. O humano só aprova os passos.",
       "t": 816,
       "legenda": "O agente se cadastra e publica o app sem nenhum clique de cadastro.",
-      "print": "img/nSkmXakJ6eo/3.jpg"
+      "print": "img/nSkmXakJ6eo/3.jpg",
+      "descricao": "Terminal do agente com pnpm build e npx wrangler deploy, e a URL workers.dev publicada. Confirma o deploy com Wrangler."
     },
     {
       "titulo": "Fluxo técnico com ID-JAG",
       "texto": "O agente consulta o auth.md do serviço (discovery), envia o ID-JAG, uma credencial assinada que representa o usuário, e recebe um token de acesso. Depois disso a API normal, o MCP e a documentação seguem iguais. O pagamento vem depois do uso, nos termos do fornecedor.",
       "t": 956,
       "legenda": "Sequência de chamadas do registro de um agente.",
-      "print": "img/nSkmXakJ6eo/4.jpg"
+      "print": "img/nSkmXakJ6eo/4.jpg",
+      "descricao": "Diagrama completo: harness, serviço de identidade, setas de Agent Auth Discovery, Send ID-JAG, Access Token e API/MCP até Cloudflare e Firecrawl."
     }
   ],
   "conceitos": [
@@ -199,5 +203,36 @@
       "contexto": "lançamento do iPhone, usado como analogia",
       "t": 1189
     }
-  ]
+  ],
+  "rotulo": "auth.md, o cadastro de produtos feito para agentes",
+  "objetivo": "listar as etapas de cadastro do seu produto que bloqueiam agentes e propor limites para um registro automático",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que o auth.md declara e como o agente prova a identidade do usuário?",
+      "resposta": "O arquivo diz ao agente como se registrar no serviço, com base em padrões OAuth. O agente prova a identidade do usuário com um token chamado ID-JAG."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Seu produto tem cadastro com CAPTCHA, e-mail e chave copiada. Como avaliar se um agente consegue usá-lo?",
+      "resposta": "Liste cada etapa que impediria um agente e defina antes um limite gratuito para agentes, com teto de gasto e prazo da conta, como o deploy gratuito de 72 horas da demo da Cloudflare."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que pontos o talk deixa em aberto sobre abuso e adoção?",
+      "resposta": "O próprio Grinich admite que fraude e agentes maliciosos são o problema, mas não detalha como decidir quem é bom. Não há dados de adoção, e a WorkOS vende uma versão hospedada do auth.md."
+    }
+  ],
+  "experimento": {
+    "titulo": "Audite o cadastro do seu produto para agentes",
+    "minutos": 25,
+    "precisa": "Acesso ao fluxo de cadastro de um produto seu ou de um serviço que você usa",
+    "passos": [
+      "Percorra o cadastro passo a passo e anote cada etapa que exige um humano, como CAPTCHA, link por e-mail ou chave copiada.",
+      "Peça a um agente de código para tentar fazer o cadastro e anote onde ele para.",
+      "Leia a especificação do auth.md e marque quais trechos resolveriam cada bloqueio anotado.",
+      "Escreva um limite sugerido de gasto e de tempo de conta para agentes."
+    ],
+    "sucesso": "Você tem uma lista de bloqueios com a etapa em que o agente parou e um limite sugerido para contas de agentes."
+  }
 }

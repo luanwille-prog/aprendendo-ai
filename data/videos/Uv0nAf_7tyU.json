@@ -21,21 +21,24 @@
       "texto": "O harness é a camada que roda o loop de chamadas de ferramenta e cobre o que o modelo não faz sozinho. A palestrante cita a \"ansiedade de contexto\" do Sonnet 4.5, que encerrava a tarefa com pressa perto do limite, e o reset de contexto criado para isso. O Opus 4.5 não tinha o problema, então a muleta virou peso morto.",
       "t": 192,
       "legenda": "Cada modelo novo pode tornar obsoleta uma gambiarra do harness.",
-      "print": "img/Uv0nAf_7tyU/0.jpg"
+      "print": "img/Uv0nAf_7tyU/0.jpg",
+      "descricao": "Slide 'The harness encodes assumptions about the model' com a lista de context anxiety do Sonnet 4.5, reset de contexto e Opus 4.5."
     },
     {
       "titulo": "Pet contra cattle na primeira arquitetura",
       "texto": "Em dezembro, o primeiro desenho colocou sessão, harness e execução no mesmo container. Ficou fácil de editar, mas o container virou um \"pet\", uma máquina insubstituível. Um pacote perdido e um container morto pareciam iguais, os dados do cliente impediam a investigação e conectar um MCP dentro da VPC do cliente exigia peering de rede ou rodar o harness nele.",
       "t": 349,
       "legenda": "Tudo no mesmo container: simples de montar e difícil de depurar.",
-      "print": "img/Uv0nAf_7tyU/1.jpg"
+      "print": "img/Uv0nAf_7tyU/1.jpg",
+      "descricao": "Slide 'One container held the brain, the hands, and the session' com sessão, harness e sandbox no mesmo container e 'credentials inside too'."
     },
     {
       "titulo": "Cérebro e mãos desacoplados",
       "texto": "O agente virou três interfaces: sessão (log de eventos só de acréscimo), cérebro (harness com Claude) e mãos (sandboxes, MCP, VPC do cliente). Se o sandbox morre, o erro volta ao Claude como uma chamada de ferramenta que falhou. Se o harness morre, uma nova instância relê o log e continua do último evento.",
       "t": 473,
       "legenda": "Só o log de sessão precisa ser protegido; o resto é descartável.",
-      "print": "img/Uv0nAf_7tyU/2.jpg"
+      "print": "img/Uv0nAf_7tyU/2.jpg",
+      "descricao": "Slide 'The agent became three separate interfaces': sessão (log append-only), cérebro (Claude + loop) e mãos (sandboxes e ferramentas)."
     },
     {
       "titulo": "Credenciais nunca entram no sandbox",
@@ -49,7 +52,8 @@
       "texto": "Primeiro se cria o environment (modelo do sandbox, rede e pacotes). Depois o agent, com nome, modelo, system prompt e ferramentas. Por fim a session, que nasce ociosa até receber um evento. O diálogo acontece pelo fluxo de eventos, com mensagem do usuário, tool use customizado, erro de sessão, status idle e interrupção.",
       "t": 943,
       "legenda": "A sessão só trabalha quando recebe um evento, e tudo passa pelo stream.",
-      "print": "img/Uv0nAf_7tyU/4.jpg"
+      "print": "img/Uv0nAf_7tyU/4.jpg",
+      "descricao": "Slide 'The user and the agent share one event stream' com eventos enviados (POST) e recebidos (GET stream) da sessão."
     }
   ],
   "conceitos": [
@@ -170,5 +174,36 @@
       "contexto": "tempo da palestrante focada em infraestrutura de agentes",
       "t": 33
     }
-  ]
+  ],
+  "rotulo": "Cérebro e mãos separados no Claude Managed Agents",
+  "objetivo": "separar sessão, harness e sandbox num desenho de agente e manter credenciais fora do ambiente onde o código roda",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são as três interfaces em que a Anthropic dividiu o agente?",
+      "resposta": "A sessão (log de eventos só de acréscimo), o cérebro (harness com Claude) e as mãos (sandboxes e ferramentas). Só o log precisa ser protegido, e o resto pode cair e ser recriado."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como dar a um agente acesso a um serviço com token sem expor o token?",
+      "resposta": "Faça a chamada passar por um proxy que injeta a credencial antes de sair. O modelo nunca vê o token, então a credencial fica fora do sandbox e do alcance de um ataque de prompt injection."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta para a queda de cerca de 90% no tempo até o primeiro token?",
+      "resposta": "Aparece sem linha de base, sem metodologia e sem dizer se vale para média ou p99. Os problemas da primeira arquitetura vêm só de clientes em acesso antecipado, e o custo do proxy e do log durável quase não é discutido."
+    }
+  ],
+  "experimento": {
+    "titulo": "Log só de acréscimo para retomar um agente",
+    "minutos": 30,
+    "precisa": "Python e Claude ou ChatGPT para ajudar com o código; o modelo pode ser simulado",
+    "passos": [
+      "Escreva um loop simples de agente que chama uma ferramenta fictícia, simulando o modelo com respostas fixas.",
+      "Grave cada evento (mensagem, chamada, resultado) num arquivo .jsonl só de acréscimo.",
+      "Interrompa o processo no meio e escreva um script que reconstrói o estado lendo o log.",
+      "Faça a ferramenta falhar de propósito e registre o erro como evento, em vez de derrubar o loop."
+    ],
+    "sucesso": "Depois de interromper o processo, o script retoma do último evento, e a falha da ferramenta aparece como evento no log."
+  }
 }

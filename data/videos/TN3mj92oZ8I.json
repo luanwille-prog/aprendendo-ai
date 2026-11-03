@@ -21,35 +21,40 @@
       "texto": "Uma skill descreve um procedimento que o agente repete, como reproduzir issues. Com o tempo ela fica desatualizada, porque humanos dão feedback e o agente aprende em suas execuções. O agente de laço externo (outer loop) observa o agente que aplica a skill (inner loop), procura erros e feedback e propõe a atualização.",
       "t": 165,
       "legenda": "Mostra os dois laços, o interno que executa e o externo que melhora a skill.",
-      "print": "img/TN3mj92oZ8I/0.jpg"
+      "print": "img/TN3mj92oZ8I/0.jpg",
+      "descricao": "Slide com diagrama dos dois laços: Inner loop (agente executa) e Outer loop (agente melhora a skill)"
     },
     {
       "titulo": "Demo real com o agente de triagem do Warp",
       "texto": "O Warp roda o repositório de cliente open source como uma fábrica. Toda issue nova no GitHub dispara o agente de triagem, que descobre que informação o usuário não deu e se a issue duplica outra. O agente externo lê as decisões dele, coleta polegar para cima ou para baixo e comentários, sintetiza e atualiza a skill.",
       "t": 259,
       "legenda": "Prova que o ciclo de melhoria da skill roda em um repositório real.",
-      "print": "img/TN3mj92oZ8I/1.jpg"
+      "print": "img/TN3mj92oZ8I/1.jpg",
+      "descricao": "Repositório GitHub mostrando arquivo SKILL.md com descrição da skill de triagem e seus passos"
     },
     {
       "titulo": "Toda mudança de skill passa por pull request",
       "texto": "O agente externo abre um pull request para alterar a skill. Isso dá rastreio completo no Git de como a skill mudou e obriga um humano a revisar. A revisão evita que o agente externo cause um erro e deixe o agente de triagem pior.",
       "t": 290,
       "legenda": "Mostra o controle humano no fim do laço de melhoria.",
-      "print": "img/TN3mj92oZ8I/2.jpg"
+      "print": "img/TN3mj92oZ8I/2.jpg",
+      "descricao": "Passos do agente externo no SKILL.md: sintetizar lições e editar a skill com controle humano"
     },
     {
       "titulo": "Memória persistente como repositório de fatos do agente",
       "texto": "Skills guardam procedimentos, mas não fatos. Um agente do Sentry que já achou a causa raiz de um problema não deveria gastar tokens para descobrir tudo de novo. No Oz, plataforma de agentes na nuvem do Warp, cada agente recebe um memory store com versões, edição humana e origem de cada memória.",
       "t": 415,
       "legenda": "Mostra memórias versionadas com link para a execução que as gerou.",
-      "print": "img/TN3mj92oZ8I/3.jpg"
+      "print": "img/TN3mj92oZ8I/3.jpg",
+      "descricao": "Memory store do agente Sentry com lista de 3 memórias e suas origens versionadas"
     },
     {
       "titulo": "Roteamento de modelo por classe de tarefa",
       "texto": "Rodar triagem e correções simples de CI com o Opus fica caro. O Warp oferece modelos auto e permite regras próprias, como migrações de banco com GLM e documentação de API com Qwen. Um sidecar de eval roda a mesma tarefa em vários modelos e o Warp viu que tarefas de UI funcionam bem com GLM.",
       "t": 601,
       "legenda": "Mostra regras que ligam cada classe de tarefa a um modelo.",
-      "print": "img/TN3mj92oZ8I/4.jpg"
+      "print": "img/TN3mj92oZ8I/4.jpg",
+      "descricao": "Arquivo orchestrator.yaml no VS Code com rotas de modelos por tipo de tarefa"
     }
   ],
   "conceitos": [
@@ -194,5 +199,36 @@
       "contexto": "memórias usadas pelo agente Sentry na execução da demo",
       "t": 477
     }
-  ]
+  ],
+  "rotulo": "Fábrica que se melhora com skills, memória e roteamento",
+  "objetivo": "desenhar um laço em que um agente propõe atualizações de skill por pull request para um humano revisar",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são as três formas de a fábrica do Warp melhorar com o tempo?",
+      "resposta": "Skills atualizadas por um agente de laço externo, memória persistente com fatos de execuções passadas e roteamento de modelo por classe de tarefa."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você aplicaria o roteamento de modelos no seu uso de agentes?",
+      "resposta": "Listando as tarefas por tipo e testando modelos mais baratos nas simples, como triagem e CI, e reservando o modelo mais caro para as difíceis."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta ao talk?",
+      "resposta": "Não há métrica de quanto skills ou memória melhoraram os agentes. A afirmação sobre UI com GLM vem de evals internos sem dados, e o palestrante lidera o produto que vende."
+    }
+  ],
+  "experimento": {
+    "titulo": "Revisar uma skill com feedback via pull request",
+    "minutos": 40,
+    "precisa": "Claude Code ou similar, um repositório e uma skill ou prompt fixo seu",
+    "passos": [
+      "Escolha um procedimento repetido, como triar issues, e escreva-o como skill em Markdown.",
+      "Rode o agente em cinco casos e anote o feedback de cada um.",
+      "Peça a outro agente uma nova versão da skill a partir do feedback, em um branch.",
+      "Abra um pull request, revise o diff e decida se aceita."
+    ],
+    "sucesso": "A skill muda por pull request, com histórico no Git, e você aprova ou recusa a mudança."
+  }
 }

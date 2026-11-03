@@ -21,35 +21,40 @@
       "texto": "Uma linha pedia ao agente para confirmar antes de agir. A segurança das ações subiu 17 pontos, mas a conclusão de tarefas caiu 17, porque usuários abandonavam a sessão antes do fim. A média das duas métricas ficou em zero. Sem um conjunto de evals com várias métricas, a mudança teria sido aprovada.",
       "t": 219,
       "legenda": "Duas métricas se movem em sentidos opostos e a média fica em zero.",
-      "print": "img/v5tm5EAzsAs/0.jpg"
+      "print": "img/v5tm5EAzsAs/0.jpg",
+      "descricao": "Slide 'The fix that broke the agent' com action safety 0.81 para 0.98 (+0.17). Não mostra a queda de task completion."
     },
     {
       "titulo": "O diff mostra o que mudou, o trace mostra o que aconteceu",
       "texto": "O revisor de código vê uma linha num arquivo markdown. Em produção, essa linha muda o número de passos, a conversa com subagentes e as chamadas de ferramentas. Essas trajetórias não existem no código estático, só nos traces. Por isso a palestrante trata o trace como nova fonte de verdade.",
       "t": 313,
       "legenda": "Mudança local no código, efeito global no comportamento.",
-      "print": "img/v5tm5EAzsAs/1.jpg"
+      "print": "img/v5tm5EAzsAs/1.jpg",
+      "descricao": "Slide 'Why agent regressions are different': diff de uma linha à esquerda e trace do agent.run com policy.check à direita."
     },
     {
       "titulo": "O dataset precisa de quatro tipos de caso",
       "texto": "O dataset sai de traces reais, sem dados sintéticos. Ele deve incluir fluxos comuns, falhas conhecidas, casos de borda e fluxos bem-sucedidos que você quer proteger. O quarto tipo costuma ser esquecido, e é ele que detecta a regressão.",
       "t": 436,
       "legenda": "Casos que já funcionam entram no teste para detectar regressões.",
-      "print": "img/v5tm5EAzsAs/2.jpg"
+      "print": "img/v5tm5EAzsAs/2.jpg",
+      "descricao": "Slide 'Select a dataset' com quatro casos etiquetados: representative workflow, known failure, edge case e success to protect."
     },
     {
       "titulo": "LLM como juiz transforma critério subjetivo em nota",
       "texto": "Métricas como alucinação, eficiência de passos e conclusão de tarefa dependem de julgamento. Um LLM recebe um guia e classifica cada trace, por exemplo em completo ou incompleto, ou em nota de 0 a 5. Checagens determinísticas ficam melhor com evaluators em código.",
       "t": 532,
       "legenda": "Um rótulo binário transforma julgamento humano em métrica automatizável.",
-      "print": "img/v5tm5EAzsAs/3.jpg"
+      "print": "img/v5tm5EAzsAs/3.jpg",
+      "descricao": "Slide 'Add evaluators' com o exemplo LLM-as-a-judge de task_completion (complete | incomplete) no canto superior direito."
     },
     {
       "titulo": "Comparar prompts e modelos lado a lado antes de publicar",
       "texto": "Na plataforma da Arize, o playground roda o mesmo dataset de 100 linhas em duas versões de prompt e aplica os evals escolhidos. A tabela de experimentos mostra o saldo de cada variante contra o baseline. O mesmo método serve para decidir se vale pagar por um modelo mais caro.",
       "t": 716,
       "legenda": "Cada linha é uma variante testada, com o saldo de cada métrica.",
-      "print": "img/v5tm5EAzsAs/4.jpg"
+      "print": "img/v5tm5EAzsAs/4.jpg",
+      "descricao": "Plataforma Arize com a análise do dataset refund-policy-regression: gráfico de action_safety e task_completion por experimento e tabela contra o baseline."
     }
   ],
   "conceitos": [
@@ -134,7 +139,7 @@
       "nome": "Agent skills",
       "traducao": "pacotes de instruções e contexto que conectam coding agents a sistemas externos",
       "nivel": "intermediario",
-      "chave": "agent skills",
+      "chave": "skill",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -170,5 +175,36 @@
       "contexto": "tamanho do dataset usado na demo",
       "t": 780
     }
-  ]
+  ],
+  "rotulo": "Evitar que um conserto de agente quebre outro",
+  "objetivo": "montar um loop de regressão com traces reais, evals e experimento para comparar mudanças de prompt antes do merge",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que aconteceu quando uma linha do prompt pediu confirmação antes de agir?",
+      "resposta": "A segurança das ações subiu 17 pontos e a conclusão de tarefas caiu 17, porque usuários abandonavam a sessão antes do fim. A média das duas métricas ficou em zero."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que casos você colocaria num dataset de regressão do seu agente?",
+      "resposta": "Traces reais de quatro tipos: fluxos comuns, falhas conhecidas, casos de borda e fluxos bem-sucedidos que você quer proteger. Cada falha nova de produção entra como caso novo."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que o exemplo de +17 e -17 serve como ilustração, mas não como prova?",
+      "resposta": "Não traz amostra, método de medição nem fonte, e a palestra não diz se é um caso real. A palestrante trabalha na Arize e a demo é do produto dela. Os evals por LLM juiz também têm viés e custo, o que não foi discutido."
+    }
+  ],
+  "experimento": {
+    "titulo": "Comparar duas versões de prompt com duas métricas",
+    "minutos": 40,
+    "precisa": "Um agente ou prompt seu, 15 casos reais ou realistas e um assistente de IA como juiz",
+    "passos": [
+      "Reúna 15 entradas, incluindo falhas conhecidas e casos que já funcionam.",
+      "Defina duas métricas em tensão, como segurança e conclusão da tarefa, com critério de pass e fail.",
+      "Rode as 15 entradas na versão atual do prompt e na versão alterada e pontue com as duas métricas.",
+      "Monte uma tabela com o saldo de cada versão por métrica."
+    ],
+    "sucesso": "A tabela mostra o efeito da mudança nas duas métricas e você sabe dizer se ela melhora uma delas à custa da outra."
+  }
 }

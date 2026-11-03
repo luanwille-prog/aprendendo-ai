@@ -21,35 +21,40 @@
       "texto": "No exemplo, o texto mostra o agente se corrigindo. O áudio mostra 2,4 segundos de silêncio, o agente falando por cima do cliente, o número 14 ouvido errado e tom robótico. Quem lê só o log não vê nenhum desses problemas, porque latência, turnos de fala e erros de transcrição são fenômenos de áudio.",
       "t": 161,
       "legenda": "O texto parece correto, mas o áudio esconde silêncio, interrupção e erro de número.",
-      "print": "img/42Bz0TUfeOQ/0.jpg"
+      "print": "img/42Bz0TUfeOQ/0.jpg",
+      "descricao": "Slide com transcrição vs áudio: o texto correto esconde 2.4s de silêncio, interrupção e erro de número"
     },
     {
       "titulo": "Uma sessão com áudio, transcrição e trace",
       "texto": "A proposta é ver tudo no mesmo lugar: tocar o áudio dentro do trace, ler a transcrição, ver latência, tempo até o primeiro áudio, interrupções e custo de tokens de áudio. A conexão entre esses dados importa mais que cada um isolado, porque permite ligar uma fala ao momento exato da chamada de ferramenta.",
       "t": 315,
       "legenda": "Áudio, transcrição, latência e evals aparecem juntos em uma única visão.",
-      "print": "img/42Bz0TUfeOQ/1.jpg"
+      "print": "img/42Bz0TUfeOQ/1.jpg",
+      "descricao": "Trace com árvore de spans: áudio, transcrição, latência e eventos de interrupção em uma única visualização"
     },
     {
       "titulo": "Um esquema aberto para vários provedores",
       "texto": "O OpenInference é um conjunto aberto de convenções, compatível com OpenTelemetry, que traduz eventos de websocket de provedores como OpenAI Realtime e Gemini Live para um formato consultável. Isso evita parser próprio por fornecedor e facilita trocar de modelo quando um novo sai.",
       "t": 378,
       "legenda": "Um único esquema normaliza eventos de áudio de provedores diferentes.",
-      "print": "img/42Bz0TUfeOQ/2.jpg"
+      "print": "img/42Bz0TUfeOQ/2.jpg",
+      "descricao": "Esquema OpenInference normaliza eventos de OpenAI e Google em campos tipados e consultáveis"
     },
     {
       "titulo": "Achando a falha na chamada de ferramenta",
       "texto": "Na demo, a chamada da ferramenta aparece alinhada ao áudio da sessão. Aplicado ao caso do reembolso, o trace mostra os três erros: 2,4 s até o primeiro áudio no turno 1, o agente falando por cima no turno 3 e o reembolso processado para o pedido 40.",
       "t": 540,
       "legenda": "O trace mostra os três erros que o log de texto escondia.",
-      "print": "img/42Bz0TUfeOQ/3.jpg"
+      "print": "img/42Bz0TUfeOQ/3.jpg",
+      "descricao": "Trace da sessão de reembolso mostra os turnos, TTFA e o erro do pedido 40 contra 14"
     },
     {
       "titulo": "Do eval ao pull request automático",
       "texto": "Com os scores de eval gravados nos próprios spans, monitores podem acionar agentes de investigação. O cenário descrito: um agente de SRE acha a causa (resultados de ferramenta sem truncar sobrecarregavam o contexto), sobe a correção em dev, repete os traces que falharam e deixa um PR para o humano aprovar ou recusar.",
       "t": 882,
       "legenda": "Um agente propõe a correção e testa contra as chamadas que falharam.",
-      "print": "img/42Bz0TUfeOQ/4.jpg"
+      "print": "img/42Bz0TUfeOQ/4.jpg",
+      "descricao": "Ciclo observe-evaluate-improve para agentes de voz, integrado ao observabilidade de texto"
     }
   ],
   "conceitos": [
@@ -142,7 +147,7 @@
       "nome": "LLM as a judge",
       "traducao": "modelo de linguagem como avaliador",
       "nivel": "intermediario",
-      "chave": "llm as a judge",
+      "chave": "llm-as-a-judge",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -200,5 +205,36 @@
       "contexto": "plano Pro gratuito oferecido com o código do evento",
       "t": 1037
     }
-  ]
+  ],
+  "rotulo": "Depurar agentes de voz com áudio, trace e evals",
+  "objetivo": "diagnosticar uma chamada de agente de voz juntando áudio, transcrição e trace em vez de ler só o texto",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que problemas a transcrição da ligação de reembolso escondia?",
+      "resposta": "O áudio mostrava 2,4 segundos de silêncio, o agente falando por cima do cliente, o número 14 ouvido errado e tom robótico. O agente reembolsou o pedido 40 em vez do 14."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que duas métricas você mediria primeiro nas chamadas do seu agente de voz?",
+      "resposta": "Tempo até o primeiro áudio e número de interrupções, antes de mexer em prompt ou modelo. Guarde o áudio com cada trace e use um identificador de sessão para juntar os turnos."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites o talk tem como evidência a favor do Arize AX?",
+      "resposta": "O produto aparece como solução em quase todos os trechos e o talk termina com um código de plano grátis. Não há taxa de erro, comparação antes e depois nem acerto dos evals de áudio, e o caso do reembolso é uma chamada gerada por IA."
+    }
+  ],
+  "experimento": {
+    "titulo": "Comparar a leitura do texto com a do áudio",
+    "minutos": 40,
+    "precisa": "Cinco gravações de conversas com um assistente de voz e uma planilha",
+    "passos": [
+      "Grave ou junte 5 chamadas curtas com um assistente de voz.",
+      "Em uma planilha, anote para cada chamada o tempo até o primeiro áudio e o número de interrupções.",
+      "Leia só a transcrição e marque se cada chamada parece boa.",
+      "Ouça o áudio, marque de novo e compare as duas colunas."
+    ],
+    "sucesso": "Você achou ao menos uma chamada que parecia boa no texto e falhou no áudio, com latência ou interrupção anotada."
+  }
 }

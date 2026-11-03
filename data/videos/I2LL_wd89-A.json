@@ -21,35 +21,40 @@
       "texto": "O time acompanha a fatia do código escrito por agente que chega a ser commitado. Código jogado fora indica que o agente errou ou que ninguém confiou nele. A métrica subiu de 55% com o GPT 4.1 para 86% com o Claude Opus 4.6, segundo o palestrante. Ele atribui a alta ao modelo novo e a melhorias no harness (a estrutura em volta do modelo).",
       "t": 75,
       "legenda": "Mostra a evolução da taxa de código de agente que sobrevive ao commit.",
-      "print": "img/I2LL_wd89-A/0.jpg"
+      "print": "img/I2LL_wd89-A/0.jpg",
+      "descricao": "Slide com métrica de code survival mostrando evolução de 55% para 86% entre modelos e melhorias"
     },
     {
       "titulo": "CI lento se multiplica com vários agentes",
       "texto": "Com uma pessoa, build e testes lentos são incômodo contornável: ela revisa outro PR enquanto espera. Com 10 ou 20 agentes batendo no mesmo CI, cada lentidão se acumula. A migração para TypeScript Go deu builds 10 vezes mais rápidos, e o ciclo de feedback dos PRs automáticos depende disso.",
       "t": 448,
       "legenda": "Ilustra por que o tempo de CI vira o gargalo quando há muitos agentes.",
-      "print": "img/I2LL_wd89-A/1.jpg"
+      "print": "img/I2LL_wd89-A/1.jpg",
+      "descricao": "Slide sobre TypeScript Go com exemplo de build de 8 minutos e gargalo de CI para agentes"
     },
     {
       "titulo": "Deixe o agente usar o app para se corrigir",
       "texto": "Agentes entregam UI desalinhada e dizem que está perfeita. O time criou um component browser, que tira screenshots de cada componente a cada mudança e aponta diferenças, e uma skill /launch com Playwright que abre o VS Code e percorre um cenário. O agente verifica o próprio trabalho antes de devolver a tarefa.",
       "t": 546,
       "legenda": "Comparação automática de screenshots mostra o efeito colateral de cada PR.",
-      "print": "img/I2LL_wd89-A/2.jpg"
+      "print": "img/I2LL_wd89-A/2.jpg",
+      "descricao": "Slide sobre component browser mostrando comparação antes e depois de mudanças na interface"
     },
     {
       "titulo": "De stack de erro a PR de correção",
       "texto": "O pipeline parte de 51 bilhões de eventos de telemetria por dia. Filtra os que têm stack completo, agrupa por fingerprint (impressão digital do erro) e chega a cerca de 10 issues atribuídas a donos de área. Um agente abre o PR com a correção, e um humano aprova. O exemplo mostrado era um cancelamento que faltava no protocolo RPC.",
       "t": 828,
       "legenda": "Funil que reduz bilhões de eventos a poucas issues com PR automático.",
-      "print": "img/I2LL_wd89-A/3.jpg"
+      "print": "img/I2LL_wd89-A/3.jpg",
+      "descricao": "Diagrama de funil de telemetria reduzindo bilhões de eventos a poucas issues com fix automático"
     },
     {
       "titulo": "Entenda como cada modelo reage ao seu harness",
       "texto": "Um eval de uma linha, escrever um arquivo com hello world, serviu para testar o harness de ponta a ponta. O mesmo arquivo de cinco caracteres custou 70 vezes mais tokens no modelo mais caro, e não era o modelo de raciocínio alto. O resultado mostra que custo e comportamento variam por combinação de modelo e harness.",
       "t": 1018,
       "legenda": "Mostra a diferença de custo em tokens para a mesma tarefa trivial.",
-      "print": "img/I2LL_wd89-A/4.jpg"
+      "print": "img/I2LL_wd89-A/4.jpg",
+      "descricao": "Gráfico de experimento hello world mostrando variação de tokens entre modelos, até 70x"
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "tokens a mais para um arquivo de 5 caracteres",
       "t": 1018
     }
-  ]
+  ],
+  "rotulo": "Como o VS Code passou de releases mensais a semanais",
+  "objetivo": "listar o que mudar no entorno do repositório para que agentes de código acelerem a entrega sem derrubar a qualidade",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que mede o code survival e como ele variou no VS Code?",
+      "resposta": "Mede a fatia do código escrito por agente que chega a ser commitado. Subiu de 55% com o GPT 4.1 para 86% com o Claude Opus 4.6, segundo o palestrante."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "O que você daria ao seu agente para ele conferir o próprio trabalho antes da sua revisão?",
+      "resposta": "Um jeito de rodar o app e verificar o resultado, como screenshots por componente ou um roteiro com Playwright, mais um AGENTS.md com um mapa curto do código."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que não dá para atribuir toda a alta do code survival ao modelo novo?",
+      "resposta": "A subida mistura troca de modelo com melhorias no harness, e o talk não separa as causas nem define como mede o commit. Também não há dados de bugs após os releases semanais."
+    }
+  ],
+  "experimento": {
+    "titulo": "Medir o code survival do seu repositório",
+    "minutos": 30,
+    "precisa": "Um repositório seu em que um agente de código fez alguns commits, e Git",
+    "passos": [
+      "Liste de 5 a 10 mudanças recentes feitas por agente.",
+      "Para cada uma, use git log e git blame para ver quantas linhas continuam no código hoje.",
+      "Calcule a fração mantida no total.",
+      "Anote o motivo de cada trecho descartado, como erro do agente ou falta de confiança."
+    ],
+    "sucesso": "Você tem um percentual do código gerado por IA que sobreviveu e uma lista de motivos para o que foi descartado."
+  }
 }

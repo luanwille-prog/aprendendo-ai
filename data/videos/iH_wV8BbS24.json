@@ -21,35 +21,40 @@
       "texto": "Rodar o agente local com dangerously skip permissions dá a ele seu sistema de arquivos, variáveis de ambiente com segredos, arquivos na home e qualquer banco ou cluster de produção em que você esteja conectado. A alternativa é aprovar cada ação à mão, o que obriga a vigiar o agente o tempo todo.",
       "t": 248,
       "legenda": "Sem sandbox, o agente acessa tudo o que o usuário acessa.",
-      "print": "img/iH_wV8BbS24/0.jpg"
+      "print": "img/iH_wV8BbS24/0.jpg",
+      "descricao": "Slide 'Running Locally' com o prompt do Claude Code pedindo permissão para executar comando, sem sandbox"
     },
     {
       "titulo": "Menor privilégio limita o estrago",
       "texto": "Brennan aplica ao agente um princípio antigo de segurança: dar só o acesso necessário ao trabalho, como o repositório em edição e um ou dois segredos. Assim, se houver prompt injection ou confusão do agente, o dano fica restrito a esse recorte.",
       "t": 292,
       "legenda": "O sandbox define o raio de dano de um erro ou ataque.",
-      "print": "img/iH_wV8BbS24/1.jpg"
+      "print": "img/iH_wV8BbS24/1.jpg",
+      "descricao": "Slide 'What can the agent access?' listando arquivos locais, segredos em env/files e recursos de nuvem ou produção"
     },
     {
       "titulo": "Docker local é seguro e simples, mas não escala",
       "texto": "Um container por conversa é descartável: se o agente apagar tudo, você destrói o container e recomeça. Dá para montar só o repositório, portas e segredos escolhidos. O limite é o laptop, que comporta poucos containers e não escuta eventos de Slack ou DataDog.",
       "t": 342,
       "legenda": "Docker local isola bem, mas depende de uma máquina e de comandos manuais.",
-      "print": "img/iH_wV8BbS24/2.jpg"
+      "print": "img/iH_wV8BbS24/2.jpg",
+      "descricao": "Slide 'Sandbox Strategy #1: Docker' com prós (efêmero, montagem de arquivos, MCP) e a ressalva 'doesn't really scale'"
     },
     {
       "titulo": "VM compartilhada reintroduz o problema de privilégio",
       "texto": "Uma VM ou Mac Mini dedicada dá persistência e recebe webhooks, mas junta todos os agentes no mesmo ambiente. Um agente de revisão de código pode ganhar acesso ao DataDog ou editar a memória de outro agente. O ambiente também pode degradar com o tempo.",
       "t": 527,
       "legenda": "Agentes co-localizados compartilham acessos e atrapalham uns aos outros.",
-      "print": "img/iH_wV8BbS24/3.jpg"
+      "print": "img/iH_wV8BbS24/3.jpg",
+      "descricao": "Slide 'Sandbox Strategy #3: Virtual Machine' com OpenClaw e a ressalva de que todos os agentes compartilham o mesmo acesso"
     },
     {
       "titulo": "Tabela comparativa das quatro estratégias",
       "texto": "Brennan compara as opções em cinco eixos: local ou remoto, escala, isolamento, persistência e gatilhos. Kubernetes com um pod por sessão aparece como a opção mais robusta: isolamento por agente, escala na casa dos milhares e execução por agenda ou evento.",
       "t": 662,
       "legenda": "O mesmo quadro mostra o trade-off entre conveniência local e isolamento em nuvem.",
-      "print": "img/iH_wV8BbS24/4.jpg"
+      "print": "img/iH_wV8BbS24/4.jpg",
+      "descricao": "Tabela 'Considerations' comparando sem sandbox, Docker local, GitHub Actions, VM e Kubernetes em local/remoto, escala, isolamento, persistência e gatilhos"
     }
   ],
   "conceitos": [
@@ -199,5 +204,36 @@
       "contexto": "agentes possíveis em Kubernetes, segundo o palestrante",
       "t": 682
     }
-  ]
+  ],
+  "rotulo": "Quatro jeitos de isolar agentes de código",
+  "objetivo": "escolher entre Docker local, GitHub Actions, VM dedicada e Kubernetes para isolar um agente, pelo menor privilégio",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são as quatro formas de sandbox comparadas e que critérios o palestrante usa?",
+      "resposta": "Docker no laptop, Claude Code no GitHub Actions, VM ou Mac Mini dedicada e um pod de Kubernetes por sessão. Ele compara local ou remoto, escala, isolamento, persistência e gatilhos."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você roda o agente com permissões puladas no laptop. O que fazer primeiro?",
+      "resposta": "Liste o que ele alcança (pastas, variáveis de ambiente com segredos, acessos a produção) e retire o que não precisa. Depois rode-o em um container Docker com só o repositório montado e segredos mínimos."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que a comparação das quatro estratégias deve ser lida com cautela?",
+      "resposta": "É qualitativa, sem teste, custo ou medição de incidentes. O palestrante é da OpenHands e fecha com propaganda do Agent Canvas. A fuga de sandbox do Mythos é citada de passagem, sem fonte."
+    }
+  ],
+  "experimento": {
+    "titulo": "Rode o agente dentro de um container",
+    "minutos": 35,
+    "precisa": "Docker instalado, um repositório pequeno e um agente de linha de comando",
+    "passos": [
+      "Liste as pastas e variáveis de ambiente com segredos que o agente alcança hoje no seu laptop.",
+      "Monte um container com só esse repositório e as credenciais mínimas para a tarefa.",
+      "Rode o agente no container com uma tarefa simples, como corrigir um teste.",
+      "Tente ler um arquivo fora do repositório de dentro do container e anote o resultado."
+    ],
+    "sucesso": "O agente completou a tarefa no container e não conseguiu ler nada fora do repositório montado."
+  }
 }

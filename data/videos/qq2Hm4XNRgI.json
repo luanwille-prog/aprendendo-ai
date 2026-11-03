@@ -21,14 +21,16 @@
       "texto": "Recuperar informação não diz o que deve sobreviver à conversa. O agente precisa de um caminho de escrita que guarde só o que vale reaproveitar. É nesse registro durável que o palestrante vê o valor de negócio, porque ele nasce do uso real.",
       "t": 218,
       "legenda": "Leitura e escrita aparecem como dois caminhos separados.",
-      "print": "img/qq2Hm4XNRgI/0.jpg"
+      "print": "img/qq2Hm4XNRgI/0.jpg",
+      "descricao": "Slide 'Your agent forgets... and RAG won't fix it' com perguntas sobre o que sobrevive à conversa. Não mostra o contraste leitura/escrita."
     },
     {
       "titulo": "Pipeline de promoção de memória",
       "texto": "Cada candidato a memória passa por etapas. Classifica-se o significado, compara-se com os registros existentes e verifica-se a evidência exigida para aquele tipo. Por fim o harness (o código ao redor do modelo) admite, rejeita ou manda para revisão humana.",
       "t": 264,
       "legenda": "O pipeline termina em três saídas possíveis.",
-      "print": "img/qq2Hm4XNRgI/1.jpg"
+      "print": "img/qq2Hm4XNRgI/1.jpg",
+      "descricao": "Slide 'Memory Promotion' com só a caixa 'candidate' no início do diagrama. Etapas seguintes e saídas não aparecem."
     },
     {
       "titulo": "Demo: preferência que persiste entre sessões",
@@ -42,14 +44,16 @@
       "texto": "Um comando para aprovar todas as aplicações é rejeitado pelo portão de promoção. Já uma memória operacional mais ampla vai para aprovação humana antes de ser compartilhada com o time. O harness não pode contornar esse controle.",
       "t": 605,
       "legenda": "Três desfechos distintos: admitida, rejeitada e escalada.",
-      "print": "img/qq2Hm4XNRgI/3.jpg"
+      "print": "img/qq2Hm4XNRgI/3.jpg",
+      "descricao": "Terminal com o salvaguarda de memória recusando regra para aprovar todos os aplicantes e 'Memory: No new preference saved'."
     },
     {
       "titulo": "Context card mantém o prompt enxuto",
       "texto": "O pacote de memória do Oracle monta um bloco compacto para o prompt. Ele organiza tópicos, resumos, informações relevantes e mensagens recentes. O harness escolhe o que importa naquele turno e reduz o excesso de contexto.",
       "t": 961,
       "legenda": "Quatro seções compõem o bloco de contexto entregue ao agente.",
-      "print": "img/qq2Hm4XNRgI/4.jpg"
+      "print": "img/qq2Hm4XNRgI/4.jpg",
+      "descricao": "Slide 'Compaction by construction' com o context card em quatro seções: topics, summary, relevant information, recent messages."
     }
   ],
   "conceitos": [
@@ -165,5 +169,36 @@
       "contexto": "Código para usar o context card no agent memory",
       "t": 917
     }
-  ]
+  ],
+  "rotulo": "O que o agente deve lembrar: o portão da memória",
+  "objetivo": "desenhar um portão de promoção que decide o que entra, o que sai e o que vai para revisão na memória do agente",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Qual a diferença entre RAG e memória segundo Pluta?",
+      "resposta": "RAG é o caminho de leitura, que busca informação para o agente ler. A memória é o caminho de escrita, que decide o que sobrevive à conversa e fica registrado de forma durável."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que passos você exigiria antes de gravar uma memória nova?",
+      "resposta": "Classificar o tipo, comparar com registros existentes e checar a evidência exigida. Depois admitir, rejeitar ou mandar para humano o que for compartilhado com o time, guardando origem e data."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que fragilidades tem a demo do agente de hipoteca?",
+      "resposta": "É marketing técnico da Oracle, a demo é pré-gravada e sintética, com dois casos fictícios e uma preferência simples de formato. Não há taxa de acerto do portão, falsos positivos, custo ou comparação com alternativas."
+    }
+  ],
+  "experimento": {
+    "titulo": "Portão de memória em Python",
+    "minutos": 40,
+    "precisa": "Python e um arquivo JSON como banco de memória",
+    "passos": [
+      "Defina três tipos de memória permitidos, como preferência, fato e rotina, e uma lista do que nunca deve ser gravado.",
+      "Escreva uma função que recebe um candidato e devolve admitir, rejeitar ou revisar conforme o tipo.",
+      "Grave a origem e a data de cada memória admitida.",
+      "Teste dez candidatos, incluindo uma regra como aprovar tudo, e confira que ela é rejeitada."
+    ],
+    "sucesso": "Dos dez candidatos, os perigosos são rejeitados ou vão para revisão e cada memória admitida tem origem e data."
+  }
 }

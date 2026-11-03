@@ -170,5 +170,36 @@
       "contexto": "tamanho do índice de documentos da Exa, em dezenas de bilhões",
       "t": 658
     }
-  ]
+  ],
+  "rotulo": "Agente de código desatualizado e a regra de busca",
+  "objetivo": "escrever uma regra que diga ao agente quando buscar fontes atuais e pedir trechos curtos em vez de páginas inteiras",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que um agente de revisão pode tomar uma migração por simples limpeza de código?",
+      "resposta": "O modelo é lançado cerca de seis meses depois do corte de conhecimento e não conhece PRs e versões recentes. Sem consultar o changelog, não vê o breaking change na dependência."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que regra você colocaria no prompt de um agente que revisa pull requests?",
+      "resposta": "Quando o diff mexer na versão de uma dependência, consultar o changelog ou a documentação oficial e basear a revisão no que encontrar."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites tem o exemplo do PR usado para defender a busca da Exa?",
+      "resposta": "É um único caso escolhido a dedo, num talk de pitch da própria Exa. A comparação de custo e qualidade com a busca nativa vem sem número, benchmark ou metodologia."
+    }
+  ],
+  "experimento": {
+    "titulo": "Revisar um PR recente com e sem busca",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT com busca na web e um PR público recente que atualiza uma dependência",
+    "passos": [
+      "Escolha um PR público de menos de três meses que mexa na versão de uma dependência.",
+      "Peça a revisão do diff sem permitir busca.",
+      "Peça de novo com a regra de consultar o changelog da dependência antes de revisar.",
+      "Compare os dois diagnósticos."
+    ],
+    "sucesso": "Você identifica se a busca mudou o diagnóstico, por exemplo de limpeza de código para migração com breaking change."
+  }
 }

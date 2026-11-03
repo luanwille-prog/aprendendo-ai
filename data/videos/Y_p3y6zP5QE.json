@@ -21,35 +21,40 @@
       "texto": "Montar sozinho exige subir container ou VM, construir o harness, configurar rede e firewall. No managed agent, você chama o agente base Antigravity com environment igual a remote e o Google cria o sandbox. Para escalar, basta fazer mais chamadas.",
       "t": 190,
       "legenda": "A configuração de sandbox, harness e rede cabe em uma chamada de API.",
-      "print": "img/Y_p3y6zP5QE/0.jpg"
+      "print": "img/Y_p3y6zP5QE/0.jpg",
+      "descricao": "Slide 'Now it's a single API call' com o código do interactions.create, environment=remote e agent antigravity."
     },
     {
       "titulo": "Interações e ambientes são estados separados",
       "texto": "A interação guarda a conversa e o ambiente guarda os arquivos do sandbox. Como são separados, um segundo agente pode receber o ID do ambiente, começar com contexto limpo e continuar o trabalho sobre os arquivos do primeiro.",
       "t": 595,
       "legenda": "O ID do ambiente passa o trabalho de um agente para o outro.",
-      "print": "img/Y_p3y6zP5QE/1.jpg"
+      "print": "img/Y_p3y6zP5QE/1.jpg",
+      "descricao": "Slide 'Interactions and Environments are stateful' com dois blocos de código: researcher salva em /workspace e quant reusa environment_id."
     },
     {
       "titulo": "O proxy mantém o segredo fora do sandbox",
       "texto": "O agente recebe um token falso. Quando ele chama, por exemplo, a API do GitHub, o proxy reconhece o destino e injeta o token real. Assim o agente não consegue ler nem usar a credencial por conta própria.",
       "t": 748,
       "legenda": "O token real nunca entra no sandbox, só um substituto.",
-      "print": "img/Y_p3y6zP5QE/2.jpg"
+      "print": "img/Y_p3y6zP5QE/2.jpg",
+      "descricao": "Slide 'Secrets never enter the sandbox' com o diagrama sandbox, egress proxy e API externa, e o código credentials.create."
     },
     {
       "titulo": "Três agentes especializados em cadeia",
       "texto": "Na demo, um agente pesquisa a Nvidia nos relatórios da SEC e grava metrics.json. Um agente quant lê o arquivo, roda Python e prevê o preço da ação. Um terceiro transforma a pesquisa em relatório. Cada um tem um propósito estreito.",
       "t": 936,
       "legenda": "O segundo agente continua a partir do arquivo deixado pelo primeiro.",
-      "print": "img/Y_p3y6zP5QE/3.jpg"
+      "print": "img/Y_p3y6zP5QE/3.jpg",
+      "descricao": "Tela 'Let's put it to the test' com três passos encadeados (pesquisa, quant, briefing) sobre o mesmo sandbox compartilhado e o trace do primeiro."
     },
     {
       "titulo": "Agentes dentro de um app em AI Studio",
       "texto": "O exemplo do ticker agent usa vários managed agents para analisar um fundo, mostra o raciocínio em streaming e entrega um PDF com gráficos e links das fontes. O palestrante diz que o streaming serve só para visualizar e pode sair do seu app.",
       "t": 1130,
       "legenda": "Um app de usuário final pode esconder o agente e mostrar só o relatório.",
-      "print": "img/Y_p3y6zP5QE/4.jpg"
+      "print": "img/Y_p3y6zP5QE/4.jpg",
+      "descricao": "App AI Studio (Financial Research Agent) com raciocínio do agente em streaming. O relatório em PDF com gráficos não aparece neste frame."
     }
   ],
   "conceitos": [
@@ -165,5 +170,36 @@
       "contexto": "exemplo de horário do gatilho antes da abertura do mercado",
       "t": 372
     }
-  ]
+  ],
+  "rotulo": "Times de agentes gerenciados no Gemini com sandbox",
+  "objetivo": "desenhar um fluxo de agentes em cadeia que passam arquivos entre si por um ambiente compartilhado",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que separar interação e ambiente permite encadear agentes?",
+      "resposta": "A interação guarda a conversa e o ambiente guarda os arquivos do sandbox. Um segundo agente recebe o ID do ambiente, começa com contexto limpo e continua o trabalho sobre os arquivos do primeiro."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que fluxo do seu trabalho você dividiria em agentes de propósito único?",
+      "resposta": "Qualquer fluxo com etapas distintas, como pesquisa, análise e relatório, em que cada agente grava um arquivo (por exemplo metrics.json) que o seguinte lê, em vez de um agente com tarefa ampla."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que a demo não prova sobre esses agentes gerenciados?",
+      "resposta": "É talk de produto do Google DeepMind sobre o próprio produto. Há um caso só (Nvidia e um fundo), sem taxa de erro, custo ou tempo de execução, e a previsão de preço da ação não foi verificada."
+    }
+  ],
+  "experimento": {
+    "titulo": "Três agentes em cadeia com arquivos",
+    "minutos": 40,
+    "precisa": "Claude Code ou outro agente de código, e uma pasta vazia",
+    "passos": [
+      "Escolha um tema pequeno, como comparar duas bibliotecas, e crie uma pasta de trabalho.",
+      "Peça a um primeiro agente que pesquise e grave os achados em um arquivo JSON, sem escrever relatório.",
+      "Abra uma sessão nova, com contexto limpo, e peça a um segundo agente que leia o JSON e faça uma análise em outro arquivo.",
+      "Em uma terceira sessão, peça um relatório curto só a partir dos dois arquivos."
+    ],
+    "sucesso": "O relatório final cita dados que só existiam nos arquivos intermediários, sem que você tenha repetido o contexto nas sessões seguintes."
+  }
 }

@@ -21,21 +21,24 @@
       "texto": "No modelo tradicional, o agente recebe um catálogo enorme de ferramentas. Cada chamada devolve dados que entram no contexto, às vezes com lixo ou paginação. O resultado é context rot (degradação do contexto), muitos turnos e necessidade de compactação.",
       "t": 125,
       "legenda": "Cada chamada de ferramenta empurra mais texto para o contexto.",
-      "print": "img/dAoOYFx7ZYw/0.jpg"
+      "print": "img/dAoOYFx7ZYw/0.jpg",
+      "descricao": "Slide 'The too many tools problem' na segunda chamada: contexto com definições de ferramentas, pergunta, chamada e resultado empilhados."
     },
     {
       "titulo": "Code mode: buscar, executar e compor em código",
       "texto": "O agente ganha uma ferramenta de busca e um ambiente de programação. Ele roda ferramentas em sequência, em paralelo ou com condicionais, num único turno. Só o que for necessário volta ao contexto do modelo.",
       "t": 218,
       "legenda": "Menos turnos e menos texto no contexto, na comparação dos dois desenhos.",
-      "print": "img/dAoOYFx7ZYw/1.jpg"
+      "print": "img/dAoOYFx7ZYw/1.jpg",
+      "descricao": "Slide 'The model programs the tools': modelo gera código num sandbox que chama find_meeting, get_transcript, find_deal e attach. Não é comparação lado a lado."
     },
     {
       "titulo": "Quatro motivos para funcionar",
       "texto": "O palestrante lista descoberta progressiva de ferramentas, composição (paralelo, fan out, encadeamento), eficiência de tokens e comportamento emergente. O último permite ao agente criar a própria ferramenta, por exemplo para remover dados pessoais sem passá-los pelo contexto.",
       "t": 281,
       "legenda": "Os quatro argumentos centrais a favor do code mode.",
-      "print": "img/dAoOYFx7ZYw/2.jpg"
+      "print": "img/dAoOYFx7ZYw/2.jpg",
+      "descricao": "Slide 'Why code mode works' com os quatro motivos: progressive disclosure, composability, token efficiency e emergent behavior."
     },
     {
       "titulo": "Como o Phoenix usa code mode",
@@ -49,7 +52,8 @@
       "texto": "Código gerado por LLM traz risco de rede, segredos que vazam para o contexto, permissões amplas, falhas de boot e depuração mais difícil. Nos evals do Harbor, a Arize relata queda de 43% nos tokens e 31% no custo, com latência estável.",
       "t": 778,
       "legenda": "Tokens e custo caem após o code mode, e a latência quase não muda.",
-      "print": "img/dAoOYFx7ZYw/4.jpg"
+      "print": "img/dAoOYFx7ZYw/4.jpg",
+      "descricao": "Slide 'What code mode saves PXI' com tokens -43%, custo -31%, recompensa igual e latência +0.6%. Os números batem com o texto; o slide diz PXI, não Harbor."
     }
   ],
   "conceitos": [
@@ -165,5 +169,36 @@
       "contexto": "janela de história do software citada na abertura",
       "t": 32
     }
-  ]
+  ],
+  "rotulo": "Code mode: dê um sandbox ao agente, não mais ferramentas",
+  "objetivo": "comparar um agente com catálogo de ferramentas e um agente com sandbox de código quanto a contexto e custo",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Como o code mode reduz o que entra na janela de contexto do modelo?",
+      "resposta": "O agente busca a ferramenta que precisa e a executa dentro de um sandbox, em sequência, em paralelo ou com condicionais, num único turno. Só o resultado útil volta ao contexto."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você trataria dados sensíveis num agente que roda código?",
+      "resposta": "Pedindo ao agente que escreva um script de limpeza em vez de colar os dados no chat, e testando antes o sandbox com rede desligada e segredos fora do contexto."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Quanto você confiaria nos 43% menos tokens e 31% menos custo?",
+      "resposta": "Com cautela. Vêm dos evals da própria Arize, que vende observabilidade, sem número de tarefas, modelos ou margem de variação. O talk admite custos de segredos e permissões sem medi-los."
+    }
+  ],
+  "experimento": {
+    "titulo": "Mesma tarefa com ferramentas e com código",
+    "minutos": 40,
+    "precisa": "Python, um arquivo CSV grande e um assistente com execução de código (Claude Code ou ChatGPT)",
+    "passos": [
+      "Escolha uma pergunta que exija somar ou filtrar um CSV grande, como o total por categoria.",
+      "Cole uma amostra do CSV no chat e peça a resposta direto, anotando tokens ou tamanho da conversa.",
+      "Repita pedindo que o agente escreva e rode código sobre o arquivo, devolvendo só o resultado.",
+      "Compare o tamanho do contexto usado e a correção das duas respostas."
+    ],
+    "sucesso": "Você registra, para a mesma pergunta, quanto contexto cada abordagem gastou e qual resposta bateu com o cálculo de referência."
+  }
 }

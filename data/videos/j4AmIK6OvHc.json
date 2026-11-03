@@ -21,35 +21,40 @@
       "texto": "Rankings avaliam um modelo por vez, com áudio limpo. Quem entrega um agente de voz entrega um pipeline de três modelos em cascata. Se a transcrição ouve 'dia 30' em vez de 'dia 3', o LLM agenda o dia errado com toda a confiança e as camadas seguintes não percebem.",
       "t": 296,
       "legenda": "O ranking mede um componente, mas o produto é a conversa inteira.",
-      "print": "img/j4AmIK6OvHc/0.jpg"
+      "print": "img/j4AmIK6OvHc/0.jpg",
+      "descricao": "Slide 'The leaderboard is a trap.' com o palestrante ao lado; mostra a crítica ao ranking de modelos"
     },
     {
       "titulo": "Latência medida versus percebida",
       "texto": "O painel do provedor de TTS (text-to-speech, síntese de voz) mostra time to first byte, mas bytes podem ser silêncio. Eles mediram provedores que enviam centenas de milissegundos de silêncio no início, chegando a três quartos de segundo. O número que importa é o tempo até o primeiro áudio audível. No LLM, vale o tempo até completar a primeira frase, não o primeiro token.",
       "t": 359,
       "legenda": "Medida do painel e percepção do usuário divergem.",
-      "print": "img/j4AmIK6OvHc/1.jpg"
+      "print": "img/j4AmIK6OvHc/1.jpg",
+      "descricao": "Slide 'Dashboard fast. Human slow.' com 210 ms no painel e 750 ms para o usuário"
     },
     {
       "titulo": "Ganhar tempo como uma pessoa",
       "texto": "Ferramentas podem levar de 2 a 40 segundos ou mais, e nenhum modelo esconde isso. Uma recepcionista diz 'um instante, estou consultando' e continua ouvindo. No código, uma única linha devolve a palavra ao agente enquanto a ferramenta trabalha em segundo plano. Conversa e ferramenta deixam de dividir a mesma thread.",
       "t": 470,
       "legenda": "Uma linha de código separa a conversa do trabalho da ferramenta.",
-      "print": "img/j4AmIK6OvHc/2.jpg"
+      "print": "img/j4AmIK6OvHc/2.jpg",
+      "descricao": "Slide 'One line changes the conversation.' com trecho de código da ferramenta assíncrona"
     },
     {
       "titulo": "Detecção de turno por áudio",
       "texto": "Esperar a transcrição completa para decidir que o usuário terminou já é tarde. O detector da LiveKit usa ritmo, tom e entonação do áudio. O LLM já roda sobre uma transcrição provisória, e o TTS começa na primeira frase completa. Isso pode economizar meio segundo.",
       "t": 639,
       "legenda": "Comparação de cortes indevidos no mesmo orçamento de latência.",
-      "print": "img/j4AmIK6OvHc/3.jpg"
+      "print": "img/j4AmIK6OvHc/3.jpg",
+      "descricao": "Slide 'Same latency budget. Fewer false cutoffs.' com 9,9% vs 4,5% de cortes indevidos"
     },
     {
       "titulo": "Benchmark do agente inteiro",
       "texto": "O benchmark usa um agente de hotel real, com back end real, e centenas de chamadores simulados que interrompem, murmuram e mudam de ideia. Pontua desfechos (reserva correta no banco, corte do chamador, dados vazados) e penaliza perguntas desnecessárias. Troca-se só a stack, com entrada idêntica, e dá para rodar contra o seu agente.",
       "t": 766,
       "legenda": "Avaliação por desfecho, comparável entre stacks de modelos.",
-      "print": "img/j4AmIK6OvHc/4.jpg"
+      "print": "img/j4AmIK6OvHc/4.jpg",
+      "descricao": "Slide 'Test the conversation, not the component.' com diagrama de chamadores simulados e agente"
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "Início da fala do Gemma ajustado; 88% nos evals de voz",
       "t": 893
     }
-  ]
+  ],
+  "rotulo": "Orçamento de latência para agentes de voz",
+  "objetivo": "definir um orçamento de latência de ponta a ponta para um agente de voz e medir o tempo até o primeiro áudio",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Qual latência o palestrante diz que importa e quais são os limites citados?",
+      "resposta": "A latência percebida, que é o tempo até o primeiro áudio audível, e não a do painel do provedor. A conversa ainda funciona até 1,5 s e começa a soar humana perto de 600 ms."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Sua ferramenta de consulta leva 3 segundos. Como evitar silêncio na ligação?",
+      "resposta": "Execute a ferramenta de forma assíncrona e faça o agente avisar o usuário que está consultando enquanto trabalha. Isso vale para qualquer ferramenta que passe de 1 segundo."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que os números de cortes indevidos (9,9% e 4,5%) e dos 88% pedem cautela?",
+      "resposta": "Vêm de avaliação da própria LiveKit, que vende o benchmark e o Gemma ajustado. A amostra não aparece, os 88% e os 380 ms são prévia de lançamento e o benchmark gira em torno de um único agente de hotel."
+    }
+  ],
+  "experimento": {
+    "titulo": "Meça o tempo até o primeiro áudio",
+    "minutos": 30,
+    "precisa": "Um agente de voz de teste (ou um protótipo com STT, LLM e TTS) e um cronômetro",
+    "passos": [
+      "Fixe um orçamento por etapa que some 1,5 s no máximo, com meta perto de 600 ms.",
+      "Faça 10 chamadas e anote, para cada uma, o tempo entre o fim da sua fala e o primeiro áudio que você ouve.",
+      "Compare o tempo médio e o pior caso com o orçamento.",
+      "Ajuste uma etapa, como resposta em streaming por frase, e meça de novo."
+    ],
+    "sucesso": "Você tem a média e o pior caso de 10 chamadas, comparados ao orçamento, e mediu o efeito de uma mudança."
+  }
 }

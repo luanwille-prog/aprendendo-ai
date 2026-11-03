@@ -21,7 +21,8 @@
       "texto": "No console, o palestrante descreve o agente em uma frase e o Claude gera nome, prompt de sistema e modelo. Depois se cria o environment (template do sandbox) e se abre a sessão. A Anthropic cuida da infraestrutura, do harness, do escalonamento e do log de eventos.",
       "t": 93,
       "legenda": "Criar um agente no console leva poucos cliques.",
-      "print": "img/FGftGOzfohc/0.jpg"
+      "print": "img/FGftGOzfohc/0.jpg",
+      "descricao": "Console Quickstart com a frase do agente digitada ('Build me an agent that tells me jokes...'). Agente gerado ainda não aparece."
     },
     {
       "titulo": "Chat é só um fluxo de eventos",
@@ -35,14 +36,16 @@
       "texto": "O agente principal recebe uma skill para consultar o SEC, subagentes especializados e uma referência a si mesmo para se clonar. O clone copia prompt e ferramentas, não o histórico da conversa. Uma ferramenta própria, dispatch analysis, permite orquestrar várias sessões.",
       "t": 910,
       "legenda": "O agente ganha subagentes, skill e ferramenta própria.",
-      "print": "img/FGftGOzfohc/2.jpg"
+      "print": "img/FGftGOzfohc/2.jpg",
+      "descricao": "Código do coordinator com lista de agents (financials, risk) e {type: 'self'}, que mostra subagentes e autorreferência."
     },
     {
       "titulo": "Outcome: o agente se corrige sozinho",
       "texto": "Você define tarefa, rubrica e número máximo de iterações. Quando o Claude acha que terminou, um subagente avaliador compara o trabalho com a rubrica. Se reprovar, o Claude tenta de novo. No caso da Nvidia, ele entregou uma nota na memória e um scorecard em JSON.",
       "t": 1160,
       "legenda": "Sessão com outcome mostra threads de subagentes e a avaliação final.",
-      "print": "img/FGftGOzfohc/3.jpg"
+      "print": "img/FGftGOzfohc/3.jpg",
+      "descricao": "Sessão 'Filing analysis: AMD' (não Nvidia): Grading iteration 0 Satisfied, threads de subagentes e mensagem final do grader."
     },
     {
       "titulo": "Cofre troca o segredo na saída",
@@ -199,5 +202,37 @@
       "contexto": "podem ser enfileiradas de uma vez para guiar o agente",
       "t": 1691
     }
-  ]
+  ],
+  "rotulo": "Agente de pesquisa com avaliador no Claude Managed Agents",
+  "objetivo": "escrever uma rubrica verificável para um agente e explicar como um avaliador faz o agente refazer o trabalho até passar",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que é um outcome no Claude Managed Agents?",
+      "resposta": "Você entrega a tarefa, uma rubrica e um máximo de iterações. Quando o Claude acha que terminou, um subagente avaliador confere o trabalho e manda tentar de novo se reprovar."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você protegeria a chave de API de um agente que consulta um serviço externo?",
+      "resposta": "Guarde a chave num cofre e fora do prompt. O sandbox vê só um placeholder, e a plataforma troca pelo segredo real na saída de rede, apenas para domínios autorizados."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que o workshop não prova que o outcome funciona bem?",
+      "resposta": "É demonstração de produto da Anthropic. A sessão da Nvidia foi gravada na véspera, não há custo, taxa de acerto nem número de rodadas do avaliador, e o Q&A admite que não há limite de gasto por sessão."
+    }
+  ],
+  "experimento": {
+    "titulo": "Rubrica e revisor em duas conversas",
+    "minutos": 20,
+    "precisa": "Claude ou ChatGPT, com duas conversas separadas",
+    "passos": [
+      "Escolha uma tarefa de pesquisa curta, como comparar duas ferramentas que você usa.",
+      "Escreva uma rubrica com 5 critérios verificáveis, como fontes citadas, números com origem e limites declarados.",
+      "Peça o trabalho na conversa A.",
+      "Cole o trabalho e a rubrica na conversa B e peça uma nota por critério, com a falha apontada.",
+      "Devolva as falhas à conversa A e repita por no máximo 3 rodadas."
+    ],
+    "sucesso": "Você tem a nota por critério em cada rodada e vê quais critérios passaram a ser atendidos depois da revisão."
+  }
 }

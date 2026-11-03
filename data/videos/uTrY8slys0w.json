@@ -21,35 +21,40 @@
       "texto": "O auth.md é um arquivo markdown que o app hospeda para o agente ler. Ele descreve como obter acesso, criar conta e chamar a API. O arquivo só descreve. Quem aplica as regras de acesso continua sendo o app, no caso o Waypoint.",
       "t": 154,
       "legenda": "O auth.md é lido pelo agente e descreve acesso, conta e API.",
-      "print": "img/uTrY8slys0w/0.jpg"
+      "print": "img/uTrY8slys0w/0.jpg",
+      "descricao": "Slide 'How to let agents in' com o endereço waypoint-aie.workos.cloud/auth.md; a área abaixo do título está vazia."
     },
     {
       "titulo": "Modo anônimo e reivindicação do trabalho",
       "texto": "O agente começa sem conta e recebe um access token e um claim token. Quando o usuário quer assumir o que o agente fez, recebe um link e um código de uso único. Ele entra no app, digita o código e o trabalho passa para a conta dele. Esse fluxo ainda exige cadastro e verificação de e-mail, onde o app perde usuários.",
       "t": 247,
       "legenda": "O fluxo de claim move as ações do agente para a conta do usuário.",
-      "print": "img/uTrY8slys0w/1.jpg"
+      "print": "img/uTrY8slys0w/1.jpg",
+      "descricao": "Diagrama 'Anon → User claimed': agente faz POST /agent/identity anônimo, recebe claim_token e obtém access_token via /oauth2/token."
     },
     {
       "titulo": "ID-JAG: o provedor do agente atesta quem é o usuário",
       "texto": "A ID-JAG é uma afirmação de identidade assinada pelo provedor do agente e endereçada a um app específico. Traz nome, e-mail, se o e-mail foi verificado e a validade. O app verifica a assinatura e decide se cria conta, vincula a uma existente e quais permissões entrega no token.",
       "t": 467,
       "legenda": "O payload mostra emissor, destinatário e dados do usuário.",
-      "print": "img/uTrY8slys0w/2.jpg"
+      "print": "img/uTrY8slys0w/2.jpg",
+      "descricao": "Slide ID-JAG com header, payload decodificado (iss, sub, email, email_verified, aud, client_id, iat, exp) e referência ao draft IETF."
     },
     {
       "titulo": "Demo: o agente se cadastra e reserva jantar sozinho",
       "texto": "Num agent harness (ambiente que roda o agente), o usuário pede um roteiro em Nova York. O agente tenta outras ferramentas, que exigem cadastro no navegador ou chave de API, e escolhe o Waypoint. Depois do consentimento, cria a conta, monta o roteiro e reserva o jantar sem mais interação.",
       "t": 656,
       "legenda": "O agente criou a conta e fechou o roteiro sem ação manual.",
-      "print": "img/uTrY8slys0w/3.jpg"
+      "print": "img/uTrY8slys0w/3.jpg",
+      "descricao": "Terminal do agent harness pedindo consentimento e mostrando 'Identity verified'. Não mostra a conta criada nem a reserva do jantar."
     },
     {
       "titulo": "Token de agente com teto de permissões",
       "texto": "Em vez de entregar o token do usuário, o app emite um token do agente. As permissões são a interseção entre as do usuário e o teto definido no blueprint do agente. O token identifica o agente e o usuário em nome de quem age. Assim dá para auditar, revogar o agente sem derrubar a sessão do usuário e impedir que ele mude o orçamento.",
       "t": 907,
       "legenda": "O token do agente tem só a interseção das permissões.",
-      "print": "img/uTrY8slys0w/4.jpg"
+      "print": "img/uTrY8slys0w/4.jpg",
+      "descricao": "Modal 'Session details' lado a lado: user token, blueprint 'Read-only agent' com permissões e agent token com permissões reduzidas."
     }
   ],
   "conceitos": [
@@ -134,7 +139,7 @@
       "nome": "Agent harness",
       "traducao": "ambiente que roda o agente e suas ferramentas",
       "nivel": "intermediario",
-      "chave": "agent harness",
+      "chave": "harness",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -170,5 +175,36 @@
       "contexto": "novo orçamento definido pelo usuário Jordan",
       "t": 1000
     }
-  ]
+  ],
+  "rotulo": "Como deixar agentes de IA se cadastrarem no app",
+  "objetivo": "desenhar a entrada de agentes no seu app com auth.md, ID-JAG e token de agente com teto de permissões",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Como fica a permissão do token que o app emite para um agente?",
+      "resposta": "É a interseção entre as permissões do usuário e o teto definido para o agente. O token identifica o agente e o usuário em nome de quem age, o que permite auditar, limitar e revogar."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Onde um agente trava hoje no seu produto e o que você mudaria primeiro?",
+      "resposta": "Liste cadastro, chave de API e MCP e anote onde exigem navegador ou formulário. Depois publique um auth.md descrevendo como obter acesso e emita tokens próprios de agente, nunca o token do usuário."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que lacunas a palestra deixa sobre segurança e adoção?",
+      "resposta": "É pitch da WorkOS, com demos em app e harness construídos por ela, que não provam adoção real. Faltam dados de abuso, spam de cadastros ou fraude e custo, e não se discute como evitar contas falsas criadas em massa por agentes."
+    }
+  ],
+  "experimento": {
+    "titulo": "Escrever um auth.md para um app seu",
+    "minutos": 30,
+    "precisa": "Um app ou API sua (ou fictícia) e um assistente de IA para testar a leitura",
+    "passos": [
+      "Escreva um auth.md curto com como criar conta, como obter token e quais endpoints o agente pode chamar.",
+      "Defina numa lista o teto de permissões de um agente, como ler e criar rascunhos, sem apagar.",
+      "Entregue só o auth.md a um assistente de IA e peça que descreva, passo a passo, como ele se cadastraria.",
+      "Corrija o arquivo nos pontos em que o assistente se perdeu."
+    ],
+    "sucesso": "O assistente descreve o fluxo de cadastro corretamente a partir só do arquivo, e o teto de permissões está explícito."
+  }
 }

@@ -21,35 +21,40 @@
       "texto": "Na demo no ChatGPT, o palestrante pergunta quais conectores existem e depois pede cinco clientes pagantes com tickets de suporte. O agente busca no Context Store (índice de busca dos dados) e cruza as duas fontes sozinho. O MCP é indicado para quem não é técnico e só quer plugar os dados no chat.",
       "t": 318,
       "legenda": "O agente combina duas fontes de dados e devolve cinco clientes.",
-      "print": "img/3wj6sgbi1YA/0.jpg"
+      "print": "img/3wj6sgbi1YA/0.jpg",
+      "descricao": "Chat de demo com a pergunta por cinco clientes com tickets do Zendesk e as etapas do agente (Inspect Connector, Finding tools) visíveis"
     },
     {
       "titulo": "Poucas ferramentas, descoberta progressiva",
       "texto": "A Airbyte tem muitos conectores, cada um com entidades e ações próprias. Em vez de uma ferramenta MCP para cada um, expõe duas: descrever o conector (traz o schema) e executar (lê, escreve e apaga registros). Descrições curtas poupam contexto e, segundo ele, melhoram o desempenho do servidor.",
       "t": 348,
       "legenda": "Duas ferramentas cobrem todos os conectores.",
-      "print": "img/3wj6sgbi1YA/1.jpg"
+      "print": "img/3wj6sgbi1YA/1.jpg",
+      "descricao": "Slide de título '1. Keep tool counts small'. Não mostra as duas ferramentas describe e execute, só o princípio da ideia"
     },
     {
       "titulo": "A elicitation por URL ainda não funciona em todo cliente",
       "texto": "O MCP prevê um modo de elicitation por URL para pedir credenciais com segurança. Na prática, o Claude Desktop responde que não suporta o recurso. A Airbyte voltou a gerar o próprio link de conexão. A lição é que a especificação promete mais do que os clientes entregam.",
       "t": 596,
       "legenda": "Cliente real recusa um recurso que consta da especificação.",
-      "print": "img/3wj6sgbi1YA/2.jpg"
+      "print": "img/3wj6sgbi1YA/2.jpg",
+      "descricao": "Slide '3 - Elicitation is not the way' com a resposta do Claude dizendo que URL-mode elicitation não é suportado pelo cliente"
     },
     {
       "titulo": "JSON de entrada e saída, com pipes",
       "texto": "Humanos gostam de flags. Agentes montam consultas complexas com mais precisão em JSON, com menos chute. Na saída, JSON permite usar pipes do Unix, como jq, para filtrar e cortar respostas longas antes que cheguem ao contexto do agente.",
       "t": 720,
       "legenda": "JSON na entrada e na saída habilita o encadeamento com jq.",
-      "print": "img/3wj6sgbi1YA/3.jpg"
+      "print": "img/3wj6sgbi1YA/3.jpg",
+      "descricao": "Slide '1 - JSON in, JSON out' com comando airbyte-agent connectors execute --json e texto citando pipes para jq"
     },
     {
       "titulo": "Skills embarcadas para o agente descobrir a CLI",
       "texto": "Sem uma skill, o agente nem sabe que a CLI existe. A skill traz uma descrição que dispara quando o assunto são conectores e aponta para arquivos de referência separados. Assim, o contexto carrega só o necessário. Erros repetidos do agente indicam um contrato de CLI pouco óbvio.",
       "t": 848,
       "legenda": "A skill principal aponta para referências carregadas sob demanda.",
-      "print": "img/3wj6sgbi1YA/4.jpg"
+      "print": "img/3wj6sgbi1YA/4.jpg",
+      "descricao": "Slide '3 - Skills ship with the tool' com texto sobre skills e referências, à direita painel de estrutura da skill. Resolução baixa"
     }
   ],
   "conceitos": [
@@ -112,7 +117,7 @@
       "nome": "Skills",
       "traducao": "instruções empacotadas que o agente carrega quando precisa",
       "nivel": "intermediario",
-      "chave": "skills",
+      "chave": "skill",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -170,5 +175,36 @@
       "contexto": "Limite do Claude para descrições de ferramentas",
       "t": 973
     }
-  ]
+  ],
+  "rotulo": "MCP ou CLI para expor dados de SaaS a agentes",
+  "objetivo": "escolher entre MCP e CLI para expor uma ferramenta a agentes e desenhar uma interface enxuta, em JSON e sem prompts interativos",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Como a Airbyte reduziu a lista de ferramentas do seu servidor MCP?",
+      "resposta": "Em vez de uma ferramenta por conector, expõe duas, descrever o conector (que traz o schema) e executar (que lê, escreve e apaga registros). O agente descobre o resto sob demanda, e as descrições curtas poupam contexto."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você vai criar uma CLI para agentes usarem. Que regras de desenho aplicaria?",
+      "resposta": "Aceitar JSON de entrada e devolver JSON de saída, padronizar os comandos no formato substantivo e verbo e eliminar prompts interativos, recebendo credenciais por variáveis de ambiente ou arquivo de configuração."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "A afirmação de que poucas ferramentas melhoram o desempenho do servidor tem boa sustentação?",
+      "resposta": "Não. Vem de tentativa e erro, sem números de latência ou acerto. O palestrante é da Airbyte, a comparação entre MCP e CLI é opinião de quem construiu os dois e a demo traz um único caso de uso."
+    }
+  ],
+  "experimento": {
+    "titulo": "Reescrever uma CLI pensando em agentes",
+    "minutos": 30,
+    "precisa": "Um script de linha de comando seu em Python ou shell e um agente de código",
+    "passos": [
+      "Escolha um script seu que hoje pergunta algo ao usuário durante a execução.",
+      "Troque os prompts por flags e variáveis de ambiente e faça a saída em JSON.",
+      "Peça ao agente que use o script para uma tarefa real, sem explicar nada além do comando de ajuda.",
+      "Anote cada erro repetido do agente e ajuste o nome ou a descrição do comando correspondente."
+    ],
+    "sucesso": "O agente completa a tarefa sem nenhuma interação humana e os erros repetidos caem depois do ajuste dos comandos."
+  }
 }

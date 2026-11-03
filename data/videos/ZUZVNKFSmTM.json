@@ -21,35 +21,40 @@
       "texto": "Clark descreve o harness como um laço que recebe contexto e emite chamadas de ferramenta. Como as pessoas trocam de harness o tempo todo, o controle de segurança não pode morar nele. Ele mora nas ferramentas e no contexto que chegam ao agente, ou seja, no sandbox.",
       "t": 217,
       "legenda": "Harness, MCP e sandbox: onde o controle de segurança deve ficar",
-      "print": "img/ZUZVNKFSmTM/0.jpg"
+      "print": "img/ZUZVNKFSmTM/0.jpg",
+      "descricao": "Slide mostrando harness como gerador de tool calls e diagrama de fluxo com MCP"
     },
     {
       "titulo": "Redação separada em três sandboxes",
       "texto": "No exemplo da redação, o pesquisador navega pela web, mas não tem ferramenta de escrita no site. O verificador lê a pesquisa e consulta uma base de fatos, sem rede. O publicador só vê material filtrado e tem a ferramenta de publicar, sem rede. Nenhum sandbox junta entrada não confiável com ferramenta perigosa.",
       "t": 380,
       "legenda": "Cada papel recebe só a rede e as ferramentas de que precisa",
-      "print": "img/ZUZVNKFSmTM/1.jpg"
+      "print": "img/ZUZVNKFSmTM/1.jpg",
+      "descricao": "Diagrama com três caixas: researcher, fact-checker e publisher com funcionalidades distintas"
     },
     {
       "titulo": "Modele o sandbox pela intenção da tarefa",
       "texto": "O coding agent trabalha cerca de uma hora, mas só precisa da chave de assinatura do Git por uns 2 minutos, no commit. Se o sandbox reflete a intenção, a chave não fica lá o resto do tempo. A mesma lógica vale para rede, MCPs e diretórios.",
       "t": 534,
       "legenda": "A chave de assinatura só existe no sandbox durante o commit",
-      "print": "img/ZUZVNKFSmTM/2.jpg"
+      "print": "img/ZUZVNKFSmTM/2.jpg",
+      "descricao": "Slide sobre inserir commit task entre etapas e chave de assinatura do Git"
     },
     {
       "titulo": "Um endpoint de gateway por sandbox",
       "texto": "Todo tráfego MCP do harness passa por uma URL interna única. O gateway decide quais ferramentas, recursos e prompts cada sandbox recebe. Isso também deixa os harnesses intercambiáveis, porque a configuração de MCP fica no sandbox e não em cada ferramenta como Codex ou Claude Code.",
       "t": 625,
       "legenda": "O gateway é o ponto de controle e deixa o harness trocável",
-      "print": "img/ZUZVNKFSmTM/3.jpg"
+      "print": "img/ZUZVNKFSmTM/3.jpg",
+      "descricao": "Diagrama de sandbox com harness e endpoint de MCP gateway interno como ponto de controle"
     },
     {
       "titulo": "Identidade do agente com XAA e ID-JAG",
       "texto": "Com Cross App Access, sandbox e gateway informam em nome de quem o agente age. Eles trocam essas declarações com o provedor de identidade da empresa e recebem uma concessão de autorização (ID-JAG) para os mesmos servidores OAuth de Notion, GitHub ou Slack. O SSO existente é reaproveitado e a administração fica central.",
       "t": 783,
       "legenda": "O agente obtém acesso pelo SSO que a empresa já tem",
-      "print": "img/ZUZVNKFSmTM/4.jpg"
+      "print": "img/ZUZVNKFSmTM/4.jpg",
+      "descricao": "Diagrama de fluxo SSO para agentes com Enterprise IM e resource servers"
     }
   ],
   "conceitos": [
@@ -200,5 +205,36 @@
       "contexto": "MCPs que um fluxo pode usar, sem expor todos a cada sandbox",
       "t": 875
     }
-  ]
+  ],
+  "rotulo": "Agente com zero credenciais: sandboxes por papel",
+  "objetivo": "dividir um fluxo de agente em sandboxes por papel, para nunca juntar entrada não confiável com ferramenta perigosa",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Como o exemplo da redação separa os sandboxes?",
+      "resposta": "O pesquisador navega pela web, mas não tem ferramenta de escrita. O verificador lê a pesquisa e consulta fatos, sem rede. O publicador vê só material filtrado e tem a ferramenta de publicar, sem rede."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como aplicar essa ideia aos agentes que você usa hoje?",
+      "resposta": "Liste as ferramentas e credenciais de cada agente e remova as que a tarefa não exige. Separe o agente que lê conteúdo externo do que escreve em sistemas sensíveis e entregue chaves só no momento do uso."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidências faltam para a proposta do Docker?",
+      "resposta": "Não há dados de incidentes, testes de ataque nem comparação com outras abordagens. Os exemplos são ilustrativos, o talk em parte divulga o sbx, produto do Docker, e a promessa do XAA depende de um SSO bem configurado."
+    }
+  ],
+  "experimento": {
+    "titulo": "Auditoria de ferramentas e credenciais",
+    "minutos": 25,
+    "precisa": "Os agentes ou assistentes de código que você usa e um bloco de notas",
+    "passos": [
+      "Liste cada agente que você usa e as ferramentas, tokens e chaves que ele acessa.",
+      "Para cada item, marque se a tarefa realmente exige.",
+      "Marque os agentes que leem conteúdo externo e também escrevem em sistemas sensíveis.",
+      "Escreva como você dividiria um deles em dois papéis."
+    ],
+    "sucesso": "Você marcou ao menos uma credencial para remover e tem um desenho de divisão em dois papéis."
+  }
 }

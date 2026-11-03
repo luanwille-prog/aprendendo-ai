@@ -28,28 +28,32 @@
       "texto": "O grafo cataloga serviços, endpoints, a linha de código de cada implementação, chamadas entre serviços e o caminho dos dados até bancos e caches. A regra do time é que cada ponto aponte para uma verdade concreta: uma linha de código ou um trace de telemetria de produção. O LLM indexa tudo, mas não inventa relações.",
       "t": 322,
       "legenda": "O que entra no grafo e a regra de só aceitar dado verificável.",
-      "print": "img/k2ClBT4aqAg/1.jpg"
+      "print": "img/k2ClBT4aqAg/1.jpg",
+      "descricao": "Slide com o princípio do grafo: indexado por LLMs, mas cada dado ancorado em código ou telemetria de produção."
     },
     {
       "titulo": "Evals saem de PRs reais e decisões de design já tomadas",
       "texto": "O time pegou PRs reais, registrou a intenção do desenvolvedor e o resultado final, e usou decisões de design documentadas como gabarito. Comparou três configurações: o agente da Postman com o grafo, o Claude Code com busca de código no GitHub e o Claude Code com o grafo como skill. Cada eval recebe nota de 0 a 5, e o gráfico cruza nota com tokens gastos.",
       "t": 455,
       "legenda": "Como ler o gráfico: canto superior esquerdo é bom e barato.",
-      "print": "img/k2ClBT4aqAg/2.jpg"
+      "print": "img/k2ClBT4aqAg/2.jpg",
+      "descricao": "Gráfico de dispersão com eixo de nota (0 a 5) e tokens, com linha horizontal de referência e pontos das configurações."
     },
     {
       "titulo": "O ganho maior apareceu em redesenho e análise de impacto",
       "texto": "Em descoberta de API, a diferença para o Claude Code foi pequena, mas o grafo superou a busca simples. No redesenho, o agente com grafo identificou os formatos de entrada usados por cada consumidor de uma API, enquanto a busca simples foi mal e o Claude com skill desistiu cedo. Na análise de impacto, a qualidade subiu e o gasto de tokens caiu para cerca de metade ou um terço da busca de código.",
       "t": 728,
       "legenda": "Mais qualidade com bem menos tokens que a busca de código.",
-      "print": "img/k2ClBT4aqAg/3.jpg"
+      "print": "img/k2ClBT4aqAg/3.jpg",
+      "descricao": "Gráfico nota contra tokens com marcadores de Postman, Claude + CG e Claude; Postman aparece no topo, com legendas pequenas."
     },
     {
       "titulo": "Grafo desatualizado derruba a nota e a confiança",
       "texto": "Em um eval de impacto de um PR, o resultado se inverteu: nota baixa e muito consumo de tokens. A causa foi que surgiram novos consumidores entre a escrita do eval e a execução. Para o palestrante, atraso na sincronização gera lacunas, as lacunas fazem o desenvolvedor perder a confiança e ele deixa de usar. Remoções de APIs e dependências também precisam ser detectadas.",
       "t": 759,
       "legenda": "A falha com dados defasados: nota baixa e consumo alto de tokens.",
-      "print": "img/k2ClBT4aqAg/4.jpg"
+      "print": "img/k2ClBT4aqAg/4.jpg",
+      "descricao": "Gráfico nota contra tokens do caso de falha: Claude no alto à esquerda, Postman no alto à direita e Claude + CG embaixo."
     }
   ],
   "conceitos": [
@@ -170,5 +174,36 @@
       "contexto": "dos PRs dos 10 maiores repositórios afetaram APIs",
       "t": 819
     }
-  ]
+  ],
+  "rotulo": "Um mapa de APIs para agentes em microsserviços",
+  "objetivo": "montar um eval pequeno com PRs antigos para medir se um mapa de APIs melhora o agente de código, contando nota e tokens",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que regra a Postman impõe a cada dado do grafo de contexto de API?",
+      "resposta": "Cada ponto precisa apontar para uma verdade concreta, que é uma linha de código ou um trace de telemetria de produção. O LLM indexa tudo, mas o dado precisa ter lastro."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você mediria se dar mais contexto ao seu agente de código compensa?",
+      "resposta": "Montar um eval com PRs antigos, guardar o resultado real como gabarito e rodar o agente com e sem o contexto extra. Medir nota e consumo de tokens juntos, porque um contexto que dobra o custo muda a conta."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que lacunas enfraquecem os resultados mostrados nos gráficos do talk?",
+      "resposta": "Os evals são internos, sem número de casos, notas exatas ou repetições, e os gráficos mostram tendências. O Claude Code usado como comparação não tem a configuração detalhada. O custo de manter o grafo atualizado não é quantificado."
+    }
+  ],
+  "experimento": {
+    "titulo": "Eval de PRs antigos com e sem contexto extra",
+    "minutos": 45,
+    "precisa": "Um repositório com PRs antigos, um agente de código e uma planilha",
+    "passos": [
+      "Escolha três PRs antigos pequenos e escreva a tarefa de cada um como um pedido ao agente.",
+      "Guarde o diff real de cada PR como gabarito.",
+      "Rode o agente sem contexto extra e depois com um arquivo que descreve os serviços e APIs relevantes.",
+      "Dê nota de 0 a 5 a cada resultado e anote os tokens gastos na planilha."
+    ],
+    "sucesso": "Você tem uma tabela com nota e tokens das duas condições para os três PRs e sabe dizer se o contexto extra valeu o custo."
+  }
 }

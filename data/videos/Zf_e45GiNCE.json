@@ -21,21 +21,24 @@
       "texto": "Containers e VMs podem levar de segundos a minutos para subir quando a demanda dispara. Para evitar isso, as equipes mantêm servidores ociosos, o que aumenta a conta de nuvem e o impacto ambiental. Soluções de nível mais alto costumam trazer SDKs proprietários, e migrar depois fica caro.",
       "t": 96,
       "legenda": "O slide lista os atritos das arquiteturas presas a uma região.",
-      "print": "img/Zf_e45GiNCE/0.jpg"
+      "print": "img/Zf_e45GiNCE/0.jpg",
+      "descricao": "slide 'Cold Starts' listando containers e VMs que levam de segundos a minutos para subir"
     },
     {
       "titulo": "WebAssembly como contêiner mais leve",
       "texto": "O palestrante compara WebAssembly a containers como containers são a VMs: binários pequenos, fáceis de distribuir e rápidos de iniciar. O Spin, projeto da CNCF, reúne CLI, runtime baseado em Wasmtime e SDKs por linguagem. O Akamai Functions é a plataforma que executa esses binários no mundo todo.",
       "t": 219,
       "legenda": "O slide mostra as peças do Spin que compõem a pilha edge native.",
-      "print": "img/Zf_e45GiNCE/1.jpg"
+      "print": "img/Zf_e45GiNCE/1.jpg",
+      "descricao": "slide 'CNCF Spin' com os três pilares CLI, runtime e SDKs, e QR code da documentação"
     },
     {
       "titulo": "Montar um MCP só com a lógica de negócio",
       "texto": "O wasmcp gera um projeto com as ferramentas (tools) e cuida de autenticação e protocolo. O fluxo da demo é wasmcp new, make para compilar em Wasm, wasmcp compose para montar o servidor e spin up para rodar local. Depois o MCP Inspector confirma que a ferramenta responde.",
       "t": 565,
       "legenda": "A demo mostra o caminho do scaffold até o servidor MCP rodando em localhost.",
-      "print": "img/Zf_e45GiNCE/2.jpg"
+      "print": "img/Zf_e45GiNCE/2.jpg",
+      "descricao": "terminal com a saída do build do componente e comandos de wasmcp compose para montar o servidor MCP"
     },
     {
       "titulo": "Deploy global com um comando",
@@ -204,5 +207,36 @@
       "contexto": "ciclo completo do agente passando pelo LLM",
       "t": 1196
     }
-  ]
+  ],
+  "rotulo": "MCP e agentes sem cold start com WebAssembly",
+  "objetivo": "medir o cold start dos seus serviços e montar um servidor MCP em WebAssembly que separa a lógica de negócio de autenticação e protocolo",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que o palestrante propõe WebAssembly no lugar de containers e VMs?",
+      "resposta": "Containers e VMs sofrem com cold start e regiões únicas, o que leva a manter servidores ociosos. Wasm gera binários pequenos, portáteis, rápidos de iniciar e isolados por padrão."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Antes de migrar um MCP ou agente para outra plataforma, o que você mediria e perguntaria?",
+      "resposta": "Meça o cold start real que você tem hoje e pergunte ao fornecedor quais SDKs ou formatos proprietários exige, quanto custaria migrar depois e se há benchmark reproduzível."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que os números do talk não sustentam a comparação com outras plataformas?",
+      "resposta": "O palestrante é advocate da Akamai. Os números (menos de 0,5 ms, 60 segundos, 33 ms) vêm de demos e afirmações da empresa, sem benchmark contra Lambda, Cloudflare Workers ou containers, e os cerca de 820 ms vêm de poucas tentativas."
+    }
+  ],
+  "experimento": {
+    "titulo": "Medir o cold start de um serviço em container",
+    "minutos": 25,
+    "precisa": "Docker, Python ou Node, e um servidor HTTP mínimo",
+    "passos": [
+      "Crie um servidor HTTP mínimo que responde ok e empacote em um container.",
+      "Pare o container e meça o tempo até a primeira resposta depois de iniciá-lo, repetindo 5 vezes.",
+      "Meça 5 chamadas seguidas com o container já quente e compare.",
+      "Anote a diferença e se ela importaria para um usuário esperando a resposta."
+    ],
+    "sucesso": "Você tem a média de cold start e a média com o serviço quente, e uma frase dizendo se a diferença pesa no seu caso."
+  }
 }

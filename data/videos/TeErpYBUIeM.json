@@ -21,35 +21,40 @@
       "texto": "Observabilidade (tracing e monitoramento) mostra como usuários usam o agente. Datasets e evals offline testam mudanças antes do deploy. Sem juntar os dois, o benchmark usa dados desatualizados ou o monitoramento nunca vira teste. Por muito tempo, esse ciclo exigiu trabalho manual de olhar traces toda semana.",
       "t": 126,
       "legenda": "O ciclo online + offline que sustenta a melhoria de um agente.",
-      "print": "img/TeErpYBUIeM/0.jpg"
+      "print": "img/TeErpYBUIeM/0.jpg",
+      "descricao": "Slide com o processo de referência: Trace, Monitor, Build datasets, Experiment e Evaluate, com a seta de deploy de volta ao trace."
     },
     {
       "titulo": "Camadas de loops e onde o humano fica",
       "texto": "Klingen mostra loops empilhados, do próximo token até a definição de metas humanas. Os modelos atuais permitem automatizar os loops de nível médio. Os humanos seguem alinhando o dataset com o uso real e definindo como avaliar, porque a IA pode se ajustar demais ao dataset e perseguir falhas irrelevantes.",
       "t": 253,
       "legenda": "As duas etapas azuis do loop 3 continuam com humanos.",
-      "print": "img/TeErpYBUIeM/1.jpg"
+      "print": "img/TeErpYBUIeM/1.jpg",
+      "descricao": "Diagrama de loops em camadas (token, turno do agente, goal, meta e roadmap) com as etapas que exigem humano destacadas em azul."
     },
     {
       "titulo": "IA mantém datasets e critérios de eval",
       "texto": "O uso mais comum é a IA propor correções do agente, com hill climbing (subir degrau a degrau) contra os datasets. Há cerca de um mês, mais times usam IA para atualizar datasets conforme o uso real e propor novos evaluators a partir de padrões de erro. O time revisa, porque esses critérios definem o alvo da otimização seguinte. Sem revisão, o risco é gerar mais lixo (slop).",
       "t": 346,
       "legenda": "Onde a IA já atua no loop e onde o humano valida.",
-      "print": "img/TeErpYBUIeM/2.jpg"
+      "print": "img/TeErpYBUIeM/2.jpg",
+      "descricao": "Diagrama Look at traces leva a Maintain eval criteria, Maintain datasets e Propose fixes, com as três caixas destacadas em amarelo."
     },
     {
       "titulo": "Menos tempo investido, qualidade maior",
       "texto": "O quadrante manual dá qualidade alta, mas custa muito tempo da equipe. A automação total custa pouco tempo, mas gera muitos tokens sem sentido. O ponto ideal combina o humano definindo direção e a IA fazendo o trabalho tedioso, olhando muito mais casos de erro do que uma pessoa aguentaria. Sinais implícitos do uso, como edições e aprovações, alimentam o processo.",
       "t": 503,
       "legenda": "Direção humana mais execução por IA rende mais qualidade com menos tempo.",
-      "print": "img/TeErpYBUIeM/3.jpg"
+      "print": "img/TeErpYBUIeM/3.jpg",
+      "descricao": "Gráfico de tempo investido contra qualidade, com manual AI engineering, automação total (agent slop) e a região ideal de colaboração humano-agente."
     },
     {
       "titulo": "Demo: changelog writer que se corrige",
       "texto": "Um agente escreve changelog e documentação, e pessoas aprovam ou pedem mudanças em PRs. Um coding agent usa as agent skills da Langfuse, nota que o texto vazava jargão interno e atualiza dataset e evaluators. Depois testa a V2 contra a V1: formato e precisão ficam iguais e a linguagem voltada ao usuário melhora.",
       "t": 842,
       "legenda": "Back-test mostra a V2 melhor em linguagem ao usuário sem perder precisão.",
-      "print": "img/TeErpYBUIeM/4.jpg"
+      "print": "img/TeErpYBUIeM/4.jpg",
+      "descricao": "Tabela de resultado do coding agent: user_facing_language sobe de 0.675 para 0.900 (+0.225), com format_compliance e accuracy sem regressão."
     }
   ],
   "conceitos": [
@@ -101,7 +106,7 @@
       "nome": "Agent skills",
       "traducao": "instruções empacotadas que ensinam o coding agent a usar uma ferramenta",
       "nivel": "intermediario",
-      "chave": "agent skills",
+      "chave": "skill",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -160,5 +165,36 @@
       "contexto": "ano em que a Langfuse começou, quando só se editava um HTML",
       "t": 221
     }
-  ]
+  ],
+  "rotulo": "Como fechar o loop de melhoria de um agente",
+  "objetivo": "desenhar um loop em que traces de produção alimentam um dataset e evals offline, com a IA no trabalho braçal e você nas metas",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais duas partes o loop de melhoria de um agente precisa juntar, segundo Klingen?",
+      "resposta": "Observabilidade em produção (tracing e monitoramento) e datasets com evals offline. Sem juntar os dois, o benchmark usa dados velhos ou o monitoramento nunca vira teste."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "No seu agente, que sinal implícito de uso (edição, aprovação, reclamação) poderia alimentar um dataset de teste?",
+      "resposta": "Qualquer ação do usuário sobre a saída do agente serve, como editar o texto, aprovar ou rejeitar um PR ou reclamar. Cada caso vira um exemplo com entrada, saída e veredito. A IA propõe os casos e você revisa."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites existem na demo do changelog writer e na ideia de que os melhores usuários já fazem assim?",
+      "resposta": "A demo é um caso interno que o próprio palestrante chama de yolo, e o agente só abre PRs. Não há métrica de tempo economizado nem amostra de times, e Klingen é cofundador da Langfuse, que vende a ferramenta."
+    }
+  ],
+  "experimento": {
+    "titulo": "Compare duas versões de prompt no mesmo dataset",
+    "minutos": 30,
+    "precisa": "Planilha e Claude ou ChatGPT, mais 10 exemplos reais de entrada e saída do seu agente",
+    "passos": [
+      "Junte 10 casos reais em uma planilha com entrada, saída e uma nota de 0 a 1 dada por você.",
+      "Peça a uma IA 3 critérios de avaliação a partir dos erros e corte os que não importam para o seu uso.",
+      "Escreva uma versão 2 do prompt que corrija o erro mais comum.",
+      "Rode a V1 e a V2 nos mesmos 10 casos e compare as notas por critério."
+    ],
+    "sucesso": "Você tem uma tabela com V1 e V2 lado a lado e sabe dizer qual critério melhorou e qual ficou igual."
+  }
 }

@@ -21,35 +21,40 @@
       "texto": "Quando o agente A entrega um arquivo (MD, PDF) ao agente B, o resultado vai, mas o raciocínio, os becos sem saída e as falhas anteriores ficam para trás. O agente B refaz tudo e você paga tokens por isso. Ranganathan compara com um novo membro de equipe que propõe 50 alternativas já descartadas.",
       "t": 189,
       "legenda": "O handoff passa o output e perde o raciocínio que levou até ele.",
-      "print": "img/9_oy4owGtPI/0.jpg"
+      "print": "img/9_oy4owGtPI/0.jpg",
+      "descricao": "Slide sobre handoff entre agentes: Agent A passa resultado, perde raciocínio, becos sem saída e contexto."
     },
     {
       "titulo": "Cinco equívocos sobre memória de agente",
       "texto": "Mais memória, estado compartilhado, RAG em tudo, fine-tuning e janela de contexto maior não equivalem a aprendizado. Para o palestrante, cada um é uma lacuna de arquitetura. Ele pede contexto compartilhado, promovido sob supervisão (como código) e com origem rastreável.",
       "t": 237,
       "legenda": "Os cinco equívocos e os três requisitos de contexto compartilhado.",
-      "print": "img/9_oy4owGtPI/1.jpg"
+      "print": "img/9_oy4owGtPI/1.jpg",
+      "descricao": "Slide com cinco equívocos sobre aprendizado: mais memória, estado compartilhado, RAG, fine-tuning, contexto maior."
     },
     {
       "titulo": "Ajustar o RAG uma variável por vez",
       "texto": "O primeiro RAG da Yugabyte, montado com componentes recomendados pela academia, deu 14% de fidelidade em benchmark público de Markdown. Com traces e testes de uma variável por vez, chegou a 82%. Os chunks recuperados caíram de mais de 7.000 para cerca de 1.000.",
       "t": 407,
       "legenda": "A melhora de 14% para 82% veio de ajustes isolados, medidos com traces.",
-      "print": "img/9_oy4owGtPI/2.jpg"
+      "print": "img/9_oy4owGtPI/2.jpg",
+      "descricao": "Gráfico de evolução: faithfulness sobe de 14% para 82%, chunks caem de 7.550 para 1.069."
     },
     {
       "titulo": "Memória privada, promoção e memória compartilhada",
       "texto": "Na demo, Heather Downing salva um fato no Claude Desktop e o Codex não o enxerga, porque a memória ainda é privada. Depois de promover só aquele item ao espaço compartilhado, o Codex o encontra. A promoção é granular e feita por um humano.",
       "t": 903,
       "legenda": "A memória só aparece para outro agente depois que um humano a promove.",
-      "print": "img/9_oy4owGtPI/3.jpg"
+      "print": "img/9_oy4owGtPI/3.jpg",
+      "descricao": "Gravação da demo do Meko com interface de datapacks e controle de versão de memória de agente."
     },
     {
       "titulo": "Promoção humana como sinal de treino",
       "texto": "Cada vez que uma pessoa decide que algo merece ser guardado, gera um exemplo rotulado do que é um bom contexto. A Yugabyte sugere que isso pode treinar no futuro um agente que faça a promoção sozinho, mas hoje mantém o humano no loop. Os traces mostram cada tool call, o que permitiria conferir a economia de tokens.",
       "t": 975,
       "legenda": "Os traces do data pack mostram as tool calls e o gasto de tokens.",
-      "print": "img/9_oy4owGtPI/4.jpg"
+      "print": "img/9_oy4owGtPI/4.jpg",
+      "descricao": "Interface Meko mostrando datapacks com conversas armazenadas e acesso compartilhado entre agentes."
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "chunks de contexto, cerca de um sétimo",
       "t": 437
     }
-  ]
+  ],
+  "rotulo": "Aprendizado compartilhado entre agentes, além da memória",
+  "objetivo": "projetar a passagem de trabalho entre agentes preservando decisões, becos sem saída e origem de cada informação",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que se perde quando um agente passa trabalho a outro só com o arquivo final?",
+      "resposta": "Perde-se o raciocínio, os becos sem saída e as falhas anteriores. O segundo agente refaz tudo e você paga tokens de novo."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você ajustaria o RAG do seu projeto seguindo o exemplo do talk?",
+      "resposta": "Mude uma variável por vez (tamanho do chunk, número de resultados, re-ranking) e meça fidelidade e precisão do contexto antes de adicionar documentos. No exemplo, a fidelidade foi de 14% para 82%."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que tratar com cautela a economia de tokens e o ganho de 14% para 82%?",
+      "resposta": "O palestrante apresenta o Meko, produto da própria Yugabyte. A economia de tokens não foi medida na demo, e o ganho vem de um pipeline interno, sem detalhar as variáveis nem o benchmark."
+    }
+  ],
+  "experimento": {
+    "titulo": "Arquivo de handoff entre duas conversas",
+    "minutos": 30,
+    "precisa": "Claude Code ou ChatGPT e uma tarefa de pesquisa pequena",
+    "passos": [
+      "Peça a um agente que pesquise uma questão técnica e entregue só o resumo final.",
+      "Abra uma segunda conversa, entregue só o resumo e peça para continuar a tarefa.",
+      "Repita com um arquivo de handoff que inclui decisões, alternativas descartadas e erros.",
+      "Compare quanto trabalho repetido a segunda conversa fez nas duas versões."
+    ],
+    "sucesso": "Na versão com handoff completo, o segundo agente não repete alternativas já descartadas."
+  }
 }

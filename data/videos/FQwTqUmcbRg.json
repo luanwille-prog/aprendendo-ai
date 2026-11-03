@@ -21,35 +21,40 @@
       "texto": "Se você só pede ao modelo um exemplo sintético, ele repete os padrões mais comuns dos dados em que foi treinado. A DatologyAI parte de documentos de alta qualidade do próprio cliente e pede ao modelo para reescrever ou reestruturar cada um. O documento original funciona como semente e mantém a variedade do conjunto. Na prática, o pipeline junta um prompt a cada documento e distribui o trabalho por várias GPUs.",
       "t": 300,
       "legenda": "O dado sintético nasce de um documento real usado como semente.",
-      "print": "img/FQwTqUmcbRg/0.jpg"
+      "print": "img/FQwTqUmcbRg/0.jpg",
+      "descricao": "Slide mostrando o fluxo: Targeted Dataset para GPUs gerando Synthetic Dataset com reescrita de texto."
     },
     {
       "titulo": "BeyondWeb promete o mesmo resultado com menos tokens",
       "texto": "Nos gráficos do paper BeyondWeb, modelos de 1B, 3B e 8B parâmetros treinados com a receita da empresa superam conjuntos como Nemotron-Synth, Cosmopedia, WRAP e RedPajama. O modelo de 3B chega perto do de 8B treinado com Nemotron-Synth. A empresa diz que alcança a mesma acurácia com 2,7 vezes menos tokens que o Nemotron-Synth e 5,3 vezes menos que o Cosmopedia (3:40).",
       "t": 165,
       "legenda": "Comparação da própria DatologyAI entre BeyondWeb e outros conjuntos sintéticos.",
-      "print": "img/FQwTqUmcbRg/1.jpg"
+      "print": "img/FQwTqUmcbRg/1.jpg",
+      "descricao": "Gráfico de acurácia por tamanho de modelo (1B, 3B, 8B) comparando BeyondWeb com outros conjuntos sintéticos."
     },
     {
       "titulo": "Um pipeline só para pesquisa e produto",
       "texto": "No começo, a pesquisa gerava dados sintéticos num cluster Slurm (agendador de jobs comum em computação científica), longe do pipeline de produto em Kubernetes. Mover dados entre os dois era manual e as GPUs ficavam ociosas. Hoje tudo roda em Kubernetes, com Spark para curadoria, Ray para jobs distribuídos e vLLM para inferência. Um agendador interno encadeia curadoria, geração, treino e eval (avaliação) num único fluxo.",
       "t": 470,
       "legenda": "A mesma infraestrutura atende pesquisa e produto.",
-      "print": "img/FQwTqUmcbRg/2.jpg"
+      "print": "img/FQwTqUmcbRg/2.jpg",
+      "descricao": "Diagrama da arquitetura com Control Cluster, Compute Cluster e H100 Compute Cluster na AWS com GCP."
     },
     {
       "titulo": "Metadados e falhas de GPU travam a escala",
       "texto": "Buscar metadados de milhões de partições no S3, uma requisição por vez, levaria de 9 a 11 dias e esbarraria no limite de taxa da AWS. Com requisições em lote de até mil itens, o tempo caiu para cerca de 2 horas (11:40). Para as GPUs que falham, a equipe reduziu o tamanho das partições e passou a salvar checkpoints periódicos no S3. Assim, uma falha custa minutos em vez de um job de oito horas.",
       "t": 700,
       "legenda": "Requisições em lote derrubaram a busca de metadados de dias para horas.",
-      "print": "img/FQwTqUmcbRg/3.jpg"
+      "print": "img/FQwTqUmcbRg/3.jpg",
+      "descricao": "Diagrama do gargalo S3: requisições em lote entre Ray head e GPU workers com metadados listados em batch."
     },
     {
       "titulo": "Agendar CPU e GPU juntas e calibrar o vLLM",
       "texto": "Um job Ray precisa de CPU num cluster e de GPU em outro. Se só um dos recursos estiver livre, o job trava. A equipe criou pools dedicados por tipo de recurso e passou a agendar CPU e GPU de forma atômica, como um problema de bin packing (encaixe de caixas). Na inferência, uma varredura dos parâmetros do vLLM, como tamanho de lote e speculative decoding, rendeu cerca de 40% mais vazão (18:10).",
       "t": 1095,
       "legenda": "Só ajustar flags do vLLM deu cerca de 40% mais vazão.",
-      "print": "img/FQwTqUmcbRg/4.jpg"
+      "print": "img/FQwTqUmcbRg/4.jpg",
+      "descricao": "Slide sobre otimização de inferência vLLM mostrando ganho de 40% com varredura de parâmetros e speculative decoding."
     }
   ],
   "conceitos": [
@@ -302,5 +307,36 @@
       "contexto": "tokens sintéticos gerados: 7 tri de web e 5 tri de math e código",
       "t": 1170
     }
-  ]
+  ],
+  "rotulo": "Lições de gerar 12 trilhões de tokens sintéticos",
+  "objetivo": "explicar como a reescrita de documentos reais gera dados sintéticos e apontar os gargalos de engenharia em escala",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Como a DatologyAI evita que o modelo repita só os padrões mais comuns ao gerar dados sintéticos?",
+      "resposta": "Parte de documentos reais de alta qualidade e pede ao LLM que reescreva ou reestruture cada um. O original serve de semente e mantém a variedade do conjunto."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você vai processar milhares de arquivos com um LLM num job longo. O que faz para uma falha não custar horas?",
+      "resposta": "Divide a entrada em partições pequenas e salva checkpoints periódicos, sempre no mesmo arquivo. Assim o retry não duplica dados e a falha custa minutos."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que receber com cautela os resultados do BeyondWeb?",
+      "resposta": "O palestrante é CTO da empresa e os comparativos são dela. Ele admite que os gráficos são antigos, não detalha método nem custo dos ganhos e não discute riscos como perda de diversidade."
+    }
+  ],
+  "experimento": {
+    "titulo": "Reescrever textos reais em vez de inventar",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT e de 5 a 10 textos seus, como notas ou respostas de FAQ",
+    "passos": [
+      "Peça ao modelo 10 exemplos inventados do zero sobre um tema do seu trabalho.",
+      "Peça a reescrita de cada um dos seus textos reais em outro formato, como perguntas e respostas.",
+      "Compare nos dois conjuntos a variedade de temas, termos e estruturas.",
+      "Anote quais exemplos inventados repetem o mesmo padrão."
+    ],
+    "sucesso": "Você aponta, no seu material, quais exemplos repetem o mesmo padrão e quais mantêm a variedade dos textos originais."
+  }
 }

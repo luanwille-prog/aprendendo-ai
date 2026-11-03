@@ -21,21 +21,24 @@
       "texto": "Quando um site não tem API nem MCP, o agente só chega aos dados por um navegador. Ramp, Bill e Stripe lidam com portais de login e proteção anti-bot, e antes dos agentes pagavam times de pessoas para clicar nessas telas.",
       "t": 100,
       "legenda": "Os três casos dependem de dados atrás de login e anti-bot.",
-      "print": "img/DZ24Xbm9Joc/0.jpg"
+      "print": "img/DZ24Xbm9Joc/0.jpg",
+      "descricao": "Slide 'What do these companies have in common?' com os logos de Ramp, Bill e Stripe"
     },
     {
       "titulo": "Por que o Chromium comum é barrado no data center",
       "texto": "Num servidor, cada execução do navegador sem interface (headless) gera uma impressão digital nova, cookies vazios e um IP de data center. O site lê isso como robô. Trocar de proxy ajuda pouco, porque o Chromium continua o mesmo.",
       "t": 252,
       "legenda": "O site reconhece um humano pela impressão digital e pelo histórico.",
-      "print": "img/DZ24Xbm9Joc/1.jpg"
+      "print": "img/DZ24Xbm9Joc/1.jpg",
+      "descricao": "Slide 'What does the website see?' com os três grupos: navegador, sessão e tráfego"
     },
     {
       "titulo": "Fork do Chromium com três mudanças",
       "texto": "A Browserbase mantém um fork do Chromium. Ela troca o sinal webdriver de verdadeiro para falso, muda a identidade de headless Chrome para Chrome e mantém o processo vivo, fechando só as janelas. O Chromium muda a cada duas semanas, então o fork exige manutenção constante.",
       "t": 406,
       "legenda": "Remover flag de automação, alinhar identidade e manter o processo vivo.",
-      "print": "img/DZ24Xbm9Joc/2.jpg"
+      "print": "img/DZ24Xbm9Joc/2.jpg",
+      "descricao": "Slide 'Three changes.' com as três mudanças no Chromium e trechos de código (webdriver, Chrome, process lifecycle)"
     },
     {
       "titulo": "Stagehand corta o HTML de 122 mil para 4 mil tokens",
@@ -49,7 +52,8 @@
       "texto": "Na demo final, o mesmo código usa extract para pesquisar site, relações com investidores, SEC e bolsa de Nova York de 20 empresas ao mesmo tempo. O palestrante diz que a visualização ao vivo serve para desenvolvimento, não para produção.",
       "t": 1086,
       "legenda": "Um único código roda em vários sites em paralelo na nuvem.",
-      "print": "img/DZ24Xbm9Joc/4.jpg"
+      "print": "img/DZ24Xbm9Joc/4.jpg",
+      "descricao": "Grade de 20 empresas com 60 navegadores em paralelo, incluindo Chipotle e JPMorgan Chase, rodando ao vivo"
     }
   ],
   "conceitos": [
@@ -159,5 +163,36 @@
       "contexto": "tokens com a árvore de acessibilidade",
       "t": 807
     }
-  ]
+  ],
+  "rotulo": "Agentes que usam sites sem API com navegador",
+  "objetivo": "decidir quando um agente precisa de um navegador e extrair dados de um site com schema fixo, medindo taxa de sucesso e custo",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que o Chromium comum é barrado quando roda em data center?",
+      "resposta": "Cada execução headless gera uma impressão digital nova, cookies vazios e IP de data center, e o site lê isso como robô. Trocar de proxy ajuda pouco porque o Chromium continua o mesmo."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que tarefa manual sua em portal sem API você automatizaria e o que verificaria antes?",
+      "resposta": "Liste tarefas como baixar recibos ou checar cadastros. Antes de automatizar, confira os termos de uso do site e use API ou MCP oficial se existir. Comece pelo extract com schema fixo em poucos sites."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Quais problemas o talk deixa de lado?",
+      "resposta": "É pitch da Browserbase, e os números da Ramp (30 mil horas, escala 5x) vêm do palestrante, sem fonte externa. Faltam taxa de sucesso, custo por tarefa e dados de bloqueio. Burlar anti-bot pode violar termos de uso, e o talk não discute isso."
+    }
+  ],
+  "experimento": {
+    "titulo": "Extrair dados de um site com schema fixo",
+    "minutos": 40,
+    "precisa": "Python ou Node com Stagehand ou Playwright, e um site público que permita automação",
+    "passos": [
+      "Escolha um site público cujos termos permitam automação e defina três campos a extrair.",
+      "Escreva um schema fixo com esses três campos.",
+      "Rode a extração em duas ou três páginas, com Stagehand ou outro agente de navegador.",
+      "Anote a taxa de acerto e quanto tempo cada página levou."
+    ],
+    "sucesso": "Você extraiu os três campos em ao menos duas páginas e tem a taxa de acerto e o tempo anotados."
+  }
 }

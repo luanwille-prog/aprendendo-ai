@@ -21,35 +21,40 @@
       "texto": "Quem registra todas as ferramentas de dez servidores MCP no início da conversa perde cerca de um terço da janela de contexto antes da primeira pergunta. Čurn lembra que a especificação do MCP não diz nada sobre como montar o harness (a estrutura que roda o agente). Quem constrói o agente decide como usar o protocolo.",
       "t": 167,
       "legenda": "Carregar 100 ferramentas de uma vez consome o contexto antes do trabalho começar.",
-      "print": "img/pAnLpiAG6Es/0.jpg"
+      "print": "img/pAnLpiAG6Es/0.jpg",
+      "descricao": "Diagrama mostrando modelo, cliente MCP com contexto completo e servidor MCP, exemplificando o inchaço de contexto."
     },
     {
       "titulo": "Três correções: subagentes, descoberta progressiva e Code Mode",
       "texto": "Subagentes isolam o contexto, mas o custo em tokens continua e dados sensíveis ainda circulam. A descoberta progressiva (a ferramenta tool search da Anthropic) carrega só as ferramentas necessárias. O Code Mode, da Cloudflare, transforma ferramentas MCP em código que o modelo navega com grep. Segundo Čurn, modelos escrevem código melhor do que chamam ferramentas, porque tool calling é uma construção artificial.",
       "t": 351,
       "legenda": "No Code Mode, as ferramentas viram código que o modelo consulta sob demanda.",
-      "print": "img/pAnLpiAG6Es/1.jpg"
+      "print": "img/pAnLpiAG6Es/1.jpg",
+      "descricao": "Código TypeScript da classe Filesystem_MCP com métodos como readFile, writeFile e createDirectory, representando Code Mode."
     },
     {
       "titulo": "Por que agentes preferem CLIs",
       "texto": "O agente nunca carrega uma CLI inteira no contexto. Ele chama o comando só quando precisa, lê o help se for preciso e já conhece o shell dos dados de treino. Rodar CLI é Code Mode por padrão. O ponto fraco é a falta de protocolo padrão de transporte, de autenticação e de observação, o que complica o uso em empresas e o acesso remoto.",
       "t": 507,
       "legenda": "O shell aparece muito nos dados de treino, e os modelos o usam bem.",
-      "print": "img/pAnLpiAG6Es/2.jpg"
+      "print": "img/pAnLpiAG6Es/2.jpg",
+      "descricao": "Terminal exibindo CLI tools sendo usados como código com quatro agentes delegados (email, relatório, resumo, spam)."
     },
     {
       "titulo": "mcpc: MCP escondido atrás de um comando bash",
       "texto": "O mcpc é um cliente CLI leve, sem LLM, que envolve o protocolo MCP. Na demo, Čurn conecta um servidor local por stdio e um servidor remoto com login OAuth, guarda credenciais no chaveiro do sistema e mantém sessões persistentes. O comando grep busca ferramentas, a flag de JSON permite encadear com jq e o suporte a tarefas assíncronas deixa o trabalho rodando no servidor.",
       "t": 880,
       "legenda": "A busca por grep faz a descoberta progressiva de ferramentas na linha de comando.",
-      "print": "img/pAnLpiAG6Es/3.jpg"
+      "print": "img/pAnLpiAG6Es/3.jpg",
+      "descricao": "Terminal mostrando comandos mcpc listando ferramentas e recursos de múltiplos servidores MCP com OAuth configurado."
     },
     {
       "titulo": "Connector Evals compara MCP, CLI e mcpc",
       "texto": "A Apify criou um framework que compara conectores, não agentes. Nos gráficos de tempo contra custo em tokens, mcpc e CLI ficam parecidos e o MCP puro termina antes, mas gasta mais tokens. O próprio palestrante diz que os testes ainda são iniciais.",
       "t": 1040,
       "legenda": "No gráfico, mcpc e CLI ficam próximos e o MCP puro gasta mais tokens.",
-      "print": "img/pAnLpiAG6Es/4.jpg"
+      "print": "img/pAnLpiAG6Es/4.jpg",
+      "descricao": "Gráfico de linhas comparando tempo de execução versus custo em tokens para MCP puro, CLI e mcpc."
     }
   ],
   "conceitos": [
@@ -200,5 +205,36 @@
       "contexto": "ano de criação do Unix, citado como base do shell",
       "t": 507
     }
-  ]
+  ],
+  "rotulo": "MCP e CLI sem encher o contexto do agente",
+  "objetivo": "diagnosticar o inchaço de contexto de um cliente MCP e escolher entre MCP e CLI para cada tipo de tarefa",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Segundo Čurn, de onde vem o consumo excessivo de contexto associado ao MCP?",
+      "resposta": "De clientes ingênuos que carregam todas as ferramentas de vários servidores de uma vez. Com 10 servidores são cerca de 100 ferramentas, e até um terço da janela some antes da primeira pergunta."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Quando você usaria MCP e quando usaria uma CLI no seu agente?",
+      "resposta": "MCP para serviços remotos que exigem login e permissões. CLI para tarefas locais, como arquivos e scripts, porque o agente já conhece o shell e chama os comandos aos poucos."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que desconfiar dos gráficos do Connector Evals?",
+      "resposta": "São da própria Apify, que vende o mcpc, e aparecem só em gráficos rápidos, sem número de tarefas, repetições ou margem de erro. O próprio palestrante os chama de iniciais."
+    }
+  ],
+  "experimento": {
+    "titulo": "Medir o peso das ferramentas MCP no contexto",
+    "minutos": 25,
+    "precisa": "Um cliente de agente (como o Claude Code) com pelo menos 2 servidores MCP conectados",
+    "passos": [
+      "Abra uma sessão nova e veja quanto do contexto já está ocupado antes da primeira pergunta.",
+      "Desconecte um servidor que você pouco usa e repita a medição.",
+      "Faça a mesma tarefa pequena com MCP e com a CLI equivalente.",
+      "Anote tokens e tempo de cada caso."
+    ],
+    "sucesso": "Você tem o percentual do contexto ocupado por ferramentas antes e depois, e uma comparação de tokens entre MCP e CLI na mesma tarefa."
+  }
 }

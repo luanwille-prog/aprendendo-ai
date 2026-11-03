@@ -28,28 +28,32 @@
       "texto": "Com o plugin, o agente recebe as diretrizes do projeto e um mapa de como o código se conecta antes da primeira linha. A cada edição, uma checagem rápida roda. Antes de encerrar o turno, roda uma checagem mais profunda de fluxo de dados entre arquivos. O problema volta ao agente, que corrige e é checado de novo.",
       "t": 342,
       "legenda": "O mapa leva o agente direto aos arquivos, e cada edição passa por checagem.",
-      "print": "img/8vDzncmzxyg/1.jpg"
+      "print": "img/8vDzncmzxyg/1.jpg",
+      "descricao": "Slide de apresentação do SonarVortex com o lema 'Guide and verify, inside the agent's coding loop'."
     },
     {
       "titulo": "Contexto inicial pesa mais que o resto",
       "texto": "O palestrante diz que, fora a escolha do modelo, o contexto e a orientação dados no início são a alavanca principal do desempenho do agente. Na demo, o agente consulta onde a classe vive e quais são as diretrizes de Java antes de codar. Regras próprias da equipe entram nesse mesmo momento.",
       "t": 624,
       "legenda": "O agente pergunta ao Sonar onde está o código e quais regras seguir.",
-      "print": "img/8vDzncmzxyg/2.jpg"
+      "print": "img/8vDzncmzxyg/2.jpg",
+      "descricao": "Terminal do Claude Code com o comando 'sonar context navigation' e a busca de guidelines de Java antes da implementação."
     },
     {
       "titulo": "Checagem determinística no lugar de IA revisando IA",
       "texto": "O palestrante afirma que o agente revisar a si mesmo, ou outro agente revisar, costuma deixar passar problemas e alucinar. Uma análise determinística devolve o mesmo resultado a cada execução, o que a torna previsível e auditável. Ele a coloca como camada extra, ao lado de revisão por IA.",
       "t": 812,
       "legenda": "A análise roda sozinha a cada arquivo editado, sem depender de outra IA.",
-      "print": "img/8vDzncmzxyg/3.jpg"
+      "print": "img/8vDzncmzxyg/3.jpg",
+      "descricao": "Terminal com o teste gerado no VS Code e o comando 'sonar analyze agentic --depth DEEP' rodando após a edição."
     },
     {
       "titulo": "A primeira correção foi rejeitada",
       "texto": "A análise achou seis problemas, dois em código novo e quatro em código antigo. O mais sério era um log gravado na pasta temporária padrão, sem dizer quem pode ler. A primeira correção dependia do padrão do Java, que em Mac e Linux já restringe ao dono. A regra do Sonar exige permissão explícita, então a análise rejeitou e o agente corrigiu de novo.",
       "t": 905,
       "legenda": "A regra exige permissão explícita, e a primeira correção não passou.",
-      "print": "img/8vDzncmzxyg/4.jpg"
+      "print": "img/8vDzncmzxyg/4.jpg",
+      "descricao": "Diff da primeira correção (createTempFile com comentário de permissão POSIX) e a nota de que dois achados estavam no código escrito."
     }
   ],
   "conceitos": [
@@ -170,5 +174,36 @@
       "contexto": "redução de quedas em produção, segundo a Sonar",
       "t": 436
     }
-  ]
+  ],
+  "rotulo": "Contexto e checagem para o agente que começa do zero",
+  "objetivo": "escrever um arquivo de convenções e rodar análise estática a cada edição de um agente de código",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que cada sessão de agente se parece com um funcionário novo?",
+      "resposta": "O agente não conhece convenções, regras de arquitetura nem bibliotecas aprovadas. Para escrever algo novo, vasculha o repositório, gastando tempo e tokens, e pode repetir problemas que já existem."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "O que você colocaria num arquivo que o agente lê no início da sessão?",
+      "resposta": "As convenções do projeto, as bibliotecas aprovadas e as regras de arquitetura, mais um mapa de onde cada coisa vive, para o agente consultar antes de escrever a primeira linha."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que fragiliza os números de 36% de economia e 44% menos quedas?",
+      "resposta": "É pitch do fornecedor, os números aparecem sem método, amostra ou comparação, a demo é uma gravação de um caso só e a pesquisa de 96% e 48% vem da própria Sonar, que vende verificação."
+    }
+  ],
+  "experimento": {
+    "titulo": "Arquivo de convenções mais análise a cada edição",
+    "minutos": 35,
+    "precisa": "Claude Code, um repositório seu e um linter ou ferramenta de análise estática",
+    "passos": [
+      "Escreva um AGENTS.md ou CLAUDE.md com convenções, bibliotecas aprovadas e comandos de teste.",
+      "Peça ao agente um endpoint novo e anote quantos arquivos ele leu antes de escrever.",
+      "Configure o agente para rodar o linter ou analisador a cada edição e peça o mesmo endpoint de novo.",
+      "Compare os problemas apontados e o esforço de exploração nas duas rodadas."
+    ],
+    "sucesso": "Você compara as duas rodadas e vê se o arquivo reduziu a exploração e se a análise pegou algo que os testes do agente não pegaram."
+  }
 }

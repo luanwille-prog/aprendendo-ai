@@ -21,35 +21,40 @@
       "texto": "O Claude Code testou banco vetorial e desistiu. Manter um índice sincronizado com código que muda o tempo todo custa caro. Além disso, um repositório é pequeno, semiestruturado, deixa pistas (imports, testes), tem hierarquia natural e já está no disco. Essas condições raramente existem em dados de empresa.",
       "t": 219,
       "legenda": "Lista de motivos pelos quais código dispensa índice vetorial.",
-      "print": "img/X4w2Pkz5tDY/0.jpg"
+      "print": "img/X4w2Pkz5tDY/0.jpg",
+      "descricao": "Slide 'But there's a catch': grep funciona para código porque ele é pequeno, estruturado, em texto puro e em disco. Quatro cards."
     },
     {
       "titulo": "A escala decide a abordagem",
       "texto": "Com cem a mil arquivos, o agente navega pelo sistema de arquivos dentro do contexto sem gastar muitos tokens. Com milhares ou milhões, ele precisa de uma bússola que indique a região certa antes de ler. Contexto maior também sai caro, e subagentes repetem o contexto completo, o que pesa em tokens e latência.",
       "t": 345,
       "legenda": "Escala de arquivos define entre grep local e índice.",
-      "print": "img/X4w2Pkz5tDY/1.jpg"
+      "print": "img/X4w2Pkz5tDY/1.jpg",
+      "descricao": "Slide 'It mostly comes down to how much data you have': faixa de escala de grep a semantic-first, de 10-100 arquivos a milhões."
     },
     {
       "titulo": "Cinco ferramentas em um harness",
       "texto": "Em vez de decidir sozinho entre RAG e grep, o sistema entrega ao agente um conjunto de ferramentas. A busca híbrida mostra onde procurar. Listar arquivos, filtrar por metadados e grep reduzem o conjunto. A leitura do documento, em texto parseado e em screenshot da página, fundamenta a resposta e evita alucinação.",
       "t": 537,
       "legenda": "As cinco ferramentas que compõem o harness de busca.",
-      "print": "img/X4w2Pkz5tDY/2.jpg"
+      "print": "img/X4w2Pkz5tDY/2.jpg",
+      "descricao": "Slide 'Build a harness, let the agent choose': compara busca semântica e grep isolados. Não lista as cinco ferramentas."
     },
     {
       "titulo": "Busca híbrida com fusão e reranking",
       "texto": "Palavra-chave (BM25) e busca semântica falham de formas diferentes. Combinar os dois com pesos e reordenar os 100 melhores resultados com um LLM dá resultados melhores nos benchmarks citados por ele. O palestrante recomenda essa combinação para uso corporativo.",
       "t": 685,
       "legenda": "Fusão de keyword e vetor supera cada método isolado.",
-      "print": "img/X4w2Pkz5tDY/3.jpg"
+      "print": "img/X4w2Pkz5tDY/3.jpg",
+      "descricao": "Slide 'Inside the tool: vector + keyword': gráfico NDCG@3 com keyword 40.6, vetor 43.8, fusão 48.4 e reranking 60.1."
     },
     {
       "titulo": "Demo com 135 arquivos da Alphabet",
       "texto": "A interface devolve trechos e screenshots das páginas de origem. O agente usa grep com regex e lê um intervalo de caracteres por offset, como se o armazenamento remoto fosse local. Ao final, monta a tabela de fluxo de caixa de 2021 a 2025 com base em vários arquivos.",
       "t": 1150,
       "legenda": "Chunks e screenshots de página que servem de base para o agente.",
-      "print": "img/X4w2Pkz5tDY/4.jpg"
+      "print": "img/X4w2Pkz5tDY/4.jpg",
+      "descricao": "Tela da demo no índice 'alphabet' com 135 arquivos indexados e painel de busca híbrida. Sem chunks nem screenshots de página."
     }
   ],
   "conceitos": [
@@ -199,5 +204,36 @@
       "contexto": "melhores resultados reordenados por um LLM",
       "t": 685
     }
-  ]
+  ],
+  "rotulo": "Grep ou embeddings para buscar em documentos",
+  "objetivo": "escolher entre grep, listagem e índice híbrido para o agente buscar em documentos, conforme o volume e a bagunça dos dados",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que o Claude Code dispensou embeddings para código?",
+      "resposta": "Manter um índice sincronizado com código que muda o tempo todo custa caro. Além disso, um repositório é pequeno, semiestruturado, cheio de pistas (imports, testes) e já está no disco. Dados de empresa raramente têm isso."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Seu agente precisa consultar 300 PDFs de contratos. O que testar primeiro e quando passar para um índice?",
+      "resposta": "Comece com listar, filtrar por metadados, grep e leitura, pois de cem a mil arquivos ainda dá para navegar localmente. Indexe com busca híbrida quando chegar a milhares de arquivos ou quando houver tabelas e permissões."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que interesse e que limite pesam sobre a conclusão do talk?",
+      "resposta": "George He é da LlamaIndex, que vende parsing e indexação, e a conclusão favorece indexar. Os benchmarks da busca híbrida vêm sem nome nem números, e a demo com 135 arquivos não mede acurácia nem custo contra o grep sozinho."
+    }
+  ],
+  "experimento": {
+    "titulo": "Grep contra busca simples em uma pasta de documentos",
+    "minutos": 40,
+    "precisa": "Claude Code ou outro agente com acesso a arquivos e uma pasta com 20 a 100 documentos seus",
+    "passos": [
+      "Escreva 5 perguntas cujas respostas você já sabe e anote em que arquivo cada uma está.",
+      "Peça ao agente para responder usando só listar, grep e leitura de arquivos, citando o arquivo de origem.",
+      "Conte quantas respostas vieram certas e com a fonte correta.",
+      "Veja onde ele falhou e decida se um índice com metadados resolveria esse tipo de falha."
+    ],
+    "sucesso": "Você tem um placar de acertos com fonte citada e sabe dizer se o grep bastou para esse volume de documentos."
+  }
 }

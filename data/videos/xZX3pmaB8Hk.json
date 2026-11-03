@@ -21,28 +21,32 @@
       "texto": "Segundo dados da Mandiant citados no talk, em 2018 e 2019 o patch saía em média 63 dias antes da exploração. A curva foi encurtando e hoje está em menos 7 dias, ou seja, o ataque acontece antes da correção. Smyth liga a virada ao uso de IA por atacantes.",
       "t": 187,
       "legenda": "A média cruzou o zero: o ataque agora vem antes da correção.",
-      "print": "img/xZX3pmaB8Hk/0.jpg"
+      "print": "img/xZX3pmaB8Hk/0.jpg",
+      "descricao": "Slide 'Exploit arrives before the patch': linha do tempo Mandiant, de +63 dias (2018-19) a -7 dias (2025) em relação ao patch"
     },
     {
       "titulo": "Prazo de 30 dias não serve mais",
       "texto": "O fluxo clássico roda scanners como Grype e Trivy, gera uma lista de CVEs por severidade e entrega a um time com 30 dias para corrigir. Smyth diz que 30 dias equivalem a um milhão de anos diante de atacantes que miram falhas conhecidas quase na hora e de modelos que acham zero days.",
       "t": 251,
       "legenda": "O processo é sensato no papel, mas o prazo ficou longo demais.",
-      "print": "img/xZX3pmaB8Hk/1.jpg"
+      "print": "img/xZX3pmaB8Hk/1.jpg",
+      "descricao": "Slide 'An approach from a different era': fluxo scan, achar vulnerabilidade, abrir ticket, backlog e correção em 30, 60 e 90 dias"
     },
     {
       "titulo": "Ondas de malware na cadeia de suprimentos",
       "texto": "O palestrante mostra ataques de 2026 em sequência: Shai Hulud (um worm, malware que se espalha sozinho, nascido no ecossistema JavaScript), o scanner Trivy e o pacote Axios. Os ataques se encadeiam porque todo mundo depende das dependências de todo mundo. A defesa indicada para esse vetor é o cooldown, um período de espera antes de adotar versões novas.",
       "t": 346,
       "legenda": "Ataques à cadeia de suprimentos viraram quase diários.",
-      "print": "img/xZX3pmaB8Hk/2.jpg"
+      "print": "img/xZX3pmaB8Hk/2.jpg",
+      "descricao": "Slide 'Malware waves' com quatro cavaleiros nomeados: Shai-Hulud, Trivy, LiteLLM e Axios"
     },
     {
       "titulo": "Quatro superfícies de ataque",
       "texto": "Smyth separa malware, vulnerabilidades conhecidas (CVEs), zero days e portas laterais. As portas laterais são CI/CD, laptops de desenvolvedores e a camada de agentes. Segundo ele, o laptop do desenvolvedor raramente tem cooldown, e por isso virou alvo fácil.",
       "t": 779,
       "legenda": "Quem protege só a produção deixa CI/CD, laptop e agentes abertos.",
-      "print": "img/xZX3pmaB8Hk/3.jpg"
+      "print": "img/xZX3pmaB8Hk/3.jpg",
+      "descricao": "Slide 'The risks': CVEs conhecidas, malware, zero-days, CI/CD compromise e camada de agentes, com legendas curtas"
     },
     {
       "titulo": "Assinar tudo e endurecer skills",
@@ -168,7 +172,7 @@
       "nome": "Agent skills",
       "traducao": "pacotes de instruções e scripts que ampliam um agente",
       "nivel": "intermediario",
-      "chave": "agent skills",
+      "chave": "skill",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -204,5 +208,36 @@
       "contexto": "agent skills públicas maliciosas, análise do palestrante",
       "t": 1181
     }
-  ]
+  ],
+  "rotulo": "Segurança de código aberto quando o exploit vem antes",
+  "objetivo": "avaliar se o seu prazo de correção de vulnerabilidades ainda faz sentido e escolher defesas como cooldown e assinatura de artefatos",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que os dados da Mandiant citados no talk mostram sobre o tempo entre patch e exploração?",
+      "resposta": "Em 2018 e 2019 o patch saía em média 63 dias antes da exploração. Hoje a média é de menos 7 dias, ou seja, o exploit aparece antes da correção. O próprio palestrante diz que a média é ruidosa."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que regra de cooldown você poderia ativar no gerenciador de pacotes do seu projeto, e onde mais ela deveria valer?",
+      "resposta": "Definir um período de espera de alguns dias antes de aceitar versões recém-publicadas, no projeto e também nos laptops da equipe, que segundo o talk raramente têm cooldown e viram alvo fácil."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que conflito de interesse pesa sobre as recomendações do talk?",
+      "resposta": "O palestrante é da Chainguard, e cada recomendação termina em produto da empresa. Os dados vêm de fontes citadas de passagem ou de análise própria sem metodologia, como os 5% de skills maliciosas, que antes eram cerca de 20%."
+    }
+  ],
+  "experimento": {
+    "titulo": "Auditar o cooldown e o prazo de CVEs do seu projeto",
+    "minutos": 30,
+    "precisa": "Um repositório seu com package.json ou requirements.txt e acesso ao terminal",
+    "passos": [
+      "Rode npm audit ou pip-audit no repositório e anote as vulnerabilidades por severidade.",
+      "Para cada item crítico, escreva há quantos dias o aviso existe e quanto tempo levaria para corrigir.",
+      "Procure na documentação do seu gerenciador de pacotes (npm, pnpm ou uv) a opção de espera para versões novas e ative-a.",
+      "Compare o seu prazo atual com a meta de horas ou poucos dias para vulnerabilidades já exploradas."
+    ],
+    "sucesso": "Você tem uma lista de vulnerabilidades com idade e prazo estimado de correção, e a espera para pacotes novos está ativada ou registrada como pendência."
+  }
 }

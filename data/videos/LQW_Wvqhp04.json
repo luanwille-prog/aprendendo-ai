@@ -21,35 +21,40 @@
       "texto": "Um estudo citado mostra linhas de código subindo 2.450% e commits subindo 240% com agentes assíncronos, mas releases subiram só 30%. Produzir ficou fácil. Revisar, testar e entregar não acompanhou.",
       "t": 190,
       "legenda": "Código e commits explodem, releases quase não saem do lugar.",
-      "print": "img/LQW_Wvqhp04/0.jpg"
+      "print": "img/LQW_Wvqhp04/0.jpg",
+      "descricao": "slide 'Agents make code creation easy and abundant' com gráfico de barras: +2450% linhas de código e +240% commits"
     },
     {
       "titulo": "Humano no loop concorda com IA errada",
       "texto": "Segundo um estudo citado, pessoas concordam com a IA 93% das vezes quando ela acerta e em 4 de cada 5 vezes quando ela erra. Ele chama isso de cognitive surrender (rendição cognitiva). Por isso, dizer que há humano revisando não basta como governança.",
       "t": 373,
       "legenda": "A revisão humana falha justamente quando a IA erra.",
-      "print": "img/LQW_Wvqhp04/1.jpg"
+      "print": "img/LQW_Wvqhp04/1.jpg",
+      "descricao": "slide 'cognitive surrender is real': 93% quando a IA acerta e 80% quando a IA erra, com fonte Shaw & Nave"
     },
     {
       "titulo": "Agentes perdem precisão em tarefas longas",
       "texto": "Em tradução de código, a acurácia era de 91% com 10 mil linhas e desabou perto de 50 mil. O custo em tokens varia até 30 vezes na mesma tarefa, porque o agente gasta tokens para se orientar. Na curva da METR, subir a exigência de 50% para 80% de acerto achata o horizonte de tarefas.",
       "t": 497,
       "legenda": "Exigir mais acerto encolhe bastante a duração das tarefas que o agente cumpre.",
-      "print": "img/LQW_Wvqhp04/2.jpg"
+      "print": "img/LQW_Wvqhp04/2.jpg",
+      "descricao": "slide 'Error stacking causes long running tasks to fail' com gráfico METR de horizonte de tarefas por modelo"
     },
     {
       "titulo": "Perguntar a um LLM não é verificação confiável",
       "texto": "Pesquisa citada da PayPal mostra de 7% a 17% dos veredictos mudando em réplicas idênticas. Outro estudo, da Meta, mostra o modelo mudando de ideia de 7% a 34% das vezes quando alguém pergunta se ele tem certeza. Juiz LLM sozinho dá resultado instável.",
       "t": 558,
       "legenda": "O mesmo juiz LLM dá respostas diferentes para a mesma pergunta.",
-      "print": "img/LQW_Wvqhp04/3.jpg"
+      "print": "img/LQW_Wvqhp04/3.jpg",
+      "descricao": "slide 'Ask the AI judge twice, get a different answer' com 7-17% e 7-34% de veredictos que mudam, com fontes PayPal e Meta"
     },
     {
       "titulo": "Fórmula de confiança: quatro fatores multiplicados",
       "texto": "Intenção clara, guide rails, verificação independente e evidência entram multiplicados. Se um fator for zero, a confiança vai a zero. Fazer tudo sem produzir evidência auditável deixa o resultado sem confiança.",
       "t": 690,
       "legenda": "Qualquer fator zerado derruba a confiança inteira.",
-      "print": "img/LQW_Wvqhp04/4.jpg"
+      "print": "img/LQW_Wvqhp04/4.jpg",
+      "descricao": "slide 'The Code Confidence Formula' com Intent, Guiderails, Verification e Evidence multiplicados"
     }
   ],
   "conceitos": [
@@ -101,7 +106,7 @@
       "nome": "LLM judge",
       "traducao": "modelo que avalia a saída de outro modelo",
       "nivel": "intermediario",
-      "chave": "llm judge",
+      "chave": "llm-as-a-judge",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -170,5 +175,36 @@
       "contexto": "redução de issues no commit, segundo a Sonar",
       "t": 776
     }
-  ]
+  ],
+  "rotulo": "Por que humanos não acompanham código escrito por IA",
+  "objetivo": "aplicar a fórmula de confiança no código (intenção, guide rails, verificação e evidência) a um fluxo seu",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais fatores entram na fórmula de confiança no código e por que são multiplicados?",
+      "resposta": "Intenção, guide rails, verificação independente e evidência. Como são multiplicados, se um deles for zero a confiança vai a zero, mesmo que os outros estejam fortes."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você usaria um LLM como juiz sem depender só dele?",
+      "resposta": "Combinando com checagens determinísticas como testes, linters e análise estática, e rodando o juiz mais de uma vez, já que os veredictos mudaram de 7% a 17% em réplicas idênticas."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que limita os resultados de clientes apresentados no fim?",
+      "resposta": "O palestrante é CEO da Sonar e vende os produtos. Os números (36% menos tokens, 92% menos issues) não trazem amostra, método nem grupo de comparação, e a pesquisa mede a percepção de quem já usa o produto."
+    }
+  ],
+  "experimento": {
+    "titulo": "Razão entre código gerado e entregue",
+    "minutos": 30,
+    "precisa": "Um repositório com histórico no Git e Python ou uma planilha",
+    "passos": [
+      "Conte commits e merges (ou releases) por semana nas últimas oito semanas com git log.",
+      "Calcule a razão entre commits e merges em cada semana.",
+      "Marque as semanas em que você usou mais agentes de código.",
+      "Escreva uma frase dizendo onde o gargalo parece estar, em revisão, testes ou entrega."
+    ],
+    "sucesso": "Você tem um gráfico ou tabela simples com a razão semanal e uma hipótese escrita sobre onde o fluxo trava."
+  }
 }

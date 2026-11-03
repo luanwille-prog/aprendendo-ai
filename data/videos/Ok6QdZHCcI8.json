@@ -21,35 +21,40 @@
       "texto": "Com o Gemini, o lead time caiu 10% e o tempo de codificação 20%. O Claude Code lançado com orçamento rígido teve pouco impacto. Com o GLM hospedado e sem limite, vieram 60% a menos no tempo de codificação e 70% no lead time. O palestrante atribui parte do efeito à liberdade de usar IA em tarefas além de código.",
       "t": 123,
       "legenda": "Linha do tempo de adoção de IA com 2.000 engenheiros da Revolut.",
-      "print": "img/Ok6QdZHCcI8/0.jpg"
+      "print": "img/Ok6QdZHCcI8/0.jpg",
+      "descricao": "Slide 'AI adoption & impact' com gráfico FIG 2.3 de lead time (dias) e coding time (horas) e marcos de lançamento; palestrante no canto"
     },
     {
       "titulo": "Código não é o gargalo da engenharia",
       "texto": "O lead time melhorou mais que o tempo de codificação. Para o palestrante, isso indica que parte do tempo se perde em caixa de entrada, Jira e Confluence. Sem preocupação com o custo de tokens, os engenheiros usam a IA nessas tarefas também, sem guardar tokens para o fim do trimestre.",
       "t": 184,
       "legenda": "O ganho em lead time supera o ganho em coding time.",
-      "print": "img/Ok6QdZHCcI8/1.jpg"
+      "print": "img/Ok6QdZHCcI8/1.jpg",
+      "descricao": "Mesmo slide 'AI adoption & impact' com o gráfico de lead time e coding time, marcos Gemini, Claude Code e open source em abril de 2026"
     },
     {
       "titulo": "Metas de latência e custo do self-hosting",
       "texto": "Para atender 2.000 engenheiros, a Revolut usa cerca de 56 GPUs B200 com um modelo de 800 bilhões de parâmetros. A meta é abaixo de 3 segundos até o primeiro token, pois acima de 5 segundos o Slack dele lota. 200 tokens por segundo bastam, porque as pessoas rodam tarefas em paralelo. O custo misto fica em 30 centavos de dólar por milhão de tokens.",
       "t": 277,
       "legenda": "Números de capacidade e custo do GLM hospedado.",
-      "print": "img/Ok6QdZHCcI8/2.jpg"
+      "print": "img/Ok6QdZHCcI8/2.jpg",
+      "descricao": "Slide 'Metrics that matter for happy engineers' com 2.000 engenheiros, <3s TTFT, >200 TPS e US$ 0,30 por milhão de tokens"
     },
     {
       "titulo": "Mesmo hardware, 88% mais rápido",
       "texto": "De abril a agosto a equipe manteve as 56 GPUs. O tempo até o primeiro token caiu de mais de 10 segundos para cerca de 1,6, enquanto a demanda subiu de cerca de 3 para mais de 7 requisições por segundo. O ganho veio de ajustes de configuração, não de comprar mais máquinas.",
       "t": 368,
       "legenda": "Demanda sobe e o tempo até o primeiro token cai com as mesmas GPUs.",
-      "print": "img/Ok6QdZHCcI8/3.jpg"
+      "print": "img/Ok6QdZHCcI8/3.jpg",
+      "descricao": "Slide 'Resist scaling, tune first' com 76% mais RPS e 88% menos TTFT e gráfico de TTFT versus carga ao longo do tempo"
     },
     {
       "titulo": "Parâmetros que mais pesaram",
       "texto": "Contexto longo é desperdício, e 256 mil tokens bastam. Quantização em FP4 em GPUs Blackwell economiza cerca de 40% de GPU frente a FP8, segundo ele sem perda de precisão. Tensor parallelism em 8 GPUs deixa mais espaço para KV cache. Em coding, o cache hit precisa passar de 90%.",
       "t": 430,
       "legenda": "Lista de parâmetros de ajuste do servidor de inferência.",
-      "print": "img/Ok6QdZHCcI8/4.jpg"
+      "print": "img/Ok6QdZHCcI8/4.jpg",
+      "descricao": "Slide 'Resist scaling, tune first' com a lista 'Also tuned': contexto longo, FP4, tensor parallelism, cache hits, sticky sessions e PD"
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "melhora no lead time com o GLM hospedado",
       "t": 184
     }
-  ]
+  ],
+  "rotulo": "Revolut e modelos abertos hospedados: custo de IA para código",
+  "objetivo": "separar lead time de tempo de codificação para avaliar o ganho real de uma ferramenta de IA",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que a Revolut observou ao comparar ferramentas de IA para código?",
+      "resposta": "Com Gemini, o lead time caiu 10% e o tempo de codificação 20%. O Claude Code com orçamento rígido teve pouco impacto. O GLM hospedado e sem limite trouxe 60% a menos no tempo de codificação e 70% no lead time."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que meta de latência você definiria ao hospedar um modelo para sua equipe?",
+      "resposta": "Tempo até o primeiro token abaixo de 3 segundos, acompanhado junto da demanda de requisições. A Revolut observou que acima de 5 segundos o Slack do palestrante lota de reclamações."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que a conclusão de custo de um décimo da fatura merece desconfiança?",
+      "resposta": "Os ganhos coincidem no tempo com a retirada dos limites, então não separam modelo de uso ilimitado. A comparação aparentemente ignora o custo das 56 GPUs B200 e da equipe, e o palestrante defende a própria decisão."
+    }
+  ],
+  "experimento": {
+    "titulo": "Medir lead time e tempo de codificação",
+    "minutos": 30,
+    "precisa": "Um repositório com histórico de PRs no GitHub e uma planilha",
+    "passos": [
+      "Pegue 20 PRs recentes e anote a data de abertura da tarefa, do primeiro commit e do merge.",
+      "Calcule o tempo de codificação (tarefa até primeiro PR) e o lead time (tarefa até merge).",
+      "Separe os PRs em com e sem ajuda de IA, se você tiver essa informação.",
+      "Compare as medianas e anote onde o tempo mais se perde."
+    ],
+    "sucesso": "Você tem duas medianas por grupo e sabe dizer se o tempo vai em codificar ou em esperar revisão e fila."
+  }
 }

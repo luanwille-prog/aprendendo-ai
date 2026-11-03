@@ -21,35 +21,40 @@
       "texto": "Cheah pergunta à plateia quem sabe o gasto total, por departamento, por time e por caso de uso. A mão desce a cada nível. Entre 30% e 40% dos clientes que o procuram usam uma única chave compartilhada. Separar chaves por time e por uso é o primeiro passo e, segundo ele, onde está o maior retorno.",
       "t": 217,
       "legenda": "Metade da sala não sabe o gasto por time; a causa comum é uma chave única.",
-      "print": "img/Ti-BmGU1_mQ/0.jpg"
+      "print": "img/Ti-BmGU1_mQ/0.jpg",
+      "descricao": "Slide 'Step one: measure your token spend' com três pontos: chave única, sem dono, por que medir primeiro."
     },
     {
       "titulo": "Duas cargas, duas economias",
       "texto": "Agentes de código rodam por muito tempo, reaproveitam contexto e geram só cerca de 1% de tokens de saída. Automações de processo (call center, filtro de mensagens, documentos) têm contexto curto e volume enorme. Cada uma pede medição e modelo próprios. Um time de 5 devs com 8 agentes contínuos gastava US$ 150 mil por mês no Opus e caiu para menos de US$ 10 mil com um modelo aberto.",
       "t": 311,
       "legenda": "As duas cargas têm perfis de custo opostos e exigem acompanhamento separado.",
-      "print": "img/Ti-BmGU1_mQ/1.jpg"
+      "print": "img/Ti-BmGU1_mQ/1.jpg",
+      "descricao": "Slide 'Two tracks, opposite economics' com colunas Agentic e Process automation (texto pequeno, baixa resolução)."
     },
     {
       "titulo": "Dê rótulos de modelo aos times, não nomes",
       "texto": "Finanças e suporte não sabem comparar modelos. A recomendação é oferecer rótulos como rápido, inteligente ou agente financeiro, e trocar o modelo por trás sem avisar ninguém. Isso permite dividir tráfego e testar. Para fazer o time migrar de verdade, o incentivo que funciona é velocidade, não preço: o modelo barato precisa ser mais rápido.",
       "t": 1150,
       "legenda": "O rótulo dá controle de troca sem custo de comunicação com o time.",
-      "print": "img/Ti-BmGU1_mQ/2.jpg"
+      "print": "img/Ti-BmGU1_mQ/2.jpg",
+      "descricao": "Slide 'Give departments model labels, not model names' com rótulos smart, fast e finance-agent apontando para modelos."
     },
     {
       "titulo": "Dobrar a velocidade custa o triplo",
       "texto": "Pela regra de bolso do palestrante, cada 2x de velocidade por requisição custa 3x e o efeito se acumula. No exemplo com um nó de GPU, uma requisição sozinha roda a 112 tokens por segundo. Com 16 em paralelo, cada uma cai para cerca de metade, mas a saída total sobe cerca de 10x e o custo cai na mesma proporção. Agentes de fundo e CI não precisam de velocidade alta.",
       "t": 1808,
       "legenda": "Menos velocidade por requisição multiplica a vazão total e reduz o custo.",
-      "print": "img/Ti-BmGU1_mQ/3.jpg"
+      "print": "img/Ti-BmGU1_mQ/3.jpg",
+      "descricao": "Tabela 'Share a node': 1 agente a 112 tok/s versus 16 agentes a 64 tok/s cada, saída de 1.034 tok/s e custo ~9x menor."
     },
     {
       "titulo": "Slop grenade e a fórmula de resultado",
       "texto": "Gerar muito código, slide ou relatório e deixar a verificação para outro é o que ele chama de slop grenade (granada de lixo gerado). Em um caso, o revisor jogou fora o código do agente e refez à mão. A regra é cada pessoa assumir o que entrega e medir resultados, não uso. Ele cita a fórmula tokens vezes preço dividido por resultados realmente usados, e admite que é uma medida falha.",
       "t": 2579,
       "legenda": "Custo útil se mede por resultado adotado, não por volume de tokens.",
-      "print": "img/Ti-BmGU1_mQ/4.jpg"
+      "print": "img/Ti-BmGU1_mQ/4.jpg",
+      "descricao": "Slide 'Three rules that only you can set' (own what you hand over, measure outcomes, pass the smaller thing). Não mostra a fórmula de tokens."
     }
   ],
   "conceitos": [
@@ -170,5 +175,35 @@
       "contexto": "Regra de bolso: dobrar velocidade triplica o custo",
       "t": 1808
     }
-  ]
+  ],
+  "rotulo": "Tokenomics: como reduzir a conta de IA",
+  "objetivo": "aplicar os quatro passos para cortar custo de tokens, começando por separar chaves de API e medir o gasto",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são os quatro passos para cortar o custo de IA propostos por Eugene Cheah?",
+      "resposta": "Medir, ajustar o tamanho do modelo, comprar capacidade de GPU com critério e revisar os processos. O primeiro passo exige chaves de API separadas por time e por caso de uso."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você testaria um modelo mais barato numa tarefa do seu time sem arriscar a qualidade?",
+      "resposta": "Monte um eval pequeno com exemplos reais da tarefa, teste modelos mais baratos ou abertos e escolha o mais barato que passa na maioria dos casos. Use o modelo forte para planejar e revisar e um rápido para implementar."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que os casos de economia, como US$ 250 mil para US$ 7,6 mil por mês, merecem cautela?",
+      "resposta": "O palestrante vende inferência e os casos vêm de clientes dele, sem metodologia, sem medida de qualidade e sem comparação independente. A regra de que 2x de velocidade custa 3x é estimativa de bolso."
+    }
+  ],
+  "experimento": {
+    "titulo": "Eval barato para trocar de modelo",
+    "minutos": 40,
+    "precisa": "Acesso a dois modelos, um forte e um mais barato, e 15 exemplos reais da sua tarefa",
+    "passos": [
+      "Junte 15 exemplos reais de entrada e a resposta esperada para uma tarefa do seu trabalho.",
+      "Rode os exemplos no modelo forte e no mais barato e marque cada saída como aceitável ou não.",
+      "Anote o custo por 1.000 chamadas de cada modelo e calcule a economia."
+    ],
+    "sucesso": "Você tem a taxa de aceitação e o custo dos dois modelos e uma decisão por escrito sobre qual passa na maioria dos casos."
+  }
 }

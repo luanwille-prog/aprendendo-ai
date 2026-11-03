@@ -21,35 +21,40 @@
       "texto": "O Spotify passou de curadoria manual para recomendação em escala e agora para personalização generativa. O usuário conduz o DJ, escreve prompts para montar playlists e edita o próprio perfil de gosto em linguagem natural. A promessa é trocar o palpite de uma caixa-preta por raciocínio que o usuário enxerga e corrige.",
       "t": 281,
       "legenda": "Prompts livres controlam o algoritmo de recomendação inteiro.",
-      "print": "img/2LRIAfng7eA/0.jpg"
+      "print": "img/2LRIAfng7eA/0.jpg",
+      "descricao": "slide com prompts controlando playlists: shows em San Francisco e workout"
     },
     {
       "titulo": "Taste profile editável",
       "texto": "O taste profile mostra em texto o que o sistema entendeu sobre você. Yves Raimond dá o exemplo de pedir que músicas da Disney, ouvidas pelos filhos em aparelhos compartilhados, não entrem no gosto dele. O perfil vira um ponto de controle direto do usuário, além de aceitar metas, como aprender um idioma.",
       "t": 342,
       "legenda": "O usuário corrige o que o modelo pensa dele, em texto.",
-      "print": "img/2LRIAfng7eA/1.jpg"
+      "print": "img/2LRIAfng7eA/1.jpg",
+      "descricao": "taste profile em linguagem natural explicando preferências musicais do usuário"
     },
     {
       "titulo": "NEO em quatro etapas",
       "texto": "A receita começa criando semantic IDs a partir de embeddings de conteúdo e adicionando esses tokens ao vocabulário de um LLM aberto. Depois vem o domain grounding com o modelo congelado, em que só os novos tokens aprendem. A terceira etapa descongela tudo e faz instruction tuning em várias tarefas do Spotify. A quarta, opcional, é pós-treino como RL.",
       "t": 592,
       "legenda": "As quatro etapas do treino e o que fica congelado em cada uma.",
-      "print": "img/2LRIAfng7eA/2.jpg"
+      "print": "img/2LRIAfng7eA/2.jpg",
+      "descricao": "diagrama das quatro etapas do NEO: semantic foundation, domain grounding, capability induction e post-training"
     },
     {
       "titulo": "Congelar preserva a linguagem",
       "texto": "Nas ablações, fazer continued pre-training (pré-treino continuado) no lugar do domain grounding mal mudou o desempenho nas tarefas do Spotify. Mas a capacidade de linguagem natural e conhecimento de mundo do modelo caiu para perto de zero. Congelar o backbone manteve essas habilidades. Segundo Jacqueline, o resultado se repetiu com Llama.",
       "t": 800,
       "legenda": "O pré-treino continuado zera a habilidade de linguagem, o congelamento a mantém.",
-      "print": "img/2LRIAfng7eA/3.jpg"
+      "print": "img/2LRIAfng7eA/3.jpg",
+      "descricao": "tabela de ablação comparando continued pretraining com domain grounding e congelamento"
     },
     {
       "titulo": "Juízes LLM precisam de contexto",
       "texto": "Métricas offline clássicas dizem se o usuário interagiu, mas não se a recomendação ou a explicação faz sentido. O time usa LLMs como juízes e os ancora em perfis textuais e em comportamento passado do usuário. Em buscas ambíguas, a concordância com humanos subiu 91%, contra 5% no geral.",
       "t": 1067,
       "legenda": "O ganho do grounding aparece sobretudo nos casos ambíguos.",
-      "print": "img/2LRIAfng7eA/4.jpg"
+      "print": "img/2LRIAfng7eA/4.jpg",
+      "descricao": "resultados de alinhamento LLM-judge com humanos: +91% em casos ambíguos com grounding"
     }
   ],
   "conceitos": [
@@ -261,7 +266,7 @@
       "nome": "LLM as a judge",
       "traducao": "LLM como juiz de avaliação",
       "nivel": "intermediario",
-      "chave": "llm as a judge",
+      "chave": "llm-as-a-judge",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -297,5 +302,36 @@
       "contexto": "ganho de concordância do juiz em buscas ambíguas",
       "t": 1085
     }
-  ]
+  ],
+  "rotulo": "Ensinar o catálogo do Spotify a um LLM",
+  "objetivo": "descrever a receita NEO para ensinar tokens novos a um LLM com o corpo congelado e avaliar com juízes ancorados no perfil do usuário",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são as quatro etapas da receita NEO e o que fica congelado na segunda?",
+      "resposta": "Criar semantic IDs e adicioná-los ao vocabulário, domain grounding com o modelo congelado e só os novos tokens aprendendo, instruction tuning com tudo descongelado e um pós-treino opcional como RL."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você usa um LLM como juiz de recomendações. Como o configuraria antes de confiar nas notas?",
+      "resposta": "Passe a ele o perfil do usuário e exemplos de comportamento passado, compare a concordância com avaliadores humanos e separe os casos ambíguos, onde o ganho foi maior."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Como ler os ganhos descritos como sizable ou huge e o dado de um em cada quatro assinantes?",
+      "resposta": "Eles vêm sem números, base de comparação ou tamanho de teste. O dado de um em quatro não separa curiosidade de retenção, as métricas das ablações estão só em slides e a alegação de pioneirismo vem da própria equipe."
+    }
+  ],
+  "experimento": {
+    "titulo": "Juiz de IA com e sem perfil do usuário",
+    "minutos": 40,
+    "precisa": "Claude ou ChatGPT e 10 pedidos de recomendação com respostas que você mesmo notou",
+    "passos": [
+      "Anote 10 pedidos de recomendação, como filmes ou músicas, com a resposta de um modelo e a sua nota de 1 a 5.",
+      "Peça a um juiz que dê nota de 1 a 5 a cada resposta, sem contexto sobre a pessoa.",
+      "Repita dando ao juiz um parágrafo com o perfil e o histórico da pessoa.",
+      "Compare qual versão do juiz concorda mais com as suas notas."
+    ],
+    "sucesso": "Você tem a concordância das duas versões do juiz com as suas notas e sabe se o perfil ajudou."
+  }
 }

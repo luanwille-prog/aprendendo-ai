@@ -21,7 +21,8 @@
       "texto": "Annabelle mostra um agente de suporte que diz ter emitido um reembolso, mas nunca chamou a ferramenta. Latência e erros ficam normais, então a observabilidade tradicional não vê o problema. O usuário só descobre semanas depois. Por isso o time precisa procurar sinais de falha de forma contínua.",
       "t": 136,
       "legenda": "Status verde não prova que o agente fez o que disse.",
-      "print": "img/obfPzbapMIM/0.jpg"
+      "print": "img/obfPzbapMIM/0.jpg",
+      "descricao": "slide 'Agents can fail while system metrics look green' com trace do agente de suporte, reembolso sem tool e checks verdes"
     },
     {
       "titulo": "Máscara de PII antes de gravar o trace",
@@ -35,14 +36,16 @@
       "texto": "O especialista de domínio revisa uma amostra numa annotation queue e deixa notas curtas, de preferência ditadas. Depois um LLM agrupa os comentários em failure modes, como citação ausente ou registro informal. Esses modos viram os scores que o sistema mede. A tarefa humana fica leve e o LLM faz o que sabe fazer, achar padrões em texto.",
       "t": 1628,
       "legenda": "O especialista escreve em segundos e o LLM agrupa os padrões.",
-      "print": "img/obfPzbapMIM/2.jpg"
+      "print": "img/obfPzbapMIM/2.jpg",
+      "descricao": "annotation queue do Langfuse com campos de score sme-compliance, sme-failure-mode e sme-faithfulness"
     },
     {
       "titulo": "Mudou o prompt, o CI roda os evals",
       "texto": "Promover uma versão do prompt para produção dispara uma automação que lança um job de CI no GitHub. O job roda o experimento contra o dataset e compara cada score com um mínimo definido. Se algum ficar abaixo, a mudança não passa. O time ganha um registro de evidência em vez de decidir por impressão.",
       "t": 2253,
       "legenda": "A mudança de prompt só passa se todos os scores cruzam o mínimo.",
-      "print": "img/obfPzbapMIM/3.jpg"
+      "print": "img/obfPzbapMIM/3.jpg",
+      "descricao": "GitHub Actions com a lista de runs do workflow Northwind prompt gate; não mostra os evaluators nem os mínimos por score"
     },
     {
       "titulo": "Equilíbrio entre automação e gosto humano",
@@ -170,5 +173,35 @@
       "contexto": "casos de pedido de conselho de investimento em 7 dias",
       "t": 2629
     }
-  ]
+  ],
+  "rotulo": "Evals com gate de CI para agentes de alto risco",
+  "objetivo": "montar o ciclo de tracing, dataset curado, evaluators e CI que barra mudança de prompt quando a nota cai",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que um agente pode dizer que fez um reembolso e as métricas de sistema continuarem verdes?",
+      "resposta": "Porque ele pode afirmar o reembolso sem chamar a ferramenta, e latência e erros ficam normais. A observabilidade tradicional não vê o problema, e o usuário descobre semanas depois."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você usaria um especialista de domínio e um LLM para criar as categorias de falha do seu agente?",
+      "resposta": "O especialista anota uma amostra de traces com notas curtas, de preferência ditadas, e um LLM agrupa os comentários em failure modes, como citação ausente. Esses modos viram os scores medidos."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites tem o demo do workshop?",
+      "resposta": "É um workshop de produto da Langfuse, com dados fictícios e um agente simples. Os números do dashboard (1.400 interações, menos de US$ 7) vêm de uma conta rápida sem metodologia, e a calibração do LLM judge contra rótulos humanos ficou só nas perguntas."
+    }
+  ],
+  "experimento": {
+    "titulo": "Gate de CI para um prompt",
+    "minutos": 45,
+    "precisa": "Python, um repositório no GitHub e um prompt de agente com 10 a 20 casos de teste",
+    "passos": [
+      "Salve 10 a 20 casos de teste, com entrada e critério, em um arquivo JSON.",
+      "Escreva um script que rode o prompt contra os casos, com uma checagem em código e uma de LLM judge, e imprima um score.",
+      "Crie um workflow do GitHub Actions que roda o script e falha se o score ficar abaixo do mínimo."
+    ],
+    "sucesso": "Uma mudança proposital que piora o prompt faz o CI falhar, e uma mudança neutra passa."
+  }
 }

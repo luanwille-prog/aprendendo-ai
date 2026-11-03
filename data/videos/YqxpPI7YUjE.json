@@ -21,35 +21,40 @@
       "texto": "O exemplo é uma renomeação no modelo de dados do Bitwarden. Build, testes unitários e linters ficam verdes, então um desenvolvedor aprovaria. Só que o servidor alimenta clientes web, mobile, CLI e servidores MCP, e todos são afetados. Esse tipo de falha costuma aparecer só em produção.",
       "t": 221,
       "legenda": "Uma linha alterada atinge vários repositórios ao mesmo tempo.",
-      "print": "img/YqxpPI7YUjE/0.jpg"
+      "print": "img/YqxpPI7YUjE/0.jpg",
+      "descricao": "Slide 'Seven clients the agent never opened': bitwarden/server ligado a web vault, CLI, MCP, iOS, Android etc., com 'reads revisionDate'."
     },
     {
       "titulo": "Grafo de software para medir o blast radius",
       "texto": "A Qodo monta automaticamente um grafo dos repositórios da equipe, com a superfície de integração. Não basta saber que o servidor se conecta ao Android. É preciso saber quais componentes se conectam. Com isso, o revisor humano ou agente recebe o alerta de que o raio de impacto da mudança é grande.",
       "t": 532,
       "legenda": "O grafo permite avisar o revisor sobre o impacto antes do merge.",
-      "print": "img/YqxpPI7YUjE/1.jpg"
+      "print": "img/YqxpPI7YUjE/1.jpg",
+      "descricao": "Slide 'The agent guides the human' com a revisão no Qodo mostrando 'Blast radius: Large' no PR 'Add LastModified, deprecate RevisionDate'."
     },
     {
       "titulo": "Regras personalizadas e conhecimento tribal",
       "texto": "Parte da revisão depende de gosto e de experiência sênior. Um exemplo de regra: ao mudar uma API pública, exigir flag de depreciação ou revisão extra. A Qodo também sugere uma regra a partir de um comentário feito em um PR, para aplicar em todos os PRs futuros.",
       "t": 532,
       "legenda": "Comentário de revisão vira regra automática para os próximos PRs.",
-      "print": "img/YqxpPI7YUjE/2.jpg"
+      "print": "img/YqxpPI7YUjE/2.jpg",
+      "descricao": "Mesmo slide do PR Gate, com o painel 'Suggested rule from PR #4821' transformando o comentário em regra de API response models."
     },
     {
       "titulo": "Quem escreveu o código não deve avaliá-lo",
       "texto": "O agente de implementação já carrega contexto de depuração e exploração, e contexto grande ainda deixa informação soterrada. Ele também tem viés próprio. Gannaway sugere trocar o modelo e o harness e usar revisores adversariais. Se vários revisores acham o mesmo problema, o sinal é forte. Se acham coisas diferentes, vale investigar.",
       "t": 439,
       "legenda": "Revisão independente reduz o viés do agente que escreveu o código.",
-      "print": "img/YqxpPI7YUjE/3.jpg"
+      "print": "img/YqxpPI7YUjE/3.jpg",
+      "descricao": "Slide 'Two agents, two kinds of context': agente de implementação com contexto disperso versus agente de revisão Qodo com seus padrões completos."
     },
     {
       "titulo": "Revisar contra o ticket, também antes do PR",
       "texto": "Na demo, o PR vem ligado a um ticket do Jira ou Linear com critérios de aceitação, e a ferramenta destaca lacunas de requisitos. Os clientes também instalam uma skill que roda a revisão aos 25%, 50% e 75% da geração. O agente revisor funciona como um gerente que evita o desvio de intenção e o excesso de engenharia.",
       "t": 751,
       "legenda": "A revisão confere se o PR cumpre o ticket, não só se o código funciona.",
-      "print": "img/YqxpPI7YUjE/4.jpg"
+      "print": "img/YqxpPI7YUjE/4.jpg",
+      "descricao": "Ticket Jira SCRUM-562 com requisitos funcionais e a lista de critérios de aceitação, sem o destaque visual das lacunas da revisão."
     }
   ],
   "conceitos": [
@@ -160,5 +165,36 @@
       "contexto": "Pontos da geração em que se roda a revisão",
       "t": 782
     }
-  ]
+  ],
+  "rotulo": "Mudança de uma linha que quebra várias partes do sistema",
+  "objetivo": "avaliar o raio de impacto de uma mudança de API antes de aprovar o pull request",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que a renomeação de uma linha no Bitwarden passaria numa revisão comum?",
+      "resposta": "Build, testes unitários e linters ficam verdes. Só que o servidor alimenta clientes web, mobile, CLI e servidores MCP, e todos são afetados, o que só aparece olhando as dependências entre repositórios."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que passo você faria antes de aprovar um PR que muda o modelo de dados?",
+      "resposta": "Listar quais outros repositórios e clientes consomem essa parte, para medir o blast radius, e pedir a revisão a um agente ou modelo diferente do que escreveu o código."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que o talk da Qodo deixa sem comprovação?",
+      "resposta": "É palestra de vendas, sem dados de quantos bugs a ferramenta pega, falsos positivos ou comparação com outras. O caso do Bitwarden é ilustrativo e a vantagem de usar modelos diferentes não vem com evidência."
+    }
+  ],
+  "experimento": {
+    "titulo": "Mapa de impacto de uma mudança de API",
+    "minutos": 30,
+    "precisa": "Um repositório seu ou público com mais de um consumidor interno e uma busca de texto (grep)",
+    "passos": [
+      "Escolha um campo ou função pública e imagine renomeá-lo.",
+      "Use grep para achar todos os usos no repositório e liste os módulos afetados.",
+      "Peça a um agente que faça a mesma busca e compare com a sua lista.",
+      "Anote o que sua busca ou a do agente deixou de fora."
+    ],
+    "sucesso": "Você tem uma lista de consumidores da mudança e sabe dizer o que a busca simples e o agente cada um deixaram passar."
+  }
 }

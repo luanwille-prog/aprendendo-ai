@@ -170,5 +170,36 @@
       "contexto": "intervalo entre turnos que soa humano",
       "t": 885
     }
-  ]
+  ],
+  "rotulo": "Agentes de voz que aguentam interrupções",
+  "objetivo": "medir o que o chamador ouve e montar um benchmark próprio com chamadores simulados para escolher a stack de voz",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que métricas de latência Hall prefere ao time to first byte num agente de voz?",
+      "resposta": "Tempo até o primeiro áudio e até a primeira frase, porque o chamador pode ouvir silêncio depois do primeiro byte. O orçamento citado é cerca de 1,5 segundo entre a última sílaba e a primeira resposta audível."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como evitar que uma ferramenta lenta deixe seu agente de voz mudo?",
+      "resposta": "Rodar a ferramenta em modo assíncrono, para soltar o diálogo dela, e treinar o agente a dizer algo como 'um segundo, estou verificando', seguindo a conversa como uma pessoa faria."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que enfraquece o número de 4,5% contra 9,9% em cortes indevidos?",
+      "resposta": "É medida da própria LiveKit, sem nomear a alternativa nem o tamanho da amostra. O benchmark do hotel mostra a LiveKit Inference à frente, o que favorece quem vende, e o caso testado é simples."
+    }
+  ],
+  "experimento": {
+    "titulo": "Cenários simulados para um agente de voz ou chat",
+    "minutos": 40,
+    "precisa": "Um agente ou chatbot seu (pode ser em texto) e um LLM para simular o chamador",
+    "passos": [
+      "Escreva 10 cenários de chamador, como mudar o valor no meio, interromper e dar um dado errado, cada um com o estado final esperado.",
+      "Peça a um LLM que interprete o chamador de cada cenário contra o seu agente.",
+      "Pontue o estado final (reserva ou valor correto) e o número de turnos usados.",
+      "Transforme cada falha em um novo cenário de regressão."
+    ],
+    "sucesso": "Você tem 10 cenários com pontuação de estado final e uma taxa de sucesso que dá para repetir ao trocar o modelo."
+  }
 }

@@ -21,35 +21,40 @@
       "texto": "Ela cita o caso de um CEO da Coinbase que cortou o custo com IA sem reduzir o volume de tokens. Os truques foram modelos padrão mais baratos em vez do modelo de fronteira para todos, cache, ausência de limite de gasto com cobrança por resultado e roteamento entre modelos.",
       "t": 349,
       "legenda": "O gasto em tokens cresce, mas o custo em dinheiro deixa de crescer junto.",
-      "print": "img/vGCJ7diEtrw/0.jpg"
+      "print": "img/vGCJ7diEtrw/0.jpg",
+      "descricao": "Gráfico da Coinbase mostrando token usage (linha preta) versus AI spend em dólares (barras coloridas)"
     },
     {
       "titulo": "Roteador escolhe o modelo mais barato que basta",
       "texto": "O roteamento automático tem quatro partes. A tarefa é atribuída, com modelos padrão diferentes por perfil. Um classificador estima a dificuldade olhando o prompt, a base de código e as ferramentas. Um limiar define o que é suficiente e o roteador escolhe o modelo mais barato acima dele. Se o modelo falhar, ele sobe de nível.",
       "t": 471,
       "legenda": "A classificação de dificuldade é a etapa que decide se o roteador funciona.",
-      "print": "img/vGCJ7diEtrw/1.jpg"
+      "print": "img/vGCJ7diEtrw/1.jpg",
+      "descricao": "Slide com o roteador-classificador demonstrando como estimar dificuldade da tarefa e escolher o modelo"
     },
     {
       "titulo": "Missão com orquestrador, workers e validadores",
       "texto": "Uma missão é uma sessão longa em loop. O orquestrador escreve as condições de término, os workers executam em sequência, não em enxame, e cada um recebe um contexto fresco. Validadores revisam código que não escreveram. Na missão de 16 horas de um cliente, a validação ocupou cerca de 40% do processo.",
       "t": 751,
       "legenda": "Validar consome quase metade do tempo de uma missão longa.",
-      "print": "img/vGCJ7diEtrw/2.jpg"
+      "print": "img/vGCJ7diEtrw/2.jpg",
+      "descricao": "Diagrama da missão de 16 horas com orquestrador, workers e validadores mostrando fatia de cada parte"
     },
     {
       "titulo": "Validador que usa o app de verdade",
       "texto": "Existem dois validadores. O de escrutínio confere linters, tipos e testes. O de teste de usuário roda numa máquina virtual, clica no app e checa se ele funciona. Numa migração de código, só esse tipo de agente mostrou que o resultado de outras ferramentas era um protótipo sem interação.",
       "t": 844,
       "legenda": "Código que parece certo pode não funcionar, e só o uso real revela isso.",
-      "print": "img/vGCJ7diEtrw/3.jpg"
+      "print": "img/vGCJ7diEtrw/3.jpg",
+      "descricao": "Slide dos dois validadores: scrutiny validator (lê código) e user-testing validator (testa a aplicação)"
     },
     {
       "titulo": "Contexto adiado poupa metade dos tokens",
       "texto": "Empresas usam centenas de ferramentas, e cada uma traz descrição e parâmetros que incham o contexto do agente. O motor de contexto adiado mostra só uma lista curta com descrições breves e carrega a ferramenta completa quando ela é chamada. Nada é removido, apenas escondido até ser necessário.",
       "t": 1005,
       "legenda": "Carregar ferramentas sob demanda reduz o uso de tokens em 50% ou mais.",
-      "print": "img/vGCJ7diEtrw/4.jpg"
+      "print": "img/vGCJ7diEtrw/4.jpg",
+      "descricao": "Gráfico de economia de tokens com contexto adiado, mostrando economia até 50.8% com ferramentas escondidas"
     }
   ],
   "conceitos": [
@@ -200,5 +205,36 @@
       "contexto": "ou mais de tokens economizados com contexto adiado",
       "t": 1035
     }
-  ]
+  ],
+  "rotulo": "Validação, roteamento e contexto em fábricas de software",
+  "objetivo": "escolher o modelo mais barato que basta e montar um validador independente para o trabalho de um agente",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que um validador deve usar o app de verdade?",
+      "resposta": "O validador de teste de usuário roda numa máquina virtual, clica no app e checa se ele funciona. Numa migração, só esse tipo de agente mostrou que o resultado de outras ferramentas era um protótipo sem interação."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você organizaria o uso de modelos em uma tarefa longa de agente?",
+      "resposta": "Modelo mais barato como padrão e o de fronteira só nas tarefas difíceis, com testes que o agente não contorne e outro agente revisando. Meça custo e qualidade nas suas tarefas reais."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que os 25% de economia com roteamento merecem cautela?",
+      "resposta": "Vêm de um benchmark da própria Factory, sem metodologia mostrada. Os 50% de tokens e a missão de 16 horas, de um só cliente, também não trazem amostra nem comparação externa."
+    }
+  ],
+  "experimento": {
+    "titulo": "Revisor independente que usa o app",
+    "minutos": 40,
+    "precisa": "Claude Code ou similar e um app web pequeno seu",
+    "passos": [
+      "Peça a um agente uma mudança pequena no app e defina o que significa concluída.",
+      "Em uma sessão nova, peça a outro agente que revise o diff sem ter escrito o código.",
+      "Peça ainda que ele rode o app e teste o fluxo afetado, relatando o que funcionou.",
+      "Compare esse relatório com uma revisão que só lê o código."
+    ],
+    "sucesso": "Você vê se rodar o app encontra problemas que a leitura do código deixou passar."
+  }
 }

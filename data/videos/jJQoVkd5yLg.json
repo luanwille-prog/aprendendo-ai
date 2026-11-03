@@ -21,14 +21,16 @@
       "texto": "O palestrante separa três abordagens. No auto mode, o agente tem autonomia total e o usuário paga pelos erros que não vê. No user-first, o usuário tem todos os controles e o agente quase não faz nada, como um chatbot. A terceira, que ele defende, dá ao agente capacidades delimitadas e deixa o humano verificar o trabalho.",
       "t": 158,
       "legenda": "As três abordagens e quem arca com o erro em cada uma.",
-      "print": "img/jJQoVkd5yLg/0.jpg"
+      "print": "img/jJQoVkd5yLg/0.jpg",
+      "descricao": "Slide com três cartões: Auto mode, User-first e Agent Experience a serviço do usuário, com o palestrante ao lado."
     },
     {
       "titulo": "Uma ferramenta por endpoint quebra em produção",
       "texto": "O primeiro MCP deu uma ferramenta a cada endpoint da API, em um único arquivo grande. O demo curado funcionou. Quando o time todo usou, o agente recebia descrições vagas de uma call ou de uma página do Notion, montava o fluxo inteiro e afirmava que estava tudo certo. Nem usuário nem agente sabiam explicar o que o fluxo fazia.",
       "t": 327,
       "legenda": "O ponto em que o MCP v1 falhou ao sair do demo para o uso real.",
-      "print": "img/jJQoVkd5yLg/1.jpg"
+      "print": "img/jJQoVkd5yLg/1.jpg",
+      "descricao": "Slide 'You hand it an API' com chips de ferramentas, ilustrando uma ferramenta por endpoint do MCP v1."
     },
     {
       "titulo": "Menos ferramentas, com a estrutura do trabalho dentro",
@@ -42,14 +44,16 @@
       "texto": "Como agentes não guardam estado, uma chamada de snapshot devolve o estado vivo do pipeline e os erros com códigos específicos. Em runtime, o extract entrega confidence scores e bounding boxes, e o agente pergunta ao usuário quando há duas leituras possíveis. Nos evals, a equipe passou a reprovar suposições frágeis.",
       "t": 591,
       "legenda": "A saída que torna a incerteza do agente legível para o humano.",
-      "print": "img/jJQoVkd5yLg/3.jpg"
+      "print": "img/jJQoVkd5yLg/3.jpg",
+      "descricao": "Slide 'Surface the uncertainty' sobre o agente que não consegue decidir com segurança; não mostra saída de extract com scores."
     },
     {
       "titulo": "Instrumentação que vira ciclo de melhoria",
       "texto": "Cada sessão do MCP foi registrada, e o time de vendas exportou suas sessões do Claude Code. Os logs mostram onde o humano corrigiu o agente, onde a confiança caiu e onde ele perguntou. Esses dados voltam para a orientação do MCP, e o sistema melhora a cada pipeline construído, sem reescrita manual.",
       "t": 787,
       "legenda": "O ciclo que transforma uso em melhoria da orientação do agente.",
-      "print": "img/jJQoVkd5yLg/4.jpg"
+      "print": "img/jJQoVkd5yLg/4.jpg",
+      "descricao": "Slide com quatro cartões de casos de uso, com o cartão 'Everything is logged' em destaque, sobre o ciclo de registro."
     }
   ],
   "conceitos": [
@@ -165,5 +169,36 @@
       "contexto": "documentos no exemplo de pipeline que falha em silêncio",
       "t": 527
     }
-  ]
+  ],
+  "rotulo": "Desenhar um MCP que o time inteiro consegue usar",
+  "objetivo": "desenhar ferramentas MCP por fluxo de trabalho, com sinais de confiança que façam o agente perguntar em vez de chutar",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que o primeiro MCP da Reducto, com uma ferramenta por endpoint, quebrou quando o time todo passou a usar?",
+      "resposta": "O agente recebia descrições vagas, montava fluxos completos e afirmava que estava tudo certo. Nem o usuário nem o agente sabiam explicar o que o fluxo fazia. O demo curado escondia esse problema."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você vai expor a API do seu produto a um agente. Como organizaria as ferramentas?",
+      "resposta": "Listar os fluxos reais de trabalho e criar ferramentas por fluxo, com a estrutura do trabalho embutida. Incluir uma ferramenta de snapshot do estado e mostrar confiança e justificativa junto de cada resultado."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Quão forte é a prova de que a nova arquitetura melhorou o sistema?",
+      "resposta": "Fraca. É uma anedota de um único time interno, com reações no Slack como prova, sem medir erros antes e depois. O autor desenhou o sistema que avalia, e atribuir o erro à arquitetura e não ao prompt é opinião sem comparação."
+    }
+  ],
+  "experimento": {
+    "titulo": "Trocar ferramentas por endpoint por ferramentas por fluxo",
+    "minutos": 40,
+    "precisa": "Uma API simples sua ou pública e um cliente MCP, como o Claude Desktop ou o Claude Code",
+    "passos": [
+      "Escolha três endpoints da API e descreva em uma frase o fluxo real de trabalho que os combina.",
+      "Escreva uma única ferramenta para esse fluxo, que devolva também um campo de confiança e o motivo.",
+      "Peça ao agente uma tarefa com duas leituras possíveis e veja se ele pergunta antes de agir.",
+      "Registre a conversa e anote onde você precisou corrigir o agente."
+    ],
+    "sucesso": "O agente cumpre o fluxo com uma chamada, pergunta quando o pedido é ambíguo e você consegue explicar o que ele fez lendo o resultado."
+  }
 }

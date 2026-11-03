@@ -21,35 +21,40 @@
       "texto": "O bot comprado resolveu 10% das conversas. Sobravam cerca de 900 tickets por dia para humanos. O pior problema era não ter acesso ao system prompt, às ferramentas nem ao RAG. Toda mudança pedida ao fornecedor ouvia que estava no roadmap.",
       "t": 275,
       "legenda": "Sem acesso ao prompt e ao RAG, a equipe não consegue iterar.",
-      "print": "img/pyvRID_CZZU/0.jpg"
+      "print": "img/pyvRID_CZZU/0.jpg",
+      "descricao": "Slide com gráfico de barras mostrando 10% de resolução e 90% escalado para humanos"
     },
     {
       "titulo": "Arquitetura do Joey em quatro peças",
       "texto": "Docs viram markdown local no sistema de arquivos do agente. Embeddings da Voyage trazem os trechos mais relevantes logo de início. Se a dúvida exigir mais, o agente busca nos arquivos por conta própria. O deploy fica no Railway, sem EC2 para administrar.",
       "t": 399,
       "legenda": "Quatro peças formam o Joey, todas sob controle da equipe.",
-      "print": "img/pyvRID_CZZU/1.jpg"
+      "print": "img/pyvRID_CZZU/1.jpg",
+      "descricao": "Diagrama da arquitetura com 4 componentes: docs markdown, embeddings, deep mode e Railway"
     },
     {
       "titulo": "Corrigir o agente é editar um arquivo",
       "texto": "Quando o Joey erra, a equipe revisa a conversa no Slack, ajusta o CLAUDE.md e faz um PR. Um novo Joey entra no ar em cerca de 30 segundos. Já houve caso de bug corrigido durante uma conversa ao vivo, sem o cliente notar.",
       "t": 677,
       "legenda": "O CLAUDE.md concentra as regras e é o principal ponto de ajuste.",
-      "print": "img/pyvRID_CZZU/2.jpg"
+      "print": "img/pyvRID_CZZU/2.jpg",
+      "descricao": "Repositório aberto em VS Code com pasta de docs em markdown e estrutura de projeto"
     },
     {
       "titulo": "Resultado e o que sobra para humanos",
       "texto": "A resolução foi de 10% para 80% na primeira semana, por cerca de US$ 700 mensais. O Joey recebe 100% dos tickets e escala 20% para humanos, em casos como mudança de tarifa, opt-out de dados e contratos. Cada escalação vira um item do roadmap do agente.",
       "t": 492,
       "legenda": "O número de 80% vem da própria empresa, sem auditoria externa.",
-      "print": "img/pyvRID_CZZU/3.jpg"
+      "print": "img/pyvRID_CZZU/3.jpg",
+      "descricao": "Slide de resultados mostrando 80% de resolução, 100% first-touch e custo de ~$700/mês"
     },
     {
       "titulo": "Voz com uma única conexão websocket",
       "texto": "A Voice Agent API junta speech-to-text, LLM e text-to-speech numa conexão só, com tratamento de pausas e interrupções. No demo, o Joey responde por voz sobre assinar um BAA (acordo HIPAA) e cita as docs no chat.",
       "t": 771,
       "legenda": "A mesma ferramenta do texto agora responde por voz.",
-      "print": "img/pyvRID_CZZU/4.jpg"
+      "print": "img/pyvRID_CZZU/4.jpg",
+      "descricao": "Interface de chat mostrando demo da conversa de voz com Joey e mensagens de suporte"
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "custo mensal de tokens e infraestrutura",
       "t": 492
     }
-  ]
+  ],
+  "rotulo": "Agente de suporte com docs em markdown e CLAUDE.md",
+  "objetivo": "montar um agente de suporte que lê a documentação em markdown e melhora a cada erro corrigido no CLAUDE.md",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Como o Joey foi construído e onde cada resposta errada é corrigida?",
+      "resposta": "Sobre o Claude Agent SDK, com docs em markdown local, embeddings da Voyage e busca agêntica em arquivos. Cada erro vira uma correção no CLAUDE.md, publicada em cerca de 30 segundos no Railway."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Quais motivos de escalação do seu suporte você trataria como itens de roadmap do agente?",
+      "resposta": "Liste os motivos pelos quais os tickets chegam a um humano e trate cada um como item de roadmap, corrigindo o CLAUDE.md e a documentação para cada motivo."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que o número de 80% de resolução merece cautela?",
+      "resposta": "Vem da própria equipe, sem definição de resolvido e sem checar se o cliente voltou ou ficou satisfeito. Também não há taxa de erro nem exemplos de respostas erradas, e a empresa vende o produto citado no fim."
+    }
+  ],
+  "experimento": {
+    "titulo": "Mini agente de suporte sobre uma documentação",
+    "minutos": 40,
+    "precisa": "Claude Code e a documentação de um projeto open source em markdown",
+    "passos": [
+      "Baixe a documentação de um projeto open source em markdown para uma pasta.",
+      "Crie um CLAUDE.md pedindo respostas só com base nos arquivos, citando o caminho de cada fonte.",
+      "Faça 10 perguntas como se fosse um usuário e anote as respostas erradas.",
+      "Para cada erro, corrija o CLAUDE.md e repita a pergunta."
+    ],
+    "sucesso": "A maioria das 10 perguntas sai certa, com fonte citada, e cada erro corrigido deixou de se repetir."
+  }
 }

@@ -21,35 +21,40 @@
       "texto": "O palestrante pede para olhar as métricas reais: tempo mediano de revisão de PR, tempo para reproduzir bugs, docs desatualizadas, testes. Para ele, o tempo entre código escrito e produção (métrica DORA) supera o de escrever a mudança. Por isso a fábrica precisa de coesão entre times, não só de um agente que programa.",
       "t": 318,
       "legenda": "Lista dos gargalos reais além de escrever código",
-      "print": "img/exiwa9QbQXI/0.jpg"
+      "print": "img/exiwa9QbQXI/0.jpg",
+      "descricao": "Slide 'Coding agents solved the easy part': 80% do tempo de engenharia não é escrever código, com revisão, testes, debugging, docs e reuniões"
     },
     {
       "titulo": "Comece estreito: triagem de incidentes",
       "texto": "O agente lê um alerta do Sentry, puxa traces e contexto e posta no Slack. Engenheiros revisam e decidem. Cada diagnóstico correto aumenta a confiança do time. Só depois de ter dono e monitoramento em cada etapa vale fechar o ciclo e ligar a saída ao sinal de entrada.",
       "t": 443,
       "legenda": "Primeiro caso de uso sugerido, com humano decidindo",
-      "print": "img/exiwa9QbQXI/1.jpg"
+      "print": "img/exiwa9QbQXI/1.jpg",
+      "descricao": "Slide 'Signal to deployment': diagrama do pipeline Signal, Triage, Plan, Execute, Validate, Ship, Monitor com loop de volta ao sinal"
     },
     {
       "titulo": "Três princípios da fábrica",
       "texto": "Agnóstica de modelo, para escolher o mais barato que resolve cada tarefa. Implantação soberana, do gerenciado ao isolado da rede (airgapped). Integrada ao ciclo de desenvolvimento inteiro, para que docs, código e testes se informem. Fraqueza em um pilar enfraquece o sistema todo.",
       "t": 507,
       "legenda": "Princípio de modelo agnóstico e a comparação de preço",
-      "print": "img/exiwa9QbQXI/2.jpg"
+      "print": "img/exiwa9QbQXI/2.jpg",
+      "descricao": "Slide 'Your software factory should be': três princípios (modelo agnóstico, implantação soberana até air-gapped, integração ao SDLC)"
     },
     {
       "titulo": "Oito pilares de agent readiness",
       "texto": "Validação (linters, formatadores), build documentado, feedback loops com testes, docs como AGENTS.md, ambientes reproduzíveis, código modular, observabilidade e varredura de segurança. A tese é que preparar o terreno ajuda agentes e humanos igualmente.",
       "t": 825,
       "legenda": "Checklist para deixar o código pronto para agentes",
-      "print": "img/exiwa9QbQXI/3.jpg"
+      "print": "img/exiwa9QbQXI/3.jpg",
+      "descricao": "Slide 'The codebase is the bottleneck': lista de prontidão para agentes com 5 pilares (clareza, testes, modularidade, docs, segurança) e radar"
     },
     {
       "titulo": "Meça resultado, não token",
       "texto": "Rankings de tokens e linhas de código são manipuláveis: quem é medido por token gasta token. Palmie propõe tempo do sinal à produção, contagem de intervenções humanas, tempo mediano de reparo, vida útil do código e custo por PR.",
       "t": 1017,
       "legenda": "Métricas de resultado propostas no lugar de tokens",
-      "print": "img/exiwa9QbQXI/4.jpg"
+      "print": "img/exiwa9QbQXI/4.jpg",
+      "descricao": "Slide 'Measure outcomes, not tokens': cinco métricas (cycle time, autonomy ratio, code shelf life, MTTR, custo por PR) e o que não medir"
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "Métricas de resultado recomendadas",
       "t": 1017
     }
-  ]
+  ],
+  "rotulo": "Software factory começando por triagem de incidentes",
+  "objetivo": "escolher uma tarefa estreita para o primeiro agente e medir resultado pelo tempo do sinal à produção, em vez de contar tokens",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais métricas Palmie propõe no lugar de tokens e linhas de código?",
+      "resposta": "Tempo do sinal à produção, contagem de intervenções humanas, tempo mediano de reparo, vida útil do código e custo por PR."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que tarefa estreita você daria a um agente primeiro e como seria o piloto?",
+      "resposta": "Triagem de alertas. O agente lê o alerta, puxa traces e contexto e posta um diagnóstico no Slack. Uma pessoa revisa e decide, e cada diagnóstico correto aumenta a confiança do time."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta para o argumento de que codar nunca foi o gargalo?",
+      "resposta": "Ele diz 'aposto que' e não mostra dados. A comparação de custo entre GPT 5.2 e Opus e os ganhos de 10 a 30 vezes com modelos abertos não têm metodologia, e a Factory vende a plataforma."
+    }
+  ],
+  "experimento": {
+    "titulo": "Meça onde seus PRs esperam",
+    "minutos": 25,
+    "precisa": "Acesso ao histórico de PRs de um repositório no GitHub e uma planilha",
+    "passos": [
+      "Liste os últimos 10 PRs mesclados com data de abertura, da primeira revisão e do merge.",
+      "Calcule a mediana do tempo até a primeira revisão e até o merge.",
+      "Marque quantos PRs voltaram por teste ou documentação faltando.",
+      "Decida se o gargalo está em escrever, revisar ou testar."
+    ],
+    "sucesso": "Você tem duas medianas e uma frase dizendo onde o tempo se perde, antes de pensar em comprar mais IA."
+  }
 }

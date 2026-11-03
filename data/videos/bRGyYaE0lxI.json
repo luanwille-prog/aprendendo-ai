@@ -21,14 +21,16 @@
       "texto": "O Slurm nasceu há mais de 20 anos para computação de alto desempenho. Ele traz gang scheduling (todos os nós do job começam juntos), consciência de topologia de rede e scripts familiares aos pesquisadores. Mas é estático em partições, deixa a detecção e o dreno de nós para o operador e diz que o job falhou sem explicar bem o porquê.",
       "t": 191,
       "legenda": "Onde o Slurm serve ao treino e onde deixa lacunas operacionais.",
-      "print": "img/bRGyYaE0lxI/0.jpg"
+      "print": "img/bRGyYaE0lxI/0.jpg",
+      "descricao": "Slide com grid de limitações do Slurm tradicional: Autoscaling, Health Gating, Node Failures, Observability"
     },
     {
       "titulo": "Duas pilhas custam o dobro",
       "texto": "Times que já usam Kubernetes para inferência sofrem para operar um cluster Slurm, e times de treino em Slurm estranham o Kubernetes. O resultado são duas infraestruturas, com observabilidade, plantão e runbooks separados. A Crusoe propõe um operador que cria o cluster Slurm dentro do Kubernetes com um comando.",
       "t": 455,
       "legenda": "Arquitetura de Slurm como serviço dentro do Kubernetes.",
-      "print": "img/bRGyYaE0lxI/1.jpg"
+      "print": "img/bRGyYaE0lxI/1.jpg",
+      "descricao": "Slide sobre por que Slurm em Kubernetes: interface familiar, topologia configurada, remediação automática"
     },
     {
       "titulo": "GPUs migram entre treino e inferência",
@@ -42,14 +44,16 @@
       "texto": "A sequência é notificar o usuário, marcar o nó como down no Slurm, enviar SIGTERM ao processo (com até 2 minutos para salvar checkpoint), reenfileirar o job, isolar e drenar o nó no Kubernetes, trocar por um nó saudável do estoque e registrar o alerta. Só então o job reinicia e carrega o checkpoint.",
       "t": 603,
       "legenda": "As etapas da remediação, da notificação ao reinício do job.",
-      "print": "img/bRGyYaE0lxI/3.jpg"
+      "print": "img/bRGyYaE0lxI/3.jpg",
+      "descricao": "Diagrama passo a passo da remediação automática: XID error -> AutoClusters -> drain -> replacement -> retomada"
     },
     {
       "titulo": "Demo: GPU cai, treino volta sozinho",
       "texto": "Connor lança um treino PyTorch com sbatch em um pool de dois nós A100 e injeta um alerta de XID 79 no monitoramento. A utilização da GPU despenca, a troca de nó começa na hora e o treino retoma do checkpoint. A troca de hardware leva cerca de 5 minutos, e o resto do tempo é código da aplicação.",
       "t": 727,
       "legenda": "A queda e a recuperação da utilização de GPU na demo.",
-      "print": "img/bRGyYaE0lxI/4.jpg"
+      "print": "img/bRGyYaE0lxI/4.jpg",
+      "descricao": "Console Crusoe com gráficos de GPU e texto 'Node destroyed, training crashes' mostrando o evento"
     }
   ],
   "conceitos": [
@@ -310,5 +314,36 @@
       "contexto": "tempo total na demo até voltar a treinar",
       "t": 757
     }
-  ]
+  ],
+  "rotulo": "Treino que se recupera sozinho de falha de GPU",
+  "objetivo": "descrever o fluxo automático de troca de nó e retomada e verificar se seu código de treino está pronto para ele",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que acontece depois de um alerta XID 79 na demo da Crusoe?",
+      "resposta": "O usuário é notificado, o nó vira down, o processo recebe SIGTERM, o job é reenfileirado, o nó é isolado e trocado por um saudável, e o treino retoma do checkpoint."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "O que você confere no seu código de treino para a retomada ser rápida?",
+      "resposta": "Se ele salva checkpoint com frequência e trata o SIGTERM, pois o tempo de retomada depende mais disso do que da troca de hardware."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limitações tem a demo dos 15 minutos?",
+      "resposta": "A falha foi simulada por script, num caso com dois nós A100, e a maior parte do tempo vem do código da aplicação. Faltam dados de falhas reais, falhas parciais e o custo do estoque de nós reserva."
+    }
+  ],
+  "experimento": {
+    "titulo": "Treino com checkpoint e tratamento de SIGTERM",
+    "minutos": 30,
+    "precisa": "Python com PyTorch e um treino pequeno (CPU basta)",
+    "passos": [
+      "Escreva um loop de treino pequeno que salva checkpoint a cada N passos.",
+      "Trate o SIGTERM salvando um checkpoint final antes de sair.",
+      "Interrompa o processo com kill e reinicie o script.",
+      "Confirme que o treino retoma do último passo salvo."
+    ],
+    "sucesso": "Depois do kill e do reinício, o treino continua do passo salvo e a perda não volta ao valor inicial."
+  }
 }

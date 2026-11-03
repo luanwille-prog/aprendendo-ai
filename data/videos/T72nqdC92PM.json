@@ -21,35 +21,40 @@
       "texto": "Em 2025 a maioria dos modelos de OCR (reconhecimento de texto em imagem) lia a página inteira de uma vez. A Sarvam apostou em ler bloco por bloco, com dois módulos em volta do modelo. Um detecta o layout da página e outro define a ordem de leitura. O palestrante diz que vários lançamentos de 2026 adotaram o mesmo desenho de modelo pequeno com harness (estrutura de apoio).",
       "t": 250,
       "legenda": "O modelo trabalha dentro de uma estrutura que recorta e ordena a página",
-      "print": "img/T72nqdC92PM/0.jpg"
+      "print": "img/T72nqdC92PM/0.jpg",
+      "descricao": "Diagrama do pipeline com módulo de layout, módulo de ordem de leitura e VLM de OCR"
     },
     {
       "titulo": "Por que trocar o transformer por um SSM",
       "texto": "No transformer, cada token olha para todos os outros, e o custo cresce com o quadrado do tamanho da sequência. Um SSM guarda um único estado e o atualiza token a token, com custo linear e memória constante. Uma página pode gerar de 5 a 10 mil tokens visuais, então o SSM reduz o custo de inferência. O preço é uma memória com alguma perda, que a leitura por blocos ajuda a compensar.",
       "t": 300,
       "legenda": "Custo quadrático do transformer contra custo linear do SSM",
-      "print": "img/T72nqdC92PM/1.jpg"
+      "print": "img/T72nqdC92PM/1.jpg",
+      "descricao": "Slide comparando transformer (L x L interações) e SSM (estado único atualizado)"
     },
     {
       "titulo": "Primeiro a língua, depois os pixels",
       "texto": "O treino segue quatro etapas. Primeiro vem pré-treino só com texto, 13 trilhões de tokens em inglês, línguas indianas, matemática e código. Depois 300 milhões de pares imagem e texto, 100 milhões de exemplos de OCR em ajuste supervisionado e, por fim, aprendizado por reforço. A base de língua forte ajuda o modelo a adivinhar uma palavra borrada, como uma pessoa faz ao ler.",
       "t": 370,
       "legenda": "Sequência de treino do texto puro até o aprendizado por reforço",
-      "print": "img/T72nqdC92PM/2.jpg"
+      "print": "img/T72nqdC92PM/2.jpg",
+      "descricao": "Slide do currículo em quatro estágios: text, vision, OCR, reforço com volumes"
     },
     {
       "titulo": "Recompensas que o computador confere sozinho",
       "texto": "Em OCR dá para checar a resposta de forma automática. A equipe cria testes como taxa de erro por caractere, estrutura de tabela ou regras de gramática. O modelo gera várias respostas, os testes dão nota, e o treino reforça as que ficam acima da média do grupo. Isso torna o RLVR (aprendizado por reforço com recompensas verificáveis) barato de escalar.",
       "t": 583,
       "legenda": "Loop de reforço com testes automáticos como recompensa",
-      "print": "img/T72nqdC92PM/3.jpg"
+      "print": "img/T72nqdC92PM/3.jpg",
+      "descricao": "Diagrama do ciclo de RL com amostragem de grupo, pontuação por testes"
     },
     {
       "titulo": "Resultados em inglês e em línguas indianas",
       "texto": "No lançamento, o modelo marcou 93,2 no OmniDocBench e 84,3 em outro benchmark global de OCR em inglês. O palestrante admite que modelos mais novos já avançaram nesses rankings. Em 22 línguas indianas, ele afirma que a Sarvam segue à frente de Gemini, ChatGPT e Claude Opus.",
       "t": 616,
       "legenda": "Comparação de desempenho em benchmarks de documentos",
-      "print": "img/T72nqdC92PM/4.jpg"
+      "print": "img/T72nqdC92PM/4.jpg",
+      "descricao": "Gráfico de barras comparando modelo Sarvam com concorrentes em benchmarks"
     }
   ],
   "conceitos": [
@@ -301,5 +306,36 @@
       "contexto": "páginas em digitalização por clientes em produção",
       "t": 678
     }
-  ]
+  ],
+  "rotulo": "OCR pequeno que lidera em línguas indianas",
+  "objetivo": "explicar por que um modelo de espaço de estados e a leitura por blocos reduzem o custo de OCR e como medir OCR no seu idioma",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Qual a diferença de custo entre o transformer e um SSM ao ler uma página com 5 a 10 mil tokens visuais?",
+      "resposta": "No transformer cada token olha todos os outros e o custo cresce com o quadrado da sequência. O SSM guarda um único estado e o atualiza token a token, com custo linear e memória constante, ao preço de alguma perda de memória."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você vai extrair dados de documentos longos em português. Que passos do desenho da Sarvam aplicaria?",
+      "resposta": "Divida a página em blocos, defina a ordem de leitura antes de mandar ao modelo e crie verificações automáticas, como o total de uma tabela ou o formato de CPF, para medir a qualidade da extração."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que alegações da Sarvam ficam sem comprovação no talk?",
+      "resposta": "A liderança em línguas indianas vem de avaliações internas e o benchmark público ainda não saiu. Faltam números contra Gemini e ChatGPT, clientes nomeados, custo por página e medição do ganho do SSM."
+    }
+  ],
+  "experimento": {
+    "titulo": "Monte um mini eval de OCR com regra",
+    "minutos": 40,
+    "precisa": "Cinco documentos escaneados seus e um assistente com visão",
+    "passos": [
+      "Escolha cinco documentos escaneados com números que você consegue conferir, como notas fiscais ou tabelas.",
+      "Peça a um assistente com visão que extraia os campos em JSON.",
+      "Escreva uma checagem simples, a mão ou em Python, que confira a soma de uma coluna ou o formato de um CPF.",
+      "Registre quantos documentos passam na checagem."
+    ],
+    "sucesso": "Você tem uma taxa de aprovação por regra para os seus documentos e sabe quais campos falham mais."
+  }
 }

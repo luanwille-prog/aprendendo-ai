@@ -21,35 +21,40 @@
       "texto": "Um trace é feito de spans em árvore. Cada chamada ao modelo e cada uso de ferramenta vira um span com entrada, saída, tempo e tokens. Sem isso, você só vê o prompt e o relatório final. Com isso, você vê as quatro buscas na web, a escrita que falhou e o loop sem fim. Observar vem antes de avaliar.",
       "t": 497,
       "legenda": "Cada passo do agente aparece como um span dentro do trace.",
-      "print": "img/qZj7sqmidqA/0.jpg"
+      "print": "img/qZj7sqmidqA/0.jpg",
+      "descricao": "Interface Arize AX mostrando árvore hierárquica de spans com chamadas WebSearch e escrita aninhadas"
     },
     {
       "titulo": "Ler os traces revela falhas que nenhum teste pegaria",
       "texto": "Três dos 13 relatórios tentaram gravar um arquivo em disco, algo impossível no Colab, e responderam apenas que o relatório estava salvo. A falha é silenciosa, porque o agente devolve uma saída mesmo assim. Outro caso entrou em loop de buscas sobre a Microsoft. Só a leitura direta dos traces expõe isso.",
       "t": 2032,
       "legenda": "O agente tenta salvar um arquivo que não pode existir e segue como se tivesse funcionado.",
-      "print": "img/qZj7sqmidqA/1.jpg"
+      "print": "img/qZj7sqmidqA/1.jpg",
+      "descricao": "Span 'Skill' destacado no Arize AX, mostrando parâmetros de entrada da escrita em disco"
     },
     {
       "titulo": "Um check de código barato é a primeira camada",
       "texto": "O check do ticker é uma função Python curta que procura o código da ação no relatório. Roda em milissegundos, sem custo de LLM. Passaram 12 de 13. A falha foi a consulta sobre a AWS, em que o relatório falou só da AWS e nunca citou o ticker da Amazon. É uma camada de defesa rápida do modelo do queijo suíço.",
       "t": 3261,
       "legenda": "Uma função determinística achou o relatório que ignorou a Amazon.",
-      "print": "img/qZj7sqmidqA/2.jpg"
+      "print": "img/qZj7sqmidqA/2.jpg",
+      "descricao": "Notebook Colab com barra de progresso mostrando 13/13 resultados do check de ticker"
     },
     {
       "titulo": "O mesmo juiz dá resultados opostos conforme o contexto",
       "texto": "O juiz de correção, sem acesso às fontes, reprovou todos os 13 relatórios. Ele julgava pelo próprio conhecimento, que parava em janeiro, e o agente tinha pesquisado dados de 2026. Ao receber as fontes coletadas, o juiz de fidelidade separou 6 fiéis e 7 infiéis. Escolher a pergunta certa pesa mais do que escolher o eval mais famoso.",
       "t": 3854,
       "legenda": "Com o contexto da pesquisa, o juiz passa a dar um sinal útil.",
-      "print": "img/qZj7sqmidqA/3.jpg"
+      "print": "img/qZj7sqmidqA/3.jpg",
+      "descricao": "Notebook Colab executando FaithfulnessEvaluator com tabela de resultados em progresso"
     },
     {
       "titulo": "Juiz também precisa ser testado contra humanos",
       "texto": "O juiz é um classificador. Compare as previsões dele com rótulos humanos, o golden dataset. Na demo os rótulos eram aleatórios de propósito, e a concordância foi de 46%. Na prática, você lê as explicações dos desacordos e decide se a regra ou o humano estava errado. Separe cerca de 25% dos rótulos para testar sem ajustar o juiz a eles.",
       "t": 5109,
       "legenda": "A concordância de 46% mostra onde investigar a rubrica.",
-      "print": "img/qZj7sqmidqA/4.jpg"
+      "print": "img/qZj7sqmidqA/4.jpg",
+      "descricao": "Tabela comparativa entre rótulos humanos e do juiz, concordância de 46% (6/13)"
     }
   ],
   "conceitos": [
@@ -180,5 +185,36 @@
       "contexto": "amostras sugeridas para decisões de lançamento",
       "t": 5983
     }
-  ]
+  ],
+  "rotulo": "Ler traces antes de escrever evals",
+  "objetivo": "instrumentar um agente, ler os traces e transformar falhas reais em evals validados contra anotações humanas",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que falha silenciosa a leitura dos traces revelou no agente financeiro?",
+      "resposta": "Três dos 13 relatórios tentaram gravar um arquivo em disco, impossível no Colab, e responderam só que o relatório estava salvo. Outro caso entrou em loop de buscas sobre a Microsoft."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como começar a avaliar um agente seu seguindo o talk?",
+      "resposta": "Instrumente com OpenTelemetry e leia de 12 a 15 traces completos anotando as falhas. Depois escreva um check de código para a falha mais simples e, no juiz LLM, use um critério por avaliador e rótulos binários."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que os resultados da demo não generalizam?",
+      "resposta": "Vêm de um agente de brinquedo com 13 traces e prompts fracos de propósito. A melhora de 50% para 100% foi favorecida por muitas tentativas, e os 46% de concordância usaram rótulos aleatórios. A autora é da Arize."
+    }
+  ],
+  "experimento": {
+    "titulo": "Anotar 12 traces de um agente",
+    "minutos": 45,
+    "precisa": "Um agente seu e OpenTelemetry ou outra ferramenta de tracing",
+    "passos": [
+      "Instrumente um agente com tracing.",
+      "Rode 12 consultas variadas.",
+      "Leia cada trace completo e anote as falhas em linguagem natural.",
+      "Escreva um check de código para a falha mais frequente e rode nos 12 traces."
+    ],
+    "sucesso": "Você tem 12 anotações e um check automático que acha ao menos uma das falhas que viu."
+  }
 }

@@ -21,35 +21,40 @@
       "texto": "O talk organiza a oferta da PayPal em três rotas. A primeira usa o Agentic Commerce Protocol (protocolo de comércio agêntico) da OpenAI, dentro do ChatGPT. A segunda usa o Universal Commerce Protocol, criado pelo Google com parceiros. A terceira usa só um app MCP com checkout externo. Segundo o palestrante, os dois protocolos são quase idênticos nas especificações.",
       "t": 96,
       "legenda": "Os três caminhos que o lojista pode escolher para aceitar pagamentos de agentes.",
-      "print": "img/c5U-XbbEN-g/0.jpg"
+      "print": "img/c5U-XbbEN-g/0.jpg",
+      "descricao": "Slide com as três opções de pagamento: Agentic Commerce Protocol (ACP/ChatGPT), Universal Commerce Protocol (UCP/Google) e MCP App com checkout externo."
     },
     {
       "titulo": "App MCP: o lojista controla a vitrine dentro do agente",
       "texto": "Um app MCP é um servidor MCP com interface embutida (HTML e JavaScript) que o agente renderiza. No ChatGPT, o lojista decide o visual da lista de hotéis. Na hora de pagar, a tela de checkout é do ChatGPT, não do lojista. Depois o app volta atualizado com a reserva confirmada.",
       "t": 291,
       "legenda": "A interface de busca é do lojista e a tela de pagamento é do ChatGPT.",
-      "print": "img/c5U-XbbEN-g/1.jpg"
+      "print": "img/c5U-XbbEN-g/1.jpg",
+      "descricao": "Tela inicial do ChatGPT demonstrando a integração com app MCP para shopping agêntico."
     },
     {
       "titulo": "Tokenização mantém o cartão fora do agente e do lojista",
       "texto": "O usuário digita o cartão no app hospedeiro. Ele é trocado por um token na PayPal, e só o token circula. Isso evita aumentar o escopo PCI (as regras de segurança para quem toca em dados de cartão). O lojista recebe um token igual aos que já processa, então liquidação, reembolso e chargeback seguem iguais.",
       "t": 360,
       "legenda": "O cartão real vira token antes de chegar ao lojista.",
-      "print": "img/c5U-XbbEN-g/2.jpg"
+      "print": "img/c5U-XbbEN-g/2.jpg",
+      "descricao": "Formulário de entrada de cartão de teste no ChatGPT, mostrando campos de número, data e código de segurança."
     },
     {
       "titulo": "Token com limites e origem registrada",
       "texto": "O token só funciona em um lojista, tem valor máximo, moeda definida e data de expiração. Cada transação fica atribuída à origem, por exemplo ChatGPT, e aparece assim no painel da PayPal. O limite reduz o estrago se o token vazar.",
       "t": 473,
       "legenda": "As quatro travas que limitam o uso de um token de agente.",
-      "print": "img/c5U-XbbEN-g/3.jpg"
+      "print": "img/c5U-XbbEN-g/3.jpg",
+      "descricao": "Slide de dois pontos de integração do lojista no protocolo ACP: widget MCP e servidor MCP com código."
     },
     {
       "titulo": "Google AI Mode exige endpoints, não interface",
       "texto": "No Google, o agente cria uma sessão no lojista, o Google Pay gera o token e o lojista processa a cobrança. O lojista não constrói interface. Ele publica um arquivo well-known JSON do UCP com o ID de comerciante e a chave pública, e implementa o endpoint de conclusão da sessão de checkout.",
       "t": 600,
       "legenda": "O lojista só configura endpoints e um arquivo de descoberta.",
-      "print": "img/c5U-XbbEN-g/4.jpg"
+      "print": "img/c5U-XbbEN-g/4.jpg",
+      "descricao": "Slide com fluxo de cinco passos do Google AI Mode: Discover, Session, Tokenize, Complete, Charge."
     }
   ],
   "conceitos": [
@@ -189,5 +194,36 @@
       "contexto": "passos do fluxo no Google AI Mode, o último é a cobrança",
       "t": 569
     }
-  ]
+  ],
+  "rotulo": "Como agentes de IA pagam sem ver o cartão",
+  "objetivo": "comparar os três caminhos para receber pagamentos iniciados por agentes e escolher entre controle e atrito",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que restrições o token de pagamento carrega?",
+      "resposta": "O cartão vira um token que vale para um lojista, um valor máximo, uma moeda e um prazo. O agente e o lojista só manipulam o token."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que cuidado aplicar ao desenhar um fluxo em que o seu agente paga?",
+      "resposta": "Restrinja a credencial por lojista, valor, moeda e prazo em vez de repassar o cartão. Pergunte ao seu processador como ele recebe tokens de agentes e se atribui a origem nos relatórios."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que a comparação dos três caminhos merece desconfiança?",
+      "resposta": "Vem de quem vende a integração, num estande de conferência, e é qualitativa. Não há dados de conversão, fraude ou erro, e as demos usam cartão de teste."
+    }
+  ],
+  "experimento": {
+    "titulo": "Mapa dos três caminhos de pagamento",
+    "minutos": 30,
+    "precisa": "As especificações públicas do ACP e do UCP e um catálogo de exemplo",
+    "passos": [
+      "Leia as especificações do ACP e do UCP e anote o que cada uma exige do catálogo e do endpoint de pagamento.",
+      "Monte uma tabela com os três caminhos (ChatGPT, Google AI Mode e app MCP) e as colunas controle e atrito.",
+      "Preencha a tabela para uma loja real ou fictícia.",
+      "Escolha um caminho e escreva o motivo em duas frases."
+    ],
+    "sucesso": "A tabela está completa e você justifica um caminho em duas frases com base em controle e atrito."
+  }
 }

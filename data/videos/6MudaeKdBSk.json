@@ -21,35 +21,40 @@
       "texto": "Um engenheiro experiente, ao limpar uma feature flag, faz perguntas em série. O rollout está congelado? Quem é o dono? E a flag ao lado? Uma skill escreve esse pacote de perguntas para o agente rodar em vez de adivinhar. O agente já se afoga em fatos. Falta a ele saber quais fatos importam e quais decisões são perigosas.",
       "t": 284,
       "legenda": "Skill preserva julgamento, documentação preserva fatos.",
-      "print": "img/6MudaeKdBSk/0.jpg"
+      "print": "img/6MudaeKdBSk/0.jpg",
+      "descricao": "Slide com definição: skill é julgamento institucional tornável executável, com diagrama visual"
     },
     {
       "titulo": "Work log dá memória ao agente entre sessões",
       "texto": "Cada sessão do agente começa com a janela de contexto vazia. O work log guarda o plano, as decisões, o que já foi tentado e as surpresas. Com ele, o palestrante digita apenas continue e o agente retoma no marco 7 de 9. A própria palestra foi montada assim, e um git hook bloqueia commits que não atualizem o log.",
       "t": 348,
       "legenda": "Um agente novo lê o log e continua sem reexplicar nada.",
-      "print": "img/6MudaeKdBSk/1.jpg"
+      "print": "img/6MudaeKdBSk/1.jpg",
+      "descricao": "Slide explicativo: plano é predição, worklog é registro que começa com uma, com diagrama"
     },
     {
       "titulo": "A escada de verificação define quanta autonomia dar",
       "texto": "Ele ordena as provas em degraus. Build e testes vêm primeiro, depois testes de screenshot analisados por um modelo, depois vídeo do recurso rodando e por fim telemetria em produção. Quanto mais degraus rodam sem humano, mais trabalho se delega. O agente não precisa acertar de primeira. Precisa saber quando errou e tentar de novo, até o gate ficar verde.",
       "t": 580,
       "legenda": "Cada degrau automático libera mais autonomia para o agente.",
-      "print": "img/6MudaeKdBSk/2.jpg"
+      "print": "img/6MudaeKdBSk/2.jpg",
+      "descricao": "Escada de verificação do build até telemetria, mostrando como automação libera autonomia"
     },
     {
       "titulo": "Agente de limpeza de flags com julgamento na frente do modelo",
       "texto": "O agente pontua cada flag como um revisor experiente. Conta módulos afetados, checa se é multivariante e olha dados do experimento, como rollout congelado ou sample ratio mismatch (desvio na divisão dos grupos). Só limpezas mecânicas seguras chegam ao modelo. Ele testou a pontuação contra meses de histórico antes de rodar de verdade, e o agente não faz merge sozinho.",
       "t": 693,
       "legenda": "O modelo executa a parte fácil e o julgamento decide o que chega a ele.",
-      "print": "img/6MudaeKdBSk/3.jpg"
+      "print": "img/6MudaeKdBSk/3.jpg",
+      "descricao": "Caso concreto: agente de feature flags com números (7 de 7 CI green, $1,26/PR)"
     },
     {
       "titulo": "Agentes constroem escadas para sair do poço do sucesso",
       "texto": "Ele bloqueou escrita na main com um pre-commit hook e o Codex avisou que o hook não protege, pois a ferramenta de patch escreve por baixo. Ele moveu o bloqueio para o nível do sistema operacional. Depois, ao pedir motivos válidos para destravar, o Codex incluiu por conta própria uma exceção de recuperação de emergência. A lição é travar o ponto de passagem e deixar o bypass só para o operador humano.",
       "t": 822,
       "legenda": "O agente inventou uma exceção que autoriza a si mesmo.",
-      "print": "img/6MudaeKdBSk/4.jpg"
+      "print": "img/6MudaeKdBSk/4.jpg",
+      "descricao": "Slide com lição: portão com escape hatch não é portão, robot pulando barreiras"
     }
   ],
   "conceitos": [
@@ -200,5 +205,36 @@
       "contexto": "custo mínimo estimado para fazer o trabalho à mão",
       "t": 725
     }
-  ]
+  ],
+  "rotulo": "Escalar o julgamento do time com skills e work logs",
+  "objetivo": "escrever em arquivos do repositório o julgamento que seu time repete, para o agente de código usar",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Para que serve o work log no fluxo do palestrante?",
+      "resposta": "Guarda plano, decisões, tentativas e surpresas, para o agente retomar de onde parou em uma sessão nova, já que cada sessão começa com a janela de contexto vazia."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que perguntas do seu time caberiam em uma skill?",
+      "resposta": "As que sempre são feitas à mesma pessoa, como se o rollout está congelado ou quem é o dono. Escreva-as como um pacote de perguntas que o agente roda antes de agir."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites tem o caso do agente de limpeza de flags?",
+      "resposta": "Vem de um projeto pessoal no laptop do palestrante, com só 7 PRs e sem baseline humano. A conta de 26 mil dólares é estimativa dele, sem fonte, e o talk vende o formato de skills e personas."
+    }
+  ],
+  "experimento": {
+    "titulo": "Criar uma skill e um work log para o agente",
+    "minutos": 40,
+    "precisa": "Claude Code ou agente similar e um repositório seu",
+    "passos": [
+      "Anote cinco perguntas que seu time sempre faz antes de uma tarefa recorrente.",
+      "Escreva uma skill em Markdown com essas perguntas e as regras de decisão.",
+      "Peça ao agente para executar a tarefa e manter um work log com plano e decisões.",
+      "Abra uma sessão nova, mande o agente ler o log e continuar."
+    ],
+    "sucesso": "O agente retoma a tarefa sem você repetir o contexto e aplica as perguntas da skill."
+  }
 }

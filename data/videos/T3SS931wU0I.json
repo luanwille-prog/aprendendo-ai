@@ -21,35 +21,40 @@
       "texto": "Um eval junta um dataset (casos de entrada, incluindo casos ideais, extremos e falhas), uma task (prompt de sistema e modelo), um scorer (critério de bom ou ruim) e experimentos. Cada combinação das três primeiras peças gera um experimento, e comparar experimentos mostra melhoras e regressões.",
       "t": 188,
       "legenda": "As quatro peças que formam qualquer eval.",
-      "print": "img/T3SS931wU0I/0.jpg"
+      "print": "img/T3SS931wU0I/0.jpg",
+      "descricao": "Slide apresentando a primeira das quatro partes de um eval: dataset"
     },
     {
       "titulo": "Produção alimenta o eval, o eval melhora a produção",
       "texto": "Logs reais de um chatbot em produção viram uma amostra de 10 a 20 linhas, que vira dataset. Os evals mostram o que mudar no sistema, a mudança vai ao ar e gera novos logs. O ciclo se repete, e por isso ela chama o processo de flywheel (volante de inércia).",
       "t": 373,
       "legenda": "O ciclo entre observabilidade e evals.",
-      "print": "img/T3SS931wU0I/1.jpg"
+      "print": "img/T3SS931wU0I/1.jpg",
+      "descricao": "Diagrama do ciclo contínuo: app → logs → dataset → evals → deploy"
     },
     {
       "titulo": "Montar o experimento com bugs reais",
       "texto": "O dataset saiu de PRs mergeados com \"fix\" no título do repositório TypeScript Go. Ela voltou ao commit anterior, que ainda tinha o bug, e pediu a um LLM uma descrição da tarefa a partir do diff. A nota é binária: passou na suíte de testes do repositório vale 100%, falhou vale 0%.",
       "t": 713,
       "legenda": "O dataset vem de correções reais e a nota vem dos testes.",
-      "print": "img/T3SS931wU0I/2.jpg"
+      "print": "img/T3SS931wU0I/2.jpg",
+      "descricao": "Slide com 4 passos: PRs com 'fix', checkout buggy, gerar task, rodar LLM"
     },
     {
       "titulo": "Trace órfão esconde o que o agente fez",
       "texto": "Rodar o Claude Code como subprocesso deixou o trace órfão: só aparecia a linha \"run Claude agent\", sem os passos internos. Passar o ID do span pai por variável de ambiente ligou tudo, e o trace passou a mostrar cada turno, chamada ao LLM e comando como grep e ls. Sem isso, não dá para depurar.",
       "t": 837,
       "legenda": "Depois da correção, o trace mostra cada comando do agente.",
-      "print": "img/T3SS931wU0I/3.jpg"
+      "print": "img/T3SS931wU0I/3.jpg",
+      "descricao": "Interface Braintrust mostrando trace tree com spans aninhados de agente"
     },
     {
       "titulo": "Mesma acurácia, custo 4 vezes maior",
       "texto": "A busca vetorial devolve trechos sem imports e sem o código que os chama. O agente busca de novo, de novo e de novo, e as chamadas ao LLM se acumulam. A busca agêntica lê a função inteira e segue as chamadas para outros arquivos. Jess resume: a vetorial dá proximidade, a agêntica dá o tecido conectivo.",
       "t": 900,
       "legenda": "Acurácia igual nas duas, custo cerca de 4 vezes maior na vetorial.",
-      "print": "img/T3SS931wU0I/4.jpg"
+      "print": "img/T3SS931wU0I/4.jpg",
+      "descricao": "Tabela: Vector 70%/2.9M tokens/$4.40 vs Agentic 70%/946k/$1.58"
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "exemplo de 200 casos de teste aprovados antes de lançar",
       "t": 62
     }
-  ]
+  ],
+  "rotulo": "Busca agêntica ou vetorial? Decida com um eval",
+  "objetivo": "montar um eval pequeno, com dataset, task, scorer e experimentos, para comparar duas abordagens de busca",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Qual foi o resultado da comparação entre busca vetorial e agêntica no Claude Code?",
+      "resposta": "As duas tiveram a mesma acurácia, mas a vetorial custou cerca de 4 vezes mais, porque os trechos vinham sem contexto e o agente precisava buscar de novo várias vezes."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como montar um dataset de eval com o repositório do seu projeto?",
+      "resposta": "Use bugs já corrigidos. Volte ao commit anterior à correção, peça ao agente que localize o bug e use os testes existentes como nota. Registre os traces completos e rode várias tentativas por tarefa."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que a conclusão sobre custo é uma hipótese e não uma regra?",
+      "resposta": "Foram cerca de 20 casos, um repositório, uma tentativa por tarefa e uma busca vetorial que a própria palestrante chama de fraca. Não há valores em dinheiro nem intervalo de confiança, e a Braintrust vende a plataforma usada."
+    }
+  ],
+  "experimento": {
+    "titulo": "Mini eval com bugs já corrigidos",
+    "minutos": 45,
+    "precisa": "Claude Code e um repositório com testes e histórico de bugs corrigidos",
+    "passos": [
+      "Escolha 5 commits que corrigiram bugs e trouxeram teste.",
+      "Para cada um, volte ao commit anterior à correção e peça ao Claude Code que localize o bug.",
+      "Use o teste do repositório como nota e anote os tokens gastos.",
+      "Repita a rodada e compare acerto e custo entre as duas."
+    ],
+    "sucesso": "Uma planilha mostra acerto e custo por tarefa em 5 casos, com ao menos duas rodadas por caso."
+  }
 }

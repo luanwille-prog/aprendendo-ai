@@ -21,35 +21,40 @@
       "texto": "O time mantém o agente de produção e o de pesquisa idênticos byte a byte. Um job de sincronização a cada 4 horas evita deriva quando pesquisadores criam variantes ou skills novas. Assim, o resultado offline diz algo confiável sobre o comportamento real.",
       "t": 356,
       "legenda": "Mesmo código nos dois lados reduz a distância entre teste e produção.",
-      "print": "img/XyV6bSMyq-I/0.jpg"
+      "print": "img/XyV6bSMyq-I/0.jpg",
+      "descricao": "Slide com código lado a lado: produção e pesquisa usam byte a byte o mesmo código"
     },
     {
       "titulo": "Pipeline de avaliação como um DAG",
       "texto": "Cada rodada segue etapas fixas: configuração em YAML, carga de dados reais, montagem do ambiente, reaplicação de ajustes de runtime, execução do agente, pontuação e desmontagem. Ambientes são caros porque incluem logs de treino e simulação de GPU, então rodam em paralelo.",
       "t": 540,
       "legenda": "O pipeline completo de uma avaliação, da configuração ao teardown.",
-      "print": "img/XyV6bSMyq-I/1.jpg"
+      "print": "img/XyV6bSMyq-I/1.jpg",
+      "descricao": "Pipeline de avaliação com 6 fases: hydrate, setup, rehydrate, run, score, teardown"
     },
     {
       "titulo": "Duas formas de pontuar e 886 tarefas",
       "texto": "O agente é pontuado de dois jeitos. Um diz se a tarefa passou ou não. O outro compara variantes, por exemplo uma que faz perguntas ao usuário e outra que não faz. As tarefas incluem texto simples e usuários simulados por um modelo de linguagem, para testar conversas de vários turnos.",
       "t": 695,
       "legenda": "O conjunto de 886 tarefas, separado por níveis, com scores reais.",
-      "print": "img/XyV6bSMyq-I/2.jpg"
+      "print": "img/XyV6bSMyq-I/2.jpg",
+      "descricao": "Estatísticas de escala: 886 tarefas, 29 eval suites, 10 scorers, 60/30 paralelismo"
     },
     {
       "titulo": "O flywheel de produção para tarefa",
       "texto": "Todo erro em produção, e também todo acerto, vira uma tarefa nova. Isso tira o time da escrita manual de benchmarks. Os traces de produção e os offline são analisados com as mesmas ferramentas, e o agente ajuda a revisar os rollouts que ele mesmo gerou.",
       "t": 727,
       "legenda": "Traces reais alimentam o conjunto de tarefas de avaliação.",
-      "print": "img/XyV6bSMyq-I/3.jpg"
+      "print": "img/XyV6bSMyq-I/3.jpg",
+      "descricao": "Flywheel: trajectory → BehaviorTrace → issue detectors → cluster → draft task"
     },
     {
       "titulo": "Demo: o ARIA corrige um bug dele mesmo",
       "texto": "O agente transformou um trace real em tarefa de regressão, achou que faltava chamar weave.log corretamente no sandbox e replicou o erro. Depois testou variantes e a candidata, com um trecho novo no prompt de sistema, resolveu o problema. O relatório final compara produção e candidata.",
       "t": 820,
       "legenda": "O relatório mostra o bug, o ajuste e o resultado da variante nova.",
-      "print": "img/XyV6bSMyq-I/4.jpg"
+      "print": "img/XyV6bSMyq-I/4.jpg",
+      "descricao": "Relatório W&B com comparação produção vs candidata, diagnóstico do bug e score"
     }
   ],
   "conceitos": [
@@ -79,7 +84,7 @@
       "nome": "Agent harness",
       "traducao": "estrutura que envolve o modelo (ferramentas, contexto, compactação)",
       "nivel": "intermediario",
-      "chave": "agent harness",
+      "chave": "harness",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -204,5 +209,36 @@
       "contexto": "tempo sem escrever código à mão, segundo o palestrante",
       "t": 882
     }
-  ]
+  ],
+  "rotulo": "Agente de produção e de pesquisa com o mesmo código",
+  "objetivo": "desenhar um fluxo que transforma falhas reais de um agente em tarefas de avaliação repetíveis",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que a Weights & Biases mantém o agente de produção e o de pesquisa idênticos?",
+      "resposta": "Para que o resultado offline diga algo confiável sobre o comportamento real. Um job de sincronização a cada 4 horas evita deriva quando pesquisadores criam variantes ou skills novas."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você transformaria uma falha reportada por um usuário do seu agente em uma tarefa de avaliação?",
+      "resposta": "Salvando o trace ou a entrada real e escrevendo um arquivo com a condição inicial e a condição final esperada. Depois, roda a tarefa em variantes do agente e compara com a versão atual."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites tem a evidência apresentada no talk?",
+      "resposta": "É uma demo de produto da W&B. O único score citado é cerca de 66%, sem baseline nem intervalo, e a demo mostra um único bug corrigido, sem taxa de acerto da abordagem."
+    }
+  ],
+  "experimento": {
+    "titulo": "Transformar uma falha real em tarefa de avaliação",
+    "minutos": 30,
+    "precisa": "Um agente ou prompt seu, uma falha real que ele teve e Claude ou ChatGPT",
+    "passos": [
+      "Escolha uma falha real do seu agente ou prompt e salve a entrada e a saída ruim.",
+      "Escreva um arquivo YAML com a entrada, a condição inicial e a condição final esperada.",
+      "Rode a tarefa na versão atual e em uma variante com um ajuste no prompt.",
+      "Compare os dois resultados lado a lado e anote qual passou."
+    ],
+    "sucesso": "Você tem um arquivo de tarefa reaproveitável e vê se a variante corrige a falha ou não."
+  }
 }

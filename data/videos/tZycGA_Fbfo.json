@@ -21,35 +21,40 @@
       "texto": "O desenvolvedor registra o agente num portal interno. O portal cria o repositório com os frameworks de memória, rastreio, avaliação, otimização de contexto e filtro de PII, além de identidade de workload, tabelas e segredos. Assim o padrão fica igual em todos os times e os resultados ficam num lugar só.",
       "t": 316,
       "legenda": "Um registro no portal cria repositório e recursos de produção juntos",
-      "print": "img/tZycGA_Fbfo/0.jpg"
+      "print": "img/tZycGA_Fbfo/0.jpg",
+      "descricao": "Slide 'Building Agent Infrastructure': Local Development com Agent Registration, Dev Portal, Repository, Memory e Tracking & Eval."
     },
     {
       "titulo": "MCP gateway como porta única de autenticação",
       "texto": "O cliente pede autenticação uma vez, o gateway guarda a sessão no Redis e devolve um token JWT. Cada chamada de ferramenta vai ao gateway com esse token, que identifica o servidor MCP de destino e repassa o token do usuário. Nenhum endpoint recebe acesso direto.",
       "t": 626,
       "legenda": "O gateway autentica e roteia toda chamada de ferramenta",
-      "print": "img/tZycGA_Fbfo/1.jpg"
+      "print": "img/tZycGA_Fbfo/1.jpg",
+      "descricao": "Slide 'MCP Gateway' com o fluxo numerado: OAuth, Redis para sessão, JWE, namespace lookup, token de usuário e rate limit até os servidores MCP."
     },
     {
       "titulo": "Workflow com política e aprovação humana",
       "texto": "O LangGraph interpreta a pergunta, classifica o risco (leitura, modificação, exclusão), busca evidências via gateway e checa políticas. Leitura executa direto. Escrita sensível espera aprovação humana. Aprovada ou rejeitada, a decisão vai para o log de auditoria.",
       "t": 934,
       "legenda": "Ações de escrita sensíveis passam por aprovação antes de executar",
-      "print": "img/tZycGA_Fbfo/2.jpg"
+      "print": "img/tZycGA_Fbfo/2.jpg",
+      "descricao": "Slide 'Agent Framework' com o grafo Start, Interpret, Classify, Plan, Fetch evidence via gateway, Policy, aprovação HITL, Execute e Audit."
     },
     {
       "titulo": "Tabelas de tracking e avaliação desde o dia um",
       "texto": "Cada agente tem seu projeto com seis tabelas: execução do job, checagens de qualidade, scores de eval, métricas, chamadas de ferramenta e trajetória. Com isso a empresa pode somar custo, tokens e qualidade de centenas de agentes em dashboards executivos.",
       "t": 1275,
       "legenda": "Cada execução grava pergunta, resposta, modelo, tempo e custo",
-      "print": "img/tZycGA_Fbfo/3.jpg"
+      "print": "img/tZycGA_Fbfo/3.jpg",
+      "descricao": "Console do BigQuery com as seis tabelas do dataset agent_tracking_eval listadas à esquerda e o schema de agent_job_tracking aberto."
     },
     {
       "titulo": "Otimizador de contexto corta tokens",
       "texto": "O otimizador poda o payload pelo limite de tokens, reordena por relevância, remove duplicatas e comprime antes de chamar o modelo. Na demo, a mesma consulta caiu de 24 mil para 2,4 mil tokens. O palestrante cita economia típica de 70% a 78%.",
       "t": 1554,
       "legenda": "A mesma consulta gastou cerca de 90% menos tokens com o otimizador",
-      "print": "img/tZycGA_Fbfo/4.jpg"
+      "print": "img/tZycGA_Fbfo/4.jpg",
+      "descricao": "Resultado de consulta na tabela de tracking: 24.588 tokens de entrada e 25.130 no total, com ctx_opt_on false e ctx_saved null. Sem linha com otimizador."
     }
   ],
   "conceitos": [
@@ -170,5 +175,35 @@
       "contexto": "limite de severidade para bloquear e ocultar segredos",
       "t": 1431
     }
-  ]
+  ],
+  "rotulo": "Chassi de produção para agentes corporativos",
+  "objetivo": "desenhar a base comum que um agente precisa antes da lógica de negócio, com gateway, rastreio e aprovação humana",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que o MCP gateway do Credit Karma faz em cada chamada de ferramenta?",
+      "resposta": "Autentica o cliente uma vez, guarda a sessão e devolve um token JWT. Cada chamada vai ao gateway com esse token, que identifica o servidor MCP de destino e repassa o token do usuário. Nenhum endpoint recebe acesso direto."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você classificaria as ações de um agente seu para decidir quando exigir aprovação humana?",
+      "resposta": "Por risco. Leitura executa direto, escrita sensível e exclusão esperam aprovação humana, e toda decisão, aprovada ou rejeitada, é gravada em log de auditoria."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que a redução de cerca de 90% em tokens do otimizador de contexto não basta como prova?",
+      "resposta": "Vem de uma consulta de listagem no Artifactory, sem comparação de qualidade das respostas antes e depois, e sem ROI medido. É relato interno, sem código aberto nem dados de produção."
+    }
+  ],
+  "experimento": {
+    "titulo": "Log de execução do seu agente desde o dia um",
+    "minutos": 30,
+    "precisa": "Python e um agente simples que chame uma ferramenta, como um script com a API do Claude",
+    "passos": [
+      "Crie um arquivo JSONL com pergunta, resposta, modelo, tokens, custo e ferramentas chamadas.",
+      "Faça seu agente gravar uma linha a cada execução.",
+      "Marque cada ferramenta como leitura ou escrita e faça o script pedir confirmação no terminal antes de qualquer escrita, gravando a decisão."
+    ],
+    "sucesso": "Depois de 10 execuções você consegue somar custo e tokens e ver quais escritas foram aprovadas ou recusadas."
+  }
 }

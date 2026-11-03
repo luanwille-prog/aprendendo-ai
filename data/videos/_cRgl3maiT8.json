@@ -21,35 +21,40 @@
       "texto": "Para gerar cada token, o modelo lê todos os pesos da memória. Segundo Daniel, até 90% do tempo o processador fica parado esperando esses dados. Dividir o modelo entre GPUs ajuda, mas exige um all-reduce (soma dos resultados parciais) a cada camada, e 4x mais GPUs rendem só cerca de 2x de velocidade.",
       "t": 188,
       "legenda": "Mais GPUs aceleram o token, mas o custo de comunicação cresce mais rápido.",
-      "print": "img/_cRgl3maiT8/0.jpg"
+      "print": "img/_cRgl3maiT8/0.jpg",
+      "descricao": "Slide 'One token = read the whole model' com barras de tempo por GPU (1, 2 e 4), mostrando espera de memória e comunicação. Imagem pequena."
     },
     {
       "titulo": "Fronteira de Pareto entre velocidade e vazão",
       "texto": "Quem serve inferência escolhe entre rapidez por usuário e total de tokens por segundo. O exemplo dado é o fast mode do Claude Code, que gasta cerca de 6x mais recursos por token para ir ao dobro da velocidade. As otimizações do talk servem para empurrar essa curva para a direita.",
       "t": 219,
       "legenda": "Ganhar velocidade custa vazão, e cada técnica tenta deslocar a curva.",
-      "print": "img/_cRgl3maiT8/1.jpg"
+      "print": "img/_cRgl3maiT8/1.jpg",
+      "descricao": "Gráfico 'Faster tokens cost more energy': tokens/s por usuário contra energia por token. Mostra o custo da velocidade, sem a curva de vazão."
     },
     {
       "titulo": "KV cache cresce rápido e o paging o domestica",
       "texto": "O KV cache guarda os vetores K e V de cada token já processado. Com contexto de 128k, uma única requisição ocupa 42 GB. O KV cache paginado, inspirado em memória virtual de sistema operacional, evita reservar blocos que ficam vazios e, segundo Daniel, atende 3x mais requisições.",
       "t": 371,
       "legenda": "Reserva fixa desperdiça memória, e blocos paginados ocupam só o necessário.",
-      "print": "img/_cRgl3maiT8/2.jpg"
+      "print": "img/_cRgl3maiT8/2.jpg",
+      "descricao": "Slide 'More requests = KV cache explodes': blocos de KV de sete requisições crescendo a cada token. Mostra o crescimento, não a paginação."
     },
     {
       "titulo": "Separar prefill e decode em pools diferentes",
       "texto": "O prefill (ler o prompt) é limitado por computação, e o decode (gerar a resposta) é limitado por memória. Resumir um documento pesa no prefill, e escrever um livro pesa no decode. Com dois pools de máquinas, cada um escala sozinho e um não trava o outro.",
       "t": 679,
       "legenda": "Cada fase ganha seu próprio pool, escalado conforme o tipo de carga.",
-      "print": "img/_cRgl3maiT8/3.jpg"
+      "print": "img/_cRgl3maiT8/3.jpg",
+      "descricao": "Slide do paper Splitwise (Microsoft, ISCA 2024), primeiro a separar prefill e decode. Texto legível, sem diagrama de pools."
     },
     {
       "titulo": "Speculative decoding com modelo rascunho",
       "texto": "Um modelo pequeno propõe vários tokens e o modelo grande só verifica. No exemplo de Michelle, nove tokens exigem três passadas do modelo grande em vez de nove. Rodar o rascunho em chips rápidos para modelos pequenos levaria, segundo a Gimlet, a 10x mais interatividade que GPUs homogêneas.",
       "t": 960,
       "legenda": "A curva desloca para a direita com rascunho e com chips diferentes por tarefa.",
-      "print": "img/_cRgl3maiT8/4.jpg"
+      "print": "img/_cRgl3maiT8/4.jpg",
+      "descricao": "Slide 'Gimlet: gpt-oss-120b on GPU and d-Matrix': curva de vazão contra interatividade e diagramas de prefill/decode e rascunho especulativo."
     }
   ],
   "conceitos": [
@@ -258,5 +263,36 @@
       "contexto": "ganho do KForge no GPT-OSS-120B em hardware AMD",
       "t": 1177
     }
-  ]
+  ],
+  "rotulo": "Como a inferência ficou mais barata e rápida",
+  "objetivo": "explicar por que o decode espera a memória e usar essa ideia para estruturar prompts e escolher um provedor de inferência",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que gerar tokens (o decode) é limitado pela memória e não pela computação?",
+      "resposta": "Para gerar cada token o modelo lê todos os pesos da memória, e no decode com lote pequeno o processador fica até 90% do tempo parado esperando dados. O prefill, que lê o prompt, é limitado por computação."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como estruturar o prompt de um agente para pagar menos com prompt caching?",
+      "resposta": "Coloque a parte fixa (instruções e ferramentas) no começo do prompt, para o provedor reaproveitar o que já processou e cobrar menos."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que ressalvas valem para as comparações de desempenho apresentadas?",
+      "resposta": "Os dois palestrantes vendem o que descrevem. Os 3.000 contra 600 tokens por segundo não trazem modelo, lote ou fonte, os ganhos da Gimlet não têm metodologia e os 90% de espera valem para o decode com lote pequeno."
+    }
+  ],
+  "experimento": {
+    "titulo": "Medir o efeito do tamanho do contexto na latência",
+    "minutos": 25,
+    "precisa": "Acesso a um LLM com tempo de resposta visível e um texto longo sem dados sensíveis",
+    "passos": [
+      "Prepare um prompt curto e outro com cerca de 20 vezes mais texto, ambos pedindo uma resposta curta.",
+      "Meça o tempo até a primeira palavra e o tempo total de cada um, 5 vezes.",
+      "Peça uma resposta longa a partir do prompt curto e meça de novo.",
+      "Compare os tempos e relacione com o prefill (ler o prompt) e o decode (gerar a resposta)."
+    ],
+    "sucesso": "Você tem os tempos médios das três situações e consegue dizer qual fase pesou mais em cada uma."
+  }
 }

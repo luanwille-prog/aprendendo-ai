@@ -21,35 +21,40 @@
       "texto": "A PR permite transferir um ingresso a um amigo e os testes passam. O Gitar avisa que o comprador original ainda pode cancelar e reembolsar o ingresso depois de transferi-lo. O erro está em orders.py, arquivo que a PR nem toca. Um revisor que olha só o diff não veria isso.",
       "t": 1093,
       "legenda": "O achado aponta para orders.py, fora das linhas alteradas na PR.",
-      "print": "img/wP3P89YB9fA/0.jpg"
+      "print": "img/wP3P89YB9fA/0.jpg",
+      "descricao": "PR no GitHub com comentário do gitar-bot: 'Bug: Buyer can refund and void a ticket after giving it away' e resumo do Code Review"
     },
     {
       "titulo": "Análise estática não infere intenção",
       "texto": "Killian separa duas camadas. Ferramentas como o SonarQube pegam falhas como SQL injection percorrendo muitos arquivos. Elas não leem título e descrição da PR para checar se a lógica de negócio faz sentido. O Gitar cobre essa segunda parte, e o palestrante defende usar as duas juntas.",
       "t": 1031,
       "legenda": "Testes verdes não provam que a regra de negócio está certa.",
-      "print": "img/wP3P89YB9fA/1.jpg"
+      "print": "img/wP3P89YB9fA/1.jpg",
+      "descricao": "Diff da PR de transferência em tickets.py e transfers.py com o status 'Able to merge'; o CI não aparece na tela"
     },
     {
       "titulo": "Regras de negócio em arquivos do repositório",
       "texto": "A pasta .gitar/review recebe arquivos Markdown com contexto que orienta as revisões. A pasta .gitar/rules guarda regras que disparam uma ação quando a PR cumpre um critério. No exemplo, qualquer mudança em preços gera uma lista dos campos visíveis ao cliente e a checagem se mostram o preço final. Uma taxa de 3,50 sobre um ingresso de 50 vira alerta.",
       "t": 1405,
       "legenda": "A regra do preço final fica versionada no repositório, ao lado do código.",
-      "print": "img/wP3P89YB9fA/2.jpg"
+      "print": "img/wP3P89YB9fA/2.jpg",
+      "descricao": "Árvore de arquivos com .gitar/review/all-in-pricing.md e .gitar/rules/price-display-check.md, com o texto das regras abertos"
     },
     {
       "titulo": "Diagnóstico de falha de CI e merge automático",
       "texto": "Na terceira PR, um teste falha porque a refatoração deixou o ingresso ser escaneado duas vezes. O Gitar lê os logs do CI, explica a causa e empurra correções até a pipeline passar. Dois comandos de comentário, auto apply on e auto merge on, liberam as correções sem clique e o merge no fim.",
       "t": 1779,
       "legenda": "O agente lê o log do CI e nomeia o teste e o comportamento errado.",
-      "print": "img/wP3P89YB9fA/3.jpg"
+      "print": "img/wP3P89YB9fA/3.jpg",
+      "descricao": "Comentário do gitar-bot na PR 3: 'CI failed' com o teste que retorna 200 em vez de 409 no check-in de ingresso já usado"
     },
     {
       "titulo": "Verificação entre repositórios e entre PRs",
       "texto": "No final, Taylor cita análise entre repositórios, que acha mudanças que passam sozinhas mas quebram código em outro repo. Cita também análise entre PRs em andamento, porque duas PRs podem passar isoladas e quebrar produção juntas. Só foi mostrado de relance no dashboard.",
       "t": 2152,
       "legenda": "Cada achado traz onde ocorre, a correção e por que importa.",
-      "print": "img/wP3P89YB9fA/4.jpg"
+      "print": "img/wP3P89YB9fA/4.jpg",
+      "descricao": "Dashboard Cross-PR com lista de achados abertos: PR 286 e 288 com a correção sugerida 'Both PRs' e severidade crítica"
     }
   ],
   "conceitos": [
@@ -159,5 +164,36 @@
       "contexto": "preço final de um ingresso de US$ 50 com a taxa",
       "t": 1341
     }
-  ]
+  ],
+  "rotulo": "Revisor de IA que enxerga além do diff",
+  "objetivo": "escrever regras de negócio em arquivos do repositório e testar se um revisor de IA as aplica",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Qual bug o Gitar achou na PR de transferência de ingresso?",
+      "resposta": "O comprador original ainda podia cancelar e pedir reembolso depois de transferir o ingresso. O erro estava em orders.py, arquivo que a PR nem tocava, e os testes passavam."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você ensinaria uma regra de negócio ao revisor de IA?",
+      "resposta": "Escrevendo a regra em Markdown em arquivos do repositório, como a pasta .gitar/rules, com o critério que dispara a ação, por exemplo listar os pontos afetados quando uma PR mudar preços."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites tem o workshop como evidência de qualidade?",
+      "resposta": "É material de produto da Sonar, os três cenários foram montados pelos palestrantes num app de brinquedo e não há taxa de acerto, falsos positivos ou custo reais. O merge automático exige testes fortes, como o talk admite."
+    }
+  ],
+  "experimento": {
+    "titulo": "Regra de negócio em Markdown para o revisor",
+    "minutos": 35,
+    "precisa": "Um repositório seu no GitHub e um revisor de IA (Claude Code ou o Gitar em trial)",
+    "passos": [
+      "Escolha uma regra de negócio importante, como o preço final cobrado do cliente, e escreva-a em um arquivo Markdown.",
+      "Crie uma branch com uma mudança que viole a regra sem quebrar os testes.",
+      "Peça ao revisor de IA que revise a branch usando o arquivo de regras.",
+      "Anote se ele apontou a violação e se gerou falsos alarmes."
+    ],
+    "sucesso": "O revisor aponta a violação da regra e você registra quantos alertas eram úteis e quantos eram ruído."
+  }
 }

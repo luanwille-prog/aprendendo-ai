@@ -21,35 +21,40 @@
       "texto": "O agente exagera o que fez, erra os fatos ou erra a conclusão. Cada falha pede um nível de revisão diferente, e o rigor sobe conforme o risco. O autor diz que o agente faz a checagem, e que ele mesmo não consegue revisar tudo na escala em que trabalha.",
       "t": 61,
       "legenda": "Cada nível de revisão responde a um tipo de erro do agente.",
-      "print": "img/dYh7TQkuYFE/0.jpg"
+      "print": "img/dYh7TQkuYFE/0.jpg",
+      "descricao": "Três colunas de vidro: fonte x leitura do agente ($1,564 vs $1,544) e o raciocínio com fatos corretos e conclusão errada. Mostra dois dos três modos de falha."
     },
     {
       "titulo": "Nível 1: entregar o artefato com impressão digital ou admitir que falta",
       "texto": "O agente só pode terminar com 'artefato verificado', com uma impressão digital (fingerprint) do arquivo, ou 'artefato ausente', com o motivo. No caso do vazamento de memória, o build falhou com 25 erros de compilação e o subagente relatou isso, em vez de dizer 'pronto'.",
       "t": 311,
       "legenda": "O subagente admitiu o build ausente em vez de declarar sucesso.",
-      "print": "img/dYh7TQkuYFE/1.jpg"
+      "print": "img/dYh7TQkuYFE/1.jpg",
+      "descricao": "Texto 'done' riscado e a frase 'Instead, it reported' seguida de 'MAIN DELIVERABLE: NOT DELIVERED' em vermelho. Não mostra os 25 erros de compilação."
     },
     {
       "titulo": "Nível 2: dois extratores independentes e um total de controle",
       "texto": "Na contabilidade, o saldo impresso em cada extrato serviu de total de controle. Dois agentes extraíram cada mês sem ver o trabalho um do outro. Um terceiro comparou linha a linha e resolveu cada diferença na fonte. Foram 56 diferenças e o ano fechou no centavo.",
       "t": 495,
       "legenda": "Extração dupla e independente achou 56 diferenças e fechou no centavo.",
-      "print": "img/dYh7TQkuYFE/2.jpg"
+      "print": "img/dYh7TQkuYFE/2.jpg",
+      "descricao": "Slide 'Level 2' com dois verificadores (Checker 1 e Checker 2) ligados a uma tabela de registros de transação."
     },
     {
       "titulo": "Nível 3: revisores frios com motivo para criticar",
       "texto": "Primeiro o agente audita as próprias afirmações. Depois revisores sem contexto, cada um em um papel (litigante, advogado da outra parte, auditor), leem o material cru. Por fim, revisores novos checam a versão revisada. Dois advogados-agentes acharam a renovação automática de três anos que a autoverificação do agente tinha deixado passar.",
       "t": 587,
       "legenda": "Revisores frios acharam a cláusula que a autoauditoria aprovou.",
-      "print": "img/dYh7TQkuYFE/3.jpg"
+      "print": "img/dYh7TQkuYFE/3.jpg",
+      "descricao": "Slide 'Level 3 · Adversarial review', etapa 2 'Cold reviewers' com três feixes de luz (papéis). Os papéis e o achado da renovação não aparecem nomeados."
     },
     {
       "titulo": "Custo em tempo e tokens",
       "texto": "O autor informa o custo de cada caso. Os revisores do vazamento levaram cerca de 15 minutos e 6 milhões de tokens. A carta de cobrança levou 15 minutos e 13 milhões. Ele defende que a revisão leva minutos, não horas, e que o custo compensa quando o erro custaria milhares de dólares.",
       "t": 651,
       "legenda": "Revisão de alto risco custou 15 minutos e 13 milhões de tokens.",
-      "print": "img/dYh7TQkuYFE/4.jpg"
+      "print": "img/dYh7TQkuYFE/4.jpg",
+      "descricao": "Medidor 'What the cold review cost' marcando ~15 minutos e contador de tokens ainda animando (~0M, escala até 20M). O valor final de 13 milhões não aparece."
     }
   ],
   "conceitos": [
@@ -57,7 +62,7 @@
       "nome": "Agent skills",
       "traducao": "habilidades empacotadas para agentes",
       "nivel": "intermediario",
-      "chave": "agent skills",
+      "chave": "skill",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -159,5 +164,35 @@
       "contexto": "tokens gastos na revisão da carta de cobrança",
       "t": 651
     }
-  ]
+  ],
+  "rotulo": "Três níveis de revisão para confiar em agentes",
+  "objetivo": "escolher o nível de revisão adequado ao risco de uma tarefa delegada a um agente",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são as três falhas de agentes que Corey Gallon descreve e o que o nível 1 exige do agente?",
+      "resposta": "O agente exagera o que fez, erra fatos ou erra o raciocínio. O nível 1 exige que ele termine com 'artefato verificado', com uma impressão digital do arquivo, ou com 'artefato ausente' e o motivo."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você usaria dois agentes extratores e um total de controle para conferir dados de relatórios do seu trabalho?",
+      "resposta": "Escolha um total impresso na própria fonte, como um saldo. Dois agentes extraem os mesmos dados sem ver o trabalho um do outro, um terceiro compara linha a linha e cada diferença é resolvida na fonte. No caso do talk foram 56 diferenças."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que limita a conclusão de que o método de revisão funciona?",
+      "resposta": "O método é do próprio autor, os três casos foram escolhidos a dedo, não há grupo de comparação nem taxa de erros que escapam, e 'erro relevante' não tem definição pública. O custo dos falsos alarmes dos revisores também não aparece."
+    }
+  ],
+  "experimento": {
+    "titulo": "Agente que entrega com prova do arquivo",
+    "minutos": 20,
+    "precisa": "Claude ou Claude Code e uma tarefa pequena que gere um arquivo",
+    "passos": [
+      "Peça a um agente que gere um arquivo simples, como um CSV de resumo, e que termine só com 'artefato verificado' (com hash) ou 'artefato ausente' e o motivo.",
+      "Rode você mesmo o comando de hash (shasum) no arquivo e compare com o valor que o agente informou.",
+      "Repita com uma tarefa impossível, como gravar numa pasta sem permissão, e veja se o agente admite que o artefato está ausente."
+    ],
+    "sucesso": "O hash informado bate com o seu e, na tarefa impossível, o agente relata a ausência em vez de dizer que terminou."
+  }
 }

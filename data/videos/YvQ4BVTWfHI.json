@@ -21,35 +21,40 @@
       "texto": "O caso é um analista que pergunta se fornecedores de placas de circuito impresso (PCB) transformam a demanda por servidores de IA em caixa. O modelo precisa achar os relatórios certos, alinhar períodos e separar negócios. Um relatório só conta como pronto quando o analista consegue abrir a fonte e refazer o cálculo. Lucro pode subir enquanto o fluxo de caixa conta outra história, e o modelo precisa apontar a nota de rodapé certa.",
       "t": 268,
       "legenda": "Cada otimização do modelo mexe numa parte diferente do trabalho",
-      "print": "img/YvQ4BVTWfHI/0.jpg"
+      "print": "img/YvQ4BVTWfHI/0.jpg",
+      "descricao": "Slide 'What changed in M3.1 Flash' com tabela de componentes: atenção, KV cache, experts MoE e controles de raciocínio, antes e depois."
     },
     {
       "titulo": "Atenção esparsa precisa achar a nota de rodapé",
       "texto": "Sparse attention (atenção esparsa) pontua blocos de texto e calcula a atenção só nos selecionados, mais o texto vizinho. Isso reduz trabalho em entradas longas. O risco é pular um trecho curto que muda a conclusão. A MiniMax relata que o modelo passou em 39 pedidos de recuperação com entradas de até cerca de 830 mil tokens. A palestrante sugere mover a passagem importante para posições diferentes e repetir a pergunta.",
       "t": 331,
       "legenda": "O modelo lê só os blocos selecionados, e a seleção muda com a pergunta",
-      "print": "img/YvQ4BVTWfHI/1.jpg"
+      "print": "img/YvQ4BVTWfHI/1.jpg",
+      "descricao": "Slide 'How sparse attention works' com os ramos index e main, diagrama de máscara com blocos selecionados e números de 2.048 tokens."
     },
     {
       "titulo": "A média esconde o erro que o usuário sente",
       "texto": "O KV cache (memória interna do texto já lido) passou de 8 para 4 bits nas chaves e valores. A média dos benchmarks ficou quase igual, mas uma das pontuações caiu 6,6 pontos. Os experts do modelo MoE também passaram a usar 4 bits, e a ordem de escalar e restaurar os números afeta a resposta. Confira fontes, cálculos e coerência da explicação no seu próprio caso.",
       "t": 486,
       "legenda": "Média quase igual com uma pontuação caindo 6,6 pontos",
-      "print": "img/YvQ4BVTWfHI/2.jpg"
+      "print": "img/YvQ4BVTWfHI/2.jpg",
+      "descricao": "Slide 'Four-bit KV' com tabela Q8KV8 vs Q8KV4: média 61,72 vs 61,83 e SciCode caindo 6,6 pontos."
     },
     {
       "titulo": "Mais vazão no servidor pode multiplicar a espera",
       "texto": "Num teste de serving, dobrar os pedidos simultâneos de 32 para 64 aumentou a saída total por segundo em cerca de 1,9 vez. O tempo até o primeiro token no percentil 95 subiu de cerca de 1,5 para 11,3 segundos. A mediana quase não mudou, por isso olhar só para ela engana. Speculative decoding também ajuda, desde que você conte o tempo gasto rejeitando rascunhos.",
       "t": 707,
       "legenda": "Vazão sobe 1,9 vez enquanto a espera no P95 fica cerca de oito vezes maior",
-      "print": "img/YvQ4BVTWfHI/3.jpg"
+      "print": "img/YvQ4BVTWfHI/3.jpg",
+      "descricao": "Slide 'serving capacity' com tabela de 32, 64 e 128 pedidos: vazão total e P95 do tempo até o primeiro token, de 1,46 s para 11,59 s."
     },
     {
       "titulo": "Orçamento de raciocínio muda a precisão",
       "texto": "O padrão do esforço de raciocínio é max quando o campo fica vazio. Num teste de código, o nível high gastou menos tokens, mas a precisão caiu de 80% para 68%. A recomendação é comparar níveis nos mesmos relatórios, anotar o nível escolhido e, na hora de trocar de modelo, fixar perguntas, fontes e critério de aceite antes de rodar a comparação.",
       "t": 834,
       "legenda": "Menos tokens de raciocínio levaram a precisão de 80% para 68%",
-      "print": "img/YvQ4BVTWfHI/4.jpg"
+      "print": "img/YvQ4BVTWfHI/4.jpg",
+      "descricao": "Slide 'Default max changes the work' com tabela high vs max: MMLU-Pro, LiveCodeBench, tokens de saída e precisão de 68% para 80%."
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "precisão ao trocar raciocínio max por high",
       "t": 834
     }
-  ]
+  ],
+  "rotulo": "Medir o trabalho inteiro ao trocar de modelo",
+  "objetivo": "avaliar se um modelo mais rápido compensa, medindo resultado aceitável, retrabalho e espera no percentil 95",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que aconteceu ao dobrar os pedidos simultâneos de 32 para 64 no teste de serving?",
+      "resposta": "A saída total por segundo subiu cerca de 1,9 vez, mas o tempo até o primeiro token no percentil 95 foi de cerca de 1,5 para 11,3 segundos. A mediana quase não mudou."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você compararia dois modelos para uma tarefa real do seu trabalho?",
+      "resposta": "Fixe as fontes, escreva o que torna o resultado aceitável e meça o custo do resultado utilizável, somando tentativas falhas, chamadas de ferramenta e o tempo de quem corrige. Olhe a espera no P95, não só a mediana."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que os números da MiniMax pedem cautela?",
+      "resposta": "Ela apresenta um modelo da própria empresa, com números de revisão interna e sem comparação com concorrentes. O teste de recuperação tem só 39 pedidos e ela admite que a tabela do KV cache não isola qual mudança causou cada variação."
+    }
+  ],
+  "experimento": {
+    "titulo": "Comparar dois modelos no trabalho inteiro",
+    "minutos": 40,
+    "precisa": "Dois modelos (um rápido e um maior) e uma tarefa real sua, além de um cronômetro",
+    "passos": [
+      "Escolha uma tarefa real e escreva em três linhas o que torna o resultado aceitável.",
+      "Rode a tarefa cinco vezes em cada modelo e anote o tempo de cada rodada.",
+      "Marque quais saídas você aceitaria sem correção e quanto tempo gastou corrigindo as demais.",
+      "Some espera e correção por resultado aceitável em cada modelo."
+    ],
+    "sucesso": "Você tem, para cada modelo, o tempo total por resultado aceitável e sabe qual deles vence."
+  }
 }

@@ -21,14 +21,16 @@
       "texto": "A inferência tem duas fases. No prefill o modelo lê o prompt e monta o KV cache uma única vez. No decode ele escreve um token por vez, e cada token custa uma passada (forward pass) no modelo grande. Com speculative decoding (decodificação especulativa), um modelo menor propõe de 3 a 5 tokens por ciclo. O modelo alvo aprova ou rejeita todos em uma passada e recalcula os rejeitados. Por isso a qualidade da saída continua a do modelo grande.",
       "t": 137,
       "legenda": "O modelo alvo verifica vários tokens propostos em uma única passada",
-      "print": "img/XTpyNrEgJQ4/0.jpg"
+      "print": "img/XTpyNrEgJQ4/0.jpg",
+      "descricao": "Slide Speculative Decoding com três etapas: draft model pequeno, prevê K tokens e o modelo alvo verifica em uma passada"
     },
     {
       "titulo": "O custo é memória para dois modelos",
       "texto": "Você hospeda dois modelos e precisa de espaço para o KV cache dos dois. Na demo, o modelo base ocupou cerca de 16 GB de pesos e o draft model 2,5 GB, o que deixou espaço para cache. A palestrante recomenda um draft model de 10 a 50 vezes menor que o alvo, com o mesmo tokenizer e de preferência da mesma família de modelos.",
       "t": 268,
       "legenda": "Pesos de 16 GB mais 2,5 GB ainda deixam espaço para KV cache",
-      "print": "img/XTpyNrEgJQ4/1.jpg"
+      "print": "img/XTpyNrEgJQ4/1.jpg",
+      "descricao": "Slide The Demo Environment com tabela de VRAM: pesos de 16 GB do alvo, 2,5 GB do draft e KV cache restante"
     },
     {
       "titulo": "Saída estruturada ganha 1,6 vez de velocidade",
@@ -170,5 +172,36 @@
       "contexto": "ganho de velocidade na tarefa de saída estruturada",
       "t": 562
     }
-  ]
+  ],
+  "rotulo": "Quando vale ligar speculative decoding no vLLM",
+  "objetivo": "decidir se speculative decoding compensa em uma carga de trabalho, olhando tipo de saída, memória livre, contexto e concorrência",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Como o speculative decoding acelera a geração sem mudar a resposta final?",
+      "resposta": "Um modelo pequeno propõe de 3 a 5 tokens e o modelo grande aprova ou rejeita todos em uma única passada, recalculando os rejeitados. Por isso a qualidade continua a do modelo grande."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Seu serviço gera JSON de extração e também texto de marketing. Em qual ligar primeiro e o que medir?",
+      "resposta": "No JSON, porque saída estruturada é previsível e tem alta taxa de aceitação. Meça tokens por segundo e a taxa de aceitação (tokens aceitos sobre propostos) por tipo de tarefa, e desligue onde ela cair."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites tem a medição de 1,6 vez de ganho mostrada na demo?",
+      "resposta": "Cada tarefa rodou uma vez, sem repetição nem variância, e o talk não diz quais modelos foram alvo e rascunho. Os limites para contexto longo e alta concorrência são afirmados sem medição, e a palestrante fala pela Akamai."
+    }
+  ],
+  "experimento": {
+    "titulo": "Geração assistida por modelo pequeno no Colab",
+    "minutos": 45,
+    "precisa": "Python, Google Colab com GPU e a biblioteca transformers, mais dois modelos da mesma família",
+    "passos": [
+      "Carregue um modelo alvo e um modelo menor da mesma família, com o mesmo tokenizer.",
+      "Gere uma resposta em JSON com generate normal e anote os tokens por segundo.",
+      "Repita passando o modelo menor em assistant_model e anote de novo.",
+      "Repita as duas rodadas com um pedido de poema e compare o ganho entre os dois tipos de texto."
+    ],
+    "sucesso": "Você tem quatro medidas de tokens por segundo e sabe dizer em que tipo de tarefa a técnica ajudou mais."
+  }
 }

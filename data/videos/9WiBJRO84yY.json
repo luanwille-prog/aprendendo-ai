@@ -21,35 +21,40 @@
       "texto": "O App Server segue o estilo JSON-RPC e conecta o cliente (seu app) ao servidor (o harness do Codex). Os mesmos eventos alimentam o app do Codex, as extensões de IDE, Xcode, JetBrains e projetos de terceiros. Harness e protocolo são open source e aceitam outros provedores de modelo que tenham API compatível com Responses.",
       "t": 137,
       "legenda": "Vários clientes, um único harness e um único protocolo.",
-      "print": "img/9WiBJRO84yY/0.jpg"
+      "print": "img/9WiBJRO84yY/0.jpg",
+      "descricao": "Slide 'App server' com clientes (Desktop, TUI/CLI, SSH) e integrações (JetBrains, VS Code, Xcode) ligados ao harness por JSON-RPC."
     },
     {
       "titulo": "Inspetor mostra os eventos reais",
       "texto": "Para tirar o protocolo do abstrato, o palestrante construiu um inspetor que intercepta as mensagens entre o app do Codex e o servidor. Aparecem threads iniciadas, leitura de configuração e deltas de texto em streaming. Tudo o que o app faz passa por essas mensagens, então um cliente próprio pode fazer o mesmo.",
       "t": 262,
       "legenda": "Os eventos reais trocados entre o app do Codex e o servidor.",
-      "print": "img/9WiBJRO84yY/1.jpg"
+      "print": "img/9WiBJRO84yY/1.jpg",
+      "descricao": "Inspetor de protocolo listando frames JSON-RPC entre app e servidor (skills/list, account/read, config/read, thread/name/set) com payload."
     },
     {
       "titulo": "Controle fino do agente",
       "texto": "Diferente de protocolos mais genéricos como o ACP, o App Server expõe partes internas do harness. Há mais de 120 mensagens, de threads e turnos a busca de arquivos e modo goal. Dá para anexar developer instructions, registrar ferramentas dinâmicas e mudar modelo, provedor e sandbox por thread. O login com ChatGPT deixa o usuário usar a própria assinatura.",
       "t": 354,
       "legenda": "A superfície de controle vai além de um chat genérico.",
-      "print": "img/9WiBJRO84yY/2.jpg"
+      "print": "img/9WiBJRO84yY/2.jpg",
+      "descricao": "Slide 'App server protocol' com 120+ tipos de requisição do cliente, controles de agente e login com ChatGPT, e trecho de lista de métodos."
     },
     {
       "titulo": "Codex dentro do Doom",
       "texto": "Como demo, ele roda o Codex dentro do jogo Doom, num app Electron que fala com o App Server por IPC. Ferramentas dinâmicas dão ao agente acesso a vida, armadura e armas. O mesmo servidor também executa comandos reais no shell da máquina. A demo mostra que a interface pode ser qualquer coisa além de um chat.",
       "t": 821,
       "legenda": "O agente altera o estado do jogo por ferramentas dinâmicas.",
-      "print": "img/9WiBJRO84yY/3.jpg"
+      "print": "img/9WiBJRO84yY/3.jpg",
+      "descricao": "Doom em tela cheia com terminal do Codex e prompt pedindo ferramenta de saúde/armadura. Imagem de storyboard, baixa resolução."
     },
     {
       "titulo": "App Server ou codex exec",
       "texto": "O comando codex exec roda tarefas sem interação e serve para scripts e CI, como corrigir um PR automaticamente. O App Server compensa quando o cliente é mais completo ou quando é preciso abrir várias threads em paralelo, por exemplo num eval harness próprio. Assim você evita criar sua própria paralelização de chamadas ao exec.",
       "t": 913,
       "legenda": "Script e CI usam exec. Clientes ricos e paralelismo usam o App Server.",
-      "print": "img/9WiBJRO84yY/4.jpg"
+      "print": "img/9WiBJRO84yY/4.jpg",
+      "descricao": "Terminal com 'codex exec --help' (executar sem interação, comandos resume/review). Mostra só o exec, não a comparação com App Server."
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "versão do modelo usada na demo do Doom",
       "t": 789
     }
-  ]
+  ],
+  "rotulo": "Embutir o harness do Codex com o App Server",
+  "objetivo": "avaliar quando embutir o harness do Codex via App Server em vez de montar um harness próprio, e como personalizá-lo",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que é o Codex App Server e quem já o usa?",
+      "resposta": "Um protocolo aberto no estilo JSON-RPC que conecta o cliente ao harness do Codex. Os mesmos eventos alimentam o app do Codex, extensões de IDE, Xcode, JetBrains e projetos de terceiros."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você quer mudar o comportamento do agente no seu produto. Por onde começa e que cuidado tem com versões?",
+      "resposta": "Começa por developer instructions e só reescreve o prompt de sistema se tiver evals que justifiquem. Embarca a versão do binário com o produto e gera os bindings dela, porque o protocolo muda entre versões."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que afirmações do talk ficam sem comprovação?",
+      "resposta": "Não há benchmark, custo nem comparação de esforço com outros harnesses. Que o Codex implemente o protocolo quase sozinho e que o ACP seja mais genérico são opiniões do palestrante, e o login com ChatGPT atrai usuários para a assinatura."
+    }
+  ],
+  "experimento": {
+    "titulo": "Gerar um cliente mínimo do App Server",
+    "minutos": 45,
+    "precisa": "O Codex CLI instalado, uma conta compatível e Python ou Node",
+    "passos": [
+      "Peça ao Codex que leia a documentação do App Server e explique em um parágrafo como iniciar uma thread.",
+      "Peça um cliente mínimo que abra o servidor, inicie uma thread e imprima os eventos de streaming.",
+      "Rode o cliente com uma tarefa simples e identifique no log os eventos de início de thread e de texto.",
+      "Anote qual versão do binário você usou, para recriar os bindings depois."
+    ],
+    "sucesso": "O cliente imprime os eventos reais de uma conversa e você sabe apontar no log onde a thread começa e onde o texto chega."
+  }
 }

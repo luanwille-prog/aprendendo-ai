@@ -21,35 +21,40 @@
       "texto": "Sistemas de memória comuns guardam embeddings e injetam os trechos mais parecidos no contexto. Falta uma representação canônica das coisas: o mesmo médico aparece com três nomes e o agente não sabe que é a mesma pessoa. Lyon defende conhecimento conectado, tipado e rastreável.",
       "t": 80,
       "legenda": "O mesmo médico citado de três formas mostra a falta de uma representação canônica.",
-      "print": "img/XPj3mIKEtI4/0.jpg"
+      "print": "img/XPj3mIKEtI4/0.jpg",
+      "descricao": "Slide 'What the agent actually receives': embeddings de trechos soltos indo para o contexto do agente, sem modelo de quem é quem"
     },
     {
       "titulo": "Três memórias em um grafo de contexto",
       "texto": "A Neo4j modela memória de curto prazo (mensagens), de longo prazo (entidades extraídas e ligadas por relações tipadas) e de raciocínio. Uma ontologia compartilhada e a resolução de entidades garantem que cada coisa tenha uma identidade única no grafo.",
       "t": 140,
       "legenda": "O desenho mostra mensagens virando entidades e relações em um grafo com tipos.",
-      "print": "img/XPj3mIKEtI4/1.jpg"
+      "print": "img/XPj3mIKEtI4/1.jpg",
+      "descricao": "Diagrama do grafo de contexto com nós e setas tipadas, separado em camadas de memória (curto prazo, longo prazo e raciocínio)"
     },
     {
       "titulo": "Decision traces e memória compartilhada",
       "texto": "Cada decisão do agente fica ligada à evidência, às políticas, ao plano, às chamadas de ferramenta, aos resultados, aos tokens gastos e ao tempo. Com isso, centenas ou milhares de agentes que usam as mesmas ferramentas aprendem com as execuções uns dos outros.",
       "t": 270,
       "legenda": "Cada decisão do agente aparece ligada ao que a justificou e ao que ela produziu.",
-      "print": "img/XPj3mIKEtI4/2.jpg"
+      "print": "img/XPj3mIKEtI4/2.jpg",
+      "descricao": "Diagrama do grafo de raciocínio com decisões, evidências e resultados ligados; um caminho aparece destacado em vermelho"
     },
     {
       "titulo": "APE: skills como grafos de execução",
       "texto": "Skills em prosa têm o mesmo problema da memória: ambiguidade e pouca depuração. A pesquisa da Neo4j propõe o APE, uma extensão do padrão de agent skills em que os passos são nós, descritos por um esquema rígido. Segundo o palestrante, o benchmark mostrou aumento relevante de tarefas concluídas, sem dar o valor.",
       "t": 520,
       "legenda": "A figura do paper mostra uma skill dividida em passos executáveis com esquema.",
-      "print": "img/XPj3mIKEtI4/3.jpg"
+      "print": "img/XPj3mIKEtI4/3.jpg",
+      "descricao": "Captura do paper 'APE: A Graph Representation for Learning and Governing Agent Skills' com figura de passos em grafo"
     },
     {
       "titulo": "Destilar skills com grounding, cobertura e coerência",
       "texto": "O pipeline parte de um escopo (entidade, conversa ou classe da ontologia) e usa LLM só para sintetizar afirmações e textos. Grounding e cobertura checam se os passos vêm dos dados. Coerência, com detecção de comunidades no grafo, sugere dividir a skill quando ela mistura tópicos. Se os dados mudam, a skill é marcada como desatualizada.",
       "t": 1019,
       "legenda": "Cada passo da skill aponta para as chamadas de ferramenta e entidades que o originaram.",
-      "print": "img/XPj3mIKEtI4/4.jpg"
+      "print": "img/XPj3mIKEtI4/4.jpg",
+      "descricao": "Interface do NAMS com texto de skill gerada; imagem pequena, com faixa do evento e o palestrante na lateral"
     }
   ],
   "conceitos": [
@@ -101,7 +106,7 @@
       "nome": "Agent skills",
       "traducao": "skills de agente",
       "nivel": "basico",
-      "chave": "agent skills",
+      "chave": "skill",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -165,5 +170,36 @@
       "contexto": "pipeline de destilação da skill no NAMS",
       "t": 986
     }
-  ]
+  ],
+  "rotulo": "Memória de agente em grafo e skills verificáveis",
+  "objetivo": "dar identidade única às entidades do agente e exigir que cada passo de uma skill cite o dado de origem",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são as três memórias do grafo de contexto da Neo4j?",
+      "resposta": "Curto prazo (mensagens), longo prazo (entidades extraídas e ligadas por relações tipadas) e de raciocínio, com decision traces que ligam cada decisão a evidência, ferramentas e custo."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Seu agente cita o mesmo cliente com nomes diferentes. O que fazer primeiro?",
+      "resposta": "Definir um identificador único para cada entidade (clientes, produtos, pessoas) antes de buscar uma memória mais sofisticada, e registrar em log evidência, ferramentas, resultados e tokens de cada decisão."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que o benchmark do APE merece cautela?",
+      "resposta": "Vem de pesquisa da própria Neo4j e é citado sem número, só como aumento relevante. A demo mostra uma skill já pronta, sem comparar com skills escritas à mão ou RAG simples, e não há dados de custo, latência ou erro."
+    }
+  ],
+  "experimento": {
+    "titulo": "Skill com passos rastreáveis",
+    "minutos": 35,
+    "precisa": "Claude ou ChatGPT e 3 a 5 conversas ou logs seus de uma tarefa repetida",
+    "passos": [
+      "Reúna 3 a 5 execuções de uma tarefa repetida, numerando cada trecho.",
+      "Liste as entidades que aparecem com nomes diferentes e padronize um nome único para cada.",
+      "Peça à IA uma skill curta em que cada passo cite o número do trecho de origem.",
+      "Remova os passos sem origem e confira os restantes nos trechos."
+    ],
+    "sucesso": "Você tem uma skill em que todo passo aponta para um trecho verificável e uma lista de nomes padronizados."
+  }
 }

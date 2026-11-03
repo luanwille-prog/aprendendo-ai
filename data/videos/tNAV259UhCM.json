@@ -21,35 +21,40 @@
       "texto": "O palestrante define a wait-time ratio (razão de tempo de espera): tempo para preparar e transportar os dados, dividido pelo tempo total do pipeline. No baseline, 85% do tempo era espera por dados. O treino levava de 15 a 20 segundos por lote, e buscar o lote passava de 100 segundos. O flame graph (gráfico de perfil) mostrou o S3 como maior fatia.",
       "t": 356,
       "legenda": "Buscar dados leva mais de 100 s por lote, treinar leva 15 a 20 s.",
-      "print": "img/tNAV259UhCM/0.jpg"
+      "print": "img/tNAV259UhCM/0.jpg",
+      "descricao": "slide 'Baseline: The naive path' com gráficos de train time, tempo de busca por passo e razão de espera perto de 0,9"
     },
     {
       "titulo": "Combine a concorrência com o tipo de gargalo",
       "texto": "Cada amostra é independente, então o trabalho se paraleliza com facilidade. Ele escolhe asyncio para buscar imagens (espera de rede), e Ray actors, que são processos com APIs de comunicação prontas, para decodificar e pré-processar (uso de CPU). A regra dele é casar a ferramenta com o gargalo, e não repetir a que já funcionou antes. Esse passo deu cerca de 25% de ganho.",
       "t": 481,
       "legenda": "Asyncio para IO, Ray actors para CPU, e a busca por lote cai para cerca de 40 s.",
-      "print": "img/tNAV259UhCM/1.jpg"
+      "print": "img/tNAV259UhCM/1.jpg",
+      "descricao": "slide 'Solution 1: Concurrency' com asyncio para fetch, ray.Actor para processo e diagrama do coordenador com worker pool"
     },
     {
       "titulo": "Prefetching mantém o produtor à frente do treino",
       "texto": "Uma thread em segundo plano enche uma fila antes de o trainer pedir. O produtor roda mais rápido que o consumidor, e o treino encontra o lote pronto. O tempo de busca por lote fica perto de zero. O custo é um checkpoint e uma retomada mais trabalhosos, além de um período de cold start (fila ainda vazia) no começo.",
       "t": 575,
       "legenda": "Com a fila cheia, o trainer não espera mais pelo dado.",
-      "print": "img/tNAV259UhCM/2.jpg"
+      "print": "img/tNAV259UhCM/2.jpg",
+      "descricao": "slide 'Solution 2: Prefetching' com fila limitada alimentada em background e diagrama do data generator"
     },
     {
       "titulo": "Object store evita copiar tensores entre processos",
       "texto": "Depois do prefetching, o transporte ficou mais caro. Cada amostra era serializada (pickle) no worker, copiada para o coordenador e serializada de novo para o trainer, com megabytes por amostra. Com o object store do Ray, cada amostra carrega só uma referência (ponteiro). Os ranks do Megatron buscam o dado direto quando precisam. A espera total cai de 85% para 20%.",
       "t": 670,
       "legenda": "A referência viaja pelo coordenador e o tensor fica no object store.",
-      "print": "img/tNAV259UhCM/3.jpg"
+      "print": "img/tNAV259UhCM/3.jpg",
+      "descricao": "slide 'Solution 3: Object Store' com problema (pickle, cópia, re-pickle) e correção com ObjectRef e Ray Store"
     },
     {
       "titulo": "Em escala, o gargalo vira a placa de rede",
       "texto": "Ao multiplicar por quatro os ranks de dados paralelos e o tamanho do lote, a espera voltou a subir. O Ray agrupa workers na mesma máquina, e a placa de rede (NIC) desse nó não dava conta. Espalhar os workers por vários nós (spread scheduling), junto com leitura zero-copy, rendeu 50% a mais de throughput. Nenhuma das duas flags ajudou sozinha em escala pequena.",
       "t": 825,
       "legenda": "O Ray junta workers por padrão, e isso satura a rede de um nó.",
-      "print": "img/tNAV259UhCM/4.jpg"
+      "print": "img/tNAV259UhCM/4.jpg",
+      "descricao": "slide 'Scaling up' com 4x DP ranks, batch 1024 e diagrama com caminhos quentes em vermelho saturando as NICs"
     }
   ],
   "conceitos": [
@@ -261,5 +266,36 @@
       "contexto": "ganho extra de throughput em escala com duas flags",
       "t": 916
     }
-  ]
+  ],
+  "rotulo": "Achar o gargalo de dados quando a GPU fica parada",
+  "objetivo": "calcular a razão de tempo de espera de um pipeline e escolher o tipo de concorrência certo para o gargalo",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que é a wait-time ratio e qual era o valor no baseline do talk?",
+      "resposta": "É o tempo para preparar e transportar os dados dividido pelo tempo total do pipeline. No baseline era 85%, e a GPU ficava com só 15% de utilização."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que tipo de concorrência você usaria para buscar arquivos de rede e qual para decodificar imagens?",
+      "resposta": "asyncio para espera de rede, como buscar imagens no S3. Processos, como os actors do Ray, para trabalho pesado de CPU, como decodificar e pré-processar. Threads servem quando a biblioteca solta o GIL."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que os 15% iniciais dizem pouco sobre outras equipes?",
+      "resposta": "O ponto de partida era um pipeline deliberadamente ingênuo, que buscava uma imagem por vez. Quem já usa bons data loaders começa melhor. O talk também traz um único experimento, sem tamanho de cluster, GPUs nem repetições."
+    }
+  ],
+  "experimento": {
+    "titulo": "Medir quanto tempo seu pipeline espera por dados",
+    "minutos": 30,
+    "precisa": "Python e um loop de treino ou processamento em lote seu, mesmo que pequeno",
+    "passos": [
+      "Meça com time.perf_counter quanto tempo cada lote gasta carregando dados e quanto gasta processando.",
+      "Calcule a razão de espera, que é o tempo de carga dividido pelo tempo total.",
+      "Troque a carga sequencial por asyncio ou por um pool de threads, conforme o gargalo.",
+      "Meça de novo e compare a razão antes e depois."
+    ],
+    "sucesso": "Você tem a razão de espera antes e depois e ela cai de forma mensurável com uma única mudança."
+  }
 }

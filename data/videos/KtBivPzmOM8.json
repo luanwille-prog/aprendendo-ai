@@ -21,35 +21,40 @@
       "texto": "A pilha de um agente tem aplicação, modelo, infraestrutura e computação. O modelo vem de um laboratório de fronteira e quase não dá para mexer nele. Já o harness (memória, uso de ferramentas, percepção, loop e contexto) é configurável. O palestrante diz que trocar só o harness faz o mesmo modelo render melhor ou pior em tarefas específicas.",
       "t": 352,
       "legenda": "A camada de dados e o harness são onde o engenheiro tem controle.",
-      "print": "img/KtBivPzmOM8/0.jpg"
+      "print": "img/KtBivPzmOM8/0.jpg",
+      "descricao": "Slide 'The Agent Stack' com as cinco camadas (aplicação, dados destacada, modelo, infraestrutura, computação)"
     },
     {
       "titulo": "Arquivos ou banco de dados para a memória",
       "texto": "Vários agentes escrevendo no mesmo arquivo geram conflito de consistência. A solução atual é o git worktree (uma cópia de trabalho por agente). Martinez lembra que bancos resolvem isso há 30 anos com transações ACID e sugere usar arquivos para dados não estruturados e banco onde a escrita concorrente importa.",
       "t": 821,
       "legenda": "Worktrees contornam um problema que transações de banco já resolvem.",
-      "print": "img/KtBivPzmOM8/1.jpg"
+      "print": "img/KtBivPzmOM8/1.jpg",
+      "descricao": "Slide 'Where does memory live?' comparando filesystem camp e database camp (ACID, busca, backups); não mostra o caso de escrita concorrente"
     },
     {
       "titulo": "Quatro tipos de memória do agente",
       "texto": "A janela de contexto é a memória de curto prazo e some ao fim da conversa. A memória de longo prazo se divide em episódica (conversas, logs de ferramentas, resumos), procedural (skills e workflows) e semântica (quem é o usuário e o que ele prefere). Contexto longo demais piora a precisão, por isso o agente precisa dessa separação.",
       "t": 1038,
       "legenda": "A taxonomia de memória usada para organizar o harness do workshop.",
-      "print": "img/KtBivPzmOM8/2.jpg"
+      "print": "img/KtBivPzmOM8/2.jpg",
+      "descricao": "Slide 'Agent memory is not one category' com memória de curto prazo (working) e longo prazo (episódica, procedural, semântica)"
     },
     {
       "titulo": "Skills e tools buscadas por similaridade",
       "texto": "Cada skill ocupa de 3 mil a 5 mil tokens, então carregar cem delas estoura o contexto. O padrão toolbox e skillbox guarda embeddings de tools e skills num armazenamento vetorial. A cada pedido, o loop busca as mais próximas (padrão de três), usa e descarrega. Skills destiladas de conversas passadas entram no mesmo repositório.",
       "t": 1286,
       "legenda": "O loop recupera só as skills relevantes em vez de carregar todas.",
-      "print": "img/KtBivPzmOM8/3.jpg"
+      "print": "img/KtBivPzmOM8/3.jpg",
+      "descricao": "Slide 'The toolbox pattern' com fluxo de escrita e leitura: embed, top-6 por cosseno, seleção pelo LLM e lista de tools"
     },
     {
       "titulo": "Demo: agente de AML rodando 24 horas",
       "texto": "A interface do workshop mostra transações fictícias chegando, o agente marcando as suspeitas, a janela de contexto visualizada e a investigação com chamadas de ferramentas e busca em bases vetoriais. O agente não bloqueia ninguém. Ele registra relatórios de atividade suspeita para uma pessoa revisar depois.",
       "t": 1832,
       "legenda": "O agente sinaliza transações e um humano revisa depois.",
-      "print": "img/KtBivPzmOM8/4.jpg"
+      "print": "img/KtBivPzmOM8/4.jpg",
+      "descricao": "Demo no Codespaces do agente Meridian Bank com perguntas de AML, painel de transações no globo e chat do analista"
     }
   ],
   "conceitos": [
@@ -57,7 +62,7 @@
       "nome": "Agent harness",
       "traducao": "estrutura de suporte do agente",
       "nivel": "intermediario",
-      "chave": "agent harness",
+      "chave": "harness",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -170,5 +175,35 @@
       "contexto": "skills ou tools recuperadas por busca (padrão do workshop)",
       "t": 2333
     }
-  ]
+  ],
+  "rotulo": "Memória e contexto no harness de um agente",
+  "objetivo": "distinguir os tipos de memória de um agente e decidir o que carregar no contexto a cada pedido",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são os tipos de memória de longo prazo descritos e o que é a memória de curto prazo?",
+      "resposta": "Curto prazo é a janela de contexto, que some ao fim da conversa. Longo prazo se divide em episódica (conversas, logs, resumos), procedural (skills e workflows) e semântica (quem é o usuário e o que ele prefere)."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Se seu agente tem cem skills de 3 mil a 5 mil tokens cada, como você evitaria estourar o contexto?",
+      "resposta": "Guardar embeddings de skills e tools num armazenamento vetorial, buscar as mais próximas a cada pedido (o padrão é três), usar e descarregar, em vez de carregar tudo no início."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que pontos do talk têm conflito de interesse ou imprecisão?",
+      "resposta": "O palestrante é da Oracle e o workshop roda em banco Oracle, então defender banco no lugar de arquivos é interessado. Ele não cita estudo nem número para o ganho do harness, e a explicação sobre semantic cache é imprecisa, pois o comum é prompt caching."
+    }
+  ],
+  "experimento": {
+    "titulo": "Meça o peso das skills no seu agente",
+    "minutos": 25,
+    "precisa": "Claude Code ou outro agente com skills e um contador de tokens",
+    "passos": [
+      "Liste skills, tools e instruções fixas carregadas no começo de cada requisição do seu agente.",
+      "Estime os tokens de cada item com um contador de tokens ou com o tamanho do arquivo dividido por quatro.",
+      "Marque os itens que você não usou na última semana e proponha tirá-los ou carregá-los só sob demanda."
+    ],
+    "sucesso": "Você tem uma tabela com tokens por item e uma lista de cortes que reduz o início da requisição."
+  }
 }

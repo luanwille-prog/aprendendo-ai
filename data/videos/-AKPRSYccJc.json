@@ -21,35 +21,40 @@
       "texto": "O fluxo tem quatro gates. Padrões (regras e skills), planejamento com TDD, verificação local (ruff, pyright, bandit, pytest, semgrep, conventional commits) e revisão do pull request com remediação. A autora insiste em não parar no teste local passando.",
       "t": 752,
       "legenda": "Os gates do workshop, das regras até a remediação no PR.",
-      "print": "img/-AKPRSYccJc/0.jpg"
+      "print": "img/-AKPRSYccJc/0.jpg",
+      "descricao": "README do repositório SignalPay mostrando os gates de planejamento/TDD, verificação local e revisão do PR, com pré-requisitos abaixo."
     },
     {
       "titulo": "Template de plano que o agente precisa seguir",
       "texto": "Há um plano de alto nível e um plano de execução da build. Eles trazem resumo, restrições, roteamento de skills, cenários, gates de verificação, regras de falha e plano de commits. Segundo a palestrante, quanto mais estruturado o plano, melhor o agente se corrige.",
       "t": 1553,
       "legenda": "O template de plano lista seções que o agente deve preencher antes de codar.",
-      "print": "img/-AKPRSYccJc/1.jpg"
+      "print": "img/-AKPRSYccJc/1.jpg",
+      "descricao": "Documento markdown de planejamento com seções e tabela de tipos de plano. Imagem pequena e de baixa resolução, texto pouco legível."
     },
     {
       "titulo": "Regras com categoria e severidade",
       "texto": "No portal, as regras aparecem por categoria (segurança, correção, manutenibilidade, arquitetura, acessibilidade) e por severidade. Só as mais graves bloqueiam o merge. Regras podem ser inferidas do código, mas um humano revisa e ativa cada uma.",
       "t": 2031,
       "legenda": "Regras divididas por categoria e severidade, nem todas bloqueiam merge.",
-      "print": "img/-AKPRSYccJc/2.jpg"
+      "print": "img/-AKPRSYccJc/2.jpg",
+      "descricao": "Portal Qodo com tabela de regras, filtros no topo e colunas de categoria e severidade. Texto pequeno, mas a estrutura é reconhecível."
     },
     {
       "titulo": "Revisão do PR com bug e violações de regra",
       "texto": "No PR de teste, a Qodo apontou um bug, três violações de regra e dois insights de skill. O bug era a idempotência do reembolso guardada num dicionário em memória, que some quando o processo reinicia.",
       "t": 2846,
       "legenda": "Achados da revisão, incluindo o reembolso idempotente guardado só em memória.",
-      "print": "img/-AKPRSYccJc/3.jpg"
+      "print": "img/-AKPRSYccJc/3.jpg",
+      "descricao": "Comentário 'Qodo Review' no pull request com lista de achados e trechos de código. Texto pequeno, mas legível em parte."
     },
     {
       "titulo": "Skill que resolve os achados e roda a verificação",
       "texto": "A skill PR resolver baixa os problemas do PR e oferece revisar um a um ou corrigir tudo. Depois roda a verificação, faz os commits e posta um resumo no PR. A plateia lembra que vale rodar a verificação de novo após as correções.",
       "t": 2979,
       "legenda": "A skill escolhe entre revisão item a item e correção automática de todos.",
-      "print": "img/-AKPRSYccJc/4.jpg"
+      "print": "img/-AKPRSYccJc/4.jpg",
+      "descricao": "Interface de chat do agente de código com lista de opções da skill de resolução de achados. Texto pequeno, o menu não está totalmente legível."
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "pull request usado na skill resolver",
       "t": 2948
     }
-  ]
+  ],
+  "rotulo": "Quatro barreiras de qualidade para agentes de código",
+  "objetivo": "montar um fluxo com plano estruturado, verificação local e revisão de PR, em que cada barreira usa as mesmas regras",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são as quatro barreiras do fluxo mostrado no workshop?",
+      "resposta": "Padrões (regras e skills), planejamento com TDD, verificação local com linters, análise estática e testes, e revisão do pull request com remediação dos achados."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que itens teria um template de plano que seu agente precisa preencher antes de codar?",
+      "resposta": "Resumo, restrições, regras aplicáveis, cenários de teste e comandos de verificação. Quanto mais estruturado o plano, melhor o agente se comporta, segundo a palestrante."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites tem a evidência de que o fluxo funciona?",
+      "resposta": "O workshop é da Qodo e usa a ferramenta da própria empresa. A única evidência é um relato pessoal de um bug achado, sem comparação com outras ferramentas nem taxa de falsos positivos. A seleção de regras não é determinística."
+    }
+  ],
+  "experimento": {
+    "titulo": "Template de plano e verificação em um repositório seu",
+    "minutos": 40,
+    "precisa": "Um repositório Python ou outro com linter e testes, e um agente de código",
+    "passos": [
+      "Escreva um template de plano com resumo, restrições, regras, testes e comandos de verificação.",
+      "Exija que o agente preencha o plano antes de alterar qualquer arquivo de uma tarefa pequena.",
+      "Peça ao agente que rode linter, análise estática e testes depois da implementação.",
+      "Defina quais regras bloqueiam merge e quais só avisam, e rode a verificação de novo após cada rodada de correção."
+    ],
+    "sucesso": "O agente entrega a tarefa com plano preenchido e verificação verde, e você tem uma lista de regras que bloqueiam e de regras que avisam."
+  }
 }

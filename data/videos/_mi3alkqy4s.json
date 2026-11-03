@@ -21,35 +21,40 @@
       "texto": "Um estudo com mais de 100 mil desenvolvedores do GitHub comparou o antes e o depois do uso de agentes autônomos. Escrever código ficou quase oito vezes mais rápido, mas o software entregue cresceu só um terço. Os autores apontam a revisão como o gargalo, porque o caminho até a produção ainda passa por pessoas.",
       "t": 100,
       "legenda": "A distância entre os dois números mostra onde o trabalho trava.",
-      "print": "img/_mi3alkqy4s/0.jpg"
+      "print": "img/_mi3alkqy4s/0.jpg",
+      "descricao": "Slide com os dois números principais: 741% de código escrito versus 30% de software entregue."
     },
     {
       "titulo": "Revisar mais não escala",
       "texto": "Um estudo da Cisco, com 2.500 revisões e 3,2 milhões de linhas, mostra que a eficácia do revisor despenca acima de 400 linhas por sessão e 450 linhas por hora. Nesse ritmo, um PR de 10 mil linhas leva de três a quatro dias úteis. E um desenvolvedor já roda uma dúzia de agentes em paralelo.",
       "t": 222,
       "legenda": "O limite humano de leitura inviabiliza revisar PRs de agentes.",
-      "print": "img/_mi3alkqy4s/1.jpg"
+      "print": "img/_mi3alkqy4s/1.jpg",
+      "descricao": "Slide sobre o limite de revisão humana e inviabilidade de revisar PRs de agentes."
     },
     {
       "titulo": "Testes passam, mas o PR não seria aceito",
       "texto": "A METR pediu a mantenedores de projetos open source que avaliassem PRs que já passavam no SWE-bench. Só cerca de metade seria aceita, por qualidade de código e por quebrar coisas fora da suíte de testes. O FrontierCode, da Cognition, mostra a mesma lacuna: 88% no SWE-bench Pro contra 29% na fatia mais difícil de aceitabilidade.",
       "t": 505,
       "legenda": "O mesmo modelo cai 59 pontos quando a pergunta é se o PR seria aceito.",
-      "print": "img/_mi3alkqy4s/2.jpg"
+      "print": "img/_mi3alkqy4s/2.jpg",
+      "descricao": "Slide benchmark comparando aceitabilidade de código com desempenho em testes."
     },
     {
       "titulo": "Como Cursor e GitHub revisam em produção",
       "texto": "O Cursor roda várias passadas de revisão sobre o mesmo diff e embaralha a ordem, para filtrar falsos positivos. Também precisou instruir o modelo a desconfiar do código por padrão. Um estudo independente da Universidade de Pequim viu até 44% de ganho com várias passadas. O revisor do Copilot, do GitHub, já fez 60 milhões de revisões.",
       "t": 700,
       "legenda": "Várias passadas e desconfiança por padrão reduzem falsos positivos.",
-      "print": "img/_mi3alkqy4s/3.jpg"
+      "print": "img/_mi3alkqy4s/3.jpg",
+      "descricao": "Slide sobre o desafio principal de sistemas de revisão: gerenciar falsos positivos."
     },
     {
       "titulo": "Tirar o humano tem custo escondido",
       "texto": "No port do Bun de Zig para Rust, 99,8% dos testes passaram, mas o código tem 13.044 blocos unsafe, contra cerca de 74 num projeto humano comparável. Um teste de prompt injection enganou o agente revisor em 88% das tentativas, contra 35% para humanos. O humano migra para cima, e a produção vira o último revisor.",
       "t": 1005,
       "legenda": "Os testes certificam o comportamento, mas não a segurança de memória.",
-      "print": "img/_mi3alkqy4s/4.jpg"
+      "print": "img/_mi3alkqy4s/4.jpg",
+      "descricao": "Slide com 13.044 blocos unsafe no port do Bun contra 73 em código humano comparável."
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "blocos unsafe no Rust portado pelo Bun",
       "t": 1000
     }
-  ]
+  ],
+  "rotulo": "O fim da revisão de código linha a linha",
+  "objetivo": "montar um review harness com regras da empresa e manter revisão humana só nos pontos de maior risco",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que descompasso o estudo com mais de 100 mil desenvolvedores mostrou?",
+      "resposta": "Quem usou agentes autônomos escreveu 741% mais código, mas entregou só 30% mais software, porque a revisão humana virou o gargalo."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você ajustaria a revisão de PRs de agentes no seu time?",
+      "resposta": "Limitando o PR a cerca de 400 linhas, escrevendo as regras de aceitação em um arquivo para um agente revisor e mantendo revisão humana em código de segurança ou de alto impacto."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que fragilidades tem a evidência do talk?",
+      "resposta": "Voss trabalha na Arize AI, que vende observabilidade e evals. Muitas fontes são posts de empresas sobre os próprios produtos, o estudo da Cisco tem duas décadas e não envolveu agentes, e METR e Bun são amostras pequenas."
+    }
+  ],
+  "experimento": {
+    "titulo": "Arquivo de regras para um agente revisor",
+    "minutos": 35,
+    "precisa": "Claude Code ou ChatGPT e um diff ou PR seu",
+    "passos": [
+      "Escreva em um arquivo as regras de aceitação do time (escopo, regressão, manutenção e segurança).",
+      "Peça a um agente revisor que desconfie do código por padrão e use esse arquivo como instrução.",
+      "Rode duas passadas de revisão no mesmo diff, com a ordem dos arquivos embaralhada.",
+      "Compare os alertas das duas passadas e marque quais você aceitaria."
+    ],
+    "sucesso": "Você tem um arquivo de regras reutilizável e sabe quantos alertas do revisor automático você aceitou."
+  }
 }

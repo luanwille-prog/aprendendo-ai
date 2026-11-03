@@ -21,35 +21,40 @@
       "texto": "Num app tradicional, a mesma entrada gera a mesma saída, então teste de regressão basta. Num app de IA, o mesmo prompt gera respostas diferentes. Um 200 OK do servidor só diz que a requisição funcionou, não que a resposta ajudou ou estava correta. Por isso a qualidade precisa ser avaliada continuamente em produção.",
       "t": 158,
       "legenda": "Mostra por que o status HTTP não mede a qualidade da resposta.",
-      "print": "img/rTojoVotlD8/0.jpg"
+      "print": "img/rTojoVotlD8/0.jpg",
+      "descricao": "Slide com três desafios de apps de IA: comportamento não determinístico, custo variável e novos vetores de ataque"
     },
     {
       "titulo": "Três vazamentos silenciosos de custo",
       "texto": "Token creep é aumentar o contexto aos poucos, sem revisão financeira. Troca de modelo para um mais caro mantém o volume e muda a conta. Chamadas repetidas sem cache pagam várias vezes pela mesma resposta. A palestrante sugere acompanhar as três camadas para achar o problema cedo.",
       "t": 318,
       "legenda": "Lista as três causas de custo e quanto cada uma pode pesar.",
-      "print": "img/rTojoVotlD8/1.jpg"
+      "print": "img/rTojoVotlD8/1.jpg",
+      "descricao": "Slide 'The Three Creeps' apresentando token creep como primeira causa de aumento de custo (8x)"
     },
     {
       "titulo": "Etiquete tudo em quatro níveis",
       "texto": "Sem tags, as interações com os agentes ficam indiferenciadas e ninguém sabe o que gera o gasto. A proposta tem quatro níveis. Funcionalidade (chat, resumo), usuário ou organização (cobrança interna e detecção de abuso), modelo e provedor, e endpoint (região, produção ou staging).",
       "t": 446,
       "legenda": "Mostra o esquema de tags que permite atribuir custo a cada parte.",
-      "print": "img/rTojoVotlD8/2.jpg"
+      "print": "img/rTojoVotlD8/2.jpg",
+      "descricao": "Slide 'Cost Attribution Strategy': tagging de custos por Feature Level (primeiro dos quatro níveis)"
     },
     {
       "titulo": "Quatro métricas de segurança com meta rígida",
       "texto": "Para injeção de prompt, a recomendação é usar casos de detecção por padrões ou classificadores. Para dados pessoais (PII), regex ou reconhecimento de entidades, com meta de 0% nas saídas de produção. Toxicidade pede classificador e limiares claros. Tentativas de jailbreak devem ser bloqueadas em 100% dos casos, segundo ela.",
       "t": 637,
       "legenda": "Resume o que medir em segurança e a meta proposta.",
-      "print": "img/rTojoVotlD8/3.jpg"
+      "print": "img/rTojoVotlD8/3.jpg",
+      "descricao": "Slide 'Safety Metrics to Monitor': métricas de injeção de prompt e detecção de PII com metas"
     },
     {
       "titulo": "Cinco métricas de qualidade",
       "texto": "Taxa de alucinação (respostas com afirmações sem base nos dados), relevância (por similaridade de embeddings), satisfação do usuário (joinha, estrelas, NPS), completude (avaliada por um LLM juiz) e qualidade da recuperação no RAG (top-k e NDCG). Juntas, dão uma visão multidimensional da qualidade.",
       "t": 790,
       "legenda": "Lista as cinco métricas de qualidade e como medir cada uma.",
-      "print": "img/rTojoVotlD8/4.jpg"
+      "print": "img/rTojoVotlD8/4.jpg",
+      "descricao": "Slide 'Example Quality Metrics': exemplo de métrica de qualidade (Hallucination Rate)"
     }
   ],
   "conceitos": [
@@ -112,7 +117,7 @@
       "nome": "LLM as a judge",
       "traducao": "modelo de linguagem como avaliador",
       "nivel": "intermediario",
-      "chave": "llm as a judge",
+      "chave": "llm-as-a-judge",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -170,5 +175,36 @@
       "contexto": "meta mínima de feedback positivo dos usuários",
       "t": 853
     }
-  ]
+  ],
+  "rotulo": "Monitorar app de LLM além de latência e erros",
+  "objetivo": "montar um plano de monitoramento de app de IA que some custo, segurança e qualidade aos sinais clássicos",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que um 200 OK não prova que um app de IA acertou?",
+      "resposta": "Porque o mesmo prompt pode gerar respostas diferentes, e o 200 só diz que a requisição funcionou. A qualidade precisa ser avaliada continuamente em produção."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você etiquetaria as chamadas ao modelo do seu app para descobrir o que gera gasto?",
+      "resposta": "Em quatro níveis: funcionalidade, usuário ou organização, modelo e provedor, e endpoint (região, produção ou staging). Sem tags, as interações ficam indiferenciadas."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que os alvos de 0% de dados pessoais e 100% de bloqueio de jailbreak merecem ressalva?",
+      "resposta": "Vêm sem fonte ou metodologia, e metas de 100% são irreais na prática. A palestra termina em pitch do Agent Observability da Datadog, sem demo nem dados reais."
+    }
+  ],
+  "experimento": {
+    "titulo": "Planilha de custo por funcionalidade",
+    "minutos": 25,
+    "precisa": "Um log de chamadas ao modelo de um app seu (ou um exemplo inventado) e uma planilha",
+    "passos": [
+      "Liste 20 chamadas com funcionalidade, modelo e tokens de entrada e saída.",
+      "Calcule o custo de cada funcionalidade com o preço do provedor.",
+      "Marque as chamadas repetidas com a mesma entrada.",
+      "Estime quanto um cache economizaria."
+    ],
+    "sucesso": "Você sabe qual funcionalidade pesa mais na conta e quanto do gasto vem de chamadas repetidas."
+  }
 }

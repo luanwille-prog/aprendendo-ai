@@ -21,35 +21,40 @@
       "texto": "Para o banco, saber raciocinar significa operar no próprio sistema, com schemas complexos, APIs antigas e dívida técnica, sem acumular erros em fluxos longos e com rastro auditável. O palestrante defende que tarefas especializadas pedem um modelo treinado para elas. Escalar o tamanho do modelo seria o reflexo comum, e ele argumenta contra esse reflexo.",
       "t": 232,
       "legenda": "O talk enquadra a disputa como generalista grande contra especialista pequeno",
-      "print": "img/TyPpSRXGhbc/0.jpg"
+      "print": "img/TyPpSRXGhbc/0.jpg",
+      "descricao": "slide 'Financial Institutions Need Customized, Reliable AI' com perguntas sobre operar no sistema do banco; texto pequeno, sem a tabela de modelos"
     },
     {
       "titulo": "Como o FinQA foi montado e verificado",
       "texto": "A equipe puxou relatórios 10-K do sistema EDGAR da SEC e usou o Qwen3 30B para gerar cerca de 6.900 tabelas SQL. Cada tabela virou uma pergunta e resposta, guiada por uma taxonomia criada com especialistas financeiros. A verificação tem três camadas: checagens programáticas de tabelas e colunas, revisão por agentes independentes e revisão manual de especialistas. Nenhuma empresa do benchmark aparece no treino.",
       "t": 344,
       "legenda": "O dado de treino passa por checagem automática, por agentes e por humanos",
-      "print": "img/TyPpSRXGhbc/1.jpg"
+      "print": "img/TyPpSRXGhbc/1.jpg",
+      "descricao": "slide 'Stage 2: QA Generation' com diagrama de tabelas SQL, gerador de perguntas e taxonomia; não mostra as três camadas de verificação"
     },
     {
       "titulo": "Onde até modelos de fronteira falham",
       "texto": "Os autores viram três falhas recorrentes. A primeira é inventar tabelas e colunas que não existem (schema hallucination). A segunda é encher o próprio contexto com consultas amplas como SELECT *. A terceira é repetir a mesma estratégia depois de um erro, sem ler a mensagem de erro. Segundo o palestrante, as mesmas falhas apareceram em subscrição de seguros.",
       "t": 440,
       "legenda": "As falhas são de disciplina no uso de ferramentas, e o raciocínio não aparece entre elas",
-      "print": "img/TyPpSRXGhbc/2.jpg"
+      "print": "img/TyPpSRXGhbc/2.jpg",
+      "descricao": "slide 'The Discipline Gap' com exemplo de schema hallucination do Qwen3-235B em código SQL com erros de tabela inexistente"
     },
     {
       "titulo": "Treino barato com recompensa binária",
       "texto": "O agente roda num loop ReAct (raciocinar e agir) com ferramentas para consultar as tabelas. A recompensa é só certo ou errado, decidida pelo GPT-5 nano como juiz comparando com a resposta de referência. O treino usou GRPO, cerca de 1.000 ambientes em paralelo e oito GPUs H100. O custo ficou abaixo de 500 dólares, com cerca de 420 em computação e 40 na API do juiz.",
       "t": 590,
       "legenda": "Todo o treino coube em menos de 500 dólares",
-      "print": "img/TyPpSRXGhbc/3.jpg"
+      "print": "img/TyPpSRXGhbc/3.jpg",
+      "descricao": "slide 'Training Details' com tabela: Qwen3-4B, GRPO, recompensa binária, rLLM, 1024 ambientes, 8xH100, custo abaixo de 500 dólares"
     },
     {
       "titulo": "Resultado e ablações",
       "texto": "A acurácia do modelo base mais que dobrou e passou a do 235B no benchmark de 290 perguntas. O ganho se transferiu para perguntas de duas a cinco tabelas sem treino específico, e o desempenho geral no benchmark BFCL de chamada de ferramentas subiu um pouco. Nas ablações (testes que removem ou trocam uma peça por vez), treinar só nos dados simples e usar recompensa binária venceu currículo e rubrica.",
       "t": 630,
       "legenda": "O 4B treinado supera o 235B no conjunto de teste separado",
-      "print": "img/TyPpSRXGhbc/4.jpg"
+      "print": "img/TyPpSRXGhbc/4.jpg",
+      "descricao": "gráfico de barras 'FinQA: Specialist vs. Generalist' com Pass@1 do 4B treinado (59,7%), Qwen3-235B (51,4%) e modelos fechados"
     }
   ],
   "conceitos": [
@@ -203,5 +208,36 @@
       "contexto": "custo total do treino em oito H100, juiz incluído",
       "t": 597
     }
-  ]
+  ],
+  "rotulo": "Modelo pequeno treinado com RL em perguntas financeiras",
+  "objetivo": "explicar como dados verificados e recompensa de certo ou errado deixaram um modelo de 4B melhor que o de 235B numa tarefa de agente",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que três falhas recorrentes os autores viram em modelos de fronteira no FinQA?",
+      "resposta": "Inventar tabelas e colunas que não existem, encher o contexto com consultas amplas como SELECT * e repetir a mesma estratégia depois de um erro, sem aprender com ele."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Antes de trocar por um modelo maior, o que você olharia nos logs do seu agente?",
+      "resposta": "Se há schema inventado, consultas que despejam dados demais e repetição do mesmo erro. Para reduzir isso, dar ao agente ferramentas que listem tabelas e colunas reais e limitem o tamanho do retorno."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que fragilidades têm o benchmark e o custo de 500 dólares?",
+      "resposta": "O benchmark foi criado pela própria equipe com o mesmo pipeline sintético do treino, com 290 perguntas e só 80 multitabela. O 235B não foi ajustado e não há modelos fechados na comparação. Os 500 dólares deixam de fora a geração de dados e a revisão por especialistas."
+    }
+  ],
+  "experimento": {
+    "titulo": "Auditar os erros do seu agente de SQL",
+    "minutos": 30,
+    "precisa": "Um agente que consulta um banco ou planilha, com logs, e dez perguntas com resposta conhecida",
+    "passos": [
+      "Escreva dez perguntas sobre seus dados com a resposta correta verificada por você.",
+      "Rode o agente em todas e salve o log de cada tentativa.",
+      "Classifique cada erro em tabela ou coluna inventada, consulta ampla demais ou repetição do mesmo erro.",
+      "Corrija a causa mais frequente com uma ferramenta que liste o schema real e limite as linhas devolvidas."
+    ],
+    "sucesso": "Você tem uma contagem por tipo de erro e a taxa de acerto sobe nas mesmas dez perguntas depois de uma única correção."
+  }
 }

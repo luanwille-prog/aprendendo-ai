@@ -21,35 +21,40 @@
       "texto": "No Uber, mudanças que passavam sozinhas no CI quebravam o main quando combinadas. Serializar tudo levaria até 20 dias. O SubmitQueue testa em paralelo as combinações prováveis, remove da fila o PR que vai quebrar e avisa o autor.",
       "t": 126,
       "legenda": "A fila testa commits juntos para manter o main verde.",
-      "print": "img/7b9tov5Uc5s/0.jpg"
+      "print": "img/7b9tov5Uc5s/0.jpg",
+      "descricao": "Slide 'We had agent-scale volume before agents' com 'Test likely futures in parallel' e métricas de fila (1.000 mudanças/dia, 20+ dias)."
     },
     {
       "titulo": "O volume de PRs cresce mais rápido que a equipe",
       "texto": "Korlam diz que o ritmo de commits da própria equipe quase multiplicou por 10 em três anos, com o mesmo time. O gráfico do Gitar mostra crescimento de cerca de 25% ao mês no número de PRs revisados. A fila de CI e a de revisão ficam sobrecarregadas.",
       "t": 255,
       "legenda": "Número de PRs por mês sobe de forma exponencial.",
-      "print": "img/7b9tov5Uc5s/1.jpg"
+      "print": "img/7b9tov5Uc5s/1.jpg",
+      "descricao": "Slide 'Agents bring that volume to every team' com gráfico exponencial de PRs revisados no Gitar de abr/2025 a set/2026 e o número 10x."
     },
     {
       "titulo": "Acelerar o CI e mover checagens para a esquerda",
       "texto": "A equipe baixou o CI de cerca de 10 minutos para menos de 1 minuto nos passos incrementais. Usou cache de saídas do build em Rust, menos invalidação do compilador e sharding. Checagens caras foram empurradas para antes ou para depois do merge, conforme o caso.",
       "t": 654,
       "legenda": "CI incremental cai de uns 10 minutos para menos de 1.",
-      "print": "img/7b9tov5Uc5s/2.jpg"
+      "print": "img/7b9tov5Uc5s/2.jpg",
+      "descricao": "Slide 'How we made every CI pass cheaper' mostrando só a barra de controle em 100% baseline; a comparação depois do cache não aparece."
     },
     {
       "titulo": "Política de aprovação por nível de risco",
       "texto": "Bumps de dependência e mudanças de documentação podem ser aprovados automaticamente. Áreas sensíveis, como pagamentos, exigem aprovador humano. O agente que escreveu a mudança nunca a aprova, para manter o princípio de zero trust (não confiar por padrão).",
       "t": 874,
       "legenda": "Regras de risco decidem o que é auto-aprovado e o que escala.",
-      "print": "img/7b9tov5Uc5s/3.jpg"
+      "print": "img/7b9tov5Uc5s/3.jpg",
+      "descricao": "Slide 'Let policy approve the routine changes' com lista de regras de auto-aprovação (dependências, docs) e exemplos de comandos. Miniatura pequena."
     },
     {
       "titulo": "Registro que sobrevive ao CI expirado",
       "texto": "Logs de CI expiram e force push muda o código apontado pelo branch. Sem registro, só resta um carimbo de aprovação. O talk lista o que guardar: agente e sessão de origem, commit testado, resolução de cada achado, aprovador distinto e motivo de cada override.",
       "t": 1028,
       "legenda": "Lista de evidências que o PR precisa carregar para auditoria.",
-      "print": "img/7b9tov5Uc5s/4.jpg"
+      "print": "img/7b9tov5Uc5s/4.jpg",
+      "descricao": "Slide 'When an agent writes the change, the record needs more' com a lista de campos do registro: autor, aprovador, commit testado, override."
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "PRs com ao menos uma falha de CI registrada",
       "t": 438
     }
-  ]
+  ],
+  "rotulo": "CI e revisão quando agentes abrem muitos PRs",
+  "objetivo": "medir onde o tempo de um PR se perde e escrever uma política de risco que defina o que pode ser auto-aprovado",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que a fila de CI e de revisão trava com agentes?",
+      "resposta": "Ela foi desenhada para o ritmo humano. Quando agentes abrem vários PRs ao mesmo tempo, CI, revisão e merge viram o gargalo, e o processo precisa mudar com ele."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que mudanças de baixo e de alto risco você separaria numa política de aprovação?",
+      "resposta": "Baixo risco, como docs e dependências, pode ser auto-aprovado. Pagamentos e autenticação exigem humano. O agente, ou quem deu o prompt, não aprova a própria mudança."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que desconfiar dos números de 10x e 13%?",
+      "resposta": "Vêm da própria plataforma Gitar, da Sonar, e de uma equipe pequena, sem metodologia nem comparação. A descrição avisa que são exemplos, e a afirmação sobre times com mais de 100 mil devs não tem fonte."
+    }
+  ],
+  "experimento": {
+    "titulo": "Onde o tempo do PR se perde",
+    "minutos": 30,
+    "precisa": "Acesso a um repositório no GitHub, seu ou público, e uma planilha",
+    "passos": [
+      "Pegue 10 PRs recentes já integrados de um repositório.",
+      "Anote para cada um a hora de abertura, do primeiro review e do merge.",
+      "Calcule o tempo de CI, de espera por revisão e de revisão.",
+      "Identifique o maior trecho e escreva uma ação para reduzi-lo."
+    ],
+    "sucesso": "Você sabe qual trecho consome mais tempo nos 10 PRs e tem uma ação concreta para ele."
+  }
 }

@@ -21,35 +21,40 @@
       "texto": "O data plane (onde moram os dados críticos) fica separado de control plane, observabilidade, analytics, apps e MCPs. Esses outros componentes recebem deploys com mais frequência e falham mais. Um deploy ruim no control plane não pode impedir o acesso ao banco.",
       "t": 233,
       "legenda": "Cada componente falha sozinho sem derrubar o data plane.",
-      "print": "img/uKUA1a0Kdfc/0.jpg"
+      "print": "img/uKUA1a0Kdfc/0.jpg",
+      "descricao": "Slide 'isolation + static stability' com diagrama: data plane separado de control plane, observabilidade, app e MCP."
     },
     {
       "titulo": "Em escala, falha rara vira rotina semanal",
       "texto": "Com um servidor de banco, uma falha acontece a cada alguns anos. Com milhares de servidores, vira falha semanal ou mensal. Por isso o padrão é ter um nó primário e réplicas em outros data centers ou zonas de disponibilidade, prontas para assumir.",
       "t": 295,
       "legenda": "Primário com réplicas em standby cobre a falha inevitável de servidores.",
-      "print": "img/uKUA1a0Kdfc/1.jpg"
+      "print": "img/uKUA1a0Kdfc/1.jpg",
+      "descricao": "Slide 'redundancy': primário em AZ-C e dois followers em AZ-A e AZ-B, cópias isoladas de cada componente crítico."
     },
     {
       "titulo": "Sharding espalha dados, e cada shard ainda tem réplicas",
       "texto": "Um único nó funciona com 10 GB, mas não com terabytes. O sharding divide dados e consultas entre vários servidores, atrás de um proxy (VTGate). Cada shard mantém primário e réplicas, então se recupera sozinho. A PlanetScale usa Vitess para MySQL e Neki para Postgres.",
       "t": 450,
       "legenda": "Proxy distribui as consultas entre shards redundantes.",
-      "print": "img/uKUA1a0Kdfc/2.jpg"
+      "print": "img/uKUA1a0Kdfc/2.jpg",
+      "descricao": "Slide 'sharding': aplicação, VTGate à frente e shards A a D abaixo, com a frase sobre particionar trabalho por tenant ou chave."
     },
     {
       "titulo": "VSchema em JSON deixa o agente propor o sharding",
       "texto": "O Vitess é complexo por dentro, mas a configuração de sharding é um arquivo JSON chamado VSchema, no qual se define a coluna de shard e o método. Como agentes lidam bem com texto e JSON, o desenvolvedor passa o schema do banco e pede um protótipo de VSchema. Depois a plataforma aplica via deploy, API ou CLI.",
       "t": 785,
       "legenda": "A interface de sharding é um JSON simples que o agente consegue escrever.",
-      "print": "img/uKUA1a0Kdfc/3.jpg"
+      "print": "img/uKUA1a0Kdfc/3.jpg",
+      "descricao": "Slide 'sharding specified with JSON / VSchema' com exemplo legível de VSchema: sharded, vindexes xxhash e column_vindexes com user_id."
     },
     {
       "titulo": "Traffic Control aplica back pressure por orçamento",
       "texto": "O recurso Traffic Control etiqueta o tráfego que chega ao banco e define orçamentos de recursos (CPU, processos de backend) por segmento. Ao estourar o orçamento, o sistema avisa o cliente ou mata as consultas. Perde-se parte do tráfego, mas a aplicação inteira não cai.",
       "t": 909,
       "legenda": "O gráfico mostra o tráfego acima do orçamento sendo sinalizado em vez de derrubar o banco.",
-      "print": "img/uKUA1a0Kdfc/4.jpg"
+      "print": "img/uKUA1a0Kdfc/4.jpg",
+      "descricao": "Slide 'traffic control' com gráfico de atividade do orçamento de recursos, modo warning, violações de consulta e contagem de warnings e blocks."
     }
   ],
   "conceitos": [
@@ -195,5 +200,36 @@
       "contexto": "App pequeno com um servidor falha uma vez a cada poucos anos",
       "t": 325
     }
-  ]
+  ],
+  "rotulo": "Banco de dados aguentando o tráfego de agentes",
+  "objetivo": "checar se um deploy fora do banco pode derrubá-lo e desenhar uma regra de back pressure e um fluxo seguro de mudança de schema por agentes",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que separar o data plane do control plane, do analytics e dos MCPs?",
+      "resposta": "Os outros componentes recebem deploys com mais frequência e falham mais. Um deploy ruim neles não pode impedir o acesso ao banco, onde moram os dados críticos."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "O que acontece no seu sistema quando o banco passa do limite de CPU ou de conexões?",
+      "resposta": "Se a resposta é cair tudo, desenhe uma regra de back pressure, como um orçamento de recursos por tipo de tráfego que recusa parte das requisições ao estourar, em vez de derrubar a aplicação inteira."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que partes do talk são promessa e não demonstração?",
+      "resposta": "É pitch da PlanetScale. O agente projetando shards é afirmado, não demonstrado, o aumento de 2x a 4x de tráfego do GitHub vem de um tweet e o revert sem perda de dados é promessa sem condições descritas."
+    }
+  ],
+  "experimento": {
+    "titulo": "Mudança de schema por agente, com reversão",
+    "minutos": 35,
+    "precisa": "SQLite ou Postgres local e Claude Code ou ChatGPT",
+    "passos": [
+      "Crie um banco de teste com duas tabelas e alguns dados.",
+      "Peça ao agente uma migração que adiciona uma coluna, em um arquivo .sql, sem executá-la.",
+      "Revise o arquivo e escreva a migração inversa que desfaz a mudança.",
+      "Rode a migração em uma cópia do banco, confira o resultado e rode a inversa."
+    ],
+    "sucesso": "Você aplicou e reverteu a mudança em uma cópia e os dados originais voltaram idênticos."
+  }
 }

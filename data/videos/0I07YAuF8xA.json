@@ -21,35 +21,40 @@
       "texto": "Em RAG (busca de trechos para responder perguntas), um parse ruim custava uma resposta errada. Um agente toma várias decisões em cadeia sobre vários arquivos, então o erro da leitura inicial contamina tudo que vem depois. Por isso o palestrante trata o dado não estruturado como o gargalo real.",
       "t": 252,
       "legenda": "Mostra por que o erro de entrada pesa mais em agentes do que em RAG.",
-      "print": "img/0I07YAuF8xA/0.jpg"
+      "print": "img/0I07YAuF8xA/0.jpg",
+      "descricao": "Slide mostrando impacto de entrada ruim em processamento de PDF por agentes com exemplo de erro."
     },
     {
       "titulo": "OCR agêntico corrige token, não reescreve a página",
       "texto": "Pedir a um modelo de visão que refaça o texto do OCR faz ele consertar o documento por conta própria. Um exemplo dado é somar uma coluna e trocar o total que o humano tinha errado. A Reducto aplica só correções pontuais, como zero no lugar de O, depois de um parse que combina visão computacional e modelo de visão.",
       "t": 620,
       "legenda": "Mostra o passo de verificação que gera a saída de alta confiança.",
-      "print": "img/0I07YAuF8xA/1.jpg"
+      "print": "img/0I07YAuF8xA/1.jpg",
+      "descricao": "Slide 'Agentic OCR Framework' demonstrando correção token-a-token: L0 convertido para 10 em prescrição."
     },
     {
       "titulo": "Uma tabela, três representações",
       "texto": "Tabela simples vai bem em markdown. Tabela com células mescladas pede HTML, que o modelo lê bem mas custa mais tokens. Para a busca, o HTML atrapalha, porque o embedding (vetor que representa o sentido do texto) não casa uma pergunta como 'como a receita mudou' com um monte de tags. A solução é indexar uma descrição em linguagem natural e entregar o HTML ao modelo.",
       "t": 714,
       "legenda": "Compara a tabela em HTML com a versão escrita para o embedding.",
-      "print": "img/0I07YAuF8xA/2.jpg"
+      "print": "img/0I07YAuF8xA/2.jpg",
+      "descricao": "Slide com tabela em três formatos: Markdown para simplicidade, HTML para complexidade, linguagem natural para busca."
     },
     {
       "titulo": "Entrada estruturada eleva modelos e gasta menos raciocínio",
       "texto": "No benchmark GDP PDF, o modelo de fronteira mais novo fica perto de 30%. Ao dar aos outros modelos o PDF mais o resultado do parse, dois deles passaram esse modelo sem qualquer ajuste. Eles também usaram menos tokens de raciocínio, o que baixa a latência.",
       "t": 811,
       "legenda": "Mostra o ganho de acurácia vindo só da qualidade da entrada.",
-      "print": "img/0I07YAuF8xA/3.jpg"
+      "print": "img/0I07YAuF8xA/3.jpg",
+      "descricao": "Gráfico de barras comparando acurácia de modelos com e sem parse estruturado de PDF."
     },
     {
       "titulo": "Harness de agente resolve gráfico de linha e o dilema precisão versus recall",
       "texto": "Nenhum modelo transforma um gráfico de linha em tabela numa tentativa só. Um agente com interpretador de código, que visualiza o próprio resultado e se corrige várias vezes, chega lá. O mesmo desenho reduz o vício dos modelos de fronteira, que acertam as linhas que extraem mas deixam linhas de fora sem avisar.",
       "t": 1028,
       "legenda": "Mostra a tabela de dados recuperada a partir da imagem do gráfico.",
-      "print": "img/0I07YAuF8xA/4.jpg"
+      "print": "img/0I07YAuF8xA/4.jpg",
+      "descricao": "Slide 'Agentic Chart Extraction' mostrando gráfico de linhas original e tabela markdown reconstruída."
     }
   ],
   "conceitos": [
@@ -156,7 +161,7 @@
       "nome": "Agent harness",
       "traducao": "estrutura de ferramentas ao redor do agente",
       "nivel": "avancado",
-      "chave": "agent harness",
+      "chave": "harness",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -203,5 +208,36 @@
       "contexto": "campos em um formulário CBP citado",
       "t": 1089
     }
-  ]
+  ],
+  "rotulo": "Parse de documentos que alimenta agentes",
+  "objetivo": "montar um pipeline de documentos para agentes que mede cada etapa e usa o formato certo para o modelo e para a busca",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que um erro de leitura de PDF pesa mais em um agente do que em um RAG simples?",
+      "resposta": "Um agente toma várias decisões em cadeia sobre vários arquivos, então o erro do parse inicial contamina tudo que vem depois. No RAG, um parse ruim custava só uma resposta errada."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você alimenta um agente com tabelas de PDFs. Como guardaria uma tabela com células mescladas para o modelo e para a busca?",
+      "resposta": "Guarde o HTML para o modelo ler, porque ele entende bem esse formato, e indexe uma descrição em linguagem natural na busca, porque o embedding não casa bem com um monte de tags."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites enfraquecem os ganhos que o palestrante cita no GDP PDF e no benchmark de precisão?",
+      "resposta": "Ele é fundador de uma empresa de documentos, e os números vêm sem tabela, amostra ou método. Um dos benchmarks foi lançado por terceiros na manhã do talk, e falta comparar custo e latência."
+    }
+  ],
+  "experimento": {
+    "titulo": "Compare PDF cru e tabela estruturada",
+    "minutos": 30,
+    "precisa": "Um PDF seu com tabela, Claude ou ChatGPT e uma planilha",
+    "passos": [
+      "Escolha um PDF seu com uma tabela e anote três perguntas cuja resposta você já conhece.",
+      "Envie o PDF direto ao modelo e registre quais respostas saíram certas e quais saíram erradas.",
+      "Converta a tabela para markdown ou HTML, peça isso ao próprio modelo se precisar, e faça as mesmas três perguntas.",
+      "Anote em uma planilha os acertos e o tamanho da entrada nas duas versões."
+    ],
+    "sucesso": "Você tem uma planilha com acertos e tamanho da entrada das duas versões e sabe qual formato rendeu mais nesse documento."
+  }
 }

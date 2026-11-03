@@ -21,7 +21,8 @@
       "texto": "O agente continua no fluxo normal. Quando surge uma tarefa cara em tokens ou sensível, ele chama uma ferramenta MCP. Essa ferramenta envia o arquivo para workers com GPU na nuvem do usuário. O Claude Code recebe de volta só o resultado processado.",
       "t": 650,
       "legenda": "A arquitetura separa o agente, o servidor MCP e o cluster que processa os documentos.",
-      "print": "img/Ndp5VaqFrl0/0.jpg"
+      "print": "img/Ndp5VaqFrl0/0.jpg",
+      "descricao": "Slide 'Three tiers: the agent, the edge, and your cluster' com as três camadas: MCP client, edge e cluster."
     },
     {
       "titulo": "Um conjunto de ferramentas para documentos",
@@ -35,21 +36,24 @@
       "texto": "Na demo, o prompt pede para redigir (mascarar) os dados do NDA. A ferramenta devolve o texto com e-mail, nome e outros dados pessoais trocados por rótulos. O resumo da chamada mostra 10 trechos mascarados e a contagem por tipo de rótulo.",
       "t": 1214,
       "legenda": "A saída da ferramenta mostra quantos trechos foram mascarados e de que tipo.",
-      "print": "img/Ndp5VaqFrl0/2.jpg"
+      "print": "img/Ndp5VaqFrl0/2.jpg",
+      "descricao": "Terminal do Claude Code com a saída da ferramenta de redação, em resolução baixa, com o palestrante no canto."
     },
     {
       "titulo": "Scan vira Markdown sem dados pessoais",
       "texto": "Um contrato escaneado é uma imagem, então precisa de OCR. O palestrante compara o arquivo antes e depois. O resultado é um Markdown legível com os dados pessoais mascarados. Uma barra de status também contabiliza os tokens economizados, embora ele diga que ainda precisa ajustar essa contagem.",
       "t": 1341,
       "legenda": "O mesmo contrato como imagem escaneada e como texto Markdown já mascarado.",
-      "print": "img/Ndp5VaqFrl0/3.jpg"
+      "print": "img/Ndp5VaqFrl0/3.jpg",
+      "descricao": "Contrato de prestação de serviços (imagem escaneada) ao lado de janela do Claude Code; não mostra o Markdown redigido."
     },
     {
       "titulo": "Batching por worker e embeddings mais baratos",
       "texto": "A equipe diz que uma fila compartilhada, da qual cada worker puxa trabalho, deu melhor latência de ponta a ponta. Nos testes de embeddings com tarefas do MTEB, o melhor modelo aberto por tarefa chegou a 99,8% do modelo de fronteira, com preço cerca de 10 vezes menor.",
       "t": 1654,
       "legenda": "O slide mostra a qualidade relativa e a diferença de preço dos embeddings abertos.",
-      "print": "img/Ndp5VaqFrl0/4.jpg"
+      "print": "img/Ndp5VaqFrl0/4.jpg",
+      "descricao": "Slide 'Frontier embedding quality, at about a twelfth of the cost' com 99,8% e -10x no MTEB."
     }
   ],
   "conceitos": [
@@ -229,5 +233,36 @@
       "contexto": "exemplo de PDF com imagens para pré-processar com OCR",
       "t": 490
     }
-  ]
+  ],
+  "rotulo": "Servidor MCP privado que anonimiza documentos para o agente",
+  "objetivo": "avaliar se uma ferramenta de redação de dados pessoais protege de fato, checando se o agente ainda lê o arquivo original",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que o servidor MCP da demo faz com um contrato escaneado antes de o agente vê-lo?",
+      "resposta": "Envia o arquivo a modelos abertos na nuvem do usuário, faz OCR, mascara os dados pessoais e devolve ao Claude Code um Markdown menor, o que também reduz tokens."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Antes de passar documentos sensíveis a um agente, o que você verificaria?",
+      "resposta": "Se o agente tem acesso direto à pasta com os originais. Se tiver, a privacidade depende só de instrução, sem barreira técnica, e a redação por ferramenta não garante nada."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites o próprio palestrante admite ou deixa aparecer no talk?",
+      "resposta": "A demo usa dados sintéticos e um cluster da própria Superlinked. Os números de embedding (99,8% e 10 vezes mais barato) vêm de testes internos, e ele admite que o limite de privacidade precisa de mais testes e guardrails."
+    }
+  ],
+  "experimento": {
+    "titulo": "Medir a economia de tokens com OCR em um PDF",
+    "minutos": 25,
+    "precisa": "Um PDF escaneado seu sem dados sensíveis e uma ferramenta de OCR ou Claude/ChatGPT com visão",
+    "passos": [
+      "Escolha um PDF escaneado de umas 10 páginas sem dados sensíveis.",
+      "Converta para Markdown com uma ferramenta de OCR ou peça a um modelo com visão.",
+      "Compare o tamanho do conteúdo antes e depois, por contagem de tokens ou de caracteres.",
+      "Procure no Markdown nomes, e-mails e números que um mascaramento deveria cobrir e liste."
+    ],
+    "sucesso": "Você tem o tamanho antes e depois e uma lista dos dados pessoais que ainda apareceriam no texto."
+  }
 }

@@ -21,35 +21,40 @@
       "texto": "Perguntar \"por que o cliente A ficou chateado?\" funciona com uma chamada ao Zendesk. Perguntar quais clientes ficaram chateados no último ano exige puxar milhares de tickets, 100 por vez, até dar timeout. As APIs de terceiros não oferecem busca semântica, então o agente não consegue perguntar em linguagem natural direto à plataforma.",
       "t": 259,
       "legenda": "Busca ao vivo escala mal quando a pergunta cobre um período longo.",
-      "print": "img/cSz7aL2nl2U/0.jpg"
+      "print": "img/cSz7aL2nl2U/0.jpg",
+      "descricao": "slide 'Who else experienced this problem?' com cards de tickets de clientes (Acme, Initech, Hooli etc.) marcados como detected ou missed"
     },
     {
       "titulo": "Sincronize uma cópia para perguntas semânticas",
       "texto": "Para análise ampla, o dado precisa ser copiado para um banco vetorial local. Para ações simples e pontuais, como consultar um cliente no Stripe, a chamada ao vivo basta. Feig diz que a cópia custa mais e é mais difícil de manter atualizada, então ela entra só onde a pergunta exige.",
       "t": 320,
       "legenda": "Duas vias de dados: ao vivo para o simples, sincronizado para o profundo.",
-      "print": "img/cSz7aL2nl2U/1.jpg"
+      "print": "img/cSz7aL2nl2U/1.jpg",
+      "descricao": "diagrama 'So you need a syncing layer': user prompt, agents, Sync/Cache DB ligada a MCP e aos apps Salesforce, Zendesk e Slack"
     },
     {
       "titulo": "Roteador, resumidor e skills guiam a busca",
       "texto": "O roteador envia o prompt ao agente certo. O resumidor condensa o que veio do cache e das chamadas ao vivo, para não despejar contexto demais no agente. Skills e memória vêm antes: elas dizem, por exemplo, que a empresa mede satisfação pelo Qualtrics e não pelo número de tickets.",
       "t": 382,
       "legenda": "A arquitetura completa da camada de contexto proposta.",
-      "print": "img/cSz7aL2nl2U/2.jpg"
+      "print": "img/cSz7aL2nl2U/2.jpg",
+      "descricao": "diagrama 'Then routing and summarization' com Router e Summarizer destacados, Sync/Cache DB e MCP; memory store e skills library apagados"
     },
     {
       "titulo": "Quatro camadas de contexto e um fluxograma de decisão",
       "texto": "As camadas são prompt com skills e memória, chamadas de API ao vivo, dados em cache e contexto derivado (resumos guardados para reuso). No fluxograma, o agente confere se há skill ou memória, depois se o cache está dentro do prazo aceitável (SLA), e só então chama a API ao vivo, em ciclos até juntar contexto suficiente.",
       "t": 640,
       "legenda": "Ordem de decisão: skill, cache fresco, API ao vivo, resposta.",
-      "print": "img/cSz7aL2nl2U/3.jpg"
+      "print": "img/cSz7aL2nl2U/3.jpg",
+      "descricao": "fluxograma 'Have a strategy for context selection': skill/memory match, check cache is data fresh, enough context, call live API, generate response"
     },
     {
       "titulo": "Rastreabilidade de cada dado",
       "texto": "Cada dado guardado deve levar metadados: origem, hora da busca, ID e escopos usados, quem acessou, se foi transformado, como era o original e o que o invalida (por exemplo, mais de um mês de idade). Isso permite auditar decisões de negócio e investigar falhas.",
       "t": 727,
       "legenda": "Lista do que registrar para saber de onde veio cada dado.",
-      "print": "img/cSz7aL2nl2U/4.jpg"
+      "print": "img/cSz7aL2nl2U/4.jpg",
+      "descricao": "slide 'Traceability and provenance' com a lista de cinco perguntas: origem, onde foi buscado, ID e escopo, transformação, invalidação"
     }
   ],
   "conceitos": [
@@ -101,7 +106,7 @@
       "nome": "Skills",
       "traducao": "instruções da empresa sobre como fazer uma tarefa",
       "nivel": "basico",
-      "chave": "skills",
+      "chave": "skill",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -170,5 +175,36 @@
       "contexto": "tickets puxados no exemplo do status do cliente Acme",
       "t": 789
     }
-  ]
+  ],
+  "rotulo": "Camada de contexto para agentes além do MCP",
+  "objetivo": "decidir quando uma pergunta exige consulta ao vivo ou cópia sincronizada e registrar a origem de cada dado usado pelo agente",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que a pergunta sobre clientes insatisfeitos na semana passada estoura o tempo em consultas ao vivo via MCP?",
+      "resposta": "Porque exige puxar milhares de tickets, 100 por vez, até dar timeout, e as APIs de terceiros não oferecem busca semântica. Para análise ampla, o dado precisa ser copiado para um banco vetorial."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você separaria as perguntas frequentes do seu agente entre consulta ao vivo e cópia sincronizada?",
+      "resposta": "Lookup simples, como consultar um cliente no Stripe, usa chamada ao vivo. Análise sobre muitos registros exige cópia sincronizada ou exportação. Também definir por escrito termos como cliente satisfeito e entregá-los como skill."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que conflito de interesse e que lacunas você vê no talk de Gil Feig?",
+      "resposta": "A Merge vende sincronização de dados, conexões MCP ao vivo e um roteador de LLM, e as peças descritas coincidem com esses produtos. Não há medição, caso de cliente nem custo de manter o cache, que o próprio palestrante admite ser maior."
+    }
+  ],
+  "experimento": {
+    "titulo": "Classificar perguntas e exigir fonte nas respostas",
+    "minutos": 25,
+    "precisa": "Um chat com acesso a duas ou três fontes de dados suas, ou arquivos exportados delas",
+    "passos": [
+      "Liste dez perguntas que você faria ao agente sobre seus sistemas.",
+      "Marque cada uma como lookup simples ou análise de muitos registros.",
+      "Escreva em um arquivo a definição da sua empresa para um termo ambíguo, como cliente em risco, e entregue ao agente.",
+      "Peça respostas que citem a fonte e a data de cada dado e defina a idade máxima aceitável."
+    ],
+    "sucesso": "As respostas citam fonte e data, usam sua definição do termo e você sabe quais perguntas pedem uma cópia dos dados."
+  }
 }

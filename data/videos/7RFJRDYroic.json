@@ -21,35 +21,40 @@
       "texto": "Toda rodada precisa de um arquivo que o agente pode alterar (no exemplo, solution.py com a configuração e o treino do modelo), um comando que avalia cada versão e devolve um único número, a métrica, a direção (subir ou descer) e o número de passos. O arquivo editável define o espaço de busca. O comando de eval imprime a nota no terminal, e é essa nota que guia o ciclo de tentativa e erro.",
       "t": 690,
       "legenda": "O contrato mínimo que qualquer sistema de autoresearch pede",
-      "print": "img/7RFJRDYroic/0.jpg"
+      "print": "img/7RFJRDYroic/0.jpg",
+      "descricao": "Slide 'Anatomy of an Autoresearch run' com os 7 passos (source file, evaluation, metric, goal, steps, eval timeout, instructions) e o comando weco run"
     },
     {
       "titulo": "O eval é a peça mais importante",
       "texto": "Os palestrantes pedem um eval rápido, barato e com pouco ruído. Rápido e barato permite mais tentativas dentro do mesmo orçamento, e mais tentativas trazem mais avanços. Pouco ruído dá confiança de que a melhora é real. Eles também alertam que agentes adoram reward hacking (burlar a recompensa), achando brechas no protocolo de avaliação. Por isso o eval precisa ser robusto.",
       "t": 750,
       "legenda": "Eval rápido e estável multiplica as tentativas úteis do agente",
-      "print": "img/7RFJRDYroic/1.jpg"
+      "print": "img/7RFJRDYroic/1.jpg",
+      "descricao": "Slide 'Step 2 · Evaluation' com solution.py, eval, val_bpb = 0.42 e os requisitos: métrica única, rápido/barato/pouco ruído, tornar robusto"
     },
     {
       "titulo": "Limite de tempo e orientação inicial",
       "texto": "Cada avaliação precisa de um teto de tempo, porque o loop pode travar, o hardware pode falhar e o agente pode gerar código que trava tudo. No Mini Parameter Golf o teto é de 210 segundos (minuto 14:35). Antes de começar, vale passar ao agente um arquivo markdown com o que você já sabe, como restrições e ideias promissoras (compressão, quantização, compartilhar pesos entre blocos).",
       "t": 880,
       "legenda": "O orçamento de tempo por tentativa tem justificativa explícita",
-      "print": "img/7RFJRDYroic/2.jpg"
+      "print": "img/7RFJRDYroic/2.jpg",
+      "descricao": "Slide 'Step 6 · Eval timeout' com --eval-timeout 210 e a divisão 60s train + 60s test + 90s buffer, teto de 210s por passo"
     },
     {
       "titulo": "Árvore de experimentos e controle humano",
       "texto": "A busca da Weco tem forma de árvore. A raiz é o programa original com sua nota, e cada nó é uma versão modificada com nota própria. Ramos que melhoram ganham continuação, e ramos ruins são podados. Dá para abrir qualquer nó, ler o diff (as linhas alteradas) e, se a busca empacar, escrever uma ideia em linguagem comum para abrir um ramo novo.",
       "t": 1065,
       "legenda": "Cada tentativa fica visível com sua mudança de código e sua nota",
-      "print": "img/7RFJRDYroic/3.jpg"
+      "print": "img/7RFJRDYroic/3.jpg",
+      "descricao": "Dashboard em árvore 'What is autoresearch': raiz 0 com nota 0.5, nós 1 a 13 com notas, ramos podados em vermelho e ramo vencedor destacado"
     },
     {
       "titulo": "O maior salto veio de uma ideia humana",
       "texto": "No Parameter Golf, o agente ficou estagnado de 15 a 19 de abril testando atenção e compressão. Uma pessoa da comunidade publicou um tokenizer (divisor de texto em pedaços) novo. Em oito horas o sistema incorporou a ideia ao que já tinha e entregou o maior salto em semanas. O time conclui que autoresearch funciona melhor como colaboração do que no modo ligar e esquecer.",
       "t": 1190,
       "legenda": "A ideia de fora destravou a busca que estava parada havia dias",
-      "print": "img/7RFJRDYroic/4.jpg"
+      "print": "img/7RFJRDYroic/4.jpg",
+      "descricao": "Gráfico 'When it stalled, a human idea broke it open' com curvas de notas por tentativa; imagem pequena (storyboard), título legível, eixos pouco nítidos"
     }
   ],
   "conceitos": [
@@ -204,5 +209,36 @@
       "contexto": "Teto de tempo por avaliação no Mini Parameter Golf",
       "t": 875
     }
-  ]
+  ],
+  "rotulo": "Autoresearch com eval rápido e difícil de burlar",
+  "objetivo": "montar um loop de autoresearch com arquivo editável, eval de um número só, limite de tempo e supervisão humana",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais peças toda rodada de autoresearch precisa ter?",
+      "resposta": "Um arquivo que o agente pode alterar, um comando que avalia cada versão e devolve um único número, a direção da métrica (subir ou descer), o número de passos e um limite de tempo por avaliação."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você prepararia seu eval antes de soltar um agente em loop?",
+      "resposta": "Escrever um comando que imprime um número, rodá-lo várias vezes sem mudar nada para medir o ruído, pôr um teto de tempo, esconder um conjunto de validação do agente e restringir os arquivos que ele edita."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que o caso do tokenizer e a demo ao vivo não bastam para provar o método?",
+      "resposta": "O workshop vende a plataforma da Weco, e os números do Parameter Golf são autodeclarados. A história do tokenizer é um único caso, e a demo ao vivo falhou por causa da internet, então o loop quase não foi visto rodando."
+    }
+  ],
+  "experimento": {
+    "titulo": "Loop de autoresearch com métrica de um número",
+    "minutos": 45,
+    "precisa": "Um script Python pequeno com algo mensurável, como o tempo de uma função, e um agente de código",
+    "passos": [
+      "Escolha um arquivo editável e escreva um comando que o executa e imprime um único número.",
+      "Rode o comando cinco vezes sem mudar nada para ver o ruído e defina um limite de tempo.",
+      "Peça ao agente que proponha uma mudança por vez, rode o eval e mantenha só o que melhora.",
+      "Revise o diff de cada melhoria para descobrir se ele burlou a métrica."
+    ],
+    "sucesso": "A nota melhora além do ruído medido e, ao ler os diffs, você confirma que a melhoria é real e não um atalho na métrica."
+  }
 }

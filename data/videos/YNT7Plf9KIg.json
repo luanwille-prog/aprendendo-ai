@@ -21,35 +21,40 @@
       "texto": "O palestrante cita o CTO da Dynatrace: agentes operam em velocidade, mas sem visão. Se faltam contexto, detalhes ou permissões nas ferramentas, o agente alucina e automatiza processos que não geram valor. A proposta é chamar esse contexto de sistema nervoso do agente.",
       "t": 255,
       "legenda": "A tese do talk: agentes são rápidos, mas só tão bons quanto os dados que veem.",
-      "print": "img/YNT7Plf9KIg/0.jpg"
+      "print": "img/YNT7Plf9KIg/0.jpg",
+      "descricao": "Slide 'Challenges in AI first engineering' com três colunas (Developer, Team Lead, Head of Engineering) e perguntas sobre agentes. Não é a citação do CTO."
     },
     {
       "titulo": "Funciona local, quebra em produção",
       "texto": "Uma mudança testada no notebook pode derrubar três outros serviços depois do merge. O Bluebox mapeia serviços e dependências de cada agente e carga de trabalho de IA e leva o contexto de produção para o teste local.",
       "t": 472,
       "legenda": "O print mostra como o contexto de produção entra no teste local.",
-      "print": "img/YNT7Plf9KIg/1.jpg"
+      "print": "img/YNT7Plf9KIg/1.jpg",
+      "descricao": "Slide 'Gives your agents eyes into prod' do Bluebox, com lista de recursos e mapa de serviços e dependências à direita."
     },
     {
       "titulo": "Achar o problema antes do usuário",
       "texto": "Com dados históricos de carga, a ferramenta aprende o que é normal e avisa o desenvolvedor na IDE quando um serviço fica lento ou passa a dar erros novos. Por estar ligada ao repositório, cruza o problema com a mudança que o causou.",
       "t": 564,
       "legenda": "Mostra o alerta no editor associado à mudança de código que causou o desvio.",
-      "print": "img/YNT7Plf9KIg/2.jpg"
+      "print": "img/YNT7Plf9KIg/2.jpg",
+      "descricao": "Slide 'Finds issues before they're issues' do Bluebox, com monitoramento de sinais e lista de recursos; à direita, painel de incidentes."
     },
     {
       "titulo": "Corrigir sem quebrar o resto",
       "texto": "Uma correção pode ser de uma linha, mas afetar outros serviços. Por isso o agente precisa conhecer as dependências ao sugerir os passos de remediação, em vez de resolver só o problema à vista.",
       "t": 689,
       "legenda": "A sugestão de correção leva em conta o impacto nos demais serviços.",
-      "print": "img/YNT7Plf9KIg/3.jpg"
+      "print": "img/YNT7Plf9KIg/3.jpg",
+      "descricao": "Slide 'Hands the fix PR Plan' com 'blast radius shared before you merge' e painel de plano de correção de PR."
     },
     {
       "titulo": "Planejar antes de pedir, humano decide no fim",
       "texto": "Antes de construir, o agente recebe dados reais de uso para entender o que a feature precisa entregar. O ciclo observar, detectar, sugerir correção e decidir termina com uma pessoa aprovando o envio para produção.",
       "t": 813,
       "legenda": "O ciclo do Bluebox e o ponto em que o humano mantém o controle.",
-      "print": "img/YNT7Plf9KIg/4.jpg"
+      "print": "img/YNT7Plf9KIg/4.jpg",
+      "descricao": "Slide 'You stay in control' com escada de autonomia (diagrama à direita) e controle humano sobre a execução."
     }
   ],
   "conceitos": [
@@ -165,5 +170,36 @@
       "contexto": "tempo do palestrante trabalhando com observabilidade",
       "t": 533
     }
-  ]
+  ],
+  "rotulo": "Dar contexto de produção ao agente de código",
+  "objetivo": "listar o contexto do ambiente que falta ao seu agente de código e avaliar uma promessa de fornecedor sobre isso",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Segundo o talk, por que um agente de código entra em loop ou age às cegas?",
+      "resposta": "Porque ele só enxerga os dados que recebe. Sem contexto do ambiente real, como dependências entre serviços, uso em produção e histórico de mudanças, ele alucina e automatiza o que não gera valor."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Antes de aceitar uma mudança feita por agente em um serviço do seu time, que checagem de dependências você faria?",
+      "resposta": "Verificar quais outros serviços dependem do código alterado. O talk cita uma mudança que funcionava local e derrubou três serviços depois do merge."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites você vê na evidência apresentada para o Bluebox?",
+      "resposta": "O palestrante trabalha na Dynatrace e o talk é um pitch. Não há demo ao vivo, métrica, cliente citado nem comparação com alternativas, e o acesso é só por lista de espera. As melhorias aparecem como promessas."
+    }
+  ],
+  "experimento": {
+    "titulo": "Inventário do contexto que seu agente enxerga",
+    "minutos": 20,
+    "precisa": "Um repositório seu com mais de um serviço e acesso a um agente de código",
+    "passos": [
+      "Escolha um serviço do seu repositório que outros serviços chamam.",
+      "Peça ao agente que liste quem depende desse serviço e anote o que ele acertou e o que inventou.",
+      "Escreva em uma lista curta o que o agente não tinha, como logs, uso real em produção ou histórico de mudanças.",
+      "Entregue o item mais importante da lista em um arquivo de contexto e repita o pedido."
+    ],
+    "sucesso": "A segunda resposta cita corretamente as dependências que a primeira errou ou omitiu, e você tem uma lista do contexto que ainda falta."
+  }
 }

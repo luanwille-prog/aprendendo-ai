@@ -28,28 +28,32 @@
       "texto": "O agente precisa de um prompt de sistema com o molde de uma ferramenta (decorator @tool, especificação, regras e onde salvar) e de três ferramentas: editor para escrever, shell para ver o que existe e load_tool para carregar da pasta. Tudo cabe em poucas linhas de código.",
       "t": 533,
       "legenda": "O código inteiro do meta-tooling é curto: prompt mais três ferramentas.",
-      "print": "img/33Oct2hqGnk/1.jpg"
+      "print": "img/33Oct2hqGnk/1.jpg",
+      "descricao": "IDE mostrando agent.py com SYSTEM_PROMPT, template de ferramenta e arquivos math_calculator.py e character_counter.py na pasta tools"
     },
     {
       "titulo": "Agentes que criam subagentes",
       "texto": "Com o mesmo método, o agente cria subagentes. Para um pedido de roteiro no Havaí, ele gerou três: voos, atividades e itinerário, chamando o editor uma vez para cada. Ela cita os padrões swarm, graph, handoff e workflow, que o agente também pode montar.",
       "t": 783,
       "legenda": "O agente decide sozinho a divisão em três subagentes.",
-      "print": "img/33Oct2hqGnk/2.jpg"
+      "print": "img/33Oct2hqGnk/2.jpg",
+      "descricao": "Terminal exibindo criação dos três subagentes: flight_agent, activities_agent e itinerary_agent"
     },
     {
       "titulo": "Autocorreção em produção",
       "texto": "Ela argumenta que um agente que reconhece o próprio erro e corrige a ferramenta evita o ciclo de derrubar, consertar e subir de novo. Na demo, o agente quebrou por excesso de saída, e ela diz que ele costuma se consertar. Isso foi relatado, não mostrado em detalhe.",
       "t": 875,
       "legenda": "O agente reconhece o erro e propõe atualizar a própria ferramenta.",
-      "print": "img/33Oct2hqGnk/3.jpg"
+      "print": "img/33Oct2hqGnk/3.jpg",
+      "descricao": "Terminal com arquivo itinerary_agent.py e saída da demo do planejador de viagem com dicas e itinerário"
     },
     {
       "titulo": "Evals e guardrails antes de confiar",
       "texto": "Ela lista avaliações por sessão (cumpriu o objetivo), por trace (resposta útil e sem invenção), por ferramenta (escolha e parâmetros certos) e entre agentes (ordem e mensagens). Os guardrails são ambiente isolado, permissões restritas e observabilidade, para o agente não apagar dados.",
       "t": 938,
       "legenda": "Evals medem objetivo, ferramenta, parâmetros e fluxo entre agentes.",
-      "print": "img/33Oct2hqGnk/4.jpg"
+      "print": "img/33Oct2hqGnk/4.jpg",
+      "descricao": "Slide PowerPoint 'Built-in Evaluations' mostrando SESSION LEVEL com avaliador GoalSuccessRateValidator"
     }
   ],
   "conceitos": [
@@ -68,7 +72,7 @@
       "nome": "Agent harness",
       "traducao": "estrutura que executa o modelo e as ferramentas",
       "nivel": "intermediario",
-      "chave": "agent harness",
+      "chave": "harness",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -170,5 +174,36 @@
       "contexto": "tempo desde a criação interna do Strands na AWS",
       "t": 1156
     }
-  ]
+  ],
+  "rotulo": "Agentes que escrevem as próprias ferramentas",
+  "objetivo": "montar um agente com editor, shell e load_tool e listar os guardrails necessários antes de usá-lo em produção",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que três ferramentas e que outro elemento o agente precisa para criar as próprias ferramentas?",
+      "resposta": "Editor para escrever, shell para ver o que existe e load_tool para carregar da pasta. Precisa ainda de um prompt de sistema com o molde de uma boa ferramenta."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Antes de liberar um agente que escreve código, que proteções você configura?",
+      "resposta": "Ambiente isolado, permissões mínimas e sem escrita em dados reais, observabilidade com traces de cada ferramenta criada e evals em vários níveis."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidências faltam para confiar nesse padrão?",
+      "resposta": "É demo da AWS para o Strands, pequena, sem taxa de acerto, custo ou segurança. A autocorreção é descrita e não mostrada, e a própria palestrante admite que a demo quebra."
+    }
+  ],
+  "experimento": {
+    "titulo": "Meta-tooling num repositório descartável",
+    "minutos": 40,
+    "precisa": "Python, um framework de agentes (como o Strands Agents SDK) e uma chave de modelo sua",
+    "passos": [
+      "Crie um projeto descartável com uma pasta de ferramentas vazia.",
+      "Dê ao agente as ferramentas editor, shell e load_tool e um prompt com o molde de uma ferramenta.",
+      "Peça tarefas que ele não prevê, como contar caracteres e converter unidades.",
+      "Leia o código das ferramentas que ele criou."
+    ],
+    "sucesso": "O agente cria e carrega pelo menos duas ferramentas novas sem reiniciar, e você revisou o código de cada uma."
+  }
 }

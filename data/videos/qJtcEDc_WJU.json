@@ -21,28 +21,32 @@
       "texto": "O agente principal verifica se tem a informação e chama a ferramenta dispatch analysis. Ela abre uma sessão separada para cada ticker (Google e Microsoft). Cada sessão tem subagentes, um critério de resultado e memória compartilhada para aprender com as outras.",
       "t": 32,
       "legenda": "Um pedido vira uma sessão independente por empresa.",
-      "print": "img/qJtcEDc_WJU/0.jpg"
+      "print": "img/qJtcEDc_WJU/0.jpg",
+      "descricao": "Tela The Research Desk com o pedido 'analyze google and msft' e duas chamadas bash em execução, sem o palestrante em close"
     },
     {
       "titulo": "Deployment junta agente, agenda e recursos",
       "texto": "Um deployment recebe a definição do agente, uma agenda (por exemplo, todo dia às 9h ou todo dia 1) e mensagens iniciais. Também aceita recursos como memory stores, repositórios do GitHub e arquivos. Tudo vai por API e SDK, então dá para montar sua própria interface.",
       "t": 94,
       "legenda": "Um deployment é agente mais agenda mais recursos.",
-      "print": "img/qJtcEDc_WJU/1.jpg"
+      "print": "img/qJtcEDc_WJU/1.jpg",
+      "descricao": "Terminal do VS Code com texto explicando o deployment: agente, ambiente, memory store e cron semanal (createMemoDeployment)"
     },
     {
       "titulo": "Dreaming revisa 30 dias de sessões",
       "texto": "Você escolhe um memory store, um modelo e, se quiser, instruções. O sistema abre uma sessão que dispara subagentes para ler as transcrições das sessões anteriores. No demo, achou lacunas numa skill e atualizou a memória com o que aprendeu.",
       "t": 222,
       "legenda": "O dreaming encontrou falhas numa skill e corrigiu a memória.",
-      "print": "img/qJtcEDc_WJU/2.jpg"
+      "print": "img/qJtcEDc_WJU/2.jpg",
+      "descricao": "Console Claude, tela Dreams: sonho drm_011Cc concluído, com input memory store desk-memory e lista de atualizações de arquivos"
     },
     {
       "titulo": "Harness aqui é o loop de ferramentas; o resto é seu",
       "texto": "Para a Anthropic, o harness cuida do contexto, do estado da sessão e da execução das ferramentas. A coordenação de vários agentes em uma topologia fica por sua conta, com a sessão como unidade básica. Para saber se funciona, a recomendação é rodar evals e usar outcomes com rubrica e limite de iterações.",
       "t": 622,
       "legenda": "A sessão é a primitiva; o harness de orquestração é construído por você.",
-      "print": "img/qJtcEDc_WJU/3.jpg"
+      "print": "img/qJtcEDc_WJU/3.jpg",
+      "descricao": "Console de sessão NVDA com eventos de outcome: grading em iteração e grader confirmando que todos os critérios foram atendidos"
     },
     {
       "titulo": "Workspace é a única fronteira de tenancy hoje",
@@ -195,5 +199,36 @@
       "contexto": "exemplo hipotético de sessões que discordam de uma",
       "t": 871
     }
-  ]
+  ],
+  "rotulo": "Agentes agendados e dreaming no Managed Agents",
+  "objetivo": "descrever um deployment com agenda e planejar um eval próprio para testar se o dreaming melhora a memória do agente",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que o dreaming faz com as sessões passadas de um agente?",
+      "resposta": "Revisa até 30 dias de sessões anteriores, com subagentes lendo as transcrições, e reescreve a memória do agente com o que deu errado. Ainda é research preview."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você tem um relatório semanal feito à mão. Que partes de um deployment usaria para automatizá-lo?",
+      "resposta": "O agente (sua definição), a agenda (por exemplo, toda segunda às 9h) e os recursos que ele usa, como arquivos, repositório do GitHub ou memory store, além das mensagens iniciais."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência o talk dá de que o dreaming melhora o agente, e por que isso pesa?",
+      "resposta": "Só relato da equipe, que diz ver melhora nos evals e ganho nos clientes, sem números nem método. Por isso só um eval seu, comparando a memória antes e depois, prova o ganho."
+    }
+  ],
+  "experimento": {
+    "titulo": "Mini eval antes e depois de mudar a memória",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT, uma planilha e 10 perguntas reais do seu trabalho",
+    "passos": [
+      "Escreva 10 perguntas ou tarefas e a resposta esperada de cada uma.",
+      "Rode todas com um prompt de sistema simples e anote os acertos na planilha.",
+      "Acrescente ao prompt uma lista dos erros que apareceram, como o dreaming faria com a memória.",
+      "Rode as mesmas 10 de novo e compare os acertos antes e depois."
+    ],
+    "sucesso": "Você tem dois placares lado a lado e consegue dizer se a mudança ajudou, piorou ou ficou igual."
+  }
 }

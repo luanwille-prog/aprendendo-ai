@@ -21,35 +21,40 @@
       "texto": "Sem eval, você muda o prompt, acha que melhorou e só descobre uma semana depois que outro caso quebrou. Evals permitem detectar regressões, comparar versões de prompt e de modelo e criar portões de qualidade no CI (integração contínua).",
       "t": 154,
       "legenda": "Sem eval não há como provar que algo foi corrigido ou quebrou.",
-      "print": "img/gv4w23xYj-0/0.jpg"
+      "print": "img/gv4w23xYj-0/0.jpg",
+      "descricao": "Slide 'The vibes problem': mudo prompt, ship, semana depois quebra e ninguém prova o que piorou"
     },
     {
       "titulo": "Traces são os logs, evals são os testes",
       "texto": "Um teste unitário tem uma entrada e uma saída correta. Em um agente, a lógica só aparece depois, nos traces, e a saída tem vários jeitos válidos (roteiro, orçamento). Por isso você precisa de observabilidade antes de poder avaliar.",
       "t": 249,
       "legenda": "Um trace mostra cada passo do agente que um teste unitário não captura.",
-      "print": "img/gv4w23xYj-0/1.jpg"
+      "print": "img/gv4w23xYj-0/1.jpg",
+      "descricao": "Slide 'Traces = logs for AI' e 'Evals = tests for AI', com a palestrante ao púlpito no canto"
     },
     {
       "titulo": "Como ler um trace",
       "texto": "O root span (parent ID nulo) guarda a entrada e a saída final. Abaixo dele, cada span é uma unidade de trabalho: agente, ferramenta ou chamada de LLM. Duas chamadas de LLM seguidas costumam ser a escolha da ferramenta e depois o resumo do resultado dela.",
       "t": 869,
       "legenda": "A árvore do trace mostra cada unidade de trabalho do agente.",
-      "print": "img/gv4w23xYj-0/2.jpg"
+      "print": "img/gv4w23xYj-0/2.jpg",
+      "descricao": "UI da Arize com a árvore do trace TripAgentGraph: root span, research_agent, local_agent, spans de LLM e ferramenta"
     },
     {
       "titulo": "Critérios concretos e uma qualidade por eval",
       "texto": "Troque \"resposta útil e boa\" por critérios verificáveis: segue as perguntas do usuário, respeita o número de dias e fica dentro do orçamento. Para juiz LLM, avalie uma qualidade por vez e acrescente evals com o tempo. A Arize foi de poucas evals para 32 no agente Alex.",
       "t": 1145,
       "legenda": "Critério concreto vira prompt de juiz; critério vago não.",
-      "print": "img/gv4w23xYj-0/3.jpg"
+      "print": "img/gv4w23xYj-0/3.jpg",
+      "descricao": "Google Slides no título 'Define what good means' (passo 2); não mostra a comparação vago x concreto, só a seção"
     },
     {
       "titulo": "Do critério ao juiz no playground",
       "texto": "Você filtra os spans, salva em um dataset, cola os bullets de pass/fail em um template de prompt e define os rótulos (correct/incorrect). Rode no playground, leia as explicações e itere o prompt até concordar com o juiz.",
       "t": 1699,
       "legenda": "O template do juiz nasce dos bullets de pass e fail escritos antes.",
-      "print": "img/gv4w23xYj-0/4.jpg"
+      "print": "img/gv4w23xYj-0/4.jpg",
+      "descricao": "Playground da Arize com menu de evaluators aberto (Output Accuracy); sem dataset carregado nem template de juiz visível"
     }
   ],
   "conceitos": [
@@ -90,7 +95,7 @@
       "nome": "LLM as a judge",
       "traducao": "um segundo modelo que dá nota a uma saída",
       "nivel": "intermediario",
-      "chave": "llm as a judge",
+      "chave": "llm-as-a-judge",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -180,5 +185,36 @@
       "contexto": "tempo da palestrante na Arize",
       "t": 1
     }
-  ]
+  ],
+  "rotulo": "Como escrever sua primeira eval de agente",
+  "objetivo": "ler traces de um agente, escrever critérios de pass e fail e montar um juiz LLM para uma única qualidade",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que um trace mostra e por que ele vem antes da eval?",
+      "resposta": "É o registro dos passos do agente, com o root span guardando entrada e saída final e os spans abaixo mostrando agente, ferramentas e chamadas de LLM. A lógica do agente só aparece nele, então observabilidade vem antes de avaliar."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Quais critérios de pass e fail você escreveria para um agente que monta roteiros de viagem?",
+      "resposta": "Critérios verificáveis, como segue as perguntas do usuário, respeita o número de dias e fica dentro do orçamento, em vez de resposta útil e boa. Avalie uma qualidade por eval."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que falta para confiar no juiz LLM mostrado no workshop?",
+      "resposta": "Não há medida de concordância com humanos, e o alinhamento aparece só como próximo passo. O exemplo é um agente de demonstração, o fluxo depende da plataforma da Arize e a regra de um critério por vez cita pesquisa sem apontar estudos."
+    }
+  ],
+  "experimento": {
+    "titulo": "Seu primeiro juiz LLM com 20 exemplos",
+    "minutos": 40,
+    "precisa": "20 respostas salvas de um agente ou chatbot seu e um assistente como o Claude",
+    "passos": [
+      "Salve 20 respostas reais do seu agente e marque cada uma como aprovada ou reprovada.",
+      "Escreva três bullets de pass e três de fail, todos verificáveis.",
+      "Peça a um LLM que dê o rótulo e uma explicação para cada resposta usando só esses bullets.",
+      "Compare os rótulos do LLM com os seus e ajuste o prompt onde houver discordância."
+    ],
+    "sucesso": "O juiz concorda com seus rótulos na maioria dos 20 casos e você sabe quais critérios geram discordância."
+  }
 }

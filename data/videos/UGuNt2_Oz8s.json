@@ -21,35 +21,40 @@
       "texto": "Ninguém consegue ler milhares de traces às 4h da manhã. O Signal roda em agenda (padrão de 6 em 6 horas), agrupa falhas parecidas em um único issue e evita centenas de tickets repetidos. Você resolve, ignora ou deixa ele deduplicar.",
       "t": 813,
       "legenda": "O Signal agrupa as falhas em um issue só, com análise e proposta de correção.",
-      "print": "img/UGuNt2_Oz8s/0.jpg"
+      "print": "img/UGuNt2_Oz8s/0.jpg",
+      "descricao": "Aba Signal do Arize com o issue 'Agent makes redundant search retries' (Medium), overview e evidência dos traces."
     },
     {
       "titulo": "Do trace ao PR com a causa raiz",
       "texto": "Conectado ao GitHub, o Signal lê o código do agente junto com os traces. Na demo, achou que as categorias ficam como slugs em minúsculas, mas o modelo enviava nomes com maiúsculas e espaços. A busca não retornava nada e o agente varria todos os produtos, o que gerou picos de latência.",
       "t": 908,
       "legenda": "O agente trabalhou 6 minutos e entregou diagnóstico e PR.",
-      "print": "img/UGuNt2_Oz8s/1.jpg"
+      "print": "img/UGuNt2_Oz8s/1.jpg",
+      "descricao": "Issue do Signal com o menu GitHub aberto, opção 'Open PR' (launch an agent to fix this issue and open a PR). Sem a explicação da causa raiz visível."
     },
     {
       "titulo": "Falha vira eval e dataset vivo",
       "texto": "Cada falha pode virar um eval (avaliação) com um clique e entrar em um dataset que cresce com o tempo. Esse conjunto funciona como teste de regressão: o mesmo erro não passa duas vezes. O eval criado checa se search_products foi chamado mais de uma vez na trajetória.",
       "t": 1531,
       "legenda": "O prompt do eval codifica a falha vista nos traces.",
-      "print": "img/UGuNt2_Oz8s/2.jpg"
+      "print": "img/UGuNt2_Oz8s/2.jpg",
+      "descricao": "Chat do Signal criando evaluator: plano de 3 passos e evidência dos traces com 'Search 1' e 'Search 2' e 'Create Evaluator' no issue."
     },
     {
       "titulo": "Experimento prova que o conserto funciona",
       "texto": "O agente é reexecutado nos casos que falharam e o resultado é pontuado pelos evals. Se passar do limite que você define, o PR chega com evidência. Também se confere que os outros evals não pioraram, porque mexer em um prompt pode quebrar outra ferramenta.",
       "t": 1718,
       "legenda": "O experimento reexecuta as falhas com a correção e mede o resultado.",
-      "print": "img/UGuNt2_Oz8s/3.jpg"
+      "print": "img/UGuNt2_Oz8s/3.jpg",
+      "descricao": "Tela de experimento 'regression controls fix' com gráfico de 88,9% e popup de três evals (valid_category, called_expected_tool, no_empty_category_search)."
     },
     {
       "titulo": "Confiança baixa vai para uma pessoa",
       "texto": "Modelos de decisão devolvem uma nota de confiança junto com a classificação. Os casos duvidosos caem automaticamente em uma fila de anotação humana. O limite certo depende do caso de uso, e o palestrante avisa que 80% não serve para todo mundo.",
       "t": 2029,
       "legenda": "Poucos casos duvidosos vão para revisão humana, o resto passa direto.",
-      "print": "img/UGuNt2_Oz8s/4.jpg"
+      "print": "img/UGuNt2_Oz8s/4.jpg",
+      "descricao": "Slide 'Six places to keep a person' com os seis pontos de intervenção humana e o destaque de 4,6% dos casos entre 0,3 e 0,7 com 99,5% de acurácia."
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "acurácia nos demais casos do teste de spam",
       "t": 2029
     }
-  ]
+  ],
+  "rotulo": "Agente que lê traces e propõe correções",
+  "objetivo": "montar o ciclo trace, agrupamento de falhas, eval, dataset e experimento, com a pessoa decidindo nos três pontos certos",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são as etapas do ciclo de autoaperfeiçoamento mostrado por Fuad Ali?",
+      "resposta": "Registrar traces, deixar o Signal agrupar as falhas, transformar cada falha em eval e dataset e provar o conserto com um experimento. O humano desenha o eval, escolhe quais falhas entram no dataset e revisa o PR."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Em quais casos você usaria código em vez de LLM como juiz?",
+      "resposta": "Para o que é determinístico, como filtro aplicado ou JSON válido. Reserve o LLM para o qualitativo, com amostragem para controlar custo, e mande os casos de baixa confiança para revisão humana."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que os 88,9% do experimento provam pouco?",
+      "resposta": "O bug foi plantado pelo palestrante e é simples, então prova pouco sobre falhas qualitativas. O número vem sem amostra nem comparação, a demo roda em plataforma paga e ele admite que não se deve confiar em todo issue."
+    }
+  ],
+  "experimento": {
+    "titulo": "Transformar uma falha em teste de regressão",
+    "minutos": 35,
+    "precisa": "Um agente ou prompt seu com 10 execuções salvas, ou um chatbot com 10 conversas",
+    "passos": [
+      "Salve 10 execuções do seu agente e leia os passos de cada uma.",
+      "Agrupe as falhas por causa parecida e escolha um grupo.",
+      "Escreva um eval em código ou em prompt de juiz que detecte essa falha e rode nos 10 casos.",
+      "Faça a correção, rode de novo nos casos que falharam e nos que passavam e compare."
+    ],
+    "sucesso": "O eval marca os casos que falhavam, a correção os faz passar e nenhum caso que passava passa a falhar."
+  }
 }

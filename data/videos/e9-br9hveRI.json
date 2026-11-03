@@ -21,7 +21,8 @@
       "texto": "O harness entrevista o usuário até o plano ficar claro, em vez de aceitar tudo e sair implementando. O modelo e a pessoa raramente definem os termos do mesmo jeito, então a conversa de ida e volta cria um vocabulário comum. Só depois o plano vira um conjunto de passos de decisão.",
       "t": 1849,
       "legenda": "O plano aceito vira uma árvore de decisões.",
-      "print": "img/e9-br9hveRI/0.jpg"
+      "print": "img/e9-br9hveRI/0.jpg",
+      "descricao": "Grafo do plano do casamento com os passos, e no painel lateral o selo 'Plan accepted' com o ramo 'challenge' ligado ao tronco."
     },
     {
       "titulo": "A conta fica no código",
@@ -35,21 +36,24 @@
       "texto": "O modelo não distingue fato duro de estimativa. O harness rotula cada dado como fato (extrato bancário), suposição (o que o agente inferiu) ou interpretação (fala solta no chat). Ao clicar num número, a pessoa segue o rastro até a origem. A história do arquivo mestre mostra o risco de mudanças sem rastro.",
       "t": 3686,
       "legenda": "Cada número mostra se veio do usuário, do agente ou de uma decisão em aberto.",
-      "print": "img/e9-br9hveRI/2.jpg"
+      "print": "img/e9-br9hveRI/2.jpg",
+      "descricao": "Passo 5 aberto com painel de evidência: 'Where this came from', 'Proposed by the assistant' e a legenda 3 Evidence destacada."
     },
     {
       "titulo": "Responsabilidade com poucos portões de alto sinal",
       "texto": "Aprovar cada mudança vira ruído, e não revisar nada tira o controle. Os palestrantes defendem poucos portões nos pontos que importam. A conversa também ramifica e volta ao tronco, então uma frase solta não destrói a análise inteira. O ramo de pergunta lateral não contamina o resto.",
       "t": 4530,
       "legenda": "A estrutura em ramos permite corrigir um dado sem refazer a análise toda.",
-      "print": "img/e9-br9hveRI/3.jpg"
+      "print": "img/e9-br9hveRI/3.jpg",
+      "descricao": "Painel 'How the plan was made' com ramo 'joined' e 'Reviewer's suggestion used on step 5' se juntando ao tronco, com 'Plan changed'."
     },
     {
       "titulo": "Verificação com um segundo ponto de vista",
       "texto": "Um agente separado revisa o plano e as suposições, e o resultado volta ao tronco e altera o plano. Segundo os palestrantes, só pôr um LLM como juiz sem laço de retorno não melhora a decisão. Exemplos de ouro também têm viés, então vale conferir contra referências externas ao domínio.",
       "t": 5468,
       "legenda": "O parecer do revisor externo volta e altera o plano.",
-      "print": "img/e9-br9hveRI/4.jpg"
+      "print": "img/e9-br9hveRI/4.jpg",
+      "descricao": "Slide 'Open a branch tagged challenge. Click Use this.' com 'It joins the trunk: Reviewer's suggestion used on step N'."
     }
   ],
   "conceitos": [
@@ -123,7 +127,7 @@
       "nome": "LLM as a judge",
       "traducao": "modelo que avalia outro modelo",
       "nivel": "intermediario",
-      "chave": "llm as a judge",
+      "chave": "llm-as-a-judge",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -170,5 +174,35 @@
       "contexto": "Agentes seguem instruções, restando 1% de falha",
       "t": 6287
     }
-  ]
+  ],
+  "rotulo": "Cinco princípios para agentes de análise financeira",
+  "objetivo": "projetar um harness que mantém as contas em código testado e rotula cada dado como fato, suposição ou interpretação",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que a conta deve rodar em código e não na cabeça do modelo?",
+      "resposta": "Porque cálculo é a parte determinística do problema. O modelo dá respostas diferentes para a mesma pergunta e reinventa o código a cada sessão. O harness força escrever a conta uma vez, testá-la e rodá-la sempre."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você rotularia os dados de uma análise do seu trabalho segundo a regra de evidência?",
+      "resposta": "Fato é o que vem de uma fonte, como um extrato. Suposição é o que o agente inferiu. Interpretação é fala solta no chat. Cada número deve permitir seguir o rastro até a origem."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que provas faltam ao harness apresentado?",
+      "resposta": "Os palestrantes admitem código gerado por vibe coding e parte superengenhada. Não mostram acerto, taxa de erro nem comparação com um chat comum. A experiência no Monzo não traz dados públicos, e a pergunta sobre provar confiança na interface ficou sem resposta direta."
+    }
+  ],
+  "experimento": {
+    "titulo": "Conta recorrente em script testado",
+    "minutos": 35,
+    "precisa": "Python, um agente de código e uma conta que você repete, como categorização de gastos",
+    "passos": [
+      "Escolha uma conta recorrente e peça ao agente que escreva um script com testes para ela.",
+      "Rode o script em três conjuntos de dados e confirme os resultados à mão.",
+      "Peça agora ao agente só que chame o script e rotule cada número como fato, suposição ou interpretação, com a origem."
+    ],
+    "sucesso": "A mesma pergunta feita duas vezes dá o mesmo número, e cada valor do resultado tem rótulo e origem."
+  }
 }

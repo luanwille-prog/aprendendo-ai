@@ -21,35 +21,40 @@
       "texto": "Humanos digitam poucas palavras e desistem rápido. Agentes escrevem consultas longas, repetem a busca várias vezes e não cansam. Por isso cada tarefa gera muito mais buscas, e a qualidade de cada resultado pesa no custo e no sucesso final.",
       "t": 124,
       "legenda": "Agentes fazem muito mais buscas por tarefa que pessoas.",
-      "print": "img/vS2IA9pq0Q4/0.jpg"
+      "print": "img/vS2IA9pq0Q4/0.jpg",
+      "descricao": "Slide 'AIs will search far more than humans' com gráfico de buscas humanas x IA e mercado de US$100B+ em 2030. Sem logos de clientes."
     },
     {
       "titulo": "Snapshot compara a web de ontem com a de hoje",
       "texto": "O exemplo é a receita anualizada da OpenAI. Em outubro circulava o valor de 70 bilhões. Depois, relatos apontaram perto de 50 bilhões ao descontar repasses a provedores de nuvem. A busca versionada mostra o que existia na web antes de o mercado perceber a diferença.",
       "t": 500,
       "legenda": "Mesma consulta devolve resultados diferentes conforme a data do índice.",
-      "print": "img/vS2IA9pq0Q4/1.jpg"
+      "print": "img/vS2IA9pq0Q4/1.jpg",
+      "descricao": "Interface Exa com duas colunas: snapshot de 1º de outubro à esquerda e resultados atuais à direita, para a consulta de receita da OpenAI."
     },
     {
       "titulo": "Busca ao vivo contamina o teste",
       "texto": "Para prever se uma empresa seria adquirida, você testa com 1, 7 e 30 dias antes do anúncio. Uma busca ao vivo já encontra a notícia da compra e entrega a resposta. Com snapshot, o agente só vê o que existia na data escolhida.",
       "t": 653,
       "legenda": "A data de corte impede que o futuro vaze para a previsão.",
-      "print": "img/vS2IA9pq0Q4/2.jpg"
+      "print": "img/vS2IA9pq0Q4/2.jpg",
+      "descricao": "Slide 'Versioning makes search-powered systems backtestable' com linha do tempo: busca ao vivo vê o anúncio, snapshot não vê antes do corte."
     },
     {
       "titulo": "Três níveis de uso em modelos financeiros",
       "texto": "O primeiro nível extrai dados estruturados da web para um modelo tradicional. O segundo adiciona uma feature (variável de entrada) agêntica, como varredura de mídia negativa. O terceiro entrega a simulação inteira a um agente que usa a web como ferramenta.",
       "t": 776,
       "legenda": "Três formas de encaixar busca versionada num sistema de previsão.",
-      "print": "img/vS2IA9pq0Q4/3.jpg"
+      "print": "img/vS2IA9pq0Q4/3.jpg",
+      "descricao": "Slide 'How systems are being backtested with Snapshot' com três cartões: modelos tradicionais, features agênticas e modelos agênticos."
     },
     {
       "titulo": "Overfitting aparece no workshop",
       "texto": "Num workshop, uma feature de bom score perguntava se a empresa se chamava Dominion. Isso é overfitting (ajuste excessivo aos exemplos de treino). O snapshot permite separar um conjunto de teste e iterar em horas, em vez de esperar meses por dados reais.",
       "t": 996,
       "legenda": "Uma feature decorada do treino não generaliza para outras empresas.",
-      "print": "img/vS2IA9pq0Q4/4.jpg"
+      "print": "img/vS2IA9pq0Q4/4.jpg",
+      "descricao": "Slide 'Snapshot Arena' com resultados do workshop e as features F1 e F2; F2 pergunta se a empresa se chama Dominion."
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "receita anualizada líquida relatada depois",
       "t": 531
     }
-  ]
+  ],
+  "rotulo": "Busca na web com data de corte para testar agentes",
+  "objetivo": "montar um teste de agente com busca na web que não vaze informação do futuro, usando data de corte e conjunto de teste separado",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que uma busca ao vivo contamina o teste de um agente que prevê aquisições de empresas?",
+      "resposta": "A busca ao vivo já encontra a notícia da compra e entrega a resposta ao agente. Com snapshot, ele só vê o que existia na data escolhida."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você configuraria o teste de um agente de pesquisa seu para evitar vazamento de dados do futuro?",
+      "resposta": "Defina uma data de corte, confira se a ferramenta de busca respeita essa data e separe um conjunto de teste (holdout) antes de ajustar prompts ou features. Meça nele, não nos exemplos usados para iterar."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidências faltam para confiar nas promessas da Exa sobre busca versionada?",
+      "resposta": "O talk é pitch de produto feito por um engenheiro da Exa, sem medição de acurácia de previsão. O caso da OpenAI vem de um slide sem fonte e o corte de 95% em tokens remete a um blog sem metodologia."
+    }
+  ],
+  "experimento": {
+    "titulo": "Testar vazamento do futuro em um assistente",
+    "minutos": 20,
+    "precisa": "Claude ou ChatGPT com busca na web e um evento público de alguns meses atrás",
+    "passos": [
+      "Escolha um evento público que aconteceu há alguns meses, como o lançamento de um produto.",
+      "Peça ao assistente, com busca ativa, para prever o resultado como se estivesse um mês antes do evento.",
+      "Leia as fontes citadas e marque as que são posteriores à data do evento.",
+      "Anote quantas fontes vazaram o futuro."
+    ],
+    "sucesso": "Você achou ao menos uma fonte posterior à data de corte e entendeu por que esse teste não vale sem controle de data."
+  }
 }

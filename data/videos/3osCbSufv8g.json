@@ -21,21 +21,24 @@
       "texto": "O agente faz só três perguntas, mas a resposta define o que pode vir depois. Se o motivo do empréstimo é médico, não se pergunta o valor. Se é viagem para uma formatura, é preciso saber de quem. O agente também deve ignorar perguntas sobre status do pedido.",
       "t": 154,
       "legenda": "Um caso de uso simples esconde regras que mudam a conversa.",
-      "print": "img/3osCbSufv8g/0.jpg"
+      "print": "img/3osCbSufv8g/0.jpg",
+      "descricao": "Slide 'Trusting voice agents with sensitive borrower calls': 3 perguntas da verificação, quem liga e regras de compliance."
     },
     {
       "titulo": "Da planilha à fila de revisão",
       "texto": "A equipe de operações começou revisando chamadas numa planilha. Em poucas semanas, 5 colunas viraram 10 e várias pessoas criaram colunas por conta própria. Sem estrutura, os dados não serviam para melhorar o agente nem as métricas. Uma fila de revisão resolveu o problema.",
       "t": 277,
       "legenda": "Dado de revisão sem estrutura não alimenta a melhoria do agente.",
-      "print": "img/3osCbSufv8g/1.jpg"
+      "print": "img/3osCbSufv8g/1.jpg",
+      "descricao": "Slide 'Upstart started by reviewing every call by hand': fluxo de revisão manual e registro em planilha. Não mostra as colunas desorganizadas."
     },
     {
       "titulo": "Concordância do juiz de 33% a 92%",
       "texto": "O juiz LLM avalia se a chamada cumpriu as regras, e um humano revisa essa avaliação. No lançamento, os dois concordavam em 33% dos casos. Três ajustes subiram o número: codificar o conhecimento tácito no agente, alinhar os próprios revisores humanos e melhorar o juiz.",
       "t": 432,
       "legenda": "A concordância entre juiz e humanos sobe de 33% para 92%.",
-      "print": "img/3osCbSufv8g/2.jpg"
+      "print": "img/3osCbSufv8g/2.jpg",
+      "descricao": "Slide 'Human feedback trains the LLM judge': gráfico de concordância com humanos subindo de 33% (lançamento) para 92% (atual)."
     },
     {
       "titulo": "O ciclo de melhoria contínua",
@@ -49,7 +52,8 @@
       "texto": "A simulação voz a voz liga para o agente e testa ruído de fundo, sotaques, interrupções e qualidade da voz. Assim a equipe confirma que uma correção funcionou sem expor usuários reais. É a ideia de shift left (detectar problemas mais cedo). Toda mudança passa por aprovação humana.",
       "t": 774,
       "legenda": "A re-simulação mostra que a correção resolveu o caso antes da produção.",
-      "print": "img/3osCbSufv8g/4.jpg"
+      "print": "img/3osCbSufv8g/4.jpg",
+      "descricao": "Slide 'Resimulate issues to improve fixes': transcrição de chamada simulada agente/cliente com forma de onda, da Coval x Upstart."
     }
   ],
   "conceitos": [
@@ -57,7 +61,7 @@
       "nome": "LLM judge",
       "traducao": "juiz LLM",
       "nivel": "intermediario",
-      "chave": "llm judge",
+      "chave": "llm-as-a-judge",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -159,5 +163,36 @@
       "contexto": "perguntas feitas na ligação de verificação",
       "t": 123
     }
-  ]
+  ],
+  "rotulo": "Evals com revisão humana em agente de voz regulado",
+  "objetivo": "montar um ciclo de revisão humana que alinhe um juiz LLM ao que os especialistas decidem, medindo a concordância entre os dois",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Como a concordância entre o juiz LLM e os revisores subiu de 33% para 92%?",
+      "resposta": "Com três ajustes: codificar o conhecimento tácito no agente, alinhar os próprios revisores humanos e melhorar o juiz. A revisão também saiu da planilha para uma fila estruturada."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você mediria o quanto um juiz LLM concorda com um especialista no seu caso?",
+      "resposta": "Pedir a um especialista que revise uma amostra das respostas do sistema e comparar a decisão dele com a do juiz LLM, calculando o percentual de concordância."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que os 92% de concordância pedem cautela?",
+      "resposta": "Aparecem sem tamanho de amostra, período ou forma de medir. A Coval vende a plataforma e apresenta o ciclo com o cliente. Não há dados de erros reais evitados nem de custo, e os números de falhas citados são, nas palavras dela, inventados."
+    }
+  ],
+  "experimento": {
+    "titulo": "Medir a concordância entre um juiz LLM e você",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT e 20 respostas de IA de um caso seu, numa planilha",
+    "passos": [
+      "Reúna 20 respostas de IA e julgue cada uma como correta ou incorreta, com uma regra escrita.",
+      "Peça a um LLM, com a mesma regra, que julgue as 20 respostas.",
+      "Calcule o percentual de casos em que o LLM e você concordaram.",
+      "Nos casos de discordância, ajuste a regra ou o prompt do juiz e repita."
+    ],
+    "sucesso": "Você tem um percentual de concordância antes e depois do ajuste da regra e sabe quais discordâncias mudaram."
+  }
 }

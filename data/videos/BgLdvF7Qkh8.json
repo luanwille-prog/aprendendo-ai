@@ -21,35 +21,40 @@
       "texto": "Com 50 a 60 funcionários, a empresa conta mais de 300 agentes rodando todo dia, muitos disparados por gatilhos e apps, não por uma pessoa. Cada chamada de ferramenta é uma superfície de ataque: lê dado hostil, age de forma destrutiva ou vaza informação. O primeiro passo foi só enxergar tudo.",
       "t": 157,
       "legenda": "Mapa interno de agentes e execuções mostra a superfície de ataque.",
-      "print": "img/BgLdvF7Qkh8/0.jpg"
+      "print": "img/BgLdvF7Qkh8/0.jpg",
+      "descricao": "Visualização 'Universe' com galáxias de agentes e planetas em vermelho (custo/risco), legenda 'Everything we run, mapped out by topic and risk.'"
     },
     {
       "titulo": "Injeção por e-mail e permissão demais",
       "texto": "Um atacante manda um e-mail pedindo a lista de prospects. Se o agente for ingênuo e tiver acesso à agenda, ele pode entregar o dado. Pedir que cada usuário defina o escopo das ferramentas não funciona bem. Regras como classificador de instruções, bloqueio de PII por regex ou bloqueio de fonte privada ajudam, mas nenhuma é 100% eficaz.",
       "t": 252,
       "legenda": "Camadas de política (classificador, regex, bloqueio de fonte) para o mesmo ataque.",
-      "print": "img/BgLdvF7Qkh8/1.jpg"
+      "print": "img/BgLdvF7Qkh8/1.jpg",
+      "descricao": "Cenário de agente de suporte: e-mail com Email MCP apontando para Calendar MCP e evento calendar_list_events, com legenda sobre seguir instruções do e-mail."
     },
     {
       "titulo": "Ataques que se desenrolam na sessão inteira",
       "texto": "Um agente revisor de PR pode aprovar mudança sensível depois que o autor argumenta nos comentários. Perguntado dez vezes, ele pode ceder. Uma regra por chamada não pega isso. A empresa treinou classificadores que olham a sessão inteira e checam se cada chamada ainda segue o objetivo original do agente.",
       "t": 437,
       "legenda": "O desvio de intenção aparece só ao longo da sessão, não numa chamada isolada.",
-      "print": "img/BgLdvF7Qkh8/2.jpg"
+      "print": "img/BgLdvF7Qkh8/2.jpg",
+      "descricao": "Cenário do bot aprovador de PR: 'Read PR' e Repository MCP, legenda com a frase do autor dizendo que o CI está verde."
     },
     {
       "titulo": "Usar o histórico para reduzir permissões",
       "texto": "Um bot de recrutamento acessa ATS (sistema de candidatos), notas de reunião, agenda e mensagens. O histórico de chamadas mostra o uso normal. Chamada fora do padrão sinaliza execução de risco cedo, e modelos próprios sugerem quais acessos retirar do agente.",
       "t": 562,
       "legenda": "O padrão de uso real define quais permissões podem ser cortadas.",
-      "print": "img/BgLdvF7Qkh8/3.jpg"
+      "print": "img/BgLdvF7Qkh8/3.jpg",
+      "descricao": "Recruiter Bot no centro com Meeting Notes, Applicant Tracker, Calendar e Chat MCP em órbita, mostrando o conjunto de ferramentas do agente."
     },
     {
       "titulo": "Custo: MCP quebrado e troca de modelo",
       "texto": "Um MCP server feito por vibe coding (programar pedindo ao modelo) falhava em formatação, e o agente tentava de novo, pagando tokens a cada erro. Outro time trocou para um modelo mais caro e o custo subiu mais de 100 vezes em uma semana. A resposta foi limite de taxa, orçamento e padrões sensatos.",
       "t": 848,
       "legenda": "Custo de tokens disparou após trocar para um modelo mais caro.",
-      "print": "img/BgLdvF7Qkh8/4.jpg"
+      "print": "img/BgLdvF7Qkh8/4.jpg",
+      "descricao": "Slide 'Custo $11 → $1,629 em uma semana' com a legenda 'one model switch, and nobody signed it off' e agentes em vermelho."
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "aumento de custo em uma semana após trocar de modelo",
       "t": 844
     }
-  ]
+  ],
+  "rotulo": "Segurança de agentes com gateway e registro",
+  "objetivo": "inventariar seus agentes, reduzir permissões ao mínimo e definir orçamento de custo por agente",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que o gateway da Runlayer revelou ao registrar cada sessão e chamada de ferramenta?",
+      "resposta": "Ataques por e-mail, agente revisor de PR convencido a aprovar, bot com permissão demais, um agente contaminando outros e um MCP server mal escrito que queimava tokens."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Quais ações você tomaria hoje nas automações com IA do seu time?",
+      "resposta": "Listar todos os agentes, quem os criou e o que acessam, cortar permissões ao mínimo (principalmente leitura de e-mail junto com acesso a agenda ou dados de clientes) e definir orçamento e alerta de custo por agente."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que a conclusão 'monitore tudo' merece cautela?",
+      "resposta": "Quem fala vende gateway de segurança para agentes, então a conclusão favorece o produto. Faltam números de detecção, falsos positivos e custo dos classificadores, e os casos vêm de uma única empresa pequena."
+    }
+  ],
+  "experimento": {
+    "titulo": "Inventário e corte de permissões dos seus agentes",
+    "minutos": 30,
+    "precisa": "Planilha e a lista de automações e agentes de IA que você usa ou conhece (GPTs, MCPs, automações)",
+    "passos": [
+      "Liste cada agente ou automação com criador, gatilho, ferramentas e dados que acessa.",
+      "Para cada um, escreva a menor permissão que ainda cumpre a tarefa.",
+      "Marque os que combinam leitura de conteúdo externo (e-mail, web) com acesso a dados sensíveis.",
+      "Defina um orçamento mensal de custo por agente e um alerta ao se aproximar dele."
+    ],
+    "sucesso": "A planilha mostra todos os agentes, as permissões reduzidas, as combinações de risco marcadas e um orçamento por agente."
+  }
 }

@@ -21,28 +21,32 @@
       "texto": "O palestrante cita 218% mais linhas de código por desenvolvedor e 62% da saída de LLMs insegura ou quebrada. A conta dele é que o backlog (fila) de falhas de segurança cresce mais rápido do que qualquer time consegue corrigir.",
       "t": 106,
       "legenda": "Os números que sustentam o argumento de que o backlog de segurança só cresce.",
-      "print": "img/f3o0-9Dlw3E/0.jpg"
+      "print": "img/f3o0-9Dlw3E/0.jpg",
+      "descricao": "slide 'AI Is Writing More Code Than Ever' com 218% de linhas por dev, 62% de código LLM quebrado ou inseguro e 85% de uso de IA"
     },
     {
       "titulo": "Atacantes também usam IA",
       "texto": "Segundo Cohen, atacantes encadeiam vulnerabilidades de baixa severidade até formar uma crítica, e mexem justamente onde o contexto da aplicação importa. Ele cita ataque bem-sucedido em 4 minutos no melhor caso e 43% dos servidores MCP com falhas.",
       "t": 233,
       "legenda": "O tempo de ataque caiu para minutos, e o pen test anual não acompanha.",
-      "print": "img/f3o0-9Dlw3E/1.jpg"
+      "print": "img/f3o0-9Dlw3E/1.jpg",
+      "descricao": "slide 'Attackers have weaponized AI' com 34 min de breakout, 4 min no mais rápido, CVSS 9.3 e 43% de servidores MCP vulneráveis"
     },
     {
       "titulo": "O que cada teste enxerga",
       "texto": "SAST (análise estática) acha SQL injection e XSS no código. DAST (teste dinâmico) manda payloads contra a aplicação rodando e acha falhas de configuração e de autorização como BOLA. Só o pen test humano entende a lógica de negócio, mas custa caro e acontece uma a três vezes por ano.",
       "t": 376,
       "legenda": "Cada ferramenta tem um ponto cego, e a lógica de negócio fica com o humano.",
-      "print": "img/f3o0-9Dlw3E/2.jpg"
+      "print": "img/f3o0-9Dlw3E/2.jpg",
+      "descricao": "tabela 'The Coverage Gap' comparando SAST, DAST e pentest por classe de vulnerabilidade, com BOLA como #1 do OWASP API Top 10"
     },
     {
       "titulo": "Um time de agentes faz o pen test",
       "texto": "O orquestrador planeja e comanda subagentes. O de reconhecimento mapeia endpoints e APIs. Os caçadores buscam falhas conhecidas e inéditas. Um juiz tenta provar que a falha é explorável, o que corta falso positivo. Por fim, um agente propõe a correção e outro monta o relatório.",
       "t": 763,
       "legenda": "A cadeia de agentes e o papel do juiz que valida o exploit.",
-      "print": "img/f3o0-9Dlw3E/3.jpg"
+      "print": "img/f3o0-9Dlw3E/3.jpg",
+      "descricao": "diagrama 'Autonomous offensive validation' com LLM Orchestrator, Recon, Vulnerability Testing, Exploit Validation e Report & Remediation"
     },
     {
       "titulo": "Contexto e quatro perguntas ao fornecedor",
@@ -200,5 +204,36 @@
       "contexto": "dos servidores MCP teriam vulnerabilidades",
       "t": 265
     }
-  ]
+  ],
+  "rotulo": "Pen test com agentes a cada pull request",
+  "objetivo": "comparar SAST, DAST e pen test humano e avaliar um fornecedor de pen test com IA usando as quatro perguntas do talk",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que cada tipo de teste enxerga melhor, segundo Cohen?",
+      "resposta": "SAST acha falhas no código, como SQL injection e XSS. DAST ataca a aplicação rodando e acha falhas de configuração e autorização, como BOLA. Só o pen test humano entende a lógica de negócio, mas acontece poucas vezes por ano."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que perguntas você faria a um fornecedor de pen test com IA?",
+      "resposta": "Se roda de forma contínua, se raciocina sobre o contexto da aplicação, quanto contexto extra aceita e se prova a exploração da falha, em vez de só listar alertas."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que desconfiar dos números de ataque apresentados no talk?",
+      "resposta": "218%, 62%, 4 minutos e 43% de servidores MCP vêm sem fonte ou metodologia. Cohen apresenta a solução da Snyk, sem dado de falso positivo, custo por PR ou comparação com pen test humano."
+    }
+  ],
+  "experimento": {
+    "titulo": "Audite um código gerado por IA com um scanner",
+    "minutos": 30,
+    "precisa": "Claude Code ou ChatGPT e um scanner gratuito como semgrep ou bandit",
+    "passos": [
+      "Peça à IA um pequeno app web com login e busca, em Python ou Node.",
+      "Rode o semgrep (ou o bandit, no caso de Python) no código gerado.",
+      "Para cada alerta, peça um exemplo de entrada maliciosa que prove a falha.",
+      "Corrija os alertas confirmados e rode o scanner de novo."
+    ],
+    "sucesso": "Você tem a lista de alertas separada em falhas provadas e falsos positivos, e o segundo scan sai com menos achados."
+  }
 }

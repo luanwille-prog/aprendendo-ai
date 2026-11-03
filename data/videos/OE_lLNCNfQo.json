@@ -21,35 +21,40 @@
       "texto": "Rowan pediu ao Claude Code desktop que achasse o histórico do navegador. Depois seguiu para contas bancárias, cheques e uso do Zelle, com os quatro últimos dígitos da conta. Os nomes de banco eram falsos, mas os dados reais estavam lá. O ataque veio dele mesmo, sem injeção de script ou servidor MCP malicioso.",
       "t": 140,
       "legenda": "O agente listou dados bancários e pessoais sem barreira nenhuma.",
-      "print": "img/OE_lLNCNfQo/0.jpg"
+      "print": "img/OE_lLNCNfQo/0.jpg",
+      "descricao": "Diagrama mostrando dados pessoais encontrados: email, últimos 4 dígitos da conta e nome de banco."
     },
     {
       "titulo": "Basta dizer que é pesquisa de segurança",
       "texto": "Pedir direto os dados bancários gera um aviso. Dizer que se está pesquisando segurança faz o agente colaborar. Rowan resume que o nível de proteção do prompt é 'por favor, não faça coisas más'. Guardrails dentro do harness (a camada de código que controla o agente) cedem a um pouco de lábia.",
       "t": 204,
       "legenda": "Um pretexto simples contornou o aviso do agente.",
-      "print": "img/OE_lLNCNfQo/1.jpg"
+      "print": "img/OE_lLNCNfQo/1.jpg",
+      "descricao": "Slide com a mensagem 'Enough to steal my identity? It took 5 prompts.'"
     },
     {
       "titulo": "MicroVM isola por construção",
       "texto": "Uma microVM roda o próprio kernel e isola o sistema de arquivos. Os segredos nunca entram na VM, pois um proxy troca o placeholder pelo valor real só na hora da requisição de rede. Há trilha de auditoria completa. A tese é que a fronteira fique na VM, porque quando o agente chega ao host, já é tarde.",
       "t": 265,
       "legenda": "As cinco garantias que o sbx promete por design.",
-      "print": "img/OE_lLNCNfQo/2.jpg"
+      "print": "img/OE_lLNCNfQo/2.jpg",
+      "descricao": "Comparação 'Hope It Works' vs 'Sandboxes & Governance' com 5 propriedades de isolamento."
     },
     {
       "titulo": "Mesmo comando, ataque bloqueado",
       "texto": "Na demo, 'claude' roda à esquerda e 'sbx run claude' à direita. No sandbox, o agente nem acha que há navegador instalado. Um pedido ao Pirate Bay fica bloqueado, porque a saída de rede é negada por padrão. Rowan diz que o custo é digitar sete teclas a mais.",
       "t": 347,
       "legenda": "No sandbox, o ataque de histórico de navegador não encontra nada.",
-      "print": "img/OE_lLNCNfQo/3.jpg"
+      "print": "img/OE_lLNCNfQo/3.jpg",
+      "descricao": "Terminal mostrando paths do histórico de navegadores em macOS: Safari, Chrome, Firefox, Arc, Brave."
     },
     {
       "titulo": "Governança e montagem somente leitura",
       "texto": "O mockup de governança mostra regras de rede (permitir ou negar), pontos de montagem de arquivos e catálogo de MCP. Rowan monta repositórios relacionados em modo somente leitura. O agente vê o outro código, mas não faz commits fora do projeto. No roadmap estão controles L7 de rede e regras por repositório GitHub.",
       "t": 514,
       "legenda": "Políticas de rede, arquivos e MCP configuradas num só painel.",
-      "print": "img/OE_lLNCNfQo/4.jpg"
+      "print": "img/OE_lLNCNfQo/4.jpg",
+      "descricao": "Mockup artístico da tela de governança com ícones de políticas, segurança e conformidade."
     }
   ],
   "conceitos": [
@@ -228,5 +233,36 @@
       "contexto": "a mais para rodar via sbx",
       "t": 358
     }
-  ]
+  ],
+  "rotulo": "Rodar agentes de código em sandbox de microVM",
+  "objetivo": "justificar por que o limite de segurança de um agente deve ficar fora dele e montar uma política mínima de isolamento",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que uma microVM oferece que um prompt pedindo 'por favor, não faça coisas más' não oferece?",
+      "resposta": "Kernel próprio, sistema de arquivos isolado, segredos trocados por placeholders por um proxy e rede bloqueada por padrão. O limite fica fora do alcance do agente."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você configuraria o ambiente de um agente de código no seu projeto?",
+      "resposta": "Rodaria em sandbox, montaria repositórios relacionados como somente leitura, negaria a saída de rede liberando só os domínios necessários e nunca poria chaves reais no ambiente."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites tem a demo apresentada pela Docker?",
+      "resposta": "É pitch de produto, com um cenário em uma máquina, sem comparação com outros sandboxes nem teste de fuga da VM. Identidade de agente, Cedar e controles L7 ainda são roadmap."
+    }
+  ],
+  "experimento": {
+    "titulo": "Descobrir o que o seu agente alcança",
+    "minutos": 30,
+    "precisa": "Um agente de código, uma pasta de teste com arquivos falsos e Docker ou uma VM descartável",
+    "passos": [
+      "Crie uma pasta de teste com arquivos falsos, inclusive um com uma chave inventada.",
+      "Numa conta de teste, peça ao agente rodando sem sandbox que liste o que consegue ler fora da pasta do projeto.",
+      "Repita dentro de um container ou VM com a pasta montada somente leitura e a rede negada.",
+      "Compare o que ele alcançou nos dois casos."
+    ],
+    "sucesso": "Você tem a lista do que o agente alcançou sem sandbox e a confirmação de que, isolado, ele só vê o que você liberou."
+  }
 }

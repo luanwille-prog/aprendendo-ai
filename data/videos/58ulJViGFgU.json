@@ -21,14 +21,16 @@
       "texto": "Agente recebe um token do usuário e o repassa ao servidor MCP, que só enxerga o usuário. No exemplo da fatura pendente, o agente decide por conta própria enviá-la a alguém. Nada no log mostra se foi Alice ou o modelo. Por isso o agente é um ator novo, não determinístico, e não um programa comum.",
       "t": 186,
       "legenda": "O serviço de faturas não distingue a ação de Alice da ação do agente.",
-      "print": "img/58ulJViGFgU/0.jpg"
+      "print": "img/58ulJViGFgU/0.jpg",
+      "descricao": "Slide 'Who is making this request?' com Alice, agente, MCP server e Invoices API; rótulos 'token says: Alice' e 'svc-mcp-server'."
     },
     {
       "titulo": "O que é o problema das credenciais espalhadas",
       "texto": "Tokens pessoais não têm dono nem revogação fácil. Alice pode levar o token para a máquina pessoal, fora das proteções da empresa. Agentes acumulam chaves ao longo do tempo. Contas de serviço viram um balde de permissões amplo demais. Antes dos agentes o setor aceitava o risco; agora há um ator que age em nome da pessoa.",
       "t": 226,
       "legenda": "Lista dos quatro riscos do modelo atual de credenciais.",
-      "print": "img/58ulJViGFgU/1.jpg"
+      "print": "img/58ulJViGFgU/1.jpg",
+      "descricao": "Slide 'What's wrong with this picture' com o PAT do .env destacado em vermelho e o aviso 'Long-lived secret' sobre o laptop."
     },
     {
       "titulo": "Cinco requisitos de autenticação para agentes",
@@ -42,14 +44,16 @@
       "texto": "Para um agente falar com um servidor MCP, o servidor publica metadados, o cliente descobre, o agente obtém credencial e se autentica. O servidor valida assinatura, emissor e token, aplica política, pode pedir outra credencial a um sistema externo e registra tudo em log. O palestrante pergunta se um LLM acerta isso sempre e a plateia concorda que não.",
       "t": 592,
       "legenda": "Cada chamada de ferramenta envolve pelo menos oito etapas de segurança.",
-      "print": "img/58ulJViGFgU/3.jpg"
+      "print": "img/58ulJViGFgU/3.jpg",
+      "descricao": "Slide 'So many steps to get right, on every call' com Alice, agente, MCP server em papéis Client/Server e Runtime Auth; não é sequência numerada."
     },
     {
       "titulo": "Gateway tira a credencial do alcance do agente",
       "texto": "O agente pede ao gateway um alvo, como o GitHub. O gateway autentica o agente, consulta a autorização em tempo de execução, busca a credencial no cofre e a injeta na requisição. Isso permite revogação instantânea e bloquear ações específicas, como enviar e-mail mas não ler. Custos: um salto a mais, necessidade de forçar todo o tráfego por ele e um alvo único para ataque.",
       "t": 779,
       "legenda": "O agente nunca vê o token; o gateway o injeta na chamada.",
-      "print": "img/58ulJViGFgU/4.jpg"
+      "print": "img/58ulJViGFgU/4.jpg",
+      "descricao": "Slide 'Move the keys outside the agent's reach' com agente em ambiente de execução, gateway, Runtime Auth (PAT, API key, OAuth) e APIs de destino."
     }
   ],
   "conceitos": [
@@ -195,5 +199,36 @@
       "contexto": "sistemas existentes que não dá para reescrever",
       "t": 531
     }
-  ]
+  ],
+  "rotulo": "Autenticação de agentes: quem está fazendo a requisição",
+  "objetivo": "avaliar se um agente usa credenciais próprias, curtas e com escopo, e registrar quem fez cada chamada",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Qual o problema de o agente usar o token pessoal do usuário no servidor MCP?",
+      "resposta": "O servidor só enxerga o usuário e não distingue se quem agiu foi ele ou o agente. Nada no log mostra se foi Alice ou o modelo, e o token pessoal não tem dono nem revogação fácil."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "O que você mudaria nas credenciais dos agentes que usa hoje?",
+      "resposta": "Listaria tokens pessoais e chaves estáticas, trocaria contas de serviço amplas por credenciais com escopo e prazo curto via OAuth quando possível, e registraria agente e usuário em cada chamada."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que interesse atravessa a defesa do gateway de credenciais?",
+      "resposta": "Kamil trabalha na Keycard, que vende o plano de controle, os SDKs e o gateway descritos, e o final é pitch. Não há dados de incidentes nem medição de latência, embora os requisitos listados valham sem comprar a ferramenta."
+    }
+  ],
+  "experimento": {
+    "titulo": "Inventário de credenciais dos seus agentes",
+    "minutos": 25,
+    "precisa": "Uma planilha e acesso às configurações dos agentes e integrações que você usa",
+    "passos": [
+      "Liste cada agente ou integração que acessa algum serviço, como GitHub, e-mail ou banco.",
+      "Anote para cada um o tipo de credencial, quem pode revogar e quais permissões ela tem.",
+      "Marque as credenciais pessoais, estáticas ou amplas demais.",
+      "Troque uma delas por uma com escopo menor ou prazo curto e registre o que mudou."
+    ],
+    "sucesso": "Você tem o inventário completo e pelo menos uma credencial ampla trocada por uma limitada, com o agente ainda funcionando."
+  }
 }

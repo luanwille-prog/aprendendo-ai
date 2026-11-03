@@ -28,28 +28,32 @@
       "texto": "A mensagem sai do iPhone ou do MacBook pelo WhatsApp, chega ao NanoClaw no Pi e segue para o Claude via Agent SDK. Não há inferência de modelo no aparelho. Um servidor MCP liga o agente ao Neo4j, e a resposta volta pelo mesmo canal.",
       "t": 549,
       "legenda": "O caminho de uma mensagem do celular até o modelo e de volta.",
-      "print": "img/oUZEt4EiPbk/1.jpg"
+      "print": "img/oUZEt4EiPbk/1.jpg",
+      "descricao": "Diagrama de arquitetura claro mostrando iPhone, MacBook, WhatsApp, Raspberry Pi e NanoClaw agent."
     },
     {
       "titulo": "Grafo 101 e consulta via MCP",
       "texto": "Um grafo tem nós (círculos) e relações (arestas). No exemplo, Tom Hanks atuou em Forrest Gump, e Robert Zemeckis dirigiu o filme. Jeremy perguntou pelo WhatsApp quais filmes Tom Hanks fez. O agente consultou o banco pelo MCP e respondeu com os dados reais.",
       "t": 581,
       "legenda": "O que é nó e o que é relação num banco de grafos.",
-      "print": "img/oUZEt4EiPbk/2.jpg"
+      "print": "img/oUZEt4EiPbk/2.jpg",
+      "descricao": "Grafo com nós redondos: Tom Hanks e Robert Zemeckis (pessoas) conectados ao filme Forrest Gump com arestas rotuladas."
     },
     {
       "titulo": "Memória em grafo com o esquema POLE",
       "texto": "Num voo, Jeremy pediu ao agente que criasse um sistema de memória no esquema POLE, que vem do trabalho policial europeu: pessoa, objeto, local e evento, mais organização. O agente criou a skill e guardou o banco num ponto de montagem que sobrevive a reinícios. No Neo4j Aura, os nós mostram reuniões, lugares e pessoas ligados entre si.",
       "t": 768,
       "legenda": "Memórias do agente guardadas como grafo navegável.",
-      "print": "img/oUZEt4EiPbk/3.jpg"
+      "print": "img/oUZEt4EiPbk/3.jpg",
+      "descricao": "Interface Neo4j Aura mostrando grafo de memórias com nós coloridos conectados em rede navegável."
     },
     {
       "titulo": "Notas de estandes viram grafo de temas",
       "texto": "Com microfone USB, botão físico e Neo4j local, Jeremy gravou notas nos estandes mesmo com o Wi-Fi ruim da feira. Depois subiu os dados para a nuvem e os enriqueceu. O grafo mostrou temas compartilhados, como avaliação e observabilidade, ligando várias empresas.",
       "t": 1052,
       "legenda": "Expositores conectados por temas em comum no grafo da nuvem.",
-      "print": "img/oUZEt4EiPbk/4.jpg"
+      "print": "img/oUZEt4EiPbk/4.jpg",
+      "descricao": "Interface Neo4j Aura com grafo de expositores (nós roxos e marrons) ligados entre si."
     }
   ],
   "conceitos": [
@@ -194,5 +198,36 @@
       "contexto": "modelo do Raspberry Pi usado",
       "t": 268
     }
-  ]
+  ],
+  "rotulo": "Agente pessoal num Raspberry Pi com memória em grafo",
+  "objetivo": "desenhar a memória de um agente pessoal como entidades e relações e conectá-la ao agente por MCP",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que significa o esquema POLE e para que serviu no projeto?",
+      "resposta": "Pessoa, objeto, local e evento, mais organização. Serviu para estruturar a memória do agente como nós e relações num banco de grafos Neo4j."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você desenharia a memória do seu agente antes de escolher uma ferramenta?",
+      "resposta": "Listando as entidades e as relações que importam, como pessoas, locais e eventos, e só depois escolhendo o banco ou a ferramenta."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites tem a descoberta de temas entre os estandes?",
+      "resposta": "Vem de poucos estandes e de notas pessoais, sem método comparável nem medição de qualidade, latência ou custo. O talk também termina em convite ao estande da Neo4j."
+    }
+  ],
+  "experimento": {
+    "titulo": "Memória em grafo com Neo4j local",
+    "minutos": 40,
+    "precisa": "Neo4j local (por exemplo via Docker) e Claude ou ChatGPT",
+    "passos": [
+      "Escreva 10 fatos sobre as reuniões da sua semana, com pessoas, locais e eventos.",
+      "Peça ao modelo um esquema POLE e os comandos Cypher para criar os nós e as relações.",
+      "Rode os comandos no Neo4j local.",
+      "Faça 3 consultas em Cypher e compare com o que o modelo responderia só com texto."
+    ],
+    "sucesso": "As 3 consultas retornam as pessoas e os eventos certos a partir dos fatos que você registrou."
+  }
 }

@@ -21,28 +21,32 @@
       "texto": "O Gemma 4 sai em cinco tamanhos, de 2B a 31B parâmetros. Os modelos de 26B (mixture of experts) e 31B (denso) miram uma GPU comum. Até 12B roda em notebook, e o 2B cabe em celular. A licença Apache 2 permite baixar, usar na empresa e fazer fine-tuning (ajuste fino).",
       "t": 314,
       "legenda": "Cinco tamanhos de Gemma 4, com licença que permite uso comercial e ajuste",
-      "print": "img/zQZiHOpkq_s/0.jpg"
+      "print": "img/zQZiHOpkq_s/0.jpg",
+      "descricao": "Slide Gemma 4 com cinco tamanhos: 2B, 4B, 26B, 31B e licença Apache 2"
     },
     {
       "titulo": "Modelo rodando só no navegador",
       "texto": "A demo carrega o Gemma direto no navegador, via WebAssembly e transformers.js, dentro de um sandbox (ambiente isolado). Ela pede uma tabela com emojis comparando os livros de Harry Potter e a resposta vem quase instantânea. Sem API, nenhum dado sai da máquina.",
       "t": 379,
       "legenda": "Resposta gerada localmente, sem chamada de API",
-      "print": "img/zQZiHOpkq_s/1.jpg"
+      "print": "img/zQZiHOpkq_s/1.jpg",
+      "descricao": "Interface web Gemma rodando no navegador com chat local, sem enviar dados"
     },
     {
       "titulo": "Google AI Edge Gallery no celular",
       "texto": "O app gratuito, para Android e iOS, testa o Gemma no aparelho. Descreve imagens, transcreve áudio em vários idiomas (ela cita mais de 140 línguas) e faz function calling local. Também traz skills prontas, como jogos, haikus, clima e eventos de calendário. Aceleradores do aparelho assumem a inferência em vez da CPU.",
       "t": 473,
       "legenda": "O app roda modelos locais com skills, sem servidor",
-      "print": "img/zQZiHOpkq_s/2.jpg"
+      "print": "img/zQZiHOpkq_s/2.jpg",
+      "descricao": "Google AI Edge Gallery com skills: Focus Flow, Currency, Account, Proxy"
     },
     {
       "titulo": "Tamanho pequeno, desempenho acima do esperado",
       "texto": "O gráfico compara desempenho e tamanho dos Gemma de 31B e 26B. Segundo ela, eles superam modelos de ordem de grandeza maior. A consequência prática é economizar, sem inferência distribuída e com menos GPU. Falta ver o gráfico com as métricas para checar a afirmação.",
       "t": 540,
       "legenda": "Gráfico que sustenta a alegação de desempenho acima do tamanho",
-      "print": "img/zQZiHOpkq_s/3.jpg"
+      "print": "img/zQZiHOpkq_s/3.jpg",
+      "descricao": "Gráfico Model Performance VS Size com Gemma 31B e 26B em destaque"
     },
     {
       "titulo": "Checkpoints QAT explicam a velocidade",
@@ -200,5 +204,36 @@
       "contexto": "Tamanho do checkpoint QAT do Gemma 2B",
       "t": 627
     }
-  ]
+  ],
+  "rotulo": "Gemma 4: modelos abertos no navegador e no celular",
+  "objetivo": "decidir quais tarefas com dados sensíveis podem rodar em um modelo aberto local em vez de uma API",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que tamanhos tem a família Gemma 4 e o que cabe onde?",
+      "resposta": "Vai de 2B a 31B parâmetros. Os de 26B e 31B miram uma GPU comum, até 12B roda em notebook e o 2B quantizado ocupa menos de 1 GB e cabe em celular. A licença é Apache 2."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como avaliar se um modelo local serve para o seu trabalho?",
+      "resposta": "Liste as tarefas com dados sensíveis, teste um modelo de 2B a 12B local nelas e compare com o modelo que você usa hoje, com seus próprios casos, em vez de confiar no gráfico da palestrante."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que não aceitar de imediato que o Gemma 4 supera modelos maiores?",
+      "resposta": "A afirmação vem de um gráfico citado sem benchmark, metodologia ou concorrentes nomeados, numa palestra de produto do Google. A demo de Harry Potter não mede qualidade e faltam dados de latência e bateria."
+    }
+  ],
+  "experimento": {
+    "titulo": "Teste cego entre modelo local e o que você usa",
+    "minutos": 45,
+    "precisa": "Um runtime local de modelos, um modelo aberto pequeno e 10 tarefas suas",
+    "passos": [
+      "Escolha 10 tarefas que não deveriam sair da sua máquina e use exemplos fictícios.",
+      "Baixe um modelo aberto de 2B a 12B num runtime local.",
+      "Rode as 10 tarefas no modelo local e no que você usa hoje.",
+      "Compare as respostas sem saber qual é qual e dê uma nota a cada uma."
+    ],
+    "sucesso": "Você tem uma nota por tarefa para os dois modelos e sabe quais tarefas podem rodar local."
+  }
 }

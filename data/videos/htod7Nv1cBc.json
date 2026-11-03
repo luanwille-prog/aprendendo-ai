@@ -21,35 +21,40 @@
       "texto": "A sparse attention (atenção esparsa) da MiniMax tem um ramo indexador, que faz uma atenção completa barata com quatro cabeças de query e uma de key. Ele aprende a imitar as notas de atenção do ramo principal. O ramo esparso então calcula a atenção só nos blocos que o indexador escolheu. Assim o modelo evita comparar cada token com todos os outros em contextos de 1 milhão de tokens.",
       "t": 177,
       "legenda": "O indexador escolhe os blocos e o ramo esparso só calcula atenção neles",
-      "print": "img/htod7Nv1cBc/0.jpg"
+      "print": "img/htod7Nv1cBc/0.jpg",
+      "descricao": "Slide 'MiniMax Sparse Attention (MSA)' com os dois ramos (indexador e esparso) listados e um diagrama pequeno da arquitetura à direita"
     },
     {
       "titulo": "O desenho da DeepSeek não servia para GQA",
       "texto": "A DSA, atenção esparsa da DeepSeek, foi feita para MQA, em que existe uma única cabeça de key e value bem larga. Em GQA (grouped-query attention), a mesma largura se divide em várias cabeças. Com a DSA, todas essas cabeças acabavam olhando os mesmos tokens e perdiam diversidade. A GPU também precisava fazer várias leituras separadas na memória, o que custa mais tempo.",
       "t": 349,
       "legenda": "Em GQA a GPU faz leituras separadas por cabeça, o que encarece a atenção esparsa",
-      "print": "img/htod7Nv1cBc/1.jpg"
+      "print": "img/htod7Nv1cBc/1.jpg",
+      "descricao": "Slide 'MSA - Challenges' com as perspectivas de algoritmo e infraestrutura sobre GQA e leituras de memória; não mostra o layout MQA vs GQA"
     },
     {
       "titulo": "Escolher blocos sai mais barato do que escolher tokens",
       "texto": "A MSA deixa cada cabeça de KV selecionar o seu próprio conjunto de tokens. Ela também troca a seleção token a token por seleção de blocos. Com menos candidatos, o cálculo de top-k fica mais leve, e a leitura contígua de memória aproveita melhor a GPU. A palestrante afirma que essa troca não trouxe perda relevante de qualidade, e a equipe escreveu kernels próprios para treino e inferência.",
       "t": 466,
       "legenda": "Selecionar blocos reduz candidatos do top-k e melhora o acesso à memória",
-      "print": "img/htod7Nv1cBc/2.jpg"
+      "print": "img/htod7Nv1cBc/2.jpg",
+      "descricao": "Slide 'MSA - Co-Design' com a perspectiva de algoritmo (agregação de índices) e de infraestrutura (seleção de blocos em vez de tokens)"
     },
     {
       "titulo": "Três jeitos de ensinar visão a um modelo de texto",
       "texto": "A equipe testou três estratégias. Adicionar visão depois do pré-treino, no estilo CPT (continued pre-training), degradou o texto. Adicionar visão no meio do pré-treino ficou sensível demais à mistura de dados e à taxa de aprendizado, e o resultado de uma rodada não se repetia na outra. Treinar com texto e imagem desde o passo zero quase não prejudicou o texto com o mesmo orçamento de tokens de texto.",
       "t": 598,
       "legenda": "Só o treino multimodal desde o início preservou o desempenho em texto",
-      "print": "img/htod7Nv1cBc/3.jpg"
+      "print": "img/htod7Nv1cBc/3.jpg",
+      "descricao": "Slide 'Natively Multimodal from Step Zero' comparando treino nativo, pré-treino e CPT com seus efeitos em texto"
     },
     {
       "titulo": "Mapas de atenção mostram a integração entre texto e imagem",
       "texto": "Nos modelos treinados no estilo CPT, os tokens de texto quase ignoram os tokens visuais, e essa região aparece escura no mapa de atenção. No modelo nativo, o mapa não separa texto e imagem. A equipe lê isso como sinal de que o modelo aprendeu a juntar as duas informações. Depois, a palestrante mostra que a atenção 3D dentro do ViT, com quatro quadros por vez, melhora a compreensão de vídeo e também de imagens.",
       "t": 705,
       "legenda": "No modelo nativo o texto presta atenção aos tokens visuais",
-      "print": "img/htod7Nv1cBc/4.jpg"
+      "print": "img/htod7Nv1cBc/4.jpg",
+      "descricao": "Dois mapas de atenção lado a lado sob 'Natively Multimodal from Step Zero': o da esquerda com regiões claras e o da direita com região visual escura"
     }
   ],
   "conceitos": [
@@ -292,5 +297,36 @@
       "contexto": "melhor equilíbrio para a atenção 3D dentro do ViT",
       "t": 849
     }
-  ]
+  ],
+  "rotulo": "Como o MiniMax M3 faz contexto longo e visão nativa",
+  "objetivo": "explicar como atenção esparsa e treino multimodal desde o início sustentam contexto longo, e como testar essas promessas",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Como funcionam os dois ramos da atenção esparsa MSA?",
+      "resposta": "Um ramo indexador leve escolhe blocos de tokens e um ramo esparso olha só para esses blocos. O desenho foi pensado para GQA e para a memória da GPU, e escolher blocos sai mais barato do que escolher tokens."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você quer usar o M3 para ler uma base de código grande. Como validar a promessa de contexto longo?",
+      "resposta": "Rode suas próprias tarefas com contexto longo e meça latência e acerto contra o modelo que você usa hoje. Não aceite os números do talk como prova para o seu caso."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que informações faltam nos ganhos de 9x no prefill e 15x no decode?",
+      "resposta": "O talk não informa tamanho de contexto, hardware nem custo do teste. A palestrante é da MiniMax, as estratégias de treino aparecem sem benchmark e os mapas de atenção foram escolhidos pela equipe."
+    }
+  ],
+  "experimento": {
+    "titulo": "Teste de contexto longo com dois modelos",
+    "minutos": 40,
+    "precisa": "Acesso a dois modelos com contexto longo e um documento ou repositório grande seu",
+    "passos": [
+      "Escolha um documento ou um repositório grande e escreva 5 perguntas cuja resposta está em partes distantes do material.",
+      "Envie o material inteiro e as perguntas a cada modelo e anote o tempo de resposta.",
+      "Confira cada resposta contra o material e marque acerto ou erro.",
+      "Compare a tabela dos dois modelos em acerto e tempo."
+    ],
+    "sucesso": "Você tem uma tabela de 5 perguntas por modelo com acerto e tempo e sabe qual serve melhor para o seu material."
+  }
 }

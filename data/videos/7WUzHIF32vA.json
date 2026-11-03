@@ -21,35 +21,40 @@
       "texto": "O palestrante pede para definir o sucesso mais ambicioso antes de desenhar qualquer teste. Ele pergunta o que deve acontecer, o que nunca pode acontecer e quando o agente deve parar. Se o eval dá 100 de 100, a ambição ficou pequena e o teste ficou fácil. Quando o modelo chega a 85 ou 90, é hora de endurecer o eval.",
       "t": 353,
       "legenda": "Primeira prática: definir a meta ambiciosa antes de montar o teste.",
-      "print": "img/7WUzHIF32vA/0.jpg"
+      "print": "img/7WUzHIF32vA/0.jpg",
+      "descricao": "Slide 'Start with the job' com a pergunta 'What must happen?' sobre a primeira prática, em tela legível; só mostra a primeira pergunta."
     },
     {
       "titulo": "Teste o fluxo inteiro, não só a resposta final",
       "texto": "Ele mostra um exemplo de edição de imagem. Pediram só para trocar o fundo, e o fundo mudou para creme, mas o objeto ganhou duas alças. Olhar só a entrada e a saída esconderia o erro. Em um fluxo de 100 etapas, cada uma precisa de teste próprio para o que entra, o que sai e o que se espera. Uma etapa de tool calling (chamada de ferramenta), por exemplo, deve medir a precisão das chamadas.",
       "t": 403,
       "legenda": "O fundo mudou como pedido, mas o objeto também mudou sem ninguém pedir.",
-      "print": "img/7WUzHIF32vA/1.jpg"
+      "print": "img/7WUzHIF32vA/1.jpg",
+      "descricao": "Slide 'Check every handoff' com a frase 'Only change the background' e a imagem original da caneca azul; a versão editada não aparece."
     },
     {
       "titulo": "Um placar só não descreve o sistema",
       "texto": "Em 2022 e 2023 media-se uma habilidade por vez, como código ou escrita. Hoje agentes persistentes fazem várias coisas, então o eval precisa de camadas. Ele lista checagens automáticas no pipeline de deploy, revisão humana e testes adversariais. Avisa que não se deve usar o próprio agente como revisor do eval, embora ele possa acelerar o processo.",
       "t": 478,
       "legenda": "Sistema holístico de avaliação em três camadas.",
-      "print": "img/7WUzHIF32vA/2.jpg"
+      "print": "img/7WUzHIF32vA/2.jpg",
+      "descricao": "Slide 'One score is not the system' com o subtítulo 'Build a Holistic System' e o item 'Automated checks'; só o primeiro dos três elementos aparece."
     },
     {
       "titulo": "Jogos como eval de raciocínio: eSlams",
       "texto": "Benchmarks como o SWE-bench (tarefas de programação) pedem uma resposta e acabam. Em jogos, o modelo muda de estratégia, sai de erros e carrega as consequências de jogadas antigas. O eSlams é um pacote Python que põe modelos para jogar xadrez, Go, pôquer e jogos cooperativos. O autor diz que o vencedor importa menos do que como o modelo joga.",
       "t": 667,
       "legenda": "Partida entre dois modelos que termina empatada, usada como exemplo de eval.",
-      "print": "img/7WUzHIF32vA/3.jpg"
+      "print": "img/7WUzHIF32vA/3.jpg",
+      "descricao": "Demo Battlefield do eSlams com partida de jogo da velha entre Claude e GPT, tabuleiro e painel de raciocínio legíveis, e o texto 'Inspect a decision'."
     },
     {
       "titulo": "Regressão e falhas reais viram teste",
       "texto": "Um modelo melhor pode perder algo que o antigo fazia bem. O exemplo é o Google Assistant, que deixou de criar lembretes quando migrou para o Gemini. Por isso é preciso manter testes de regressão. Além disso, cada falha relatada por usuários deve ser reproduzida, localizada no fluxo e adicionada ao conjunto de evals, fechando um ciclo de feedback.",
       "t": 852,
       "legenda": "Falha de usuário vira caso de teste permanente.",
-      "print": "img/7WUzHIF32vA/4.jpg"
+      "print": "img/7WUzHIF32vA/4.jpg",
+      "descricao": "Slide 'Every failure should become a part of your pipeline' com o subtítulo 'Observe'; mostra só a primeira etapa do ciclo de feedback."
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "jogos suportados no eSlams, com cerca de 90 provedores",
       "t": 635
     }
-  ]
+  ],
+  "rotulo": "Por que nota 100 em um eval indica eval fraco",
+  "objetivo": "escrever um eval que cubra o fluxo inteiro, mantenha testes de regressão e transforme falhas reais em casos novos",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que perguntas ajudam a definir o sucesso mais ambicioso antes de desenhar o eval?",
+      "resposta": "O que deve acontecer, o que nunca pode acontecer e quando o agente deve parar. Se o eval dá 100 de 100, a ambição ficou pequena e o teste ficou fácil."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você evitaria perder uma função ao trocar de modelo?",
+      "resposta": "Rodando no modelo novo os mesmos casos que funcionavam no antigo, ou seja, um teste de regressão. O exemplo do talk é o Google Assistant, que deixou de criar lembretes ao migrar para o Gemini."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta no talk?",
+      "resposta": "Não há dados próprios que comprovem as práticas nem casos em que a regra dos 100% se aplicou. Não há prova de que o desempenho em jogos prevê a qualidade em tarefas de trabalho, e o eSlams é projeto do próprio palestrante. A cifra de 95% do MIT é citada de memória."
+    }
+  ],
+  "experimento": {
+    "titulo": "Montar um eval com casos difíceis e regressão",
+    "minutos": 35,
+    "precisa": "Claude ou ChatGPT, uma planilha e um prompt que você já usa no trabalho",
+    "passos": [
+      "Escreva o que o prompt deve fazer, o que nunca pode fazer e quando deve parar.",
+      "Crie 10 casos de teste, sendo ao menos 3 difíceis ou adversariais.",
+      "Rode os casos, pontue cada um e anote a nota total.",
+      "Se a nota passar de 85 ou 90, acrescente casos mais difíceis. Guarde os casos que passam como suíte de regressão."
+    ],
+    "sucesso": "Você tem uma planilha com 10 casos, a nota atual e pelo menos um caso difícil que o prompt ainda falha."
+  }
 }

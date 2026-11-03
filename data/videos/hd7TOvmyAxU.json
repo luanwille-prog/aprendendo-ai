@@ -21,35 +21,40 @@
       "texto": "O ARIA já vinha rodando mais de 200 experimentos no projeto autoresearch de Karpathy. Ao receber o pedido de um novo lote, ele decide evitar mudança de arquitetura, ajusta hiperparâmetros e dispara a execução via shell na fila do W&B Launch, ligada a um cluster Kubernetes. Depois fica consultando o resultado até os jobs terminarem.",
       "t": 284,
       "legenda": "O agente escolhe ajustes de hiperparâmetro e lança jobs reais na GPU.",
-      "print": "img/hd7TOvmyAxU/0.jpg"
+      "print": "img/hd7TOvmyAxU/0.jpg",
+      "descricao": "Chat do ARIA planejando lotes e disparando shell calls para rodar experimentos na GPU via W&B Launch."
     },
     {
       "titulo": "Dashboard de conversas mostra a forma de cada trace",
       "texto": "No Weave, a visão de conversas lista o tráfego do ARIA com um indicador visual da topologia de cada trace: chamadas de ferramenta, chamadas de LLM e blocos de raciocínio aparecem em cores e formas diferentes. O time abre uma conversa, lê prompt de sistema e shell calls, deixa notas e transforma os achados em tarefas.",
       "t": 813,
       "legenda": "A forma do trace revela o comportamento do agente sem ler cada mensagem.",
-      "print": "img/hd7TOvmyAxU/1.jpg"
+      "print": "img/hd7TOvmyAxU/1.jpg",
+      "descricao": "Dashboard do Weave mostrando traces de conversas com spans coloridos indicando topologia de execução do agente."
     },
     {
       "titulo": "Signals: juízes LLM sobre tráfego ao vivo",
       "texto": "O Weave roda juízes LLM (LLM judges) contra o tráfego real e marca sinais como frustração do usuário, resposta de baixa qualidade e pedido de esclarecimento. Cada marca traz o raciocínio do juiz. No exemplo, o usuário diz que a curva de loss está ruim e o juiz registra frustração. O time usa esses clusters para escolher o que corrigir na semana seguinte.",
       "t": 938,
       "legenda": "Cada sinal vem com o raciocínio do juiz, então dá para auditar a marcação.",
-      "print": "img/hd7TOvmyAxU/2.jpg"
+      "print": "img/hd7TOvmyAxU/2.jpg",
+      "descricao": "Painel de Signals exibindo sinais como frustração do usuário e baixa qualidade com justificativas do juiz LLM."
     },
     {
       "titulo": "Tarefas em YAML funcionam como testes unitários",
       "texto": "Cada tarefa é um arquivo YAML com um prompt de usuário e juízes. No exemplo, o prompt pede para comparar duas runs. Um juiz LLM avalia correção, outro avalia se os insights são interessantes, e uma regra fixa exige o resultado em até seis chamadas de ferramenta. O time mantém cerca de 200 tarefas assim.",
       "t": 985,
       "legenda": "Uma tarefa combina dois juízes LLM e uma regra objetiva de custo em chamadas.",
-      "print": "img/hd7TOvmyAxU/3.jpg"
+      "print": "img/hd7TOvmyAxU/3.jpg",
+      "descricao": "Arquivo YAML de tarefa com prompt de usuário e três juízes: dois LLM e um critério de custo de chamadas."
     },
     {
       "titulo": "Eval noturno decide o go/no-go",
       "texto": "As cerca de 200 tarefas formam uma suíte que roda toda noite, com resultados no Weave. Na tela, o modelo candidato marcou 73% contra 72% do modelo em produção. Com essa margem, o time decide promover o candidato na sexta-feira. O painel também traz um gráfico de desempenho ao longo das noites.",
       "t": 1040,
       "legenda": "Um placar noturno único serve de critério de promoção do agente.",
-      "print": "img/hd7TOvmyAxU/4.jpg"
+      "print": "img/hd7TOvmyAxU/4.jpg",
+      "descricao": "Avaliações noturnas: candidato a 73% versus produção a 72%, com gráfico de desempenho ao longo do tempo."
     }
   ],
   "conceitos": [
@@ -101,7 +106,7 @@
       "nome": "LLM judge",
       "traducao": "modelo que avalia outro modelo",
       "nivel": "intermediario",
-      "chave": "llm judge",
+      "chave": "llm-as-a-judge",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -199,5 +204,36 @@
       "contexto": "experimentos no lote rodado ao vivo",
       "t": 1219
     }
-  ]
+  ],
+  "rotulo": "Evals noturnos e juízes automáticos para agentes",
+  "objetivo": "montar uma suíte pequena de tarefas com juízes que ajuda a decidir se uma versão nova do agente sobe para produção",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Como o eval noturno do ARIA ajuda a decidir o que vai para produção?",
+      "resposta": "Cerca de 200 tarefas em YAML rodam toda noite, cada uma com juízes LLM e regras fixas. O modelo candidato é comparado ao de produção (73% contra 72% na demo) e o time decide a promoção."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que regra objetiva você poderia somar a um juiz LLM no seu agente?",
+      "resposta": "Um limite de chamadas de ferramenta por tarefa, como a regra de até seis chamadas do exemplo, ou outro critério que o código consiga verificar sozinho."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que pesa contra concluir que o candidato é melhor com 73% contra 72%?",
+      "resposta": "O talk não traz intervalo de confiança nem detalhes da suíte, e é uma demo de produto da W&B. Uma diferença de um ponto pode ser ruído."
+    }
+  ],
+  "experimento": {
+    "titulo": "Escrever 5 tarefas de teste com um juiz simples",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT e um prompt ou agente que você já usa",
+    "passos": [
+      "Escreva 5 tarefas, cada uma com um prompt de usuário e o resultado esperado.",
+      "Para cada tarefa, crie uma regra objetiva, como limite de chamadas ou palavra obrigatória.",
+      "Peça a um LLM para atuar como juiz e dar nota com justificativa.",
+      "Rode as 5 tarefas em duas versões do prompt e some as notas."
+    ],
+    "sucesso": "Você obtém um placar por versão e sabe qual das duas passaria no seu portão de lançamento."
+  }
 }

@@ -165,5 +165,36 @@
       "contexto": "duração de sessão longa citada; sem limite especial",
       "t": 932
     }
-  ]
+  ],
+  "rotulo": "Evals, CI/CD e multi-tenancy no Claude Managed Agents",
+  "objetivo": "versionar a definição de um agente em YAML e escolher o nível de isolamento por cliente conforme a exigência de segregação",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são os três níveis de isolamento por cliente citados?",
+      "resposta": "Um agente por cliente, um workspace por cliente ou uma organização por cliente. Com exigência legal de segregação de dados, a recomendação é um workspace por cliente."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como manter o agente principal responsivo enquanto uma custom tool demora?",
+      "resposta": "Delegue a um subagente que define e executa a custom tool. O coordenador fica ocioso e livre para novas mensagens, já que durante a espera mensagens novas ao agente em pausa devolvem erro 400."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que o Q&A deixa sem evidência?",
+      "resposta": "Não há números de desempenho, custo ou resultado de evals. Diz-se que agentes de revisão reduzem bugs e tempo por PR sem dados, e a pergunta sobre o gargalo da revisão de código ficou sem resposta firme."
+    }
+  ],
+  "experimento": {
+    "titulo": "Agente definido em YAML com validação no repositório",
+    "minutos": 25,
+    "precisa": "Um repositório git local e Claude ou ChatGPT para ajudar a escrever o YAML e o validador",
+    "passos": [
+      "Crie um agent.yaml com nome, modelo, system prompt e lista de ferramentas de um agente seu.",
+      "Escreva um script que valide se os campos obrigatórios existem.",
+      "Faça um commit, mude o prompt e remova um campo obrigatório de propósito.",
+      "Rode o validador e o git diff e descreva em uma frase o que mudou."
+    ],
+    "sucesso": "O validador acusa o campo removido de propósito e o diff mostra a mudança do prompt versionada."
+  }
 }

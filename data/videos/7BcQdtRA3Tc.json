@@ -21,35 +21,40 @@
       "texto": "O vLLM já precisa de caminhos separados para Nvidia e AMD. Cada hardware adicional deixa o diagrama mais confuso. Na prática, as equipes misturam vLLM, SGLang, TensorRT-LLM e llama.cpp, e cada ferramenta resolve só uma parte do problema.",
       "t": 66,
       "legenda": "Cada hardware extra torna a pilha de software mais difícil de manter.",
-      "print": "img/7BcQdtRA3Tc/0.jpg"
+      "print": "img/7BcQdtRA3Tc/0.jpg",
+      "descricao": "slide 'AI hardware is exploding and AI software is not scaling' com diagrama de pilhas do vLLM, CUDA, ROCm e drivers"
     },
     {
       "titulo": "Quatro camadas, uma pilha",
       "texto": "A Modular divide a solução em camadas. Mojo é a linguagem para CPUs, GPUs e aceleradores. MAX é o motor de inferência feito sobre Mojo. Os kernels (código que roda direto na GPU) ficam por baixo. A Modular Cloud cuida de escolher hardware, rotear requisições e distribuir o modelo.",
       "t": 162,
       "legenda": "A arquitetura proposta, do código de baixo nível até a nuvem.",
-      "print": "img/7BcQdtRA3Tc/1.jpg"
+      "print": "img/7BcQdtRA3Tc/1.jpg",
+      "descricao": "slide da Modular com Cloud, Serving e Kernels; destaque para MAX, o motor de serving em NVIDIA e AMD"
     },
     {
       "titulo": "Mojo no quadrante ideal",
       "texto": "O palestrante compara linguagens em três eixos: usabilidade, desempenho e portabilidade. CUDA dá desempenho, mas custa usabilidade. OpenCL dá portabilidade, mas perde velocidade. Triton fica no meio, com cerca de 70% do desempenho. Mojo diz querer reunir os três.",
       "t": 288,
       "legenda": "Posicionamento de Mojo contra CUDA, OpenCL e Triton, feito pela própria Modular.",
-      "print": "img/7BcQdtRA3Tc/2.jpg"
+      "print": "img/7BcQdtRA3Tc/2.jpg",
+      "descricao": "diagrama de Venn com Usability, Performance e Portability; ROCm, CUDA e OpenCL posicionados, sem Mojo visível"
     },
     {
       "titulo": "MAX atende vários tipos de modelo",
       "texto": "MAX foi pensado para a inferência de IA generativa atual, sem herdar as limitações do PyTorch. Ele serve texto, imagem, vídeo e voz no mesmo framework, expõe endpoints compatíveis com a API da OpenAI e permite separar prefill e decode em hardwares diferentes.",
       "t": 477,
       "legenda": "Definir modelos em Python e servir por endpoint compatível com OpenAI.",
-      "print": "img/7BcQdtRA3Tc/3.jpg"
+      "print": "img/7BcQdtRA3Tc/3.jpg",
+      "descricao": "slide 'MAX Modeling' com lista de arquiteturas suportadas (grep/sed) e logos do Hugging Face"
     },
     {
       "titulo": "Benchmarks de velocidade",
       "texto": "A Modular mostra ganhos sobre vLLM e torch.compile: 5,5x no tempo até o primeiro token com Kimi K2.5 e 7x com FLUX.2. Na AMD MI355 o ganho é de 4x, e ele lembra que a AMD custa cerca de 30% menos. Ele cita a Artificial Analysis como verificadora independente.",
       "t": 697,
       "legenda": "Comparação de velocidade apresentada pela própria Modular.",
-      "print": "img/7BcQdtRA3Tc/4.jpg"
+      "print": "img/7BcQdtRA3Tc/4.jpg",
+      "descricao": "slide 'Kimi-K2.5 on MAX' com barras de TTFT (239 ms contra 1.303 ms do vLLM, 5,5x) e throughput de 1,5x"
     }
   ],
   "conceitos": [
@@ -229,5 +234,36 @@
       "contexto": "mais rápido que o concorrente no FLUX.2 dev",
       "t": 793
     }
-  ]
+  ],
+  "rotulo": "Pilha única de inferência para qualquer hardware",
+  "objetivo": "avaliar benchmarks de fornecedor de inferência, perguntando hardware, versão do concorrente e quem verificou o resultado",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são as peças da pilha proposta pela Modular?",
+      "resposta": "Mojo, a linguagem parecida com Python para CPUs, GPUs e aceleradores, MAX, o motor de inferência feito sobre Mojo, kernels por baixo e a Modular Cloud, que escolhe hardware, roteia requisições e distribui o serviço."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você validaria os ganhos de velocidade antes de adotar uma alternativa ao vLLM?",
+      "resposta": "Medir o TTFT e o throughput da sua configuração atual, instalar a alternativa em uma máquina de laboratório e comparar com um modelo que você já usa, na sua carga real."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que perguntas você faria diante dos slides de 5,5x e 7x?",
+      "resposta": "Qual hardware, tamanho de lote e configuração do vLLM serviram de base, e quem verificou. A Artificial Analysis só aparece como verificadora do FLUX.2. O talk é pitch do cientista-chefe da Modular, e o Mojo 1.0 aberto ainda é promessa."
+    }
+  ],
+  "experimento": {
+    "titulo": "Comparar TTFT e vazão com a sua carga real",
+    "minutos": 45,
+    "precisa": "Uma máquina com GPU, vLLM instalado e um modelo pequeno que você já usa",
+    "passos": [
+      "Meça o tempo até o primeiro token e a vazão do seu vLLM com prompts do seu tamanho.",
+      "Instale a alternativa que quer testar, como pip install modular, em um ambiente separado.",
+      "Rode o mesmo modelo e o mesmo script de carga na alternativa.",
+      "Anote hardware, versões e configuração para poder repetir ou contestar o resultado."
+    ],
+    "sucesso": "Você tem duas colunas comparáveis com configuração registrada e sabe dizer se o ganho anunciado aparece na sua carga."
+  }
 }

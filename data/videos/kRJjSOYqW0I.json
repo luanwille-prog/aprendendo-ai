@@ -21,35 +21,40 @@
       "texto": "Cada tarefa tem uma instrução em markdown, um ambiente em Docker com os dados e scripts que checam o efeito deixado pelo agente. O verificador produz uma recompensa, como 0 ou 1. Com tarefa e verificador fixos, você troca o agente e vê se melhorou ou piorou.",
       "t": 251,
       "legenda": "Uma tarefa do Harbor é instrução, ambiente e verificador.",
-      "print": "img/kRJjSOYqW0I/0.jpg"
+      "print": "img/kRJjSOYqW0I/0.jpg",
+      "descricao": "slide Anatomy of a task com task.toml, instruction.md, environment/, solution/ (oracle opcional) e tests/ verificador"
     },
     {
       "titulo": "Oracle valida o teste antes de gastar tokens",
       "texto": "O oracle é um script que resolve a tarefa. Rodá-lo antes do agente mostra se os dados, o ambiente e os verificadores funcionam, sem pagar por tokens. Song usa isso para confiar nos verificadores sem revisar cada linha.",
       "t": 536,
       "legenda": "A solução de referência confirma que o verificador está certo.",
-      "print": "img/kRJjSOYqW0I/1.jpg"
+      "print": "img/kRJjSOYqW0I/1.jpg",
+      "descricao": "mesmo slide Anatomy of a task, com destaque para solution/ marcado como oracle opcional e tests/ com test.sh"
     },
     {
       "titulo": "Execução em paralelo e pass@k",
       "texto": "Cada trial roda em um container separado, então tudo escala na horizontal em provedores como Daytona. O time roda cerca de 200 workers em paralelo e calcula métricas como pass@k, que mede se o agente acertou em k tentativas.",
       "t": 946,
       "legenda": "Trials independentes viram uma métrica agregada por tarefa.",
-      "print": "img/kRJjSOYqW0I/2.jpg"
+      "print": "img/kRJjSOYqW0I/2.jpg",
+      "descricao": "slide Scale horizontally: grade de 4 tarefas por 3 trials (k1 a k3) para claude-code e codex, com resultados 1, 0, FAILED e TIMEOUT"
     },
     {
       "titulo": "Testar o sistema inteiro junto com o agente",
       "texto": "O time do Phoenix não ajusta o Claude Code. Ele ajusta o conjunto formado pelo agente, o servidor MCP, o CLI e as skills. Por isso coloca o servidor, o SQLite e as skills no mesmo container e avalia tudo como uma unidade.",
       "t": 1259,
       "legenda": "O ambiente de teste inclui o produto inteiro, não só o agente.",
-      "print": "img/kRJjSOYqW0I/3.jpg"
+      "print": "img/kRJjSOYqW0I/3.jpg",
+      "descricao": "diagrama How we use Harbor: app/agente, OTLP, servidor Phoenix com REST, GraphQL, MCP, PXI, banco SQLite/PostgreSQL e 3 formas de agente"
     },
     {
       "titulo": "Mudança de prompt medida em antes e depois",
       "texto": "O prompt passou a orientar o uso de SQL para contagens e agrupamentos, em vez de GraphQL. Na comparação por tarefa, chamadas de GraphQL, turnos e chamadas de ferramenta caíram, e a recompensa ficou igual. Era uma otimização, não uma correção de erro.",
       "t": 2692,
       "legenda": "Menos chamadas de ferramenta, mesma taxa de acerto.",
-      "print": "img/kRJjSOYqW0I/4.jpg"
+      "print": "img/kRJjSOYqW0I/4.jpg",
+      "descricao": "Phoenix comparando dois jobs: graficos de graphql_call_count, reward, sql_call_count, tool_count e turn_count, com tabelas de custo"
     }
   ],
   "conceitos": [
@@ -196,5 +201,36 @@
       "contexto": "formas de agente que o time precisa testar",
       "t": 1383
     }
-  ]
+  ],
+  "rotulo": "Testar agentes com Harbor: tarefa, ambiente e verificador",
+  "objetivo": "escrever tarefas com verificador de resultado final para medir se uma mudança de prompt melhora o agente",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais três partes compõem cada tarefa no Harbor?",
+      "resposta": "Uma instrução em markdown, um ambiente em Docker com os dados e scripts verificadores que checam o efeito deixado pelo agente, gerando uma recompensa como 0 ou 1."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Para que serve rodar o oracle antes do agente e como você usaria isso?",
+      "resposta": "O oracle é um script que resolve a tarefa. Rodá-lo contra o verificador mostra se dados, ambiente e checagens funcionam sem gastar tokens. Use antes de cada rodada do seu agente."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites tem o estudo de caso do Phoenix?",
+      "resposta": "O conjunto é pequeno, com perguntas sintéticas geradas pelo Claude e checadas por amostragem. O palestrante diz que a queda nas chamadas é modesta, não mostra número de acerto, e trabalha na Arize."
+    }
+  ],
+  "experimento": {
+    "titulo": "Três tarefas com verificador de resultado",
+    "minutos": 45,
+    "precisa": "Python, um arquivo SQLite ou CSV seu e um agente de código",
+    "passos": [
+      "Escolha três perguntas sobre seus dados com resposta conhecida.",
+      "Escreva para cada uma um script que confere só o resultado final, sem olhar como o agente chegou lá.",
+      "Rode uma solução de referência para confirmar que os verificadores passam.",
+      "Rode o agente três vezes por tarefa, mude uma linha do prompt e rode de novo, comparando acertos."
+    ],
+    "sucesso": "Você tem uma tabela de acertos antes e depois da mudança de prompt e sabe dizer se ela ajudou, piorou ou ficou igual."
+  }
 }

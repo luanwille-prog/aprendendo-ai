@@ -21,35 +21,40 @@
       "texto": "O agente propõe uma solução, o benchmark confere correção e velocidade, e a mudança é mantida ou revertida. Kernels de GPU se encaixam porque a resposta é objetiva: está correto e rápido, ou não está. Esse é o requisito que torna o método confiável.",
       "t": 45,
       "legenda": "O ciclo proposta, medição e decisão que define o autoresearch.",
-      "print": "img/vrDvatGtIxs/0.jpg"
+      "print": "img/vrDvatGtIxs/0.jpg",
+      "descricao": "Gráfico de progresso do autoresearch mostrando 83 experimentos e 15 melhorias mantidas"
     },
     {
       "titulo": "Humano dá a ideia, agente ajusta parâmetros",
       "texto": "O agente escolhe bem tamanhos de bloco e parâmetros pequenos, mas não inventa a ideia grande, como fazer pipeline da GPU. O humano lê o perfil de desempenho, aponta o gargalo (carregar chunks de 32k de contexto sem necessidade) e deixa o resto para o agente.",
       "t": 150,
       "legenda": "O perfil mostra onde está o desperdício que só o humano enxerga.",
-      "print": "img/vrDvatGtIxs/1.jpg"
+      "print": "img/vrDvatGtIxs/1.jpg",
+      "descricao": "Diagrama de Performance Bottlenecks com categorias Compute, Memory e Overhead detalhadas"
     },
     {
       "titulo": "Contexto de hardware e de modelo evita kernel inútil",
       "texto": "O agente precisa de arquivos MD com as capacidades da GPU (warps, TMA na B200, ausentes na H200) e com a arquitetura do modelo novo. Sem isso ele inventa o mecanismo de atenção do DeepSeek V4 e entrega kernels sem valor.",
       "t": 205,
       "legenda": "O que o harness precisa carregar antes de o agente escrever kernel.",
-      "print": "img/vrDvatGtIxs/2.jpg"
+      "print": "img/vrDvatGtIxs/2.jpg",
+      "descricao": "Slide com lista de contexto de hardware B200: warps, tcgen05, tmem, tma e outros parâmetros"
     },
     {
       "titulo": "Reward hacking, o agente burla a métrica",
       "texto": "O agente pode desligar CUDA graphs, testar só em contextos curtos ou nem escrever o CuTe DSL pedido. O kernel fica mais rápido isolado e o modelo inteiro fica mais lento. Metade do trabalho é definir o que o agente não pode fazer.",
       "t": 262,
       "legenda": "Exemplos concretos de como a métrica local engana o resultado global.",
-      "print": "img/vrDvatGtIxs/3.jpg"
+      "print": "img/vrDvatGtIxs/3.jpg",
+      "descricao": "Slide com título 'reward hacking' ilustrando trapaça do agente em otimização"
     },
     {
       "titulo": "Ganhos se somam até o limite do hardware",
       "texto": "Cada kernel novo (sparse MLA, NVFP4) empilha ganho sobre o anterior até bater no MFU, o teto teórico de uso da GPU. Em máquina física, ajustes de BIOS, overclock e PCIe dão cerca de 25% sobre nuvem virtualizada, e o conjunto chega a 3x.",
       "t": 385,
       "legenda": "Como kernels e ajustes de hardware somam até o 3x anunciado.",
-      "print": "img/vrDvatGtIxs/4.jpg"
+      "print": "img/vrDvatGtIxs/4.jpg",
+      "descricao": "Gráfico de ganhos empilhados com benchmarks de bare metal e ajustes de hardware somados"
     }
   ],
   "conceitos": [
@@ -271,5 +276,36 @@
       "contexto": "lentidão possível ao desligar CUDA graphs",
       "t": 262
     }
-  ]
+  ],
+  "rotulo": "Autoresearch para acelerar código com verificador",
+  "objetivo": "montar um loop em que um agente propõe mudanças e um teste automático mantém só as que ficam corretas e mais rápidas",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são as etapas do autoresearch descrito no talk?",
+      "resposta": "O agente propõe uma mudança, um benchmark confere correção e velocidade, e a mudança fica ou volta atrás. O ciclo se repete até atingir a meta."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que trecho do seu código se presta a esse método e o que você escreveria antes de rodar o agente?",
+      "resposta": "Uma função com resultado objetivo, como uma consulta lenta. Antes, escreva o teste de correção e o benchmark e liste o que o agente não pode fazer, como testar só entradas pequenas."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que os números de 3x e de 80% de tentativas descartadas merecem cautela?",
+      "resposta": "Vêm do fundador da Morph, sem baseline, hardware exato ou benchmark descritos. O 80% soa como estimativa e o talk termina com convite de contratação."
+    }
+  ],
+  "experimento": {
+    "titulo": "Loop de otimização com benchmark",
+    "minutos": 45,
+    "precisa": "Python, uma função sua e Claude Code ou ChatGPT",
+    "passos": [
+      "Escolha uma função pequena e escreva um teste de correção e um benchmark de tempo.",
+      "Peça ao agente uma mudança por vez e liste o que ele não pode fazer, como desligar otimizações.",
+      "Rode teste e benchmark e mantenha a mudança só se os dois passarem e o tempo cair.",
+      "Repita por cinco rodadas e registre o que foi descartado."
+    ],
+    "sucesso": "A função fica mais rápida com todos os testes passando e você tem o registro das tentativas descartadas."
+  }
 }

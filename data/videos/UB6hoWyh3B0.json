@@ -21,35 +21,40 @@
       "texto": "Cada área do banco costuma manter seu próprio modelo, com features (variáveis de entrada) montadas à mão. A proposta é treinar uma única base que aprende a representação dos clientes a partir das transações. Depois, cada área faz fine-tuning (ajuste fino) dessa base para sua tarefa: fraude, aumento de limite, prevenção à lavagem de dinheiro ou marketing.",
       "t": 202,
       "legenda": "A mesma receita dos LLMs, com transações no lugar de palavras.",
-      "print": "img/UB6hoWyh3B0/0.jpg"
+      "print": "img/UB6hoWyh3B0/0.jpg",
+      "descricao": "slide 'A transaction is a sentence': comparação entre foundation model de linguagem (prevê a próxima palavra) e de transações (prevê a próxima transação)."
     },
     {
       "titulo": "Cinco dimensões e cerca de 100 features brutas",
       "texto": "O time organizou cada transação em quem, o quê, como, quando e onde. Em vez de herdar milhares de features feitas à mão para modelos antigos, eles buscaram as unidades mínimas de informação e chegaram a cerca de 100. A ideia é deixar a atenção do transformer descobrir as relações entre elas.",
       "t": 440,
       "legenda": "As features brutas que alimentam o modelo, separadas por dimensão.",
-      "print": "img/UB6hoWyh3B0/1.jpg"
+      "print": "img/UB6hoWyh3B0/1.jpg",
+      "descricao": "slide 'Heterogeneous, sparse, sequential': features brutas de uma transação agrupadas em WHO, WHAT, HOW, WHEN e WHERE, com exemplo de transação."
     },
     {
       "titulo": "Tokenizar dados tabulares é o trabalho principal",
       "texto": "Dados de banco misturam números, categorias, intervalos de tempo, IP e CEP. Criar um token para cada CEP deixaria o vocabulário grande demais e o treino instável. Por isso eles agrupam valores, por exemplo CEPs por distribuição, e depois mapeiam cada campo para um ID e um embedding (vetor numérico). O palestrante chama essa etapa e o pós-treino de receita secreta do projeto.",
       "t": 545,
       "legenda": "Cada tipo de dado tabular pede uma estratégia própria de tokenização.",
-      "print": "img/UB6hoWyh3B0/2.jpg"
+      "print": "img/UB6hoWyh3B0/2.jpg",
+      "descricao": "slide 'A five-step pipeline': de registros tabulares a embedding, com exemplo de tokens como MERCHANT_CATEGORY_118 e TRANSACTION_RANGE_5."
     },
     {
       "titulo": "Modelo pequeno com muitos dados por parâmetro",
       "texto": "Eles usaram as contas do Chinchilla, uma lei de escala que relaciona parâmetros e volume de dados, como ponto de partida. A arquitetura é decoder-only (só decodificador), com 1 bilhão de parâmetros. A regra inicial de 20 tokens por parâmetro se mostrou insuficiente para transações, e os experimentos pediram bem mais dados por parâmetro.",
       "t": 640,
       "legenda": "Um transformer de 1 bilhão de parâmetros, longe da escala dos LLMs de mercado.",
-      "print": "img/UB6hoWyh3B0/3.jpg"
+      "print": "img/UB6hoWyh3B0/3.jpg",
+      "descricao": "slide '1B-parameter decoder-only transformer, sized by Chinchilla': arquitetura com embedding 2048, 16 blocos, 32 cabeças e regra de 20 tokens por parâmetro."
     },
     {
       "titulo": "Fraude detectada com o histórico do cliente",
       "texto": "O XGBoost avalia cada transação quase isolada, e codificar o histórico nele é trabalhoso. O transformer olha a sequência das transações anteriores com atenção. Segundo o palestrante, isso aumentou a taxa de detecção e reduziu os falsos positivos, que geram ligações ao atendimento e vendas perdidas.",
       "t": 937,
       "legenda": "Mais fraudes sinalizadas e menos bloqueios indevidos que o modelo anterior.",
-      "print": "img/UB6hoWyh3B0/4.jpg"
+      "print": "img/UB6hoWyh3B0/4.jpg",
+      "descricao": "slide 'FT-TFM beats the engineered-feature XGBoost baseline': tabela com UDR +33% e FPR -29% contra o XGBoost, sem features feitas à mão."
     }
   ],
   "conceitos": [
@@ -226,5 +231,35 @@
       "contexto": "limite de tempo para decidir se aprova a transação de cartão",
       "t": 907
     }
-  ]
+  ],
+  "rotulo": "Um modelo de base do Wells Fargo para fraude",
+  "objetivo": "explicar como um transformer treinado em transações serve a vários usos do banco e compará-lo com um baseline XGBoost",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Como o time organizou cada transação e quantas features brutas manteve?",
+      "resposta": "Em cinco dimensões, que são quem, o quê, como, quando e onde. Em vez de milhares de features feitas à mão, chegaram a cerca de 100 features brutas."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Antes de usar um modelo grande em dados tabulares seus, o que você testaria?",
+      "resposta": "Teste um baseline como XGBoost e compare os dois na mesma métrica. Em fraude ou classificação, acompanhe taxa de detecção e de falso positivo juntas e calcule o custo de cada alarme falso."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que o talk não mostra sobre o resultado em fraude?",
+      "resposta": "Não dá número nenhum. Fala em mais detecção e menos falsos positivos sem percentuais, período de teste ou amostra, e a economia vira 'milhões de dólares' sem conta. Crédito e lavagem de dinheiro ainda estão em teste."
+    }
+  ],
+  "experimento": {
+    "titulo": "XGBoost como baseline em dados tabulares",
+    "minutos": 40,
+    "precisa": "Python com scikit-learn e xgboost, e um dataset público de fraude em cartão",
+    "passos": [
+      "Separe treino e teste mantendo a ordem do tempo das transações.",
+      "Treine um XGBoost e meça a taxa de detecção e a de falso positivo.",
+      "Assuma um custo por alarme falso e calcule o custo total no conjunto de teste."
+    ],
+    "sucesso": "Você tem detecção, falso positivo e um custo estimado de alarmes falsos para o baseline."
+  }
 }

@@ -21,35 +21,40 @@
       "texto": "Sem context engine, o Claude explora o código do zero, como um funcionário novo. Com ele, recebe um pacote de contexto da tarefa, com código, documentos do Notion, PRs e conversas do Slack, mais links para buscar detalhes. Na demo, a sessão custou US$ 1,29 em 1min30 contra cerca de US$ 2,60 em 3 minutos.",
       "t": 221,
       "legenda": "Comparação de custo e tempo com e sem context engine.",
-      "print": "img/ORVh4GivEU0/0.jpg"
+      "print": "img/ORVh4GivEU0/0.jpg",
+      "descricao": "terminal da sessão do Claude com linhas de saída; valores de custo e tempo ilegíveis na miniatura"
     },
     {
       "titulo": "Rastrear uma regressão até a troca de modelo",
       "texto": "Um colega notou que o produto de code review achava cada vez menos problemas. Ao perguntar à Unblocked, ela ligou a queda à troca de versão do modelo Opus e criou um PR de correção, com descrição que cita o PR causador e a conversa no Slack. A fala sobre as versões saiu confusa na legenda automática.",
       "t": 314,
       "legenda": "O PR de correção traz o histórico que explica a regressão.",
-      "print": "img/ORVh4GivEU0/1.jpg"
+      "print": "img/ORVh4GivEU0/1.jpg",
+      "descricao": "página de PR no GitHub com título 'Switch default review engine to Claude Opus' e comentários da discussão"
     },
     {
       "titulo": "Busca semântica não faz consultas",
       "texto": "RAG cobre bem perguntas de conteúdo: o código, o PR que o mudou, a thread que o discute. Perguntas como \"PRs que fechei semana passada\" ou \"quem mais revisou pagamentos\" são filtros e agregações com tempo. Essa informação não está codificada em um vector store (banco de vetores), então precisa de um motor de consulta.",
       "t": 440,
       "legenda": "Pergunta com recorte temporal que um vector store não responde.",
-      "print": "img/ORVh4GivEU0/2.jpg"
+      "print": "img/ORVh4GivEU0/2.jpg",
+      "descricao": "slide 'These are queries, not searches' listando o que RAG não faz: tempo, relações, filtros e agregações"
     },
     {
       "titulo": "Gerar a query é a parte fácil",
       "texto": "Quatro peças cercam o LLM: schema para limitar a query, mapeamento de identidades entre sistemas, validação da query (que é não confiável) e retry quando há erro. Schema e identidades saem bem de métodos procedurais comuns, com o LLM só como desempate. A síntese recebe schema, data atual e dados do usuário.",
       "t": 501,
       "legenda": "O entorno da query dá mais trabalho que a geração em si.",
-      "print": "img/ORVh4GivEU0/3.jpg"
+      "print": "img/ORVh4GivEU0/3.jpg",
+      "descricao": "slide 'Generating queries is the easy part' com os quatro itens: schema, identidades, validação e retry"
     },
     {
       "titulo": "Validar bloqueia operadores perigosos e vira feedback",
       "texto": "A query do LLM pode trazer operadores como $function, que executa JavaScript no servidor, ou tocar campos de tenant. A validação barra isso e injeta o filtro de tenant por baixo, sem o modelo ver. Na demo, uma regex foi barrada; o erro voltou ao LLM, que tentou de novo em um loop com limite de tentativas.",
       "t": 880,
       "legenda": "A validação recusa a regex e o erro alimenta a próxima tentativa.",
-      "print": "img/ORVh4GivEU0/4.jpg"
+      "print": "img/ORVh4GivEU0/4.jpg",
+      "descricao": "terminal da demo com saídas de erro da validação; texto pequeno, mensagem sobre regex quase ilegível"
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "redução de custo citada pelo palestrante",
       "t": 252
     }
-  ]
+  ],
+  "rotulo": "Motor de contexto relacional para perguntas de estrutura",
+  "objetivo": "distinguir perguntas de conteúdo de perguntas de estrutura e proteger uma query gerada por LLM com validação e retry",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que perguntas o RAG não resolve bem, segundo Werry?",
+      "resposta": "As de estrutura, como 'quais PRs eu fechei semana passada' ou 'quem mais revisou pagamentos'. São filtros e agregações com tempo, que não estão codificados no banco de vetores."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você trataria uma query de banco gerada por um LLM no seu agente?",
+      "resposta": "Como saída não confiável. Valide operadores, bloqueie campos sensíveis, injete o filtro de tenant fora do modelo e devolva o erro ao LLM num loop com limite de tentativas."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que a economia de 50% de custo merece cautela?",
+      "resposta": "Vem de uma única sessão escolhida pelo palestrante, sem repetições nem média, e a tarefa não é descrita. A moeda do custo sem contexto foi inferida e o repositório da demo é pequeno."
+    }
+  ],
+  "experimento": {
+    "titulo": "Gerar e validar uma query com retry",
+    "minutos": 30,
+    "precisa": "Python com SQLite e Claude ou ChatGPT para gerar as queries",
+    "passos": [
+      "Crie uma tabela SQLite com 20 PRs inventados, com autor, data e estado.",
+      "Peça ao modelo que converta 5 perguntas estruturais em SQL, informando o schema e a data de hoje.",
+      "Antes de executar, rejeite qualquer query que não seja um SELECT.",
+      "Quando uma query falhar, devolva a mensagem de erro ao modelo e tente de novo, com no máximo 3 tentativas."
+    ],
+    "sucesso": "As 5 perguntas retornam resultado, uma query que não é SELECT é barrada e você vê quantas tentativas cada pergunta precisou."
+  }
 }

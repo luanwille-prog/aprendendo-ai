@@ -21,7 +21,8 @@
       "texto": "Antes, descobrir como o sistema antigo funcionava exigia pedir a um engenheiro de mainframe ou a um arquiteto, e a resposta levava 7 dias. Com o código legado exposto a ferramentas de IA por um servidor MCP (protocolo que conecta a IA a fontes de dados), a mesma pergunta virou um prompt de 15 minutos.",
       "t": 158,
       "legenda": "O ganho citado: feedback de 7 dias para 15 minutos.",
-      "print": "img/uA4ah-dVHvU/0.jpg"
+      "print": "img/uA4ah-dVHvU/0.jpg",
+      "descricao": "Slide Legacy Analysis MCP: 7 dias riscado para 15 min, com diagrama AI Agent, servidor MCP e COBOL/Copybooks/DB2 Catalog"
     },
     {
       "titulo": "Três migrações em paralelo",
@@ -35,21 +36,24 @@
       "texto": "Eram 35 produtores para migrar. A documentação começou manual, foi para a wiki da empresa e depois foi exposta pelo mesmo servidor MCP. Os produtores tiravam dúvidas direto no prompt, e o volume de conversas de suporte com o time caiu bastante, segundo o palestrante.",
       "t": 314,
       "legenda": "A documentação na wiki servida por MCP reduziu o suporte manual.",
-      "print": "img/uA4ah-dVHvU/2.jpg"
+      "print": "img/uA4ah-dVHvU/2.jpg",
+      "descricao": "Slide Producer Migration: três formas de produzir dados e o fluxo Gateway, API, Cloud DB, com dicas de idempotência"
     },
     {
       "titulo": "Consumidores por tempo real, lote e streaming",
       "texto": "Cada consumidor acessa o ledger por um destes caminhos, todos com schema registry (catálogo central de formatos de dado). Tempo real usa GraphQL, onde cada um assina só os atributos de que precisa. Lote usa views no data warehouse. Streaming usa tópicos Kafka com entrega ao menos uma vez e operações idempotentes, para que repetir uma tarefa não duplique ledgers.",
       "t": 408,
       "legenda": "Três formas de consumir o mesmo ledger com um esquema único.",
-      "print": "img/uA4ah-dVHvU/3.jpg"
+      "print": "img/uA4ah-dVHvU/3.jpg",
+      "descricao": "Slide Consumer Migration: tempo real (GraphQL), lote (Data Warehouse) e streaming (Kafka), com dicas de schema registry"
     },
     {
       "titulo": "Justificativa de negócio como metadado",
       "texto": "No cadastro de 50 consumidores, o time pediu, além do código de aplicação, uma descrição do caso de uso e o impacto de quebrar o SLA. A IA agrupa essas descrições e responde quais funções de negócio dependem do ledger. Em incidente, isso mostra se há horas (lote) ou minutos (API em tempo real) para agir.",
       "t": 600,
       "legenda": "Metadados de negócio permitem priorizar incidentes por impacto.",
-      "print": "img/uA4ah-dVHvU/4.jpg"
+      "print": "img/uA4ah-dVHvU/4.jpg",
+      "descricao": "Slide AI Analysis: Determining Consumer Impact, com descrição do subgrafo e impacto para o cliente se o serviço cair"
     }
   ],
   "conceitos": [
@@ -159,5 +163,36 @@
       "contexto": "engenheiros do programa que usam IA todo dia",
       "t": 692
     }
-  ]
+  ],
+  "rotulo": "Código legado consultável por IA via MCP",
+  "objetivo": "expor código e documentação legados a uma IA por MCP e medir o tempo de resposta antes e depois",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que mudou na pesquisa sobre o sistema antigo com o servidor MCP?",
+      "resposta": "Antes era preciso pedir a um engenheiro de mainframe ou a um arquiteto, e a resposta levava 7 dias. Com o código legado exposto à IA por um servidor MCP, a mesma pergunta virou um prompt de 15 minutos."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que documentação do seu time você publicaria para a IA ler e como mediria o efeito?",
+      "resposta": "Publique a documentação de migração ou integração onde a IA possa lê-la, como uma wiki exposta via MCP, e conte quantas dúvidas deixam de chegar por chat. Meça o tempo de resposta antes e depois."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que o ganho de 7 dias para 15 minutos exige cautela?",
+      "resposta": "É um relato interno de uma empresa que apresenta o próprio projeto como sucesso. O número vem de um exemplo, sem amostra, método ou comparação de qualidade das respostas. O talk não fala de erros do servidor MCP nem de quem revisa."
+    }
+  ],
+  "experimento": {
+    "titulo": "Perguntar ao código com acesso via MCP",
+    "minutos": 45,
+    "precisa": "Claude Code ou Claude Desktop e um repositório com código que você não conhece bem",
+    "passos": [
+      "Escolha um repositório que você não conhece e anote três perguntas sobre como ele funciona.",
+      "Responda as perguntas lendo o código por conta própria e anote o tempo gasto.",
+      "Dê acesso ao repositório à IA, por Claude Code ou MCP de arquivos, e faça as mesmas perguntas.",
+      "Compare tempo e qualidade e confira as respostas da IA no código."
+    ],
+    "sucesso": "Você tem os tempos dos dois métodos e sabe quais respostas da IA estavam corretas."
+  }
 }

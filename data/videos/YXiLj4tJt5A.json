@@ -21,35 +21,40 @@
       "texto": "O agente recebe a pergunta, chama o LLM, o LLM escolhe uma ferramenta, o resultado volta e o loop repete até a resposta final. As ferramentas são funções Python com o decorador @tool, e o system prompt diz ao modelo quando usá-las. Aqui são três: buscar cliente, ver histórico de pedidos e processar reembolso.",
       "t": 1350,
       "legenda": "O agente encadeia duas ferramentas sozinho antes de responder.",
-      "print": "img/YXiLj4tJt5A/0.jpg"
+      "print": "img/YXiLj4tJt5A/0.jpg",
+      "descricao": "Notebook com saída de célula listando chamadas de ferramenta do agente; texto pequeno, pouco legível."
     },
     {
       "titulo": "Hook como limitador de chamadas",
       "texto": "Um hook roda código antes da invocação e antes de cada chamada de ferramenta. O exemplo zera um contador a cada pedido do usuário e bloqueia a ferramenta depois do limite de três chamadas. Com o limite baixado na demo, o bloqueio aparece no log. Na pergunta da plateia, os apresentadores explicam que o hook também poderia encerrar o turno inteiro.",
       "t": 1843,
       "legenda": "Com o limite baixo, o hook bloqueia a ferramenta e o log mostra isso.",
-      "print": "img/YXiLj4tJt5A/1.jpg"
+      "print": "img/YXiLj4tJt5A/1.jpg",
+      "descricao": "Notebook na seção 'Part 3: Trigger the Rate Limit' com saída em formato de log; título legível, log pouco legível."
     },
     {
       "titulo": "Prompt é sugestão, hook é regra",
       "texto": "Elizabeth lembra que o LLM é probabilístico e que o prompt funciona como sugestão. Um hook é código, então bloqueia de forma determinística. Ele pode barrar um número de cartão antes de chegar ao modelo, o que também poupa tokens, ou filtrar a resposta depois da chamada.",
       "t": 1905,
       "legenda": "O hook intercepta antes e depois do modelo, em código.",
-      "print": "img/YXiLj4tJt5A/2.jpg"
+      "print": "img/YXiLj4tJt5A/2.jpg",
+      "descricao": "Código destacado no notebook, provavelmente do hook; apresentador ao lado. Resolução baixa."
     },
     {
       "titulo": "Skills carregam contexto só quando preciso",
       "texto": "Procedimentos de reembolso, rastreio de pedido e problemas de conta ficam em arquivos markdown numa pasta de skills. O agente lê o que precisa para cada pergunta, em vez de encher o system prompt, que gasta tokens de entrada a cada chamada. Na demo, o pedido de reembolso de fones dispara a skill como se fosse uma ferramenta.",
       "t": 2310,
       "legenda": "A skill vira uma chamada de ferramenta quando a pergunta pede.",
-      "print": "img/YXiLj4tJt5A/3.jpg"
+      "print": "img/YXiLj4tJt5A/3.jpg",
+      "descricao": "Editor com árvore de arquivos, código e painel de saída; pode ser a chamada da skill. Texto ilegível na resolução."
     },
     {
       "titulo": "Steering: um agente revisor no loop",
       "texto": "Steering usa handlers nos mesmos pontos dos hooks, mas com um revisor que checa a ordem do fluxo (verificar o cliente antes do reembolso) e o tom da resposta (não prometer prazo, não culpar o cliente). Pode ser função fixa ou outro agente. Depois, o deploy no AgentCore exige só o decorador de entrada do runtime sobre o código existente.",
       "t": 2592,
       "legenda": "Duas regras de steering: ordem do fluxo e tom da resposta.",
-      "print": "img/YXiLj4tJt5A/4.jpg"
+      "print": "img/YXiLj4tJt5A/4.jpg",
+      "descricao": "Notebook na seção 'Part 3: LLM-Based Steering - Tone Guardrail' com código; título legível, código pequeno."
     }
   ],
   "conceitos": [
@@ -57,7 +62,7 @@
       "nome": "Agent harness",
       "traducao": "arcabouço do agente",
       "nivel": "basico",
-      "chave": "agent harness",
+      "chave": "harness",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -101,7 +106,7 @@
       "nome": "Skills",
       "traducao": "instruções em markdown carregadas sob demanda",
       "nivel": "intermediario",
-      "chave": "skills",
+      "chave": "skill",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -170,5 +175,36 @@
       "contexto": "limite de ferramentas por pedido no hook da demo",
       "t": 1720
     }
-  ]
+  ],
+  "rotulo": "Controlar agentes com hooks, skills e steering",
+  "objetivo": "limitar chamadas de ferramenta com código determinístico e mover procedimentos longos do prompt para skills carregadas sob demanda",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Qual a diferença entre prompt e hook no controle de um agente?",
+      "resposta": "O LLM é probabilístico e o prompt funciona como sugestão. O hook é código executado antes da chamada de ferramenta, então bloqueia de forma determinística, como no limite de três chamadas por pedido."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que regras do seu agente deveriam sair do prompt e virar código?",
+      "resposta": "As que não podem falhar, como limites de chamadas e barrar dados sensíveis (um número de cartão) antes de chegarem ao modelo. No prompt ficam só as orientações flexíveis."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que enfraquece a promessa de controle do workshop?",
+      "resposta": "É divulgação do ecossistema AWS com caminho feliz, dados fictícios e três ferramentas, sem custo, latência ou taxa de erro dos controles. A fala de que o agente responderá como se quer, com plena confiança, contradiz o argumento sobre modelos probabilísticos."
+    }
+  ],
+  "experimento": {
+    "titulo": "Hook de limite de chamadas em um loop de agente",
+    "minutos": 30,
+    "precisa": "Python e Claude ou ChatGPT para gerar o esqueleto; o modelo pode ser simulado",
+    "passos": [
+      "Escreva um loop que chama duas ferramentas de mentira, como consultar pedido e calcular reembolso.",
+      "Adicione um contador que zera a cada pedido do usuário.",
+      "Bloqueie a chamada e devolva uma mensagem de erro quando o contador passar de três.",
+      "Provoque o bloqueio com um pedido que faz o agente chamar a ferramenta repetidas vezes."
+    ],
+    "sucesso": "A quarta chamada é bloqueada pelo código e a mensagem de erro aparece no log, sem depender do prompt."
+  }
 }

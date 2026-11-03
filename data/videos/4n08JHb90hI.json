@@ -21,28 +21,32 @@
       "texto": "Uso alto e constante, dados privados e capacidade disponível favorecem GPU dedicada. Tráfego baixo e irregular, modelos mais capazes e time sem experiência em hospedagem favorecem API paga por token. Os palestrantes mostram uma conta de custo mensal para 200 mil tokens por dia, mas o valor da GPU sai truncado na legenda automática.",
       "t": 231,
       "legenda": "Critérios que separam GPU própria de API hospedada",
-      "print": "img/4n08JHb90hI/0.jpg"
+      "print": "img/4n08JHb90hI/0.jpg",
+      "descricao": "Slide 'When to own, and when not to' com a lista de critérios Own when e Rent when"
     },
     {
       "titulo": "Memória da GPU define quantos usuários cabem",
       "texto": "Os pesos de um modelo de 4 bilhões de parâmetros em BF16 ocupam 8 GB. O que sobra na GPU vira KV cache, o espaço onde ficam prompt, ferramentas e resposta de cada usuário. O notebook calcula cerca de 37 mil tokens de contexto no total, o que dá quatro usuários com 8 mil tokens cada.",
       "t": 2124,
       "legenda": "Pesos de 8 GB deixam cerca de 37 mil tokens para o KV cache",
-      "print": "img/4n08JHb90hI/1.jpg"
+      "print": "img/4n08JHb90hI/1.jpg",
+      "descricao": "Notebook com a seção 'The KV-cache memory formula' e o código de cálculo de memória, em baixa resolução"
     },
     {
       "titulo": "FP8 acelera, mas exige eval próprio",
       "texto": "Com o modelo FP8 da Red Hat, a velocidade com uma requisição subiu de 37,5 para 53,4 tokens por segundo. O pico de vazão foi 1,4 vez maior. O tempo até o primeiro token também cresceu sob carga alta. Omar insiste em criar evals (avaliações) próprios, por exemplo para ver se o JSON das chamadas de função continua válido.",
       "t": 3845,
       "legenda": "Comparação antes e depois da quantização FP8",
-      "print": "img/4n08JHb90hI/2.jpg"
+      "print": "img/4n08JHb90hI/2.jpg",
+      "descricao": "Notebook com o título 'Measure the results on FP8' e texto de resultados da comparação, legível só em parte"
     },
     {
       "titulo": "Speculative decoding que piora a velocidade",
       "texto": "Um modelo pequeno (0,6B) rascunha 4 tokens e o modelo de 4B verifica. Aqui a taxa de aceitação foi baixa porque o rascunho não foi treinado para esse modelo, e a velocidade caiu de 58 para 16 tokens por segundo. A lição é testar a compatibilidade e o número de tokens especulativos antes de ativar.",
       "t": 4538,
       "legenda": "Queda de 58 para 16 tokens por segundo com o rascunho incompatível",
-      "print": "img/4n08JHb90hI/3.jpg"
+      "print": "img/4n08JHb90hI/3.jpg",
+      "descricao": "Notebook com saída de tabela de métricas do teste de carga, em baixa resolução"
     },
     {
       "titulo": "Achar o ponto em que a vazão estabiliza",
@@ -170,5 +174,36 @@
       "contexto": "vazão com 64 simultâneas após subir max sequences",
       "t": 6452
     }
-  ]
+  ],
+  "rotulo": "Servir um modelo com vLLM medindo cada ajuste",
+  "objetivo": "rodar um ciclo de medir, mudar um parâmetro de servidor e medir de novo, checando qualidade em cada otimização",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que aconteceu com a velocidade ao ligar o speculative decoding no workshop e por quê?",
+      "resposta": "A velocidade caiu de 58 para 16 tokens por segundo. A taxa de aceitação foi baixa porque o modelo rascunho de 0,6B não foi treinado para o modelo de 4B."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Antes de mudar qualquer configuração do servidor, o que você mediria e como seguiria?",
+      "resposta": "Rodar um teste de carga com o tamanho real dos seus prompts e guardar os números como linha de base. Depois mudar um parâmetro por vez, refazer o teste e anotar vazão e latência."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que a comparação entre alugar API e ter GPU própria pede cuidado?",
+      "resposta": "O workshop é de uma empresa de nuvem que vende GPU. Os testes usam um só modelo de 4B, uma GPU e prompts curtos, a conta de custo tem poucos detalhes e a comparação final mistura FP8 e BF16 por causa de uma falha do notebook."
+    }
+  ],
+  "experimento": {
+    "titulo": "Teste de carga de linha de base com vLLM",
+    "minutos": 45,
+    "precisa": "Uma GPU local ou alugada, vLLM instalado e um modelo pequeno",
+    "passos": [
+      "Suba um modelo pequeno com vLLM usando a configuração padrão.",
+      "Escreva um script que envie 1, 8 e 32 requisições simultâneas com prompts do tamanho dos seus.",
+      "Registre tokens por segundo, tempo até o primeiro token e memória usada.",
+      "Mude um único parâmetro, como o limite de sequências, e repita o teste."
+    ],
+    "sucesso": "Você tem uma tabela de linha de base e outra após a mudança, e consegue dizer se o parâmetro ajudou na sua carga."
+  }
 }

@@ -21,28 +21,32 @@
       "texto": "Antes de mexer em parâmetros, o palestrante pergunta o que o modelo fará (agente de código ou resumos simples) e quantos usuários o usarão ao mesmo tempo. Contexto de 1 milhão de tokens nem sempre é necessário. Com mais usuários simultâneos, o uso do KV cache (memória de atenção do modelo) passa a pesar na escolha da GPU.",
       "t": 95,
       "legenda": "As perguntas a fazer antes de escolher a config.",
-      "print": "img/P_0_Th_ZzIg/0.jpg"
+      "print": "img/P_0_Th_ZzIg/0.jpg",
+      "descricao": "Slide 'The problem': 'LLM serving configs ship on guesswork', citando versão errada do vLLM, max-model-len e paralelismo."
     },
     {
       "titulo": "Versão e CUDA quebram modelos novos",
       "texto": "Modelos recém-lançados como o Kimi K3 exigem a versão certa do vLLM, às vezes a nightly (build diário), e a versão certa do CUDA (software que faz a GPU Nvidia rodar o modelo). Ele cita um caso que falha no CUDA 12.8 e funciona no 13.0. Também não recomenda pôr em produção no dia seguinte ao lançamento, por causa do código ainda imaturo.",
       "t": 404,
       "legenda": "O painel mostra versão do CUDA e métricas de GPU lado a lado.",
-      "print": "img/P_0_Th_ZzIg/1.jpg"
+      "print": "img/P_0_Th_ZzIg/1.jpg",
+      "descricao": "Painel BenchPod (vLLM) com métricas de GPU: KV cache, requests, throughput, TTFT, contagem de erros CUDA. Versão do CUDA não aparece em destaque."
     },
     {
       "titulo": "Trocar config sem reiniciar o servidor",
       "texto": "Cada mudança de config costuma exigir reiniciar a imagem e esperar o download dos pesos e o carregamento na GPU, algo como 30 minutos para o Kimi. O BenchPod aplica o YAML do vLLM e reinicia rápido, guarda os experimentos e expõe tudo por API (FastAPI), de modo que um agente também pode rodar os testes.",
       "t": 559,
       "legenda": "Config aplicada pelo painel, com métricas ao vivo e histórico salvo.",
-      "print": "img/P_0_Th_ZzIg/2.jpg"
+      "print": "img/P_0_Th_ZzIg/2.jpg",
+      "descricao": "Slide 'Why Kimi K3' com trecho de config YAML do vLLM (tensor-parallel, max-model-len, batched tokens). Não é a tela do BenchPod."
     },
     {
       "titulo": "Mais tokens por lote reduz a latência entre tokens",
       "texto": "No demo, ele variou o máximo de batch tokens e comparou as rodadas com 1, 8, 64 e 192 usuários simultâneos. O tempo até o primeiro token mudou pouco. A latência entre tokens (ITL) caiu bastante, e tarefas longas terminaram mais rápido que na receita padrão do vLLM.",
       "t": 652,
       "legenda": "TTFT quase igual entre rodadas, ITL menor com mais batch tokens.",
-      "print": "img/P_0_Th_ZzIg/3.jpg"
+      "print": "img/P_0_Th_ZzIg/3.jpg",
+      "descricao": "BenchPod em Benchmarks: tabela comparando duas rodadas por concorrência (c1 a c192) com TTFT e ITL p99; c64 ITL cai de 195 para 78 ms."
     },
     {
       "titulo": "Talvez você não precise do modelo de fronteira",
@@ -170,5 +174,36 @@
       "contexto": "custo citado de um nó B200 na plataforma",
       "t": 875
     }
-  ]
+  ],
+  "rotulo": "Medir a config do vLLM antes de ir para produção",
+  "objetivo": "planejar um benchmark de config do vLLM sob a sua carga, escolhendo a métrica certa para o produto",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que o teste de Chris Vela mostrou ao aumentar o máximo de tokens por lote?",
+      "resposta": "O tempo até o primeiro token mudou pouco, mas a latência entre tokens caiu bastante, e tarefas longas terminaram mais rápido. O teste usou 1, 8, 64 e 192 usuários simultâneos."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Qual métrica você priorizaria num chat e qual em tarefas longas?",
+      "resposta": "Para chat, tempo até o primeiro token (TTFT) baixo. Para tarefas longas, latência entre tokens (ITL) baixa, que ajuda a terminar mais cedo. Defina antes a concorrência esperada."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que o demo da Runpod não permite concluir?",
+      "resposta": "Mostra um único teste variando só o batch tokens, sem valores numéricos de latência nem número de repetições, e sem checar a qualidade das respostas. O BenchPod nem foi lançado e o talk vende créditos."
+    }
+  ],
+  "experimento": {
+    "titulo": "Benchmark de duas configs de servidor",
+    "minutos": 45,
+    "precisa": "Uma máquina com GPU ou um provedor de nuvem, vLLM e um modelo aberto pequeno",
+    "passos": [
+      "Suba o modelo no vLLM com a config padrão e anote o caso de uso e a concorrência esperada.",
+      "Rode um teste de carga com 1, 8 e 32 usuários simultâneos e anote TTFT e ITL.",
+      "Mude um parâmetro, como o máximo de batch tokens, e repita os mesmos testes.",
+      "Compare as duas tabelas e escolha a config pela métrica do seu caso de uso."
+    ],
+    "sucesso": "Você tem duas tabelas de latência na mesma carga e escolhe uma config com base nos números e não na receita padrão."
+  }
 }

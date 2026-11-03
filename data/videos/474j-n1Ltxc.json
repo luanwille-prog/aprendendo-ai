@@ -21,35 +21,40 @@
       "texto": "Marcar PR como feito por IA é difícil. O campo de autor do GitHub acusou menos de 1%, número que o palestrante achou baixo demais. Ele somou dois outros sinais, o rodapé de coautoria na descrição (co-authored by Claude ou Cursor) e o prefixo do nome da branch, como o Codex usa. Com isso chegou a cerca de 25% dos PRs do mês (min 3:48 a 4:19). É uma estimativa por indícios, sem certeza de autoria.",
       "t": 289,
       "legenda": "A adoção de agentes cresce de forma contínua, sem salto visível na data de cada modelo novo.",
-      "print": "img/474j-n1Ltxc/0.jpg"
+      "print": "img/474j-n1Ltxc/0.jpg",
+      "descricao": "Gráfico de linha mostrando crescimento de PRs de IA de 0,88% em fev/25 para 27,6% em abr/26"
     },
     {
       "titulo": "Taxa de reversão parecida entre humanos e agentes",
       "texto": "O primeiro teste de qualidade foi a taxa de revert (PR desfeito depois de mergeado). O Codex teve cerca de 1 revert a cada 1.000 PRs, o Devin 3,5 e os humanos 2,5 (min 5:52). Para checar se os agentes só pegavam tarefas fáceis, ele cruzou com o tamanho do PR e achou pouca correlação (min 6:23). O talk conclui que falta evidência forte de que o humano seja melhor.",
       "t": 352,
       "legenda": "Humanos ficam no meio entre Codex e Devin em reversões por mil PRs.",
-      "print": "img/474j-n1Ltxc/1.jpg"
+      "print": "img/474j-n1Ltxc/1.jpg",
+      "descricao": "Slide explicando revert rates com exemplo de PR revertida por falha em produção"
     },
     {
       "titulo": "Severidade e rodadas de revisão sem grande diferença",
       "texto": "O segundo teste contou os problemas que o próprio Greptile aponta, classificados em P0, P1 e P2 (do mais grave ao menos grave). Três dos quatro agentes testados geraram menos P0 que humanos (min 6:53). O terceiro teste contou rodadas de revisão até o merge, com Devin em 2,1 e Codex em 2,45 (min 7:56), e os humanos ficaram no meio dessa faixa.",
       "t": 413,
       "legenda": "Em três dos quatro agentes, a taxa de P0 ficou abaixo da humana.",
-      "print": "img/474j-n1Ltxc/2.jpg"
+      "print": "img/474j-n1Ltxc/2.jpg",
+      "descricao": "Exemplos de Greptile comments mostrando níveis de severidade P0 (crítico) e P2 (NIT)"
     },
     {
       "titulo": "Cada agente falha de um jeito",
       "texto": "Ao buscar termos nos comentários do Greptile, o palestrante montou um gráfico de padrões de falha com 1x igual à taxa humana. O Claude aparece com 1,5x mais SQL injection que humanos e o Devin com metade dos problemas de bypass de autenticação (min 9:16 a 9:29). A descrição do vídeo cita ainda mais N+1 queries no Cursor. Escolher o agente passa a incluir escolher quais erros você aceita revisar.",
       "t": 538,
       "legenda": "Os agentes divergem entre si e dos humanos em tipos específicos de bug.",
-      "print": "img/474j-n1Ltxc/3.jpg"
+      "print": "img/474j-n1Ltxc/3.jpg",
+      "descricao": "Heatmap de padrões de falha por agente: Claude, Codex, Devin e Cursor IQ"
     },
     {
       "titulo": "Validação em escala e as três perguntas",
       "texto": "O usuário mediano do Greptile abre 50 PRs por mês, o percentil 90 abre 500 e o percentil 99 chega aos milhares (min 10:01 a 10:32). Nesse ritmo, revisão manual e QA humano não acompanham. A proposta é validar com três perguntas. A mudança viola o contrato com o usuário? Aumenta a chance de violação futura? Cumpre a intenção do autor? (min 11:02).",
       "t": 662,
       "legenda": "Todo o critério de validação da empresa cabe em três perguntas.",
-      "print": "img/474j-n1Ltxc/4.jpg"
+      "print": "img/474j-n1Ltxc/4.jpg",
+      "descricao": "Slide com título sobre adaptação da revisão de código para a era dos agentes"
     }
   ],
   "conceitos": [
@@ -196,5 +201,36 @@
       "contexto": "PRs mergeados sem revisão humana",
       "t": 694
     }
-  ]
+  ],
+  "rotulo": "Código de agentes contra código humano em PRs",
+  "objetivo": "medir a qualidade de PRs feitos por agentes na sua equipe com taxa de revert e rodadas de revisão",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que sinais a Greptile usou para identificar PRs feitos por IA?",
+      "resposta": "O rodapé de coautoria na descrição (como co-authored by Claude) e o prefixo do nome da branch, porque o campo de autor do GitHub acusou menos de 1%."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você compararia agentes e humanos no seu repositório?",
+      "resposta": "Marcando os PRs de agentes por rodapé ou prefixo de branch e comparando taxa de revert, tamanho do PR e rodadas de revisão até o merge."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que problema de circularidade existe na conclusão de que a qualidade é parecida?",
+      "resposta": "A Greptile mede qualidade pelos comentários do próprio revisor, que define o que conta como bug. Ela vende revisão por IA e o talk não traz intervalo de confiança."
+    }
+  ],
+  "experimento": {
+    "titulo": "Medir revert de PRs de agentes no seu repositório",
+    "minutos": 40,
+    "precisa": "Um repositório no GitHub com histórico e Python ou uma planilha",
+    "passos": [
+      "Liste os últimos 100 PRs mergeados do repositório com gh pr list ou uma exportação.",
+      "Marque quais têm rodapé de coautoria de IA ou prefixo de branch de agente.",
+      "Conte reverts e rodadas de revisão em cada grupo.",
+      "Compare os grupos e anote o tamanho médio dos PRs."
+    ],
+    "sucesso": "Você tem uma tabela com taxa de revert e rodadas de revisão por origem e sabe se a amostra é grande o bastante para concluir algo."
+  }
 }

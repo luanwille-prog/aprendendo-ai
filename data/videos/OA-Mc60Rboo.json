@@ -21,21 +21,24 @@
       "texto": "No RL com recompensa verificável, cada rollout (execução completa de uma tarefa) vira uma nota de 0 ou 1. O raciocínio do modelo, as chamadas de ferramenta e as mensagens de erro são descartados. O GEPA usa um LLM para ler esse rastro, entender o que deu certo e errado e reescrever o prompt. Uma mudança de uma palavra no prompt muda o comportamento mais do que milhares de pequenos ajustes de pesos.",
       "t": 295,
       "legenda": "GEPA com 3 exemplos supera o ganho do GRPO após 25 mil rollouts.",
-      "print": "img/OA-Mc60Rboo/0.jpg"
+      "print": "img/OA-Mc60Rboo/0.jpg",
+      "descricao": "Gráfico GEPA vs GRPO comparando desempenho em HotpotQA e HoVer"
     },
     {
       "titulo": "O prompt aprendido vira uma especificação do problema",
       "texto": "O GEPA não usa truques como ameaçar o modelo. Ele escreve uma descrição detalhada da tarefa, com contexto, lições tiradas dos dados e armadilhas. No caso da AMD, o prompt aprendido avisou para não usar a biblioteca ADF.h, que não funcionava na nova geração de NPU (chip acelerador de IA). O agente saiu de 4,25% para 30,52% sem nenhuma outra mudança.",
       "t": 480,
       "legenda": "O otimizador descobriu sozinho um detalhe de domínio que faltava na internet.",
-      "print": "img/OA-Mc60Rboo/1.jpg"
+      "print": "img/OA-Mc60Rboo/1.jpg",
+      "descricao": "Prompt otimizado para NPU XDNA2 com gráfico de melhoria de 4% para 30%"
     },
     {
       "titulo": "Guardar vários candidatos evita travar num ótimo local",
       "texto": "Pedir para um LLM melhorar o prompt em loop costuma travar numa versão razoável e gastar todo o orçamento tentando sair dela. O GEPA mantém um conjunto de Pareto, onde fica todo candidato que vence em pelo menos um exemplo de treino. Segundo o autor, mais da metade do ganho do GEPA vem dessa escolha, que rende quase o dobro do loop simples em quatro benchmarks.",
       "t": 560,
       "legenda": "A busca com conjunto de Pareto explora mais caminhos e chega a nota maior.",
-      "print": "img/OA-Mc60Rboo/2.jpg"
+      "print": "img/OA-Mc60Rboo/2.jpg",
+      "descricao": "Duas estratégias de busca: SelectBestCandidate presa e Pareto explorativa"
     },
     {
       "titulo": "Otimizar o código do agente inteiro",
@@ -49,7 +52,8 @@
       "texto": "Para tarefas subjetivas, o autor propõe coletar traces de produção, pedir a uma pessoa que comente cerca de 50 deles e usar o GEPA para otimizar o prompt de um LLM-as-a-judge (modelo que dá nota a respostas). Esse juiz passa a guiar a otimização do agente, num ciclo que melhora com o uso.",
       "t": 1165,
       "legenda": "Cerca de 50 anotações humanas bastam para iniciar o ciclo de melhoria.",
-      "print": "img/OA-Mc60Rboo/4.jpg"
+      "print": "img/OA-Mc60Rboo/4.jpg",
+      "descricao": "Ciclo de aprendizado com anotação humana, juiz e agente otimizado"
     }
   ],
   "conceitos": [
@@ -203,7 +207,7 @@
       "nome": "Agent harness",
       "traducao": "código que orquestra o agente, suas ferramentas e seu fluxo",
       "nivel": "intermediario",
-      "chave": "agent harness",
+      "chave": "harness",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -214,7 +218,7 @@
       "nome": "Agent skills",
       "traducao": "arquivos de instrução que agentes de código carregam sob demanda",
       "nivel": "intermediario",
-      "chave": "agent skills",
+      "chave": "skill",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -261,5 +265,36 @@
       "contexto": "redução de custo da Databricks com GPT-OSS 120B contra Claude Opus",
       "t": 1102
     }
-  ]
+  ],
+  "rotulo": "GEPA e a reflexão sobre execuções para melhorar prompts",
+  "objetivo": "fazer uma função de avaliação devolver texto além da nota e usar a reflexão de um LLM para melhorar um prompt com poucos exemplos",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que o RL descarta e o GEPA aproveita?",
+      "resposta": "No RL cada rollout vira uma nota de 0 ou 1, e o raciocínio, as chamadas de ferramenta e as mensagens de erro são descartados. O GEPA usa um LLM para ler esse rastro e reescrever o prompt."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você tem um prompt que já usa e poucos exemplos rotulados. Como testaria a ideia do GEPA?",
+      "resposta": "Faça a avaliação devolver erros e logs além da nota, rode o GEPA (github.com/gepa-ai/gepa) com poucos exemplos, compare com a versão escrita à mão e guarde as versões que vencem em casos específicos."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites da comparação do GEPA com o GRPO o talk não discute?",
+      "resposta": "O autor criou o GEPA e não mostra casos de falha. A comparação usa um modelo e poucos domínios, faltam custo e tempo, e não se discute o risco de o prompt se ajustar demais aos exemplos de treino."
+    }
+  ],
+  "experimento": {
+    "titulo": "Melhore um prompt lendo os próprios erros",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT e um prompt seu com 5 a 10 exemplos rotulados",
+    "passos": [
+      "Rode seu prompt nos exemplos e anote, para cada erro, a entrada, a saída e a resposta certa.",
+      "Peça a um modelo que leia esses erros e explique o padrão em um parágrafo.",
+      "Peça uma nova versão do prompt com uma descrição detalhada da tarefa e das armadilhas encontradas.",
+      "Rode a nova versão nos mesmos exemplos e compare os acertos."
+    ],
+    "sucesso": "A nova versão acerta mais exemplos que a original, e você consegue apontar a armadilha que o prompt agora descreve."
+  }
 }

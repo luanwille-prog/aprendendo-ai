@@ -21,35 +21,40 @@
       "texto": "Na pesquisa State of Development, o uso diário de agentes passou de 47,3% para 80,8% em um ano. Só 49,1% dizem rodar agentes em produção ou tê-los como parte central da entrega. A diferença de cerca de 30 pontos é o primeiro dos quatro gaps que o palestrante apresenta.",
       "t": 254,
       "legenda": "Quase metade de quem usa agente todo dia ainda não o coloca em produção.",
-      "print": "img/mJ7q8CuVmbw/0.jpg"
+      "print": "img/mJ7q8CuVmbw/0.jpg",
+      "descricao": "Slide 'GAP 1 · Usage vs. Production' com 80.8% (use agents daily or more) ao lado de 49.1% (ship them). Palestrante pequeno no canto."
     },
     {
       "titulo": "Confiança alta, falhas diárias",
       "texto": "85,5% confiam ao menos um pouco na saída do agente, mas 41,1% enfrentam problemas todo dia ou com mais frequência, e 16,4% a cada hora. Times que se dizem bem-sucedidos relatam mais falhas, e a Temporal supõe que eles apenas procuram falhas com mais cuidado. A conclusão do palestrante é planejar para a falha, em vez de buscar zero falhas.",
       "t": 317,
       "legenda": "Muito rosa para um grupo em que 85% confia no agente.",
-      "print": "img/mJ7q8CuVmbw/1.jpg"
+      "print": "img/mJ7q8CuVmbw/1.jpg",
+      "descricao": "Gráfico de barras 'How often do your agents have issues?' com barras rosa para continuously, hourly e daily (24.7%). Legível."
     },
     {
       "titulo": "O gargalo é estado e depuração, não o modelo",
       "texto": "Quando perguntados o que limita a produtividade, os respondentes citaram primeiro rastrear estado entre serviços (35,7%) e depois depurar problemas (30,9%). 22,2% perdem progresso e refazem trabalho por quedas e reinícios. Só 13% confiam muito em observar e depurar fluxos de IA em escala.",
       "t": 566,
       "legenda": "Estado e depuração aparecem à frente de qualquer problema do modelo.",
-      "print": "img/mJ7q8CuVmbw/2.jpg"
+      "print": "img/mJ7q8CuVmbw/2.jpg",
+      "descricao": "Slide com 22.2% 'lose progress and redo work because of crashes and restarts'. Não é a lista de limitadores pedida, mas sustenta o número da ideia."
     },
     {
       "titulo": "Demo: matar o worker no meio do pagamento",
       "texto": "O workflow de pagamento tem nove etapas e um agente de investigação de fraude rodando num modelo local. O palestrante derruba o worker, aprova a transação enquanto não há nenhum worker ativo e depois religa o processo. A aprovação fica registrada como signal, e o fluxo segue do último passo concluído.",
       "t": 942,
       "legenda": "A aprovação foi registrada mesmo sem nenhum worker rodando.",
-      "print": "img/mJ7q8CuVmbw/3.jpg"
+      "print": "img/mJ7q8CuVmbw/3.jpg",
+      "descricao": "Demo Payout orchestration: campo de US$ 2.500, timeline de etapas e botão Approve sendo clicado no bloco 'Interact with this execution'."
     },
     {
       "titulo": "O histórico de eventos evita gastar tokens de novo",
       "texto": "Cada passo do agente, como escolher a investigação, consultar o cliente e redigir o resumo, é uma activity com resultado gravado. Depois do crash, as chamadas de IA aparecem uma vez só no histórico, sem nova execução. O código do workflow decide o que vem a seguir e o modelo só aconselha, então uma falha do modelo não derrubaria o pagamento.",
       "t": 1038,
       "legenda": "Cada chamada de IA rodou uma vez, sem retrabalho nem novo custo de tokens.",
-      "print": "img/mJ7q8CuVmbw/4.jpg"
+      "print": "img/mJ7q8CuVmbw/4.jpg",
+      "descricao": "Demo com timeline de atividades (DraftAIBrief, LookupRecentPayouts, ChooseInvestigation, ReserveFunds) e 1/10 workers rodando. Não é a aba de event history."
     }
   ],
   "conceitos": [
@@ -148,5 +153,36 @@
       "contexto": "têm problemas com agentes todo dia ou mais",
       "t": 317
     }
-  ]
+  ],
+  "rotulo": "Agentes falham todo dia: como projetar para falhar bem",
+  "objetivo": "identificar quais passos de um fluxo com agente não podem ser repetidos após uma queda",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que a pesquisa da Temporal mostra sobre o uso de agentes em produção?",
+      "resposta": "80,8% usam agentes todo dia, mas só 49,1% os rodam em produção ou como parte central da entrega. Os maiores bloqueios são rastrear estado (35,7%) e depurar problemas (30,9%), não a qualidade do modelo."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você protegeria um fluxo com agente que mexe em dinheiro?",
+      "resposta": "Marcando os passos que gastam tokens ou movem dinheiro, gravando cada resultado para não repetir após queda, e deixando o agente só aconselhar enquanto a decisão e o estado crítico ficam em código determinístico."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que ressalvas cabem na pesquisa e na demo da Temporal?",
+      "resposta": "A pesquisa é da própria empresa e tem 554 pessoas já ligadas a agentes. O palestrante admite que comparar anos não forma tendência, e a demo é um fluxo sintético cujo vídeo ao vivo falhou e foi trocado por gravação."
+    }
+  ],
+  "experimento": {
+    "titulo": "Derrubar o processo no meio do fluxo",
+    "minutos": 30,
+    "precisa": "Python e um script simples com três passos, um deles uma chamada de modelo",
+    "passos": [
+      "Escreva um script de três passos que grava o resultado de cada passo em um arquivo JSON.",
+      "Faça o script pular passos já gravados ao ser iniciado.",
+      "Interrompa o processo com Ctrl+C depois do segundo passo e rode de novo.",
+      "Confira se a chamada ao modelo do segundo passo não foi repetida."
+    ],
+    "sucesso": "O script retoma do terceiro passo sem refazer a chamada ao modelo, e você vê isso nos arquivos gravados."
+  }
 }

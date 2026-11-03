@@ -21,35 +21,40 @@
       "texto": "A mesma transação, com o mesmo vetor de 198 features (atributos), recebe nota 0,04 quando o modelo vê só a linha da tabela. A nota sobe para 0,91 quando o modelo enxerga a vizinhança: usuário, loja e outras transações marcadas como fraude na última hora. Para os autores, fraude é uma propriedade da vizinhança da transação.",
       "t": 20,
       "legenda": "Mesma linha de dados, nota 0,04 sem vizinhança e 0,91 com vizinhança.",
-      "print": "img/SHvwutPSeZg/0.jpg"
+      "print": "img/SHvwutPSeZg/0.jpg",
+      "descricao": "Slide 'Same transaction. Same features': nota 0,04 com a transação isolada e 0,91 com os vizinhos no grafo"
     },
     {
       "titulo": "Mais colunas na tabela batem num teto",
       "texto": "No canal de compras presenciais, o time passou de 40 atributos brutos para 87 features e a taxa de verdadeiros positivos foi de 35,5% para 36,6%. No canal online, quase 200 features renderam cerca de um ponto. Toda feature tabular deriva da mesma linha e do histórico do próprio cartão, então não captura dispositivos compartilhados nem lojas que acabaram de virar foco de fraude.",
       "t": 135,
       "legenda": "Duas a cinco vezes mais features renderam cerca de um ponto de ganho.",
-      "print": "img/SHvwutPSeZg/1.jpg"
+      "print": "img/SHvwutPSeZg/1.jpg",
+      "descricao": "Slide de features vs TPR: barras de 35,5% a 48,3% conforme sobe de 40 para 198 features; texto 'the ceiling is structural'"
     },
     {
       "titulo": "Amostragem e vazamento resolvidos na construção do grafo",
       "texto": "Fraude é rara (0,05% no presencial), então o time eleva a taxa para cerca de 10 vezes a natural. Para isso, mantém o histórico completo de cada usuário selecionado, porque cortar transações quebra a vizinhança. Cada mês vira um grafo separado, cada transação só agrega vizinhos com data anterior e os normalizadores são ajustados apenas no mês de treino. Assim o vazamento de dados (leakage) fica bloqueado pela própria estrutura.",
       "t": 530,
       "legenda": "Grafos mensais disjuntos impedem que informação do futuro ou do teste entre no treino.",
-      "print": "img/SHvwutPSeZg/2.jpg"
+      "print": "img/SHvwutPSeZg/2.jpg",
+      "descricao": "Diagrama dos grafos mensais disjuntos (miniatura pequena) com a transação no centro e a lista de garantias contra vazamento"
     },
     {
       "titulo": "Média esconde o vizinho perigoso",
       "texto": "O GraphSAGE resume os vizinhos de cada nó. Com três vizinhos normais (nota perto de 0,1) e um ligado a um anel de fraude (0,92), a média dá 0,32 e dilui o sinal. O máximo preserva o 0,92 e o desvio padrão mostra o quanto a vizinhança diverge. O time concatena as três estatísticas sem acrescentar parâmetros aprendidos.",
       "t": 730,
       "legenda": "A média reduz o vizinho fraudulento a 0,32 e o máximo preserva 0,92.",
-      "print": "img/SHvwutPSeZg/3.jpg"
+      "print": "img/SHvwutPSeZg/3.jpg",
+      "descricao": "Slide mean/max/std: barras de vizinhos (0,10 a 0,92), média 0,32 e máximo 0,92 para o vizinho do anel de fraude"
     },
     {
       "titulo": "Servir em milissegundos exige cache e previsão por aresta",
       "texto": "Offline, o time calcula as representações de usuários, lojas e transações recentes e as guarda em cache. Online, roda só a passagem de duas camadas da transação nova mais o XGBoost. Guardar um vetor por transação exigiria cerca de 60 GB. Por isso eles preveem sobre a aresta e guardam apenas usuários e lojas, em 2 a 3 GB. A mediana fica em 2,3 ms e o P99 em 3,1 ms.",
       "t": 1175,
       "legenda": "A GNN leva 1,61 ms e o total fica em 3,1 ms no P99.",
-      "print": "img/SHvwutPSeZg/4.jpg"
+      "print": "img/SHvwutPSeZg/4.jpg",
+      "descricao": "Gráfico de barras do latency breakdown por etapa: GNN 1,61 ms, cache 0,02 ms, XGBoost 0,10 ms; totais 2,3 e 3,1 ms"
     }
   ],
   "conceitos": [
@@ -300,5 +305,36 @@
       "contexto": "latência P99 de ponta a ponta na pontuação em tempo real",
       "t": 1190
     }
-  ]
+  ],
+  "rotulo": "Fraude: embeddings de grafo somados ao XGBoost",
+  "objetivo": "explicar como a vizinhança de uma transação melhora a detecção de fraude e como comparar modelos com o mesmo orçamento de alertas",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que a EXL fez para melhorar o classificador de fraude?",
+      "resposta": "Somou embeddings de uma graph neural network ao XGBoost que já usava e comparou com a mesma taxa de alertas. Relatou ganho relativo de 27% a 33% na taxa de verdadeiros positivos."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como avaliar um modelo de alerta quando a equipe só revisa uma fatia dos casos?",
+      "resposta": "Meça a precisão dentro da fatia revisável, com o mesmo orçamento de alertas, e não só a métrica geral. Exija que cada alerta traga a evidência concreta que o motivou."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que os US$ 65 milhões merecem cautela?",
+      "resposta": "São captura de fraude anual projetada, não economia realizada. O cliente e o tamanho da base não são citados, e o modelo por aresta, que vai à produção, não tem taxa mostrada. A EXL vende serviços."
+    }
+  ],
+  "experimento": {
+    "titulo": "Veja o efeito da vizinhança numa base sintética",
+    "minutos": 40,
+    "precisa": "Python com scikit-learn e pandas, e um dataset sintético de transações",
+    "passos": [
+      "Gere 1000 transações sintéticas com cliente, dispositivo e valor, com alguns dispositivos compartilhados por clientes fraudadores.",
+      "Treine um classificador só com as colunas da transação e anote a taxa de fraude capturada nos 5% mais suspeitos.",
+      "Some uma coluna com a contagem de clientes por dispositivo e treine de novo.",
+      "Compare as duas taxas dentro dos mesmos 5%."
+    ],
+    "sucesso": "Você mede a taxa nos mesmos 5% com e sem a feature de vizinhança e vê a diferença entre as duas."
+  }
 }

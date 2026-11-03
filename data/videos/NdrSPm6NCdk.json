@@ -28,14 +28,16 @@
       "texto": "Casos de teste (entradas e respostas geradas), comportamento esperado (direção, não texto exato), juiz e agregação em uma pontuação. As perguntas típicas são se o agente seguiu a política, usou as ferramentas certas e resolveu o problema. Chamadas de ferramenta dá para checar com código determinístico, sem IA.",
       "t": 758,
       "legenda": "Os quatro componentes que toda suíte de eval bem definida compartilha.",
-      "print": "img/NdrSPm6NCdk/1.jpg"
+      "print": "img/NdrSPm6NCdk/1.jpg",
+      "descricao": "Slide com comparação entre Unit Test (teste determinístico) e Eval (comportamento de agente)"
     },
     {
       "titulo": "Como o juiz mente",
       "texto": "O juiz favorece a primeira opção (viés de posição), a resposta mais simpática (bajulação), o texto da própria família de modelos e a resposta mais longa. Para detectar posição, troque a ordem das opções. Para evitar autopreferência, use um juiz de outra família. Prefira avaliar uma resposta por vez (pointwise) a comparar duas (pairwise).",
       "t": 1110,
       "legenda": "Quatro maneiras de um juiz LLM distorcer o resultado de uma eval.",
-      "print": "img/NdrSPm6NCdk/2.jpg"
+      "print": "img/NdrSPm6NCdk/2.jpg",
+      "descricao": "Slide listando técnicas de eval: Exact Match, Schema Validation, Pairwise Comparison, LLM-as-a-Judge"
     },
     {
       "titulo": "Calibrar o juiz contra veredictos humanos",
@@ -49,7 +51,8 @@
       "texto": "Com GPT-3.5 Turbo e sem política, o juiz falha muito. Ele recebe a política de 14 dias, depois a regra de item sem uso, e ainda erra o caso da bolsa de ioga. A troca para o 4o mini e a regra de que lealdade não muda a política levam a 27 acertos em 30. O teste passa a falhar só se a concordância cair abaixo de 80%.",
       "t": 2373,
       "legenda": "A taxa de concordância do juiz sobe a cada lacuna de contexto preenchida.",
-      "print": "img/NdrSPm6NCdk/4.jpg"
+      "print": "img/NdrSPm6NCdk/4.jpg",
+      "descricao": "Terminal mostrando scenarios de teste com Human Verdict e AI Verdict lado a lado"
     }
   ],
   "conceitos": [
@@ -204,5 +207,36 @@
       "contexto": "contas comprometidas no caso Instagram, segundo ele",
       "t": 447
     }
-  ]
+  ],
+  "rotulo": "Calibrar um LLM juiz com 30 casos e 80% de acordo",
+  "objetivo": "medir a concordância de um LLM juiz com veredictos humanos e decidir se ele pode travar o CI",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais vieses o talk cita em LLM juízes e qual é o limite de concordância para o CI?",
+      "resposta": "Viés de posição, bajulação, preferência pelo próprio texto e gosto por respostas longas. O CI deve travar quando a concordância com humanos fica abaixo de 80%."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você validaria um juiz para o agente do seu trabalho?",
+      "resposta": "Monte 30 casos reais com veredicto humano, passe ao juiz a política vigente e meça a concordância. Mire em 80% a 85% e desconfie de 100%. Use um juiz de família diferente da do agente."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que o 27 de 30 da demo não garante que o juiz é confiável?",
+      "resposta": "Os 30 exemplos foram escritos pelo próprio palestrante, sem separar treino e teste, e ajustar a política até bater 80% é o risco de overfitting que ele mesmo alerta. O trecho do OpenRAG é divulgação da IBM."
+    }
+  ],
+  "experimento": {
+    "titulo": "Medir a concordância do seu juiz",
+    "minutos": 40,
+    "precisa": "Claude ou ChatGPT, uma planilha e 30 respostas de um chatbot com uma política escrita",
+    "passos": [
+      "Junte 30 respostas de um chatbot e escreva a política que elas devem seguir, como a de devolução.",
+      "Marque você mesmo cada resposta como aprovada ou reprovada.",
+      "Peça a um LLM de outra família que julgue as 30 respostas, com a política no prompt.",
+      "Conte quantas vezes o juiz concordou com você."
+    ],
+    "sucesso": "Você tem a taxa de concordância, sabe se ela passa de 80% e listou os casos de divergência."
+  }
 }

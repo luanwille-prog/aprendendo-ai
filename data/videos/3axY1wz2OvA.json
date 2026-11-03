@@ -21,35 +21,40 @@
       "texto": "O slide separa insumos (hardware e eletricidade) de um multiplicador (software e operação) que gera a inteligência útil. A hora de GPU mede o que você gasta. O que você recebe é o volume de respostas aceitáveis. Por isso o preço por token serve, por ora, como medida prática, até existir preço por tarefa concluída.",
       "t": 158,
       "legenda": "Operação multiplica o que hardware e energia entregam",
-      "print": "img/3axY1wz2OvA/0.jpg"
+      "print": "img/3axY1wz2OvA/0.jpg",
+      "descricao": "Slide 'GPU-hours are the input. Intelligence is the output' com diagrama hardware e eletricidade x software e operação = inteligência útil"
     },
     {
       "titulo": "Mesma B200, cerca de 50% mais saída",
       "texto": "No exemplo do calculador público InferenceX, duas pilhas de serving rodam a mesma GPU, o mesmo modelo e a mesma meta de interatividade. Uma entrega cerca de 200 tokens por segundo e a outra cerca de 300. Com a mesma fatura por hora, o custo por token aceitável cai na proporção. Software, configurações e concorrência são escolhas do operador.",
       "t": 222,
       "legenda": "Mesmo chip e mesma meta, 200 contra 300 tokens por segundo",
-      "print": "img/3axY1wz2OvA/1.jpg"
+      "print": "img/3axY1wz2OvA/1.jpg",
+      "descricao": "Gráfico 'Same chip. Different output' em B200: TensorRT-LLM 199 contra SGLang+MTP 298 tokens/s por GPU, com 'about 50% more output'"
     },
     {
       "titulo": "Segurança faz parte de ser útil",
       "texto": "Inteligência útil precisa ser boa o bastante, rápida e disponível, e também respeitar fronteiras de acesso. A SemiAnalysis achou um caso em que o monitoramento expunha logs e métricas de outro cliente, em GPUs muito rápidas. Desempenho de chip não captura isso. Alguém precisa testar atualizações, medir sob carga e ter como voltar à versão anterior.",
       "t": 315,
       "legenda": "GPU rápida pode falhar em segurança e ainda assim ser inútil",
-      "print": "img/3axY1wz2OvA/2.jpg"
+      "print": "img/3axY1wz2OvA/2.jpg",
+      "descricao": "Slide 'What counts as useful intelligence?' com qualidade, velocidade, confiabilidade e segurança, e exemplo de vazamento entre clientes"
     },
     {
       "titulo": "Sua posição na curva de custo é relativa",
       "texto": "Num exemplo hipotético, seu custo por tarefa cai de 10 para 8 e o do concorrente muda de 6 para 12 em unidades inventadas. A leitura do slide é que você melhorou e ainda pode ficar atrás, porque o rival melhora mais rápido. Em tempos de demanda maior que oferta, a escassez esconde essas diferenças.",
       "t": 631,
       "legenda": "Melhorar não garante ficar à frente dos rivais",
-      "print": "img/3axY1wz2OvA/3.jpg"
+      "print": "img/3axY1wz2OvA/3.jpg",
+      "descricao": "Slide 'Your position on the cost curve is relative' com barras antes e depois: você 10 para 8, concorrente 12 para 6, marcado como hipotético"
     },
     {
       "titulo": "Nota de operador, grau de compute e futuros",
       "texto": "O ClusterMAX avalia clusters gerenciados em provisionamento, confiabilidade, monitoramento e segurança. Um grau de computação descreve o serviço comprado, e um índice de preço de aluguel não mede custo de produção nem qualidade. Para servir de hedge, o índice precisa acompanhar o aluguel que você paga ou recebe. A nota do operador ajuda, mas não define sozinha um contrato futuro.",
       "t": 878,
       "legenda": "Rating, grau, benchmark e liquidez são etapas separadas",
-      "print": "img/3axY1wz2OvA/4.jpg"
+      "print": "img/3axY1wz2OvA/4.jpg",
+      "descricao": "Slide 'What can compute futures hedge?' com cadeia operador, grau, referência de aluguel, contrato futuro e hedge"
     }
   ],
   "conceitos": [
@@ -215,5 +220,36 @@
       "contexto": "seu custo hipotético contra 6 para 12 do rival",
       "t": 601
     }
-  ]
+  ],
+  "rotulo": "Custo por token aceitável ao comparar GPUs",
+  "objetivo": "comparar provedores de GPU pelo custo por token aceitável na sua carga de trabalho, e não pelo preço da hora",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "No exemplo da B200, o que mudou para gerar cerca de 50% mais saída com o mesmo hardware?",
+      "resposta": "Só a pilha de serving. Com a mesma GPU, o mesmo modelo e a mesma meta de interatividade, uma pilha entregava cerca de 200 tokens por segundo e a outra cerca de 300, pela mesma fatura por hora."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você vai contratar GPU para o seu produto. Que perguntas faz ao provedor além do preço por hora?",
+      "resposta": "Peça o custo por token aceitável na sua carga, pergunte quem testa atualizações de serving, como funciona a volta à versão anterior e quem responde a incidentes. Inclua o isolamento de logs e métricas entre clientes."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que o ganho de 50% merece cautela?",
+      "resposta": "Vem de um único exemplo com duas pilhas não identificadas, sem dizer qual software mudou. O talk é em parte pitch, pois a SemiAnalysis vende o ClusterMAX e o InferenceX, e o exemplo de custo (10 para 8 contra 6 para 12) é hipotético."
+    }
+  ],
+  "experimento": {
+    "titulo": "Calcular o custo por resposta aceitável",
+    "minutos": 30,
+    "precisa": "Planilha e acesso a um LLM por API ou chat com consumo de tokens visível",
+    "passos": [
+      "Escolha 10 tarefas reais do seu trabalho e rode todas em um modelo.",
+      "Marque quais respostas foram aceitáveis para você.",
+      "Divida o gasto total em tokens pelo número de respostas aceitáveis.",
+      "Compare esse custo com o preço por token cru do mesmo modelo."
+    ],
+    "sucesso": "Você tem um custo por resposta aceitável e vê a diferença para o custo por token bruto."
+  }
 }

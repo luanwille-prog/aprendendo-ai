@@ -21,35 +21,40 @@
       "texto": "Manning lembra que o Google treinou em 2007 um modelo de linguagem com 2 trilhões de tokens, na mesma ordem de grandeza dos modelos atuais. Faltava arquitetura flexível. O transformer só chegou em 2018, e o primeiro GPT usou bem menos dados. Dados, computação e arquitetura só se juntaram a partir do GPT-3, em 2020.",
       "t": 887,
       "legenda": "Os dados em escala vieram antes da arquitetura certa",
-      "print": "img/4Gqg0HVe-AY/0.jpg"
+      "print": "img/4Gqg0HVe-AY/0.jpg",
+      "descricao": "Slide com linha do tempo dos modelos de linguagem: CPAT-Tree (1998), Bengio (2000), EMNLP 2007 com 2 trilhões de tokens, GPT/BERT (2018) e GPT-3 (2020)."
     },
     {
       "titulo": "Treinar robô no mundo real custa caro",
       "texto": "Uma forma de ensinar robôs é coletar dados no mundo físico, como fez o Google X com fileiras de braços robóticos. Isso exige cerca de 10.000 horas de teleoperação (um humano guiando o robô). Manning diz que esse ritmo não leva à robótica geral e propõe simular o mundo no lugar.",
       "t": 1210,
       "legenda": "Coleta física de dados é lenta e depende de operador humano",
-      "print": "img/4Gqg0HVe-AY/1.jpg"
+      "print": "img/4Gqg0HVe-AY/1.jpg",
+      "descricao": "Slide mostrando fileiras de 7 braços robóticos do Google X coletando dados de preensão com supervisão autônoma."
     },
     {
       "titulo": "Pixels bonitos não bastam para planejar",
       "texto": "Um world model (modelo de mundo) útil prevê qual novo estado surge quando uma ação é tomada. O Genie 3 gera vídeo fluido e bonito, mas só simula a observação. Sem uma representação dos objetos e da causalidade por baixo, o sistema não dá base para um robô planejar.",
       "t": 1440,
       "legenda": "Vídeo gerado convence o olho mas não carrega regras do mundo",
-      "print": "img/4Gqg0HVe-AY/2.jpg"
+      "print": "img/4Gqg0HVe-AY/2.jpg",
+      "descricao": "Demo do Genie 3 com vídeo gerado e navegável em corredor de metrô, mostrando caixa de chá sobre piso de cerâmica."
     },
     {
       "titulo": "Completar o que a câmera não vê",
       "texto": "A partir de uma foto de cozinha, o sistema separa o fundo dos objetos que podem ser movidos. Para saber o que há dentro de uma caixa de chá fechada, ele pesquisa o produto na web em estilo RAG (busca de informação para alimentar o modelo), acha fotos e medidas e modela os sachês como objetos que se pode tirar da caixa.",
       "t": 1780,
       "legenda": "Busca na web preenche partes ocultas da cena simulada",
-      "print": "img/4Gqg0HVe-AY/3.jpg"
+      "print": "img/4Gqg0HVe-AY/3.jpg",
+      "descricao": "Cena simulada 3D de caixa de chá aberta ao lado de fotos e descrição do produto encontradas na web (fundo rosa)."
     },
     {
       "titulo": "Mundo em código com loop de correção",
       "texto": "A Moonlake escreve em código as partes controláveis do mundo e aplica texturas geradas por difusão. Um loop inspirado no Claude Code renderiza a cena, compara com a realidade, mede os desvios e revisa o código. A parte simbólica fica fácil de editar e inspecionar por humanos.",
       "t": 1905,
       "legenda": "O loop de código reduz a distância entre simulação e realidade",
-      "print": "img/4Gqg0HVe-AY/4.jpg"
+      "print": "img/4Gqg0HVe-AY/4.jpg",
+      "descricao": "Diagrama do loop: gerar malha, escrever código, renderizar, inspecionar e pontuar desvios com cena final da caixa simulada."
     }
   ],
   "conceitos": [
@@ -233,5 +238,36 @@
       "contexto": "de teleoperação típicas para treinar um robô no mundo real",
       "t": 1210
     }
-  ]
+  ],
+  "rotulo": "Por que world models precisam de objetos e regras",
+  "objetivo": "diferenciar um gerador de vídeo de um world model condicionado a ações e avaliar se uma ferramenta serve para planejar",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que um world model condicionado a ações recebe e o que ele prevê?",
+      "resposta": "Recebe o estado atual e uma ação e prevê o novo estado que surge depois dela. Com isso o robô testa ações na cabeça e escolhe a melhor antes de agir."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você avalia uma ferramenta de 3D gerado por IA para treinar um robô. Qual teste faria primeiro?",
+      "resposta": "Verifique se ela permite agir sobre os objetos da cena e se há objetos e regras por baixo, e não só imagem convincente. Peça também números de transferência para o mundo físico."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que a crítica de Manning ao Genie 3 e a promessa de 10.000 horas de simulação pedem cautela?",
+      "resposta": "Ele trabalha na Moonlake e compara com produtos concorrentes. A demo da cozinha e o vídeo da esteira vêm sem métricas de transferência para robôs reais, e o loop que fecha a lacuna com a realidade não foi demonstrado."
+    }
+  ],
+  "experimento": {
+    "titulo": "Loop de gerar, comparar e corrigir uma cena",
+    "minutos": 40,
+    "precisa": "Claude ou ChatGPT e uma foto simples de uma mesa com três objetos",
+    "passos": [
+      "Escolha uma foto simples, como uma mesa com três objetos.",
+      "Peça ao modelo um script em HTML ou Python que reproduza a cena com os objetos posicionados.",
+      "Compare a saída com a foto e liste três diferenças.",
+      "Devolva as diferenças ao modelo e peça a correção. Repita mais uma vez."
+    ],
+    "sucesso": "Depois de duas rodadas as diferenças com a foto diminuem e você vê que a cena é código, com objetos que dá para mover."
+  }
 }

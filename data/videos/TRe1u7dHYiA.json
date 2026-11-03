@@ -323,5 +323,36 @@
       "contexto": "ganho de velocidade citado com KV cache",
       "t": 1006
     }
-  ]
+  ],
+  "rotulo": "O que torna modelos abertos rápidos em produção",
+  "objetivo": "explicar as camadas de otimização de inferência e escolher que perguntas fazer a um provedor de modelo aberto",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que faz a decodificação especulativa?",
+      "resposta": "Um modelo pequeno gera os tokens rápido e o modelo grande só verifica, regenerando se discordar. É como um júnior que rascunha e um sênior que revisa."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como estruturar seus prompts longos para aproveitar o cache de prompt?",
+      "resposta": "Deixando o início igual entre as chamadas, com instruções fixas ou a base de código no começo, para o prefixo repetido cair na GPU que já guarda aquele trecho."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que os números de 5 a 10 vezes com cache e até 30% com modelo rascunho pedem cautela?",
+      "resposta": "O talk é pitch da Nebius, feito por funcionários. Os ganhos vêm ditos sem carga de trabalho, modelo ou hardware de referência, e não há comparação de custo com concorrentes."
+    }
+  ],
+  "experimento": {
+    "titulo": "Testar cache de prompt com prefixo fixo",
+    "minutos": 25,
+    "precisa": "Acesso a uma API de LLM com cache de prompt (como Claude ou OpenAI) e Python",
+    "passos": [
+      "Monte um prompt longo, com cerca de 3 mil palavras fixas no início.",
+      "Faça 5 chamadas com perguntas diferentes mantendo o prefixo igual.",
+      "Repita colocando a pergunta antes do texto fixo.",
+      "Compare o tempo e os tokens em cache informados pela API."
+    ],
+    "sucesso": "Você vê nos campos de uso da API a diferença de tokens em cache e de tempo entre prefixo estável e prefixo variável."
+  }
 }

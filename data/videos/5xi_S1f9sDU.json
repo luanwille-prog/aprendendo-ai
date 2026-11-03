@@ -21,35 +21,40 @@
       "texto": "Cada passo do agente gera custo e risco novos, mas o valor só aparece quando a tarefa inteira termina. O palestrante chama isso de ausência de crédito parcial. A maioria das automações web cai nesse caso, e por isso trajetórias longas são frágeis.",
       "t": 281,
       "legenda": "Custo e risco crescem a cada passo, valor só no último.",
-      "print": "img/5xi_S1f9sDU/0.jpg"
+      "print": "img/5xi_S1f9sDU/0.jpg",
+      "descricao": "Slide com frase 'custo contínuo, valor só no fim' e gráfico mostrando custo acumulado por passo"
     },
     {
       "titulo": "A conta do 99% que vira 36%",
       "texto": "Se cada passo acerta 99% das vezes de forma independente, 100 passos seguidos dão sucesso total perto de 36%. Um modelo melhor ajuda, mas não resolve sozinho. A saída é encurtar a trajetória e permitir retentativas.",
       "t": 322,
       "legenda": "A probabilidade composta derruba a confiabilidade de trajetórias longas.",
-      "print": "img/5xi_S1f9sDU/1.jpg"
+      "print": "img/5xi_S1f9sDU/1.jpg",
+      "descricao": "Slide com fórmula 0.99^100 = 36% e texto sobre 100 passos de 99% de confiabilidade cada"
     },
     {
       "titulo": "Meça por transação, não por execução",
       "texto": "Um agente com 50% de sucesso por execução chega a 94% por transação se puder tentar de novo, segundo o palestrante. O cliente quer o trabalho concluído, não o número de tentativas. Sucesso deve ser um artefato concreto, como recibo, ID de pedido ou registro consultável.",
       "t": 534,
       "legenda": "Retentativas elevam o sucesso por transação sem mudar o modelo.",
-      "print": "img/5xi_S1f9sDU/2.jpg"
+      "print": "img/5xi_S1f9sDU/2.jpg",
+      "descricao": "Slide comparando 50% (sucesso por execução) com 94% (sucesso por transação com até 4 retentativas)"
     },
     {
       "titulo": "Custo e manutenção ao longo do tempo",
       "texto": "Custo por execução hoje é sobretudo modelo, mas Meegan espera que ele pese menos com a queda de preço. Sobram infraestrutura, integrações, observabilidade, tempo de desenvolvedor e reavaliação quando sites e modelos mudam. Os riscos são antibot, mudança de tarefa, API nova e desvio do modelo.",
       "t": 572,
       "legenda": "O custo de um agente em produção vai além da conta do modelo.",
-      "print": "img/5xi_S1f9sDU/3.jpg"
+      "print": "img/5xi_S1f9sDU/3.jpg",
+      "descricao": "Slide dividindo custo por execução (modelo, infraestrutura, integrações) e manutenção (observabilidade, dev, reavaliação)"
     },
     {
       "titulo": "Arquitetura do portal de plano de saúde",
       "texto": "O sistema final começa com um agente simples e vai tirando responsabilidades dele. Entram uma ferramenta de download em uma só chamada, uma ferramenta de OCR que confere o documento contra o sistema de registro, uma função de login separada e uma skill que descreve o caminho crítico. O agente decide menos e acerta mais.",
       "t": 939,
       "legenda": "Diagrama final que tira passos determinísticos do modelo.",
-      "print": "img/5xi_S1f9sDU/4.jpg"
+      "print": "img/5xi_S1f9sDU/4.jpg",
+      "descricao": "Diagrama final: autenticação serverless, agente com skill, download determinístico, verificação OCR e sistema de registro"
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "sucesso por transação com até quatro retentativas",
       "t": 534
     }
-  ]
+  ],
+  "rotulo": "Por que agentes de navegador falham em tarefas longas",
+  "objetivo": "calcular como o acerto por passo derruba o sucesso de um agente e decidir quais passos tirar do modelo",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que um agente com 99% de acerto por passo conclui só cerca de 36% das tarefas de 100 passos?",
+      "resposta": "Porque o acerto se multiplica a cada passo e o valor só aparece no fim. Com passos independentes, 0,99 elevado a 100 dá perto de 36%."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "No seu fluxo de automação web, quais passos você tiraria das mãos do modelo?",
+      "resposta": "Os que nunca mudam, como login e download. Eles viram funções determinísticas, o agente decide menos passos e o risco composto cai."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limite tem a conta que leva 50% por execução a 94% por transação?",
+      "resposta": "Ela supõe tentativas independentes, o que raramente vale na prática. O talk vem da Browserbase e não traz dados reais do portal de saúde, só um desenho ilustrativo."
+    }
+  ],
+  "experimento": {
+    "titulo": "Calcular o sucesso composto do seu fluxo",
+    "minutos": 20,
+    "precisa": "Uma planilha e um fluxo de agente ou automação que você conhece",
+    "passos": [
+      "Liste os passos de um fluxo que um agente executa hoje.",
+      "Marque quais passos são determinísticos, como login e download.",
+      "Calcule na planilha acerto elevado ao número de passos para 95% e 99% por passo, antes e depois de remover os determinísticos.",
+      "Calcule o sucesso com até três tentativas usando 1 menos (1 menos p) ao cubo."
+    ],
+    "sucesso": "Você tem uma tabela que mostra como o sucesso total muda ao encurtar a trajetória e ao permitir retentativas."
+  }
 }

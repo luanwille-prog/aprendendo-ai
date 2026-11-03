@@ -21,7 +21,8 @@
       "texto": "Um scanner SAST procura padrões conhecidos de código inseguro. Ele não sabe o que o sistema deveria fazer. Um código tecnicamente correto pode contradizer a regra de negócio, e é essa lacuna que o Hunter Agent tenta cobrir.",
       "t": 93,
       "legenda": "Código válido pode ter intenção errada, e o SAST não vê isso.",
-      "print": "img/UW8Qkk7MG8A/0.jpg"
+      "print": "img/UW8Qkk7MG8A/0.jpg",
+      "descricao": "Slide 'Not all vulnerabilities are bugs in your code' com os rótulos Privilege escalation e Business logic abuse na grade."
     },
     {
       "titulo": "Mapa global, três especialistas e validação adversarial",
@@ -35,14 +36,16 @@
       "texto": "Na demo, o scan do app Python leva cerca de uma hora e gera 46 issues abertas. Elas se dividem em controle de acesso quebrado (IDOR, escalada de privilégio, CSRF), lógica de negócio (pular etapas, falta de rate limit) e autenticação e sessão (fixação de sessão, falta de MFA).",
       "t": 509,
       "legenda": "46 issues abertas, separadas nas três classes que o agente cobre.",
-      "print": "img/UW8Qkk7MG8A/2.jpg"
+      "print": "img/UW8Qkk7MG8A/2.jpg",
+      "descricao": "Run history do Hunter Agent no SonarQube Cloud, com 1h18 de duração e etapas até Reporting. Não mostra a contagem de 46 issues."
     },
     {
       "titulo": "Um achado por dentro: usuário vira admin",
       "texto": "O achado de severidade alta mostra que qualquer usuário logado passa na checagem de admin, porque consegue escrever o próprio campo de papel (role). A tela mostra o local no código, a explicação, a sugestão de correção e o histórico. A issue entra na mesma lista do SonarQube e pode ser aceita, confirmada ou marcada como falso positivo.",
       "t": 621,
       "legenda": "Qualquer usuário logado escreve o próprio role e passa na checagem de admin.",
-      "print": "img/UW8Qkk7MG8A/3.jpg"
+      "print": "img/UW8Qkk7MG8A/3.jpg",
+      "descricao": "Issue de severidade alta 'Any signed-in user can pass the admin access check' com trecho de admin_routes.py destacando role = 'admin'."
     },
     {
       "titulo": "Scans agendados e correção automática",
@@ -204,5 +207,36 @@
       "contexto": "achados de lógica de negócio na demo",
       "t": 685
     }
-  ]
+  ],
+  "rotulo": "Agente que caça bugs de lógica de negócio",
+  "objetivo": "diferenciar achados de scanner por padrão de bugs de intenção e testar regras de negócio críticas",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que etapas o Hunter Agent segue antes de mostrar um achado?",
+      "resposta": "Um agente mapeia o repositório todo, três especialistas (um por classe de problema) buscam falhas nas relações entre componentes e uma etapa adversarial tenta derrubar cada achado antes dos filtros de ruído."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que verificação manual você faria com um agente de código no seu sistema?",
+      "resposta": "Listar regras críticas, como quem pode virar admin, e pedir que o agente revise autorizações e campos como role que o usuário consegue escrever, no estilo do achado de escalada de privilégio da demo."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que informação você exigiria de uma ferramenta de segurança com IA antes de confiar nela?",
+      "resposta": "O número de achados confirmados contra descartados, não só o total. A demo tem um app Python, 46 issues sem informar quantas eram válidas, e nenhuma comparação com pentest humano."
+    }
+  ],
+  "experimento": {
+    "titulo": "Caçar bug de autorização com um agente",
+    "minutos": 35,
+    "precisa": "Claude Code ou ChatGPT e um app web pequeno seu ou público",
+    "passos": [
+      "Escreva em cinco linhas as regras de negócio críticas do app, como quem acessa o quê.",
+      "Peça ao agente que revise o repositório procurando checagens de autorização ausentes e campos que o usuário não deveria escrever.",
+      "Para cada achado, tente reproduzir ou refutar lendo o código.",
+      "Registre quantos achados eram reais e quantos eram falso positivo."
+    ],
+    "sucesso": "Você tem uma lista de achados classificados como confirmados ou descartados e sabe a taxa de acerto da revisão do agente."
+  }
 }

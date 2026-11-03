@@ -21,35 +21,40 @@
       "texto": "Quando o agente gera código em minutos, alguém na empresa ainda precisa conferir o que mudou. O palestrante afirma que sem verificação exaustiva você escolhe entre velocidade e bugs. A pergunta de teste é se você apertaria o botão de merge num pull request escrito por IA. Na maioria das empresas, a resposta seria não.",
       "t": 124,
       "legenda": "Define o problema central do talk, a revisão como gargalo.",
-      "print": "img/HLTa7Vcs4X0/0.jpg"
+      "print": "img/HLTa7Vcs4X0/0.jpg",
+      "descricao": "Slide sobre limites de testes com assertions, tema central do talk"
     },
     {
       "titulo": "Assertions não cobrem tudo",
       "texto": "Um teste com assertion exige que alguém defina de antemão o comportamento correto. O palestrante argumenta que o espaço de regressões possíveis é grande demais para isso. Ele cita combinações de feature flags, papéis, permissões e configurações que ninguém checa à mão. Também aponta tempo gasto em suítes de testes end-to-end, flakes e revisão manual.",
       "t": 184,
       "legenda": "Lista o custo de depender só de testes escritos à mão.",
-      "print": "img/HLTa7Vcs4X0/1.jpg"
+      "print": "img/HLTa7Vcs4X0/1.jpg",
+      "descricao": "Slide 'THE PROBLEM' com custo de bugs em impacto do cliente e tempo de debug"
     },
     {
       "titulo": "Gravar, repetir e comparar telas",
       "texto": "Um trecho de JavaScript roda em ambientes que não são de produção e grava fluxos de uso, como clicar em login ou abrir um painel. No pull request, a ferramenta repete um subconjunto desses fluxos e tira capturas de tela a cada passo, antes e depois do código novo. Ela compara as duas sequências. Quem revisa, pessoa ou agente, decide se cada diferença era esperada.",
       "t": 341,
       "legenda": "Mostra o formato do resultado, diferenças e não veredito de bug.",
-      "print": "img/HLTa7Vcs4X0/2.jpg"
+      "print": "img/HLTa7Vcs4X0/2.jpg",
+      "descricao": "Demo de pull request com diffs visuais lado a lado em GitHub mostrando mudanças"
     },
     {
       "titulo": "Rede simulada e navegador determinístico",
       "texto": "Na gravação, todas as requisições e respostas de rede são salvas e depois reaplicadas. Isso torna o teste repetível e isolado, e permite rodar em paralelo. A segunda peça é um navegador alterado para eliminar fontes de aleatoriedade, como relógio da CPU e a ordem de timers. O palestrante diz que isso reduz muito os testes flaky (que falham sem motivo), mas não mostra medições.",
       "t": 434,
       "legenda": "Explica por que as repetições devem dar o mesmo resultado.",
-      "print": "img/HLTa7Vcs4X0/3.jpg"
+      "print": "img/HLTa7Vcs4X0/3.jpg",
+      "descricao": "Diagrama das três tecnologias: cobertura exaustiva, testes determinísticos e mock"
     },
     {
       "titulo": "Cobertura de código que mede teste de verdade",
       "texto": "A ferramenta repete cada fluxo gravado na branch principal e registra quais linhas rodam. Com esse mapa, escolhe o subconjunto de fluxos que cobre mais código. Segundo o palestrante, cobertura costuma enganar, porque um teste pode passar por todo o código com uma só assertion. Com captura de tela a cada passo, ele afirma que cobrir equivale a testar.",
       "t": 528,
       "legenda": "Mostra como a ferramenta escolhe quais fluxos repetir.",
-      "print": "img/HLTa7Vcs4X0/4.jpg"
+      "print": "img/HLTa7Vcs4X0/4.jpg",
+      "descricao": "Slide KEY TECHNOLOGIES explicando cobertura exaustiva, determinismo e mocking"
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "cobertura possível com uma única assertion em teste comum",
       "t": 559
     }
-  ]
+  ],
+  "rotulo": "Verificação como gargalo do código escrito por IA",
+  "objetivo": "avaliar se sua equipe consegue revisar o código de agentes e comparar testes com assertions e testes de tela antes e depois",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Em quais três peças a ferramenta da Meticulous se apoia?",
+      "resposta": "Rede simulada, que grava e repete as requisições, navegador determinístico, sem fontes de aleatoriedade, e escolha de fluxos guiada por cobertura de código, com capturas de tela comparadas antes e depois."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Num pull request gerado por IA no seu projeto, você apertaria merge? O que checaria à mão?",
+      "resposta": "A pergunta serve de teste. Se a resposta for não, liste o que você conferiria à mão, como fluxos de login, permissões e feature flags, e meça o tempo gasto em revisão."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidências faltam para aceitar as promessas de zero esforço e menos testes flaky?",
+      "resposta": "É pitch do CEO da empresa, sem benchmark nem comparação independente com Cypress e Playwright. A ferramenta compara telas, então não vê erro de back-end sem efeito visual."
+    }
+  ],
+  "experimento": {
+    "titulo": "Medir onde o tempo de entrega realmente vai",
+    "minutos": 25,
+    "precisa": "Histórico de pull requests de um repositório (GitHub ou similar) e uma planilha",
+    "passos": [
+      "Escolha 10 pull requests recentes.",
+      "Anote o tempo entre abrir e fazer merge e quanto foi de espera por revisão.",
+      "Marque quantos exigiram teste novo ou ajuste de teste.",
+      "Calcule a parcela do tempo gasta em revisão e manutenção de testes."
+    ],
+    "sucesso": "Você sabe que fatia do tempo vai para revisão e testes e consegue dizer se a verificação é o seu gargalo."
+  }
 }

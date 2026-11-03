@@ -21,14 +21,16 @@
       "texto": "Software factory (fábrica de software) é um conjunto de loops de agentes em escala. Na versão de luz acesa, agentes planejam, constroem, checam e entregam, mas uma pessoa aplica julgamento e gosto. Na versão no escuro, a pessoa só define a intenção e entra nas exceções. A maioria das equipes está no meio desse espectro.",
       "t": 169,
       "legenda": "Define o espectro de autonomia que organiza o resto da conversa.",
-      "print": "img/AnsXWH2_EBU/0.jpg"
+      "print": "img/AnsXWH2_EBU/0.jpg",
+      "descricao": "Slide com a citação 'A software factory is harnessing loops at scale' (Addy Osmani). Não mostra o espectro luz acesa/no escuro."
     },
     {
       "titulo": "Throughput sobe, merges falham",
       "texto": "Segundo dados do CircleCI citados no início, o throughput (volume de trabalho entregue) subiu cerca de 59%, mas três em cada dez tentativas de levar código para produção falham. Na pesquisa da Sonar, 76% dos desenvolvedores dizem que o código de IA sai rápido demais para ser verificado.",
       "t": 123,
       "legenda": "Mostra o descompasso entre velocidade de escrita e sucesso do merge.",
-      "print": "img/AnsXWH2_EBU/1.jpg"
+      "print": "img/AnsXWH2_EBU/1.jpg",
+      "descricao": "Slide 'Writing code is no longer the constraint. Checking it is.' com +59% de throughput e ~3 em 10 merges falhando (CircleCI)."
     },
     {
       "titulo": "Como a Anthropic revisa 30 mil mudanças por dia",
@@ -42,14 +44,16 @@
       "texto": "A Sonar propõe uma abordagem de zero trust (confiança zero). A camada 1 é determinística e pega bugs e falhas como SQL injection. A camada 2 é revisão por agente, que pega erros de lógica e de intenção. A camada 3 protege a cadeia de suprimentos contra CVEs e pacotes maliciosos. Cada loop precisa dessa verificação.",
       "t": 746,
       "legenda": "Cada camada pega um tipo diferente de problema.",
-      "print": "img/AnsXWH2_EBU/3.jpg"
+      "print": "img/AnsXWH2_EBU/3.jpg",
+      "descricao": "Slide 'Verification should be zero trust and multilayered' com verificação determinística x agêntica. Não mostra a camada de cadeia de suprimentos."
     },
     {
       "titulo": "Rotular PRs de agente e manter um dono",
       "texto": "Ambos defendem rotular PRs escritos por agentes, por auditabilidade e para saber quais checagens extras aplicar. Addy diz que, mesmo ao disparar uma execução do Claude, continua responsável se algo der errado. Para eles, o PR é seguro para mesclar quando a confiança é total ou o risco foi mitigado ao máximo.",
       "t": 932,
       "legenda": "Resume a posição dos dois sobre rótulo e responsabilidade humana.",
-      "print": "img/AnsXWH2_EBU/4.jpg"
+      "print": "img/AnsXWH2_EBU/4.jpg",
+      "descricao": "Slide 'Lightning round: one sentence each' com as perguntas sobre fábrica no escuro até 2027, rótulo no PR e quando é seguro mesclar."
     }
   ],
   "conceitos": [
@@ -170,5 +174,36 @@
       "contexto": "empresas usam software factories hoje, projeção de 34%",
       "t": 591
     }
-  ]
+  ],
+  "rotulo": "Verificar é o gargalo: 30 mil mudanças por dia na Anthropic",
+  "objetivo": "montar um fluxo em que o agente entrega evidências de teste junto de cada pull request",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Como a Anthropic revisa tantas mudanças por dia?",
+      "resposta": "O Claude faz a primeira revisão e tenta usar a mudança como um usuário, abrindo o navegador e rodando testes ponta a ponta e linters. Hooks corrigem o PR em loop e entregam evidências à pessoa."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que regra de PRs de agentes você adotaria na sua equipe?",
+      "resposta": "Rotular PRs escritos por agentes, nomear uma pessoa responsável por cada um e exigir evidência como teste rodado, captura de tela ou vídeo, revisando a evidência antes do código."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que os palestrantes podem exagerar a defesa de mais verificação por ferramentas?",
+      "resposta": "A Sonar vende verificação e a Anthropic vende Claude Code e um produto de code review. Os dados do State of Code não foram publicados, o do CircleCI não explica as falhas, e não há taxa de bugs após os 30 mil merges."
+    }
+  ],
+  "experimento": {
+    "titulo": "PR de agente com evidência anexada",
+    "minutos": 35,
+    "precisa": "Claude Code, um repositório seu ou público com testes",
+    "passos": [
+      "Escreva um CLAUDE.md curto com o padrão de qualidade e o comando que roda os testes.",
+      "Peça ao agente uma mudança pequena e exija que ele rode os testes e cole a saída na descrição do PR.",
+      "Se houver interface, peça uma captura de tela do fluxo funcionando.",
+      "Revise primeiro a evidência e só depois o código, anotando o que a evidência cobriu."
+    ],
+    "sucesso": "Você recebe um PR com saída de testes e evidência visual e consegue dizer o que foi verificado sem ler todo o diff."
+  }
 }

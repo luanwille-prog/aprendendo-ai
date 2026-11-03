@@ -21,35 +21,40 @@
       "texto": "Guthrie defende um ciclo em que a produção informa o desenvolvimento. Você muda o agente, roda evals para checar se melhorou ou piorou, publica e observa. Como o volume de traces é grande demais para leitura humana, o ciclo precisa de uma camada de inteligência que destaque o que importa.",
       "t": 485,
       "legenda": "O ciclo que liga produção, evals e mudanças no agente.",
-      "print": "img/hfEczxdNyvU/0.jpg"
+      "print": "img/hfEczxdNyvU/0.jpg",
+      "descricao": "Slide do flywheel com etapas Develop, Evaluate, Deploy, Observe e Improve em círculo."
     },
     {
       "titulo": "Quatro tipos de score e calibração humana",
       "texto": "Os scores vão de checagens em código (rápidas e baratas, como validar schema ou ordem de chamada de ferramentas) a LLM juízes e juízes alinhados com revisão humana. Dicas dele: score binário no começo, exemplos no prompt do juiz, modelo mais forte para julgar do que para gerar. Se tudo dá 100%, os testes são fracos.",
       "t": 610,
       "legenda": "Taxonomia de scores que o talk usa no resto do workshop.",
-      "print": "img/hfEczxdNyvU/1.jpg"
+      "print": "img/hfEczxdNyvU/1.jpg",
+      "descricao": "Slide com taxonomia de três tipos de scorers: code, LLM range, e LLM-as-judge alinhado."
     },
     {
       "titulo": "Topics encontra falhas que os evals não testam",
       "texto": "O pipeline de Topics pré-processa o trace em uma conversa enxuta, resume com uma facet (tarefa, sentimento, problemas), gera um embedding e monta um topic map que rotula os traces. Serve para os desconhecidos que ninguém testou, inclusive pedidos de funcionalidade novos. O custo citado é de poucos centavos por milhão de tokens.",
       "t": 1114,
       "legenda": "As etapas que transformam um trace bruto em rótulos filtráveis.",
-      "print": "img/hfEczxdNyvU/2.jpg"
+      "print": "img/hfEczxdNyvU/2.jpg",
+      "descricao": "Diagrama do pipeline de Topics: Preprocessor, Facets, Embeddings e Topic com fluxo."
     },
     {
       "titulo": "Resultado no demo: falha de busca de pedido",
       "texto": "Depois de importar 968 traces de exemplo, o painel de Topics mostra as tarefas mais frequentes e o sentimento. A facet customizada de workflow aponta uma falha de recuperação de pedido que os evals existentes não cobriam. A facet padrão de problemas não gerou dados, porque o prompt não combinava com o agente e faltaram 100 ocorrências.",
       "t": 4078,
       "legenda": "Os padrões que o pipeline achou nos traces importados.",
-      "print": "img/hfEczxdNyvU/3.jpg"
+      "print": "img/hfEczxdNyvU/3.jpg",
+      "descricao": "Painel de Topics mostrando gráficos scatter de tarefas, sentimento e tópicos identificados."
     },
     {
       "titulo": "Coding agent fecha o ciclo e abre o PR",
       "texto": "Com a CLI (bt) e uma skill de melhoria, o Codex ou o Claude Code escreve SQL sobre os traces, cria dataset com os casos que falharam, adiciona scores, altera o agente e roda o eval. Uma GitHub Action empacota achados, explicação e evidência de eval num pull request, e o humano decide se aprova.",
       "t": 6331,
       "legenda": "O PR automático traz a evidência para o revisor decidir.",
-      "print": "img/hfEczxdNyvU/4.jpg"
+      "print": "img/hfEczxdNyvU/4.jpg",
+      "descricao": "Pull request automático no GitHub com mudanças no config, motivação e status de revisão."
     }
   ],
   "conceitos": [
@@ -153,7 +158,7 @@
       "nome": "Agent skills",
       "traducao": "instruções empacotadas que ensinam o coding agent a usar uma ferramenta",
       "nivel": "intermediario",
-      "chave": "agent skills",
+      "chave": "skill",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -230,5 +235,36 @@
       "contexto": "PRs a mais por dia, segundo um cliente citado",
       "t": 6362
     }
-  ]
+  ],
+  "rotulo": "Observabilidade: dos traces ao PR com evals",
+  "objetivo": "montar um ciclo em que scores sobre traces de produção geram casos de eval e uma correção revisada por humano",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são as duas fontes de sinal que o talk mostra e o que cada uma pega?",
+      "resposta": "Scores online (código ou LLM juiz) medem falhas já conhecidas. Topics agrupa padrões em tarefas, sentimento e problemas que ninguém previu."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Qual a primeira coisa a fazer no seu agente segundo o talk, e como evoluir?",
+      "resposta": "Ligue tracing. Depois comece com scores binários e casos difíceis, leve os traces que falharam para o dataset de eval e revise por amostragem as notas do LLM juiz com um humano."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que a demo não prova que Topics funciona em tráfego real?",
+      "resposta": "Usou 968 traces sintéticos gerados por script, e a facet de problemas não gerou resultado. O talk é pitch da Braintrust, com comparações sem dados e dependência de modelos hospedados por ela."
+    }
+  ],
+  "experimento": {
+    "titulo": "Score binário sobre traces que falharam",
+    "minutos": 40,
+    "precisa": "Um agente com tracing ou 20 conversas salvas, e Claude ou ChatGPT",
+    "passos": [
+      "Junte 20 traces ou conversas do seu agente e marque quais falharam.",
+      "Escreva um score binário, em código ou em prompt de juiz, para a falha mais comum.",
+      "Rode o score nas 20 e compare com a sua marcação.",
+      "Salve os casos que falharam como dataset de regressão."
+    ],
+    "sucesso": "O score concorda com a sua marcação na maioria dos casos e você tem um dataset com as falhas reais."
+  }
 }

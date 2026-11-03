@@ -21,35 +21,40 @@
       "texto": "Ela afirma que modelos abertos já são prontos para produção (cita o GLM 5.2 em código), que a diferença de qualidade se fecha com customização e que a pilha de IA virou um ciclo contínuo de treinar e servir, em vez de servir uma vez.",
       "t": 87,
       "legenda": "A tese do talk resumida em três afirmações.",
-      "print": "img/13YZ1EB9hjU/0.jpg"
+      "print": "img/13YZ1EB9hjU/0.jpg",
+      "descricao": "Slide de seção 'From Foundational Models to Owned Intelligence' com o subtítulo '3 Fundamental Truths in AI Today'; as três verdades não aparecem legíveis."
     },
     {
       "titulo": "Casos de clientes: Cursor, Vercel e Genspark",
       "texto": "O Composer 2 do Cursor foi treinado e hospedado na plataforma, com inferência 13 vezes mais rápida. A Vercel teve latência 40 vezes menor. A Genspark ganhou 12% de qualidade com reinforcement fine-tuning (RFT, ajuste fino por reforço). Os números são da empresa, sem metodologia.",
       "t": 230,
       "legenda": "Resultados que a Fireworks atribui a cada cliente.",
-      "print": "img/13YZ1EB9hjU/1.jpg"
+      "print": "img/13YZ1EB9hjU/1.jpg",
+      "descricao": "Slide 'Production-Grade Inference and Training' com logos e números de Cursor (13x), Vercel (40x) e Genspark (12%), além da escala de 30T tokens."
     },
     {
       "titulo": "Motor próprio de inferência e draft model",
       "texto": "A Fireworks otimiza o FireAttention, seu motor de inferência, e os CUDA kernels (código que roda na GPU) para a carga de cada cliente: tokens de entrada e saída, taxa de acerto do cache e meta de latência. O cliente também pode treinar um draft model para acelerar o modelo principal.",
       "t": 326,
       "legenda": "Onde o motor de inferência se encaixa entre modelo e GPU.",
-      "print": "img/13YZ1EB9hjU/2.jpg"
+      "print": "img/13YZ1EB9hjU/2.jpg",
+      "descricao": "Slide 'Fireworks Optimizer' com diagrama de camadas: speculative decoding, quantização, FireAttention custom CUDA kernel e configuração personalizada."
     },
     {
       "titulo": "Três formas de treinar",
       "texto": "O agente de treino atende gerentes de produto e iniciantes: limpa dados, escolhe modelo e hiperparâmetros. O treino gerenciado pede modelo, dados e hiperparâmetros e um clique. A API de treino deixa engenheiros de ML definir o próprio loop e a função de perda. Funciona para SFT, RFT e DPO.",
       "t": 450,
       "legenda": "Os três níveis de controle do treino na plataforma.",
-      "print": "img/13YZ1EB9hjU/3.jpg"
+      "print": "img/13YZ1EB9hjU/3.jpg",
+      "descricao": "Slide 'Leverage your data. Own your AI' comparando Training Agent, Managed Training e Training API, com métodos SFT, DPO, RFT e GRPO."
     },
     {
       "titulo": "O flywheel: hot loading e fidelidade numérica",
       "texto": "Depois do treino, um clique publica o modelo. A plataforma monitora tokens, cache e speculator, e permite retreinar a partir do checkpoint. O hot loading troca os pesos sem downtime. Treinar e servir no mesmo lugar evita diferenças numéricas que pioram a qualidade.",
       "t": 701,
       "legenda": "O ciclo contínuo que a plataforma promete automatizar.",
-      "print": "img/13YZ1EB9hjU/4.jpg"
+      "print": "img/13YZ1EB9hjU/4.jpg",
+      "descricao": "Diagrama 'The Data Flywheel' com cinco etapas (train, deploy, monitor, collect, retrain) e quatro caixas sobre GPUs, hot loading e fidelidade numérica."
     }
   ],
   "conceitos": [
@@ -204,5 +209,36 @@
       "contexto": "ganho de qualidade da Genspark com RFT",
       "t": 262
     }
-  ]
+  ],
+  "rotulo": "Treinar e servir modelos abertos num ciclo contínuo",
+  "objetivo": "avaliar se um modelo aberto atende a uma tarefa sua, com conjunto de teste próprio e sem depender de números de fornecedor",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são as três formas de treinar apresentadas pela Fireworks?",
+      "resposta": "O agente de treino, para gerentes de produto e iniciantes, o treino gerenciado, que pede modelo, dados e hiperparâmetros, e a API de treino, em que o engenheiro de ML define o próprio loop e a função de perda."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Se o custo de um modelo fechado pesa, como você testaria um modelo aberto?",
+      "resposta": "Separar uma tarefa repetitiva, montar um conjunto de avaliação separado dos dados de treino e medir o modelo aberto nele antes de decidir. Ao comparar fornecedores, pedir a carga de teste por trás de qualquer número."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que os números de Cursor, Vercel e Genspark merecem cautela?",
+      "resposta": "Vêm da própria Fireworks, sem baseline, metodologia ou amostra. O 13x e o 40x misturam otimização de inferência com troca de modelo, e não há custo comparado com modelos fechados, apesar de o custo abrir o talk."
+    }
+  ],
+  "experimento": {
+    "titulo": "Comparar um modelo aberto com o seu atual",
+    "minutos": 40,
+    "precisa": "Uma tarefa repetitiva sua, vinte exemplos com resposta esperada e acesso a um modelo aberto via API ou local",
+    "passos": [
+      "Escolha uma tarefa que seu sistema faz muitas vezes e reúna vinte exemplos com a resposta certa.",
+      "Rode o modelo atual e um modelo aberto nos mesmos vinte exemplos.",
+      "Conte acertos, latência e custo por mil chamadas para cada um.",
+      "Anote em quais exemplos o modelo aberto errou, para decidir se um ajuste fino ajudaria."
+    ],
+    "sucesso": "Você tem uma tabela com acerto, latência e custo dos dois modelos no seu conjunto e uma decisão baseada nela."
+  }
 }

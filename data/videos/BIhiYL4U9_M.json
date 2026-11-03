@@ -21,35 +21,40 @@
       "texto": "A janela de contexto serve só à execução atual. Se o agente resolve um ticket de suporte, descobre a causa raiz e escreve um procedimento útil, tudo isso se perde no fim da sessão. O próximo agente refaz as mesmas consultas, com mais chance de erro e alucinação. Janelas maiores e arquivos markdown ajudam pouco, e o grep não faz recuperação governada.",
       "t": 64,
       "legenda": "Sem persistência, o trabalho útil da sessão é jogado fora.",
-      "print": "img/BIhiYL4U9_M/0.jpg"
+      "print": "img/BIhiYL4U9_M/0.jpg",
+      "descricao": "Slide 'A context window is not memory' com Agent Session A e B lado a lado, marcados como 'No persistence!'"
     },
     {
       "titulo": "O ciclo: formar, recuperar, evoluir, avaliar",
       "texto": "Sistemas modernos de memória convergem para quatro etapas. Na formação, o agente guarda fatos destilados, não a transcrição bruta. Na recuperação, usa busca híbrida. Na evolução, consolida duplicatas e resolve conflitos. Na avaliação, mede o uso e devolve feedback à camada de memória. Governança (escopo, redação, aprovação) cobre tudo.",
       "t": 281,
       "legenda": "O fato de uma sessão volta como contexto na próxima e recebe nota.",
-      "print": "img/BIhiYL4U9_M/1.jpg"
+      "print": "img/BIhiYL4U9_M/1.jpg",
+      "descricao": "Diagrama 'Walk the agent memory loop' com os passos Run, Record, Recall e Adapt em ciclo, e a caixa 'Next run'"
     },
     {
       "titulo": "Quatro tipos de memória e um esquema de armazenamento",
       "texto": "As memórias são tipadas. Episódica guarda eventos passados, semântica guarda fatos e preferências, procedural guarda como fazer uma rotina, e o estado de trabalho guarda o que está em andamento. Cada registro tem texto, tags em JSON, vetor de embedding, índice de texto, ligações em grafo, dados de validade no tempo e eventos de auditoria.",
       "t": 438,
       "legenda": "Uma memória é um objeto tipado com vários caminhos de busca.",
-      "print": "img/BIhiYL4U9_M/2.jpg"
+      "print": "img/BIhiYL4U9_M/2.jpg",
+      "descricao": "Slide 'What does a storage schema look like?' com código dos tipos Memory e Fact e blocos de índices e auditoria"
     },
     {
       "titulo": "Redigir primeiro, gravar depois",
       "texto": "Na criação de uma memória, a redação vem antes de tudo. Antes de gerar embedding ou enriquecer, o sistema remove dados pessoais e segredos. Depois vêm o enriquecimento, o escopo (agente, time, organização), o embedding, o episódio de origem e as políticas da empresa. Só então grava no armazenamento.",
       "t": 531,
       "legenda": "A redação é o primeiro passo do pipeline de escrita.",
-      "print": "img/BIhiYL4U9_M/3.jpg"
+      "print": "img/BIhiYL4U9_M/3.jpg",
+      "descricao": "Slide 'Good memories are intentionally formed' com o fluxo redact, enrich, scope, embed, episode, policy, save e código"
     },
     {
       "titulo": "Busca híbrida e modos de falha",
       "texto": "A recuperação combina busca vetorial, busca por palavra-chave, entidades, grafo e sinais de recência e feedback. Os resultados são fundidos, filtrados e reordenados em um context card com evidência pontuada. Os riscos listados são memória velha, escopo errado, envenenamento, conflito, excesso de recall e drift silencioso conforme a base cresce.",
       "t": 654,
       "legenda": "Vários ramos de busca viram um único pacote de contexto com proveniência.",
-      "print": "img/BIhiYL4U9_M/4.jpg"
+      "print": "img/BIhiYL4U9_M/4.jpg",
+      "descricao": "Diagrama de busca híbrida com vector, text, entity, graph, recency, importance e feedback, fusão e context card"
     }
   ],
   "conceitos": [
@@ -165,5 +170,36 @@
       "contexto": "tipos de memória: episódica, semântica, procedural e estado de trabalho",
       "t": 375
     }
-  ]
+  ],
+  "rotulo": "Memória de agente como banco de dados com regras",
+  "objetivo": "desenhar um ciclo de memória para agentes com tipos, redação de dados sensíveis, busca combinada e feedback por uso",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são as quatro etapas do ciclo de memória e os quatro tipos de memória do talk?",
+      "resposta": "Formação, recuperação, evolução e avaliação. Os tipos são episódica, semântica, procedural e estado de trabalho."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que item o seu agente relê a cada sessão e como você o transformaria em memória persistente?",
+      "resposta": "Escolher um item, como um procedimento ou uma consulta repetida, e gravá-lo com escopo e validade. Antes de gravar, passar um filtro que remova dados pessoais e segredos, e registrar feedback sobre cada uso."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que afirmações do palestrante da Oracle estão sem dados que as sustentem?",
+      "resposta": "Que a busca híbrida é o método dominante e que o sistema funciona com mil registros e falha com 50 mil. Não há benchmark nem caso de cliente, e a tese do banco multimodelo favorece o produto de quem fala."
+    }
+  ],
+  "experimento": {
+    "titulo": "Memória mínima com redação antes de gravar",
+    "minutos": 40,
+    "precisa": "Python, SQLite e acesso a um chat ou API de modelo",
+    "passos": [
+      "Crie uma tabela SQLite com texto, tipo, escopo, data e uma nota de feedback.",
+      "Escreva uma função que remove e-mails e chaves do texto antes de gravar uma memória.",
+      "Grave dez fatos de uma tarefa sua e recupere os três mais parecidos com uma pergunta nova, por palavra-chave.",
+      "Marque cada memória usada como útil ou velha e rebaixe as velhas."
+    ],
+    "sucesso": "Nenhum dado sensível chega à tabela, a recuperação devolve fatos relevantes e as memórias velhas deixam de aparecer no topo."
+  }
 }

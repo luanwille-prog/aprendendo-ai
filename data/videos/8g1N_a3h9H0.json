@@ -28,14 +28,16 @@
       "texto": "O candidato barato discordava da produção em 18% dos casos e foi descartado. Ao rodar a própria produção três vezes nas mesmas entradas, a equipe viu que ela discorda de si em cerca de 7%. Os 18% misturam diferença real e ruído natural do modelo diante de entradas ambíguas.",
       "t": 191,
       "legenda": "A produção concorda só 93% consigo mesma, o teto realista de comparação.",
-      "print": "img/8g1N_a3h9H0/1.jpg"
+      "print": "img/8g1N_a3h9H0/1.jpg",
+      "descricao": "Slide 'Baseline variance': mesma entrada, decisões diferentes. Ilustra a variação, mas não o gráfico de 93% de concordância."
     },
     {
       "titulo": "Três alavancas em sequência: cache, prompt, modelo",
       "texto": "Primeiro estruture o prompt para aproveitar o cache de prefixo. Depois encolha as instruções: com DSPy você define entradas, formato de saída e função de pontuação, e o otimizador GEPA busca instruções mais curtas. Por último, tente um modelo menor, que muitas vezes falhou ou sofreu overfitting nos testes da equipe.",
       "t": 330,
       "legenda": "O otimizador trocou exemplos longos por regras compactas, com 51% menos tokens.",
-      "print": "img/8g1N_a3h9H0/2.jpg"
+      "print": "img/8g1N_a3h9H0/2.jpg",
+      "descricao": "Slide GEPA: transcrição vira raciocínio e insight, com exemplo de saída falha. Não mostra o resultado de 51% de redução."
     },
     {
       "titulo": "Avaliação em sombra com três comparações",
@@ -49,7 +51,8 @@
       "texto": "Na revisão humana do exemplo, apareceram 443 regressões e 2.463 melhorias. Mesmo assim, o time não libera por estimativa pontual. Calcula um intervalo de confiança pareado sobre o ganho líquido e exige limite inferior acima de zero, além de rodar a conta em cada categoria crítica.",
       "t": 570,
       "legenda": "Liberar só se o limite inferior do intervalo ficar acima de zero.",
-      "print": "img/8g1N_a3h9H0/4.jpg"
+      "print": "img/8g1N_a3h9H0/4.jpg",
+      "descricao": "Slide 'A point estimate is not a release rule' com +2.02 pp de ganho líquido. Não mostra o intervalo nem a linha do zero."
     }
   ],
   "conceitos": [
@@ -204,5 +207,36 @@
       "contexto": "melhorias contra regressões no exemplo hipotético",
       "t": 537
     }
-  ]
+  ],
+  "rotulo": "Teste A/A antes de trocar para um modelo mais barato",
+  "objetivo": "medir quanto a sua produção discorda de si mesma e usar esse número para decidir se um modelo mais barato piorou",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que o teste A/A revelou no exemplo e por que isso importa?",
+      "resposta": "A produção discordou de si mesma em 7%. Isso torna os 18% de discordância do candidato barato uma comparação injusta, porque parte da diferença é ruído."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que regra de liberação você aplicaria antes de trocar o modelo?",
+      "resposta": "Revisão humana de uma amostra das diferenças, intervalo de confiança pareado com limite inferior acima de zero e checagem separada das categorias críticas."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limite tem o exemplo da HarborBite?",
+      "resposta": "É um proxy sintético, que não prova economia de milhões. Os números 443 e 2.463 vêm de um caso hipotético, e os 7% e 18% não trazem tamanho de amostra nem método."
+    }
+  ],
+  "experimento": {
+    "titulo": "Teste A/A na sua tarefa mais cara",
+    "minutos": 30,
+    "precisa": "Python ou um chat com modelo, e 20 entradas reais da sua tarefa",
+    "passos": [
+      "Escolha 20 entradas da tarefa e anote a versão do prompt e do modelo.",
+      "Rode as 20 três vezes com o mesmo modelo e o mesmo prompt.",
+      "Conte em quantos casos as saídas discordam entre as rodadas.",
+      "Rode um modelo mais barato nas mesmas 20 e compare a discordância dele com a do seu modelo atual."
+    ],
+    "sucesso": "Você tem a taxa de discordância do modelo consigo mesmo e sabe se a do modelo barato passa dela."
+  }
 }

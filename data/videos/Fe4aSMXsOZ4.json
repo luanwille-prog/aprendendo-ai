@@ -21,14 +21,16 @@
       "texto": "O palestrante diz que empréstimos, seguros e hipotecas são atualizados a cada trimestre. O imóvel por baixo, porém, costuma ser revisto só na criação do instrumento financeiro e talvez no ano cinco. Nesse intervalo, o que existe são fotos e PDFs. A pergunta central é o que seria preciso para consultar um prédio como se consulta um ledger (livro-razão).",
       "t": 93,
       "legenda": "Livros fecham todo trimestre; o estado do prédio fica anos sem revisão.",
-      "print": "img/Fe4aSMXsOZ4/0.jpg"
+      "print": "img/Fe4aSMXsOZ4/0.jpg",
+      "descricao": "Slide 'The books close every quarter' com linha do tempo: livros fecham 20 vezes, o prédio recebe visita a cada cinco anos."
     },
     {
       "titulo": "Cada caminhada vira memória do prédio",
       "texto": "Um sensor comum mapeia o espaço enquanto alguém caminha. Os objetos reconhecidos vão para um banco de dados em grafo, com significado semântico. Uma segunda caminhada, meses depois, fica alinhada na mesma linha do tempo. O grafo permite escolher que informação guardar e como conectá-la, por imóvel.",
       "t": 187,
       "legenda": "Um scan de cerca de um minuto alimenta o grafo de objetos.",
-      "print": "img/Fe4aSMXsOZ4/1.jpg"
+      "print": "img/Fe4aSMXsOZ4/1.jpg",
+      "descricao": "Scan 3D de salão com grafo de objetos ao lado (159 objetos, 53 classes), com o nó 'this walk' no centro."
     },
     {
       "titulo": "Perguntas de ledger, não de visão computacional",
@@ -42,14 +44,16 @@
       "texto": "Duas passagens pela mesma cozinha ficam alinhadas. O usuário pergunta onde se aquecer e o sistema aponta o radiador. Pergunta por copo ou caneca e ele aponta os itens. Na comparação entre as duas visitas, três cadeiras no meio aparecem como deslocadas, com referência à captura que serve de prova.",
       "t": 402,
       "legenda": "A consulta devolve a diferença entre duas visitas e aponta para a captura.",
-      "print": "img/Fe4aSMXsOZ4/3.jpg"
+      "print": "img/Fe4aSMXsOZ4/3.jpg",
+      "descricao": "Demo com mapa 3D, grafo e chat respondendo sobre radiador e copo, com os objetos citados na resposta."
     },
     {
       "titulo": "Seguros como primeiro caso de uso proposto",
       "texto": "No início da apólice haveria um estado inicial do imóvel, e na renovação a comparação mostraria a manutenção. A seguradora poderia ajustar o prêmio ao desempenho do prédio. O palestrante apresenta isso como proposta de negócio, apoiada em estatísticas de mercado.",
       "t": 527,
       "legenda": "Estatísticas de mercado sustentam a proposta, sem resultado do produto.",
-      "print": "img/Fe4aSMXsOZ4/4.jpg"
+      "print": "img/Fe4aSMXsOZ4/4.jpg",
+      "descricao": "Slide 'Insurance pays for what it can verify' com 1 em 3, 35 a 60% e 73%, com fontes no rodapé."
     }
   ],
   "conceitos": [
@@ -147,5 +151,36 @@
       "contexto": "seguradoras que dizem ter menos sinistros com prédio certificado",
       "t": 557
     }
-  ]
+  ],
+  "rotulo": "Prédios como grafo: memória espacial com prova",
+  "objetivo": "modelar observações com data e origem num grafo para comparar versões de um espaço ao longo do tempo",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que lacuna de informação a Spranic quer resolver?",
+      "resposta": "Os livros financeiros de um imóvel fecham todo trimestre, mas o estado físico do prédio só é atualizado a cada alguns anos. A proposta é escanear, guardar objetos e relações num grafo e comparar visitas."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como aplicar nos seus dados a ideia de guardar cada observação com data e origem?",
+      "resposta": "Registre cada leitura com a data e a fonte da captura. Assim você compara versões depois e mostra de onde veio cada mudança, como o scan que prova que as cadeiras mudaram de lugar."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta no talk?",
+      "resposta": "Não há métrica de acerto do reconhecimento nem teste além de dois exemplos. Os números de seguro são do mercado, não do produto, e o talk é pitch da Spranic em colaboração com a Neo4j."
+    }
+  ],
+  "experimento": {
+    "titulo": "Mini grafo de mudanças com Python",
+    "minutos": 35,
+    "precisa": "Python com networkx, ou uma planilha, e a lista dos objetos de um cômodo",
+    "passos": [
+      "Liste os objetos de um cômodo seu em duas datas, mudando de lugar 2 ou 3 itens.",
+      "Crie nós para os objetos e arestas para as relações, como ao lado de, com a data de cada observação.",
+      "Escreva uma função que compare as duas datas e liste o que mudou.",
+      "Guarde em cada mudança a referência à observação original."
+    ],
+    "sucesso": "A função lista os itens que mudaram e cada mudança aponta para a observação que a comprova."
+  }
 }

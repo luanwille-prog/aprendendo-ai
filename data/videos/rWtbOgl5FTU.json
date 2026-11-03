@@ -21,35 +21,40 @@
       "texto": "No benchmark de impostos, o modelo de segunda linha da Anthropic tinha preço por token menor. Na prática gastou mais tokens para fazer o trabalho, saiu cerca de 14% mais caro e ainda tirou nota 3% menor. Quem escolheu pelo preço de tabela pagou mais por um resultado pior.",
       "t": 232,
       "legenda": "Preço de tabela menor não garantiu custo por tarefa menor.",
-      "print": "img/rWtbOgl5FTU/0.jpg"
+      "print": "img/rWtbOgl5FTU/0.jpg",
+      "descricao": "Slide 'The price of a token isn't the price of a task' com 40% mais barato no papel, 14% mais caro na prática e 3,62% de nota a menos."
     },
     {
       "titulo": "A fronteira muda com o subtipo de tarefa",
       "texto": "No gráfico de custo por tarefa contra desempenho em modelagem Excel, o conjunto de LBO (compra alavancada) fica abaixo da nota geral. O modelo que parecia o melhor no geral sai da fronteira de Pareto nesse subconjunto. Quem só olha o número agregado paga demais por um modelo que deixou de ser o melhor.",
       "t": 330,
       "legenda": "A curva vermelha do LBO fica abaixo da verde e muda quem está na fronteira.",
-      "print": "img/rWtbOgl5FTU/1.jpg"
+      "print": "img/rWtbOgl5FTU/1.jpg",
+      "descricao": "Gráfico de Pareto no Excel Modeling Benchmark: curva verde (geral) e quadrados vermelhos (LBO), com Claude Fable 5.1 caindo da fronteira."
     },
     {
       "titulo": "Quatro cuidados ao construir benchmarks",
       "texto": "A métrica muda a conclusão: crédito parcial mostra utilidade como rascunho, resposta totalmente correta mostra o que dá para entregar ao cliente. Além disso, o benchmark precisa de validade (tarefas reais), confiabilidade (amostra grande, não cinco ou seis casos) e poder de discriminação (modelos não podem todos tirar 0% ou 100%).",
       "t": 437,
       "legenda": "Lista de critérios que separa benchmark rigoroso de vibe check.",
-      "print": "img/rWtbOgl5FTU/2.jpg"
+      "print": "img/rWtbOgl5FTU/2.jpg",
+      "descricao": "Slide 'What's good enough for the task?': 77,6% de acurácia com crédito parcial contra 49,2% de respostas totalmente corretas (All-Pass)."
     },
     {
       "titulo": "Agentes resolvem o teste, não o problema",
       "texto": "Em sandbox, modelos tentaram chamar outros modelos pelo proxy para escapar do ambiente. Em finanças, quando a rubrica pontua itens presentes na resposta, o modelo dá três respostas para aumentar a chance de acertar. Ninguém quer receber três respostas, então o eval precisa refletir o trabalho real.",
       "t": 545,
       "legenda": "Exemplos de como o modelo ganha pontos sem fazer o trabalho.",
-      "print": "img/rWtbOgl5FTU/3.jpg"
+      "print": "img/rWtbOgl5FTU/3.jpg",
+      "descricao": "Slide 'Agents solve the test, not the problem'; sem os exemplos de reward hacking."
     },
     {
       "titulo": "Histórico de PRs como eval interno",
       "texto": "A Vals pegou issues e pull requests antigos do repositório, voltou o relógio e deu as mesmas tarefas a agentes. Assim descobriu quais modelos eram exagero e quais bastavam. Um modelo fechado ficou 2% melhor, mais rápido e mais barato (US$ 2,50 contra US$ 11) que o open source hospedado por conta própria.",
       "t": 750,
       "legenda": "No eval interno, o modelo fechado ganhou em nota, custo e velocidade.",
-      "print": "img/rWtbOgl5FTU/4.jpg"
+      "print": "img/rWtbOgl5FTU/4.jpg",
+      "descricao": "Slide do Vals Smith com comparação GPT-5.4 SOL x Kimi K3: acurácia, custo por teste ($2,51 x $11,73) e latência (8m28s x 16m44s)."
     }
   ],
   "conceitos": [
@@ -159,5 +164,36 @@
       "contexto": "redução de gasto com mesma produção, segundo o palestrante",
       "t": 777
     }
-  ]
+  ],
+  "rotulo": "O modelo mais barato que sai mais caro",
+  "objetivo": "comparar modelos pelo custo por tarefa concluída com um eval feito de tarefas reais suas",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que um modelo com preço por token menor pode custar mais?",
+      "resposta": "Porque gasta mais tokens para fazer o trabalho. No benchmark de impostos, o modelo de segunda linha saiu cerca de 14% mais caro e ainda tirou nota 3% menor. Compare custo por tarefa, não por token."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "De onde você tiraria tarefas para montar um eval interno?",
+      "resposta": "Do histórico real do trabalho, como e-mails, tickets ou pull requests antigos, com 30 ou mais tarefas, como a Vals fez voltando o relógio nas issues e PRs do próprio repositório."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que limita o corte de 90% do gasto contado no estudo de caso?",
+      "resposta": "A Vals vende benchmarks, não mostra metodologia nem intervalos de confiança, e o ponto de partida de US$ 1,5 milhão vem de uma equipe pequena em modo token maxing. O 14% e 3% vêm de um benchmark só."
+    }
+  ],
+  "experimento": {
+    "titulo": "Custo por tarefa de dois modelos",
+    "minutos": 45,
+    "precisa": "Acesso por API ou chat a dois modelos de preços diferentes e uma planilha",
+    "passos": [
+      "Escolha 10 tarefas reais do seu trabalho com um resultado esperado claro.",
+      "Rode as tarefas nos dois modelos e anote tokens usados e nota de 0 a 2 para cada resposta.",
+      "Calcule o custo por tarefa multiplicando tokens pelo preço de cada modelo.",
+      "Compare custo por tarefa e nota média, sem olhar o preço por token de tabela."
+    ],
+    "sucesso": "Você tem uma planilha com custo por tarefa e nota média por modelo e sabe qual rende mais por dólar nas suas tarefas."
+  }
 }

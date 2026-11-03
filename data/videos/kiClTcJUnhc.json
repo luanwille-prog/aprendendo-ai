@@ -21,35 +21,40 @@
       "texto": "No scanner de ações, cada ticker vai para um agente de varredura com contexto próprio. Depois passa para uma fase de revisão, também isolada. Nenhum agente sofre influência dos resultados dos outros. O Claude decide quantos agentes criar conforme a complexidade da tarefa.",
       "t": 1590,
       "legenda": "O fluxo divide a lista de tickers e isola cada contexto.",
-      "print": "img/kiClTcJUnhc/0.jpg"
+      "print": "img/kiClTcJUnhc/0.jpg",
+      "descricao": "Slide 'Watchlist scanner' com diagrama das fases Scan e Review, um agente por ticker, e falha redone"
     },
     {
       "titulo": "Gaste mais computação onde importa",
       "texto": "Os palestrantes comparam um agente único com o flow. O flow custa bem mais e encontra mais detalhes. Dá para pedir modelo barato (Haiku) na varredura e modelo mais forte com 2 ou 3 agentes por ticker na revisão. Eles recomendam um conjunto de evals (avaliações) para validar flows importantes.",
       "t": 1652,
       "legenda": "O flow acha mais detalhes e custa mais.",
-      "print": "img/kiClTcJUnhc/1.jpg"
+      "print": "img/kiClTcJUnhc/1.jpg",
+      "descricao": "Slide do watchlist com 88% vs 52% de eventos capturados e custo de US$ 33 a 46 contra US$ 7 para o agente único"
     },
     {
       "titulo": "Bug Hunter divide a revisão de PR",
       "texto": "O código do PR é cortado em fatias. Um agente por fatia lista problemas, um segundo revisa e discorda, uma fase escolhe candidatos e um provador baixa o repositório e tenta reproduzir o bug. O resultado vira comentário inline com prioridade.",
       "t": 3894,
       "legenda": "Quatro fases isoladas filtram falsos alarmes antes do humano.",
-      "print": "img/kiClTcJUnhc/2.jpg"
+      "print": "img/kiClTcJUnhc/2.jpg",
+      "descricao": "Slide 'In Bug hunter' com diagrama Split, Read the code, Second look, Pick candidates e Prove each candidate"
     },
     {
       "titulo": "Os três defeitos do agente único",
       "texto": "Preguiça agêntica: após ver 35 serviços saudáveis, o agente dá o resto como bom. Viés de preferência própria: quem escreveu o código tende a aprová-lo. Perda de objetivo: com a compactação do contexto, a ordem 'não toque na produção' pode sumir. Um agente por serviço, revisão adversarial e o objetivo copiado em cada subagente corrigem isso.",
       "t": 4358,
       "legenda": "O exemplo dos 50 serviços mostra preguiça e perda de objetivo.",
-      "print": "img/kiClTcJUnhc/3.jpg"
+      "print": "img/kiClTcJUnhc/3.jpg",
+      "descricao": "Slide comparando agente único, coordenador e Flow com 35 de 50 itens; não mostra a instrução 'não toque na produção'"
     },
     {
       "titulo": "Credencial nunca entra no sandbox",
       "texto": "O container recebe só um segredo falso. Na saída, o proxy de rede troca o placeholder pelo valor real e só para os hosts permitidos. Assim nem um prompt malicioso extrai a chave. Somam-se orçamento, interrupção, auto mode, ferramentas desligadas e rede restrita ao domínio necessário.",
       "t": 5322,
       "legenda": "O vault define onde o segredo entra e para quais domínios vale.",
-      "print": "img/kiClTcJUnhc/4.jpg"
+      "print": "img/kiClTcJUnhc/4.jpg",
+      "descricao": "Slide 'Keep credentials in vaults' com código credentials.create, injection_location header e allowed_hosts api.twilio.com"
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "aprovações dadas por humanos quando o agente pergunta",
       "t": 5230
     }
-  ]
+  ],
+  "rotulo": "Flows: muitos agentes com contexto isolado",
+  "objetivo": "explicar por que dividir uma tarefa grande em vários agentes isolados e como limitar custo e risco",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são os três defeitos do agente único descritos no talk?",
+      "resposta": "Preguiça agêntica (dá o resto como bom depois de ver alguns itens saudáveis), viés de preferência própria (quem escreveu tende a aprovar) e perda de objetivo (ordens somem com a compactação do contexto)."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que tarefa do seu trabalho você dividiria em um agente por item, e que controles de segurança usaria?",
+      "resposta": "Algo como revisar 50 itens, com um agente por item e uma fase de revisão adversarial por outro agente. Controles: orçamento por sessão, cofre de credenciais, rede liberada só para os domínios necessários e interrupção pela API."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta para concluir que um flow é melhor que um agente único?",
+      "resposta": "É um workshop da Anthropic sobre um produto com três dias de vida. A comparação não mostra amostra, tarefa nem números, só que o flow acha mais e custa mais. Os palestrantes admitem não saber onde mais agentes deixam de ajudar."
+    }
+  ],
+  "experimento": {
+    "titulo": "Um agente por item contra um agente só",
+    "minutos": 40,
+    "precisa": "Claude Code ou outro agente com subagentes e uma lista de 20 a 30 itens para revisar",
+    "passos": [
+      "Escolha 20 a 30 itens, como arquivos de um repositório ou parágrafos de um documento, e um critério de revisão.",
+      "Peça a um único agente que revise tudo e conte quantos problemas achou.",
+      "Peça um subagente por item, cada um com contexto próprio, e depois um agente separado para revisar os achados.",
+      "Compare problemas achados, itens realmente checados e tokens gastos nas duas abordagens."
+    ],
+    "sucesso": "Você tem uma tabela comparando as duas abordagens em problemas achados, itens cobertos e custo, e sabe se o isolamento compensou."
+  }
 }

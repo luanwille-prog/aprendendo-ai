@@ -170,5 +170,36 @@
       "contexto": "sementes iniciais e registros SFT finais",
       "t": 2388
     }
-  ]
+  ],
+  "rotulo": "Dados sintéticos para ensinar um agente a pesquisar",
+  "objetivo": "gerar um conjunto pequeno de dados sintéticos com preview, variação e filtro, e conferir os exemplos à mão",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Como o fluxo do Data Designer transforma caminhos do Wikidata em dados de treino?",
+      "resposta": "Cada caminho vira uma charada, um agente busca a resposta com a Tavily via MCP e o resultado é filtrado para fine-tuning supervisionado. O funil foi de 50 mil sementes a cerca de 7 mil registros."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você vai gerar um dataset com um modelo. Como evitar um conjunto repetitivo e ruim?",
+      "resposta": "Rode um preview de 3 a 10 registros e leia tudo à mão antes do lote. Acrescente uma coluna de variação (dificuldade, tipo, persona) e gere mais do que precisa para filtrar depois."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que os ganhos de 0% a 30% no BrowseComp não bastam como prova?",
+      "resposta": "Vêm do próprio palestrante, sem baseline, número de execuções ou comparação com outros dados. A NVIDIA divulga seu ecossistema, a checagem determinística de 24% e o caso da US Steel mostram que verificar o dado segue em aberto."
+    }
+  ],
+  "experimento": {
+    "titulo": "Gere e filtre 30 exemplos sintéticos",
+    "minutos": 40,
+    "precisa": "Claude ou ChatGPT e uma planilha",
+    "passos": [
+      "Defina um tipo de exemplo, como perguntas de suporte com resposta, e escreva o prompt de geração com uma coluna de dificuldade.",
+      "Gere um preview de 5 exemplos, leia tudo à mão e ajuste o prompt até ficarem bons.",
+      "Gere 30 exemplos e peça a um segundo modelo para julgar cada um com nota de 1 a 5.",
+      "Revise 10 exemplos à mão e compare com as notas do juiz antes de descartar os piores."
+    ],
+    "sucesso": "Você ficou com exemplos filtrados e conferiu que as notas do juiz concordam com a sua revisão em pelo menos 8 dos 10 revisados."
+  }
 }

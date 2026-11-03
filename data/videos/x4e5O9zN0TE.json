@@ -21,35 +21,40 @@
       "texto": "Cada agente tinha memória própria, vetor de emoção e matriz de confiança. Em cenas curtas funcionou. Em rodadas longas, o agente lembrava do assunto, mas perdia quem contou e tratava rumor como fato. A memória precisa registrar origem e grau de certeza.",
       "t": 326,
       "legenda": "Onde a cadeia de repasses degrada a informação.",
-      "print": "img/x4e5O9zN0TE/0.jpg"
+      "print": "img/x4e5O9zN0TE/0.jpg",
+      "descricao": "Sequência Owen → Sakura → Adam mostrando perda de proveniência quando informação passa entre agentes em rodadas longas."
     },
     {
       "titulo": "Avaliar a rodada inteira, não uma resposta",
       "texto": "O autoresearch fica fora da vila como um meta sistema. Ele lê os traces completos, compara com a verdade do cenário, pontua, propõe uma mudança pequena e reroda. Se o placar sobe e as travas seguram, mantém. Se não, volta atrás.",
       "t": 563,
       "legenda": "O ciclo experimental que envolve a vila.",
-      "print": "img/x4e5O9zN0TE/1.jpg"
+      "print": "img/x4e5O9zN0TE/1.jpg",
+      "descricao": "Diagrama do loop experimental: cenário, simulação, traces, pontuação, diagnóstico, edição de política e reroda com rollback."
     },
     {
       "titulo": "Cenários controlados tornam o comportamento social mensurável",
       "texto": "Deixar os agentes vagando parece bonito, mas não dá para medir melhora. Os cenários do talk testam difusão de fato público, incerteza de rumor e replanejamento quando a rota fica bloqueada. Depois do loop, o agente respondeu certo sobre as mangas.",
       "t": 676,
       "legenda": "Os cenários que servem de banco de testes.",
-      "print": "img/x4e5O9zN0TE/2.jpg"
+      "print": "img/x4e5O9zN0TE/2.jpg",
+      "descricao": "Três cenários de teste: difusão de fato público, incerteza de rumor e replanejamento quando rota fica bloqueada."
     },
     {
       "titulo": "Placar balanceado impede que o loop trapaceie",
       "texto": "Uma métrica única esconde falhas. O placar cobre alcance, retenção de fonte, preservação da incerteza, tempo de replanejamento e contenção de privacidade. Otimizar só a difusão faz os agentes contarem tudo a todos.",
       "t": 802,
       "legenda": "As cinco frentes que o placar precisa cobrir.",
-      "print": "img/x4e5O9zN0TE/3.jpg"
+      "print": "img/x4e5O9zN0TE/3.jpg",
+      "descricao": "Scorecard balanceado com sete métricas ponderadas e guardrail contra otimização de uma métrica que piora outras."
     },
     {
       "titulo": "Superfície editável pequena e rollback obrigatório",
       "texto": "O harness, os cenários e as métricas ficam congelados. O loop só mexe em políticas como escrita de memória, recuperação, regras de confiança e gatilhos de replanejamento. Como uma mudança pode melhorar um ponto e piorar outro, o processo funciona como catraca.",
       "t": 894,
       "legenda": "A fronteira entre o que é fixo e o que é otimizável.",
-      "print": "img/x4e5O9zN0TE/4.jpg"
+      "print": "img/x4e5O9zN0TE/4.jpg",
+      "descricao": "Divisão entre o que fica congelado (cenários, métricas) e o que o loop pode editar (políticas de memória, confiança, atribuição)."
     }
   ],
   "conceitos": [
@@ -194,5 +199,36 @@
       "contexto": "frentes do placar: alcance, fonte, rumor, planejamento, privacidade",
       "t": 802
     }
-  ]
+  ],
+  "rotulo": "Melhorar agente de longa duração com experimentos",
+  "objetivo": "projetar cenários de teste e um placar com várias métricas para melhorar um agente que guarda estado por muito tempo",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que falha apareceu nos agentes da vila em rodadas longas?",
+      "resposta": "O agente lembrava do assunto, mas perdia quem contou e tratava rumor como fato. A memória não registrava a origem nem o grau de certeza."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Quais três cenários você escreveria para testar um agente seu que guarda memória?",
+      "resposta": "Um fato público, um rumor com incerteza e uma mudança de plano, cada um com a resposta esperada conhecida e rodando em uma conversa longa."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que o resultado do talk não prova que o método funciona em geral?",
+      "resposta": "A própria palestrante admite que faltam resultados repetidos. A evidência é um único caso (as mangas), mostrado em demo, sem números de placar antes e depois."
+    }
+  ],
+  "experimento": {
+    "titulo": "Três cenários de teste para a memória de um agente",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT com uma conversa longa e uma planilha",
+    "passos": [
+      "Escreva três cenários curtos (um fato, um rumor e uma mudança de plano) e a resposta correta de cada um.",
+      "Conte os cenários ao assistente em uma conversa longa, com assuntos de distração no meio.",
+      "Pergunte sobre cada cenário e pontue fonte, incerteza e fato na planilha.",
+      "Mude uma instrução do prompt e repita, guardando a versão anterior."
+    ],
+    "sucesso": "Você tem um placar com três colunas antes e depois da mudança e sabe se alguma métrica piorou."
+  }
 }

@@ -21,28 +21,32 @@
       "texto": "IDE, CLI e SDK entram no mesmo serviço central do Copilot, chamado de harness (estrutura que cuida de autenticação, logs, filtros e envio aos modelos). Por isso um agente criado em uma interface pode ser chamado nas outras, inclusive pelo celular com o comando /remote.",
       "t": 160,
       "legenda": "Qualquer interface passa pelo mesmo harness antes de chegar ao modelo.",
-      "print": "img/b9UhZkKjX_A/0.jpg"
+      "print": "img/b9UhZkKjX_A/0.jpg",
+      "descricao": "Slide 'GitHub Copilot Data Flow' com diagrama de fluxo entre clientes, serviço central e provedores de modelo; palestrante ao lado."
     },
     {
       "titulo": "Agent builder gera o agente a partir de uma linha",
       "texto": "O comando de agentes no CLI cria o arquivo do agente a partir de uma descrição curta. Ele escreve a descrição, o front matter (cabeçalho de configuração), os critérios de sucesso e a metodologia. O usuário edita o que não gostar, como a ordem das fontes consultadas. Cada agente também define o modelo que usa.",
       "t": 376,
       "legenda": "Um prompt de uma linha vira um arquivo de agente completo e editável.",
-      "print": "img/b9UhZkKjX_A/1.jpg"
+      "print": "img/b9UhZkKjX_A/1.jpg",
+      "descricao": "Terminal e editor mostrando o texto do arquivo de agente gerado pelo CLI, com front matter e instruções; legibilidade baixa."
     },
     {
       "titulo": "Marketplace e repositório .github-private distribuem agentes",
       "texto": "Um marketplace é um repositório com um JSON extra que dá versionamento, atualização em massa e avisos de vulnerabilidade. O repositório .github-private expõe os agentes a toda a organização, e o mesmo agente de compliance aparece no menu do cloud agent. Palafox diz que agentes reutilizáveis elevam a taxa de cache hit e reduzem a conta.",
       "t": 530,
       "legenda": "O agente do repositório aparece como opção no menu do cloud agent.",
-      "print": "img/b9UhZkKjX_A/2.jpg"
+      "print": "img/b9UhZkKjX_A/2.jpg",
+      "descricao": "Página de repositório no GitHub com menu suspenso aberto listando agentes disponíveis para o cloud agent."
     },
     {
       "titulo": "Pipeline com humano no loop via slash command",
       "texto": "O Copilot CLI roda com a opção -P (um prompt único) dentro do GitHub Actions. Um agente agendado acha duplicação de código e abre issues. O desenvolvedor aprova com um slash command no comentário, e isso aciona o agente de PRD (documento de requisitos), que gera o plano e passa a implementação ao Copilot. O humano volta na aceitação.",
       "t": 845,
       "legenda": "Cada fase do pipeline só avança quando uma pessoa aprova.",
-      "print": "img/b9UhZkKjX_A/3.jpg"
+      "print": "img/b9UhZkKjX_A/3.jpg",
+      "descricao": "Slide 'Research - Plan - Assign' com três agentes (DeepResearch, Issue Mantle, Copilot) e fluxo de atribuição de issues."
     },
     {
       "titulo": "Rodar no CI dá visibilidade de custo",
@@ -68,7 +72,7 @@
       "nome": "Agent skills",
       "traducao": "habilidades do agente",
       "nivel": "intermediario",
-      "chave": "agent skills",
+      "chave": "skill",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -170,5 +174,36 @@
       "contexto": "agentes de pipeline prontos no projeto Agentics",
       "t": 995
     }
-  ]
+  ],
+  "rotulo": "Do agente local ao pipeline com GitHub Copilot",
+  "objetivo": "desenhar o caminho de um agente do laptop ao CI, com compartilhamento no time, aprovação humana e registro de custo",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são os três degraus para escalar agentes com o Copilot?",
+      "resposta": "Criar um agente local no CLI, compartilhá-lo na organização por marketplace ou repositório .github-private, e rodá-lo sem supervisão no CI com Agentic Workflows."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que tarefa repetitiva do seu time serviria para um primeiro agente em CI e como limitar o risco?",
+      "resposta": "Uma tarefa de manutenção, como achar código duplicado, rodando por agendamento e abrindo issues em vez de alterar código. Exija aprovação humana antes de qualquer etapa que gaste mais."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta para a afirmação de que rodar agentes em CI reduz a conta?",
+      "resposta": "O talk é demo de produto do GitHub e não traz métrica de ganho, qualidade dos agentes ou custo real do pipeline. O exemplo dos 200 agentes é o próprio projeto da empresa."
+    }
+  ],
+  "experimento": {
+    "titulo": "Agente agendado que só abre issues",
+    "minutos": 45,
+    "precisa": "Um repositório seu no GitHub, GitHub Actions habilitado e acesso ao Copilot CLI ou a outro agente de linha de comando",
+    "passos": [
+      "Escreva em um arquivo de texto a tarefa do agente, como listar funções duplicadas, e proíba alterar código.",
+      "Crie um workflow do GitHub Actions com agendamento semanal que roda o agente com esse arquivo.",
+      "Faça o agente abrir uma issue com o resultado, e rode o workflow manualmente uma vez.",
+      "Registre o tempo e os tokens da execução para ter um custo de referência."
+    ],
+    "sucesso": "O workflow rodou, abriu uma issue com achados que você conferiu e deixou um registro de custo da execução."
+  }
 }

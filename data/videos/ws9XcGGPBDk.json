@@ -28,28 +28,32 @@
       "texto": "Dados privados, conteúdo não confiável (tickets) e comunicação externa tornam o agente útil e perigoso ao mesmo tempo. Maida rejeita remover uma das três capacidades, porque o agente perde utilidade. Ela propõe controlar o acesso para conter o raio de dano.",
       "t": 290,
       "legenda": "As três capacidades juntas formam o risco descrito por Simon Willison.",
-      "print": "img/ws9XcGGPBDk/1.jpg"
+      "print": "img/ws9XcGGPBDk/1.jpg",
+      "descricao": "slide 'What makes an agent useful' com três ícones: acesso a dados, capacidade de pesquisa e uso de ferramentas externas"
     },
     {
       "titulo": "OAuth, gateway e sandbox deixam acesso permanente",
       "texto": "OAuth concede permissões antes de existir a tarefa. O gateway MCP segura credenciais permanentes. O sandbox limita o processo, mas o trabalho útil sai dele. Nenhum entrega ao agente uma credencial reduzida a uma só tarefa, e a aprovação humana sozinha cansa o usuário.",
       "t": 446,
       "legenda": "Cada controle prende o acesso a algo diferente, e nenhum limita por tarefa.",
-      "print": "img/ws9XcGGPBDk/2.jpg"
+      "print": "img/ws9XcGGPBDk/2.jpg",
+      "descricao": "slide 'OAuth binds delegated access to a grant' com um único grant e permissões; não mostra a comparação com MCP gateway e sandbox"
     },
     {
       "titulo": "Cada chamada pede um token curto ao STS",
       "texto": "O token do usuário vira subject token. O runtime do agente se autentica no security token service (STS), envia esse token e pede acesso a uma única chamada de ferramenta. O STS avalia política, cadeia de delegação e acesso pedido, e devolve um token que expira em minutos e não é guardado.",
       "t": 799,
       "legenda": "O diagrama mostra o STS decidindo cada troca de token entre agente, MCP e recurso.",
-      "print": "img/ws9XcGGPBDk/3.jpg"
+      "print": "img/ws9XcGGPBDk/3.jpg",
+      "descricao": "diagrama 'Runtime OAuth client requests token exchange' com usuário, runtime e STS, mostrando a troca de token"
     },
     {
       "titulo": "A política bloqueia o que o usuário não pode fazer",
       "texto": "Na segunda demo, o STS nega a consulta a dados de clientes e a exclusão do banco. A renovação do certificado passa. O restart de produção é bloqueado mesmo após clique em aprovar, porque o papel do usuário não permite. O escalonamento passa porque o papel permite.",
       "t": 1364,
       "legenda": "O restart fica negado após a aprovação, pois o papel do usuário não tem essa autoridade.",
-      "print": "img/ws9XcGGPBDk/4.jpg"
+      "print": "img/ws9XcGGPBDk/4.jpg",
+      "descricao": "app On-Call Triage Agent com mensagem 'Blocked, policy block-db-deletion' e log STS com allow e deny; o restart não aparece"
     }
   ],
   "conceitos": [
@@ -172,7 +176,7 @@
       "nome": "Intent based authorization",
       "traducao": "autorização baseada em intenção (proposta, não é padrão)",
       "nivel": "avancado",
-      "chave": "intent based authorization",
+      "chave": "intent-based authorization",
       "analogia": "A autorização por intenção é como a ordem de serviço do mecânico, que lista o conserto combinado e impede trocar outras peças sem nova assinatura do cliente.",
       "explicacao": [
         "Antes de agir, o agente descreve o que pretende fazer, e um sistema confere se isso bate com o pedido do usuário.",
@@ -264,5 +268,37 @@
       "contexto": "Prazo de expiração do token efêmero",
       "t": 954
     }
-  ]
+  ],
+  "rotulo": "Credenciais curtas para agentes com token exchange",
+  "objetivo": "propor credenciais de curta duração, atreladas ao usuário e à tarefa, e uma política que bloqueie ações destrutivas do agente",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que o token exchange faz no desenho de Kim Maida?",
+      "resposta": "Um serviço de tokens confere a política e a identidade do usuário e do agente, e emite credenciais que expiram em minutos e valem para uma única chamada."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Seu agente de plantão usa uma senha de administrador. O que você muda?",
+      "resposta": "Troca por credenciais de escopo mínimo e prazo curto, registra no log qual usuário e qual agente agiu, e define em política as ações que o agente nunca faz sozinho, como apagar um banco."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que lacunas há nas demos do talk?",
+      "resposta": "As demos são encenadas, sem dados de incidentes reais nem de falhas evitadas, e sem o custo de latência da troca de token. Maida trabalha na Keycard, que vende essa solução."
+    }
+  ],
+  "experimento": {
+    "titulo": "Inventário de credenciais dos seus agentes",
+    "minutos": 25,
+    "precisa": "Acesso aos arquivos de configuração dos seus agentes e uma planilha",
+    "passos": [
+      "Liste cada agente ou automação com IA que você usa.",
+      "Para cada um, anote as chaves e senhas que ele consegue ler.",
+      "Marque as que são de longa duração ou de administrador.",
+      "Escreva ao lado o escopo mínimo e o prazo que bastariam.",
+      "Escolha uma credencial e troque por outra de escopo menor."
+    ],
+    "sucesso": "A planilha lista todas as credenciais por agente e pelo menos uma foi trocada por outra de escopo menor."
+  }
 }

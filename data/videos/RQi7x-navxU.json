@@ -28,28 +28,32 @@
       "texto": "Um PDF foi feito para imprimir. O texto vira glifos com coordenadas, a tabela vira segmentos de linha com caracteres em posições de célula, e a ordem de leitura de várias colunas não está guardada em lugar nenhum. Um agente que recebe o binário cru não consegue montar o sentido.",
       "t": 530,
       "legenda": "Mostra por que o arquivo bruto não serve como contexto para o agente.",
-      "print": "img/RQi7x-navxU/1.jpg"
+      "print": "img/RQi7x-navxU/1.jpg",
+      "descricao": "Comparação visual entre o texto legível (left) e o armazenamento do PDF com coordenadas e tabelas (right)"
     },
     {
       "titulo": "O híbrido busca a fronteira de Pareto",
       "texto": "Pipelines heurísticos são baratos, mas rígidos. Ler a página inteira com um VLM funciona razoavelmente, porém custa caro e alucina em páginas só de texto. Liu propõe combinar os dois, com roteamento entre modelos baratos e de ponta, e diz que um fluxo ajustado ao tipo de dado sempre supera o modelo geral em custo e precisão.",
       "t": 716,
       "legenda": "Posiciona a abordagem híbrida como a que equilibra custo e acerto.",
-      "print": "img/RQi7x-navxU/2.jpg"
+      "print": "img/RQi7x-navxU/2.jpg",
+      "descricao": "Diagrama com as três abordagens: pipelines determinísticos, vision models e hybrid approach"
     },
     {
       "titulo": "ParseBench mede o que o agente entende",
       "texto": "O benchmark reúne 2.000 páginas verificadas por humanos e avalia tabelas, gráficos, fidelidade de conteúdo e formatação semântica. Ele compara cerca de 50 modelos em uma curva de custo contra precisão e mostra que entender documentos está longe de resolvido.",
       "t": 841,
       "legenda": "A curva mostra quanta precisão ainda falta a cada faixa de custo.",
-      "print": "img/RQi7x-navxU/3.jpg"
+      "print": "img/RQi7x-navxU/3.jpg",
+      "descricao": "ParseBench benchmark mostrando os 5 tipos de avaliação com exemplos de documentos"
     },
     {
       "titulo": "Leitura rápida primeiro, VLM só quando precisa",
       "texto": "Em uploads em tempo real, VLMs são lentos demais para mil PDFs em um minuto. O LightParse faz a passada inicial sem modelo, e o agente chama um parser com VLM apenas nas páginas com tabelas ou gráficos que exigem leitura dos valores.",
       "t": 1063,
       "legenda": "Desenha o fluxo em duas etapas que a empresa recomenda para agentes.",
-      "print": "img/RQi7x-navxU/4.jpg"
+      "print": "img/RQi7x-navxU/4.jpg",
+      "descricao": "LiteParse como padrão no loop do agente, com primeira leitura rápida e VLM para análise profunda"
     }
   ],
   "conceitos": [
@@ -79,7 +83,7 @@
       "nome": "Agent harness",
       "traducao": "estrutura que executa o agente",
       "nivel": "intermediario",
-      "chave": "agent harness",
+      "chave": "harness",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -170,5 +174,36 @@
       "contexto": "precisão exigida em finanças e seguros",
       "t": 908
     }
-  ]
+  ],
+  "rotulo": "Camada de contexto de documentos para agentes",
+  "objetivo": "escolher um parser de PDF por regime de uso e dar ao agente leitura rápida por padrão e leitura por visão quando a página pedir",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que um agente não consegue extrair sentido de um PDF cru, segundo Jerry Liu?",
+      "resposta": "O PDF foi feito para imprimir. O texto vira glifos com coordenadas, a tabela vira segmentos de linha e a ordem de leitura de várias colunas não está guardada em lugar nenhum."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você tem três tipos de documento, contratos regulados, uma base grande para indexar e uploads em tempo real. Como escolheria o parser?",
+      "resposta": "Por regime. Alta precisão para o caso regulado, baixo custo para a indexação em massa e baixa latência para o upload em tempo real, com o parser caro chamado só nas páginas que pedirem."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que o ParseBench e as alegações de parser mais rápido e mais preciso merecem cautela?",
+      "resposta": "O benchmark é da própria empresa, que também aparece nele, e o palestrante não mostra números de ranking. As alegações de rapidez e precisão vêm sem medição no vídeo."
+    }
+  ],
+  "experimento": {
+    "titulo": "Compare dois parsers no seu PDF mais difícil",
+    "minutos": 40,
+    "precisa": "Um PDF com tabelas e várias colunas, Python e dois parsers gratuitos como pdfplumber e PyMuPDF",
+    "passos": [
+      "Escolha o PDF mais difícil que você tem e copie dele uma tabela e um parágrafo de duas colunas como referência.",
+      "Extraia o texto com o primeiro parser e salve em um arquivo.",
+      "Extraia com o segundo parser e salve em outro arquivo.",
+      "Compare os dois arquivos com a referência e marque onde a ordem de leitura ou a tabela quebrou."
+    ],
+    "sucesso": "Você sabe qual parser preserva melhor a tabela e a ordem de leitura nesse documento e tem os dois arquivos como prova."
+  }
 }

@@ -189,5 +189,35 @@
       "contexto": "níveis de software factory na arquitetura publicada",
       "t": 2032
     }
-  ]
+  ],
+  "rotulo": "Autorização para agentes além do OAuth",
+  "objetivo": "propor limites de permissão, orçamento e auditoria para um agente que usa serviços externos",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que aconteceu no caso do Resy e por que um rate limit não resolve, segundo Dick Hardt?",
+      "resposta": "Um agente fez cerca de 200 chamadas por hora e baniu a conta do usuário. O rate limit só corta o agente, sem explicar nada. Hardt propõe um token com orçamento de uso que o agente enxerga e que a supervisão pode ampliar."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que regras você aplicaria a um agente seu que acessa uma API de terceiros, usando a ideia de cérebro e mãos?",
+      "resposta": "Manter as chaves fora do ambiente do modelo, rodar as ferramentas numa sandbox, passar todo o tráfego de saída por um proxy que aplica as regras e registra cada chamada, e definir um limite de uso por tarefa."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que conflitos de interesse existem no painel?",
+      "resposta": "O painel é organizado pela Keycard, que vende autorização para agentes, e Hardt promove o AAuth, de sua autoria. Há quase só anedota, sem medição de quantos agentes falham assim e sem adoção relatada das ideias de missão e orçamento."
+    }
+  ],
+  "experimento": {
+    "titulo": "Proxy de saída com orçamento para agente",
+    "minutos": 40,
+    "precisa": "Python e um agente ou script que chame uma API pública",
+    "passos": [
+      "Escreva um pequeno wrapper que todas as chamadas HTTP do agente atravessem, em vez de chamadas diretas.",
+      "Faça o wrapper permitir só domínios de uma lista, contar chamadas por tarefa e bloquear acima de um orçamento.",
+      "Grave cada chamada em um arquivo de log que o agente não edita e teste com um loop que estoura o limite."
+    ],
+    "sucesso": "O loop é bloqueado ao atingir o orçamento, domínios fora da lista são recusados e o log mostra todas as tentativas."
+  }
 }

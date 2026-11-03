@@ -28,28 +28,32 @@
       "texto": "O diagrama vai do gatilho agendado (cron) à camada de proxy, ao parsing com validação, à limpeza (deduplicação, enriquecimento) e ao banco de dados. Se qualquer etapa quebra, como o anti-bot ou um seletor, o processo recomeça, às vezes com backfill (preencher o histórico perdido) e risco de estourar SLA (prazo combinado).",
       "t": 427,
       "legenda": "O fluxo completo de coleta, de gatilho até banco, com pontos de falha em cada camada.",
-      "print": "img/IK8cC4FScps/1.jpg"
+      "print": "img/IK8cC4FScps/1.jpg",
+      "descricao": "Diagrama da arquitetura tradicional de scraping com caixas e setas; texto pequeno e pouco legível"
     },
     {
       "titulo": "Dois caminhos: conhecimento guardado ou web ao vivo",
       "texto": "Perguntas como 'melhor época para viajar a San Francisco' podem ser respondidas com dado pré-treinado ou pré-indexado. Se a pergunta traz 'este ano', o agente precisa ir à web. O palestrante também cita cache para respostas repetidas, como o clima do dia, para economizar tokens e dinheiro, e diz que sites bloqueiam crawlers de IA via robots.txt.",
       "t": 632,
       "legenda": "O agente escolhe entre responder do que já tem e buscar informação atual.",
-      "print": "img/IK8cC4FScps/2.jpg"
+      "print": "img/IK8cC4FScps/2.jpg",
+      "descricao": "Diagrama com dois caminhos (sync e async) e caixas de processo; texto pequeno, mas a estrutura aparece"
     },
     {
       "titulo": "MCP dá ao agente busca, páginas e navegador",
       "texto": "O servidor MCP (protocolo que conecta agentes a ferramentas) da Bright Data reúne mais de 60 ferramentas: busca no Google, páginas em markdown ou HTML, dados de Amazon, Reddit, LinkedIn e automação de navegador. Na comparação lado a lado, o Claude com o MCP leu uma página do Glassdoor e o Claude sem ele foi bloqueado.",
       "t": 940,
       "legenda": "Mesmo prompt, resultado diferente: com o MCP a página abre, sem ele o acesso é bloqueado.",
-      "print": "img/IK8cC4FScps/3.jpg"
+      "print": "img/IK8cC4FScps/3.jpg",
+      "descricao": "Comparação lado a lado Com e Sem o MCP da Bright Data, mostrando páginas do Glassdoor"
     },
     {
       "titulo": "Demo final transforma dois dados em uma recomendação",
       "texto": "O notebook busca preço, nota e vendedores na Amazon, pesquisa posts no Reddit e manda os dois para o Gemini. A resposta recomenda a compra por causa do desconto e das avaliações positivas, com ressalvas sobre opiniões mistas e estoque baixo. O padrão vale para outros casos além de e-commerce.",
       "t": 1552,
       "legenda": "O modelo cruza dados da Amazon e do Reddit e justifica a decisão de comprar.",
-      "print": "img/IK8cC4FScps/4.jpg"
+      "print": "img/IK8cC4FScps/4.jpg",
+      "descricao": "Notebook com células de código e saída de texto; resultado do Gemini pouco legível"
     }
   ],
   "conceitos": [
@@ -148,5 +152,36 @@
       "contexto": "exemplo de taxa de retorno do campo preço a validar",
       "t": 509
     }
-  ]
+  ],
+  "rotulo": "Agentes com dados da web em tempo real",
+  "objetivo": "decidir quando um agente precisa buscar dado atual na web e quando basta cache ou base interna, pesando o custo de manter scrapers",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que escalar scrapers próprios fica caro, segundo Raju?",
+      "resposta": "Cada site tem layout próprio, muda sem aviso e usa proteção anti-bot. Um scraper leva 3 a 5 dias para ser feito e, com 100 ou 1000 sites, cada mudança de seletor derruba o pipeline e exige reprocessar os dados perdidos."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Dê um exemplo do seu produto em que o agente precisa ir à web e outro em que não precisa.",
+      "resposta": "Precisa quando a pergunta depende de dado atual, como 'melhor época para viajar este ano'. Não precisa para respostas estáveis ou repetidas, que cabem em base pré-indexada ou cache, como o clima do dia."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que problemas há em tratar a demo da Bright Data como prova?",
+      "resposta": "É pitch de quem vende acesso a dados. O caso do Glassdoor é um só, sem taxa de sucesso ou custo, a recomendação da Amazon não foi medida e os termos de uso e a legalidade de contornar bloqueios não foram discutidos."
+    }
+  ],
+  "experimento": {
+    "titulo": "Classificar perguntas entre dado atual e conhecimento guardado",
+    "minutos": 15,
+    "precisa": "Claude ou ChatGPT e uma lista de 10 perguntas do seu produto",
+    "passos": [
+      "Escreva 10 perguntas que usuários fariam ao seu agente.",
+      "Marque cada uma como precisa de dado atual ou pode usar base interna ou cache.",
+      "Para as que precisam da web, anote a fonte e se o site permite coleta, lendo os termos de uso e o robots.txt.",
+      "Peça a um modelo que revise sua classificação e veja onde ele discorda."
+    ],
+    "sucesso": "Cada pergunta tem uma classe e as que vão à web têm fonte e condição de coleta anotadas."
+  }
 }

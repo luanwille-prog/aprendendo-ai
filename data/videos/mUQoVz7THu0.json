@@ -21,35 +21,40 @@
       "texto": "Eval testa o comportamento do agente antes de ir para produção. Observabilidade acompanha as interações reais depois do lançamento. Os dois atacam o mesmo problema, porque o LLM é não determinístico e varia a cada execução.",
       "t": 63,
       "legenda": "Qualidade de agente se apoia em eval offline e monitoramento em produção.",
-      "print": "img/mUQoVz7THu0/0.jpg"
+      "print": "img/mUQoVz7THu0/0.jpg",
+      "descricao": "Slide 'What is Braintrust?' com monitoramento de produção e evals antes do lançamento; palestrante pequeno no canto"
     },
     {
       "titulo": "O iceberg por baixo da planilha",
       "texto": "Um eval básico tem três partes: executar o agente, ver as saídas ou notas, e ter exemplos de entrada. Por baixo disso ficam datasets, sistemas de nota, processo de revisão, ferramentas de debug e a ligação com a produção. Além disso, PMs e especialistas de domínio também rodam evals.",
       "t": 313,
       "legenda": "A parte visível do eval é pequena perto do trabalho de suporte.",
-      "print": "img/mUQoVz7THu0/1.jpg"
+      "print": "img/mUQoVz7THu0/1.jpg",
+      "descricao": "Slide 'Evals is just a UI on a spreadsheet' com iceberg: executor, UI e exemplos de entrada acima; suporte embaixo"
     },
     {
       "titulo": "Quatro estágios de maturidade",
       "texto": "Planilha tem barreira zero, mas só documenta. Interface própria inclui PMs, mas vira só relatório. Experimentos lado a lado deixam trocar prompt, modelo e parâmetros. O quarto estágio liga a produção e fecha o ciclo.",
       "t": 598,
       "legenda": "O terceiro estágio troca registro de resultados por experimentação.",
-      "print": "img/mUQoVz7THu0/2.jpg"
+      "print": "img/mUQoVz7THu0/2.jpg",
+      "descricao": "Slide 'Encouraging experimentation' com comparação lado a lado de execuções de eval, com YAML de entrada e saídas"
     },
     {
       "titulo": "O flywheel de melhoria",
       "texto": "O ciclo observa falhas em produção, registra cada passo do trace, define dimensões de sucesso e falha, cria casos de teste a partir delas e itera offline sem gerar regressões. Depois publica e repete. O palestrante cita drift como razão para o ciclo nunca parar.",
       "t": 661,
       "legenda": "Falhas de produção viram casos de teste que alimentam a próxima versão.",
-      "print": "img/mUQoVz7THu0/3.jpg"
+      "print": "img/mUQoVz7THu0/3.jpg",
+      "descricao": "Diagrama circular do flywheel: Observe, Analyze, Eval, Improve, com descrição de cada etapa"
     },
     {
       "titulo": "Traces quebram o data warehouse comum",
       "texto": "Traces de agente são JSON semiestruturado e aninhado, com centenas de megabytes por interação, contra kilobytes de observabilidade tradicional. É preciso consulta em tempo real e consultas longas, por isso a Braintrust criou a BTQL. Mais recentemente, agentes de código rodam os evals e humanos revisam.",
       "t": 726,
       "legenda": "O volume e o formato dos traces tornam eval um problema de sistemas.",
-      "print": "img/mUQoVz7THu0/4.jpg"
+      "print": "img/mUQoVz7THu0/4.jpg",
+      "descricao": "Slide 'Fitting the flywheel together' com lista de traces e logs; não mostra a comparação de tamanho pedida"
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "maturidade de plataformas de eval descrita no talk",
       "t": 409
     }
-  ]
+  ],
+  "rotulo": "Por que montar uma plataforma de eval é difícil",
+  "objetivo": "descrever os quatro estágios de maturidade de evals e começar um flywheel simples com falhas reais de produção",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são os quatro estágios de maturidade de uma plataforma de eval?",
+      "resposta": "Planilha, interface própria, experimentos lado a lado para PMs e especialistas e, por fim, um flywheel ligado à produção que transforma falhas em casos de teste."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você avalia seu agente em planilha. Qual o próximo passo mais barato?",
+      "resposta": "Guardar entrada, saída e nota de cada execução para comparar versões, e transformar alguns casos reais de uma falha já vista em produção em exemplos de teste."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que viés tem o argumento de que construir uma plataforma própria é difícil?",
+      "resposta": "Hossein lidera engenharia de soluções da Braintrust, que vende a plataforma. Não há custo de construir internamente, dado de clientes nem comparação, e os estágios são um modelo narrativo, não resultado de pesquisa."
+    }
+  ],
+  "experimento": {
+    "titulo": "Transforme falhas reais em casos de teste",
+    "minutos": 30,
+    "precisa": "Uma planilha e um prompt ou agente seu com exemplos de falhas",
+    "passos": [
+      "Abra uma planilha com as colunas entrada, saída, nota e tipo de falha.",
+      "Registre 10 execuções reais do seu prompt, incluindo as que falharam.",
+      "Escolha o tipo de falha mais comum e escreva 3 casos novos parecidos.",
+      "Mude o prompt, rode os 13 casos de novo e anote as notas na mesma planilha."
+    ],
+    "sucesso": "Você vê na planilha se a mudança melhorou o tipo de falha escolhido sem piorar os outros casos."
+  }
 }

@@ -21,35 +21,40 @@
       "texto": "Toda empresa tem regras explícitas (código, processos, e-mails) e um saber implícito sobre quem decide, onde está o atrito e o que costuma dar certo. Funcionários aprendem isso com o tempo. Agentes só aprendem por contexto, com arquivos de skill e leitura do código, e por isso refazem o mesmo trabalho e gastam muitos tokens de entrada a cada sessão.",
       "t": 383,
       "legenda": "Preferências e heurísticas são dados, e dados cabem melhor nos pesos do que no prompt.",
-      "print": "img/5SRjPT2Eo7A/0.jpg"
+      "print": "img/5SRjPT2Eo7A/0.jpg",
+      "descricao": "Slide 'what agents relearn' com quatro colunas: preferências, onde as coisas ficam, como o time trabalha e o maior modelo. Ilustra o reaprendizado."
     },
     {
       "titulo": "O telefone sem fio do treino nos grandes laboratórios",
       "texto": "Para um modelo de fronteira aprender a usar ferramentas como o Salesforce, o saber passa por um especialista freelancer, uma empresa de rede de especialistas, quem monta o ambiente de RL (aprendizado por reforço), um comprador e um pesquisador. Ninguém nessa cadeia é o dono do conhecimento. Brown propõe que a própria pessoa que usa o agente passe a corrigir o modelo diretamente.",
       "t": 476,
       "legenda": "Cada etapa da cadeia afasta o especialista do treino que usa o saber dele.",
-      "print": "img/5SRjPT2Eo7A/1.jpg"
+      "print": "img/5SRjPT2Eo7A/1.jpg",
+      "descricao": "Slide 'the long way around' com a cadeia de etapas: especialista, expert network, environment vendor, frontier lab, próximo modelo e agente."
     },
     {
       "titulo": "Eval como teste e o modelo como codebase",
       "texto": "A versão mais prática de aprendizado contínuo trata o modelo como um repositório de código, com ciclo de vida, casos de teste e novas funções. Os traces (registros de execução) do uso diário já trazem prompts e feedback. Agentes podem fazer a curadoria desses traces e transformá-los em evals.",
       "t": 694,
       "legenda": "Traces do uso diário viram a matéria-prima dos evals.",
-      "print": "img/5SRjPT2Eo7A/2.jpg"
+      "print": "img/5SRjPT2Eo7A/2.jpg",
+      "descricao": "Slide 'evals as test cases': um trace com passos e um erro marcado, um juiz ou segundo agente, e o eval set sendo preenchido."
     },
     {
       "titulo": "Roteamento e modelos de decisão geram rótulos claros",
       "texto": "Rodar a mesma tarefa num modelo grande e num pequeno e julgar se o pequeno bastou gera dado para rotear mais tarefas ao modelo barato. Um modelo de decisão aprende a imitar a aprovação humana em situações específicas da empresa. Os dois casos têm resposta certa, e por isso servem como porta de entrada para o aprendizado contínuo.",
       "t": 786,
       "legenda": "Comparar modelo grande e pequeno na mesma tarefa produz dado de roteamento.",
-      "print": "img/5SRjPT2Eo7A/3.jpg"
+      "print": "img/5SRjPT2Eo7A/3.jpg",
+      "descricao": "Slide 'decisions and routing' em miniatura de baixa resolução. O título aparece, mas o diagrama é pouco legível."
     },
     {
       "titulo": "Widgets de decisão e treino noturno",
       "texto": "O agente cria na hora um cartão com opções quando precisa de uma decisão humana. Isso facilita a vida de quem decide e gera um rótulo explícito para treino, o que reduz o risco de reward hacking (o modelo burlar a recompensa). O protótipo interno da Prime Intellect junta traces, mostra os problemas sinalizados e dispara um treino toda noite, usando a capacidade de GPU ociosa.",
       "t": 1096,
       "legenda": "O treino noturno aproveita a GPU que fica ociosa quando a equipe não usa os agentes.",
-      "print": "img/5SRjPT2Eo7A/4.jpg"
+      "print": "img/5SRjPT2Eo7A/4.jpg",
+      "descricao": "Slide 'a nightly loop' com painel do protótipo interno: curva de reward e matriz checkpoint x suite de avaliação, com menu Continual Learning."
     }
   ],
   "conceitos": [
@@ -204,5 +209,36 @@
       "contexto": "quantidade de agentes em paralelo que o usuário precisa acompanhar",
       "t": 910
     }
-  ]
+  ],
+  "rotulo": "Treinar modelo próprio com os traces da empresa",
+  "objetivo": "comparar o caminho de evals, roteamento e treino com dados da empresa e decidir o que montar primeiro",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que, segundo Brown, agentes reaprendem o contexto da empresa a cada sessão?",
+      "resposta": "O saber implícito da organização (quem decide, onde está o atrito, o que costuma dar certo) nunca chega aos pesos do modelo. O agente só o recebe por contexto, como arquivos de skill."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que registros você começaria a guardar hoje para usar em evals ou treino no futuro?",
+      "resposta": "Os traces das sessões com agentes, com prompt e correção, e a lista das correções que você repete toda semana. Elas indicam o que deveria virar skill, eval ou dado de treino."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que limita o exemplo de US$ 300 mil e a ideia do treino noturno?",
+      "resposta": "A Prime Intellect vende a infraestrutura que defende. O exemplo vem de uma empresa amiga que usa as ferramentas da casa, sem eval nem comparação com modelos de fronteira. O treino noturno é protótipo, e faltam riscos como esquecimento catastrófico e privacidade dos traces."
+    }
+  ],
+  "experimento": {
+    "titulo": "Comparar modelo grande e pequeno na mesma tarefa",
+    "minutos": 35,
+    "precisa": "Acesso a um modelo grande e a um pequeno (Claude, ChatGPT ou modelos locais) e 10 tarefas reais",
+    "passos": [
+      "Liste 10 tarefas repetitivas do seu trabalho que tenham um critério claro de resposta boa.",
+      "Rode cada tarefa no modelo grande e no pequeno.",
+      "Para cada tarefa, anote se o modelo pequeno bastou.",
+      "Conte em quantas o modelo pequeno foi suficiente e proponha uma regra simples de roteamento."
+    ],
+    "sucesso": "Você tem uma tabela com 10 tarefas, o resultado de cada modelo e uma regra dizendo quais tarefas iriam para o modelo barato."
+  }
 }

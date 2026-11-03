@@ -21,21 +21,24 @@
       "texto": "Li define o pass^k: rodar o agente k vezes e exigir sucesso em todas. Clientes que querem um fluxo diário sem vigiar precisam disso, e os benchmarks atuais não medem. Ao repetir três vezes, todos os agentes testados perderam cerca de 10% de sucesso, e com ambiente ou pedido alterado a queda foi maior.",
       "t": 1140,
       "legenda": "Todos os agentes pioram quando precisam acertar em três execuções seguidas.",
-      "print": "img/tyFPqtyOK5w/0.jpg"
+      "print": "img/tyFPqtyOK5w/0.jpg",
+      "descricao": "Gráfico pass^1 e pass^3 por modelo (GPT-5, Claude, Kimi), linha baseline e perturbed, com quedas de sucesso destacadas."
     },
     {
       "titulo": "Pedir esclarecimento antes de agir melhora a confiabilidade",
       "texto": "Um truque simples do paper dele é instruir o agente a fazer perguntas sobre as partes ambíguas do pedido, com o mínimo de perguntas possível. Na comparação entre linha tracejada (sem perguntas) e linha cheia (com perguntas), todos os agentes melhoraram. Agent S com GPT-5 teve o maior ganho.",
       "t": 1262,
       "legenda": "A linha cheia fica acima da tracejada em todos os agentes comparados.",
-      "print": "img/tyFPqtyOK5w/1.jpg"
+      "print": "img/tyFPqtyOK5w/1.jpg",
+      "descricao": "Gráfico pass^k com linhas cheias (clarified) acima das tracejadas (unclarified) para GPT-5, Claude e Kimi, k = 1 a 3."
     },
     {
       "titulo": "Código é estável, modelo com visão é adaptável",
       "texto": "O agente de código gera scripts determinísticos, mas quebra quando a tela muda. O agente com visão se adapta, mas não repete o processo com fidelidade. Li chama isso de dilema estabilidade-plasticidade e busca um ponto intermediário na fronteira de Pareto, fundindo os dois numa abordagem neuro-simbólica.",
       "t": 1767,
       "legenda": "Os dois tipos de agente ocupam extremos opostos da curva estabilidade versus adaptação.",
-      "print": "img/tyFPqtyOK5w/2.jpg"
+      "print": "img/tyFPqtyOK5w/2.jpg",
+      "descricao": "Paper sobre o dilema estabilidade-plasticidade. Não é a curva de Pareto descrita, mas nomeia o conceito do momento."
     },
     {
       "titulo": "Computador reduzido a um problema de código",
@@ -49,7 +52,8 @@
       "texto": "O agente achou o primeiro palestrante de terça, salvou o fluxo como skill e o repetiu para quarta só trocando o parâmetro. Num soluço no filtro, ele voltou ao modo com visão, terminou e seguiu. Li diz que na segunda execução cerca de 50% do trabalho sai de código, sem chamada ao modelo.",
       "t": 2402,
       "legenda": "O replay roda o código salvo com o dia trocado e só chama o modelo quando falha.",
-      "print": "img/tyFPqtyOK5w/4.jpg"
+      "print": "img/tyFPqtyOK5w/4.jpg",
+      "descricao": "Chat do Sai com skill salva 'aiewf-first-speaker-on-day' com parâmetro day e o modo replay rodando o skill no activity log."
     }
   ],
   "conceitos": [
@@ -181,5 +185,36 @@
       "contexto": "Plano de tarefas ilimitadas em teste pela empresa",
       "t": 2556
     }
-  ]
+  ],
+  "rotulo": "Agentes de computador confiáveis com visão e código",
+  "objetivo": "medir a confiabilidade de um agente com várias execuções e decidir que fluxo gravar como script para gastar menos token",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que é o modo neuro-simbólico proposto por Ang Li?",
+      "resposta": "O agente com visão explora e acerta a tarefa, o fluxo que funcionou é gravado como código e repetido. Se algo quebra, volta ao modelo para consertar, e o custo em tokens cai."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você tem um agente que preenche formulários toda semana. Como medir se ele é confiável?",
+      "resposta": "Rode a mesma tarefa várias vezes e conte só as execuções em que todas passam, em vez de olhar um único acerto. No talk, mesmo os melhores agentes perdem cerca de 10% de sucesso ao exigir três acertos."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que tratar com cuidado a afirmação de 100% de sucesso ao dar um SOP ao agente?",
+      "resposta": "Ela aparece sem dados, vem do CEO da Simular, que vende o produto, e a demo ao vivo falhou. Os números de pass^k vêm de papers da própria empresa."
+    }
+  ],
+  "experimento": {
+    "titulo": "Teste de consistência com 5 execuções da mesma tarefa",
+    "minutos": 30,
+    "precisa": "Claude Code ou um agente de navegador e uma tarefa repetitiva simples",
+    "passos": [
+      "Escolha uma tarefa pequena com resultado verificável, como extrair um dado de uma página.",
+      "Rode o agente 5 vezes com o mesmo prompt e anote cada resultado.",
+      "Conte as execuções corretas e veja se as 5 passaram juntas.",
+      "Peça ao agente que grave o fluxo como script parametrizado e rode o script 3 vezes."
+    ],
+    "sucesso": "Você tem a contagem de acertos em 5 execuções e um script que repete a tarefa sem chamar o modelo a cada passo."
+  }
 }

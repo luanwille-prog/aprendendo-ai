@@ -21,35 +21,40 @@
       "texto": "Kormos trata a política da empresa como a intenção institucional original, algo como o system prompt (instrução de base) do negócio. Ele separa o estado de construção, em que a política muda, do estado de execução, em que o sistema roda e evolui sempre dentro dos limites dessa política.",
       "t": 43,
       "legenda": "A política vem antes do sistema e define o que o agente pode fazer.",
-      "print": "img/_4Ph2dhmUFI/0.jpg"
+      "print": "img/_4Ph2dhmUFI/0.jpg",
+      "descricao": "Slide 'Start with the policy' mostrando um documento de política escrito, com a legenda 'clear policy, written down'."
     },
     {
       "titulo": "Processos como DAGs, etapas como loops",
       "texto": "Um DAG (grafo acíclico dirigido) representa etapas e dependências sem voltar atrás. Agentes permitem rodar revisões independentes em paralelo e manter os controles obrigatórios. Dentro de cada nó há um loop de trabalho, checagem e feedback, que forma um grafo com ciclos (DCG). A receita dele: determinístico por fora, adaptativo por dentro.",
       "t": 354,
       "legenda": "Dentro de cada etapa do DAG existe um loop que itera até o trabalho passar.",
-      "print": "img/_4Ph2dhmUFI/1.jpg"
+      "print": "img/_4Ph2dhmUFI/1.jpg",
+      "descricao": "Slide 'A process' com o fluxo draft -> check -> pass dentro de um círculo, legenda 'do, then check'. Mostra a checagem, mas não o ciclo completo do code review."
     },
     {
       "titulo": "Acelerar uma etapa desloca o gargalo",
       "texto": "Quando agentes revisam código mais rápido, o volume se desloca para as etapas vizinhas, como design e scan de segurança. Kormos diz que a visibilidade operacional do processo importa mais do que a ferramenta para criar o workflow, e que é preciso desenhar fluxos de exceção sem tentar cobrir todo caso raro.",
       "t": 480,
       "legenda": "Paralelizar uma etapa cria gargalos nas outras e exige métricas do processo.",
-      "print": "img/_4Ph2dhmUFI/2.jpg"
+      "print": "img/_4Ph2dhmUFI/2.jpg",
+      "descricao": "Slide 'A process' com o DAG de change request, code review, security scan, exception e release approval; legenda 'volume shifts across the flow'."
     },
     {
       "titulo": "Evals substituem a comparação exata",
       "texto": "Software tradicional ganha confiança com testes unitários. Agentes são probabilísticos, então a mesma entrada gera respostas diferentes e várias podem estar corretas. A saída é montar datasets representativos, definir o que é bom e rodar as avaliações em série, como análise estatística, junto com traces de execução.",
       "t": 707,
       "legenda": "Evals e traces formam o mecanismo de confiança que complementa os testes clássicos.",
-      "print": "img/_4Ph2dhmUFI/3.jpg"
+      "print": "img/_4Ph2dhmUFI/3.jpg",
+      "descricao": "Slide 'Quality' com test cases -> unit tests -> confidence. Mostra só o lado dos testes tradicionais, sem evals nem traces."
     },
     {
       "titulo": "Supervisionado, amostrado, só exceções",
       "texto": "No primeiro dia, humanos verificam toda saída e ajudam a refinar os datasets com especialistas do domínio. Quando a confiança medida atinge o limite da política, a revisão passa a ser por amostra, com avaliação sistemática via traces. Superado outro limite, humanos tratam só as exceções.",
       "t": 869,
       "legenda": "A supervisão diminui por etapas, cada uma liberada por um limite de confiança medido.",
-      "print": "img/_4Ph2dhmUFI/4.jpg"
+      "print": "img/_4Ph2dhmUFI/4.jpg",
+      "descricao": "Slide 'Turning it on' com curva de confiança de every output, sampled e exceptions only, limiar ≥ 0.9 e marcador 0.70."
     }
   ],
   "conceitos": [
@@ -160,5 +165,35 @@
       "contexto": "desses, em serviços financeiros corporativos",
       "t": 12
     }
-  ]
+  ],
+  "rotulo": "Quando um agente pode trabalhar sem supervisão",
+  "objetivo": "decidir quando um agente passa de revisão total para amostra e depois só exceções, usando evals e traces como base",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são os três estágios de autonomia que Kormos descreve para um agente?",
+      "resposta": "Primeiro humanos verificam toda saída. Depois verificam uma amostra. No fim tratam só as exceções, sempre que a confiança medida passar de um limite definido pela política."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Pense em um processo do seu trabalho. Qual etapa você entregaria a um agente e como saberia que a checagem merece confiança?",
+      "resposta": "Escolha uma etapa que dê para checar contra uma regra, rodar em loop limitado, rastrear e devolver a um humano. Só automatize se as quatro respostas forem sim e meça a confiança com um dataset de exemplos."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que falta no talk para você confiar no limite que libera a próxima fase de autonomia?",
+      "resposta": "Não há dados do Coinbase, como taxa de erro, tamanho de amostra ou o limite usado, nem caso real sem supervisão. Ele também não explica como medir esse limite, e o palestrante fala de uma empresa que quer adotar agentes."
+    }
+  ],
+  "experimento": {
+    "titulo": "Mapear um processo em etapas e checagens",
+    "minutos": 25,
+    "precisa": "Papel ou planilha e um processo que você conhece bem",
+    "passos": [
+      "Liste as etapas de um processo do seu trabalho e as dependências entre elas.",
+      "Marque quais etapas poderiam rodar em paralelo e quais exigem aprovação humana.",
+      "Para uma etapa candidata, responda se dá para checar contra uma regra, rodar em loop limitado, rastrear e devolver a um humano."
+    ],
+    "sucesso": "Você tem uma etapa com quatro respostas sim e uma regra escrita de como seria a checagem."
+  }
 }

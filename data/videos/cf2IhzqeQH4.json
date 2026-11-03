@@ -21,35 +21,40 @@
       "texto": "Hoje muitos times registram o uso depois da inferência e só então conferem limite e cobrança. Sasson defende o caminho inverso: a checagem de direito de uso roda no caminho crítico da requisição, e o acerto de contas acontece depois, de forma assíncrona. Ele compara com o caixa eletrônico, que valida o saque antes de entregar o dinheiro.",
       "t": 387,
       "legenda": "Diagrama mostra a checagem movida para antes da inferência.",
-      "print": "img/cf2IhzqeQH4/0.jpg"
+      "print": "img/cf2IhzqeQH4/0.jpg",
+      "descricao": "Slide 'The real problem: no entitlement layer' comparando request/inference/log/bill later com request/ENFORCE sync/inference/settle async"
     },
     {
       "titulo": "Crises de preço eram problema de infraestrutura",
       "texto": "Em abril, a Anthropic cortou agentes de terceiros como o OpenClaw dos planos de assinatura, a OpenAI mudou o preço do tier Pro e o GitHub encerrou o acesso gratuito ao Copilot. Para o palestrante, a causa comum foi não conseguir separar quem usa API de quem usa assinatura, nem limitar o gasto antes da fatura.",
       "t": 104,
       "legenda": "Os três casos citados como emergências de preço em um único mês.",
-      "print": "img/cf2IhzqeQH4/1.jpg"
+      "print": "img/cf2IhzqeQH4/1.jpg",
+      "descricao": "Slide 'April 2026: the month every AI plan broke' com linha do tempo dos casos Anthropic, OpenAI e GitHub"
     },
     {
       "titulo": "Três traços da arquitetura da OpenAI",
       "texto": "Sasson cita um texto da equipe de financial engineering da OpenAI, de fevereiro. Ele extrai três pontos: a avaliação é única e síncrona, a prioridade é determinística (as regras são conhecidas de antemão) e o sistema é financeiro, não só de cobrança, porque decide antes de qualquer fatura.",
       "t": 515,
       "legenda": "Mostra a ordem de decisões avaliadas a cada requisição.",
-      "print": "img/cf2IhzqeQH4/2.jpg"
+      "print": "img/cf2IhzqeQH4/2.jpg",
+      "descricao": "Slide 'OpenAI's blueprint: the decision waterfall' com fluxo de checagem de direito, limite de taxa, prioridade de créditos e débito assíncrono"
     },
     {
       "titulo": "Concorrência e origem dos créditos",
       "texto": "Se 10 mil agentes puxam do mesmo saldo ao mesmo tempo, o saldo visível engana e ocorre gasto duplicado (double spend). Bancos resolvem com reserva (hold), liquidação, idempotência e partida dobrada. Créditos também vêm de fontes diferentes, e é preciso definir qual é consumido primeiro, em vez de usar um único inteiro no banco.",
       "t": 640,
       "legenda": "Ilustra o risco de vários consumidores sobre o mesmo saldo.",
-      "print": "img/cf2IhzqeQH4/3.jpg"
+      "print": "img/cf2IhzqeQH4/3.jpg",
+      "descricao": "Slide '10,000 agents. One dollar left.' em baixa resolução, mostrando agentes disputando o mesmo saldo"
     },
     {
       "titulo": "Quatro padrões para vender IA em escala",
       "texto": "Os padrões são: reservar antes da inferência e liquidar o real depois; manter o medidor e o ledger (livro-razão) dentro da própria VPC; checar saldo durante o trabalho de agentes, cujo custo não se conhece de antemão; e dar visibilidade de gasto por modelo, equipe, usuário e agente para CFO e CIO.",
       "t": 891,
       "legenda": "Resume os quatro padrões que o palestrante vê se repetirem.",
-      "print": "img/cf2IhzqeQH4/4.jpg"
+      "print": "img/cf2IhzqeQH4/4.jpg",
+      "descricao": "Slide 'Four enforcement patterns' com hold and settle, in-VPC, agent SDK e governance graph"
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "agentes hipotéticos disputando o mesmo saldo",
       "t": 640
     }
-  ]
+  ],
+  "rotulo": "Cobrança de IA por uso, como um caixa eletrônico",
+  "objetivo": "desenhar o fluxo de reservar saldo antes da inferência e liquidar o custo real depois, com tetos de gasto por agente",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que significa checar antes e liquidar depois?",
+      "resposta": "A checagem de direito de uso roda antes da chamada ao modelo, no caminho crítico. O acerto de contas do gasto real acontece depois, de forma assíncrona, como o caixa eletrônico que valida o saque antes de entregar o dinheiro."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Seu agente tem custo imprevisível por tarefa. Como limitar o gasto?",
+      "resposta": "Reserve um orçamento por tarefa antes de começar, cheque o saldo durante o trabalho e concilie o gasto real ao final. Defina também tetos por equipe, usuário e agente para um grupo não esgotar o contrato."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que fragilidades tem a argumentação de Sasson?",
+      "resposta": "A Stigg vende essa infraestrutura e o final convida ao estande. Os números citados (150 a 750 de subsídio, meio bilhão de créditos) vêm sem unidade ou fonte, e não há dado mostrando que a abordagem evitaria as crises de preço."
+    }
+  ],
+  "experimento": {
+    "titulo": "Simule reserva e liquidação de créditos",
+    "minutos": 30,
+    "precisa": "Python 3 ou uma planilha",
+    "passos": [
+      "Crie uma conta com 100 créditos e uma função reservar(valor) que desconta do saldo disponível.",
+      "Faça 5 chamadas que reservam 30 créditos cada e veja quantas passam.",
+      "Escreva liquidar(reserva, custo_real) que devolve a diferença ao saldo.",
+      "Rode de novo com custos reais menores que o reservado e confira o saldo final."
+    ],
+    "sucesso": "Só três reservas passam, não há gasto duplicado e o saldo final bate com 100 menos a soma dos custos reais."
+  }
 }

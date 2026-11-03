@@ -21,28 +21,32 @@
       "texto": "Os modelos de pesos abertos caem em três faixas de acerto. Qwen e DeepSeek ficam perto de 32,5% a 40%, o GLM chega ao nível do Opus e o Kimi K3 passa de 80%. Qwen e DeepSeek rendem parecido, mas um exige hardware cerca de quatro vezes mais caro de alugar. Já o salto do GLM para o Kimi K3 dá cerca de 20% a mais de acerto por só 15% a mais de custo. O custo não segue uma curva suave.",
       "t": 545,
       "legenda": "Custo de hardware sobe em degraus, sem relação linear com a acurácia.",
-      "print": "img/9-Y_oS9OBLc/0.jpg"
+      "print": "img/9-Y_oS9OBLc/0.jpg",
+      "descricao": "Gráfico de taxa de resolução por modelo (Qwen 35,4%, DS-v4-Flash 39,1%, GLM-5.2 62,5%, Opus 62,5%, Kimi-K3 86,4%) com setas de custo de GPU"
     },
     {
       "titulo": "Concorrência pesa mais que acurácia",
       "texto": "Ao usar a própria máquina, a pergunta passa a ser quantos usuários cabem sem a latência explodir. O modelo e o KV cache de cada usuário precisam caber na memória. Com o Kimi K3, só cerca de quatro usuários rodaram com conforto, e ainda cerca de três vezes mais lentos que o Claude Code usado como referência.",
       "t": 700,
       "legenda": "Mesmo hardware grande comporta poucos usuários em tarefas longas.",
-      "print": "img/9-Y_oS9OBLc/1.jpg"
+      "print": "img/9-Y_oS9OBLc/1.jpg",
+      "descricao": "Tabela de usuários simultâneos confortáveis: Qwen DGX Spark 1, Qwen H200 48, DeepSeek 48, GLM-5.2 8, Kimi K3 4, com lentidão vs Claude Code"
     },
     {
       "titulo": "API, aluguel ou compra de GPU",
       "texto": "A análise de custo total de propriedade mostra que sistemas pequenos exigem GPU ocupada cerca de 89% do tempo para valer a pena, o que é inviável. Sistemas grandes, como 8 B200, empatam com a API a cerca de 15% de utilização. Para a classe do GLM em assistente de código, o estudo estima economia de custo ao sair da API.",
       "t": 800,
       "legenda": "Quanto menor o sistema, maior a utilização exigida para vencer a API.",
-      "print": "img/9-Y_oS9OBLc/2.jpg"
+      "print": "img/9-Y_oS9OBLc/2.jpg",
+      "descricao": "Tabela de custo API, compra e aluguel por sistema, com cards de utilização de equilíbrio: 89% em 4x H200 e 15% em 8x B200"
     },
     {
       "titulo": "O harness muda a conta de GPU",
       "texto": "Os três harnesses resolveram praticamente as mesmas tarefas. Mas com o GLM, o Codex gerou só metade dos tokens dos outros e usou metade do tempo de GPU. Na API isso passa despercebido. Em infraestrutura própria, vira metade da conta.",
       "t": 925,
       "legenda": "Mesmo acerto, metade dos tokens e do tempo de GPU com o Codex.",
-      "print": "img/9-Y_oS9OBLc/3.jpg"
+      "print": "img/9-Y_oS9OBLc/3.jpg",
+      "descricao": "Gráfico de tokens de saída por varredura de 64 tarefas: Codex com GLM-5.3-Flash gera 2,1M contra cerca de 3,8M a 4M nos outros harnesses"
     }
   ],
   "conceitos": [
@@ -260,5 +264,36 @@
       "contexto": "utilização de equilíbrio em 8 B200",
       "t": 825
     }
-  ]
+  ],
+  "rotulo": "Quando rodar o próprio modelo compensa mais que a API",
+  "objetivo": "estimar se rodar um modelo aberto em GPU própria compensa, usando concorrência, utilização de GPU e tokens por harness",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que o harness muda a conta de GPU mesmo com taxa de acerto parecida?",
+      "resposta": "Os três harnesses resolveram quase as mesmas tarefas, mas com o GLM o Codex gerou metade dos tokens e usou metade do tempo de GPU. Na API isso passa despercebido. Em infraestrutura própria, vira metade da conta."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que números você levantaria antes de migrar de API para GPU própria?",
+      "resposta": "Quantos usuários simultâneos o sistema terá, a utilização esperada da GPU e os tokens gerados e o tempo por tarefa no seu harness. Só a acurácia do modelo não basta."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites têm os resultados da imec?",
+      "resposta": "Valem para uma só aplicação, assistente de código em tarefas longas. O palestrante admite que o Kimi K3 pode ter visto parte do benchmark no treino. Quantização e speculative decoding ficaram sem detalhe, e os dados ainda não são públicos."
+    }
+  ],
+  "experimento": {
+    "titulo": "Calcular o ponto de equilíbrio entre API e GPU",
+    "minutos": 30,
+    "precisa": "Uma planilha e os preços públicos de uma API e de uma GPU alugada",
+    "passos": [
+      "Estime quantas tarefas por dia o seu uso gera e quantos tokens cada uma consome na API.",
+      "Levante o preço por hora de aluguel de uma GPU e quantos usuários simultâneos ela suportaria.",
+      "Calcule o custo por tarefa na API e na GPU para utilizações de 15%, 50% e 89%.",
+      "Marque em qual utilização a GPU empata com a API."
+    ],
+    "sucesso": "Você tem uma planilha que mostra o custo por tarefa nos dois cenários e a utilização de equilíbrio."
+  }
 }

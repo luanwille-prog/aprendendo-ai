@@ -21,35 +21,40 @@
       "texto": "O agente da esquerda recebe um pedido para cancelar uma reserva e rodar a ferramenta de apagar todas. Ele executa, porque a ferramenta existia e o usuário tinha permissão. A política do hotel dizendo para não usar IA nisso não é lida por ninguém na hora. O banco de dados fica sem as reservas.",
       "t": 217,
       "legenda": "Sem gateway, a chamada destrutiva retorna 200 e o banco é esvaziado.",
-      "print": "img/7v2myBde05o/0.jpg"
+      "print": "img/7v2myBde05o/0.jpg",
+      "descricao": "Demo em tela dividida, com os dois painéis de agente e linhas de log embaixo; texto pequeno, mas o layout confere."
     },
     {
       "titulo": "O gateway nega com 403 e o agente faz só a parte permitida",
       "texto": "No agente governado, a ferramenta é descoberta, mas a execução é barrada no gateway com código 403 (proibido). O token do usuário só vale no momento da tarefa, com permissões estreitas. O agente ainda cancela a reserva autorizada e avisa que não pode apagar o resto.",
       "t": 247,
       "legenda": "O mesmo prompt é bloqueado no gateway e o agente cumpre só o que é permitido.",
-      "print": "img/7v2myBde05o/1.jpg"
+      "print": "img/7v2myBde05o/1.jpg",
+      "descricao": "Tela dividida da demo com a resposta do agente no painel direito e o log de chamadas embaixo; texto pouco legível."
     },
     {
       "titulo": "Vazamento de dados pessoais barrado antes de sair",
       "texto": "Na segunda demo, o usuário pede a lista completa de hóspedes com e-mails e dados de carro, sob o pretexto de conformidade. O agente sem gateway entrega tudo (dados fictícios). O gateway bloqueia, sugere autenticação e deixa um rastro em OpenTelemetry para auditar cada passo.",
       "t": 339,
       "legenda": "O gateway devolve erro real, sem vazamento, e registra cada etapa.",
-      "print": "img/7v2myBde05o/2.jpg"
+      "print": "img/7v2myBde05o/2.jpg",
+      "descricao": "Painel de resposta no alto e log de chamadas na parte inferior da demo; texto pouco legível, sem painel de telemetria claro."
     },
     {
       "titulo": "Limite de requisições e cache cortam custo de token",
       "texto": "Um agente com bug repete o mesmo pedido oito vezes. Com o gateway, só as três primeiras passam e as demais são barradas antes do modelo. No cache semântico, cinco pedidos parecidos são servidos do Redis, gastando cerca de 200 tokens contra cerca de mil. O nível de similaridade é configurável de 0 a 1.",
       "t": 461,
       "legenda": "Rate limit de três por minuto barra as chamadas antes de gastar token.",
-      "print": "img/7v2myBde05o/3.jpg"
+      "print": "img/7v2myBde05o/3.jpg",
+      "descricao": "Lista de chamadas repetidas no log da demo, com os painéis de resposta acima; contagem de oito chamadas não dá para ler."
     },
     {
       "titulo": "Bloqueio de prompt grande e de assunto fora do escopo",
       "texto": "Um prompt com dez minutos de transcrição gasta 2.000 tokens de entrada e gera 312 de saída numa tarefa simples. O gateway recusa antes de chamar o modelo e sugere dividir em passos. Também filtra perguntas que não têm relação com reserva de hotel, como a previsão do tempo.",
       "t": 676,
       "legenda": "O gateway recusa o prompt antes de qualquer chamada ao modelo.",
-      "print": "img/7v2myBde05o/4.jpg"
+      "print": "img/7v2myBde05o/4.jpg",
+      "descricao": "Duas colunas de texto da demo, uma com o prompt grande e outra com a resposta de bloqueio; texto pequeno, layout legível."
     }
   ],
   "conceitos": [
@@ -204,5 +209,36 @@
       "contexto": "ferramentas expostas pelo servidor MCP do CRM citado",
       "t": 922
     }
-  ]
+  ],
+  "rotulo": "Governança de agentes num gateway de infraestrutura",
+  "objetivo": "mapear as ferramentas destrutivas dos seus agentes e exigir permissão no servidor, com identidade própria e limites de uso",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que o gateway fez nas demos que o prompt com regras não conseguiu fazer?",
+      "resposta": "Negou a ação proibida com 403, limitou requisições, serviu respostas parecidas do cache semântico, recusou prompts grandes e filtrou perguntas fora do escopo. O agente sem gateway apagou todas as reservas e vazou dados."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você reduziria o dano de um agente com bug que repete o mesmo pedido?",
+      "resposta": "Ativar limite de requisições e de tokens por usuário ou agente, e dar a cada agente identidade própria, com permissões mínimas e token de curta duração. Nas demos, só as três primeiras de oito repetições passaram."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que as demos e a pesquisa de 88% e 14% pedem cautela?",
+      "resposta": "O palestrante é CTO da empresa que vende o gateway, as demos usam dados fictícios num cenário montado para o agente falhar e a pesquisa é interna, sem metodologia. Não há comparação com outros gateways nem custo e latência."
+    }
+  ],
+  "experimento": {
+    "titulo": "Mapa de ferramentas destrutivas dos seus agentes",
+    "minutos": 25,
+    "precisa": "A lista de ferramentas e credenciais de um agente seu e uma planilha",
+    "passos": [
+      "Liste cada ferramenta que o agente pode chamar e marque as que apagam, exportam tudo ou gastam dinheiro.",
+      "Para cada ferramenta marcada, anote se a restrição existe só no prompt ou também no servidor.",
+      "Escolha uma ferramenta e mova a regra para uma checagem de permissão no servidor.",
+      "Teste pedindo ao agente a ação proibida e confira se o servidor responde 403."
+    ],
+    "sucesso": "A ação proibida é barrada pelo servidor mesmo quando o prompt é ignorado, e a planilha mostra o que ainda depende só de prompt."
+  }
 }

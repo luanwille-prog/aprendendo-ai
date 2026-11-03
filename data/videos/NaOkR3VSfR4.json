@@ -21,35 +21,40 @@
       "texto": "Agentes não são só chatbots. Há agentes em segundo plano, agendados, orientados a eventos, coordenadores de longa duração e sistemas multiagente. Como nos microservices, cada agente tem uma responsabilidade, e o conjunto precisa de um harness que os controle e os conecte a bancos, humanos e ferramentas (APIs ou MCP).",
       "t": 281,
       "legenda": "O harness é a aplicação, e o agente é só uma das peças.",
-      "print": "img/NaOkR3VSfR4/0.jpg"
+      "print": "img/NaOkR3VSfR4/0.jpg",
+      "descricao": "slide 'The application is the harness' com texto e mini diagrama do harness ao redor do agente"
     },
     {
       "titulo": "Partes determinísticas e não determinísticas",
       "texto": "O LLM entrega o raciocínio, que é não determinístico. Pagamentos e reinício de cluster Kubernetes pedem uma sequência de passos fixa, que roda igual toda vez. O harness garante esse determinismo onde ele importa. Como roda por segundos ou meses, também precisa de durabilidade para se recuperar de falhas.",
       "t": 311,
       "legenda": "Raciocínio fica com o LLM, e passos críticos ficam com código fixo.",
-      "print": "img/NaOkR3VSfR4/1.jpg"
+      "print": "img/NaOkR3VSfR4/1.jpg",
+      "descricao": "slide 'A harness runs more than an agent loop' com listas não determinística x determinística"
     },
     {
       "titulo": "Cérebro planeja, mãos executam",
       "texto": "O palestrante pede que o público leve só um slide. O agente decide o que deve acontecer. O harness decide como fazer, pede aprovação humana (por exemplo, uma mensagem no Slack antes de reiniciar um cluster de produção) e registra efeitos colaterais quando o passo não é idempotente.",
       "t": 496,
       "legenda": "Divisão de responsabilidades entre o LLM (cérebro) e o harness (mãos).",
-      "print": "img/NaOkR3VSfR4/2.jpg"
+      "print": "img/NaOkR3VSfR4/2.jpg",
+      "descricao": "slide 'The agent plans. The harness executes.' com o que o agente decide e o que o harness decide"
     },
     {
       "titulo": "Sagas de ligação tardia",
       "texto": "Um harness agêntico é uma saga (fluxo de passos com controle de falhas) cujo desenho nasce em tempo de execução. O conjunto de ferramentas é finito e determinístico, mas o agente monta a combinação. Com N ferramentas, ele cobre combinações que ninguém desenharia à mão, e mantém visibilidade e controle de um workflow tradicional.",
       "t": 649,
       "legenda": "O agente propõe o workflow, e o motor de workflow o executa.",
-      "print": "img/NaOkR3VSfR4/3.jpg"
+      "print": "img/NaOkR3VSfR4/3.jpg",
+      "descricao": "slide 'Late-bound sagas' com diagrama de nós e ferramentas montado em runtime"
     },
     {
       "titulo": "Demo: agente de SRE em dois ciclos",
       "texto": "O LLM devolve uma sequência de passos: coletar evidências, analisar logs, reverter o deploy e verificar a recuperação. Uma ferramenta de plan and compile transforma o plano em workflow do Conductor, que é executado. No segundo ciclo, o agente vê que o rollback já foi feito e só checa os serviços dependentes.",
       "t": 804,
       "legenda": "O plano do LLM vira workflow determinístico e roda em dois ciclos.",
-      "print": "img/NaOkR3VSfR4/4.jpg"
+      "print": "img/NaOkR3VSfR4/4.jpg",
+      "descricao": "tela do Conductor com o workflow compilado do plano do LLM, com nós e JSON à direita"
     }
   ],
   "conceitos": [
@@ -57,7 +62,7 @@
       "nome": "Agent harness",
       "traducao": "estrutura de execução ao redor do agente",
       "nivel": "intermediario",
-      "chave": "agent harness",
+      "chave": "harness",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -199,5 +204,36 @@
       "contexto": "Duração possível de um harness em execução",
       "t": 372
     }
-  ]
+  ],
+  "rotulo": "Cérebro e mãos para agentes em produção",
+  "objetivo": "separar o que o LLM decide do que o código executa de forma determinística, com aprovação humana antes de ações destrutivas",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que faz o cérebro e o que fazem as mãos nesse modelo?",
+      "resposta": "O LLM planeja o próximo passo. O harness, determinístico e durável, executa, pede aprovação humana quando preciso e registra efeitos colaterais quando o passo não é idempotente."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Em um fluxo seu, o que você passaria para código fixo?",
+      "resposta": "O que precisa rodar igual toda vez, como pagamento, reinício de serviço e envio de e-mail. O LLM fica com o diagnóstico e a escolha do próximo passo, e uma aprovação humana precede qualquer ação destrutiva."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites tem a demo do agente de SRE?",
+      "resposta": "É uma execução gravada e pré-planejada, como o palestrante admite. Não há dado de falhas evitadas, custo ou latência, a ideia de que agentes em produção são comuns se apoia em mãos levantadas, e ele divulga o Conductor e a Orkes."
+    }
+  ],
+  "experimento": {
+    "titulo": "Agente que planeja e script que executa",
+    "minutos": 40,
+    "precisa": "Python e Claude ou ChatGPT",
+    "passos": [
+      "Peça à IA um plano em JSON com passos para uma tarefa, como renomear arquivos de uma pasta de teste.",
+      "Escreva um script Python que lê o plano, aceita só ações de uma lista permitida e executa cada uma.",
+      "Adicione uma confirmação no terminal antes de qualquer ação que apague ou sobrescreva.",
+      "Grave um log de cada ação e rode o script duas vezes, conferindo que a segunda não repete o que já foi feito."
+    ],
+    "sucesso": "O script recusa ação fora da lista, pede confirmação e, na segunda rodada, pula os passos já feitos."
+  }
 }

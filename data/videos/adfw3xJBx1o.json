@@ -21,7 +21,8 @@
       "texto": "O Agent Chip ficou viral dentro do Monzo porque qualquer pessoa pode reagir a uma mensagem com um emoji e transformá-la em prompt. Depois ele virou um colega sempre disponível no Slack. Responde dúvidas de arquitetura, revisa código e recebe tarefas do Linear. A barreira de entrada baixa explica boa parte da adoção.",
       "t": 100,
       "legenda": "O gatilho do agente é uma reação com emoji, sem interface nova.",
-      "print": "img/adfw3xJBx1o/0.jpg"
+      "print": "img/adfw3xJBx1o/0.jpg",
+      "descricao": "Slide 'In January 2026 this went viral at Monzo' com o canal #agent-chip e a dica 'Write a prompt, react with emoji'."
     },
     {
       "titulo": "Lots of little multipliers: a plataforma vem antes do agente",
@@ -35,21 +36,24 @@
       "texto": "O Monzo colocou serviços internos e fontes de conhecimento atrás de um servidor MCP próprio. Ele decide de forma determinística o que os agentes podem ver e cuida de autenticação e autorização. A ideia começou com agentes de código locais e serve depois ao agente remoto. Mais contexto, dado com segurança, melhora o resultado.",
       "t": 318,
       "legenda": "O gateway centraliza o acesso e as permissões dos agentes.",
-      "print": "img/adfw3xJBx1o/2.jpg"
+      "print": "img/adfw3xJBx1o/2.jpg",
+      "descricao": "Diagrama: AI Agent conecta ao Monzo MCP server (authn/authz e comportamento determinístico) até serviços internos e bases de conhecimento."
     },
     {
       "titulo": "Sandbox isolado para conter o não determinismo",
       "texto": "Por ser banco regulado, o Monzo roda os agentes em pods dentro de um namespace isolado. A imagem do agente define as ferramentas, e um proxy libera só a saída de rede escolhida. O não determinismo fica na caixa mais interna, onde o agente pode agir à vontade, separada da infraestrutura de produção.",
       "t": 440,
       "legenda": "Camadas de isolamento deixam o agente livre sem tocar a produção.",
-      "print": "img/adfw3xJBx1o/3.jpg"
+      "print": "img/adfw3xJBx1o/3.jpg",
+      "descricao": "Diagrama do Isolated Namespace com Agent Sandbox, Agent Image, Proxy e bundles de agentes repetidos."
     },
     {
       "titulo": "O agente como peça de construção: incidentes e não engenheiros",
       "texto": "Com o agente reutilizável, o banco criou outros usos. Em incidentes, o Agent Chip entra no canal e investiga logs, traces e código, mantendo sinal alto. Ele também faz triagem de alertas de qualidade de dados e rascunha respostas entre squads. Pessoas de fora de engenharia pedem mudanças, recebem um rascunho testado em staging e só então chamam um engenheiro para revisar.",
       "t": 600,
       "legenda": "O agente investiga o incidente ao lado dos humanos, com controle de quanto fala.",
-      "print": "img/adfw3xJBx1o/4.jpg"
+      "print": "img/adfw3xJBx1o/4.jpg",
+      "descricao": "Slide 'Working in incident mode and leveraging the MCP' com a mensagem do Agent Chip ativando o Incident Responder no Slack."
     }
   ],
   "conceitos": [
@@ -159,5 +163,36 @@
       "contexto": "tarefas por dia executadas pelo agente",
       "t": 187
     }
-  ]
+  ],
+  "rotulo": "Como o Monzo construiu seu agente de código",
+  "objetivo": "listar as peças de plataforma que ajudam um agente de código a decolar, como gateway MCP, sandbox isolado e integrações prontas",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que, segundo os palestrantes, o Agent Chip decolou no Monzo?",
+      "resposta": "A plataforma interna já tinha muitas peças prontas, como alertas, monitoramento, integrações, staging, filas e deploy fácil. Eles chamam isso de lots of little multipliers. O modelo sozinho teria rendido pouco."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que partes da sua infraestrutura um agente poderia usar hoje e como você daria acesso seguro?",
+      "resposta": "Liste alertas, staging, filas e deploy que sua equipe já tem. Centralize o acesso a sistemas internos em um gateway com autenticação e autorização por agente e rode o agente em ambiente isolado."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que dados faltam para concluir que a plataforma explica o sucesso do agente?",
+      "resposta": "Os números (10% dos PRs, 1.800 tarefas por dia) vêm sem comparação anterior, taxa de aceitação, custo ou retrabalho. A ligação com a plataforma é plausível, mas não foi testada, e os ganhos em incidentes vêm só de exemplos."
+    }
+  ],
+  "experimento": {
+    "titulo": "Desenhar o acesso controlado de um agente",
+    "minutos": 45,
+    "precisa": "Claude Code e um projeto seu com alguma API, pasta de docs ou base de dados",
+    "passos": [
+      "Liste três fontes de dados do seu projeto que um agente poderia consultar.",
+      "Escreva para cada fonte o que o agente pode ler e o que não pode.",
+      "Crie um servidor MCP simples que exponha só uma dessas fontes, em modo leitura.",
+      "Peça ao agente para responder uma pergunta usando apenas esse servidor."
+    ],
+    "sucesso": "O agente responde usando só o servidor e não alcança as fontes que você não liberou."
+  }
 }

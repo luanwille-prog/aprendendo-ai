@@ -21,35 +21,40 @@
       "texto": "Merve afirma que quem usa VLM para tudo nunca chega a tempo real. Um detector treinado para a tarefa roda a 30 a 40 quadros por segundo em hardware simples e, segundo ela, supera o VLM. O VLM serve melhor como ferramenta de preparação, não de execução.",
       "t": 76,
       "legenda": "O detector pequeno roda em tempo real; o VLM não.",
-      "print": "img/dKcTBQzR7jI/0.jpg"
+      "print": "img/dKcTBQzR7jI/0.jpg",
+      "descricao": "Slide comparando detector RF-DETR com VLM, demo ao vivo mostrando vídeo em tempo real"
     },
     {
       "titulo": "Vibe training: VLM rotula, dois VLMs julgam, depois treina",
       "texto": "O pipeline pega um conjunto de imagens sem rótulos e rotula com um VLM de 9 bilhões de parâmetros. Dois VLMs menores julgam cada rótulo. Só os exemplos aprovados vão para o treino do RF-DETR. O agente de código conduz as etapas longas, e o processo pode rodar local ou na infraestrutura da Hugging Face.",
       "t": 327,
       "legenda": "Todo o fluxo, do dado sem rótulo ao detector treinado.",
-      "print": "img/dKcTBQzR7jI/1.jpg"
+      "print": "img/dKcTBQzR7jI/1.jpg",
+      "descricao": "Slide listando habilitadores: agentes de código, RF-DETR, VLMs menores para rotulação"
     },
     {
       "titulo": "Caixas desenhadas na imagem em vez de tokens de coordenadas",
       "texto": "O modelo rotulador devolve as caixas como tokens de texto. Merve não passa esses tokens aos juízes. Ela desenha as caixas sobre a imagem e pergunta, com a descrição do rótulo, se a caixa está correta. Os vereditos são unidos por acordo mínimo: basta um juiz aprovar para o exemplo entrar.",
       "t": 419,
       "legenda": "O juiz vê a caixa desenhada e responde aprova ou rejeita.",
-      "print": "img/dKcTBQzR7jI/2.jpg"
+      "print": "img/dKcTBQzR7jI/2.jpg",
+      "descricao": "Slide Vibe-training Pipeline com prompt de exemplo para execução com agente de código"
     },
     {
       "titulo": "Resultados em placas de trânsito e em documentos",
       "texto": "Nas placas, ela comparou o detector treinado com os rótulos reais e obteve bom mAP acima de 50, com uma diferença esperada por ter aprendido com rótulos gerados. Em documentos, o detector achou uma assinatura que o modelo rotulador tinha deixado passar, sinal de que generalizou.",
       "t": 637,
       "legenda": "O detector achou a assinatura que o rotulador perdeu.",
-      "print": "img/dKcTBQzR7jI/3.jpg"
+      "print": "img/dKcTBQzR7jI/3.jpg",
+      "descricao": "Resultados iniciais com métricas mAP em detecção de placas de trânsito e documentos"
     },
     {
       "titulo": "Três achados sobre juízes, prompts e agentes",
       "texto": "Um juiz rejeita muito mais que o outro, então exigir consenso deixaria poucos exemplos. Os prompts dos juízes ainda precisam de aprovação humana. E o agente de código, mesmo bom, espelhou placas na horizontal e mexeu na cor de semáforos, o que corrompe o conjunto de dados até ser instruído a não fazer isso.",
       "t": 733,
       "legenda": "Onde o pipeline ainda depende de julgamento humano.",
-      "print": "img/dKcTBQzR7jI/4.jpg"
+      "print": "img/dKcTBQzR7jI/4.jpg",
+      "descricao": "Gráfico de desbalanço entre juízes VLM, mostrando diferenças em aprovação de rótulos"
     }
   ],
   "conceitos": [
@@ -304,5 +309,36 @@
       "contexto": "VLMs que aprovam ou rejeitam os rótulos",
       "t": 357
     }
-  ]
+  ],
+  "rotulo": "Use o VLM para rotular e treine um detector pequeno",
+  "objetivo": "montar um fluxo em que um VLM rotula imagens, dois juízes filtram os rótulos e um detector pequeno roda em produção",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que Merve Noyan prefere um detector treinado a um VLM em tempo real?",
+      "resposta": "Um detector treinado para a tarefa roda a 30 a 40 quadros por segundo em hardware simples, e um VLM chamado a cada quadro não chega a esse tempo real. O VLM serve melhor para preparar os dados."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você quer detectar um tipo de objeto em vídeo de câmera. Como usaria o fluxo do talk?",
+      "resposta": "Rotule um conjunto de imagens com um VLM, peça a dois VLMs juízes que aprovem as caixas desenhadas, treine um detector pequeno só com os exemplos aprovados e revise você mesmo os prompts dos juízes."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que fatores deixam o custo de três a quatro dólares e os resultados menos convincentes?",
+      "resposta": "Ela trabalha na Hugging Face e usa créditos de computação da empresa. Há só dois testes, sem mAP exato, e em placas o rotulador acabou sendo a própria referência do teste."
+    }
+  ],
+  "experimento": {
+    "titulo": "Rotule imagens com um VLM e confira com um juiz",
+    "minutos": 40,
+    "precisa": "20 imagens suas com um objeto de interesse e um assistente com visão",
+    "passos": [
+      "Reúna 20 imagens com um tipo de objeto, como placas, produtos ou ferramentas.",
+      "Peça a um assistente com visão que descreva onde está o objeto em cada imagem.",
+      "Em uma conversa nova, mostre a imagem com a descrição e peça que um juiz aprove ou rejeite.",
+      "Confira você mesmo as aprovações e conte quantas estavam erradas."
+    ],
+    "sucesso": "Você sabe quantos rótulos o juiz aprovou e em quantos você discorda, e tem uma ideia clara do prompt do juiz que precisa ajustar."
+  }
 }

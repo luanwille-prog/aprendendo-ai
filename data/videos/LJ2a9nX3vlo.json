@@ -21,35 +21,40 @@
       "texto": "Macklin usa uma maçã para mostrar que um vetor é uma lista de números que ninguém lê, enquanto um grafo diz que a maçã vem de uma árvore, é redonda, é vermelha e é uma fruta. O grafo serve a humanos e a máquinas ao mesmo tempo, e isso sustenta a promessa de respostas explicáveis.",
       "t": 460,
       "legenda": "O vetor é opaco, o grafo mostra as relações de forma legível.",
-      "print": "img/LJ2a9nX3vlo/0.jpg"
+      "print": "img/LJ2a9nX3vlo/0.jpg",
+      "descricao": "Slide 'To Overcome AI's Black Box Problem' com maçã em dois painéis: visão humana e visão em vetor de números."
     },
     {
       "titulo": "RAG comum versus GraphRAG",
       "texto": "No RAG comum, os PDFs viram chunks (pedaços de texto), recebem embeddings (vetores) e os top k mais próximos vão para o LLM. No GraphRAG, o caminho de busca também passa por um grafo. Macklin recomenda vetor para perguntas que um buscador resolve e grafo para perguntas com vários saltos ou que exigem agregação. Ela defende usar os dois juntos.",
       "t": 765,
       "legenda": "A diferença de arquitetura está em um único bloco extra, o grafo.",
-      "print": "img/LJ2a9nX3vlo/1.jpg"
+      "print": "img/LJ2a9nX3vlo/1.jpg",
+      "descricao": "Diagrama GraphRAG: pergunta, retriever, busca vetorial e grafo de conhecimento sobre data sources, até a resposta do LLM."
     },
     {
       "titulo": "Configurar a ferramenta de busca no agente Aura",
       "texto": "Na tela de criação do agente, a ferramenta de busca de lições usa o índice vetorial chunk embedding, retorna os 5 melhores resultados e usa o modelo text-embedding-3-small da OpenAI, com 1536 dimensões. Uma consulta Cypher devolve nós conectados e pontuações, o que traz o contexto do grafo junto com o trecho.",
       "t": 2472,
       "legenda": "A busca vetorial entra como ferramenta do agente e devolve dados do grafo.",
-      "print": "img/LJ2a9nX3vlo/2.jpg"
+      "print": "img/LJ2a9nX3vlo/2.jpg",
+      "descricao": "Diálogo de configuração da ferramenta de busca no Aura Agents, com campos de índice e parâmetros. Texto pequeno, mas legível."
     },
     {
       "titulo": "Resposta com fontes e contagem errada",
       "texto": "O agente responde que temperatura controla a aleatoriedade do texto e mostra as fontes no curso. Na pergunta sobre quantas lições existem, ele diz 30. O banco tem 15, porque o construtor rodou duas vezes e duplicou nós. A palestrante confere no console e acha o número certo.",
       "t": 2757,
       "legenda": "Rodar o construtor duas vezes inflou a contagem; só a consulta direta revelou o erro.",
-      "print": "img/LJ2a9nX3vlo/3.jpg"
+      "print": "img/LJ2a9nX3vlo/3.jpg",
+      "descricao": "Chat do agente Aura com a pergunta sobre lições e a resposta com a contagem. Texto pequeno; o painel com a consulta de 15 não aparece."
     },
     {
       "titulo": "O esquema guia o LLM na criação do grafo",
       "texto": "No código, um splitter de tamanho fixo corta o texto em chunks. O esquema lista tipos de nós (tecnologia, conceito, exemplo, processo, desafio, benefício), tipos de relação e padrões permitidos entre eles. Com isso o LLM não inventa estrutura nova a cada documento.",
       "t": 2942,
       "legenda": "O esquema fixa quais nós e relações o LLM pode extrair.",
-      "print": "img/LJ2a9nX3vlo/4.jpg"
+      "print": "img/LJ2a9nX3vlo/4.jpg",
+      "descricao": "Código Python do knowledge graph builder com listas de node types e relationship types no editor do VS Code."
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "tamanho do chunk no splitter de tamanho fixo",
       "t": 2942
     }
-  ]
+  ],
+  "rotulo": "GraphRAG para perguntas de contagem e vários saltos",
+  "objetivo": "separar perguntas que o RAG vetorial resolve das que pedem grafo e conferir a contagem do agente direto no banco",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quando o grafo ajuda mais que a busca vetorial, segundo Macklin?",
+      "resposta": "Em perguntas com vários saltos entre entidades ou que exigem agregação, como contar. O vetor serve para perguntas que um buscador resolve, e o grafo guarda as ligações entre os trechos."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você decidiria se o seu produto precisa de GraphRAG?",
+      "resposta": "Liste as perguntas reais dos usuários e separe as que um buscador vetorial já responde das que pedem contagem, soma ou vários saltos. Só as segundas justificam o grafo."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que o erro de contagem na demo revela sobre o pipeline?",
+      "resposta": "O agente disse 30 lições e o banco tinha 15, porque o construtor rodou duas vezes e duplicou nós. Só a conferência no console achou o erro, e não há benchmark comparando com RAG só de vetores."
+    }
+  ],
+  "experimento": {
+    "titulo": "Classificar 15 perguntas e testar uma contagem",
+    "minutos": 25,
+    "precisa": "Claude ou ChatGPT e 3 a 5 páginas de um documento seu sem dados sensíveis",
+    "passos": [
+      "Escolha um documento curto e escreva 15 perguntas que um usuário faria sobre ele.",
+      "Marque cada pergunta como busca de trecho, vários saltos ou contagem.",
+      "Peça ao modelo que extraia entidades e relações do texto num esquema que você definiu antes.",
+      "Responda à mão uma pergunta de contagem e compare com o que o modelo diz."
+    ],
+    "sucesso": "Você tem as 15 perguntas classificadas e sabe se a contagem do modelo bate com a sua."
+  }
 }

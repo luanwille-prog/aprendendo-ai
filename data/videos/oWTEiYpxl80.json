@@ -21,35 +21,40 @@
       "texto": "A Interactions API usa o mesmo formato de chamada para um modelo Gemini e para um agente. Você passa um modelo ou agente, uma entrada (texto ou multimodal) e ferramentas ou ambiente. O estado da conversa pode ficar no servidor: no turno seguinte você manda só o ID da interação anterior. Tarefas lentas, como gerar vídeo, rodam em segundo plano e você consulta depois.",
       "t": 231,
       "legenda": "Chamar modelo ou agente usa praticamente o mesmo código.",
-      "print": "img/oWTEiYpxl80/0.jpg"
+      "print": "img/oWTEiYpxl80/0.jpg",
+      "descricao": "Slide 'Introducing the Interactions API' com dois blocos de código: client.interactions.create para modelo Gemini e para agente Antigravity."
     },
     {
       "titulo": "De turnos user/model para uma linha do tempo de steps",
       "texto": "Nas APIs tradicionais, o resultado de uma função volta num turno com papel de usuário, embora venha do ambiente. Schmid defende trocar os turnos por uma linha do tempo de steps (passos), em que cada ação ou geração tem seu próprio tipo. O resultado de função vira function result, e novos recursos entram sem remendos.",
       "t": 453,
       "legenda": "Cada ação do agente vira um step com tipo próprio.",
-      "print": "img/oWTEiYpxl80/1.jpg"
+      "print": "img/oWTEiYpxl80/1.jpg",
+      "descricao": "Slide 'The Steps Data Model' com lista de tipos de step à esquerda e JSON de exemplo com steps tipados à direita."
     },
     {
       "titulo": "Cada agente ganha um sandbox gerenciado e persistente",
       "texto": "No campo environment, a chamada pede um sandbox na nuvem. Ali o agente roda código, cria arquivos, instala dependências e chama APIs, sem que você cuide de infraestrutura. O ambiente persiste entre interações e pode ser compartilhado: vários agentes trabalham no mesmo sistema de arquivos ou subagentes retomam o trabalho de outro.",
       "t": 545,
       "legenda": "Uma chamada de API sobe um sandbox na nuvem para o agente.",
-      "print": "img/oWTEiYpxl80/2.jpg"
+      "print": "img/oWTEiYpxl80/2.jpg",
+      "descricao": "Slide 'Antigravity as Remote Agent' com código de interactions.create usando agent e environment=\"remote\"."
     },
     {
       "titulo": "O agente é só arquivos",
       "texto": "Na demo, o agente de rádio é um AGENTS.md com as instruções (pesquisar, escrever roteiro, gerar música e fala, mixar) e uma pasta de skills com scripts Python que chamam outros modelos Gemini. O AGENTS.md entra no system prompt (instrução de sistema) e as skills são detectadas sozinhas. Para levar ao back end, basta copiar os arquivos e criar o agente.",
       "t": 1011,
       "legenda": "As instruções e as skills do agente cabem em arquivos de texto e Python.",
-      "print": "img/oWTEiYpxl80/3.jpg"
+      "print": "img/oWTEiYpxl80/3.jpg",
+      "descricao": "Editor do AI Studio mostrando o AGENTS.md do AI Talk Radio com as instruções de workspace, passos e execução."
     },
     {
       "titulo": "Agente empacotado a partir de um ambiente pronto",
       "texto": "Com a Agents API, você define o modelo base, a instrução e o ambiente. Um agente pode montar o próprio ambiente (instalar o GitHub CLI, adicionar skills, rodar checagens) e devolver um ID de ambiente. Novos agentes partem desse ambiente pré-configurado, e você compartilha o agente com times ou clientes sem Terraform ou Kubernetes.",
       "t": 699,
       "legenda": "Um ID de ambiente vira ponto de partida reutilizável para outros agentes.",
-      "print": "img/oWTEiYpxl80/4.jpg"
+      "print": "img/oWTEiYpxl80/4.jpg",
+      "descricao": "Slide 'Build your own managed agent' com blocos de código (base agent, environment); imagem pequena e de baixa resolução, texto pouco legível."
     }
   ],
   "conceitos": [
@@ -123,7 +128,7 @@
       "nome": "Skills",
       "traducao": "pacotes de instruções e scripts que o agente carrega",
       "nivel": "intermediario",
-      "chave": "skills",
+      "chave": "skill",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -170,5 +175,36 @@
       "contexto": "Máquina que o agente reportou no sandbox de teste",
       "t": 1104
     }
-  ]
+  ],
+  "rotulo": "Agente em sandbox gerenciado na Interactions API",
+  "objetivo": "montar um agente como arquivos AGENTS.md e skills e rodá-lo em um sandbox na nuvem com uma chamada de API",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que a Interactions API faz com o estado da conversa?",
+      "resposta": "Pode guardá-lo no servidor, então no turno seguinte você manda só o ID da interação anterior. Tarefas lentas, como gerar vídeo, rodam em segundo plano e você consulta depois."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você já tem um CLAUDE.md. Como testá-lo em um agente gerenciado?",
+      "resposta": "Use-o como AGENTS.md, com as skills, e confira se as instruções e skills são carregadas sem ajuste. Antes, avalie o que o sandbox poderá acessar, como segredos, rede e arquivos."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que o talk não mostra sobre o sandbox?",
+      "resposta": "Não compara custo, latência, limites de uso nem segurança com alternativas. As demos são curadas (o programa de rádio já estava gerado) e não há um caso real de agente rodando por horas ou dias. Schmid fala pelo Google DeepMind."
+    }
+  ],
+  "experimento": {
+    "titulo": "Compare modelo e agente na Gemini API",
+    "minutos": 40,
+    "precisa": "Uma chave gratuita do Google AI Studio e o playground da Gemini API",
+    "passos": [
+      "Crie sua chave no Google AI Studio e rode uma chamada na Interactions API com um modelo Gemini.",
+      "Rode a mesma chamada com o agente Antigravity e compare as respostas.",
+      "No playground, peça ao agente para explorar o ambiente onde roda, com sistema, CPU, memória e linguagens.",
+      "Baixe os arquivos que ele gerar e avalie se o fluxo serve para algo do seu trabalho."
+    ],
+    "sucesso": "Você tem as duas respostas lado a lado, sabe o que o sandbox oferece e decidiu se algum arquivo gerado foi útil."
+  }
 }

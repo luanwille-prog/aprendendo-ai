@@ -21,35 +21,40 @@
       "texto": "A extensão deixa a pessoa desenhar na página, escolher um elemento ou soltar um pin, como no Google Maps. Ao exportar, sai um arquivo JSON com as mudanças e um prompt pronto para o agente de código. Essa etapa é determinística: não chama modelo nenhum, só gera dados estruturados.",
       "t": 479,
       "legenda": "A anotação vira JSON estruturado, sem inferência de modelo.",
-      "print": "img/ZGzthw4BZiA/0.jpg"
+      "print": "img/ZGzthw4BZiA/0.jpg",
+      "descricao": "Slide 'Perception Agent Primitives' com 'Visual annotation' e 'Visual verification'. Não mostra o export em JSON nem o prompt."
     },
     {
       "titulo": "Verificação visual contra design e fluxos Gherkin",
       "texto": "A segunda peça é uma skill que o agente de código roda contra os estilos CSS do site e contra fluxos escritos em Gherkin, como login e checkout. Na primeira execução, ela faz um rastreio de um nível no site e gera os fluxos sozinha. No fim, produz um relatório.",
       "t": 882,
       "legenda": "A skill percorre o site renderizado e emite um relatório de verificação.",
-      "print": "img/ZGzthw4BZiA/1.jpg"
+      "print": "img/ZGzthw4BZiA/1.jpg",
+      "descricao": "Slide 'UI Verification Skill' com captura de app ao fundo. Não mostra a execução nem o relatório."
     },
     {
       "titulo": "Ponte local liga a extensão ao agente",
       "texto": "Extensão e agente de código não se falam por padrão. Shruti Arora mostra um agent bridge local que recebe as anotações e as entrega ao agente. Para o workshop, ela edita o manifest.json (permissão de localhost) e o content.js (botão Apply Changes), e o fluxo roda edição, verificação e relatório.",
       "t": 1509,
       "legenda": "Sem a ponte, a anotação não chega ao agente.",
-      "print": "img/ZGzthw4BZiA/2.jpg"
+      "print": "img/ZGzthw4BZiA/2.jpg",
+      "descricao": "Diagrama legível: Chrome Extension -> HTTP -> Agent Bridge (porta 9999) -> shell -> AI CLI + Verify, no repositório do workshop."
     },
     {
       "titulo": "Conversa falada vira feedback de design",
       "texto": "Giovanni integra o dispositivo Bee, que escuta reuniões, ao mesmo fluxo. Uma fala como 'mude o título para vermelho' vira transcrição, o usuário clica em aplicar, o site muda e a verificação roda. Ele não fez a demo ao vivo por causa do Wi-Fi lento.",
       "t": 2054,
       "legenda": "Voz entra como fonte de feedback no mesmo ciclo de edição e verificação.",
-      "print": "img/ZGzthw4BZiA/3.jpg"
+      "print": "img/ZGzthw4BZiA/3.jpg",
+      "descricao": "Demo Bee: página de podcast com painel 'Bee Conversations' na lateral e botão Verify that it's you. Mostra a integração, não a transcrição."
     },
     {
       "titulo": "A verificação pegou o que o agente só afirmava",
       "texto": "Um participante pediu uma página de podcast de patos. O agente disse que fez o ícone de pato. Ele comenta que muita gente sabe que isso nem sempre acontece de verdade. Por isso a verificação visual rodou e o relatório confirmou a mudança na tela.",
       "t": 2273,
       "legenda": "O relatório confirma na tela o que o agente declarou ter feito.",
-      "print": "img/ZGzthw4BZiA/4.jpg"
+      "print": "img/ZGzthw4BZiA/4.jpg",
+      "descricao": "Página 'Duck Podcast' em estilo retro/NES com o Nova Act Annotator aberto. Não mostra o relatório de verificação."
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "tempo previsto para o caminho médio",
       "t": 1350
     }
-  ]
+  ],
+  "rotulo": "Verificação visual de código gerado por agentes",
+  "objetivo": "exigir verificação visual do resultado renderizado antes de aceitar o pronto de um agente de código, usando fluxos em Gherkin",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são as duas peças abertas que a Amazon AGI Lab apresenta?",
+      "resposta": "Uma extensão de Chrome que exporta feedback visual em JSON, sem usar modelo, e uma skill que confere o site renderizado contra specs de design e fluxos de usuário escritos em Gherkin."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você checaria se o agente fez mesmo o que disse que fez numa interface?",
+      "resposta": "Peça verificação no navegador depois de cada mudança e escreva os fluxos críticos (login, checkout) em Gherkin como roteiro fixo. No caso do ícone de pato, a verificação confirmou o que o agente só afirmava."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que conflitos de interesse e lacunas aparecem no workshop?",
+      "resposta": "É produto da Amazon, e os convidados promovem o dispositivo Bee, que foi o prêmio do concurso. Não há medição de tempo ou acerto, a redução de uma semana para poucas horas é estimativa falada e as demos ao vivo falharam por Wi-Fi."
+    }
+  ],
+  "experimento": {
+    "titulo": "Roteiro em Gherkin e verificação no navegador",
+    "minutos": 30,
+    "precisa": "Claude Code ou outro agente de código com acesso a navegador, como o Playwright, e uma página HTML simples",
+    "passos": [
+      "Peça ao agente uma página simples com um formulário de contato.",
+      "Escreva em Gherkin dois fluxos, enviar com campos válidos e enviar com o e-mail vazio.",
+      "Peça que o agente abra a página no navegador e verifique cada fluxo, com relatório do que passou.",
+      "Introduza um defeito de propósito e rode a verificação de novo."
+    ],
+    "sucesso": "O relatório aponta o defeito introduzido e os dois fluxos aparecem como passou ou falhou."
+  }
 }

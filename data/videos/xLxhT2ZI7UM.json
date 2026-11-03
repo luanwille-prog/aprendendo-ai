@@ -21,35 +21,40 @@
       "texto": "Os benchmarks populares de agentes web trazem juízes de LLM prontos, baseados em modelos menores como GPT-4o ou o4-mini. Ao conferir esses juízes com anotadores humanos, a equipe viu respostas erradas dadas com muita confiança. Treinar um agente com esse sinal produz um agente que mente melhor, não um agente melhor.",
       "t": 227,
       "legenda": "O mesmo agente cai de 74% para 38% quando o verificador é melhor.",
-      "print": "img/xLxhT2ZI7UM/0.jpg"
+      "print": "img/xLxhT2ZI7UM/0.jpg",
+      "descricao": "Gráfico comparando taxa de sucesso: 74.6% vs 37.9% para o mesmo agente, destacando a diferença entre juízes."
     },
     {
       "titulo": "Como o Universal Verifier funciona",
       "texto": "Dada uma tarefa, o sistema gera uma rubrica com cerca de 10 critérios. Para cada critério, ranqueia os screenshots da trajetória e usa os mais relevantes como evidência. Compara o que o agente disse ter feito com o que a tela mostra. A saída traz uma nota de processo (com crédito parcial) e um booleano de resultado.",
       "t": 318,
       "legenda": "O verificador julga critério a critério, com evidência da tela.",
-      "print": "img/xLxhT2ZI7UM/1.jpg"
+      "print": "img/xLxhT2ZI7UM/1.jpg",
+      "descricao": "Diagrama do pipeline Universal Verifier com tarefa, rubrica, matriz de relevância e resultado booleano."
     },
     {
       "titulo": "Rubrica boa avalia só o que foi pedido",
       "texto": "Na tarefa do hotel em Jacarta, uma rubrica ruim cobrava o preço total da estadia, que ninguém pediu. Isso derruba a nota do agente sem motivo. Os autores também isolam erros. Se o agente errou o sobrenome mais longo, ele não deve perder pontos no critério seguinte, que só pede o patrimônio da pessoa escolhida.",
       "t": 444,
       "legenda": "Critério extra inventado pela rubrica deflaciona a nota do agente.",
-      "print": "img/xLxhT2ZI7UM/2.jpg"
+      "print": "img/xLxhT2ZI7UM/2.jpg",
+      "descricao": "Tabela comparando rubrica boa versus ruim para tarefa de hotel, mostrando critérios extras que deflacionam notas."
     },
     {
       "titulo": "Falha controlável e incontrolável",
       "texto": "Se o agente busca o brinquedo certo na Amazon e ele está sem estoque, recebe nota máxima de processo, mas o resultado continua falso. Se acha uma alternativa parecida, conta como sucesso. Erro que o agente podia evitar, ou alucinação, é penalizado. Os autores montaram um esquema com os modos de falha e o crédito de cada um.",
       "t": 568,
       "legenda": "Nota de processo e resultado final podem divergir de propósito.",
-      "print": "img/xLxhT2ZI7UM/3.jpg"
+      "print": "img/xLxhT2ZI7UM/3.jpg",
+      "descricao": "Tabela de cenários de falha com brinquedo fora de estoque, separando falhas controláveis de incontroláveis."
     },
     {
       "titulo": "Validação com humanos e treino filtrado",
       "texto": "Os humanos julgam a trajetória e depois dizem se concordam com o verificador. O Cohen's kappa ficou em 0.58, no nível da concordância entre dois humanos. O verificador chegou a corrigir anotadores. Como prova final, treinar com 3 mil trajetórias filtradas por ele gerou um modelo melhor que o filtrado por um verificador de base.",
       "t": 726,
       "legenda": "O verificador concorda com humanos tanto quanto humanos entre si.",
-      "print": "img/xLxhT2ZI7UM/4.jpg"
+      "print": "img/xLxhT2ZI7UM/4.jpg",
+      "descricao": "Gráfico de Cohen's kappa mostrando concordância do verificador com humanos (0.58) igual à entre humanos."
     }
   ],
   "conceitos": [
@@ -199,5 +204,36 @@
       "contexto": "concordância que o autoresearch atingiu em relação ao verificador humano",
       "t": 884
     }
-  ]
+  ],
+  "rotulo": "Verificadores de agentes web que não mentem",
+  "objetivo": "avaliar um juiz de LLM pelo falso positivo e desenhar uma rubrica por tarefa com evidência concreta",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que diferença de resultado o talk mostra entre o juiz oficial e o Universal Verifier?",
+      "resposta": "Para o mesmo agente, o juiz oficial do WebVoyager deu 74% de sucesso e o Universal Verifier deu 38%. Os falsos positivos caíram de quase metade para perto de zero."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como testar um juiz de LLM que você usa?",
+      "resposta": "Compare o juiz com rótulos humanos numa amostra sua e meça o falso positivo, não só a taxa de acerto. Gere uma rubrica por tarefa, exija evidência (screenshots, logs) e separe nota de processo de resultado final."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites tem a validação do verificador?",
+      "resposta": "O verificador é do próprio grupo, comparado com juízes antigos e fracos. O conjunto de validação tem 150 trajetórias, cerca de 100 rotuladas por humanos, e o kappa de 0.58 é moderado. O Browserbase também é divulgado."
+    }
+  ],
+  "experimento": {
+    "titulo": "Contar falsos positivos de um juiz",
+    "minutos": 40,
+    "precisa": "Claude ou ChatGPT e 20 resultados de tarefas de um agente, com logs ou prints",
+    "passos": [
+      "Junte 20 resultados de tarefas de agente com evidência, como logs ou prints.",
+      "Marque você mesmo cada um como sucesso ou falha.",
+      "Peça a um LLM que julgue sem rubrica e depois com uma rubrica de cerca de 10 critérios gerada para a tarefa.",
+      "Conte os falsos positivos de cada juiz."
+    ],
+    "sucesso": "Você comparou o falso positivo dos dois juízes e viu se a rubrica com evidência o reduziu."
+  }
 }

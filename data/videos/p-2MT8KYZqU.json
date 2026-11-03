@@ -21,35 +21,40 @@
       "texto": "Um chatbot de alunos deveria mostrar só nomes e horários. Dizer no system prompt para não revelar notas deixa as notas ao alcance do modelo. Silverman propõe uma view do banco, ou uma cópia sincronizada, sem os campos sensíveis. Se o dado nunca chega ao contexto, não há o que vazar.",
       "t": 3723,
       "legenda": "A defesa mais forte é o modelo nunca ter acesso ao dado.",
-      "print": "img/p-2MT8KYZqU/0.jpg"
+      "print": "img/p-2MT8KYZqU/0.jpg",
+      "descricao": "slide 'Student Assistant Chatbot' com a conversa do chatbot de alunos; palestrante pequeno no canto, texto pouco nítido"
     },
     {
       "titulo": "AI BOM como gate de build",
       "texto": "Um AI BOM (AI bill of materials, inventário de modelos, datasets, agentes e ferramentas) vira ação quando entra no CI/CD. Na demo da plataforma EVO, uma política que proíbe modelos da Salesforce acusa na hora um problema crítico no projeto AI buffet. A proposta é guardar uma linha de base e quebrar o build quando surgir componente de IA fora dela.",
       "t": 2389,
       "legenda": "Inventário mais política detecta um modelo proibido sem revisão manual.",
-      "print": "img/p-2MT8KYZqU/1.jpg"
+      "print": "img/p-2MT8KYZqU/1.jpg",
+      "descricao": "tela da plataforma EVO com o projeto AI buffet e a lista de componentes/políticas; letras pequenas e pouco legíveis"
     },
     {
       "titulo": "Tool poisoning em servidores MCP",
       "texto": "Um servidor MCP malicioso pode esconder instruções na descrição de uma ferramenta, como incluir a chave SSH na consulta de uma busca. O modelo trata a descrição como autoridade. Silverman mostra o agent scan da Snyk, que lê os arquivos de configuração do Cursor e do VS Code e aponta prompt injection na definição da ferramenta.",
       "t": 4477,
       "legenda": "O scan inspeciona a descrição da ferramenta antes de o agente usá-la.",
-      "print": "img/p-2MT8KYZqU/2.jpg"
+      "print": "img/p-2MT8KYZqU/2.jpg",
+      "descricao": "terminal com comando agent-scan e saída de texto, link github.com/snyk/agent-scan; alerta de prompt injection não legível"
     },
     {
       "titulo": "Servidor MCP também é código com bug",
       "texto": "O servidor MCP da Framelink para Figma montava um comando curl concatenando a URL. Um argumento com aspas e ponto e vírgula executava um segundo comando no shell. É o mesmo padrão de SQL injection, aplicado a bash. Por isso a defesa inclui scan de código e de dependências, além do scan do agente.",
       "t": 4726,
       "legenda": "Entrada sem sanitização virou execução de comando no servidor MCP.",
-      "print": "img/p-2MT8KYZqU/3.jpg"
+      "print": "img/p-2MT8KYZqU/3.jpg",
+      "descricao": "slide 'Real-World Command Injection in MCP Servers' com trecho de código e a linha vulnerável destacada"
     },
     {
       "titulo": "Playbook de desenvolvimento seguro com agentes",
       "texto": "Depois de casos como o banco de produção apagado no Replit e os e-mails apagados pelo OpenClaw mesmo com regra salva na memória, Silverman lista camadas. Ambientes separados sem credenciais compartilhadas, aprovação humana para deploy e ações destrutivas, sandbox, rede segmentada e verificação de pacotes contra nomes alucinados.",
       "t": 5895,
       "legenda": "O controle fica fora da conversa, em ambiente, credencial e aprovação.",
-      "print": "img/p-2MT8KYZqU/4.jpg"
+      "print": "img/p-2MT8KYZqU/4.jpg",
+      "descricao": "slide 'Layer 2 - Architecture Boundaries' com as não negociáveis: ambientes separados, aprovação humana, sandbox e rede segmentada"
     }
   ],
   "conceitos": [
@@ -229,5 +234,36 @@
       "contexto": "de cerca de 4.000 skills do ClawHub com falha relevante",
       "t": 5611
     }
-  ]
+  ],
+  "rotulo": "Fundamentos de segurança para IA e agentes",
+  "objetivo": "reduzir o risco de um assistente de IA tirando dados do alcance do modelo, em vez de pedir segredo no prompt",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que o prompt não funciona como controle de acesso, segundo o talk?",
+      "resposta": "Instruir o modelo a não revelar algo não impede o vazamento. A recusa do chatbot de notas já mostra que ele tem acesso às notas. O controle certo é tirar o dado do alcance do modelo."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você vai instalar um servidor MCP e uma skill de terceiros. O que fazer antes?",
+      "resposta": "Leia as descrições das ferramentas, rode um scanner de segurança e trate ambos como código de terceiros. Mantenha um inventário de modelos, MCPs e skills e defina quem aprova cada novo componente."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites tem a evidência apresentada sobre shadow AI, skills com falhas e a demo final?",
+      "resposta": "O palestrante é da Snyk e admite ser parcial. As estatísticas de shadow AI e de skills com falhas foram citadas sem fonte. Na demo houve poucas tentativas e nenhuma extraiu a nota, então ela não prova robustez nem fragilidade."
+    }
+  ],
+  "experimento": {
+    "titulo": "Inventário e revisão de acesso dos seus assistentes",
+    "minutos": 30,
+    "precisa": "Lista dos assistentes de IA, MCPs e skills que você usa",
+    "passos": [
+      "Liste cada assistente, servidor MCP e skill em uso, com quem os instalou.",
+      "Para cada um, anote o que pode ler e escrever e marque os dados sensíveis dentro do alcance.",
+      "Escolha dois itens em que o dado sensível não precisa estar no contexto e retire o acesso.",
+      "Leia as descrições de ferramentas de um MCP que você usa e procure instruções estranhas."
+    ],
+    "sucesso": "Você tem um inventário com o acesso de cada item, retirou o acesso desnecessário em dois deles e revisou a descrição de um MCP."
+  }
 }

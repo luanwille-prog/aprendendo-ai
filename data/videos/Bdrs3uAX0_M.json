@@ -28,7 +28,8 @@
       "texto": "Mais código chega mais rápido, e agentes diferentes aplicam padrões diferentes. Surgem bibliotecas duplicadas, dependências entre serviços mais frágeis e pequenos desvios de padrão. Agentes também descobrem vulnerabilidades novas todo dia, o que exige manutenção constante. Revisores humanos e agentes de revisão ajudam, mas ele os compara a sacos de areia contra uma enchente.",
       "t": 186,
       "legenda": "Resume os quatro sintomas que o palestrante atribui ao excesso de código gerado.",
-      "print": "img/Bdrs3uAX0_M/1.jpg"
+      "print": "img/Bdrs3uAX0_M/1.jpg",
+      "descricao": "Slide sobre decaimento de código com visualização em padrão de quadrados vermelhos e brancos"
     },
     {
       "titulo": "Contexto é o gargalo, não o modelo",
@@ -42,14 +43,16 @@
       "texto": "A Sourcegraph propõe um grafo do código, com busca e análise precisa como a de um compilador, para que agentes saibam onde e como mudar. Sobre ele, o Agentic Batch Changes aplica uma mudança em muitos repositórios, reage a CI e comentários de PR, usa agentes onde precisa de julgamento e scripts determinísticos onde não precisa, e registra tudo para auditoria.",
       "t": 561,
       "legenda": "Mostra o produto que o palestrante oferece como resposta ao problema.",
-      "print": "img/Bdrs3uAX0_M/3.jpg"
+      "print": "img/Bdrs3uAX0_M/3.jpg",
+      "descricao": "Slide 'The code graph foundation' com três pilares: Code Understanding, Oversight, Evolution"
     },
     {
       "titulo": "Caso Mercari: de 2 repositórios a 80 achados",
       "texto": "Um usuário em acesso antecipado na Mercari corrigiu uma falha de injeção de código no GitHub (variáveis de ambiente mal configuradas) em dois repositórios. Depois pediu ao agente para explorar o resto e ele achou cerca de 80 outros pontos vulneráveis, corrigidos com um script determinístico.",
       "t": 623,
       "legenda": "Único caso concreto do talk, vindo de um usuário do próprio produto.",
-      "print": "img/Bdrs3uAX0_M/4.jpg"
+      "print": "img/Bdrs3uAX0_M/4.jpg",
+      "descricao": "Citação de Patrick Alfuski, engenheiro da Mercari, sobre descoberta de vulnerabilidades"
     }
   ],
   "conceitos": [
@@ -170,5 +173,36 @@
       "contexto": "repositórios citados como escala sem infraestrutura de visão",
       "t": 311
     }
-  ]
+  ],
+  "rotulo": "Agentes de código em bases grandes e antigas",
+  "objetivo": "explicar por que o contexto é o gargalo em grandes bases e planejar uma mudança em lote com script determinístico e auditoria",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Para Adler, onde está o gargalo dos agentes em bases corporativas?",
+      "resposta": "No contexto que o agente enxerga, mais do que na qualidade do modelo. Em dezenas de milhares de repositórios não dá para clonar tudo, e um agente só com grep não entende o que não vê."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você precisa aplicar a mesma correção em muitos repositórios. Como divide o trabalho entre script e agente?",
+      "resposta": "Pede um script determinístico para a parte mecânica e deixa o agente só para os casos de julgamento, com trilha de auditoria dos repositórios alterados, do status do CI e dos que ficaram de fora."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que o caso Mercari não prova que o produto funciona?",
+      "resposta": "É a citação de um usuário em acesso antecipado, sem taxa de falsos positivos nem medição de esforço. Adler é CEO da Sourcegraph, o produto está em beta e o talk não traz demo."
+    }
+  ],
+  "experimento": {
+    "titulo": "Mudança em lote com script e agente",
+    "minutos": 40,
+    "precisa": "3 a 5 repositórios públicos pequenos clonados, Python ou shell e um agente de código",
+    "passos": [
+      "Escolha uma mudança mecânica, como atualizar a versão de uma dependência.",
+      "Peça ao agente um script determinístico que aplique a mudança nos repositórios.",
+      "Rode o script e registre o resultado de cada repositório numa tabela (alterado, falhou ou ignorado).",
+      "Use o agente só nos repositórios que o script não resolveu."
+    ],
+    "sucesso": "Você tem uma tabela de auditoria com o status de cada repositório e sabe quantos exigiram julgamento do agente."
+  }
 }

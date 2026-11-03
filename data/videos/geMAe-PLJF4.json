@@ -21,35 +21,40 @@
       "texto": "CI, linting e revisores automáticos já checam os pull requests, mas tudo fica parado esperando uma pessoa aprovar. Nisi defende que o foco deve ser saber se o código faz o que se espera. A revisão humana passa a servir para devolver contexto: o que mudou e por que importa.",
       "t": 63,
       "legenda": "O argumento central: PRs sobem mais rápido do que alguém consegue aprovar.",
-      "print": "img/geMAe-PLJF4/0.jpg"
+      "print": "img/geMAe-PLJF4/0.jpg",
+      "descricao": "Slide 'The bottleneck': checks de CI verdes, 'Review required' em vermelho e 'Waiting on a human: 0h'"
     },
     {
       "titulo": "Código vira cheiro para a mosca",
       "texto": "Um modelo rápido faz 30 perguntas neutras sobre o código e converte as respostas em um cheiro. A mosca já aprendeu, com recompensa de açúcar e punição amarga, o que é código bom ou ruim na base. Se a língua dela sai, o PR cheira bem e ela aprova.",
       "t": 314,
       "legenda": "Mostra como o código entra no conectoma e vira aprovação ou pedido de mudança.",
-      "print": "img/geMAe-PLJF4/1.jpg"
+      "print": "img/geMAe-PLJF4/1.jpg",
+      "descricao": "Slide 'A fruit fly can't read code': 'The nose' descreve 30 perguntas sim/não que viram cheiro, com a mosca ao lado"
     },
     {
       "titulo": "Jogo: plateia contra a mosca",
       "texto": "Três arquivos reais foram sorteados. A plateia acertou os três e a mosca acertou dois. Nisi cita 88% de acerto geral nos testes e, em casos mais difíceis, 96% e 98% ao pedir mudanças. Num PR real dele, a mosca não conseguiu decidir.",
       "t": 528,
       "legenda": "Placar da rodada: plateia 3 de 3, mosca 2 de 3.",
-      "print": "img/geMAe-PLJF4/2.jpg"
+      "print": "img/geMAe-PLJF4/2.jpg",
+      "descricao": "Jogo 'Round 1 of 3' com diff de src/punycode.ts e cartões Room/Fly/Tests ainda sem veredito"
     },
     {
       "titulo": "Só o humano sabe o porquê",
       "texto": "A mosca detecta lógica removida e condicionais alteradas, mas revisores como Greptile e CodeRabbit fazem isso melhor. Nenhuma ferramenta sabe por que a funcionalidade está mudando. Esse contexto de negócio é o que mantém a pessoa na revisão.",
       "t": 722,
       "legenda": "Limite apontado: detecta o que mudou, mas não explica por quê.",
-      "print": "img/geMAe-PLJF4/3.jpg"
+      "print": "img/geMAe-PLJF4/3.jpg",
+      "descricao": "Slide 'If a fruit fly can do code review...' com o texto: aprendeu o que mudou, nada sabe o porquê"
     },
     {
       "titulo": "Escalar só o que importa e exigir prova",
       "texto": "A cadeia tem três etapas: skill de revisão mantida pelo time (via code owners), classificador de risco e revisor automatizado. Se algo falhar, vai para um humano. Se tudo passar, o PR pode ser mesclado sozinho. O agente anexa screenshots, vídeos, resultados de teste e smoke tests como prova.",
       "t": 819,
       "legenda": "Fluxo proposto para decidir quais PRs chegam a uma pessoa.",
-      "print": "img/geMAe-PLJF4/4.jpg"
+      "print": "img/geMAe-PLJF4/4.jpg",
+      "descricao": "Slide 'What I propose instead': cartões 'Team review skill' e 'Classifier'; sem o terceiro passo visível e sem logo"
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "acerto num teste mais difícil de pedir mudanças",
       "t": 659
     }
-  ]
+  ],
+  "rotulo": "Filtrar PRs de risco para revisão humana com provas",
+  "objetivo": "montar uma cadeia de filtros de revisão que leve a uma pessoa só os PRs de risco, exigindo provas anexadas",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são as três etapas da cadeia de filtros proposta por Nisi?",
+      "resposta": "Uma skill de revisão mantida pelo time (via code owners), um classificador de risco e um revisor automatizado. Se algo falhar, o PR vai a um humano. Se tudo passar, pode ser mesclado sozinho."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que tipos de PR do seu time exigem olho humano e quais podem passar com CI e revisor automático?",
+      "resposta": "Escreva essa divisão como uma skill de revisão e peça ao agente que anexe provas a cada PR, como screenshots, saída de comandos e um smoke test que você possa rodar."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que não dá para liberar a mesclagem automática só com base no talk?",
+      "resposta": "Os 88% de acerto da mosca vêm de testes do próprio Nisi, sem amostra, método ou comparação. O talk não traz evidência de que o classificador e os revisores erram pouco, e o WorkOS tem estande no evento."
+    }
+  ],
+  "experimento": {
+    "titulo": "Escrever uma skill de revisão e um modelo de PR com provas",
+    "minutos": 30,
+    "precisa": "Um repositório seu e um agente de código como o Claude Code",
+    "passos": [
+      "Liste 5 PRs recentes e classifique cada um como de baixo ou alto risco, com o motivo.",
+      "Escreva uma skill ou arquivo de instruções com os critérios que levam um PR a um humano.",
+      "Crie um modelo de descrição de PR que exija prova de funcionamento, como screenshot e comando de smoke test.",
+      "Peça ao agente que abra um PR pequeno seguindo o modelo."
+    ],
+    "sucesso": "O PR do agente chega com prova anexada e você consegue aplicar seus critérios aos 5 PRs antigos sem dúvida."
+  }
 }

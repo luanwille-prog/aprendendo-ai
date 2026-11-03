@@ -21,14 +21,16 @@
       "texto": "No código tradicional, o fluxo é previsível. Num agente, o código tem uma linha só (agent.run) e o resto depende do modelo. O trace registra cada chamada de LLM, documento recuperado e ferramenta usada. No exemplo do reembolso, o agente chamou a ferramenta de status do pedido, que era a errada para a pergunta do cliente.",
       "t": 202,
       "legenda": "O trace expõe a ferramenta errada escolhida no caso do reembolso.",
-      "print": "img/_zUp6y9bDU8/0.jpg"
+      "print": "img/_zUp6y9bDU8/0.jpg",
+      "descricao": "slide 'What actually happened?' com a árvore do trace support-agent: agent.run, llm.plan, retriever, tool.get_order_status marcada como wrong tool"
     },
     {
       "titulo": "O ciclo de melhoria manual é longo",
       "texto": "O caminho padrão tem várias etapas. Você identifica a falha em produção, junta uma amostra de casos, descobre a causa (prompt, guardrail ou ferramenta), cria uma eval para monitorar, faz a mudança, roda o experimento e publica. Duggal diz que isso leva horas ou dias e quer reduzir a minutos.",
       "t": 264,
       "legenda": "As etapas manuais que a proposta quer comprimir.",
-      "print": "img/_zUp6y9bDU8/1.jpg"
+      "print": "img/_zUp6y9bDU8/1.jpg",
+      "descricao": "slide 'Every failure runs the same loop' com as oito etapas, de production failure a verified improvement, agrupadas em observe, evaluate e develop"
     },
     {
       "titulo": "Um único lugar para dados e código",
@@ -42,14 +44,16 @@
       "texto": "Na demo, o Claude Code puxa os spans (cada passo de um trace) e os resultados de evals. Ele aponta cerca de 44% das interações com resumo ruim, respostas inventadas, chamadas redundantes de ferramenta e falhas silenciosas, em que a ferramenta diz ter dado certo sem trazer resposta. Também sugere quais evals criar.",
       "t": 1011,
       "legenda": "A análise do agente lista as falhas e a taxa de resumo ruim.",
-      "print": "img/_zUp6y9bDU8/3.jpg"
+      "print": "img/_zUp6y9bDU8/3.jpg",
+      "descricao": "terminal do Claude Code com a tabela de evals e Summarization em 14/32 bad (44%), e a análise das falhas de tool calls"
     },
     {
       "titulo": "Experimentos mostram se a correção funcionou",
       "texto": "Num caso anterior, o agente falhava com ações de outros países. Ele criou um dataset com os casos de falha e testou três versões. A base com bug teve 0% de acerto. A correção só do nome do país não resolveu, porque a ferramenta estava desatualizada. Com a ferramenta atualizada, a taxa chegou a cerca de 90%.",
       "t": 1263,
       "legenda": "Três iterações do experimento, da base com bug até cerca de 90% de acerto.",
-      "print": "img/_zUp6y9bDU8/4.jpg"
+      "print": "img/_zUp6y9bDU8/4.jpg",
+      "descricao": "Arize com o gráfico de experimentos screener-country-failures: três iterações, de 0% no baseline buggy até 90% na versão estável"
     }
   ],
   "conceitos": [
@@ -170,5 +174,36 @@
       "contexto": "tempo da correção ao vivo, ainda incompleta",
       "t": 1952
     }
-  ]
+  ],
+  "rotulo": "Agente de código que lê traces e conserta o seu agente",
+  "objetivo": "montar um ciclo em que um agente de código lê traces e evals, lista falhas e testa correções com um experimento",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que um trace mostra que a sensação de que o agente responde bem não mostra?",
+      "resposta": "O trace registra cada passo e decisão do agente. Com ele dá para ver onde a falha acontece, como resumos ruins, respostas inventadas e chamadas repetidas de ferramenta."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Seu agente falhou em alguns casos em produção. Como provar que uma correção funcionou?",
+      "resposta": "Monte um dataset com os casos que falharam e rode um experimento antes e depois da correção, comparando o resultado das evals. A melhora precisa aparecer nesses casos."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites tem a demo em que o agente chega a cerca de 90% de acerto?",
+      "resposta": "Vem de um agente de demonstração e de uma execução, sem tamanho de dataset nem repetição. A correção ao vivo levou cerca de 14 minutos e não terminou. O talk é pitch da Arize, e o modelo juiz não tem benchmark."
+    }
+  ],
+  "experimento": {
+    "titulo": "Peça a um agente de código a lista de falhas",
+    "minutos": 40,
+    "precisa": "Um agente seu com logs ou traces de pelo menos 20 execuções, e o Claude Code",
+    "passos": [
+      "Exporte 20 execuções do seu agente (entrada, passos e saída) para uma pasta em formato de texto ou JSON.",
+      "Abra o Claude Code nessa pasta e peça uma lista de falhas por tipo, com um exemplo de cada, sem alterar nenhum arquivo.",
+      "Escolha duas falhas da lista e confira à mão se o diagnóstico bate com o que aconteceu nos traces.",
+      "Salve as execuções que falharam em um arquivo de casos para testar a próxima correção."
+    ],
+    "sucesso": "Você tem uma lista de falhas por tipo, conferida à mão em dois casos, e um arquivo com os casos ruins para reusar."
+  }
 }

@@ -21,35 +21,40 @@
       "texto": "O palestrante mostra um ranking de código em que o GLM 5.2 aparece acima do Opus 4.8 e logo abaixo de outro modelo fechado. Ele conclui que a pergunta deixou de ser se o modelo aberto é bom o bastante e passou a ser como rodá-lo rápido e com confiabilidade em produção.",
       "t": 80,
       "legenda": "Ranking que coloca o GLM 5.2 acima do Opus 4.8 em código",
-      "print": "img/_naLJOqVOEI/0.jpg"
+      "print": "img/_naLJOqVOEI/0.jpg",
+      "descricao": "Slide 'The Frontier Is Opening Up' com o ranking Code Arena WebDev; glm-5.2 (max) aparece em 2º, acima dos Claude Opus 4.8"
     },
     {
       "titulo": "Mesmo modelo, provedores diferentes, tempos diferentes",
       "texto": "Com o GLM 5.2 e o mesmo agente de código, o palestrante pede um jogo estilo Candy Crush. Na FriendliAI o jogo sai em cerca de dois minutos. O outro provedor leva mais de três. Ele diz que a diferença vem da pilha inteira de inferência, e não do modelo.",
       "t": 235,
       "legenda": "Mesma tarefa e mesmo modelo, com tempos diferentes por provedor",
-      "print": "img/_naLJOqVOEI/1.jpg"
+      "print": "img/_naLJOqVOEI/1.jpg",
+      "descricao": "Tela dividida com os rótulos FriendliAI e Inference Provider A, mostrando os dois agentes de código gerando o jogo"
     },
     {
       "titulo": "Reaproveitar o prefixo evita recalcular a entrada",
       "texto": "Em agentes, a entrada passa de 10 mil tokens e boa parte se repete entre requisições. Reaproveitar o KV cache do prefixo comum pula o prefill e reduz o TTFT. Para funcionar em escala, o roteador precisa mandar a requisição à réplica que já guarda aquele prefixo.",
       "t": 351,
       "legenda": "Prefixo repetido é reaproveitado em vez de recalculado",
-      "print": "img/_naLJOqVOEI/2.jpg"
+      "print": "img/_naLJOqVOEI/2.jpg",
+      "descricao": "Slide 'Optimizing Long Context' com regras de thumb, roteamento cache-aware (Replica 2 com cache hit) e offload do KV cache"
     },
     {
       "titulo": "O cache vira uma hierarquia de memória",
       "texto": "O KV cache pode ficar maior que os pesos do modelo, e a memória da GPU é pequena. A solução descrita usa três camadas. O cache quente fica na GPU, o morno na RAM da CPU e o frio em NVMe ou disco. O sistema move blocos pouco usados e os traz de volta quando precisa.",
       "t": 420,
       "legenda": "Cache em três camadas, da mais rápida à mais barata",
-      "print": "img/_naLJOqVOEI/3.jpg"
+      "print": "img/_naLJOqVOEI/3.jpg",
+      "descricao": "Mesmo slide com o diagrama KV Cache Offloading: GPU VRAM (hot cache), CPU RAM/NVMe (warm/cold cache) e movimentação de blocos"
     },
     {
       "titulo": "Speculative decoding híbrido e adaptativo",
       "texto": "Um modelo rascunho propõe vários tokens e o modelo principal valida todos de uma vez. Isso reduz o tempo por token sem mudar a saída. A versão baseada em modelo aceita mais tokens, mas gasta computação extra. A versão sem modelo é barata, mas só funciona bem quando a saída lembra o contexto. A empresa alterna entre as duas conforme o tráfego.",
       "t": 510,
       "legenda": "Duas formas de rascunhar tokens, cada uma com custo diferente",
-      "print": "img/_naLJOqVOEI/4.jpg"
+      "print": "img/_naLJOqVOEI/4.jpg",
+      "descricao": "Slide 'Optimizing Interactive Speed' comparando drafting model-based e model-free, com trade-off e diagrama de verificação paralela"
     }
   ],
   "conceitos": [
@@ -204,5 +209,36 @@
       "contexto": "mais rápido segundo a Kilo Code em teste com modelos GLM",
       "t": 736
     }
-  ]
+  ],
+  "rotulo": "Por que o mesmo modelo aberto muda de velocidade",
+  "objetivo": "comparar provedores de um modelo aberto usando a sua própria carga de trabalho, com tempo, erros e custo",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que três técnicas o palestrante usa para explicar por que o mesmo modelo roda em velocidades diferentes?",
+      "resposta": "Prefix caching (reaproveitar o prefixo já calculado), cache em camadas e speculative decoding híbrido. Cada provedor combina isso de um jeito, e o resultado muda o tempo que o usuário espera."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Seu agente tem um prompt com instruções e ferramentas fixas e um conteúdo que muda a cada chamada. Como organizar o prompt para ajudar o cache do provedor?",
+      "resposta": "Deixe a parte fixa (instruções e ferramentas) no começo e o conteúdo variável no fim. Assim o prefixo igual entre requisições pode ser reaproveitado pelo cache."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que a comparação do jogo de tower defense e o 7x da Kilo Code não bastam para escolher um provedor?",
+      "resposta": "O palestrante trabalha na FriendliAI, que vende o serviço. A comparação usa uma tarefa, um concorrente sem nome e nenhuma repetição. O 7x é um depoimento sem metodologia. A parte sólida é testar a própria carga."
+    }
+  ],
+  "experimento": {
+    "titulo": "Compare dois provedores com o seu prompt",
+    "minutos": 30,
+    "precisa": "Conta em dois provedores do mesmo modelo aberto e um prompt real seu",
+    "passos": [
+      "Escolha um modelo aberto que dois provedores oferecem e separe um prompt real do seu trabalho, com o tamanho de entrada típico.",
+      "Rode o prompt 10 vezes em cada provedor e anote o tempo até a primeira resposta, o tempo total e qualquer erro.",
+      "Anote o custo informado de cada rodada e some por provedor.",
+      "Monte uma tabela com tempo médio, erros e custo, e compare."
+    ],
+    "sucesso": "Você tem uma tabela com tempo, erros e custo dos dois provedores e consegue dizer qual serve melhor para a sua carga."
+  }
 }

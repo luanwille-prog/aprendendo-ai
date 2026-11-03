@@ -21,35 +21,40 @@
       "texto": "A E2B pausa a sandbox salvando RAM e sistema de arquivos, e retoma do mesmo ponto. O agente não percebe que o tempo passou e encontra tudo como deixou, o que reduz erros. Um template (modelo) é uma VM já em execução, congelada. No workshop, cerca de 200 pessoas retomaram cópias do mesmo template.",
       "t": 1025,
       "legenda": "Um template congelado vira centenas de cópias iguais para a plateia.",
-      "print": "img/fz6-NS7qpZc/0.jpg"
+      "print": "img/fz6-NS7qpZc/0.jpg",
+      "descricao": "Dashboard da E2B com menu de Sandboxes e Templates, terminal conectado rodando o lab interativo."
     },
     {
       "titulo": "Diagnóstico básico de CPU, memória e disco",
       "texto": "As primeiras fases usam comandos Linux simples. Lista-se os processos, acha-se o que consome 99,7% da CPU e encerra-se com kill. Para o disco, roda-se um script que mostra o arquivo de 512 MB em /tmp e remove-se. Agentes geram esses problemas com frequência, então saber ler esse diagnóstico ajuda a revisar o trabalho deles.",
       "t": 1148,
       "legenda": "Um processo descontrolado aparece no topo da lista e cai com um kill.",
-      "print": "img/fz6-NS7qpZc/1.jpg"
+      "print": "img/fz6-NS7qpZc/1.jpg",
+      "descricao": "Página CPU Runaway com terminal mostrando TOP CPU e lista de processos com seus percentuais de consumo."
     },
     {
       "titulo": "Vida longa para a tarefa, vida curta depois dela",
       "texto": "A sandbox ganha timeout longo (uma hora) para a tarefa terminar e, ao fim, um timeout curto (um minuto) para não ficar ocupando recursos. Brockman descreve o tradeoff entre velocidade, com a sandbox rodando, e custo, com ela pausada. Para serviços que precisam ficar sempre no ar, ele diz que sandbox talvez não seja a melhor opção.",
       "t": 2319,
       "legenda": "A configuração em duas etapas libera recursos sem cortar a tarefa.",
-      "print": "img/fz6-NS7qpZc/2.jpg"
+      "print": "img/fz6-NS7qpZc/2.jpg",
+      "descricao": "Página Sandbox Task Lifecycle exibindo Task Runner Logs com campos de timeout (192s, 600s, 3600s)."
     },
     {
       "titulo": "Estado restaurado traz de volta os processos esquecidos",
       "texto": "Retomar do snapshot é rápido, mas processos abandonados voltam junto e degradam o desempenho. Brockman diz que boa parte da gestão de sandboxes é matar órfãos. Na demo, três processos 'orphan worker' são achados com grep e encerrados um a um.",
       "t": 2442,
       "legenda": "Três órfãos vivos aparecem e são mortos até a página liberar a próxima fase.",
-      "print": "img/fz6-NS7qpZc/3.jpg"
+      "print": "img/fz6-NS7qpZc/3.jpg",
+      "descricao": "Página Background Process Leak com terminal rodando código Python e Replay Logs mencionando orphan_worker."
     },
     {
       "titulo": "Mapa de usuário para sandbox no lugar do round robin",
       "texto": "Distribuir sandboxes em rodízio faz cada visita cair em um ambiente diferente. A correção é um dicionário que liga user ID a sandbox ID, para a pessoa voltar ao mesmo workspace. Em produção, ele diz que isso fica num banco de dados, o que também permite auditar reatribuições. Um teste falhou ao vivo porque faltava gravar o ID no dicionário.",
       "t": 2691,
       "legenda": "Uma estrutura de dados simples dá a cada usuário seu próprio workspace.",
-      "print": "img/fz6-NS7qpZc/4.jpg"
+      "print": "img/fz6-NS7qpZc/4.jpg",
+      "descricao": "Página Stale Workspace State com terminal exibindo código Python incluindo função assign_sandbox e estrutura de roteador."
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "arquivo que enchia o disco em /tmp",
       "t": 1616
     }
-  ]
+  ],
+  "rotulo": "Operar sandboxes de agentes sem perder o controle",
+  "objetivo": "diagnosticar problemas comuns de uma sandbox (CPU, disco, processos órfãos, timeout) e planejar como vigiar muitas delas",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que uma sandbox da E2B salva ao ser pausada e por que isso ajuda o agente?",
+      "resposta": "Salva a memória RAM e o sistema de arquivos e retoma do mesmo ponto. O agente não percebe que o tempo passou e encontra tudo como deixou, o que reduz erros."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Que rotinas você criaria para operar muitas sandboxes?",
+      "resposta": "Guarde o mapa de user ID para sandbox ID, defina dois timeouts (um longo para terminar e um curto depois), liste periodicamente sandboxes e processos sem dono para remover e restrinja a saída de rede."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que falta de evidência no talk?",
+      "resposta": "A meta de subir uma sandbox em menos de 100 ms não foi medida, e os problemas do lab são simulados e pequenos. O talk também divulga a E2B, que admite não oferecer GPU e não ter resolvido o Kubernetes."
+    }
+  ],
+  "experimento": {
+    "titulo": "Diagnóstico Linux numa sandbox descartável",
+    "minutos": 30,
+    "precisa": "Docker ou uma VM descartável e um terminal",
+    "passos": [
+      "Suba um container ou VM descartável.",
+      "Crie um processo que consome CPU, ache o PID com ps ou top e encerre com kill.",
+      "Crie um arquivo grande em /tmp, ache-o com du e remova.",
+      "Anote os comandos numa lista de checagem de diagnóstico."
+    ],
+    "sucesso": "Você resolveu os dois problemas só com comandos de terminal e tem uma lista de checagem pronta."
+  }
 }

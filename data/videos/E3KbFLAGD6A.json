@@ -35,7 +35,8 @@
       "texto": "No código antigo da Sentry (Django, DRF, sem tipagem estrita em todo lugar), a documentação OpenAPI divergia do comportamento real. As regras exigem tipo de resposta sem any, um decorator de schema em cada endpoint e concordância entre o tipo retornado e o schema.",
       "t": 439,
       "legenda": "Regras simples e verificáveis reduzem o drift entre código e documentação.",
-      "print": "img/E3KbFLAGD6A/2.jpg"
+      "print": "img/E3KbFLAGD6A/2.jpg",
+      "descricao": "Slide 'API practices' com código @extend_schema de endpoint (18/26), ligado ao decorator de schema das regras de OpenAPI."
     },
     {
       "titulo": "Whack-a-mole para linter as skills do agente",
@@ -49,7 +50,8 @@
       "texto": "Para julgamento qualitativo, o autor escreve políticas (menos testes, testes mais fortes, menos código defensivo) e roda um subagente por política, em loop, até todos concordarem. Ele também avisa que cobertura de testes e complexidade ciclomática são burladas pelo agente.",
       "t": 782,
       "legenda": "A revisão por políticas eleva o piso, mas não substitui o code review humano.",
-      "print": "img/E3KbFLAGD6A/4.jpg"
+      "print": "img/E3KbFLAGD6A/4.jpg",
+      "descricao": "Slide 'Grumpy engineer skill' (23/26) com lista: sem guardrails especulativos, testes fortes, depois ler o diff."
     }
   ],
   "conceitos": [
@@ -90,7 +92,7 @@
       "nome": "Skills",
       "traducao": "instruções empacotadas que o agente carrega sob demanda",
       "nivel": "intermediario",
-      "chave": "skills",
+      "chave": "skill",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -199,5 +201,36 @@
       "contexto": "cobertura de testes com testes ruins",
       "t": 878
     }
-  ]
+  ],
+  "rotulo": "Transformar correções repetidas em lint rules",
+  "objetivo": "transformar correções que você repete ao agente em lint rules, testes ou políticas que valem em toda sessão",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que corrigir o agente na conversa não resolve o problema?",
+      "resposta": "O agente não tem memória. Depois da compactação do contexto, a lição some e ele repete o erro. Uma regra gravada como lint, teste ou política continua valendo sempre."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você descobriria quais regras de lint o seu repositório precisa?",
+      "resposta": "Pedir ao agente que leia conversas passadas e comentários de revisão no GitHub e liste as correções repetidas que podem virar regra determinística. Repetir isso em intervalos regulares."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites tem a experiência relatada por Greg Pstrucha?",
+      "resposta": "É relato pessoal sem medição. Não há dados sobre quantas correções as regras evitaram nem sobre o custo de mantê-las. O contexto é uma empresa grande com engenheiros experientes, e em time pequeno a conta pode ser outra."
+    }
+  ],
+  "experimento": {
+    "titulo": "Minerar suas correções e criar uma lint rule",
+    "minutos": 35,
+    "precisa": "Um repositório com linter configurado e um agente de código com acesso às suas conversas ou comentários de PR",
+    "passos": [
+      "Peça ao agente que leia seus últimos comentários de revisão e liste as três correções que mais se repetem.",
+      "Escolha uma que dê para checar de forma determinística e peça a regra de lint correspondente.",
+      "Rode a regra no repositório e confira se ela pega os casos antigos sem muitos falsos positivos.",
+      "Se o agente contornar a regra, escreva outra regra que feche o atalho."
+    ],
+    "sucesso": "A regra falha em pelo menos um caso real antigo, passa no código correto e o agente deixa de repetir aquele erro."
+  }
 }

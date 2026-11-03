@@ -21,35 +21,40 @@
       "texto": "Do laptop, Bargoti lança um drone perto de San Mateo, outro no Colorado e um terceiro na sede, e manda um deles seguir um carro sozinho. Ele diz que pilotar um drone por pessoa não escala quando chegam mais chamadas e alertas. A proposta é comandar a frota por objetivo, sem se preocupar com o voo.",
       "t": 44,
       "legenda": "Um operador controla drones em estados diferentes ao mesmo tempo.",
-      "print": "img/2wgPHvW0mG8/0.jpg"
+      "print": "img/2wgPHvW0mG8/0.jpg",
+      "descricao": "Painel de controle com mapa de San Mateo e frota de drones, mostrando interface de comando simultâneo."
     },
     {
       "titulo": "Inteligência dividida entre borda e nuvem",
       "texto": "As ações imediatas acontecem no drone, o chamado edge (borda). O vídeo e a telemetria sobem para servidores na nuvem, onde GPUs rodam planejamento de prazo mais longo. O talk mostra que isso exige comprimir vídeo com boa qualidade em redes de pouca banda.",
       "t": 702,
       "legenda": "O que roda no drone e o que roda nos servidores.",
-      "print": "img/2wgPHvW0mG8/1.jpg"
+      "print": "img/2wgPHvW0mG8/1.jpg",
+      "descricao": "Slide diagrama isométrico: divisão entre computação na borda (drone) e na nuvem para tomada de decisão."
     },
     {
       "titulo": "Mapas como modelos do mundo mantidos pela frota",
       "texto": "O drone navega sobre um mapa que junta dados de prédios e dados vetoriais, como linhas de energia e estradas. Quando o voo revela algo novo, como um canteiro de obras, a observação volta para o processo de sincronização e toda a frota recebe o mapa atualizado na iteração seguinte.",
       "t": 831,
       "legenda": "O mapa desatualizado aparece como desalinhamento no vídeo.",
-      "print": "img/2wgPHvW0mG8/2.jpg"
+      "print": "img/2wgPHvW0mG8/2.jpg",
+      "descricao": "Slide mostrando desalinhamento de mapa: imagem 3D de cidade vs. mapa de cores revelando inconsistência."
     },
     {
       "titulo": "Agente com modelo de visão e linguagem acha e segue alvo",
       "texto": "O usuário digita 'look for a white jeep' e o VLM (modelo de visão e linguagem) usa uma API do drone para definir a trajetória, detecta o carro e chama ferramentas de rastreamento. Nenhuma regra específica foi codificada para esse caso. O agente recebe as ferramentas e o contexto e decide.",
       "t": 1018,
       "legenda": "Um pedido em texto vira busca e perseguição sem regras escritas à mão.",
-      "print": "img/2wgPHvW0mG8/3.jpg"
+      "print": "img/2wgPHvW0mG8/3.jpg",
+      "descricao": "Slide com agente VLM detectando e seguindo jipe em estacionamento, interface mostra vídeo e mapa ao vivo."
     },
     {
       "titulo": "Por que o end-to-end ainda não basta",
       "texto": "Bargoti diz que a Skydio testa aprendizado por reforço e entrada de sensor bruta, mas sistemas físicos exigem muitos noves de confiabilidade. Num modelo end-to-end fica difícil observar o que deu errado e garantir o comportamento. A empresa migra por partes, começando pelos trechos cheios de regras feitas à mão, como a busca e resgate.",
       "t": 1111,
       "legenda": "O limite atual do aprendizado de ponta a ponta em máquinas físicas.",
-      "print": "img/2wgPHvW0mG8/4.jpg"
+      "print": "img/2wgPHvW0mG8/4.jpg",
+      "descricao": "Slide diagrama de fluxo: sensor de imagem (globo terrestre) → modelo (caixa) → saída em cascata."
     }
   ],
   "conceitos": [
@@ -196,5 +201,36 @@
       "contexto": "latência de feedback do VLM, suficiente para decisões amplas",
       "t": 970
     }
-  ]
+  ],
+  "rotulo": "Como a Skydio divide autonomia entre borda e nuvem",
+  "objetivo": "separar o que um agente decide localmente do que pode esperar na nuvem e listar ferramentas de alto nível em vez de regras",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que roda no drone e o que roda na nuvem na pilha da Skydio?",
+      "resposta": "As ações imediatas rodam no drone, na borda. Vídeo e telemetria sobem para a nuvem, onde GPUs rodam o planejamento de prazo mais longo e VLMs pesados que respondem em 1 a 2 segundos."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você desenha um agente que age sobre um sistema. Como definiria as ferramentas dele?",
+      "resposta": "Liste ferramentas de alto nível, como buscar, seguir e pousar, em vez de escrever regras para cada caso, e separe o que exige resposta local imediata do que aceita 1 a 2 segundos de espera."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que lacunas há na demonstração ao vivo e na meta de 99,9999% de confiabilidade?",
+      "resposta": "A demo mostra um caso que deu certo, sem taxa de falha, custo por missão ou número de intervenções humanas. A meta vem sem detalhe do método de simulação, e o talk também vende vagas."
+    }
+  ],
+  "experimento": {
+    "titulo": "Reduza as regras de um processo a poucas ferramentas",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT e um processo seu com várias regras, como triagem de e-mails",
+    "passos": [
+      "Escreva as regras atuais do processo e reduza-as a cinco ferramentas de alto nível, como buscar, classificar e responder.",
+      "Descreva as cinco ferramentas em texto e peça ao modelo que decida usando só elas.",
+      "Teste em cinco casos reais do processo.",
+      "Marque quais casos exigiram uma regra extra e quais as ferramentas cobriram."
+    ],
+    "sucesso": "Você tem uma lista curta de ferramentas e sabe quantos dos cinco casos ela cobriu sem regra extra."
+  }
 }

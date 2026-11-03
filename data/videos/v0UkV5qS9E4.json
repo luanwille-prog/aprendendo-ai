@@ -21,35 +21,40 @@
       "texto": "Hoje cada pessoa usa o Claude ou o ChatGPT sozinha e depois baixa o arquivo e manda por e-mail ou Teams. A Compound dá a cada agente uma caixa de entrada. Todos da negociação entram na mesma conversa e o agente compartilha o contexto de todos. Há cuidados de projeto, como autenticar quem tem acesso (por causa de NDA) e esperar um pouco antes de responder, para não encher a thread de confirmações.",
       "t": 251,
       "legenda": "O agente participa das threads de e-mail como um colega, com acesso controlado.",
-      "print": "img/v0UkV5qS9E4/0.jpg"
+      "print": "img/v0UkV5qS9E4/0.jpg",
+      "descricao": "Slide 'Building multiplayer in familiar environments': agente com caixa de entrada, do iMessage/WhatsApp ao Outlook, com e-mail do agente no thread."
     },
     {
       "titulo": "Reconstruir o Office com agentes em loop",
       "texto": "Nenhuma opção pronta servia (plugins, computer use em máquinas virtuais, bibliotecas como OpenPyXL). A equipe apontou agentes para um objetivo, recriar o Office com fidelidade total, e usou o próprio Office como oráculo (referência de resposta certa). Em Excel, partiu do projeto aberto IronCalc e testou com arquivos reais.",
       "t": 375,
       "legenda": "O método é um loop de agentes comparando o resultado com o Office de verdade.",
-      "print": "img/v0UkV5qS9E4/1.jpg"
+      "print": "img/v0UkV5qS9E4/1.jpg",
+      "descricao": "Slide 'Building our own Office took 1.5 trillion tokens': 1,5 trilhão de tokens, 8 milhões de linhas de código e os três pontos da software factory."
     },
     {
       "titulo": "Motor headless escala em paralelo",
       "texto": "Excel, PowerPoint e Word de desktop dependem da CPU da máquina. Um motor sem interface roda muitas tarefas em paralelo. O palestrante afirma que recalcula planilhas de 20 MB quatro vezes mais rápido. Ser dono do editor também permite deixar comentários no arquivo e o agente revisar de forma assíncrona, até em time.",
       "t": 467,
       "legenda": "Comentários no documento viram instruções de revisão para o agente.",
-      "print": "img/v0UkV5qS9E4/2.jpg"
+      "print": "img/v0UkV5qS9E4/2.jpg",
+      "descricao": "Slide 'A headless engine runs many tasks at once': gráfico de operações por segundo (225.000 vs 19.000) e tempos de escrita e recálculo comparados."
     },
     {
       "titulo": "Loop escrever, renderizar, checar, corrigir",
       "texto": "Com OpenPyXL, o agente escreve a planilha sem ver o resultado e só confere se a célula tem certa cor ou fonte. Com motor próprio, ele renderiza o arquivo, olha a formatação e corrige. Esse ciclo permite iterar rápido em tarefas que levariam horas.",
       "t": 559,
       "legenda": "Renderizar o resultado deixa o agente conferir o que produziu.",
-      "print": "img/v0UkV5qS9E4/3.jpg"
+      "print": "img/v0UkV5qS9E4/3.jpg",
+      "descricao": "Slide 'Our engine checks at every step': biblioteca de código (write, deliver) versus loop write, render, check, fix do motor próprio."
     },
     {
       "titulo": "Enxames de agentes no lugar de banco vetorial",
       "texto": "Para data rooms com mais de 15.000 arquivos, o palestrante prefere agentes de código lendo arquivos com grep. Um agente líder divide o diretório, vários agentes voltam com achados e o ciclo se repete. Cada achado leva citação da fonte, para o analista confiar no número.",
       "t": 620,
       "legenda": "Um agente líder reparte os arquivos e junta os achados com citações.",
-      "print": "img/v0UkV5qS9E4/4.jpg"
+      "print": "img/v0UkV5qS9E4/4.jpg",
+      "descricao": "Slide 'A firm's context has both breadth and depth': 15.000 arquivos em um data room e modelo de 24 MB. Não mostra o swarm, só o contexto do problema."
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "mais rápido para recalcular Excel de 20 MB",
       "t": 467
     }
-  ]
+  ],
+  "rotulo": "Agentes com e-mail próprio e motor de Office headless",
+  "objetivo": "aplicar o loop escrever, renderizar, checar e corrigir e escolher entre agentes com grep e banco vetorial para ler documentos",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Qual a diferença entre o loop de escrita de planilhas com OpenPyXL e com um motor próprio?",
+      "resposta": "Com OpenPyXL o agente escreve sem ver o resultado e só confere propriedades como cor e fonte. Com motor próprio ele renderiza o arquivo, olha a formatação e corrige, o que permite iterar rápido."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como analisar uma pasta grande de documentos com agentes, segundo o talk?",
+      "resposta": "Usando agentes de código que leem arquivos com grep. Um agente líder divide o diretório e vários voltam com achados, cada um com citação da fonte. O palestrante prefere isso a um banco vetorial em data rooms de mais de 15.000 arquivos."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que falta para validar as promessas da Compound?",
+      "resposta": "É pitch de produto sem medição independente. Os números de tokens, linhas de código e ganho de 4x vêm só da empresa, a paridade pixel a pixel com o Office não foi demonstrada e faltam taxa de erro e custo."
+    }
+  ],
+  "experimento": {
+    "titulo": "Loop de renderizar e checar uma planilha gerada",
+    "minutos": 35,
+    "precisa": "Um agente de código como o Claude Code, Python com openpyxl e LibreOffice instalado",
+    "passos": [
+      "Peça ao agente que gere uma planilha .xlsx pequena, com formatação, usando openpyxl.",
+      "Peça que ele converta o arquivo em PDF ou imagem com LibreOffice e descreva o que vê.",
+      "Compare a descrição com o que você vê ao abrir o arquivo.",
+      "Peça que corrija o que estiver fora do pedido e repita o ciclo uma vez."
+    ],
+    "sucesso": "O agente encontra e corrige pelo menos um problema visual que a escrita sem renderização não mostraria."
+  }
 }

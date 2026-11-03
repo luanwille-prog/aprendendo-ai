@@ -21,35 +21,40 @@
       "texto": "O papel muda em três frentes. Em vez de escrever a feature, você monta o ciclo que a escreve. Em vez de ler o diff, você configura agentes que fazem code review e evals que julgam trabalho não determinístico. Em vez de olhar métricas, você faz agentes lerem a observabilidade.",
       "t": 153,
       "legenda": "O slide resume a troca de escrever feature por construir o ciclo.",
-      "print": "img/ImnZ7s68jw8/0.jpg"
+      "print": "img/ImnZ7s68jw8/0.jpg",
+      "descricao": "Slide 'The AI engineer, then and now': tabela comparando 2025 e agora (unidade de trabalho, verificação, problemas, abstração)."
     },
     {
       "titulo": "Telemetria feita para agentes lerem",
       "texto": "Segundo ela, os principais consumidores de telemetria passam a ser agentes, não pessoas. O dado de observabilidade vira o gatilho que acorda agentes sempre ligados, seja por cadência (a cada 3 ou 6 horas), por evento (mensagem no Slack, reclamação de usuário) ou por métrica.",
       "t": 319,
       "legenda": "Mostra o que acorda um agente sempre ligado.",
-      "print": "img/ImnZ7s68jw8/1.jpg"
+      "print": "img/ImnZ7s68jw8/1.jpg",
+      "descricao": "Diagrama 'What triggers the agent': gatilhos (Slack, mensagens, cronograma, métrica, evento, outro agente) levando a 'Agent spins up'."
     },
     {
       "titulo": "Anatomia de uma execução do Signal",
       "texto": "A cada gatilho, o sistema monta uma sandbox (ambiente isolado) com traces, logs de APM, acesso ao repositório e chaves. Um único proxy controla a entrada e a saída. Tudo é rastreado. Ao fim, ficam na memória os problemas achados e as skills aprendidas. Sandbox, credenciais e acesso ao repo são destruídos.",
       "t": 398,
       "legenda": "Mostra o que persiste e o que é descartado após cada execução.",
-      "print": "img/ImnZ7s68jw8/2.jpg"
+      "print": "img/ImnZ7s68jw8/2.jpg",
+      "descricao": "Diagrama 'Anatomy of an agent run': control plane (trigger, admit, compose job) e sandbox isolada com camadas, traces e teardown."
     },
     {
       "titulo": "Agente durável e independente de modelo",
       "texto": "O estado fica salvo fora da sandbox. Se a sandbox ou o harness falhar, uma nova sobe e retoma do passo interrompido. O Signal roda em Claude Code, Cursor e Codex, com vários modelos. Isso ajuda a comparar qualidade e a controlar custo.",
       "t": 524,
       "legenda": "Prova que o estado fica fora da sandbox e que o harness é trocável.",
-      "print": "img/ImnZ7s68jw8/3.jpg"
+      "print": "img/ImnZ7s68jw8/3.jpg",
+      "descricao": "Diagrama 'How to keep the agent durable': step 3 falha, estado salvo fora da sandbox e nova sandbox retoma do step 3."
     },
     {
       "titulo": "Avaliar os avaliadores",
       "texto": "Evals precisam concordar com o julgamento humano. A equipe monta golden datasets (conjuntos de referência rotulados por humanos), compara a saída do juiz com a humana e só lança um novo avaliador quando os dois concordam. Depois a eval roda offline e online.",
       "t": 713,
       "legenda": "Mostra o processo de validar o avaliador antes de publicá-lo.",
-      "print": "img/ImnZ7s68jw8/4.jpg"
+      "print": "img/ImnZ7s68jw8/4.jpg",
+      "descricao": "Slide 'You evaluate the evaluator': tabela de casos com rótulo humano x juiz e concordância de 80% (n = 5)."
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "cadência configurável de execução do Signal",
       "t": 306
     }
-  ]
+  ],
+  "rotulo": "O papel do engenheiro de IA: construir o ciclo",
+  "objetivo": "desenhar um ciclo em que agentes leem telemetria, avaliam e corrigem, com um LLM juiz validado contra rótulos humanos",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que muda no trabalho do engenheiro de IA, segundo Aparna?",
+      "resposta": "Em vez de escrever a feature, ele monta o ciclo que a escreve. Em vez de ler o diff, configura agentes de code review e evals. Em vez de olhar métricas, faz agentes lerem a telemetria."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você validaria um LLM juiz antes de confiar nele?",
+      "resposta": "Monte um golden dataset pequeno com casos reais rotulados por uma pessoa, compare a saída do juiz com a humana e só use o juiz quando os dois concordarem. Depois rode a eval offline e online."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que sinais indicam que o talk também é um pitch?",
+      "resposta": "Ela vende o Signal e a Arize, que fazem observabilidade e evals, e termina convidando para o estande. Não há dados de PRs aceitos, falsos positivos ou economia, e os cerca de 5.000 usuários vêm de um tweet citado de memória."
+    }
+  ],
+  "experimento": {
+    "titulo": "Validar um LLM juiz com dez casos rotulados",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT e dez saídas reais de IA do seu trabalho",
+    "passos": [
+      "Junte dez saídas de IA do seu trabalho e rotule cada uma como boa ou ruim.",
+      "Escreva um prompt de juiz com o critério de bom e ruim.",
+      "Peça ao juiz para classificar as dez saídas sem ver os seus rótulos.",
+      "Calcule em quantas o juiz concordou com você e leia as divergências."
+    ],
+    "sucesso": "Você tem a porcentagem de concordância e sabe se o juiz serve ou se o prompt precisa mudar."
+  }
 }

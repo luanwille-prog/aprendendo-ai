@@ -21,35 +21,40 @@
       "texto": "Num menu com setas, o humano vê a pergunta. O agente vê só o redesenho da tela e o harness (a camada que executa o agente) perde o estado da interface. A falha é silenciosa: sem erro, sem aviso. Flags resolvem fluxos simples, mas não perguntas que dependem de respostas anteriores ou de uma API.",
       "t": 235,
       "legenda": "O mesmo prompt aparece como pergunta para o humano e como loop de redesenho para o agente.",
-      "print": "img/aV_vgUSatqs/0.jpg"
+      "print": "img/aV_vgUSatqs/0.jpg",
+      "descricao": "Slide 'The problem' com prompt de setas do barista brew à esquerda e a nota de que o agente vê um loop de redesenho, não uma pergunta."
     },
     {
       "titulo": "Dica 1: tmux para enviar teclas e ler a tela",
       "texto": "O tmux roda a CLI numa sessão separada. O agente envia teclas (send-keys) e lê a tela (capture-pane). Serve para tarefas longas e vários agentes. Os palestrantes avisam que continua sendo leitura de tela, o caminho de menor esforço. Também pedem que o agente comece pelo comando help.",
       "t": 1608,
       "legenda": "Sessão tmux destacada, controlada por comandos que o agente consegue executar.",
-      "print": "img/aV_vgUSatqs/1.jpg"
+      "print": "img/aV_vgUSatqs/1.jpg",
+      "descricao": "Slide 'Good idea 01: tmux' com comandos new-session, capture-pane e send-keys, mais os prós e contras de screen-scraping."
     },
     {
       "titulo": "Dica 2: side channel com saída em JSON",
       "texto": "O side channel (canal lateral, via IPC, comunicação entre processos) funciona como uma API REST ao lado do site. O humano usa a interface visual e o agente lê o estado e envia entradas em JSON. Na demo, o comando barista brew ask lista campos e opções, como tamanhos de café e o padrão.",
       "t": 1824,
       "legenda": "A CLI entrega as opções em formato legível por máquina, sem raspar a tela.",
-      "print": "img/aV_vgUSatqs/2.jpg"
+      "print": "img/aV_vgUSatqs/2.jpg",
+      "descricao": "Slide 'Good idea 02: side channel' com comando barista brew ask devolvendo campo e opções em JSON, e barista brew reply aceito."
     },
     {
       "titulo": "Dica 3: injetar contexto em vez de perguntar passo a passo",
       "texto": "Humanos querem um conjunto de opções por vez. O agente pode receber tudo de uma vez num arquivo de entrada. O exemplo é leite de aveia acabando: o contexto diz ao agente o que confirmar com o usuário e se deve escolher um substituto.",
       "t": 1917,
       "legenda": "A mesma CLI atende duas personas, com contexto completo entregue ao agente.",
-      "print": "img/aV_vgUSatqs/3.jpg"
+      "print": "img/aV_vgUSatqs/3.jpg",
+      "descricao": "Slide 'Context injection' comparando o prompt humano de leite com o contexto JSON do agente (guidance, ask_user, policy)."
     },
     {
       "titulo": "A CLI deve ser pequena e determinística",
       "texto": "Um participante usou um parser determinístico perto do servidor para ganhar no placar. Lummus aproveita para defender que a CLI não deve conter outro agente. O LLM já é o elemento não determinístico, então a CLI precisa devolver a mesma resposta a cada comando.",
       "t": 2519,
       "legenda": "O placar premiava pontuação e tempo, o que favoreceu soluções determinísticas.",
-      "print": "img/aV_vgUSatqs/4.jpg"
+      "print": "img/aV_vgUSatqs/4.jpg",
+      "descricao": "Placar ao vivo do Café PayPal com pontuações em torno de 4.997 a 4.999 e colunas de resultado, tempo e pedidos iniciados."
     }
   ],
   "conceitos": [
@@ -170,5 +175,36 @@
       "contexto": "tempo previsto para o exercício inicial",
       "t": 900
     }
-  ]
+  ],
+  "rotulo": "Como deixar sua CLI utilizável por agentes",
+  "objetivo": "ajustar uma CLI para agentes usando saída em JSON, contexto injetado e um terminal controlável por tmux",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que um menu interativo de terminal com setas falha em silêncio quando um agente o usa?",
+      "resposta": "O agente não vê uma pergunta, vê um loop de redesenho da tela. Por isso a CLI não gera erro e o agente simplesmente não responde ao menu."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Sua CLI interna faz cinco perguntas em sequência. Como adaptá-la para um agente chamar?",
+      "resposta": "Aceite todo o contexto de uma vez (por arquivo ou argumentos), ofereça saída em JSON como side channel e mantenha o comando de help claro. A CLI continua pequena e previsível."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que o resultado do prêmio do workshop deixa de mostrar sobre as três dicas?",
+      "resposta": "O placar misturava precisão e latência, e o vencedor construiu um solver determinístico, ou seja, sem testar o uso de agente. Não há comparação entre tmux, side channel e injeção de contexto."
+    }
+  ],
+  "experimento": {
+    "titulo": "Teste uma CLI sua com um agente",
+    "minutos": 30,
+    "precisa": "Uma CLI com algum prompt interativo (pode ser um script pequeno seu) e o Claude Code",
+    "passos": [
+      "Escolha uma CLI ou escreva um script curto em Python que faça duas perguntas com input().",
+      "Peça ao agente de código para usar a CLI e anote se ele trava ou falha sem erro.",
+      "Adicione uma flag para saída em JSON e outra que aceita todas as respostas de uma vez.",
+      "Repita o pedido ao agente e compare o resultado."
+    ],
+    "sucesso": "O agente completa a tarefa na segunda tentativa sem travar, usando a saída em JSON ou o contexto passado de uma vez."
+  }
 }

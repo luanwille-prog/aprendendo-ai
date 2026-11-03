@@ -21,7 +21,8 @@
       "texto": "O reviewer orquestra, o perceiver quebra o vídeo em clipes e devolve embeddings, tags, OCR e descrição, e o retriever busca clipes e autores parecidos. O palestrante diz que só faz sentido usar vários agentes porque um único LLM não resolve o problema.",
       "t": 262,
       "legenda": "O fluxo entre os três agentes e o que cada um entrega.",
-      "print": "img/jNE8No-wvok/0.jpg"
+      "print": "img/jNE8No-wvok/0.jpg",
+      "descricao": "Slide da arquitetura com três agentes: Perceiver indexa, Retriever encontra fonte, Reviewer julga."
     },
     {
       "titulo": "A análise temporal acha o trecho fora do tema",
@@ -35,21 +36,24 @@
       "texto": "O retriever guarda tópicos em índice invertido, embeddings em banco vetorial e entidades em banco de grafos. Assim, na hora da inferência, ele recupera clipes, autores e entidades similares, reordena os candidatos e usa um classificador de spam para filtrar.",
       "t": 405,
       "legenda": "Cada sinal extraído vai para o armazenamento que melhor o consulta.",
-      "print": "img/jNE8No-wvok/2.jpg"
+      "print": "img/jNE8No-wvok/2.jpg",
+      "descricao": "Slide do Retriever com três bancos de dados: vetorial, grafo, key-value e índice invertido."
     },
     {
       "titulo": "VLM pequeno treinado no dado sujo da casa",
       "texto": "Modelos de fronteira aprendem com dados web limpos, mas vídeo de usuário é bagunçado. Por isso o time pré-treina o vision encoder com imagens internas e faz instruction tuning com saída em JSON e rótulos próprios. O palestrante diz que não se importa se o modelo sabe programar.",
       "t": 746,
       "legenda": "O projector liga o encoder de visão ao LLM, e é aí que entra o ajuste.",
-      "print": "img/jNE8No-wvok/3.jpg"
+      "print": "img/jNE8No-wvok/3.jpg",
+      "descricao": "Diagrama Stage 2 com vision encoder, projector e language model em sequência treinada."
     },
     {
       "titulo": "Laço diário de DPO com humanos na fila",
       "texto": "Todo dia uma amostra da produção passa por um LLM juiz treinado em rótulos humanos e por uma fila de revisão. Quando a métrica fica abaixo do limite, humanos rastreiam se a falha veio do raciocínio, de uma ferramenta errada ou da recuperação. Esses casos viram pares positivo e negativo para retreinar o modelo.",
       "t": 839,
       "legenda": "O ciclo contínuo que transforma falhas de produção em dado de treino.",
-      "print": "img/jNE8No-wvok/4.jpg"
+      "print": "img/jNE8No-wvok/4.jpg",
+      "descricao": "Fluxo circular Stage 3: produção, amostra, fila humana, preference pairs e DPO update."
     }
   ],
   "conceitos": [
@@ -261,7 +265,7 @@
       "nome": "LLM as a judge",
       "traducao": "LLM como juiz",
       "nivel": "intermediario",
-      "chave": "llm as a judge",
+      "chave": "llm-as-a-judge",
       "analogia": null,
       "explicacao": [],
       "pre_requisitos": [],
@@ -292,5 +296,36 @@
       "contexto": "limite de desempenho citado como exemplo",
       "t": 869
     }
-  ]
+  ],
+  "rotulo": "Três agentes pequenos para vídeo curto em escala",
+  "objetivo": "decidir quando dividir um fluxo em agentes com papéis claros e como medir cada nó para manter custo e latência sob controle",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são os três agentes do sistema e o que cada um faz?",
+      "resposta": "O reviewer orquestra e decide, o perceiver quebra o vídeo em clipes e devolve embeddings, tags, OCR e descrição, e o retriever busca clipes e autores parecidos."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você vai montar um fluxo de moderação de conteúdo com IA. Que filtros colocaria antes do modelo caro?",
+      "resposta": "Cache para conteúdo repetido e regras por metadados para fontes confiáveis. Meça também latência, custo de tokens e taxa de erro por etapa, não só a métrica final."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que provas faltam para aceitar que vários agentes pequenos superam um modelo grande?",
+      "resposta": "O talk não mostra precisão, recall, custo nem latência, e não compara com um modelo grande único. O único número é um limite de 95% dado como exemplo, e o sistema é interno da Meta, sem como auditar."
+    }
+  ],
+  "experimento": {
+    "titulo": "Um prompt contra dois papéis em sequência",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT e 10 textos curtos seus, como tickets ou avaliações",
+    "passos": [
+      "Defina uma tarefa de classificação, como marcar tickets urgentes, e rotule os 10 textos você mesmo.",
+      "Rode um único prompt que descreva e classifique cada texto e conte os acertos.",
+      "Rode em dois passos, primeiro um que extrai tópico e tom em lista e depois outro que decide só pela lista, e conte os acertos.",
+      "Compare acertos e número de chamadas nas duas versões."
+    ],
+    "sucesso": "Você sabe se dividir em papéis melhorou os acertos o bastante para justificar a chamada extra."
+  }
 }

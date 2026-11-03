@@ -21,14 +21,16 @@
       "texto": "Ferramentas como Sysdig, Wiz e Prisma verificam se o pacote foi atualizado. Elas não dizem se o exploit ainda funciona no código da aplicação. Chen usa um agente que escreve um exploit contra a versão antiga e um teste para ver se ele ainda passa na versão nova. A evidência vai para o time de segurança do banco.",
       "t": 342,
       "legenda": "Estrutura da tarefa que faz o agente provar se o CVE foi corrigido",
-      "print": "img/Bz1HFxQA1o8/0.jpg"
+      "print": "img/Bz1HFxQA1o8/0.jpg",
+      "descricao": "Slide 'A skill!' com tabela de status de remediação de CVEs por pacote; não mostra a estrutura da Harbor task"
     },
     {
       "titulo": "Backup que rodou não prova dado correto",
       "texto": "O ClickHouse não tem failover gerenciado entre regiões, então o banco monta o seu: backup para um bucket e restauração na região de recuperação. O log mostra que o job rodou, mas disco ruim, migração falha ou atraso de replicação deixam o dado velho. Chen propõe comparar contagem de linhas e verificar se as réplicas convergiram.",
       "t": 501,
       "legenda": "O status do job de backup não prova a correção dos dados",
-      "print": "img/Bz1HFxQA1o8/1.jpg"
+      "print": "img/Bz1HFxQA1o8/1.jpg",
+      "descricao": "Diagrama 'Backup & restore, not live replication': região primária, object store e região DR com ClickHouse e réplicas"
     },
     {
       "titulo": "Replicar para um bucket também decide residência de dados",
@@ -42,14 +44,16 @@
       "texto": "A interface mostra os dados do cliente mascarados, mas o judge lê o trace bruto e pode citar PII (dado pessoal) ou MNPI (informação material não pública) na explicação do score. Uma linha de prompt que pede explicação para o revisor humano basta para o vazamento. Chen sugere guardar só o score ou rodar um segundo judge sobre entrada já redigida.",
       "t": 656,
       "legenda": "Uma linha inocente do prompt faz o judge expor dados sensíveis",
-      "print": "img/Bz1HFxQA1o8/3.jpg"
+      "print": "img/Bz1HFxQA1o8/3.jpg",
+      "descricao": "Slide 'Pillar 3: Zero Leakage' com registro de cliente na UI, com número da conta mascarado; não mostra o system prompt"
     },
     {
       "titulo": "Vazamento zero tem custo",
       "texto": "O segundo judge com entrada redigida custa uma chamada de LLM extra por requisição. Chen diz que zero vazamento e soberania de dados não saem de graça. Ele também observa que os fatores que mais atrasam o deploy em banco são organizacionais, como aprovação para baixar imagens e compra de GPUs.",
       "t": 752,
       "legenda": "Fluxo com segundo judge, ao custo de uma chamada extra de LLM",
-      "print": "img/Bz1HFxQA1o8/4.jpg"
+      "print": "img/Bz1HFxQA1o8/4.jpg",
+      "descricao": "Diagrama de um LLM-as-judge lendo trace bruto, com raciocínio que pode vazar PII e checagem de flag no app; só um judge aparece"
     }
   ],
   "conceitos": [
@@ -170,5 +174,36 @@
       "contexto": "versão do pacote testada contra o exploit",
       "t": 342
     }
-  ]
+  ],
+  "rotulo": "IA em bancos: provar que o problema sumiu",
+  "objetivo": "exigir evidência de correção em vez de status de job, usando teste de exploit e revisão de LLM judges que possam vazar dados",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que um scanner de CVE não prova que a vulnerabilidade foi corrigida?",
+      "resposta": "Ele só confere a versão do pacote e não mostra se o exploit ainda funciona no código da aplicação. Chen usa um agente que escreve o exploit e um teste para ver se ele ainda funciona na versão nova."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você checaria se um LLM judge do seu sistema pode vazar dados do cliente?",
+      "resposta": "Revise o system prompt do judge e veja se alguma instrução pede para citar dados do cliente na explicação. Uma linha desse tipo basta para vazar PII. Um segundo judge com entrada redigida resolve, ao custo de uma chamada extra."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limite o fato de o palestrante ser da Cisco coloca sobre as conclusões?",
+      "resposta": "O talk é em parte pitch do produto de observabilidade da Cisco. Não há dados medidos sobre o prazo de um ano cair para semanas, nem sobre quantos CVEs o agente corrigiu ou quantas vezes o judge vazou PII."
+    }
+  ],
+  "experimento": {
+    "titulo": "Pedir um teste de exploit para uma correção",
+    "minutos": 40,
+    "precisa": "Claude Code ou outro assistente de código e um projeto seu com dependência de versão antiga",
+    "passos": [
+      "Escolha um projeto seu com uma dependência que tenha vulnerabilidade conhecida na versão atual.",
+      "Peça ao agente para escrever um teste que demonstre o problema na versão antiga.",
+      "Atualize a dependência e rode o mesmo teste na versão nova.",
+      "Guarde a saída dos dois testes como evidência da correção."
+    ],
+    "sucesso": "O exploit funciona na versão antiga, deixa de funcionar na nova e você guardou as duas saídas."
+  }
 }

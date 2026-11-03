@@ -28,7 +28,8 @@
       "texto": "O gráfico do METR mostra por quanto tempo agentes trabalham sozinhos com chance razoável de acabar a tarefa. Quanto mais longa a tarefa, mais fundo o agente cava um caminho errado, com centenas de chamadas de ferramenta. A skill orienta a trajetória logo no início.",
       "t": 195,
       "legenda": "O horizonte de tarefa dos agentes cresce, e o erro inicial fica mais caro.",
-      "print": "img/u-o0sW9nwmk/1.jpg"
+      "print": "img/u-o0sW9nwmk/1.jpg",
+      "descricao": "Gráfico METR do horizonte de tarefa dos modelos ao longo de 2019-2026, com Claude Opus 4.5 em destaque"
     },
     {
       "titulo": "MCP como camada de distribuição de skills",
@@ -42,14 +43,16 @@
       "texto": "Inspirado no artigo Voyager (Minecraft), o agente guarda o que descobriu como receita reutilizável. Na Runlayer, um modelo de ponta lê o trace de cada execução e escreve a skill. As falhas mostram a proteção ou o caso de borda que faltava.",
       "t": 719,
       "legenda": "Sucessos dão confiança à skill e falhas a deixam mais robusta.",
-      "print": "img/u-o0sW9nwmk/3.jpg"
+      "print": "img/u-o0sW9nwmk/3.jpg",
+      "descricao": "Diagrama do skill distiller: agente com skill v1, quatro execuções pass/fail, destilador e skill v2 voltando ao agente"
     },
     {
       "titulo": "Resultado e flywheel organizacional",
       "texto": "Rodando um fork do Chromium no AWS Lambda com Sonnet 4.6, a taxa de sucesso era de 36%. Depois que uma skill destilada passou a valer para as execuções seguintes, foi a 100%. Execuções semelhantes são agrupadas, checadas contra prompt injection e dados pessoais e servidas pelo gateway MCP a todos.",
       "t": 790,
       "legenda": "Uma skill destilada levou o sucesso de 36% a 100% no teste da Runlayer.",
-      "print": "img/u-o0sW9nwmk/4.jpg"
+      "print": "img/u-o0sW9nwmk/4.jpg",
+      "descricao": "Slide do Chromium no AWS Lambda com Sonnet 4.6: taxa de sucesso de 36% (9/25) sem skill e 100% (25/25) com skill"
     }
   ],
   "conceitos": [
@@ -170,5 +173,36 @@
       "contexto": "skills escaneadas por dia pela Runlayer",
       "t": 378
     }
-  ]
+  ],
+  "rotulo": "Agentes que escrevem as próprias skills",
+  "objetivo": "transformar execuções bem-sucedidas e falhas em uma skill e medir a taxa de sucesso antes e depois",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que é progressive disclosure em skills?",
+      "resposta": "O agente vê só um resumo curto de cada skill. Quando julga o conhecimento útil, lê o texto inteiro e o injeta no contexto."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como testar se uma skill ajuda em uma tarefa que seu agente costuma falhar?",
+      "resposta": "Escolha a tarefa, meça a taxa de sucesso em várias execuções, adicione a skill destilada de um caso bem resolvido e meça de novo nas mesmas condições."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que o salto de 36% para 100% prova pouco?",
+      "resposta": "Vem de uma única tarefa (Chromium no Lambda), sem número de execuções nem grupo de controle, e sem dizer se a skill já era quase a resposta. A Runlayer vende o gateway MCP e o destilador."
+    }
+  ],
+  "experimento": {
+    "titulo": "Destile uma skill de uma tarefa difícil",
+    "minutos": 40,
+    "precisa": "Claude Code ou outro agente de código e uma tarefa que ele erra com frequência",
+    "passos": [
+      "Rode a tarefa 5 vezes e conte quantas deram certo.",
+      "Peça ao modelo para ler uma execução bem-sucedida e uma que falhou e escrever uma skill curta, com quando usar e como fazer.",
+      "Salve a skill no repositório e rode a tarefa mais 5 vezes.",
+      "Compare as contagens e leia a skill para checar que não contém segredo nem dado pessoal."
+    ],
+    "sucesso": "Você tem duas contagens de 5 execuções e uma skill curta revisada por você."
+  }
 }

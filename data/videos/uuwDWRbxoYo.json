@@ -21,35 +21,40 @@
       "texto": "Com IA, o time gera mais PRs (pull requests, propostas de mudança no código) e PRs maiores, todos com chance de defeito. O custo se desloca para a revisão e para a produção. As duas saídas do palestrante são desacelerar, revisando tudo com cuidado, ou carimbar sem ler e arriscar incidentes.",
       "t": 177,
       "legenda": "Mostra o dilema entre desacelerar e aprovar sem ler.",
-      "print": "img/uuwDWRbxoYo/0.jpg"
+      "print": "img/uuwDWRbxoYo/0.jpg",
+      "descricao": "Slide 'Agentes de IA amplificam': IA gera mais código = mais revisões + mais falhas; custos deslocados para a direita."
     },
     {
       "titulo": "Agente de validação em quatro funções",
       "texto": "O agente revisa o PR com poucos comentários de ruído, resume a causa de falhas de CI e identifica testes flaky (instáveis). Também corrige problemas em loop até o PR ficar verde e, por fim, aprova e faz merge segundo regras que o time configura.",
       "t": 231,
       "legenda": "Resume as funções do agente da criação do PR ao merge.",
-      "print": "img/uuwDWRbxoYo/1.jpg"
+      "print": "img/uuwDWRbxoYo/1.jpg",
+      "descricao": "Diagrama 'Agentic PR validation': codificação, validação de PR (CI e code review) e rollout, com Gitar gerando PRs verdes."
     },
     {
       "titulo": "Confiança em degraus até a automação total",
       "texto": "Segundo o palestrante, os usuários começam só lendo as revisões. Depois deixam o agente bloquear PRs, ligam o autofix e, por último, definem regras de aprovação e merge automáticos. Cada degrau libera mais automação conforme a confiança na precisão cresce.",
       "t": 355,
       "legenda": "Mostra a ordem em que times liberam autonomia ao agente.",
-      "print": "img/uuwDWRbxoYo/2.jpg"
+      "print": "img/uuwDWRbxoYo/2.jpg",
+      "descricao": "Escada 'The trajectory: Full PR automation': review, block, autofix, approve e merge conforme cresce a confiança."
     },
     {
       "titulo": "Insights para plataforma e liderança",
       "texto": "Como o agente processa todo PR, ele categoriza as principais falhas de CI (testes instáveis ou problemas de infraestrutura) e o tipo de trabalho entregue (feature, correção, chore, refactor). O primeiro dado serve ao time de plataforma, o segundo à liderança.",
       "t": 417,
       "legenda": "Exemplifica os painéis para plataforma e liderança.",
-      "print": "img/uuwDWRbxoYo/3.jpg"
+      "print": "img/uuwDWRbxoYo/3.jpg",
+      "descricao": "Painel 'Insights': categorização de falhas de CI à esquerda e gráfico de PRs por tipo à direita, em baixa resolução."
     },
     {
       "titulo": "Por baixo: control plane, harness e proxy de LLM",
       "texto": "A arquitetura tem um control plane que orquestra os fluxos de PR, um harness próprio para execução multiagente, contexto, memória e tool calling, e um proxy de LLM que roteia entre modelos e faz failover. Na Sonar, o agente se combina com análise de programa como taint e data flow.",
       "t": 479,
       "legenda": "Mostra os três componentes internos do produto.",
-      "print": "img/uuwDWRbxoYo/4.jpg"
+      "print": "img/uuwDWRbxoYo/4.jpg",
+      "descricao": "Arquitetura Gitar: control plane (configuração, orquestração, insights), agent runtime (harness, contexto, tool calling) e LLM proxy."
     }
   ],
   "conceitos": [
@@ -199,5 +204,36 @@
       "contexto": "número do estande para ver a demo",
       "t": 665
     }
-  ]
+  ],
+  "rotulo": "Agente de validação de PRs com confiança em degraus",
+  "objetivo": "propor uma escada de confiança para revisão de PRs por agente, do comentário passivo ao merge automático de baixo risco",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que problema surge quando a IA gera mais PRs e PRs maiores?",
+      "resposta": "O custo se desloca para a validação. CI e code review viram gargalo, e o time precisa escolher entre desacelerar revisando tudo ou aprovar sem olhar e arriscar incidentes."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você introduziria um agente de revisão no seu time sem arriscar a produção?",
+      "resposta": "Começar com o agente só comentando PRs e comparar os achados com a revisão humana por algumas semanas. Só liberar auto-merge para PRs de baixo risco, com regras escritas e possibilidade de reverter."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que falta para confiar na ideia de aprovar e fazer merge sem humano?",
+      "resposta": "O talk é pitch do Gitar/Sonar e não traz precisão, falsos positivos, economia nem bugs que passaram. Os resultados mostrados são qualitativos, e a promessa de resultado garantido a preço fixo não tem detalhes."
+    }
+  ],
+  "experimento": {
+    "titulo": "Medir o gargalo de revisão antes de automatizar",
+    "minutos": 30,
+    "precisa": "Acesso ao histórico de PRs de um repositório no GitHub e uma planilha",
+    "passos": [
+      "Liste os últimos vinte PRs fechados e anote quanto tempo cada um esperou pela primeira revisão.",
+      "Marque quantos tiveram falha de CI e quantas dessas falhas vieram de teste instável.",
+      "Peça a um agente que revise três desses PRs e compare os comentários com os da revisão humana.",
+      "Escreva três regras de risco baixo, como tamanho máximo e área do código, para um futuro auto-merge."
+    ],
+    "sucesso": "Você tem números de espera e de falhas de CI do seu time e uma lista de regras escritas que dizem quais PRs poderiam ser automatizados."
+  }
 }

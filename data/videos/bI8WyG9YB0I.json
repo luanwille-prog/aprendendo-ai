@@ -35,21 +35,24 @@
       "texto": "A Sonar divide o ciclo em gerar, guiar, verificar e resolver. Guide injeta regras e arquitetura do projeto antes da geração. Verify checa segurança e qualidade logo após a edição. Solve corrige o problema achado. A ideia é verificar no IDE (loop interno) e não esperar a falha no CI (loop externo).",
       "t": 519,
       "legenda": "Ciclo de desenvolvimento centrado em agente, com três etapas da Sonar.",
-      "print": "img/bI8WyG9YB0I/2.jpg"
+      "print": "img/bI8WyG9YB0I/2.jpg",
+      "descricao": "Slide 'The three key stages of the AC/DC' com Guide, Generate, Verify e Solve, e palestrante ao púlpito."
     },
     {
       "titulo": "Taint analysis mostra o caminho da falha",
       "texto": "No projeto de exemplo, um argumento vindo de sys.argv entra direto em uma f-string executada no banco. O SonarQube usa análise de fluxo de dados (taint analysis) para rastrear a entrada do usuário até a execução da query, entre arquivos e funções. A nota de segurança do projeto é E.",
       "t": 1279,
       "legenda": "O painel traça a entrada do usuário até a query vulnerável.",
-      "print": "img/bI8WyG9YB0I/3.jpg"
+      "print": "img/bI8WyG9YB0I/3.jpg",
+      "descricao": "SonarQube Cloud, aba Issues: lista com issue em database.py (SQL injection, 1 execution flow) e issue de chave OpenAI em config.py."
     },
     {
       "titulo": "Hook bloqueia segredo e reanalisa a correção",
       "texto": "Ao pedir ao Codex para fazer commit com um token falso, o hook de detecção de segredos bloqueia o prompt antes de ele chegar ao modelo. Depois, o pedido para corrigir a issue S8702 gera uma query parametrizada, e um hook pós-edição reanalisa só o código alterado. Um participante lembra que o hook atua no envio do prompt e pode ser contornado.",
       "t": 1635,
       "legenda": "O hook barra o segredo antes de ele entrar no contexto do modelo.",
-      "print": "img/bI8WyG9YB0I/4.jpg"
+      "print": "img/bI8WyG9YB0I/4.jpg",
+      "descricao": "VS Code com o prompt pedindo commit com token falso ghp_ no arquivo, e terminal do Codex iniciando o MCP sonarqube. O bloqueio do hook não aparece."
     }
   ],
   "conceitos": [
@@ -193,5 +196,36 @@
       "contexto": "tempo médio para remediar um segredo em repositório público",
       "t": 1027
     }
-  ]
+  ],
+  "rotulo": "Verificar código de agente dentro do loop com SonarQube",
+  "objetivo": "configurar uma verificação automática de segredos e SQL injection no loop de um agente de código",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que significam guide, verify e solve no fluxo da Sonar com o Codex?",
+      "resposta": "Guide orienta o agente antes de escrever, verify analisa o que foi feito (com hook que bloqueia segredo no prompt e reanalisa a edição) e solve corrige os problemas listados, como trocar uma consulta por query parametrizada."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como definir o que significa tarefa concluída para um agente no seu projeto?",
+      "resposta": "Exija evidência além de dizer que corrigiu. Um diff revisável e um teste ou análise independente que passe, para que o pronto não seja só a palavra do agente."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que os números de 42% e 96% e a demo não bastam para concluir que a ferramenta funciona em código real?",
+      "resposta": "Os números vêm de pesquisa da própria Sonar, sem metodologia. A demo usa menos de 200 linhas com falhas plantadas, então não mostra falsos positivos em código real. O hook de segredos só age no envio do prompt."
+    }
+  ],
+  "experimento": {
+    "titulo": "Hook que bloqueia chave de API no prompt",
+    "minutos": 30,
+    "precisa": "Claude Code ou Codex e um repositório pequeno com Python",
+    "passos": [
+      "Crie um hook de entrada de prompt que procure padrões de chave de API e bloqueie o envio quando achar.",
+      "Teste com um token falso no prompt e confirme que o hook bloqueia.",
+      "Rode um scanner de segredos e de SQL injection no repositório e anote os achados antes de pedir correção.",
+      "Peça ao agente para corrigir um achado e rode o scanner de novo."
+    ],
+    "sucesso": "O hook bloqueou o token falso e o scanner não aponta mais o achado que o agente corrigiu."
+  }
 }

@@ -21,35 +21,40 @@
       "texto": "O palestrante compara o texto-para-SQL ao ditado \"se compila, publique\". A consulta executa, volta uma tabela, mas pode responder outra pergunta, por exemplo com um cross join sem sentido. Quem pergunta em linguagem natural, em geral não sabe SQL e não percebe o erro. Além disso, o agente gasta tokens e tempo varrendo o dicionário do banco.",
       "t": 438,
       "legenda": "O risco central: a consulta retorna dados, mas não os que foram pedidos.",
-      "print": "img/LnQce-eHm8k/0.jpg"
+      "print": "img/LnQce-eHm8k/0.jpg",
+      "descricao": "Slide 'Self-Service Data Access' com o texto 'NL2SQL is awesome, but...'; a lista de riscos aparece só depois, fora do quadro"
     },
     {
       "titulo": "Relatórios viram ferramentas do agente",
       "texto": "A equipe já tem pastas de relatórios usados para responder a diretoria. Oracle permite cadastrá-los no servidor MCP com descrição, perguntas de exemplo e parâmetros. O código do relatório é fixo. O LLM pode escolher o relatório errado, mas não inventa SQL errado. Duas ferramentas, listar e executar relatórios, atendem até 500 relatórios sem lotar o contexto.",
       "t": 591,
       "legenda": "Duas ferramentas cobrem centenas de relatórios sem estourar o contexto.",
-      "print": "img/LnQce-eHm8k/1.jpg"
+      "print": "img/LnQce-eHm8k/1.jpg",
+      "descricao": "Captura do OCI MCP Server com a ferramenta de listar relatórios e a lista 'Reports (7)' com parâmetros de cada relatório"
     },
     {
       "titulo": "Ajuste de desempenho numa réplica somente leitura",
       "texto": "Ele não deixa o agente criar ou apagar índices em produção. Usa o Data Guard, recurso que mantém uma cópia standby só de leitura, para o agente investigar lentidão ali e apenas sugerir correções. Uma ferramenta própria oferece seis ações, como gerar relatório AWR e coletar estatísticas, que alimentam o otimizador de consultas.",
       "t": 811,
       "legenda": "O agente age só dentro de uma lista curta de ações aprovadas.",
-      "print": "img/LnQce-eHm8k/2.jpg"
+      "print": "img/LnQce-eHm8k/2.jpg",
+      "descricao": "Slide 'Autonomous Performance Tuning' com o fluxo consulta lenta, plano de execução, correção proposta e aprovação do DBA"
     },
     {
       "titulo": "Documentar o esquema para o agente",
       "texto": "Tabelas com nomes como XHR_123 forçam o agente a explorar o banco várias vezes. A ferramenta schema information devolve um dicionário compacto em JSON, com modos verbose, médio e slim e filtro por palavra-chave. Outra ferramenta gera anotações a partir de PDFs, Word e Excel e as grava no banco, o que ajuda também as pessoas.",
       "t": 1059,
       "legenda": "Um dicionário pronto substitui dezenas de consultas exploratórias do agente.",
-      "print": "img/LnQce-eHm8k/3.jpg"
+      "print": "img/LnQce-eHm8k/3.jpg",
+      "descricao": "Slide 'Schema Exploration & Documentation' com o terminal do Claude Code mostrando as ferramentas Schema Information e Generate Annotations"
     },
     {
       "titulo": "Deep data security: o banco filtra por usuário",
       "texto": "O agente não usa credencial própria do banco. O acesso passa pelo single sign-on da empresa, que devolve escopos e papéis. Quando o SQL roda, o banco remove da resposta as linhas que aquele usuário não pode ver, antes de elas chegarem ao agente. Assim um RH vê todos os salários e os demais, não.",
       "t": 1182,
       "legenda": "A regra de acesso mora no banco, então vale para qualquer ferramenta.",
-      "print": "img/LnQce-eHm8k/4.jpg"
+      "print": "img/LnQce-eHm8k/4.jpg",
+      "descricao": "Slide 'Same Rules, Every Time' com SSO Identity, Read-Only Access e Full Audit Trail; baixa resolução e sem o detalhe de filtragem de linhas"
     }
   ],
   "conceitos": [
@@ -204,5 +209,36 @@
       "contexto": "da ferramenta de ajuste de desempenho",
       "t": 811
     }
-  ]
+  ],
+  "rotulo": "Dar dados ao agente com relatórios fixos e réplica",
+  "objetivo": "desenhar o acesso de um agente a um banco de dados com relatórios aprovados, réplica somente leitura e permissões por usuário",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que um SQL que roda sem erro ainda pode ser perigoso, segundo Smith?",
+      "resposta": "A consulta executa e devolve uma tabela, mas pode responder outra pergunta, por exemplo com um cross join sem sentido. Quem pergunta em linguagem natural, em geral não sabe SQL e não percebe."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Quais relatórios do seu time você ofereceria ao agente no lugar de SQL livre?",
+      "resposta": "Os que mais respondem perguntas da diretoria, descritos com perguntas de exemplo e parâmetros, para o agente escolher o relatório sem inventar SQL. O código do relatório fica fixo."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que falta para confiar nas afirmações de Smith?",
+      "resposta": "É palestra de fornecedor, para vender o servidor MCP e o banco da Oracle. Não há medição do erro do texto-para-SQL, da economia de tokens ou do custo de cadastro, e os demos não foram mostrados. O padrão vale em qualquer fornecedor."
+    }
+  ],
+  "experimento": {
+    "titulo": "Dicionário de esquema para um agente",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT e um banco SQLite de teste com tabelas de nomes pouco claros",
+    "passos": [
+      "Crie ou escolha um banco SQLite com 3 tabelas de nomes pouco claros.",
+      "Faça à IA 5 perguntas em linguagem natural sem dar contexto e confira o SQL gerado e o resultado.",
+      "Escreva um dicionário compacto do esquema (tabela, coluna e significado) e repita as perguntas.",
+      "Transforme as duas consultas mais úteis em relatórios fixos com descrição e parâmetros."
+    ],
+    "sucesso": "Você compara os acertos antes e depois do dicionário e tem ao menos dois relatórios fixos com descrição e parâmetros."
+  }
 }
