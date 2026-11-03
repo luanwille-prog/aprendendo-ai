@@ -3,29 +3,53 @@
 <header class="hero">
   <span class="label">Estudo diário · canal AI Engineer</span>
   <h1>Aprendendo <span class="risco">AI</span></h1>
-  <p class="hand">um talk por bloco, explicado como numa aula particular</p>
+  <p class="hand">os talks do dia, explicados como numa aula particular</p>
+  <p id="habito" class="habito js-only" hidden></p>
 </header>
 
 {% if atual %}
 <section class="destaque card" aria-labelledby="destaque-titulo">
-  <h2 id="destaque-titulo">{{ atual.titulo }}</h2>
-  <p class="meta">Última edição · {{ atual.data_fmt }} · {{ atual.videos|length }} {{ "vídeo" if atual.videos|length == 1 else "vídeos" }} · {{ atual.duracao_fmt }} de talks</p>
-  {% if atual.dia %}<p class="abertura">{{ atual.dia.abertura }}</p>{% endif %}
-  <ol class="lista-talks">
-    {% for v in atual.videos %}
-    <li><a href="edicoes/{{ atual.edicao }}.html#v-{{ v.id }}" lang="en">{{ v.titulo_curto }}</a> <span class="muted">· {{ TEMAS.get(v.tema, v.tema) }} · {{ v.duracao|tempo }}</span></li>
-    {% endfor %}
-  </ol>
-  <div class="destaque-rodape">
-    <a class="botao" href="edicoes/{{ atual.edicao }}.html">Ler a edição</a>
-    <a id="continuar" class="continuar js-only" hidden href="edicoes/{{ atual.edicao }}.html#v-{{ atual.videos[0].id }}" data-talks='{{ talks|tojson }}'>Continuar de onde parei</a>
+  <div class="destaque-texto">
+    <span class="label">{% if execucao and execucao.dia_curto %}Nova em {{ execucao.dia_curto }} · {% endif %}talks de {{ atual.data_fmt }}</span>
+    <h2 id="destaque-titulo">{{ atual.titulo }}</h2>
+    <p class="meta">{{ atual.videos|length }} {{ "talk" if atual.videos|length == 1 else "talks" }} · comece pelos {{ atual.essenciais|length }} essenciais, ≈ {{ atual.leitura_essenciais }} min</p>
+    <div class="destaque-rodape">
+      <a class="botao" href="edicoes/{{ atual.edicao }}.html">Ler a edição</a>
+      <a id="continuar" class="continuar js-only" hidden href="edicoes/{{ atual.edicao }}.html#v-{{ atual.videos[0].id }}" data-talks='{{ talks|tojson }}'>Continuar de onde parei</a>
+    </div>
     <span class="progresso" data-ids="{{ atual.videos|map(attribute='id')|join(' ') }}"></span>
+    <div id="pendencias" class="pendencias js-only" hidden></div>
+    {% if atual.dia %}<p class="abertura">{{ atual.dia.abertura }}</p>{% endif %}
+    <p class="lista-rotulo">Essenciais do dia</p>
+    <ol class="lista-talks">
+      {% for v in atual.essenciais %}
+      <li><a href="edicoes/{{ atual.edicao }}.html#v-{{ v.id }}">{{ v.rotulo or v.titulo_curto }}</a>
+        <span class="lista-tese">{{ v.tese }}</span>
+        <span class="muted">{{ TEMAS.get(v.tema, v.tema) }} · ≈ {{ v.minutos }} min</span></li>
+      {% endfor %}
+    </ol>
+    {% if atual.radar %}
+    <details class="mais-termos">
+      <summary>Mais {{ atual.radar|length }} no radar</summary>
+      <ol class="lista-talks lista-radar" start="{{ atual.essenciais|length + 1 }}">
+        {% for v in atual.radar %}<li><a href="edicoes/{{ atual.edicao }}.html#v-{{ v.id }}">{{ v.rotulo or v.titulo_curto }}</a> <span class="muted">· {{ TEMAS.get(v.tema, v.tema) }}</span></li>{% endfor %}
+      </ol>
+    </details>
+    {% endif %}
   </div>
-  <div id="pendencias" class="pendencias js-only" hidden></div>
+  {% set fotos = [] %}
+  {% for v in atual.essenciais %}{% for i in v.ideias if i.print %}{% if loop.first and fotos|length < 3 %}{% set _ = fotos.append((i, v)) %}{% endif %}{% endfor %}{% endfor %}
+  {% if fotos %}
+  <div class="destaque-fotos" aria-hidden="true">
+    {% for i, v in fotos %}<figure class="shot" style="--tilt: {{ ['-2deg', '1.6deg', '-0.8deg'][loop.index0] }}"><img src="{{ i.print }}" alt="" loading="lazy" width="1280" height="720"></figure>{% endfor %}
+  </div>
+  {% endif %}
 </section>
 {% else %}
 <p class="card vazio">Nenhuma edição publicada ainda. A rotina roda todo dia às 7h.</p>
 {% endif %}
+
+<p class="atalhos"><a href="talks.html">Buscar entre todos os talks</a> · <a href="talks.html#trilhas">Trilhas por tema</a> · <a href="feed.xml">Receber por RSS</a></p>
 
 {% if semanas %}
 <section id="edicoes" class="secao" aria-labelledby="edicoes-titulo">
@@ -40,13 +64,17 @@
   {% endif %}
   {% for semana in semanas %}
   <div class="semana">
-    <h3 class="semana-titulo">{{ semana.rotulo }}</h3>
+    <div class="semana-cab">
+      <h3 class="semana-titulo">{{ semana.rotulo }}</h3>
+      <a class="semana-link" href="semanas/{{ semana.id }}.html">A semana em {{ semana.ideias|length }} ideias →</a>
+    </div>
     <div class="cartoes">
-      {% for e in semana.edicoes %}
+      {% for e in semana.edicoes if e in anteriores %}
       <a class="cartao" href="edicoes/{{ e.edicao }}.html" data-temas="{{ e.temas_ids|join(' ') }}">
+        {% if e.capa %}<img class="cartao-capa" src="{{ e.capa }}" alt="" loading="lazy" width="1280" height="720">{% endif %}
         <span class="cartao-data">{{ e.data_fmt }}</span>
         <span class="cartao-titulo">{{ e.titulo }}</span>
-        <span class="cartao-info">{{ e.videos|length }} {{ "vídeo" if e.videos|length == 1 else "vídeos" }} · {{ e.temas|join(", ") }}</span>
+        <span class="cartao-info">{{ e.videos|length }} {{ "talk" if e.videos|length == 1 else "talks" }} · {{ e.essenciais|length }} essenciais · {{ e.temas|join(", ") }}</span>
         <span class="progresso" data-ids="{{ e.videos|map(attribute='id')|join(' ') }}"></span>
       </a>
       {% endfor %}
@@ -55,4 +83,10 @@
   {% endfor %}
 </section>
 {% endif %}
+
+<details class="levar-progresso card js-only" id="progresso">
+  <summary>Levar meu progresso para outro aparelho</summary>
+  <p>O que você marcou como estudado fica salvo só neste navegador. Para continuar no celular ou no notebook, copie o link abaixo e abra no outro aparelho.</p>
+  <p><button type="button" class="botao-sec" id="exportar">Copiar link de progresso</button> <span class="exportar-status" role="status" aria-live="polite"></span></p>
+</details>
 {% endblock %}

@@ -1,0 +1,37 @@
+{% extends "_base.html.j2" %}
+{% block titulo %}Trilha {{ trilha.nome }} · Aprendendo AI{% endblock %}
+{% block conteudo %}
+<header class="hero hero-curto">
+  <span class="label"><a href="{{ raiz }}talks.html#trilhas">Trilhas</a></span>
+  <h1>{{ trilha.nome }}</h1>
+  <p class="meta">{{ trilha.talks|length }} talks · do mais acessível ao mais denso</p>
+  <span class="progresso" data-ids="{{ trilha.talks|map(attribute='id')|join(' ') }}"></span>
+</header>
+
+<section class="card comece" aria-labelledby="comece-titulo">
+  <h2 id="comece-titulo">Comece por aqui</h2>
+  <ol class="lista-talks">
+    {% for v in trilha.comeco %}
+    <li><a href="{{ raiz }}edicoes/{{ v.edicao }}.html#v-{{ v.id }}">{{ v.rotulo or v.titulo_curto }}</a>
+      <span class="lista-tese">{{ v.tese }}</span>
+      {% if v.objetivo %}<span class="muted">Você vai conseguir {{ v.objetivo }}.</span>{% endif %}</li>
+    {% endfor %}
+  </ol>
+</section>
+
+{% for nivel in range(1, 6) %}
+{% set do_nivel = trilha.talks|selectattr("complexidade", "equalto", nivel)|list %}
+{% if do_nivel %}
+<section class="secao-nivel" aria-labelledby="nivel-{{ nivel }}">
+  <h2 id="nivel-{{ nivel }}" class="semana-titulo">Nível {{ "●" * nivel }}{{ "○" * (5 - nivel) }} <span class="muted">({{ do_nivel|length }})</span></h2>
+  <ol class="lista-busca">
+    {% for v in do_nivel %}
+    <li data-id="{{ v.id }}"><a href="{{ raiz }}edicoes/{{ v.edicao }}.html#v-{{ v.id }}"><strong>{{ v.rotulo or v.titulo_curto }}</strong></a>
+      <span class="lista-tese">{{ v.tese }}</span>
+      <span class="muted">{{ v.edicao_curta }} · ≈ {{ v.minutos }} min{% if v.essencial %} · essencial{% endif %}</span></li>
+    {% endfor %}
+  </ol>
+</section>
+{% endif %}
+{% endfor %}
+{% endblock %}

@@ -36,7 +36,7 @@ def test_consolidar_video(tmp_path):
     assert v["url"] == f"https://www.youtube.com/watch?v={VID}"
     assert [i["print"] for i in v["ideias"]] == [f"img/{VID}/0.jpg", None, f"img/{VID}/2.jpg"]
     with Image.open(tmp_path / "site" / "img" / VID / "0.jpg") as im:
-        assert im.width <= 960
+        assert im.width <= 1280
     eval_, judge = v["conceitos"]
     assert eval_["analogia"] is None and eval_["no_glossario"] is False
     # todo termo entra no glossário, mesmo sem analogia, com as aparições

@@ -15,7 +15,7 @@
   </div>
   {% if ideia.print %}
   <figure class="shot" style="--tilt: {{ '-0.6deg' if loop.index is odd else '0.6deg' }}">
-    <img src="{{ raiz }}{{ ideia.print }}" alt="" loading="lazy" decoding="async" width="960" height="540">
+    <a class="ampliar" href="{{ raiz }}{{ ideia.print }}" data-legenda="{{ ideia.legenda }}"><img src="{{ raiz }}{{ ideia.print }}" alt="{{ ideia.descricao or '' }}" loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
     <figcaption><span>{{ ideia.legenda }}</span>{{ minuto(v, ideia.t) }}</figcaption>
   </figure>
   {% endif %}
@@ -23,37 +23,50 @@
 {%- endmacro %}
 
 {% macro termo(c) -%}
-{% set alvo = ancora_glossario(c.chave) %}<li>{% if alvo %}<a href="{{ raiz }}glossario.html#{{ alvo }}">{% else %}<span class="termo-sem-link">{% endif %}<strong>{{ c.nome }}</strong>{% if c.traducao and c.traducao|lower != c.nome|lower %} <span>{{ c.traducao }}</span>{% endif %}{% if alvo %}</a>{% else %}</span>{% endif %}</li>
+{% set alvo = ancora_glossario(c.chave) %}<li>{% if alvo %}<a href="{{ raiz }}glossario.html#{{ alvo }}">{% else %}<span class="termo-sem-link">{% endif %}<strong>{{ c.nome }}</strong>{% if c.traducao and c.traducao|lower != c.nome|lower %} <span>{{ c.traducao }}</span>{% endif %}{% if alvo and analogia_no_glossario(c.chave) %} <em>analogia no glossário</em>{% endif %}{% if alvo %}</a>{% else %}</span>{% endif %}</li>
 {%- endmacro %}
 
-{% macro bloco(v, n, prox) -%}
+{% macro link_talk(v) -%}
+<a href="{{ raiz }}edicoes/{{ v.edicao }}.html#v-{{ v.id }}">{{ v.rotulo or v.titulo_curto }}</a>
+{%- endmacro %}
+
+{% macro bloco(v, n, prox, total) -%}
 {% set explicados = v.conceitos|selectattr("analogia")|list %}
 {% set termos = v.conceitos|rejectattr("analogia")|list %}
-<article class="video" id="v-{{ v.id }}" data-tema="{{ v.tema }}">
+<article class="video{% if v.essencial %} essencial{% endif %}" id="v-{{ v.id }}" data-tema="{{ v.tema }}" data-n="{{ n }}" data-total="{{ total }}" aria-labelledby="t-{{ v.id }}">
   <header class="sec-head">
     <span class="step" aria-hidden="true">{{ "%02d"|format(n) }}</span>
     <div class="sec-titulo">
-      <h2 lang="en">{{ v.titulo_curto }}</h2>
+      {% if v.essencial %}<p class="selo-essencial">essencial do dia{% if v.por_que %}<span>: {{ v.por_que }}</span>{% endif %}</p>{% endif %}
+      {% if v.rotulo %}
+      <h2 id="t-{{ v.id }}">{{ v.rotulo }}</h2>
+      <p class="titulo-original" lang="en">{{ v.titulo_curto }}</p>
+      {% else %}
+      <h2 id="t-{{ v.id }}" lang="en">{{ v.titulo_curto }}</h2>
+      {% endif %}
       <p class="tese">{{ v.tese }}</p>
       <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
     </div>
   </header>
 
   <div class="chips">
-    <span class="chip">{{ TEMAS.get(v.tema, v.tema) }}</span>
-    <span class="chip">{{ v.duracao|tempo }}</span>
+    <a class="chip chip-tema" href="{{ raiz }}trilhas/{{ v.tema }}.html">{{ TEMAS.get(v.tema, v.tema) }}<span class="sr">: ver a trilha do tema</span></a>
+    <span class="chip">≈ {{ v.minutos }} min de leitura</span>
     <span class="chip" role="img" aria-label="Complexidade {{ v.complexidade }} de 5">nível {{ "●" * v.complexidade }}{{ "○" * (5 - v.complexidade) }}</span>
     {% if v.palestrante %}<span class="chip">{{ v.palestrante }}</span>{% endif %}
-    <a class="chip chip-link" href="{{ v.url }}" target="_blank" rel="noopener">Assistir no YouTube<span class="sr"> (abre em nova aba)</span></a>
+    {% if v.acrescentado %}<span class="chip chip-novo">acrescentado em {{ v.acrescentado }}</span>{% endif %}
+    <a class="chip chip-link" href="{{ v.url }}" target="_blank" rel="noopener">Assistir ({{ v.duracao|tempo }})<span class="sr"> no YouTube, abre em nova aba</span></a>
   </div>
 
-  <section class="card resumo" aria-label="Resumo">
+  {% if v.objetivo %}<p class="objetivo"><span class="objetivo-rotulo">Depois deste talk você consegue</span> {{ v.objetivo }}</p>{% endif %}
+
+  <section class="card resumo">
     <h3>Em 3 frases</h3>
     {% for frase in v.tldr %}<p>{{ frase }}</p>{% endfor %}
   </section>
 
   {% if v.conceitos %}
-  <section class="antes-de-ler" aria-label="Antes de ler">
+  <section class="antes-de-ler">
     <h3 class="rotulo-mao">Antes de ler</h3>
     {% set visiveis = 6 - explicados|length if explicados|length < 6 else 0 %}
     <ul class="termos">
@@ -84,7 +97,7 @@
   {% if v.numeros %}
   <div class="nums">
     {% for num in v.numeros %}
-    <a class="num" href="{{ v.url }}&amp;t={{ num.t }}s" target="_blank" rel="noopener"><strong>{{ num.valor }}</strong><span>{{ num.contexto }}</span><span class="num-t">{{ icone_play() }}{{ num.t|tempo }}</span></a>
+    <a class="num" href="{{ v.url }}&amp;t={{ num.t }}s" target="_blank" rel="noopener"><strong>{{ num.valor }}</strong><span>{{ num.contexto }}</span><span class="num-t">{{ icone_play() }}{{ num.t|tempo }}<span class="sr"> no YouTube, abre em nova aba</span></span></a>
     {% endfor %}
   </div>
   {% endif %}
@@ -111,18 +124,59 @@
     <p>{{ v.leitura_critica }}</p>
   </div>
 
-  <section class="card painel" aria-label="O que fazer com isso">
+  {% if v.perguntas %}
+  <section class="card autoteste">
+    <h3>Teste você mesmo</h3>
+    <p class="muted">Responda de cabeça antes de abrir. Lembrar com esforço é o que fixa.</p>
+    <ol class="perguntas">
+      {% for p in v.perguntas %}
+      <li><span class="tipo">{{ p.tipo }}</span> {{ p.pergunta }}
+        <details class="resposta"><summary>Ver resposta</summary><p>{{ p.resposta }}</p></details>
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+  {% endif %}
+
+  {% if v.experimento %}
+  <div class="casper experimento">
+    <span class="tag">experimente · {{ v.experimento.minutos }} min</span>
+    <p class="exp-titulo"><strong>{{ v.experimento.titulo }}</strong></p>
+    <p class="muted">Você precisa de: {{ v.experimento.precisa }}</p>
+    <ol class="passos">{% for p in v.experimento.passos %}<li>{{ p }}</li>{% endfor %}</ol>
+    <p><strong>Deu certo se:</strong> {{ v.experimento.sucesso }}</p>
+  </div>
+  {% endif %}
+
+  <section class="card painel">
     <h3>O que fazer com isso</h3>
     <ul class="acoes">{% for a in v.acoes %}<li>{{ a }}</li>{% endfor %}</ul>
   </section>
 
+  {% if v.conversas or v.relacionados %}
+  <section class="relacionados">
+    <h3 class="rotulo-mao">Conversa com outros talks</h3>
+    <ul>
+      {% for c in v.conversas %}<li><span class="relacao">{{ c.relacao }}</span> {{ link_talk(c.video) }} <span class="muted">· {{ c.nota }}</span></li>{% endfor %}
+      {% for r in v.relacionados %}<li>{{ link_talk(r.video) }} <span class="muted">· {{ r.video.edicao_curta }} · em comum: {{ r.comuns|join(", ") }}</span></li>{% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
   <footer class="talk-fim">
+    <div class="levo js-only">
+      <label for="nota-{{ v.id }}">O que eu levo deste talk <span class="muted">(fica só neste aparelho)</span></label>
+      <textarea id="nota-{{ v.id }}" data-nota="{{ v.id }}" rows="2" placeholder="Uma frase com as suas palavras"></textarea>
+    </div>
     <label class="estudei js-only"><input type="checkbox" data-id="{{ v.id }}"> Marquei como estudado<span class="sr">: <span lang="en">{{ v.titulo_curto }}</span></span></label>
-    {% if prox %}
-    <a class="proximo" href="#v-{{ prox.id }}">Próximo talk <span lang="en">{{ prox.titulo_curto }}</span> <span aria-hidden="true">↓</span></a>
-    {% else %}
-    <a class="proximo" href="#fim">Fechar a edição <span aria-hidden="true">↓</span></a>
-    {% endif %}
+    <div class="talk-nav">
+      <a class="voltar-indice" href="#indice">↑ Índice</a>
+      {% if prox %}
+      <a class="proximo" href="#v-{{ prox.id }}">Próximo <span>{{ prox.rotulo or prox.titulo_curto }}</span> <span aria-hidden="true">↓</span></a>
+      {% else %}
+      <a class="proximo" href="#fim">Fechar a edição <span aria-hidden="true">↓</span></a>
+      {% endif %}
+    </div>
   </footer>
 </article>
 {%- endmacro %}

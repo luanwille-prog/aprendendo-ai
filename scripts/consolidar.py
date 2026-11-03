@@ -2,10 +2,12 @@
 from __future__ import annotations
 
 import argparse
+from datetime import datetime, timezone
 from pathlib import Path
 
 from PIL import Image
 
+from canonizar import ler_aliases
 from comum import DATA, SITE, chave, gravar_json, ler_json
 from estado import Estado
 from validar import erros_de
@@ -30,8 +32,8 @@ def salvar_imagem(origem: Path, destino: Path) -> None:
     destino.parent.mkdir(parents=True, exist_ok=True)
     with Image.open(origem) as im:
         im = im.convert("RGB")
-        im.thumbnail((960, 540))
-        im.save(destino, "JPEG", quality=80, optimize=True)
+        im.thumbnail((1280, 720))  # legível ampliado em tela 2x
+        im.save(destino, "JPEG", quality=78, optimize=True, progressive=True)
 
 
 def consolidar_video(pasta: Path, edicao: str, pasta_data: Path, pasta_site: Path, glossario: dict) -> dict:
@@ -43,6 +45,7 @@ def consolidar_video(pasta: Path, edicao: str, pasta_data: Path, pasta_site: Pat
     manifesto = ler_json(pasta / "frames" / "manifesto.json")
     vid = meta["id"]
 
+    notas = {m["i"]: m.get("nota") for m in (curadoria or {}).get("momentos", [])}
     ideias = []
     for i, ideia in enumerate(analise["ideias"]):
         frame = escolher_frame(pasta, i, manifesto, curadoria)
@@ -54,13 +57,18 @@ def consolidar_video(pasta: Path, edicao: str, pasta_data: Path, pasta_site: Pat
             except Exception as e:
                 print(f"{vid}: frame {frame.name} ilegível ({e}), ideia {i} sai sem print")
         ideias.append({"titulo": ideia["titulo"], "texto": ideia["texto"], "t": ideia["momento"]["t"],
-                       "legenda": ideia["momento"]["legenda"], "print": caminho_print})
+                       "legenda": ideia["momento"]["legenda"], "print": caminho_print,
+                       "descricao": notas.get(i) if caminho_print else None})
 
+    aliases = ler_aliases(pasta_data)
     explicados = {chave(c["nome"]): c for c in (explicacao or {}).get("conceitos", [])}
-    conceitos = []
+    conceitos, vistos = [], set()
     for c in analise["conceitos"]:
-        k = chave(c["nome"])
-        e = explicados.get(k)
+        e = explicados.get(chave(c["nome"]))
+        k = aliases.get(chave(c["nome"]), chave(c["nome"]))  # Skills e Skill viram a mesma entrada
+        if k in vistos:
+            continue
+        vistos.add(k)
         item = {"nome": c["nome"], "traducao": c["traducao"], "nivel": c["nivel"], "chave": k,
                 "analogia": None, "explicacao": [], "pre_requisitos": [], "desenho": None}
         origem = {"video_id": vid, "video_titulo": meta["titulo_curto"], "edicao": edicao}
@@ -84,6 +92,8 @@ def consolidar_video(pasta: Path, edicao: str, pasta_data: Path, pasta_site: Pat
         "tese": analise["tese"], "tldr": analise["tldr"], "tema": analise["tema"],
         "complexidade": analise["complexidade"], "ideias": ideias, "conceitos": conceitos,
         "leitura_critica": analise["leitura_critica"], "acoes": analise["acoes"], "numeros": analise["numeros"],
+        **{k: analise.get(k) for k in ("rotulo", "objetivo", "perguntas", "experimento")},
+        "consolidado_em": datetime.now(timezone.utc).isoformat(timespec="seconds"),
     }
     gravar_json(Path(pasta_data) / "videos" / f"{vid}.json", video)
     return video

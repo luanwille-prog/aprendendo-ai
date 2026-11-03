@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import montar_site
-from comum import gravar_json
+from comum import gravar_json, ler_json
 from estado import Estado
 
 
@@ -96,7 +96,7 @@ def test_bloco_de_video_orienta_a_leitura(tmp_path):
     montar_site.montar(data, site)
     html = ler(site / "edicoes" / "2026-09-28.html")
     bloco = html[html.index('id="v-aaaaaaaaaaa"'):]
-    assert '<h2 lang="en">Talk aaaaaaaaaaa</h2>' in bloco
+    assert '<h2 id="t-aaaaaaaaaaa" lang="en">Talk aaaaaaaaaaa</h2>' in bloco
     assert bloco.index("Antes de ler") < bloco.index("Critério")  # termos antes das ideias
     assert 'role="img" aria-label="Complexidade 4 de 5"' in bloco
     # o primeiro talk da ordem (bbb) aponta para o próximo (aaa)
@@ -217,7 +217,7 @@ def test_palestrante_sai_do_titulo_com_hifen(tmp_path):
     site = tmp_path / "site"
     montar_site.montar(data, site)
     html = ler(site / "edicoes" / "2026-09-27.html")
-    assert '<h2 lang="en">Ship It Faster</h2>' in html
+    assert '<h2 id="t-ggggggggggg" lang="en">Ship It Faster</h2>' in html
     assert '<span class="chip">Bia Souza, Acme</span>' in html
 
 
@@ -235,3 +235,111 @@ def test_pagina_404(tmp_path):
     html = ler(site / "404.html")
     assert "Página não encontrada" in html
     assert "/aprendendo-ai/edicoes/2026-09-28.html" in html  # links absolutos: o 404 vale para qualquer caminho
+
+
+DIDATICA = {
+    "rotulo": "Juízes automáticos para avaliar respostas",
+    "objetivo": "escrever três critérios e usar um modelo como juiz",
+    "perguntas": [{"tipo": "lembrar", "pergunta": "O que o juiz recebe?", "resposta": "Os critérios e a resposta."},
+                  {"tipo": "aplicar", "pergunta": "Que critério você usaria?", "resposta": "Fidelidade ao ticket."},
+                  {"tipo": "criticar", "pergunta": "Qual o limite da evidência?", "resposta": "Um único produto."}],
+    "experimento": {"titulo": "Seu primeiro juiz", "minutos": 30, "precisa": "Claude e 10 respostas",
+                    "passos": ["Escreva três critérios.", "Peça notas de 1 a 5."], "sucesso": "Concorda em 8 de 10."},
+}
+
+
+def preparar_camadas(tmp_path):
+    """Uma edição com 5 talks (2 essenciais) e edições 1 e 7 dias antes, com perguntas para revisar."""
+    data = preparar(tmp_path)
+    ids = [c * 11 for c in "hijkl"]
+    for vid in ids:
+        gravar_json(data / "videos" / f"{vid}.json", video(vid, "2026-10-05", **DIDATICA))
+    gravar_json(data / "dias" / "2026-10-05.json", {"edicao": "2026-10-05", "titulo": "Dia de camadas",
+                "abertura": "Cinco talks sobre juízes.", "ordem": ids, "conceitos_novos": [],
+                "essenciais": [{"id": ids[2], "por_que": "Mostra o mecanismo inteiro."},
+                               {"id": ids[4], "por_que": "Traz números de produção."}]})
+    gravar_json(data / "videos" / "mmmmmmmmmmm.json", video("mmmmmmmmmmm", "2026-10-04", **DIDATICA))
+    gravar_json(data / "videos" / "nnnnnnnnnnn.json", video("nnnnnnnnnnn", "2026-09-28", **{**DIDATICA,
+                "perguntas": [{**DIDATICA["perguntas"][0], "pergunta": "Pergunta da semana passada?"}] + DIDATICA["perguntas"][1:]}))
+    return data, ids
+
+
+def test_edicao_em_camadas_essenciais_e_radar(tmp_path):
+    data, ids = preparar_camadas(tmp_path)
+    site = tmp_path / "site"
+    montar_site.montar(data, site)
+    html = ler(site / "edicoes" / "2026-10-05.html")
+    radar = html.index('id="radar"')
+    assert html.index(f'id="v-{ids[2]}"') < radar and html.index(f'id="v-{ids[4]}"') < radar  # essenciais antes
+    assert html.index(f'id="v-{ids[0]}"') > radar  # o resto vai para o radar
+    assert html.count('class="radar-item"') == 3
+    assert "Mostra o mecanismo inteiro." in html and "essencial do dia" in html
+    assert "Comece pelos <strong>2 essenciais</strong>" in html
+    assert "min de leitura" in html and "de talks" not in html.split("<main")[1].split("</header>")[0]
+    assert ancoras_quebradas(site) == []
+
+
+def test_bloco_didatico_e_revisao_espacada(tmp_path):
+    data, ids = preparar_camadas(tmp_path)
+    site = tmp_path / "site"
+    montar_site.montar(data, site)
+    html = ler(site / "edicoes" / "2026-10-05.html")
+    assert "<h2 id=\"t-" + ids[2] + "\">Juízes automáticos para avaliar respostas</h2>" in html
+    assert "Depois deste talk você consegue</span> escrever três critérios" in html
+    assert "Teste você mesmo" in html and "Ver resposta" in html
+    assert "experimente · 30 min" in html and "Deu certo se:" in html
+    assert "Hoje você vai conseguir" in html
+    revise = html[html.index('class="revise"'):]
+    assert "ontem" in revise  # pergunta da edição de 4/10
+    assert "há 7 dias" in revise
+    assert "Pergunta da semana passada?" in revise  # 28/9 = 7 dias antes
+    assert 'data-nota="' + ids[2] + '"' in html  # "o que eu levo deste talk"
+
+
+def test_relacionados_por_conceito_raro(tmp_path):
+    data, ids = preparar_camadas(tmp_path)
+    raro = {"nome": "KV cache", "traducao": "cache", "nivel": "avancado", "chave": "kv cache", "analogia": None,
+            "explicacao": [], "pre_requisitos": [], "desenho": None, "no_glossario": False}
+    for vid in (ids[2], "mmmmmmmmmmm"):
+        v = ler_json(data / "videos" / f"{vid}.json")
+        v["conceitos"].append(raro)
+        gravar_json(data / "videos" / f"{vid}.json", v)
+    site = tmp_path / "site"
+    montar_site.montar(data, site)
+    html = ler(site / "edicoes" / "2026-10-05.html")
+    bloco = html[html.index(f'id="v-{ids[2]}"'):html.index(f'id="v-{ids[4]}"')]
+    assert "Conversa com outros talks" in bloco and "em comum: KV cache" in bloco
+    assert "edicoes/2026-10-04.html#v-mmmmmmmmmmm" in bloco
+    assert "Conversa com outros talks" not in html[html.index(f'id="v-{ids[4]}"'):html.index('id="radar"')]
+
+
+def test_paginas_talks_trilhas_semana_e_feed(tmp_path):
+    data, ids = preparar_camadas(tmp_path)
+    site = tmp_path / "site"
+    montar_site.montar(data, site)
+    talks = ler(site / "talks.html")
+    assert talks.count("<li data-id=") == 10 and 'id="busca-talks"' in talks
+    assert 'href="trilhas/evals.html"' in talks
+    trilha = ler(site / "trilhas" / "evals.html")
+    assert "Comece por aqui" in trilha and "Nível ●●●●○" in trilha
+    semana = ler(site / "semanas" / "2026-09-28.html")
+    assert "A semana em" in semana and "ideias" in semana
+    assert 'href="semanas/2026-09-28.html"' in ler(site / "index.html")
+    feed = ler(site / "feed.xml")
+    assert feed.startswith('<?xml') and "<entry>" in feed and "edicoes/2026-10-05.html" in feed
+    assert ancoras_quebradas(site) == []
+
+
+def test_glossario_recolhe_termos_raros_e_limita_aparicoes(tmp_path):
+    data, site = preparar(tmp_path), tmp_path / "site"
+    g = ler_json(data / "glossario.json")
+    g["raro"] = {"chave": "raro", "nome": "raro", "traducao": "t", "analogia": None, "explicacao": [],
+                 "video_id": "aaaaaaaaaaa", "video_titulo": "x", "edicao": "2026-09-28",
+                 "aparicoes": [{"video_id": "aaaaaaaaaaa", "video_titulo": "x", "edicao": "2026-09-28"}]}
+    g["base"] = {"chave": "base", "nome": "Base", "traducao": "t", "analogia": "Como uma régua.", "explicacao": ["a", "b", "c"],
+                 "base": True, "video_id": None, "video_titulo": None, "edicao": None, "aparicoes": []}
+    gravar_json(data / "glossario.json", g)
+    montar_site.montar(data, site)
+    html = ler(site / "glossario.html")
+    assert 'class="raros"' in html and "citado uma vez só" in html
+    assert "Termo de base" in html and 'data-analogia' in html

@@ -55,7 +55,7 @@ def erros_de(tipo: str, arquivo: Path, meta: Path | None = None) -> list[str]:
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("tipo", choices=["analise", "explicacao", "curadoria", "dia"])
+    ap.add_argument("tipo", choices=["analise", "explicacao", "curadoria", "dia", "didatica"])
     ap.add_argument("arquivo", type=Path)
     ap.add_argument("--meta", type=Path, default=None)
     a = ap.parse_args(argv)

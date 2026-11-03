@@ -52,9 +52,15 @@ Grave `trabalho/HOJE/triagem.json` no formato `{"<id>": {"estimada": 3, "modelo"
 
 ## 4. Analisar (subagente `analista-video`)
 
-Leia os nomes em `data/glossario.json` (campo `nome` de cada entrada). Para cada id, dispare o subagente `analista-video` com `model` igual ao da triagem e a mensagem:
+Gere a lista do glossário com nome e tradução canônica:
 
-> Pasta: trabalho/HOJE/<id>. Conceitos já no glossário: <nomes separados por vírgula, ou "nenhum">.
+```bash
+python3 scripts/canonizar.py --listar > trabalho/HOJE/glossario.txt
+```
+
+Para cada id, dispare o subagente `analista-video` com `model` igual ao da triagem e a mensagem:
+
+> Pasta: trabalho/HOJE/<id>. Conceitos já no glossário (nome | tradução): leia trabalho/HOJE/glossario.txt.
 
 Depois de cada onda, valide cada vídeo:
 
@@ -73,7 +79,13 @@ Esse comando lê título, data e erros sozinho e renomeia a análise para `anali
 
 ## 5. Explicar (subagente `explicador`)
 
-Para cada vídeo com `analise.json` válido, monte a lista de conceitos a explicar: primeiro todos os `avancado`, depois os `intermediario` quando `complexidade >= 4`, excluindo os que já estão em `data/glossario.json` (compare pelo nome em minúsculas). Limite a lista a **5 conceitos**. Se ficar vazia, pule o vídeo. Caso contrário, dispare `explicador` com:
+Para cada vídeo com `analise.json` válido, monte a lista de conceitos a explicar, sempre excluindo os que já têm `analogia` em `data/glossario.json` (compare pelo nome em minúsculas, passando por `data/aliases.json`):
+
+1. os que o glossário já tem sem analogia e que aparecem em **3 ou mais talks** (`aparicoes`), qualquer que seja o nível: são o núcleo do campo e precisam de explicação;
+2. todos os `avancado`;
+3. os `intermediario` quando `complexidade >= 4`.
+
+Limite a lista a **5 conceitos**, nessa ordem de prioridade. Se ficar vazia, pule o vídeo. Caso contrário, dispare `explicador` com:
 
 > Pasta: trabalho/HOJE/<id>. Conceitos: <nomes separados por vírgula>.
 
@@ -109,8 +121,11 @@ Para cada edição que aparece em `publicados.json`:
    - `abertura`: 2 a 4 frases ligando os talks, dizendo o que o leitor vai aprender.
    - `ordem`: todos os ids da edição, do mais acessível ao mais denso, agrupando temas parecidos.
    - `conceitos_novos`: nomes dos conceitos explicados pela primeira vez nessa edição.
+   - `essenciais`: os 2 ou 3 talks que valem a leitura completa (1 se a edição tiver 1 talk), cada um com `por_que` (uma frase: o que o leitor ganha lendo primeiro). Critério: o que mais ensina um mecanismo reutilizável para quem constrói com IA, com evidência, e que não seja só pitch. Varie o tema. O resto vai para o "radar" do site, recolhido.
+   - `dialogos` (opcional): quando um talk da edição complementa, contradiz ou aprofunda um talk de edição anterior que você conhece pelo glossário (`aparicoes`), registre `{"id", "com", "relacao", "nota"}`.
 3. Valide: `python3 scripts/validar.py dia data/dias/<edicao>.json`.
-4. Revise cada `data/videos/<id>.json` da edição contra as regras de escrita dos agentes (sem travessão de aparte, sem "não é X, é Y", sem superlativo vazio, jargão traduzido). Corrija só o texto no próprio arquivo, sem mudar a estrutura.
+4. Se o analista criou um termo que é sinônimo ou plural de um que já existia no glossário (ex.: "Agent harness" e "Harness"), acrescente `"novo": "existente"` (chaves em minúsculas) em `data/aliases.json` e rode `python3 scripts/canonizar.py`.
+5. Revise cada `data/videos/<id>.json` da edição contra as regras de escrita dos agentes (sem travessão de aparte, sem "não é X, é Y", sem superlativo vazio, jargão traduzido). Corrija só o texto no próprio arquivo, sem mudar a estrutura.
 
 ## 10. Publicar
 

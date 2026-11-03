@@ -1,5 +1,27 @@
 {% extends "_base.html.j2" %}
 {% block titulo %}Glossário · Aprendendo AI{% endblock %}
+{% macro cartao(g) -%}
+<article class="termo-card{% if g.analogia %} casper{% else %} card{% endif %}" id="g-{{ g.chave|slug }}" data-busca="{{ g.nome|lower }} {{ (g.traducao or '')|lower }}"{% if g.analogia %} data-analogia{% endif %}>
+  {% if g.analogia %}<span class="tag">analogia</span>{% endif %}
+  <h2 class="termo">{{ g.nome }}</h2>
+  {% if g.traducao and g.traducao|lower != g.nome|lower %}<p class="traducao">{{ g.traducao }}</p>{% endif %}
+  {% if g.analogia %}
+  <p class="analogia">{{ g.analogia }}</p>
+  <ol class="passos">{% for p in g.explicacao %}<li>{{ p }}</li>{% endfor %}</ol>
+  {% endif %}
+  {% if g.pre_requisitos %}<p class="pre">Ajuda saber antes: {% for p in g.pre_requisitos %}{% set alvo = ancora_glossario(p) %}{% if alvo %}<a href="#{{ alvo }}">{{ p }}</a>{% else %}{{ p }}{% endif %}{% if not loop.last %}, {% endif %}{% endfor %}</p>{% endif %}
+  {% if g.aparicoes %}
+  <p class="pre">Aparece em {% for a in g.aparicoes[:3] %}<a href="edicoes/{{ a.edicao }}.html#v-{{ a.video_id }}" lang="en">{{ a.video_titulo }}</a>{% if not loop.last %}; {% endif %}{% endfor %}{% if g.aparicoes|length > 3 %}.{% endif %}</p>
+  {% if g.aparicoes|length > 3 %}
+  <details class="mais-aparicoes"><summary>Mais {{ g.aparicoes|length - 3 }} talks</summary>
+    <p class="pre">{% for a in g.aparicoes[3:] %}<a href="edicoes/{{ a.edicao }}.html#v-{{ a.video_id }}" lang="en">{{ a.video_titulo }}</a>{% if not loop.last %}; {% endif %}{% endfor %}</p>
+  </details>
+  {% endif %}
+  {% else %}
+  <p class="pre">Termo de base: ajuda a entender os outros.</p>
+  {% endif %}
+</article>
+{%- endmacro %}
 {% block conteudo %}
 <header class="hero hero-curto">
   <h1>Glossário</h1>
@@ -12,6 +34,7 @@
   <div class="busca js-only">
     <label for="busca">Buscar termo</label>
     <input id="busca" type="search" placeholder="ex.: harness, eval, world model" autocomplete="off" spellcheck="false">
+    <label class="so-analogia"><input type="checkbox" id="so-analogia"> Só com analogia</label>
     <p class="busca-status" role="status" aria-live="polite"></p>
   </div>
   <nav class="letras" aria-label="Ir para a letra">
@@ -19,21 +42,17 @@
   </nav>
 </div>
 {% for grupo in grupos %}
-<section class="letra" id="letra-{{ grupo.letra }}" aria-label="Letra {{ grupo.letra }}">
+<section class="letra" id="letra-{{ grupo.letra }}">
   <p class="letra-titulo" aria-hidden="true">{{ grupo.letra }}</p>
   <div class="glossario">
-    {% for g in grupo.termos %}
-    <article class="termo-card{% if g.analogia %} casper{% else %} card{% endif %}" id="g-{{ g.chave|slug }}" data-busca="{{ g.nome|lower }} {{ (g.traducao or '')|lower }}">
-      <h2 class="termo">{{ g.nome }}</h2>
-      {% if g.traducao and g.traducao|lower != g.nome|lower %}<p class="traducao">{{ g.traducao }}</p>{% endif %}
-      {% if g.analogia %}
-      <p class="analogia">{{ g.analogia }}</p>
-      <ol class="passos">{% for p in g.explicacao %}<li>{{ p }}</li>{% endfor %}</ol>
-      {% endif %}
-      <p class="pre">Aparece em {% for a in g.aparicoes %}<a href="edicoes/{{ a.edicao }}.html#v-{{ a.video_id }}" lang="en">{{ a.video_titulo }}</a>{% if not loop.last %}; {% endif %}{% endfor %}</p>
-    </article>
-    {% endfor %}
+    {% for g in grupo.termos %}{{ cartao(g) }}{% endfor %}
   </div>
+  {% if grupo.raros %}
+  <details class="raros">
+    <summary>Mais {{ grupo.raros|length }} {{ "termo citado" if grupo.raros|length == 1 else "termos citados" }} uma vez só</summary>
+    <div class="glossario">{% for g in grupo.raros %}{{ cartao(g) }}{% endfor %}</div>
+  </details>
+  {% endif %}
 </section>
 {% endfor %}
 {% else %}

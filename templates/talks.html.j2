@@ -1,0 +1,51 @@
+{% extends "_base.html.j2" %}
+{% block titulo %}Todos os talks · Aprendendo AI{% endblock %}
+{% block conteudo %}
+<header class="hero hero-curto">
+  <h1>Talks</h1>
+  <p class="meta">{{ talks|length }} talks resumidos · {{ talks|selectattr("essencial")|list|length }} essenciais</p>
+  <p class="hand">busque por assunto, palestrante ou empresa</p>
+</header>
+
+<section id="trilhas" class="trilhas" aria-labelledby="trilhas-titulo">
+  <h2 id="trilhas-titulo">Trilhas por tema</h2>
+  <p class="muted">Cada trilha ordena os talks do mais acessível ao mais denso e diz por onde começar.</p>
+  <div class="cartoes">
+    {% for t in trilhas %}
+    <a class="cartao" href="trilhas/{{ t.tema }}.html">
+      <span class="cartao-titulo">{{ t.nome }}</span>
+      <span class="cartao-info">{{ t.talks|length }} talks · comece por: {{ t.comeco[0].rotulo or t.comeco[0].titulo_curto }}</span>
+      <span class="progresso" data-ids="{{ t.talks|map(attribute='id')|join(' ') }}"></span>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="secao" aria-labelledby="busca-titulo">
+  <h2 id="busca-titulo">Todos os talks</h2>
+  <div class="talks-ferramentas js-only">
+    <div class="busca">
+      <label for="busca-talks">Buscar</label>
+      <input id="busca-talks" type="search" placeholder="ex.: evals, sandbox, Anthropic, memória" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="filtro filtro-talks" role="group" aria-label="Filtrar por tema">
+      <button type="button" data-tema="" aria-pressed="true">Todos</button>
+      {% for t in trilhas %}<button type="button" data-tema="{{ t.tema }}" aria-pressed="false">{{ t.nome }}</button>{% endfor %}
+    </div>
+    <p class="opcoes">
+      <label><input type="checkbox" id="so-essenciais"> Só essenciais</label>
+      <label><input type="checkbox" id="so-pendentes"> Só os que não estudei</label>
+    </p>
+    <p class="busca-status" role="status" aria-live="polite"></p>
+  </div>
+  <ol class="lista-busca">
+    {% for v in talks %}
+    <li data-id="{{ v.id }}" data-tema="{{ v.tema }}"{% if v.essencial %} data-essencial{% endif %} data-busca="{{ (v.rotulo or '') ~ ' ' ~ v.titulo ~ ' ' ~ (v.palestrante or '') ~ ' ' ~ v.tese ~ ' ' ~ (v.conceitos|map(attribute='nome')|join(' ')) }}">
+      <a href="edicoes/{{ v.edicao }}.html#v-{{ v.id }}"><strong>{{ v.rotulo or v.titulo_curto }}</strong></a>
+      <span class="lista-tese">{{ v.tese }}</span>
+      <span class="muted">{{ TEMAS.get(v.tema, v.tema) }} · {{ v.edicao_curta }} · ≈ {{ v.minutos }} min · nível {{ v.complexidade }}{% if v.essencial %} · essencial{% endif %}{% if v.palestrante %} · {{ v.palestrante }}{% endif %}</span>
+    </li>
+    {% endfor %}
+  </ol>
+</section>
+{% endblock %}

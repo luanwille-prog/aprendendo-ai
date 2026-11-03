@@ -38,9 +38,23 @@ def test_minuto_alem_da_duracao_e_id_trocado():
 
 def test_dia():
     ok = {"edicao": "2026-09-28", "titulo": "O dia dos juízes", "abertura": "a" * 50,
-          "ordem": ["abcdefghijk"], "conceitos_novos": ["LLM-as-judge"]}
+          "ordem": ["abcdefghijk"], "conceitos_novos": ["LLM-as-judge"],
+          "essenciais": [{"id": "abcdefghijk", "por_que": "Ensina o mecanismo central do dia."}]}
     assert validar.validar(ok, "dia") == []
     assert validar.validar({**ok, "edicao": "28/09/2026"}, "dia") != []
+    sem_essenciais = {k: v for k, v in ok.items() if k != "essenciais"}
+    assert any("essenciais" in e for e in validar.validar(sem_essenciais, "dia"))
+    dialogo = {"id": "abcdefghijk", "com": "zyxwvutsrqp", "relacao": "contradiz", "nota": "Discorda sobre o tamanho do juiz."}
+    assert validar.validar({**ok, "dialogos": [dialogo]}, "dia") == []
+
+
+def test_didatica():
+    from test_validar import ANALISE as a
+    ok = {"id": a["id"], **{k: a[k] for k in ("rotulo", "objetivo", "perguntas", "experimento")}}
+    assert validar.validar(ok, "didatica") == []
+    assert validar.validar({**ok, "experimento": None}, "didatica") == []
+    duas = {**ok, "perguntas": ok["perguntas"][:2]}
+    assert validar.validar(duas, "didatica") != []
 
 
 def test_cli(tmp_path, capsys):

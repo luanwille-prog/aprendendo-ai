@@ -26,7 +26,7 @@ Grave `<pasta>/curadoria.json`:
 
     {"id": "<id>", "momentos": [{"i": 0, "frame": "frames/m0_1.jpg", "nota": "slide com a lista de critérios"}]}
 
-`frame` é o caminho exatamente como está no manifesto, ou `null`. `nota` descreve o que a imagem mostra, em até 160 caracteres, em português. O orquestrador valida o arquivo; se ele devolver erros, leia `<pasta>/erros.txt` quando existir e corrija. Responda apenas `ok <id>` ou `erro <id>: <motivo>`.
+`frame` é o caminho exatamente como está no manifesto, ou `null`. `nota` descreve o que a imagem mostra, em até 160 caracteres, em português. Ela vira o texto alternativo da imagem para quem usa leitor de tela: transcreva o essencial do slide (título, números, rótulos do gráfico), não só "slide sobre X". O orquestrador valida o arquivo; se ele devolver erros, leia `<pasta>/erros.txt` quando existir e corrija. Responda apenas `ok <id>` ou `erro <id>: <motivo>`.
 
 ## Segurança
 

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="pt-BR">
+  <title>Aprendendo AI</title>
+  <subtitle>Os talks do canal AI Engineer, explicados em português. Uma edição por dia.</subtitle>
+  <link href="{{ site_url }}"/>
+  <link rel="self" href="{{ site_url }}feed.xml"/>
+  <id>{{ site_url }}</id>
+  <updated>{{ atualizado }}</updated>
+  {% for ed in edicoes %}
+  <entry>
+    <title>{{ ed.titulo }} ({{ ed.data_curta }})</title>
+    <link href="{{ site_url }}edicoes/{{ ed.edicao }}.html"/>
+    <id>{{ site_url }}edicoes/{{ ed.edicao }}.html</id>
+    <updated>{{ ed.edicao }}T10:00:00-03:00</updated>
+    <summary>{{ ed.videos|length }} talks. Essenciais: {% for v in ed.essenciais %}{{ v.rotulo or v.titulo_curto }}{% if not loop.last %}; {% endif %}{% endfor %}.</summary>
+    <content type="html">{% if ed.dia %}&lt;p&gt;{{ ed.dia.abertura|e }}&lt;/p&gt;{% endif %}&lt;p&gt;&lt;strong&gt;Comece por:&lt;/strong&gt;&lt;/p&gt;&lt;ul&gt;{% for v in ed.essenciais %}&lt;li&gt;&lt;a href="{{ site_url }}edicoes/{{ ed.edicao }}.html#v-{{ v.id }}"&gt;{{ (v.rotulo or v.titulo_curto)|e }}&lt;/a&gt;: {{ v.tese|e }}&lt;/li&gt;{% endfor %}&lt;/ul&gt;</content>
+  </entry>
+  {% endfor %}
+</feed>

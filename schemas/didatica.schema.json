@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Campos didáticos de um vídeo já publicado (enriquecimento retroativo)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "rotulo",
+    "objetivo",
+    "perguntas",
+    "experimento"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 11,
+      "maxLength": 11
+    },
+    "rotulo": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 70,
+      "description": "título curto em português, para índice e listas"
+    },
+    "objetivo": {
+      "type": "string",
+      "minLength": 15,
+      "maxLength": 180,
+      "description": "completa 'Depois deste talk você consegue …', começando por verbo observável no infinitivo"
+    },
+    "perguntas": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "tipo",
+          "pergunta",
+          "resposta"
+        ],
+        "properties": {
+          "tipo": {
+            "enum": [
+              "lembrar",
+              "aplicar",
+              "criticar"
+            ]
+          },
+          "pergunta": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 240
+          },
+          "resposta": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 420
+          }
+        }
+      }
+    },
+    "experimento": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "titulo",
+        "minutos",
+        "precisa",
+        "passos",
+        "sucesso"
+      ],
+      "properties": {
+        "titulo": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 80
+        },
+        "minutos": {
+          "type": "integer",
+          "minimum": 10,
+          "maximum": 60
+        },
+        "precisa": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 160
+        },
+        "passos": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 5,
+          "items": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 240
+          }
+        },
+        "sucesso": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 240
+        }
+      }
+    }
+  }
+}

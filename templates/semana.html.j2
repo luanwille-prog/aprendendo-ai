@@ -1,0 +1,28 @@
+{% extends "_base.html.j2" %}
+{% block titulo %}{{ semana.rotulo }} em {{ semana.ideias|length }} ideias · Aprendendo AI{% endblock %}
+{% block conteudo %}
+<header class="hero hero-curto">
+  <span class="label">{{ semana.rotulo }} · {{ semana.total }} talks em {{ semana.edicoes|length }} {{ "edição" if semana.edicoes|length == 1 else "edições" }}</span>
+  <h1>A semana em {{ semana.ideias|length }} ideias</h1>
+  <p class="hand">se for ler só isso, leia isso</p>
+</header>
+<ol class="cinco-ideias">
+  {% for v in semana.ideias %}
+  <li class="card">
+    <span class="step" aria-hidden="true">{{ loop.index }}</span>
+    <div>
+      <h2><a href="{{ raiz }}edicoes/{{ v.edicao }}.html#v-{{ v.id }}">{{ v.rotulo or v.titulo_curto }}</a></h2>
+      <p class="tese">{{ v.tese }}</p>
+      <p>{{ v.tldr[0] }}</p>
+      {% if v.objetivo %}<p class="muted">Depois de ler, você consegue {{ v.objetivo }}.</p>{% endif %}
+      <p class="muted">{{ TEMAS.get(v.tema, v.tema) }} · {{ v.edicao_curta }} · ≈ {{ v.minutos }} min</p>
+    </div>
+  </li>
+  {% endfor %}
+</ol>
+<nav class="paginacao" aria-label="Edições da semana">
+  {% for e in semana.edicoes %}
+  <a href="{{ raiz }}edicoes/{{ e.edicao }}.html"><span class="paginacao-dir">{{ e.data_fmt }}</span><strong>{{ e.titulo }}</strong><span class="muted">{{ e.videos|length }} talks</span></a>
+  {% endfor %}
+</nav>
+{% endblock %}
