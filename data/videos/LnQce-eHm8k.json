@@ -1,0 +1,208 @@
+{
+  "id": "LnQce-eHm8k",
+  "titulo": "Your AI Agent Wants Your Data. Here's How to Lock It Down - Jeff Smith, Oracle",
+  "titulo_curto": "Your AI Agent Wants Your Data. Here's How to Lock It Down - Jeff Smith, Oracle",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=LnQce-eHm8k",
+  "duracao": 1299,
+  "publicado_ts": 1793487611,
+  "edicao": "2026-11-02",
+  "tese": "Dar ao agente relatórios prontos, um banco réplica e permissões herdadas do usuário reduz o risco de deixá-lo consultar dados da empresa.",
+  "tldr": [
+    "Jeff Smith, da Oracle, defende que agentes precisam acessar bancos de dados, mas que SQL gerado por LLM (modelo de linguagem) pode rodar sem erro e ainda devolver o dado errado.",
+    "Ele propõe três usos via servidor MCP: relatórios já aprovados como ferramentas, ajuste de desempenho numa réplica somente leitura e documentação do esquema para o agente não varrer o banco às cegas.",
+    "A segurança fica no banco: o agente entra pelo login corporativo (SSO) e o banco remove das respostas as linhas que aquele usuário não pode ver."
+  ],
+  "tema": "dados-e-rag",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "SQL que roda não é SQL correto",
+      "texto": "O palestrante compara o texto-para-SQL ao ditado \"se compila, publique\". A consulta executa, volta uma tabela, mas pode responder outra pergunta, por exemplo com um cross join sem sentido. Quem pergunta em linguagem natural, em geral não sabe SQL e não percebe o erro. Além disso, o agente gasta tokens e tempo varrendo o dicionário do banco.",
+      "t": 438,
+      "legenda": "O risco central: a consulta retorna dados, mas não os que foram pedidos.",
+      "print": "img/LnQce-eHm8k/0.jpg"
+    },
+    {
+      "titulo": "Relatórios viram ferramentas do agente",
+      "texto": "A equipe já tem pastas de relatórios usados para responder a diretoria. Oracle permite cadastrá-los no servidor MCP com descrição, perguntas de exemplo e parâmetros. O código do relatório é fixo. O LLM pode escolher o relatório errado, mas não inventa SQL errado. Duas ferramentas, listar e executar relatórios, atendem até 500 relatórios sem lotar o contexto.",
+      "t": 591,
+      "legenda": "Duas ferramentas cobrem centenas de relatórios sem estourar o contexto.",
+      "print": "img/LnQce-eHm8k/1.jpg"
+    },
+    {
+      "titulo": "Ajuste de desempenho numa réplica somente leitura",
+      "texto": "Ele não deixa o agente criar ou apagar índices em produção. Usa o Data Guard, recurso que mantém uma cópia standby só de leitura, para o agente investigar lentidão ali e apenas sugerir correções. Uma ferramenta própria oferece seis ações, como gerar relatório AWR e coletar estatísticas, que alimentam o otimizador de consultas.",
+      "t": 811,
+      "legenda": "O agente age só dentro de uma lista curta de ações aprovadas.",
+      "print": "img/LnQce-eHm8k/2.jpg"
+    },
+    {
+      "titulo": "Documentar o esquema para o agente",
+      "texto": "Tabelas com nomes como XHR_123 forçam o agente a explorar o banco várias vezes. A ferramenta schema information devolve um dicionário compacto em JSON, com modos verbose, médio e slim e filtro por palavra-chave. Outra ferramenta gera anotações a partir de PDFs, Word e Excel e as grava no banco, o que ajuda também as pessoas.",
+      "t": 1059,
+      "legenda": "Um dicionário pronto substitui dezenas de consultas exploratórias do agente.",
+      "print": "img/LnQce-eHm8k/3.jpg"
+    },
+    {
+      "titulo": "Deep data security: o banco filtra por usuário",
+      "texto": "O agente não usa credencial própria do banco. O acesso passa pelo single sign-on da empresa, que devolve escopos e papéis. Quando o SQL roda, o banco remove da resposta as linhas que aquele usuário não pode ver, antes de elas chegarem ao agente. Assim um RH vê todos os salários e os demais, não.",
+      "t": 1182,
+      "legenda": "A regra de acesso mora no banco, então vale para qualquer ferramenta.",
+      "print": "img/LnQce-eHm8k/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "MCP",
+      "traducao": "Model Context Protocol, protocolo que expõe ferramentas ao agente",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Natural language to SQL",
+      "traducao": "texto-para-SQL, consulta gerada por LLM",
+      "nivel": "intermediario",
+      "chave": "natural language to sql",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Context engineering",
+      "traducao": "engenharia de contexto",
+      "nivel": "intermediario",
+      "chave": "context engineering",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Execution plan",
+      "traducao": "plano de execução da consulta",
+      "nivel": "avancado",
+      "chave": "execution plan",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Read-only standby",
+      "traducao": "réplica do banco só para leitura",
+      "nivel": "intermediario",
+      "chave": "read-only standby",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "SSO",
+      "traducao": "login único corporativo",
+      "nivel": "basico",
+      "chave": "sso",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "OAuth",
+      "traducao": "padrão de autorização por escopos",
+      "nivel": "intermediario",
+      "chave": "oauth",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Deep data security",
+      "traducao": "filtragem de linhas por usuário dentro do banco",
+      "nivel": "avancado",
+      "chave": "deep data security",
+      "analogia": "Deep data security é como um arquivo de escritório em que o arquivista confere o crachá de quem pede e tira da pasta as folhas que aquela pessoa não pode ler antes de entregá-la.",
+      "explicacao": [
+        "Numa empresa, cada pessoa pode ver uma parte diferente dos dados. Quem trabalha no RH vê os salários de todos, e os outros colegas não veem.",
+        "O agente de IA faz perguntas ao banco de dados em nome de uma pessoa. Por isso ele precisa carregar a identidade de quem pediu, em vez de usar uma senha própria com acesso a tudo.",
+        "A pessoa entra pelo login único da empresa, o SSO (single sign-on), como o Azure AD. Esse login devolve escopos e papéis (roles) que dizem qual é a função dela na organização.",
+        "O banco guarda regras ligadas a esses papéis. Quando o SQL gerado pelo agente roda, o próprio banco remove do resultado as linhas proibidas para aquele usuário antes de enviá-lo ao agente.",
+        "Como a regra fica dentro do banco, ela vale para qualquer cliente, seja Claude, Codex, Gemini ou um sistema próprio. Mesmo que o agente erre o SQL, ele recebe só o que a pessoa pode ver."
+      ],
+      "pre_requisitos": [
+        "SSO",
+        "Banco de dados e SQL",
+        "Papéis e permissões de acesso",
+        "MCP"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "LOGIN VIA SSO",
+            "nota": "Usuário entra pelo login da empresa"
+          },
+          {
+            "rotulo": "ESCOPOS E PAPÉIS",
+            "nota": "SSO informa a função da pessoa"
+          },
+          {
+            "rotulo": "AGENTE RODA SQL",
+            "nota": "Consulta leva a identidade do usuário"
+          },
+          {
+            "rotulo": "BANCO FILTRA LINHAS",
+            "nota": "Remove o que o usuário não pode ver"
+          },
+          {
+            "rotulo": "RESPOSTA PERMITIDA",
+            "nota": "Agente recebe só os dados liberados"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É palestra de fornecedor, no palco de um evento, para vender o servidor MCP e o banco da Oracle. Não há medição de erro do texto-para-SQL, de economia de tokens ou de custo para cadastrar relatórios. A afirmação de que LLMs falham ao gerar SQL aparece sem dados. Os demos citados não foram mostrados por falta de tempo. O padrão de usar relatórios fixos e permissões no banco vale em qualquer fornecedor.",
+  "acoes": [
+    "Liste os relatórios que sua equipe mais usa e descreva cada um com perguntas de exemplo e parâmetros, para oferecê-los ao agente no lugar de SQL livre.",
+    "Aponte agentes de análise para uma réplica somente leitura, nunca para a produção, e deixe que só sugiram mudanças.",
+    "Escreva um dicionário do esquema com nomes de tabelas estranhos e siglas internas, e entregue ao agente como contexto.",
+    "Aplique permissões por usuário no banco e não só nas ferramentas, para que outro cliente apontado ao mesmo banco não escape da regra."
+  ],
+  "numeros": [
+    {
+      "valor": "25 anos",
+      "contexto": "tempo do palestrante com ferramentas de banco",
+      "t": 1
+    },
+    {
+      "valor": "3 meses",
+      "contexto": "ritmo de novidades no MCP, segundo ele",
+      "t": 220
+    },
+    {
+      "valor": "500",
+      "contexto": "relatórios cabem em apenas 2 ferramentas",
+      "t": 561
+    },
+    {
+      "valor": "6 ações",
+      "contexto": "da ferramenta de ajuste de desempenho",
+      "t": 811
+    }
+  ]
+}

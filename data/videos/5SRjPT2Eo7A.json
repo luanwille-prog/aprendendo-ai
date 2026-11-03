@@ -1,0 +1,208 @@
+{
+  "id": "5SRjPT2Eo7A",
+  "titulo": "Your Company Should Train Its Own AI Models - Will Brown, Prime Intellect",
+  "titulo_curto": "Your Company Should Train Its Own AI Models - Will Brown, Prime Intellect",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=5SRjPT2Eo7A",
+  "duracao": 1197,
+  "publicado_ts": 1793649609,
+  "edicao": "2026-11-02",
+  "tese": "Empresas podem treinar modelos abertos com os próprios traces e decisões, para que o conhecimento da casa fique nos pesos e o agente pare de reaprender tudo.",
+  "tldr": [
+    "Will Brown, da Prime Intellect, diz que agentes reaprendem o contexto da empresa a cada sessão, porque o conhecimento implícito da organização nunca chega aos pesos do modelo.",
+    "O caminho proposto começa com evals (avaliações) tratados como testes, segue com roteamento e modelos de decisão e chega a interfaces que transformam cada escolha humana em dado de treino.",
+    "O ponto final é um ciclo de treino noturno sobre modelos abertos, com um exemplo citado de modelo treinado por cerca de US$ 300 mil."
+  ],
+  "tema": "modelos",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "O conhecimento que nunca é escrito",
+      "texto": "Toda empresa tem regras explícitas (código, processos, e-mails) e um saber implícito sobre quem decide, onde está o atrito e o que costuma dar certo. Funcionários aprendem isso com o tempo. Agentes só aprendem por contexto, com arquivos de skill e leitura do código, e por isso refazem o mesmo trabalho e gastam muitos tokens de entrada a cada sessão.",
+      "t": 383,
+      "legenda": "Preferências e heurísticas são dados, e dados cabem melhor nos pesos do que no prompt.",
+      "print": "img/5SRjPT2Eo7A/0.jpg"
+    },
+    {
+      "titulo": "O telefone sem fio do treino nos grandes laboratórios",
+      "texto": "Para um modelo de fronteira aprender a usar ferramentas como o Salesforce, o saber passa por um especialista freelancer, uma empresa de rede de especialistas, quem monta o ambiente de RL (aprendizado por reforço), um comprador e um pesquisador. Ninguém nessa cadeia é o dono do conhecimento. Brown propõe que a própria pessoa que usa o agente passe a corrigir o modelo diretamente.",
+      "t": 476,
+      "legenda": "Cada etapa da cadeia afasta o especialista do treino que usa o saber dele.",
+      "print": "img/5SRjPT2Eo7A/1.jpg"
+    },
+    {
+      "titulo": "Eval como teste e o modelo como codebase",
+      "texto": "A versão mais prática de aprendizado contínuo trata o modelo como um repositório de código, com ciclo de vida, casos de teste e novas funções. Os traces (registros de execução) do uso diário já trazem prompts e feedback. Agentes podem fazer a curadoria desses traces e transformá-los em evals.",
+      "t": 694,
+      "legenda": "Traces do uso diário viram a matéria-prima dos evals.",
+      "print": "img/5SRjPT2Eo7A/2.jpg"
+    },
+    {
+      "titulo": "Roteamento e modelos de decisão geram rótulos claros",
+      "texto": "Rodar a mesma tarefa num modelo grande e num pequeno e julgar se o pequeno bastou gera dado para rotear mais tarefas ao modelo barato. Um modelo de decisão aprende a imitar a aprovação humana em situações específicas da empresa. Os dois casos têm resposta certa, e por isso servem como porta de entrada para o aprendizado contínuo.",
+      "t": 786,
+      "legenda": "Comparar modelo grande e pequeno na mesma tarefa produz dado de roteamento.",
+      "print": "img/5SRjPT2Eo7A/3.jpg"
+    },
+    {
+      "titulo": "Widgets de decisão e treino noturno",
+      "texto": "O agente cria na hora um cartão com opções quando precisa de uma decisão humana. Isso facilita a vida de quem decide e gera um rótulo explícito para treino, o que reduz o risco de reward hacking (o modelo burlar a recompensa). O protótipo interno da Prime Intellect junta traces, mostra os problemas sinalizados e dispara um treino toda noite, usando a capacidade de GPU ociosa.",
+      "t": 1096,
+      "legenda": "O treino noturno aproveita a GPU que fica ociosa quando a equipe não usa os agentes.",
+      "print": "img/5SRjPT2Eo7A/4.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Trace",
+      "traducao": "registro de execução do agente",
+      "nivel": "basico",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação",
+      "nivel": "basico",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Continual learning",
+      "traducao": "aprendizado contínuo",
+      "nivel": "intermediario",
+      "chave": "continual learning",
+      "analogia": "Aprendizado contínuo é como um estagiário que anota cada correção do chefe e, no mês seguinte, já faz o serviço do jeito certo sem precisar ouvir tudo de novo.",
+      "explicacao": [
+        "Hoje o agente esquece tudo ao fim de cada conversa. Você repete as mesmas correções toda semana.",
+        "Continual learning (aprendizado contínuo) significa que o modelo guarda essas correções de forma durável e melhora com o uso.",
+        "Um arquivo de instruções, como o AGENTS.md, ajuda por um tempo. Ele cresce, fica bagunçado e o modelo precisa relê-lo em toda sessão.",
+        "A alternativa é treinar o modelo com as próprias correções. Uma correção do tipo \"neste caso eu preferia isto\" já tem o formato de um dado de treino.",
+        "Na prática, a empresa trata o modelo como um codebase (repositório de código). Os traces (registros de execução) do uso diário viram evals (avaliações), e cada novo treino só entra se passar nesses testes."
+      ],
+      "pre_requisitos": [
+        "Pesos do modelo",
+        "Janela de contexto",
+        "Trace",
+        "Eval"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "USO DIÁRIO",
+            "nota": "Pessoa trabalha com o agente"
+          },
+          {
+            "rotulo": "CORREÇÕES",
+            "nota": "Feedback fica salvo nos traces"
+          },
+          {
+            "rotulo": "EVALS",
+            "nota": "Traces viram casos de teste"
+          },
+          {
+            "rotulo": "TREINO",
+            "nota": "Correções entram nos pesos"
+          },
+          {
+            "rotulo": "MODELO DA CASA",
+            "nota": "Sabe o contexto sem reaprender"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Model routing",
+      "traducao": "roteamento entre modelos",
+      "nivel": "intermediario",
+      "chave": "model routing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Decision model",
+      "traducao": "modelo de decisão",
+      "nivel": "intermediario",
+      "chave": "decision model",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Reinforcement learning",
+      "traducao": "aprendizado por reforço",
+      "nivel": "avancado",
+      "chave": "reinforcement learning",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Prompt caching",
+      "traducao": "cache de prompt",
+      "nivel": "intermediario",
+      "chave": "prompt caching",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Generative UI",
+      "traducao": "interface gerada pelo modelo",
+      "nivel": "intermediario",
+      "chave": "generative ui",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "A Prime Intellect vende a infraestrutura de treino que o talk defende, então a tese coincide com o produto. O exemplo de US$ 300 mil vem de uma empresa amiga que usa as ferramentas da casa, e o talk não mostra eval, comparação com modelos de fronteira nem custo de manutenção. A demanda crescente aparece sem números. O treino noturno é um protótipo interno. Faltam riscos como esquecimento catastrófico, privacidade dos traces e custo de equipe para manter o ciclo.",
+  "acoes": [
+    "Guarde os traces das suas sessões com agentes, com prompt e correção, para ter matéria-prima de evals no futuro.",
+    "Anote as correções que você repete ao agente toda semana. Elas indicam o que deveria virar skill, eval ou dado de treino.",
+    "Teste a mesma tarefa num modelo grande e num pequeno e registre quando o pequeno bastou, para decidir o roteamento com dados.",
+    "Antes de cogitar treinar um modelo próprio, monte um conjunto de evals com casos reais do seu trabalho."
+  ],
+  "numeros": [
+    {
+      "valor": "US$ 300 mil",
+      "contexto": "custo de um modelo treinado para trabalho com planilhas e slides",
+      "t": 1034
+    },
+    {
+      "valor": "18 meses",
+      "contexto": "desde o talk em que reasoners eram novidade e agentes ainda não existiam",
+      "t": 75
+    },
+    {
+      "valor": "6 meses",
+      "contexto": "notícias recentes que os modelos não conhecem por causa do corte de dados",
+      "t": 601
+    },
+    {
+      "valor": "20 bots",
+      "contexto": "quantidade de agentes em paralelo que o usuário precisa acompanhar",
+      "t": 910
+    }
+  ]
+}

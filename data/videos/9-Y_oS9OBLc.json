@@ -1,0 +1,264 @@
+{
+  "id": "9-Y_oS9OBLc",
+  "titulo": "When Running Your Own AI Models Beats Paying for APIs - Steven Latré, imec",
+  "titulo_curto": "When Running Your Own AI Models Beats Paying for APIs - Steven Latré, imec",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=9-Y_oS9OBLc",
+  "duracao": 1109,
+  "publicado_ts": 1793433624,
+  "edicao": "2026-11-02",
+  "tese": "Rodar o próprio modelo só compensa depois de medir, além da acurácia, a concorrência, os degraus de hardware e o consumo de tokens do harness.",
+  "tldr": [
+    "A imec rodou mais de mil execuções do benchmark SWE-Bench Pro com modelos de pesos abertos e três harnesses de código, para comparar o custo de uma API com o de GPUs próprias.",
+    "O custo de hardware sobe em degraus, poucos usuários simultâneos cabem em cada máquina, e o ponto de equilíbrio depende da utilização da GPU, que varia de 89% a cerca de 15% conforme o porte do sistema.",
+    "O harness quase não muda a taxa de acerto, mas pode cortar pela metade os tokens gerados e o tempo de GPU, e isso reduz a conta."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "Acurácia por modelo e o degrau de hardware",
+      "texto": "Os modelos de pesos abertos caem em três faixas de acerto. Qwen e DeepSeek ficam perto de 32,5% a 40%, o GLM chega ao nível do Opus e o Kimi K3 passa de 80%. Qwen e DeepSeek rendem parecido, mas um exige hardware cerca de quatro vezes mais caro de alugar. Já o salto do GLM para o Kimi K3 dá cerca de 20% a mais de acerto por só 15% a mais de custo. O custo não segue uma curva suave.",
+      "t": 545,
+      "legenda": "Custo de hardware sobe em degraus, sem relação linear com a acurácia.",
+      "print": "img/9-Y_oS9OBLc/0.jpg"
+    },
+    {
+      "titulo": "Concorrência pesa mais que acurácia",
+      "texto": "Ao usar a própria máquina, a pergunta passa a ser quantos usuários cabem sem a latência explodir. O modelo e o KV cache de cada usuário precisam caber na memória. Com o Kimi K3, só cerca de quatro usuários rodaram com conforto, e ainda cerca de três vezes mais lentos que o Claude Code usado como referência.",
+      "t": 700,
+      "legenda": "Mesmo hardware grande comporta poucos usuários em tarefas longas.",
+      "print": "img/9-Y_oS9OBLc/1.jpg"
+    },
+    {
+      "titulo": "API, aluguel ou compra de GPU",
+      "texto": "A análise de custo total de propriedade mostra que sistemas pequenos exigem GPU ocupada cerca de 89% do tempo para valer a pena, o que é inviável. Sistemas grandes, como 8 B200, empatam com a API a cerca de 15% de utilização. Para a classe do GLM em assistente de código, o estudo estima economia de custo ao sair da API.",
+      "t": 800,
+      "legenda": "Quanto menor o sistema, maior a utilização exigida para vencer a API.",
+      "print": "img/9-Y_oS9OBLc/2.jpg"
+    },
+    {
+      "titulo": "O harness muda a conta de GPU",
+      "texto": "Os três harnesses resolveram praticamente as mesmas tarefas. Mas com o GLM, o Codex gerou só metade dos tokens dos outros e usou metade do tempo de GPU. Na API isso passa despercebido. Em infraestrutura própria, vira metade da conta.",
+      "t": 925,
+      "legenda": "Mesmo acerto, metade dos tokens e do tempo de GPU com o Codex.",
+      "print": "img/9-Y_oS9OBLc/3.jpg"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Open weights",
+      "traducao": "modelo de pesos abertos",
+      "nivel": "basico",
+      "chave": "open weights",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Harness",
+      "traducao": "arcabouço que roda o agente de código",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "KV cache",
+      "traducao": "memória de atenção por usuário na GPU",
+      "nivel": "avancado",
+      "chave": "kv cache",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Concorrência",
+      "traducao": "usuários simultâneos por máquina",
+      "nivel": "intermediario",
+      "chave": "concorrência",
+      "analogia": "Concorrência é como o número de clientes que uma cozinha consegue atender ao mesmo tempo sem os pratos começarem a atrasar.",
+      "explicacao": [
+        "Concorrência (concurrency) é quantas pessoas usam o mesmo sistema ao mesmo tempo.",
+        "Quando você paga uma API, o fornecedor cuida disso e você só vê a velocidade das respostas.",
+        "Quando o modelo roda na sua máquina, cada usuário a mais ocupa memória da GPU e disputa o mesmo processador.",
+        "A memória precisa guardar o modelo inteiro e ainda o KV cache, a memória de atenção de cada usuário, que cresce a cada pessoa e a cada tarefa longa.",
+        "No estudo, o Kimi K3 aguentou só cerca de quatro usuários com conforto e ainda ficou três vezes mais lento que a referência."
+      ],
+      "pre_requisitos": [
+        "GPU",
+        "KV cache",
+        "Latência",
+        "Inferência"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "MODELO NA MEMÓRIA",
+            "nota": "Os pesos ocupam boa parte da GPU"
+          },
+          {
+            "rotulo": "USUÁRIOS ENTRAM",
+            "nota": "Cada um soma seu próprio KV cache"
+          },
+          {
+            "rotulo": "MEMÓRIA ENCHE",
+            "nota": "Sobra pouco espaço e fila cresce"
+          },
+          {
+            "rotulo": "LIMITE CONFORTÁVEL",
+            "nota": "Quatro usuários no Kimi K3"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Total cost of ownership (TCO)",
+      "traducao": "custo total de propriedade",
+      "nivel": "intermediario",
+      "chave": "total cost of ownership (tco)",
+      "analogia": "TCO é como calcular quanto custa ter um carro somando parcela, seguro, combustível e oficina, em vez de olhar só o preço na concessionária.",
+      "explicacao": [
+        "Total cost of ownership (custo total de propriedade) soma tudo o que você gasta para manter algo funcionando ao longo do tempo.",
+        "Numa API você paga por token, então a conta acompanha o uso.",
+        "Com GPU própria, entram compra ou aluguel, energia, espaço e equipe, e você paga mesmo com a máquina parada.",
+        "O estudo comparou três caminhos para assistente de código (API, aluguel de GPU e compra) e achou o ponto em que cada um passa a valer a pena.",
+        "Para a classe do GLM, sair da API trouxe economia estimada perto de 24,5% nessa aplicação."
+      ],
+      "pre_requisitos": [
+        "Token",
+        "API de modelo",
+        "Utilização de GPU"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "CUSTO DA API",
+            "nota": "Preço por token usado"
+          },
+          {
+            "rotulo": "CUSTO PRÓPRIO",
+            "nota": "Hardware, energia, operação"
+          },
+          {
+            "rotulo": "UTILIZAÇÃO REAL",
+            "nota": "Quanto a GPU fica ocupada"
+          },
+          {
+            "rotulo": "PONTO DE EQUILÍBRIO",
+            "nota": "Onde a infra passa a compensar"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Utilização de GPU",
+      "traducao": "fração do tempo em que a GPU trabalha",
+      "nivel": "intermediario",
+      "chave": "utilização de gpu",
+      "analogia": "Utilização de GPU é como a taxa de ocupação de um ônibus fretado, que custa o mesmo andando cheio ou vazio.",
+      "explicacao": [
+        "Utilização é a fração do tempo em que a GPU (placa que roda o modelo) está de fato trabalhando.",
+        "Uma GPU comprada ou alugada custa o mesmo por hora, ocupada ou ociosa.",
+        "Quanto mais tempo ela trabalha, mais barato sai cada tarefa feita nela.",
+        "Em sistemas pequenos, a GPU precisaria trabalhar 89% do tempo para empatar com a API, o que é inviável na prática.",
+        "Em sistemas grandes, como 8 placas B200, basta cerca de 15% de uso para empatar, uma meta realista."
+      ],
+      "pre_requisitos": [
+        "GPU",
+        "Total cost of ownership (TCO)",
+        "Concorrência"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "SWE-Bench Pro",
+      "traducao": "benchmark de tarefas reais de código",
+      "nivel": "intermediario",
+      "chave": "swe-bench pro",
+      "analogia": "SWE-Bench Pro é como uma prova prática de oficina, em que o aluno recebe carros com defeitos reais e precisa consertá-los sozinho.",
+      "explicacao": [
+        "Um benchmark é uma prova padronizada para comparar sistemas com as mesmas questões.",
+        "O SWE-Bench Pro reúne tarefas de programação tiradas de projetos reais, como corrigir um bug ou implementar uma mudança.",
+        "Um agente de código recebe a tarefa, mexe no código e testes automáticos conferem se o problema foi resolvido.",
+        "A nota principal é a taxa de resolução (resolve rate), a porcentagem de tarefas resolvidas.",
+        "No estudo, a imec usou essas tarefas longas para comparar modelos, harnesses e hardware, com o Kimi K3 chegando a 86%."
+      ],
+      "pre_requisitos": [
+        "Benchmark",
+        "Agente de código",
+        "Harness"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "TAREFA REAL",
+            "nota": "Bug ou mudança em projeto real"
+          },
+          {
+            "rotulo": "AGENTE TRABALHA",
+            "nota": "Modelo e harness editam o código"
+          },
+          {
+            "rotulo": "TESTES CONFEREM",
+            "nota": "Testes automáticos validam"
+          },
+          {
+            "rotulo": "TAXA DE RESOLUÇÃO",
+            "nota": "Porcentagem de tarefas resolvidas"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Model routing",
+      "traducao": "roteamento de modelos por tarefa",
+      "nivel": "basico",
+      "chave": "model routing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O palestrante lidera um centro de pesquisa sem fins lucrativos e anuncia uma aliança entre software e hardware, então há interesse em mostrar que a infraestrutura importa. Os resultados valem para uma só aplicação, assistente de código em tarefas longas, e ele mesmo diz que uma mistura real de aplicações muda a conta. Ele admite que o Kimi K3 pode ter visto parte do benchmark no treino. Quantização e speculative decoding ficaram sem configuração detalhada. Os dados ainda não são públicos e a leitura vem só dos slides.",
+  "acoes": [
+    "Antes de migrar de API para GPU própria, estime a concorrência real (quantos usuários ao mesmo tempo) e a utilização esperada da GPU, não só a acurácia do modelo.",
+    "Se você já roda modelos abertos, meça tokens gerados e tempo de parede por harness na mesma tarefa. Acerto igual pode esconder custo diferente.",
+    "Compare o custo por tarefa resolvida em API, aluguel e compra usando o custo total de propriedade, com a utilização de GPU que sua equipe de fato alcançaria."
+  ],
+  "numeros": [
+    {
+      "valor": "86%",
+      "contexto": "taxa de resolução do Kimi K3 no benchmark",
+      "t": 482
+    },
+    {
+      "valor": "4 usuários",
+      "contexto": "concorrência confortável com o Kimi K3",
+      "t": 730
+    },
+    {
+      "valor": "89%",
+      "contexto": "utilização de GPU exigida em sistemas pequenos",
+      "t": 794
+    },
+    {
+      "valor": "15%",
+      "contexto": "utilização de equilíbrio em 8 B200",
+      "t": 825
+    }
+  ]
+}
