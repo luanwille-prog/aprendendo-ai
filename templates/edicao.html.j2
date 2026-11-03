@@ -4,37 +4,41 @@
 {% block conteudo %}
 {% set total = ed.videos|length %}
 <div class="edicao" id="e-{{ edicao }}">
-  <nav class="paginacao-topo" aria-label="Edições vizinhas">
-    {% if anterior %}<a rel="prev" href="{{ anterior.edicao }}.html">← {{ anterior.data_curta }}</a>{% endif %}
-    <a href="{{ raiz }}index.html#edicoes">Todas as edições</a>
-    {% if proxima %}<a rel="next" href="{{ proxima.edicao }}.html">{{ proxima.data_curta }} →</a>{% endif %}
-  </nav>
+  <div class="edicao-corpo">
   <header class="edicao-head">
+    <nav class="paginacao-topo" aria-label="Edições vizinhas">
+      {% if anterior %}<a rel="prev" href="{{ anterior.edicao }}.html">← {{ anterior.data_curta }}</a>{% endif %}
+      <a href="{{ raiz }}index.html#edicoes">Todas as edições</a>
+      {% if proxima %}<a rel="next" href="{{ proxima.edicao }}.html">{{ proxima.data_curta }} →</a>{% endif %}
+    </nav>
     <h1 class="h-edicao">{{ titulo }}</h1>
     <p class="meta">Talks de {{ ed.data_fmt }} · {{ total }} {{ "talk" if total == 1 else "talks" }} · ≈ {{ ed.leitura_fmt }} de leitura</p>
     {% if dia %}<p class="abertura">{{ dia.abertura }}</p>{% endif %}
-    {% if ed.objetivos %}
-    <div class="objetivos">
-      <p class="rotulo-mao">Hoje você vai conseguir</p>
-      <ul class="acoes">{% for o in ed.objetivos %}<li>{{ o }}</li>{% endfor %}</ul>
+    <div class="plano card">
+      <div class="plano-txt">
+        {% if ed.objetivos %}
+        <p class="rotulo-mao">Hoje você vai conseguir</p>
+        <ul class="acoes">{% for o in ed.objetivos %}<li>{{ o }}</li>{% endfor %}</ul>
+        {% endif %}
+        {% if ed.radar %}<p class="muted plano-radar">Os outros {{ ed.radar|length }} talks ficam no <a href="#radar">radar</a>, resumidos, para abrir se o tema interessar.</p>{% endif %}
+      </div>
+      <a class="botao plano-cta" href="#v-{{ ed.videos[0].id }}">Começar{% if ed.radar %} pelos {{ ed.essenciais|length }} essenciais{% endif %} · ≈ {{ ed.leitura_essenciais }} min <span aria-hidden="true">↓</span></a>
     </div>
-    {% endif %}
-    {% if ed.radar %}
-    <p class="plano">Comece pelos <strong>{{ ed.essenciais|length }} essenciais</strong> (≈ {{ ed.leitura_essenciais }} min). Os outros {{ ed.radar|length }} ficam no <a href="#radar">radar</a>, resumidos, para abrir se o tema interessar.</p>
-    {% endif %}
   </header>
 
-  <div class="edicao-corpo">
     <details class="indice card" id="indice" open>
       <summary class="indice-titulo">Ordem de leitura <span class="muted">({{ total }})</span></summary>
+      <div class="indice-progresso">
+        <span class="progresso" data-ids="{{ ed.essenciais|map(attribute='id')|join(' ') }}" data-rotulo="essenciais"></span>
+        {% if ed.radar %}<span class="progresso" data-ids="{{ ed.videos|map(attribute='id')|join(' ') }}" data-sufixo="no total"></span>{% endif %}
+      </div>
       <p class="indice-grupo">Essenciais</p>
-      <ol>{% for v in ed.essenciais %}<li data-id="{{ v.id }}"><a href="#v-{{ v.id }}">{{ v.rotulo or v.titulo_curto }}</a> <span class="muted">{{ v.minutos }} min</span></li>{% endfor %}</ol>
+      <ol>{% for v in ed.essenciais %}<li data-id="{{ v.id }}"><a href="#v-{{ v.id }}"><span class="ind-t">{{ v.rotulo or v.titulo_curto }}</span><span class="ind-min">{{ v.minutos }} min</span></a></li>{% endfor %}</ol>
       {% if ed.radar %}
       <p class="indice-grupo">Radar</p>
-      <ol start="{{ ed.essenciais|length + 1 }}">{% for v in ed.radar %}<li data-id="{{ v.id }}"><a href="#v-{{ v.id }}">{{ v.rotulo or v.titulo_curto }}</a> <span class="muted">{{ v.minutos }} min</span></li>{% endfor %}</ol>
+      <ol start="{{ ed.essenciais|length + 1 }}">{% for v in ed.radar %}<li data-id="{{ v.id }}"><a href="#v-{{ v.id }}"><span class="ind-t">{{ v.rotulo or v.titulo_curto }}</span><span class="ind-min">{{ v.minutos }} min</span></a></li>{% endfor %}</ol>
       {% endif %}
-      <span class="progresso" data-ids="{{ ed.essenciais|map(attribute='id')|join(' ') }}" data-rotulo="essenciais"></span>
-      {% if ed.radar %}<span class="progresso" data-ids="{{ ed.videos|map(attribute='id')|join(' ') }}" data-sufixo="no total"></span>{% endif %}
+      <p class="indice-atalhos js-only"><button type="button" class="abrir-atalhos">Atalhos de teclado <kbd>?</kbd></button></p>
     </details>
 
     <div class="talks">
@@ -91,6 +95,7 @@
     </div>
   </div>
 
+  <div class="progresso-leitura js-only" aria-hidden="true"><i></i></div>
   <nav class="barra-leitura js-only" aria-label="Navegação da leitura" hidden>
     <a href="#indice" class="bl-indice">Índice</a>
     <span class="bl-pos" aria-live="off"></span>

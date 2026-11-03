@@ -226,7 +226,7 @@ def test_rotulo_do_checkbox_igual_ao_texto_visivel(tmp_path):
     montar_site.montar(data, site)
     html = ler(site / "edicoes" / "2026-09-28.html")
     assert 'aria-label="Marcar' not in html
-    assert 'Marquei como estudado<span class="sr">: <span lang="en">Talk aaaaaaaaaaa</span></span>' in html
+    assert '<span class="estudei-txt">Marquei como estudado</span><span class="sr">: <span lang="en">Talk aaaaaaaaaaa</span></span>' in html
 
 
 def test_pagina_404(tmp_path):
@@ -274,7 +274,7 @@ def test_edicao_em_camadas_essenciais_e_radar(tmp_path):
     assert html.index(f'id="v-{ids[0]}"') > radar  # o resto vai para o radar
     assert html.count('class="radar-item"') == 3
     assert "Mostra o mecanismo inteiro." in html and "essencial do dia" in html
-    assert "Comece pelos <strong>2 essenciais</strong>" in html
+    assert "Começar pelos 2 essenciais" in html
     assert "min de leitura" in html and "de talks" not in html.split("<main")[1].split("</header>")[0]
     assert ancoras_quebradas(site) == []
 
