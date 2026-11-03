@@ -71,7 +71,7 @@ def test_home_com_destaque_e_cartoes(tmp_path):
     assert 'data-temas="evals"' in html  # filtro por tema entre edições
     assert 'data-ids="bbbbbbbbbbb aaaaaaaaaaa"' in html  # progresso segue a ordem de leitura
     assert 'id="continuar"' in html and "edicoes/2026-09-28.html#v-bbbbbbbbbbb" in html
-    assert '"e": "2026-09-28", "d": "28 set"' in html  # progresso agrupado por edição
+    assert '"d": "28 set", "e": "2026-09-28"' in html  # progresso agrupado por edição
     assert 'href="glossario.html"' in html
     assert 'class="video"' not in html  # a home não carrega os blocos completos
     for arq in ("estilo.css", "app.js", ".nojekyll", "favicon.svg"):
