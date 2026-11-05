@@ -1,0 +1,262 @@
+{
+  "id": "XIHZpZtYCzo",
+  "titulo": "Your AI Agents Shouldn't Care Where They Run - Nikhil Harithas, Factory",
+  "titulo_curto": "Your AI Agents Shouldn't Care Where They Run",
+  "palestrante": "Nikhil Harithas, Factory",
+  "url": "https://www.youtube.com/watch?v=XIHZpZtYCzo",
+  "duracao": 1033,
+  "publicado_ts": 1793696422,
+  "edicao": "2026-11-04",
+  "tese": "Agente é aplicação com identidade própria; quem o roda precisa escolher onde ele executa, e o produto deve se adaptar a isso.",
+  "tldr": [
+    "A Factory precisou rodar o Droid, seu agente de código, dentro da nuvem privada de um banco gigante, com computação, chave de modelo e identidade do próprio cliente.",
+    "A solução é o Open Compute, que separa a computação do produto: um gateway pede máquinas, drivers (EC2, Kubernetes, Daytona, Modal) as criam, e a máquina se conecta de dentro para fora a um relay.",
+    "A unidade gerenciada é o computador, não a sessão, com pausa, snapshot e fork, e a Factory diz que abrirá o código em algumas semanas."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "Duas perguntas: em nome de quem e onde roda",
+      "texto": "Em ambientes regulados, duas perguntas voltam sempre. Em nome de quem o agente age? Onde ele roda? Pegar emprestada a identidade do desenvolvedor dentro de uma sandbox foi uma solução temporária. O palestrante trata o agente como uma aplicação um pouco não determinística, que merece identidade e permissões próprias, como qualquer software.",
+      "t": 136,
+      "legenda": "O problema do cliente regulado se resume a identidade e local de execução.",
+      "print": null,
+      "descricao": null
+    },
+    {
+      "titulo": "Open Compute: gateway, driver e relay",
+      "texto": "O cliente pede uma sessão ao backend. O compute gateway aciona o Open Compute, que já tem conexão aberta com a nuvem privada do cliente. O controlador chama um driver (EC2, Kubernetes, Daytona, Modal), que cria a máquina. A máquina abre um websocket para o relay e o cliente conversa com ela por esse caminho.",
+      "t": 453,
+      "legenda": "Fluxo completo de uma sessão, da requisição à máquina criada na VPC do cliente.",
+      "print": "img/XIHZpZtYCzo/1.jpg",
+      "descricao": "Diagrama 'One session, end to end': CLI, Relay, Backend, Gateway, OpenCompute e EC2 computer, com passos 1 a 8 e a área 'Customer cloud'."
+    },
+    {
+      "titulo": "Só conexões de saída",
+      "texto": "Clientes costumam temer conexões de entrada e aceitar as de saída. Por isso a máquina na VPC sempre inicia a conexão websocket com o relay. Depois da configuração inicial, a Factory nunca abre conexão para dentro. Com chave de modelo própria (BYOK), por exemplo via Bedrock, até as chamadas ao LLM ficam na VPC.",
+      "t": 514,
+      "legenda": "O desenho evita ingress e mantém a inferência dentro do ambiente do cliente.",
+      "print": "img/XIHZpZtYCzo/2.jpg",
+      "descricao": "Diagrama: passo 5 'daemon dials out to Relay' e chamada ao LLM dentro da Customer cloud; passos 7 e 8 não tocam o OpenCompute."
+    },
+    {
+      "titulo": "Gerenciar computadores, não sessões",
+      "texto": "A camada tem ciclo de vida de computador (criar, pausar, retomar, destruir) e snapshot e fork. Ela evita o conceito de sessão da Factory, para não ficar presa ao produto. O fork permite que um agente salve o estado e entregue uma subtarefa a outro agente, o que importa em enxames de subagentes.",
+      "t": 701,
+      "legenda": "A interface mínima que qualquer driver de computação precisa implementar.",
+      "print": "img/XIHZpZtYCzo/3.jpg",
+      "descricao": "Slide 'Factory calls one API. Drivers implement another.': ComputeService (Pause, Resume, Snapshot, Fork) e capacidades do driver (Suspend, Snapshot, Fork)."
+    },
+    {
+      "titulo": "Spec como teste do driver",
+      "texto": "Como há uma especificação clara, dá para entregá-la ao Droid e pedir um driver novo. Se o driver cumpre a spec, está pronto. O palestrante chama isso de versão forte de desenvolvimento guiado por testes e especificação. Os problemas difíceis ficam no bookkeeping: requisições sem confirmação, retries e o limite de 8 horas das microVMs da AWS.",
+      "t": 918,
+      "legenda": "Missões de vários dias exigem salvar e reidratar a sandbox sem perceptível interrupção.",
+      "print": "img/XIHZpZtYCzo/4.jpg",
+      "descricao": "Slide 'What broke.' com o card '8-hour session cap': microVMs na AWS, ARM64 only, EFS lento nos metadados, rollover difícil."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Control plane",
+      "traducao": "plano de controle",
+      "nivel": "intermediario",
+      "chave": "control plane",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado para rodar o código",
+      "nivel": "basico",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Identidade de agente",
+      "traducao": "agent identity: como um agente é reconhecido e confiável",
+      "nivel": "intermediario",
+      "chave": "identidade de agente",
+      "analogia": "Identidade de agente é como o crachá próprio de um funcionário terceirizado, que abre só as portas liberadas para ele, em vez de usar o crachá emprestado do chefe.",
+      "explicacao": [
+        "Todo programa que acessa um sistema precisa dizer quem é, para o sistema saber o que ele pode fazer.",
+        "Muitos agentes de IA usam a identidade da pessoa que os chamou e herdam todas as permissões dela.",
+        "Com identidade própria, o agente recebe só as permissões da tarefa, e cada ação fica registrada no nome dele.",
+        "O palestrante trata o agente como uma aplicação um pouco não determinística, que segue as mesmas regras de acesso de qualquer software.",
+        "Em empresas reguladas, isso responde a duas perguntas de auditoria: em nome de quem o agente age e onde ele roda."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "API",
+        "Sandbox"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "BYOK (bring your own key)",
+      "traducao": "traga sua própria chave de acesso ao modelo",
+      "nivel": "intermediario",
+      "chave": "byok (bring your own key)",
+      "analogia": "BYOK é como levar o seu próprio cartão de crédito corporativo para pagar o almoço, em vez de deixar o restaurante cobrar na conta dele e repassar depois.",
+      "explicacao": [
+        "Para usar um modelo de IA, o programa precisa de uma chave de acesso, como uma senha ligada a uma conta que paga o uso.",
+        "Em BYOK (traga sua própria chave), a empresa cliente usa a chave do contrato que ela mesma tem com o provedor do modelo.",
+        "O fornecedor do agente deixa de intermediar as chamadas ao LLM, e o cliente controla custo, limites e registros.",
+        "Com um serviço como o Bedrock dentro da nuvem do cliente, até as chamadas ao modelo ficam dentro da VPC (rede privada na nuvem).",
+        "O palestrante diz que isso faz sentido sobretudo para organizações maduras, que já têm acordo com algum laboratório de IA."
+      ],
+      "pre_requisitos": [
+        "LLM",
+        "API"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Blast radius",
+      "traducao": "raio de impacto",
+      "nivel": "intermediario",
+      "chave": "blast radius",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Template e snapshot de sandbox",
+      "traducao": "modelo de VM congelada com memória e disco",
+      "nivel": "avancado",
+      "chave": "template e snapshot de sandbox",
+      "analogia": "Template e snapshot são como a receita de um bolo e a foto da cozinha no meio do preparo, que permite outro cozinheiro continuar exatamente do ponto em que você parou.",
+      "explicacao": [
+        "Um template é a receita da máquina: o que vem instalado, quais versões e quais containers ela usa.",
+        "Toda máquina nova criada a partir do template nasce igual, pronta para o agente trabalhar.",
+        "Um snapshot (foto do estado) congela a máquina num momento, com disco e memória, e pode ser guardado no S3 ou num banco do cliente.",
+        "Com o snapshot dá para pausar, retomar ou fazer fork (bifurcação), que é abrir uma cópia para outro agente seguir uma subtarefa.",
+        "Ao retomar, a máquina é reidratada com segredos vindos do cofre de segredos que o cliente escolher."
+      ],
+      "pre_requisitos": [
+        "Sandbox",
+        "Agente de IA"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "TEMPLATE",
+            "nota": "receita do que vem instalado"
+          },
+          {
+            "rotulo": "MÁQUINA RODANDO",
+            "nota": "agente trabalha na sandbox"
+          },
+          {
+            "rotulo": "SNAPSHOT",
+            "nota": "congela disco e memória"
+          },
+          {
+            "rotulo": "FORK OU RETOMADA",
+            "nota": "cópia segue em outra máquina"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "MicroVM",
+      "traducao": "máquina virtual leve com kernel próprio",
+      "nivel": "avancado",
+      "chave": "microvm",
+      "analogia": "Uma MicroVM é como uma sala de reunião pequena que você reserva por algumas horas, com porta e chave próprias, dentro de um prédio comercial grande.",
+      "explicacao": [
+        "Uma máquina virtual é um computador simulado por software dentro de um computador físico.",
+        "A MicroVM (máquina virtual leve) traz só o mínimo para rodar, então liga em fração de segundo e gasta pouca memória.",
+        "Ela tem kernel (núcleo do sistema operacional) próprio, o que isola melhor que um container, que divide o kernel com outros.",
+        "Por isso serve de sandbox para agentes que executam código, e provedores criam milhares delas sob demanda.",
+        "Na AWS, cada MicroVM tem limite de 8 horas, então tarefas de vários dias precisam salvar o estado e continuar em outra máquina."
+      ],
+      "pre_requisitos": [
+        "Sandbox",
+        "Agente de IA"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Rehydration",
+      "traducao": "Reidratação, retomada do estado de um agente após queda",
+      "nivel": "avancado",
+      "chave": "rehydration",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "É um talk de produto da Factory, com um único cliente de referência (Blackstone). Não há números de adoção, custo, latência ou segurança. O sucesso com clientes é afirmado ('significativo'), sem dados. O código ainda não está aberto ('em algumas semanas'), então não dá para auditar. Faltam também os riscos do relay, que ainda é um ponto central controlado pela Factory.",
+  "acoes": [
+    "Liste onde seu agente roda hoje e com qual identidade ele chama APIs; anote o que ele herda de uma pessoa.",
+    "Escreva uma interface mínima de computação (criar, pausar, retomar, destruir, snapshot, fork) para seu agente, sem citar nenhum fornecedor.",
+    "Revise as conexões do seu agente e troque entradas por conexões iniciadas de dentro para fora quando possível.",
+    "Teste dar uma spec escrita ao seu agente de código e peça uma implementação que passe nela."
+  ],
+  "numeros": [
+    {
+      "valor": "US$ 1 tri",
+      "contexto": "ativos do cliente Blackstone, citado como exemplo",
+      "t": 44
+    },
+    {
+      "valor": "18 meses",
+      "contexto": "período em que produtos reaproveitaram identidade individual",
+      "t": 167
+    },
+    {
+      "valor": "8 horas",
+      "contexto": "limite de sessão das microVMs na AWS",
+      "t": 918
+    }
+  ],
+  "rotulo": "Rodar agentes em qualquer computação do cliente",
+  "objetivo": "desenhar uma arquitetura em que o agente roda na nuvem privada do cliente, com gateway, driver e relay de saída",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que a sandbox do cliente abre a conexão websocket com o relay, e não o contrário?",
+      "resposta": "Clientes regulados temem conexões de entrada (ingress) e aceitam as de saída (egress). A máquina na VPC sempre inicia a conexão, então a Factory nunca precisa abrir uma conexão para dentro."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Seu agente roda hoje numa única sandbox de um fornecedor. Que parte você isolaria atrás de um driver para poder trocar de computação?",
+      "resposta": "A criação e o ciclo de vida da máquina: criar, pausar, retomar, destruir, snapshot e fork. Cada ambiente (EC2, Kubernetes, sandbox de terceiros) implementa essa interface, e o agente só fala com ela."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta para aceitar que o Open Compute resolve o problema de clientes regulados?",
+      "resposta": "Faltam números de segurança, custo e latência, mais de um cliente de exemplo e o código aberto para auditoria. O relay continua sob controle da Factory, e o sucesso com Blackstone é só afirmado pelo palestrante."
+    }
+  ],
+  "experimento": {
+    "titulo": "Esboce a interface de computação do seu agente",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT e um editor de texto",
+    "passos": [
+      "Escreva em uma página as operações de um computador para seu agente: criar, pausar, retomar, destruir, snapshot e fork, com entradas e saídas.",
+      "Peça ao modelo um driver em Python para Docker local que cumpra essa especificação.",
+      "Peça também testes que verifiquem cada operação e rode-os contra o driver.",
+      "Anote o que quebrou e ajuste a spec, não só o código."
+    ],
+    "sucesso": "O driver para Docker passa em todos os testes da spec, e a spec não cita nenhum detalhe específico do Docker."
+  },
+  "consolidado_em": "2026-11-05T10:25:10+00:00"
+}

@@ -1,0 +1,296 @@
+{
+  "id": "-uBABM2AuFg",
+  "titulo": "Don't Approve the AI Model. Approve the App - Doneyli De Jesus, Langfuse",
+  "titulo_curto": "Don't Approve the AI Model. Approve the App",
+  "palestrante": "Doneyli De Jesus, Langfuse",
+  "url": "https://www.youtube.com/watch?v=-uBABM2AuFg",
+  "duracao": 1159,
+  "publicado_ts": 1793786435,
+  "edicao": "2026-11-04",
+  "tese": "Quem libera IA em produção deve aprovar a aplicação inteira, com dataset próprio e limites definidos por especialistas, e não o modelo.",
+  "tldr": [
+    "Um banco entre os cinco maiores disse à Langfuse que não certifica modelos, só aplicações, e que benchmarks públicos não dizem nada sobre os dados internos dele.",
+    "O método parte de um golden dataset (conjunto de referência), gera traces (registros de execução), pontua em várias dimensões com código, análise do caminho e LLM-as-a-judge, e só promove o agente se passar em cada limite (gate).",
+    "Um modelo pequeno com 97% de ancoragem e só 60% de acerto em números passou de 90% e cruzou o gate de 85% depois de ganhar uma ferramenta de cálculo, e a avaliação caiu de semanas para minutos."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Certifique a aplicação, não o modelo",
+      "texto": "O banco avisou que não aprova modelos, aprova aplicações como um analista de relatórios 10-K. Benchmarks públicos medem capacidade geral, mas não dizem como o modelo se sai com os dados e o contexto internos. Qualquer mudança de prompt, modelo ou ferramenta exige nova aprovação do conjunto.",
+      "t": 160,
+      "legenda": "A unidade de aprovação é a aplicação inteira, não o modelo.",
+      "print": "img/-uBABM2AuFg/0.jpg",
+      "descricao": "Slide de título: 'What a model can do. Whether your app can ship.' Logo Langfuse; o slide do analista 10-K não aparece."
+    },
+    {
+      "titulo": "Golden dataset, traces e scores",
+      "texto": "O mecanismo tem três peças. O golden dataset funciona como os casos de teste de um QA de software. Rodar o agente sobre ele gera traces, que são a evidência. Dos traces saem os scores de aprovado ou reprovado em cada dimensão escolhida.",
+      "t": 360,
+      "legenda": "O fluxo de avaliação em alto nível, do dataset ao veredito.",
+      "print": "img/-uBABM2AuFg/1.jpg",
+      "descricao": "Diagrama 'The contract': Dataset + prompt version → Traced run + item scores → Verdict + evidence. PASS/FAIL por dimensão, cada linha liga a um trace."
+    },
+    {
+      "titulo": "Bem ancorado, mas ruim de conta",
+      "texto": "O modelo pequeno acertava 97% em ancoragem nas fontes do banco, mas errava números e contas simples. O motivo é que LLMs prevêem o próximo token e não calculam. A solução foi dar ao agente uma ferramenta de cálculo em Python, o que levou a precisão numérica a cerca de 95%.",
+      "t": 441,
+      "legenda": "Uma média alta esconde uma dimensão fraca.",
+      "print": "img/-uBABM2AuFg/2.jpg",
+      "descricao": "Slide 'We scored the model': Groundness 97% e Numerical Accuracy (Math) 60%, em números grandes lado a lado."
+    },
+    {
+      "titulo": "Gate por dimensão, não pela média",
+      "texto": "Cada dimensão (acurácia, completude, conformidade regulatória) tem seu limite, definido com especialistas de risco. Uma dimensão binária como conformidade pode zerar e travar a promoção mesmo com média alta. Os testes usaram datasets de 150 e de 1.500 perguntas.",
+      "t": 876,
+      "legenda": "Uma só dimensão reprovada bloqueia a ida para produção.",
+      "print": "img/-uBABM2AuFg/3.jpg",
+      "descricao": "Código evaluators.py com limites por dimensão: accuracy 0.85, groundedness 0.80, compliance 1.0, tool use 0.90; passed = all(...). Sem tabela com zero."
+    },
+    {
+      "titulo": "Fila de anotação fecha o ciclo",
+      "texto": "Falhas de uma dimensão, como conformidade, entram numa fila de anotação para o especialista revisar o trace e dar feedback. Mudanças de prompt ou configuração disparam nova rodada do gate. O feedback revisado pode virar caso novo no golden dataset.",
+      "t": 1007,
+      "legenda": "O dataset cresce com as falhas revisadas por humanos.",
+      "print": "img/-uBABM2AuFg/4.jpg",
+      "descricao": "Diagrama: golden dataset → agente → Gate (acurácia ≥85%, groundedness ≥80%, compliance =100%, tool use ≥90%); trace revisado volta ao dataset."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Golden dataset",
+      "traducao": "conjunto de referência rotulado por humanos",
+      "nivel": "basico",
+      "chave": "golden dataset",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Trace",
+      "traducao": "registro estruturado da execução",
+      "nivel": "basico",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Quality gate",
+      "traducao": "barreira de qualidade",
+      "nivel": "intermediario",
+      "chave": "quality gate",
+      "analogia": "Um quality gate é como a vistoria do carro antes do licenciamento, em que basta o freio reprovar para o carro voltar, mesmo com pneus e faróis perfeitos.",
+      "explicacao": [
+        "Quality gate (barreira de qualidade) é um ponto de controle que decide se algo pode seguir adiante ou precisa voltar.",
+        "No caso de um agente de IA, a barreira fica entre o ambiente de testes e a produção, onde os usuários reais estão.",
+        "O time escolhe dimensões como acurácia, completude e conformidade regulatória, e cada uma ganha um limite mínimo próprio.",
+        "O agente só é promovido se passar em todas as dimensões. Uma média alta não compensa uma dimensão reprovada.",
+        "Os limites vêm de especialistas de risco do negócio, e qualquer mudança de prompt, modelo ou ferramenta dispara nova rodada da barreira."
+      ],
+      "pre_requisitos": [
+        "Eval",
+        "Golden dataset",
+        "Agente de IA"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "MUDANÇA NO AGENTE",
+            "nota": "prompt, modelo ou ferramenta"
+          },
+          {
+            "rotulo": "RODADA DE AVALIAÇÃO",
+            "nota": "golden dataset gera traces e scores"
+          },
+          {
+            "rotulo": "LIMITE POR DIMENSÃO",
+            "nota": "cada score contra seu próprio mínimo"
+          },
+          {
+            "rotulo": "PROMOVE OU BLOQUEIA",
+            "nota": "uma dimensão reprovada já trava"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Grounding",
+      "traducao": "ancoragem nos dados",
+      "nivel": "intermediario",
+      "chave": "grounding",
+      "analogia": "Grounding é como o aluno que responde a prova com o livro aberto e aponta a página de onde tirou cada resposta.",
+      "explicacao": [
+        "Grounding (ancoragem) é a resposta do modelo estar apoiada em informações reais que ele recebeu, sem inventar.",
+        "Na prática, o sistema busca trechos em fontes oficiais, como documentos internos do banco, e entrega esses trechos ao modelo junto com a pergunta.",
+        "A métrica de groundedness verifica se cada afirmação da resposta aparece de fato nas fontes consultadas.",
+        "Boa ancoragem não garante acerto em contas. No talk, o modelo tinha 97% de ancoragem e só 60% de acerto numérico, porque um LLM prevê o próximo token e não calcula."
+      ],
+      "pre_requisitos": [
+        "LLM",
+        "Token",
+        "Eval"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Evaluator baseado em código",
+      "traducao": "avaliador determinístico escrito em Python ou TypeScript",
+      "nivel": "intermediario",
+      "chave": "evaluator baseado em código",
+      "analogia": "Um evaluator baseado em código é como o gabarito de uma prova de múltipla escolha, que corrige sempre igual, não importa quem passe a folha pela máquina.",
+      "explicacao": [
+        "Evaluator (avaliador) é a peça que dá nota a uma resposta do agente. Neste tipo, a nota sai de um programa comum.",
+        "O avaliador é escrito em Python ou TypeScript e confere regras objetivas, como se o número da resposta bate com o esperado.",
+        "Ele é determinístico, ou seja, para a mesma entrada devolve sempre a mesma nota, sem custo de chamar um modelo.",
+        "Ele cobre bem o que tem resposta exata. Aspectos qualitativos ficam para o LLM-as-a-judge e para a análise do caminho que o agente seguiu.",
+        "Em agentes complexos, o talk recomenda misturar avaliadores determinísticos e não determinísticos, porque depender só de juízes LLM não basta."
+      ],
+      "pre_requisitos": [
+        "Eval",
+        "LLM-as-a-judge",
+        "Trace"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo de linguagem usado para avaliar respostas",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Annotation queue",
+      "traducao": "fila de anotação para revisão humana",
+      "nivel": "intermediario",
+      "chave": "annotation queue",
+      "analogia": "Uma annotation queue é como a pilha de provas duvidosas que o professor separa para o coordenador revisar antes de fechar as notas.",
+      "explicacao": [
+        "Annotation queue (fila de anotação) é uma lista de casos separados para uma pessoa revisar com calma.",
+        "O sistema escolhe os traces que falharam numa dimensão, por exemplo conformidade regulatória, e coloca esses registros na fila.",
+        "O especialista do domínio abre cada trace, vê o que o agente fez e registra um parecer ou uma correção.",
+        "Esse feedback orienta ajustes no agente, e os casos revisados podem virar exemplos novos no golden dataset.",
+        "Assim o conjunto de referência cresce com falhas reais, e a próxima rodada do quality gate fica mais exigente."
+      ],
+      "pre_requisitos": [
+        "Trace",
+        "Golden dataset",
+        "Eval"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "FALHA NUMA DIMENSÃO",
+            "nota": "trace reprovado, ex. conformidade"
+          },
+          {
+            "rotulo": "FILA DE ANOTAÇÃO",
+            "nota": "casos separados para revisão"
+          },
+          {
+            "rotulo": "ESPECIALISTA REVISA",
+            "nota": "lê o trace e dá feedback"
+          },
+          {
+            "rotulo": "DATASET ATUALIZADO",
+            "nota": "caso revisado vira referência"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "On premise",
+      "traducao": "rodar nos próprios servidores",
+      "nivel": "basico",
+      "chave": "on premise",
+      "analogia": "Rodar on premise é como cozinhar no próprio restaurante em vez de encomendar a comida de uma cozinha terceirizada.",
+      "explicacao": [
+        "On premise (nas próprias instalações) significa rodar o software em servidores que a empresa mesma possui e controla.",
+        "A alternativa é a nuvem, em que os servidores pertencem a um fornecedor e a empresa aluga o uso.",
+        "Bancos voltaram a montar data centers com GPUs para rodar modelos localmente, porque os dados enviados à IA são sensíveis.",
+        "Junto com isso vêm duas exigências do talk. O acesso fica fechado à internet e a implantação é air-gapped (isolada da rede externa), para nenhum fornecedor ver ou treinar com os dados."
+      ],
+      "pre_requisitos": [
+        "LLM",
+        "API"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk vem de um fornecedor de observabilidade e vende o próprio fluxo, e o cliente não é nomeado. Os números do banco (97%, 60%, 85%, de semanas a minutos) aparecem sem metodologia, sem detalhe do dataset e sem comparação com outras abordagens. O ganho de 60% para mais de 90% mistura a ferramenta de cálculo com o framework de avaliação, então não se sabe quanto vem de cada um. Faltam também a concordância do LLM judge com humanos e o custo de manter o golden dataset.",
+  "acoes": [
+    "Liste as dimensões que importam para o seu agente (acurácia, completude, conformidade, tom) e dê a cada uma um limite próprio, sem usar média geral.",
+    "Monte um golden dataset de 20 a 30 casos com entrada, saída esperada e metadados, tirando exemplos de falhas reais do seu produto.",
+    "Procure no seu agente tarefas que exigem cálculo exato e troque o raciocínio do modelo por uma ferramenta determinística, medindo antes e depois.",
+    "Configure uma rodada automática do conjunto de avaliação sempre que mudar o prompt, o modelo ou uma ferramenta."
+  ],
+  "numeros": [
+    {
+      "valor": "97%",
+      "contexto": "ancoragem do modelo pequeno nas fontes do banco",
+      "t": 441
+    },
+    {
+      "valor": "60%",
+      "contexto": "acerto do mesmo modelo em números e contas",
+      "t": 536
+    },
+    {
+      "valor": "85%",
+      "contexto": "gate do banco para o caso de uso",
+      "t": 752
+    },
+    {
+      "valor": "95%",
+      "contexto": "precisão numérica depois da ferramenta de cálculo",
+      "t": 660
+    }
+  ],
+  "rotulo": "Aprovar a aplicação de IA, não o modelo, num banco",
+  "objetivo": "desenhar um processo de aprovação para um agente com golden dataset, pontuação em várias dimensões e gates definidos por especialistas",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que o modelo, mesmo com 97% de ancoragem, falhava nas respostas financeiras, e como o time resolveu?",
+      "resposta": "LLMs são preditores do próximo token e erram contas e números mesmo bem ancorados. O time deu ao agente uma ferramenta de cálculo em Python, e a acurácia numérica subiu de cerca de 60% para mais de 90%."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você vai levar um agente de atendimento para produção. Que dimensões e que regra de gate você definiria, e quem deveria fixar os limites?",
+      "resposta": "Separar dimensões como acurácia, ancoragem, conformidade e tom, cada uma com limite próprio, e tratar as binárias (como conformidade) como bloqueio total. Quem entende o risco do negócio, como jurídico, suporte sênior ou compliance, deve fixar os limites com a equipe técnica."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta para confiar que o ganho de 60% para mais de 90% vem do método do talk?",
+      "resposta": "Faltam o tamanho e a origem do dataset por resultado, a comparação sem a ferramenta de cálculo, a concordância do LLM judge com humanos e o custo de manutenção. O palestrante trabalha para o fornecedor do framework, então há conflito de interesse e o cliente não é identificado."
+    }
+  ],
+  "experimento": {
+    "titulo": "Gate por dimensão num agente simples",
+    "minutos": 40,
+    "precisa": "Python, uma chave de API de um modelo (Claude ou OpenAI) e uma planilha ou arquivo JSON",
+    "passos": [
+      "Escreva 15 perguntas com resposta esperada sobre um texto curto seu, incluindo 5 que exigem conta, e salve em JSON como golden dataset.",
+      "Rode um modelo sobre as perguntas e guarde cada resposta num arquivo, que faz o papel dos traces.",
+      "Pontue duas dimensões, acerto numérico com código determinístico e fidelidade ao texto com um LLM como juiz, cada uma com limite próprio.",
+      "Dê ao modelo uma ferramenta de calculadora em Python, rode de novo e compare as duas dimensões com o gate definido."
+    ],
+    "sucesso": "Você vê a acurácia numérica subir com a ferramenta e consegue dizer, por dimensão, se o agente passa ou não no gate, sem olhar a média."
+  },
+  "consolidado_em": "2026-11-05T10:25:10+00:00"
+}

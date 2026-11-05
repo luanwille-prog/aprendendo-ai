@@ -1,0 +1,297 @@
+{
+  "id": "3Ad73Onx3Aw",
+  "titulo": "Better Search Took This AI Agent From 36% to 98% Accuracy - Aamir Shakir, Mixedbread",
+  "titulo_curto": "Better Search Took This AI Agent From 36% to 98% Accuracy",
+  "palestrante": "Aamir Shakir, Mixedbread",
+  "url": "https://www.youtube.com/watch?v=3Ad73Onx3Aw",
+  "duracao": 989,
+  "publicado_ts": 1793692824,
+  "edicao": "2026-11-04",
+  "tese": "Agente errado quase sempre é agente mal servido de dados. Melhore a busca antes de trocar o modelo.",
+  "tldr": [
+    "O palestrante diz que a pilha clássica de OCR, chunking, embedding e banco vetorial perde informação a cada etapa e falha quando o acervo cresce.",
+    "A proposta da Mixedbread é indexar a página como imagem, com vários embeddings por documento (late interaction), e dar ao agente uma busca simples e outra agêntica.",
+    "Um hedge fund cliente relatou subir de 36% para 98% de acerto e gastar cerca de 3 vezes menos em tokens de LLM, números que a própria empresa apresenta e ainda vai publicar."
+  ],
+  "tema": "dados-e-rag",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Cada etapa da pilha perde informação",
+      "texto": "OCR erra tabelas e diagramas, o chunking corta figuras e páginas em pontos arbitrários, e o embedding resume tudo em um único ponto. Cada etapa soma ruído. Ainda por cima, o time precisa escolher um fornecedor para cada peça, o que o palestrante estima em seis a oito meses e quatro a cinco pessoas.",
+      "t": 280,
+      "legenda": "A cadeia de etapas, cada uma com perda de informação",
+      "print": "img/3Ad73Onx3Aw/0.jpg",
+      "descricao": "Slide 'Opção 2: construa seu pipeline': Parse → OCR → Chunk → Embed → Vector DB → Rerank. Cada etapa perde informação ou soma um fornecedor."
+    },
+    {
+      "titulo": "Um ponto só não distingue relatórios parecidos",
+      "texto": "Um embedding de vetor único coloca o relatório da Nvidia de anos diferentes quase no mesmo lugar. Com poucas centenas de documentos a qualidade é boa. Com escala de produção, a busca não separa detalhes finos e a resposta piora. O agente compensa com mais consultas e subagentes, e o custo sobe.",
+      "t": 406,
+      "legenda": "Documentos parecidos viram pontos parecidos",
+      "print": "img/3Ad73Onx3Aw/1.jpg",
+      "descricao": "Gráfico 'More data, more noise': qualidade da resposta cai com o volume de dados. Versões antigas e duplicatas tapam a página certa."
+    },
+    {
+      "titulo": "Quase 30 anos de BM25 e um salto só agora",
+      "texto": "A linha do tempo de 1994 até hoje mostra a busca por palavra-chave (BM25) dominando até os primeiros embeddings bons, em 2022. Depois disso o ganho foi gradual. O palestrante argumenta que RAG nunca teve um salto como o dos chatbots, e diz que o novo modelo, com vários embeddings por documento, seria esse salto.",
+      "t": 544,
+      "legenda": "Linha do tempo da busca segundo a Mixedbread",
+      "print": "img/3Ad73Onx3Aw/2.jpg",
+      "descricao": "Gráfico de qualidade de recuperação (nDCG@10) de 1994 a hoje: BM25 46,6; E5-Mistral-7B 63,2; Cohere Embed 5 Pro 73,3; Wholembed V4 83,7."
+    },
+    {
+      "titulo": "Indexar a imagem da página e citar com caixas",
+      "texto": "No demo, o modelo vê a captura da página, então gráficos e tabelas entram na busca sem passar por OCR. A consulta sobre a margem da divisão de fundição da Intel acha a página certa. As caixas delimitadoras (bounding boxes) mostram de onde veio a resposta, o que permite ao analista conferir a fonte.",
+      "t": 778,
+      "legenda": "Resultado com localização exata na página",
+      "print": "img/3Ad73Onx3Aw/3.jpg",
+      "descricao": "Demo: página de busca da Mixedbread com gráfico 'Intel foundry' (barras de 4,4 a 5,8 em $ bi). Não há caixas de destaque visíveis."
+    },
+    {
+      "titulo": "Resultado do cliente: 36% para 98%",
+      "texto": "Um grande hedge fund trocou chunking, OCR, embedding genérico e banco vetorial pela busca da Mixedbread. A taxa de resposta correta, medida contra especialistas humanos, foi de 36% para 98%. O gasto com LLM caiu cerca de 3 vezes, porque o modelo gasta menos tokens procurando e lendo.",
+      "t": 902,
+      "legenda": "Acurácia do agente antes e depois da troca de busca",
+      "print": "img/3Ad73Onx3Aw/4.jpg",
+      "descricao": "Gráfico 'Production customer: 36% → 98%': agente de hedge fund com 55 perguntas sobre os próprios documentos. Antes 36%; com Mixedbread 98%."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "RAG",
+      "traducao": "geração com recuperação de memória",
+      "nivel": "basico",
+      "chave": "rag",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "grep",
+      "traducao": "busca de texto em arquivos",
+      "nivel": "basico",
+      "chave": "grep",
+      "analogia": "O grep é como passar o dedo por cada página de uma pilha de cadernos procurando uma palavra exata, sem saber se a página fala do assunto certo.",
+      "explicacao": [
+        "O grep é um comando do terminal que procura um texto exato dentro de arquivos e mostra as linhas onde ele aparece.",
+        "Ele faz busca lexical (por palavra escrita), então acha \"LPDDR5\" mas não entende sinônimos nem o sentido da pergunta.",
+        "Agentes de código, como o Claude Code, usam o grep para achar arquivos relevantes antes de abri-los.",
+        "Num acervo grande, o grep devolve muitos resultados sem ordem de relevância, e o agente lê documentos inteiros, o que faz o custo em tokens subir.",
+        "PDFs escaneados, imagens e formatos binários não têm texto pesquisável, então o grep nem enxerga esse conteúdo."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "Token"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PERGUNTA",
+            "nota": "Termos como Intel e LPDDR5"
+          },
+          {
+            "rotulo": "GREP NOS ARQUIVOS",
+            "nota": "Casa o texto exato, linha a linha"
+          },
+          {
+            "rotulo": "MUITOS ACERTOS",
+            "nota": "Sem ordem de relevância"
+          },
+          {
+            "rotulo": "AGENTE LÊ TUDO",
+            "nota": "Custo em tokens sobe"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "OCR",
+      "traducao": "reconhecimento óptico de caracteres",
+      "nivel": "basico",
+      "chave": "ocr",
+      "analogia": "O OCR é como um digitador que copia à mão uma folha impressa: o texto corrido sai certo, mas tabelas e gráficos chegam bagunçados ou somem.",
+      "explicacao": [
+        "OCR (optical character recognition, reconhecimento óptico de caracteres) transforma a imagem de uma página em texto que o computador consegue ler.",
+        "Ele é usado em PDFs escaneados e documentos que só existem como imagem, para que o conteúdo possa ser pesquisado.",
+        "Numa pilha de RAG, o OCR é a etapa de parsing (leitura do arquivo), antes do chunking e do embedding.",
+        "Quando o OCR lê mal uma tabela, um diagrama ou alguns caracteres, essa informação se perde e as etapas seguintes trabalham com dados piores.",
+        "Por isso a Mixedbread propõe criar o embedding direto da imagem da página e deixar o OCR só como apoio para modelos que leem apenas texto."
+      ],
+      "pre_requisitos": [
+        "RAG",
+        "Chunking",
+        "Embedding"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "IMAGEM DA PÁGINA",
+            "nota": "PDF escaneado ou com figuras"
+          },
+          {
+            "rotulo": "RECONHECE LETRAS",
+            "nota": "Converte pixels em caracteres"
+          },
+          {
+            "rotulo": "TEXTO EXTRAÍDO",
+            "nota": "Tabelas e gráficos perdem forma"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Chunking",
+      "traducao": "divisão de documentos em trechos",
+      "nivel": "basico",
+      "chave": "chunking",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Embedding",
+      "traducao": "vetor que representa o sentido do texto",
+      "nivel": "intermediario",
+      "chave": "embedding",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "BM25",
+      "traducao": "busca lexical por palavra-chave",
+      "nivel": "intermediario",
+      "chave": "bm25",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Late interaction",
+      "traducao": "interação tardia: vários embeddings por documento e por consulta",
+      "nivel": "avancado",
+      "chave": "late interaction",
+      "analogia": "Late interaction é como um fichário com uma etiqueta para cada assunto da página, em vez de uma única etiqueta na capa com o nome da empresa.",
+      "explicacao": [
+        "Late interaction (interação tardia) é um jeito de buscar documentos que guarda vários resumos numéricos de cada página, e não um só.",
+        "Na busca comum, o embedding resume a página inteira em um ponto, e relatórios da mesma empresa em anos diferentes ficam quase no mesmo lugar.",
+        "No late interaction, cada parte da página ganha seu próprio vetor, por exemplo um para lucro líquido e outro para receita, e a consulta também vira vários vetores.",
+        "Os vetores são criados de uma vez só, então cada um carrega o contexto da página, como saber que aquele lucro é da Nvidia em 2026.",
+        "Na hora da busca, cada vetor da consulta procura o vetor mais parecido do documento, e a soma dessas comparações define o ranking, o que separa detalhes finos."
+      ],
+      "pre_requisitos": [
+        "Embedding",
+        "RAG",
+        "BM25"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PÁGINA",
+            "nota": "Relatório com tabelas e textos"
+          },
+          {
+            "rotulo": "VÁRIOS VETORES",
+            "nota": "Um por trecho, com contexto"
+          },
+          {
+            "rotulo": "CONSULTA EM VETORES",
+            "nota": "A pergunta também se divide"
+          },
+          {
+            "rotulo": "COMPARA PARTE A PARTE",
+            "nota": "Melhor par para cada vetor"
+          },
+          {
+            "rotulo": "PÁGINA CERTA",
+            "nota": "Distingue anos e números"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Modelo multimodal",
+      "traducao": "modelo que entende mais de um tipo de dado",
+      "nivel": "intermediario",
+      "chave": "modelo multimodal",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O talk é pitch de produto da Mixedbread, que vende a busca e os modelos descritos. O caso de 36% para 98% vem de um único cliente anônimo, sem metodologia, tamanho do conjunto de perguntas ou detalhes da pilha anterior, e o estudo ainda não foi publicado. A crítica ao RAG compara a Mixedbread com uma versão fraca da pilha, sem testar embeddings modernos, busca híbrida ou reranking bem ajustado. O modelo novo e o agentic search não estavam publicados na data, e o demo falhou por problema de internet. A afirmação de 40 vezes mais rápido e barato aparece sem fonte.",
+  "acoes": [
+    "Monte 20 perguntas reais sobre seus documentos, com resposta conhecida, e meça quantas o seu agente acerta hoje antes de mudar qualquer coisa.",
+    "Registre quantos tokens e quantas consultas o agente gasta por pergunta. Se ele lê muitos documentos inteiros, o problema provavelmente está na busca.",
+    "Teste uma busca híbrida (BM25 mais embeddings) no seu acervo e compare com a busca só vetorial nas mesmas 20 perguntas.",
+    "Confira se seus PDFs têm tabelas e gráficos que o OCR atual lê mal. Esses são os candidatos a indexação visual."
+  ],
+  "numeros": [
+    {
+      "valor": "36%",
+      "contexto": "acerto do agente do hedge fund com a pilha antiga",
+      "t": 902
+    },
+    {
+      "valor": "98%",
+      "contexto": "acerto após trocar para a busca da Mixedbread",
+      "t": 902
+    },
+    {
+      "valor": "3x",
+      "contexto": "queda no gasto com LLM relatada pelo cliente",
+      "t": 932
+    },
+    {
+      "valor": "40x",
+      "contexto": "mais rápido e barato que modelos de agentic search citados",
+      "t": 809
+    }
+  ],
+  "rotulo": "Por que a busca, e não o modelo, limita seu agente",
+  "objetivo": "explicar por que RAG clássico degrada em acervos grandes e comparar busca por vetor único com late interaction multimodal",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que o embedding de vetor único tem dificuldade com relatórios financeiros parecidos?",
+      "resposta": "Ele resume a página inteira em um único ponto. Relatórios de anos diferentes da mesma empresa caem em pontos muito próximos, e a busca não distingue detalhes finos como valores de uma tabela."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Seu agente de suporte lê dezenas de PDFs por pergunta e a conta de tokens está alta. O que você mede e muda primeiro?",
+      "resposta": "Meça tokens e número de documentos lidos por pergunta, junto com a taxa de acerto em um conjunto de perguntas com gabarito. Depois teste uma busca melhor, como híbrida ou com vários embeddings, e compare acerto e custo nas mesmas perguntas."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta para aceitar que a busca nova explica o salto de 36% para 98%?",
+      "resposta": "Faltam tamanho e origem do conjunto de perguntas, a configuração da pilha antiga e uma comparação com alternativas bem ajustadas. Há um único cliente e o relato vem do fornecedor, que tem interesse comercial. Outras mudanças no sistema também podem ter contribuído."
+    }
+  ],
+  "experimento": {
+    "titulo": "Compare busca por palavra-chave e por embedding",
+    "minutos": 40,
+    "precisa": "Python, uma pasta com 20 a 50 documentos seus e acesso a uma API de embeddings (ou modelo local)",
+    "passos": [
+      "Escreva 10 perguntas cujas respostas você sabe e anote qual documento responde cada uma.",
+      "Implemente uma busca BM25 (biblioteca rank_bm25) e rode as 10 perguntas, anotando em que posição o documento certo aparece.",
+      "Gere embeddings dos mesmos documentos, busque por similaridade e anote as posições do mesmo jeito.",
+      "Compare as duas listas e veja em quais perguntas cada método falha, principalmente nas que dependem de números ou datas."
+    ],
+    "sucesso": "Você tem uma tabela com 10 perguntas e a posição do documento certo em cada método, e consegue apontar um tipo de pergunta em que cada busca falha."
+  },
+  "consolidado_em": "2026-11-05T10:25:10+00:00"
+}

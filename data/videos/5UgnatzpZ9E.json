@@ -1,0 +1,239 @@
+{
+  "id": "5UgnatzpZ9E",
+  "titulo": "Building the AI Agent Is Easy. Proving It's Safe Isn't - Jonathan Osborne, NatWest",
+  "titulo_curto": "Building the AI Agent Is Easy. Proving It's Safe Isn't",
+  "palestrante": "Jonathan Osborne, NatWest",
+  "url": "https://www.youtube.com/watch?v=5UgnatzpZ9E",
+  "duracao": 1081,
+  "publicado_ts": 1793779239,
+  "edicao": "2026-11-04",
+  "tese": "Num banco, criar o agente é a parte barata. O que consome o esforço é provar que ele é seguro, com métricas em que dá para confiar.",
+  "tldr": [
+    "O NatWest leva o assistente Cora, com cerca de 100 mil conversas por dia, de respostas roteirizadas para agentes de IA, e limita o que chega ao modelo com um funil de roteamento de regras e classificadores.",
+    "A equipe mostra que um número único engana. Uma revisão humana de 83% de aprovação escondia só 43% nas mudanças de assunto, e um LLM juiz deu média 0,97 contra 0,83 dos humanos, quase sem correlação.",
+    "Para liberar com segurança, o time usa avaliação contínua no CI/CD, modo sombra, feature flags, liberação por marca e feedback humano obrigatório como trava."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Funil de roteamento antes do modelo",
+      "texto": "Toda conversa passa por filtros e regras determinísticas, sem IA, antes de chegar a um modelo. Depois vêm reescrita da pergunta, um classificador de intenção (rede neural sobre embeddings, não IA generativa) e regras de política. Isso reduz a superfície de risco, dá auditoria por decisão e mantém uma resposta se o modelo cair.",
+      "t": 311,
+      "legenda": "Só o que passa pelas regras determinísticas chega aos modelos.",
+      "print": "img/5UgnatzpZ9E/0.jpg",
+      "descricao": "Slide 'The routing funnel': 100% dos turnos, 80% após filtro contextual e etapas de regras e ML; menos da metade chega ao modelo."
+    },
+    {
+      "titulo": "Qualidade é um vetor, não uma nota",
+      "texto": "Um classificador com 94% de acerto não diz se a resposta tem fonte, se o cliente teve o problema resolvido ou se o sistema soube parar. O time pontua cada resposta em segurança, tarefa e experiência, e monitora cada eixo separado. Assim dá para distinguir alucinação de uma resposta correta, porém irritante.",
+      "t": 405,
+      "legenda": "Cada eixo de qualidade tem alarme e correção próprios.",
+      "print": "img/5UgnatzpZ9E/1.jpg",
+      "descricao": "Slide 'Quality is a vector, not a score': accuracy 94% riscado; pontua Segurança (groundedness, bias), Tarefa e Experiência separadamente."
+    },
+    {
+      "titulo": "A média esconde o ponto fraco",
+      "texto": "Na validação humana do agente de pagamentos, 111 conversas e 3 revisores por conversa deram 83% de aprovação. Por cenário, o caminho feliz teve 97%, os casos de borda 76% e as mudanças de assunto 43%. Além disso, os revisores concordaram só 64% das vezes em compreensão de intenção, o que enfraquece o humano como gabarito.",
+      "t": 468,
+      "legenda": "A nota de 83% esconde uma diferença de 54 pontos entre cenários.",
+      "print": "img/5UgnatzpZ9E/2.jpg",
+      "descricao": "Slide 'We had humans score it first': 97% caminho feliz, 76% casos de borda, 43% mudanças de assunto; concordância de 64% em intenção."
+    },
+    {
+      "titulo": "O juiz generoso e sem discriminação",
+      "texto": "No agente de reclamações, o LLM juiz deu média 0,97 de fidelidade com pouca variação, contra 0,83 dos humanos com variação larga. O erro médio parecia pequeno, mas a correlação era quase zero. Trocar só o modelo do juiz derrubou a nota de 0,8 para 0,2 acima do limite, então o juiz vira parte da configuração. Usar outra família de modelos aproximou os resultados.",
+      "t": 592,
+      "legenda": "Média parecida não prova que o juiz separa respostas boas das ruins.",
+      "print": "img/5UgnatzpZ9E/3.jpg",
+      "descricao": "Slide 'A broken judge looks like a good judge': juiz com média 0,97 e humanos com 0,83; correlação 0,04; limiar 0,89."
+    },
+    {
+      "titulo": "Liberar em sombra e por etapas",
+      "texto": "Primeiro o modelo classifica falas reais enquanto o bot roteirizado ainda responde ao cliente. Isso gera dados de produção com risco quase nulo. Depois a liberação vai marca por marca, em percentuais, com KPIs de go ou no-go. Uma feature flag global devolve tudo ao roteiro, e cada backend pode ser isolado em segundos.",
+      "t": 902,
+      "legenda": "A liberação em etapas troca uma decisão enorme por várias pequenas.",
+      "print": "img/5UgnatzpZ9E/4.jpg",
+      "descricao": "Slide 'Shadow first, then brand by brand': shadow, marca menor, rampa e rota total; gate com erro abaixo de 1% e p95 abaixo de 500ms; rollback em 3 níveis."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Blast radius",
+      "traducao": "raio de impacto",
+      "nivel": "basico",
+      "chave": "blast radius",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Sistema determinístico",
+      "traducao": "deterministic system (mesma entrada, mesma saída)",
+      "nivel": "basico",
+      "chave": "sistema determinístico",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo de linguagem usado para avaliar respostas",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Faithfulness eval",
+      "traducao": "avaliação de fidelidade às fontes",
+      "nivel": "intermediario",
+      "chave": "faithfulness eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Teste de regressão",
+      "traducao": "teste que detecta o que quebrou após uma mudança",
+      "nivel": "intermediario",
+      "chave": "teste de regressão",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Shadow mode",
+      "traducao": "modo sombra",
+      "nivel": "intermediario",
+      "chave": "shadow mode",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Feature flag",
+      "traducao": "chave que liga ou desliga um recurso sem novo deploy",
+      "nivel": "intermediario",
+      "chave": "feature flag",
+      "analogia": "Uma feature flag é como o interruptor de uma sala nova num escritório, que o zelador liga ou desliga sem precisar chamar o pedreiro.",
+      "explicacao": [
+        "Uma feature flag (chave de recurso) é um botão de liga e desliga para uma parte de um sistema.",
+        "O código novo e o antigo ficam prontos lado a lado, e a chave decide qual deles cada usuário recebe.",
+        "A chave muda numa configuração, sem deploy (nova publicação do sistema), então a troca leva segundos.",
+        "Dá para ligar só para uma fatia do público, como uma marca ou 5% dos clientes, e aumentar aos poucos.",
+        "No NatWest, uma chave global devolve todo o tráfego ao bot roteirizado, e cada backend pode ser isolado por marca."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "Shadow mode"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PEDIDO DO CLIENTE",
+            "nota": "chega ao sistema"
+          },
+          {
+            "rotulo": "CONSULTA A CHAVE",
+            "nota": "global, por marca ou percentual"
+          },
+          {
+            "rotulo": "ESCOLHE O CAMINHO",
+            "nota": "agente de IA ou bot roteirizado"
+          },
+          {
+            "rotulo": "VOLTA EM SEGUNDOS",
+            "nota": "desliga sem novo deploy"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Drift",
+      "traducao": "deriva dos dados ao longo do tempo",
+      "nivel": "avancado",
+      "chave": "drift",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O talk vem de um engenheiro do banco e cita a Comet como plataforma central, então há viés de fornecedor e a sessão funciona em parte como vitrine da ferramenta. Os números de juiz e de revisão humana vêm de dois casos internos (agente de pagamentos com 111 conversas e agente de reclamações), sem intervalo de confiança nem metodologia aberta. O próprio palestrante diz que a Cora ainda não está no ar e que só saberá no mês seguinte quanto disso é verdade. Faltam resultados de produção do agente voltado ao cliente.",
+  "acoes": [
+    "Quebre a métrica principal do seu agente ou eval por tipo de cenário (caminho feliz, casos de borda, mudança de assunto) e compare as taxas em vez de olhar só a média.",
+    "Calcule a correlação entre as notas do seu LLM juiz e as de um revisor humano em 30 a 50 casos, e não só a diferença das médias.",
+    "Registre no repositório qual modelo e qual prompt o juiz usa, e rode seus evals de regressão sempre que mudar um deles.",
+    "Coloque uma feature flag global que devolva o fluxo antigo, antes de liberar qualquer caminho novo gerado por IA."
+  ],
+  "numeros": [
+    {
+      "valor": "19 milhões",
+      "contexto": "clientes de varejo do NatWest",
+      "t": 31
+    },
+    {
+      "valor": "83% e 43%",
+      "contexto": "aprovação geral versus mudanças de assunto",
+      "t": 468
+    },
+    {
+      "valor": "0,97 vs 0,83",
+      "contexto": "média do LLM juiz versus humanos em fidelidade",
+      "t": 592
+    },
+    {
+      "valor": "5%",
+      "contexto": "amostra aleatória de conversas pontuada por padrão",
+      "t": 653
+    }
+  ],
+  "rotulo": "Provar que um agente de banco é seguro antes de liberar",
+  "objetivo": "desenhar um plano de avaliação e liberação gradual para um agente que atende clientes em ambiente regulado",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que o NatWest mediu a qualidade em três eixos (segurança, tarefa, experiência) em vez de uma nota única?",
+      "resposta": "Um número único não separa os problemas. Cada eixo tem alarme próprio e permite distinguir alucinação (segurança) de resposta correta, mas ruim de usar (experiência), que pedem soluções diferentes."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você vai lançar um agente de suporte que também executa ações. Como usaria o modo sombra e a liberação gradual?",
+      "resposta": "Deixe o agente classificar ou propor respostas com tráfego real enquanto o fluxo atual responde. Compare os resultados, libere por segmento e percentual com KPIs de go ou no-go, e mantenha uma feature flag para voltar ao fluxo antigo em segundos."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites existem nas evidências do talk sobre o LLM juiz e a revisão humana?",
+      "resposta": "Os dados vêm de dois casos internos, sem intervalo de confiança, e os humanos concordaram só 64% em intenção, então o gabarito é frágil. O palestrante também promove a Comet e admite que o agente ainda não foi ao ar."
+    }
+  ],
+  "experimento": {
+    "titulo": "Teste se um LLM juiz discrimina de verdade",
+    "minutos": 40,
+    "precisa": "Python ou planilha, 30 respostas de algum assistente e acesso ao Claude ou ChatGPT",
+    "passos": [
+      "Junte 30 respostas de um assistente (podem ser geradas por você, incluindo 10 com erros plantados) e dê a cada uma uma nota humana de 1 a 5.",
+      "Peça a um LLM que dê nota de 1 a 5 a cada resposta, com uma rubrica curta de fidelidade à fonte.",
+      "Compare as médias do humano e do juiz e calcule a correlação entre as duas colunas (função CORREL na planilha).",
+      "Repita com outro modelo como juiz e anote se média e correlação mudaram."
+    ],
+    "sucesso": "Você tem uma tabela com média e correlação para cada juiz e sabe dizer se algum deles dá notas altas sem separar respostas boas das ruins."
+  },
+  "consolidado_em": "2026-11-05T10:25:10+00:00"
+}

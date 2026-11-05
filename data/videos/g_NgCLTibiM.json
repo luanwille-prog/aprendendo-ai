@@ -1,0 +1,265 @@
+{
+  "id": "g_NgCLTibiM",
+  "titulo": "Make Your AI Agents Predictable With Graph Engineering - Zachary Blumenfeld, Neo4j",
+  "titulo_curto": "Make Your AI Agents Predictable With Graph Engineering",
+  "palestrante": "Zachary Blumenfeld, Neo4j",
+  "url": "https://www.youtube.com/watch?v=g_NgCLTibiM",
+  "duracao": 1235,
+  "publicado_ts": 1793700009,
+  "edicao": "2026-11-04",
+  "tese": "Transforme em grafo o procedimento que o agente repete: o roteamento sai do modelo e vai para scripts, e o agente fica mais previsível, auditável e barato.",
+  "tldr": [
+    "Graph engineering é projetar o trabalho do agente como um grafo explícito, em que nós fazem o trabalho e arestas passam o estado. Zachary Blumenfeld, da Neo4j, separa três tipos: grafos de execução, grafos de contexto e grafos procedurais.",
+    "A Neo4j compila skills e rastros de decisões passadas em uma skill em formato de grafo (YAML). O agente só chama uma CLI, e o roteamento deixa de ser decidido pelo modelo.",
+    "Na demo de aprovação de empréstimo, a tarefa caiu de 2,7 minutos para quase metade, e um modelo menor passou a bastar. A evidência é uma demo da própria empresa, sem avaliação formal."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Três tipos de grafo no trabalho do agente",
+      "texto": "O palestrante define graph engineering como desenhar o trabalho do agente como grafo explícito. Há o grafo de execução (workflow com roteadores e agentes), o grafo de contexto (rastros de decisão ligados aos dados) e o grafo procedural (uma skill como passos). Ele foca nos dois últimos.",
+      "t": 95,
+      "legenda": "Mostra os três tipos de grafo que o talk separa.",
+      "print": "img/g_NgCLTibiM/0.jpg",
+      "descricao": "Slide 'O que é graph engineering?' com os três grafos: execução (agentes e roteador), contexto (entidades e decisões) e procedural (passos tipados)."
+    },
+    {
+      "titulo": "Compilar uma skill em grafo",
+      "texto": "Um arquivo skill.md, com scripts, referências e assets, vira uma estrutura de grafo com decisões, pontos de roteamento e scripts a executar. Forçar o agente a percorrer esse grafo elevou a recompensa em tarefas difíceis, segundo um paper de workshop da equipe. O resultado vem de um modelo menor e de testes antigos.",
+      "t": 413,
+      "legenda": "Prova a conversão de skill escrita em grafo de decisões e scripts.",
+      "print": "img/g_NgCLTibiM/1.jpg",
+      "descricao": "Slide 'AIP: compile skills to graph'. SKILL.md vira rascunho, passa por validação e testes funcionais e gera uma AIP Skill em grafo."
+    },
+    {
+      "titulo": "Destilar skill a partir de rastros de decisão",
+      "texto": "O mesmo truque funciona com o grafo de memória. Rastros de execuções bem-sucedidas, mesmo inconsistentes entre si, são compilados em uma skill que continua ligada aos dados e às decisões de origem. Isso dá proveniência, versão e possibilidade de medir deriva ao longo do tempo.",
+      "t": 788,
+      "legenda": "Prova que duas execuções da mesma tarefa seguem caminhos diferentes.",
+      "print": "img/g_NgCLTibiM/2.jpg",
+      "descricao": "Consulta Cypher no Neo4j Aura sobre rastros de decisão (ReasoningTrace) ligados a conversas e passos, mostrada como grafo de nós e relações."
+    },
+    {
+      "titulo": "O agente só chama uma CLI",
+      "texto": "Na demo de empréstimo, o grafo roda por uma CLI. Regras duras de política são checadas em script, um modelo de decisão classifica o risco, e um roteador decide entre escalar para humano ou escrever e revisar o relatório. O agente não cria um laço próprio, só chama a skill.",
+      "t": 974,
+      "legenda": "Mostra o fluxo determinístico que substitui o roteamento feito pelo modelo.",
+      "print": "img/g_NgCLTibiM/3.jpg",
+      "descricao": "Grafo da skill assess-business-loan no Neo4j, com 13 passos e 17 arestas. Nó 'hard-rules' selecionado, rodando o script hard_rules.py."
+    },
+    {
+      "titulo": "Comparação de tempo e custo",
+      "texto": "Com um modelo grande sozinho, o agente acertou quase sempre, mas levou 2,7 minutos. Com a skill compilada, o tempo caiu quase pela metade, e um modelo menor (Haiku) reduziu ainda mais o tempo e o custo. As execuções ficam gravadas no grafo, o que permite ver quais ramos foram ou não percorridos.",
+      "t": 1131,
+      "legenda": "Resume o ganho de tempo e custo da skill compilada.",
+      "print": null,
+      "descricao": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Context graph",
+      "traducao": "grafo de contexto",
+      "nivel": "intermediario",
+      "chave": "context graph",
+      "analogia": "Um context graph é como o prontuário de um hospital, que guarda cada atendimento ligado ao paciente, aos exames e às decisões dos médicos anteriores.",
+      "explicacao": [
+        "Um grafo é um desenho de pontos ligados por linhas. Os pontos são coisas, como um cliente ou um pedido, e as linhas mostram como elas se relacionam.",
+        "O context graph (grafo de contexto) guarda nesse desenho a memória do agente. Entram a conversa recente, os fatos extraídos dos dados e os passos que o agente seguiu.",
+        "Cada decisão vira um decision trace (rastro de decisão), com horário, ferramenta chamada e resultado. Esse rastro fica ligado aos dados que ele usou.",
+        "Com isso, o agente consulta casos parecidos antes de decidir, e uma pessoa consegue auditar de onde veio cada resposta.",
+        "Rastros de várias execuções certas podem ser compilados em uma skill em grafo, que continua ligada à origem e permite medir deriva com o tempo."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "LLM"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "DADOS DO DOMÍNIO",
+            "nota": "Clientes, políticas, transações"
+          },
+          {
+            "rotulo": "EXECUÇÃO DO AGENTE",
+            "nota": "Conversa e chamadas de ferramenta"
+          },
+          {
+            "rotulo": "RASTRO DE DECISÃO",
+            "nota": "Passos gravados e ligados aos dados"
+          },
+          {
+            "rotulo": "MEMÓRIA CONSULTÁVEL",
+            "nota": "Precedentes, auditoria e skill"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Skill",
+      "traducao": "habilidade, julgamento institucional escrito para o agente executar",
+      "nivel": "basico",
+      "chave": "skill",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Decision traces",
+      "traducao": "rastros de decisão",
+      "nivel": "intermediario",
+      "chave": "decision traces",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Decision model",
+      "traducao": "modelo barato que devolve rótulo e probabilidade",
+      "nivel": "avancado",
+      "chave": "decision model",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Provenance",
+      "traducao": "proveniência (origem da informação)",
+      "nivel": "intermediario",
+      "chave": "provenance",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Audit trail",
+      "traducao": "trilha de auditoria",
+      "nivel": "basico",
+      "chave": "audit trail",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Workflow",
+      "traducao": "fluxo de trabalho com passos definidos",
+      "nivel": "basico",
+      "chave": "workflow",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Orquestração",
+      "traducao": "camada que coordena agentes e infraestrutura",
+      "nivel": "intermediario",
+      "chave": "orquestração",
+      "analogia": "A orquestração é como o chefe de cozinha que diz qual cozinheiro prepara cada prato, em que ordem e quando o prato segue para o salão.",
+      "explicacao": [
+        "Orquestrar é coordenar várias partes para que cada uma faça sua tarefa na hora certa.",
+        "Num sistema de IA, as partes são agentes, ferramentas e scripts. A orquestração decide quem roda, em que ordem e o que passa de um para o outro.",
+        "Frameworks (estruturas de código prontas) como LangGraph e ADK fazem isso com um grafo de execução, em que nós fazem o trabalho e arestas levam o estado adiante.",
+        "No talk, o palestrante propõe guardar esse grafo junto aos dados, numa camada de conhecimento. Assim ele sai de um runtime (ambiente de execução) e roda em outro."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "LLM"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "TAREFA CHEGA",
+            "nota": "Pedido do usuário ou do sistema"
+          },
+          {
+            "rotulo": "ROTEADOR",
+            "nota": "Escolhe o próximo nó"
+          },
+          {
+            "rotulo": "AGENTES E SCRIPTS",
+            "nota": "Cada nó faz sua parte"
+          },
+          {
+            "rotulo": "RESULTADO",
+            "nota": "Estado final entregue"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é de um fornecedor de banco de dados em grafo e mostra a plataforma e o projeto de Labs da própria Neo4j. O próprio palestrante diz que a demo não é proposta de pesquisa formal. Ele cita um paper de workshop com modelos antigos e ainda atualiza para os novos. Faltam amostra, número de execuções e custo medido, e o corte de custo dito no início da demo soa exagerado. Não há comparação com a alternativa mais simples, um script ou workflow escrito à mão sem banco de grafo. Os casos de clientes, uma consultoria de compliance e a Uber, são mencionados sem números.",
+  "acoes": [
+    "Pegue uma skill sua que o agente roda sempre do mesmo jeito e liste quais passos poderiam virar script determinístico e quais exigem julgamento do modelo.",
+    "Registre 5 execuções da mesma tarefa do agente e compare o tamanho e a ordem dos passos. Se variarem muito, esse é o candidato a virar grafo.",
+    "Escreva o procedimento como YAML de nós e arestas, com regras duras, um passo de classificação e uma saída de escalonamento para humano."
+  ],
+  "numeros": [
+    {
+      "valor": "2,7 min",
+      "contexto": "Tempo do modelo grande sozinho, sem a skill compilada",
+      "t": 1131
+    },
+    {
+      "valor": "7,5 min",
+      "contexto": "Tempo médio de relógio sem o procedimento, citado ao final",
+      "t": 1194
+    },
+    {
+      "valor": "2 min",
+      "contexto": "Tempo médio de relógio com a skill em grafo",
+      "t": 1194
+    },
+    {
+      "valor": "US$ 100",
+      "contexto": "Créditos grátis no serviço de nuvem Aura",
+      "t": 1194
+    }
+  ],
+  "rotulo": "Agentes previsíveis com skills compiladas em grafo",
+  "objetivo": "explicar como transformar um procedimento repetido do agente em um grafo executável por CLI e comparar custo, tempo e previsibilidade",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são os três tipos de grafo que o palestrante distingue em graph engineering?",
+      "resposta": "Grafos de execução (workflows com roteadores e agentes), grafos de contexto (rastros de decisão ligados aos dados) e grafos procedurais (uma skill ou procedimento em passos). O talk foca nos dois últimos."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você tem um agente de triagem de chamados que às vezes escala para humano e às vezes não. Como aplicaria a ideia do talk?",
+      "resposta": "Reúna execuções corretas, extraia o procedimento (regras duras, classificação de risco, escalonamento) e escreva-o como grafo executado por uma CLI. O agente só chama a CLI, e o roteamento fica em script e em um modelo de decisão pequeno."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta para aceitar que a skill em grafo reduz custo e tempo?",
+      "resposta": "Faltam número de execuções, variância, custo medido e um controle com um workflow simples escrito à mão. A demo é da própria Neo4j, o palestrante admite que não é pesquisa formal, e o paper usou modelos antigos."
+    }
+  ],
+  "experimento": {
+    "titulo": "Compilar uma skill em grafo YAML e rodar por CLI",
+    "minutos": 40,
+    "precisa": "Claude ou ChatGPT, Python 3 e um procedimento seu com 5 a 8 passos",
+    "passos": [
+      "Escolha um procedimento repetido, como aprovar um pedido por regras, e escreva em texto os passos e as condições de decisão.",
+      "Peça ao modelo que converta o texto em YAML com nós (regra, classificação, escalonar, relatório) e arestas com condição.",
+      "Escreva em Python um executor que lê o YAML, roda as regras duras em código e chama o modelo só no nó de classificação.",
+      "Rode 5 casos de teste com o executor e 5 com o modelo decidindo tudo, anotando tempo, tokens e o ramo percorrido."
+    ],
+    "sucesso": "O executor dá a mesma decisão nos 5 casos repetidos, e você mostra em uma tabela a diferença de tempo e tokens contra o modelo decidindo sozinho."
+  },
+  "consolidado_em": "2026-11-05T10:25:10+00:00"
+}

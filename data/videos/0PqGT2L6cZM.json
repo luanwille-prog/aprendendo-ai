@@ -1,0 +1,278 @@
+{
+  "id": "0PqGT2L6cZM",
+  "titulo": "Why Datasite Stopped Building Its Own Parsing - Adit Abraham, Reducto & Raj Bakhru, Datasite",
+  "titulo_curto": "Why Datasite Stopped Building Its Own Parsing",
+  "palestrante": "Adit Abraham, Reducto & Raj Bakhru, Datasite",
+  "url": "https://www.youtube.com/watch?v=0PqGT2L6cZM",
+  "duracao": 1188,
+  "publicado_ts": 1793782820,
+  "edicao": "2026-11-04",
+  "tese": "Em IA sobre documentos, o ganho maior está na extração; terceirize o que já está resolvido e ponha os melhores engenheiros no que gera receita.",
+  "tldr": [
+    "Raj Bakhru, CTO global da Datasite, conta que sua startup BlueFlame montou o próprio parsing de documentos e passou a gastar tempo de suporte com casos de borda, como gráficos de pizza, células mescladas do Excel e arquivos com macro.",
+    "Ele migrou o parsing para a Reducto para que 250 engenheiros trabalhem em cinco iniciativas de receita, com GraphRAG e agentes, e não na camada de baixo.",
+    "A Datasite mede o resultado com o VDR Bench, um eval próprio com perguntas de gabarito conhecido, e diz que o parsing melhor elevou o recall em 22%."
+  ],
+  "tema": "produto",
+  "complexidade": 2,
+  "ideias": [
+    {
+      "titulo": "Parsing é feito só de casos de borda",
+      "texto": "O modelo errou uma pergunta porque o tom de azul da legenda de um gráfico de pizza não batia com a fatia. O mesmo modelo acertou quando o gráfico veio como barras. Planilhas financeiras com células mescladas, arquivos XLSB com macro e templates multiplicam o problema, e o time passou a gastar muito suporte com isso.",
+      "t": 341,
+      "legenda": "Um mesmo modelo erra ou acerta conforme o formato do gráfico",
+      "print": null,
+      "descricao": null
+    },
+    {
+      "titulo": "Build versus buy pelo uso do talento",
+      "texto": "Raj pergunta em que seus engenheiros mais fortes devem trabalhar. Resposta dele: não em suporte de extração, que um fornecedor resolve todo dia. Ele separa os 250 engenheiros em cinco projetos de receita e quer o mínimo possível na camada de baixo.",
+      "t": 933,
+      "legenda": "A regra de alocação: tudo em receita, o mínimo na infraestrutura",
+      "print": null,
+      "descricao": null
+    },
+    {
+      "titulo": "Efeito barbell na contratação",
+      "texto": "Com código assistido por IA, quem tem bons modelos mentais de código ganha muito mais alavanca. O nível médio ganha pouco, e o nível júnior também ganha, porque o LLM gera a documentação que não existe. Por isso Raj quer contratar perfis muito fortes e muito juniores.",
+      "t": 840,
+      "legenda": "Sênior e júnior ganham mais com IA de código; o meio ganha menos",
+      "print": null,
+      "descricao": null
+    },
+    {
+      "titulo": "Pipeline: Reducto, Turbopuffer e GraphRAG",
+      "texto": "Os arquivos entram numa pipeline de ingestão que passa tudo pela Reducto. O resultado vai para o Turbopuffer, o banco vetorial, e o GraphRAG é construído por cima. As consultas rodam em código Python. Há picos de até um terabyte jogados de uma vez por bancos.",
+      "t": 1028,
+      "legenda": "Ingestão, parsing, banco vetorial e GraphRAG em sequência",
+      "print": null,
+      "descricao": null
+    },
+    {
+      "titulo": "VDR Bench: o eval que decide mudanças",
+      "texto": "O VDR Bench usa um data room com centenas de documentos e algumas centenas de perguntas com respostas conhecidas. Roda a cada mudança relevante e precisa superar os projetos dos laboratórios de ponta com os mesmos arquivos. O time atribui 22% de ganho de recall ao parsing e afirma que a maior parte do trabalho está na extração.",
+      "t": 1120,
+      "legenda": "Eval próprio com gabarito, comparado contra ChatGPT e Claude Projects",
+      "print": null,
+      "descricao": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Parsing de documentos",
+      "traducao": "converter PDF e slides em texto estruturado",
+      "nivel": "basico",
+      "chave": "parsing de documentos",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "GraphRAG",
+      "traducao": "RAG com grafo de conhecimento",
+      "nivel": "avancado",
+      "chave": "graphrag",
+      "analogia": "GraphRAG é como um bibliotecário que, além de achar o livro certo, lembra quem cita quem e puxa os livros ligados ao assunto.",
+      "explicacao": [
+        "Um modelo de IA responde melhor quando recebe trechos dos seus documentos junto com a pergunta.",
+        "RAG (Retrieval-Augmented Generation, geração aumentada por busca) faz isso. Ele busca os trechos mais parecidos com a pergunta e entrega ao modelo.",
+        "GraphRAG acrescenta um grafo de conhecimento, um mapa de entidades como empresas, pessoas e contratos ligadas por relações.",
+        "Na consulta, o sistema segue essas ligações para juntar fatos espalhados em vários documentos que a busca por semelhança sozinha perderia.",
+        "Na Datasite, a Reducto extrai o texto, o Turbopuffer guarda os vetores e o GraphRAG roda por cima, com consultas em Python."
+      ],
+      "pre_requisitos": [
+        "RAG",
+        "Busca vetorial",
+        "LLM",
+        "Parsing de documentos"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PARSING",
+            "nota": "Documentos viram texto estruturado"
+          },
+          {
+            "rotulo": "BANCO VETORIAL",
+            "nota": "Trechos guardados como vetores"
+          },
+          {
+            "rotulo": "GRAFO",
+            "nota": "Entidades ligadas por relações"
+          },
+          {
+            "rotulo": "BUSCA + LIGAÇÕES",
+            "nota": "Trechos parecidos e fatos conectados"
+          },
+          {
+            "rotulo": "RESPOSTA",
+            "nota": "O LLM responde com o contexto reunido"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Busca vetorial",
+      "traducao": "busca por proximidade de significado entre vetores",
+      "nivel": "intermediario",
+      "chave": "busca vetorial",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Recall",
+      "traducao": "fração das respostas certas que a busca encontra",
+      "nivel": "intermediario",
+      "chave": "recall",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação",
+      "nivel": "intermediario",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Ground truth",
+      "traducao": "gabarito rotulado por especialistas",
+      "nivel": "intermediario",
+      "chave": "ground truth",
+      "analogia": "Ground truth é como o gabarito que o professor guarda na gaveta para corrigir a prova de todos os alunos.",
+      "explicacao": [
+        "Ground truth (verdade de referência) é a resposta certa já conhecida para uma pergunta, escrita antes do teste.",
+        "Você monta uma lista de perguntas sobre um conjunto fixo de documentos e anota, com ajuda de especialistas, a resposta correta de cada uma.",
+        "O sistema de IA responde às mesmas perguntas, e você compara cada resposta com o gabarito para contar acertos.",
+        "Com o gabarito fixo, dá para rodar o teste a cada mudança de parsing, de modelo ou de prompt e ver se o resultado melhorou ou piorou.",
+        "No VDR Bench da Datasite, algumas centenas de perguntas com respostas conhecidas sobre um data room servem de base para medir o recall."
+      ],
+      "pre_requisitos": [
+        "Eval",
+        "Recall",
+        "Benchmark"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "DOCUMENTOS FIXOS",
+            "nota": "O mesmo data room em todo teste"
+          },
+          {
+            "rotulo": "PERGUNTAS + GABARITO",
+            "nota": "Respostas certas anotadas antes"
+          },
+          {
+            "rotulo": "SISTEMA RESPONDE",
+            "nota": "A IA responde às mesmas perguntas"
+          },
+          {
+            "rotulo": "COMPARAÇÃO",
+            "nota": "Resposta da IA contra o gabarito"
+          },
+          {
+            "rotulo": "PLACAR",
+            "nota": "Taxa de acerto por versão"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Benchmark",
+      "traducao": "teste padronizado de desempenho",
+      "nivel": "basico",
+      "chave": "benchmark",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Model routing",
+      "traducao": "roteamento de modelos",
+      "nivel": "intermediario",
+      "chave": "model routing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "A conversa é um pitch conjunto. Adit Abraham é CEO da Reducto e entrevista um cliente que elogia a Reducto. O ganho de 22% em recall vem do time da Datasite, sem metodologia, tamanho da amostra nem comparação com outros parsers abertos. O VDR Bench não é público. Raj também diz que o score supera o dos laboratórios de ponta, mas não mostra números. A decisão de comprar é plausível, só que o custo e as alternativas não aparecem.",
+  "acoes": [
+    "Liste os formatos de documento que mais geram erro na sua pipeline (planilhas, gráficos, PDFs escaneados) e conte quantos tickets de suporte cada um gerou no último mês.",
+    "Monte um conjunto de 30 a 50 perguntas com resposta conhecida sobre um conjunto fixo de documentos e rode a cada mudança de parsing ou de modelo.",
+    "Compare seu parsing com uma ferramenta pronta nos mesmos arquivos e meça o recall da busca antes de decidir construir ou comprar.",
+    "Teste um gráfico de pizza e o mesmo dado em barras num modelo multimodal para ver se o formato muda a resposta."
+  ],
+  "numeros": [
+    {
+      "valor": "60%",
+      "contexto": "das transações acima de US$ 100 milhões passam pela Datasite",
+      "t": 31
+    },
+    {
+      "valor": "55.000",
+      "contexto": "data rooms por ano a serem processados",
+      "t": 218
+    },
+    {
+      "valor": "250",
+      "contexto": "engenheiros divididos em cinco iniciativas de receita",
+      "t": 901
+    },
+    {
+      "valor": "22%",
+      "contexto": "ganho de recall atribuído ao parsing da Reducto",
+      "t": 1151
+    }
+  ],
+  "rotulo": "Por que a Datasite parou de construir o próprio parsing",
+  "objetivo": "decidir o que construir e o que comprar numa pipeline de documentos e montar um eval de ponta a ponta para medir o efeito do parsing",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que a Datasite diz que a maior parte do trabalho está no lado da extração e não no lado da resposta?",
+      "resposta": "Porque, se o parsing perde ou deforma o conteúdo de gráficos e planilhas, o modelo não tem o dado certo para responder. Segundo Raj, acertando a extração o resto segue, e o time atribui 22% de ganho de recall ao parsing."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você mantém uma pipeline própria que lê PDFs e planilhas e gasta tempo com chamados de erro. Como decidiria se vale trocar por um serviço pronto?",
+      "resposta": "Conte tempo e tickets gerados por casos de borda, monte um conjunto de perguntas com gabarito conhecido, rode as duas opções nos mesmos arquivos e compare recall, custo e velocidade. Se o time forte está preso em suporte, a troca tende a compensar."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites existem na evidência apresentada para o ganho de 22% de recall?",
+      "resposta": "O número vem do próprio time da Datasite, numa conversa com o CEO da fornecedora, sem metodologia, amostra ou comparação com outros parsers. O VDR Bench também não é público, então ninguém externo pode reproduzir o resultado."
+    }
+  ],
+  "experimento": {
+    "titulo": "Pizza ou barras: teste de erro de leitura",
+    "minutos": 25,
+    "precisa": "Um modelo multimodal (Claude ou ChatGPT) e uma planilha com um gráfico simples",
+    "passos": [
+      "Crie na planilha um gráfico de pizza com 6 categorias de cores parecidas e exporte como imagem.",
+      "Crie o mesmo dado como gráfico de barras e exporte também.",
+      "Faça ao modelo cinco perguntas com resposta conhecida sobre cada imagem, como o valor da maior fatia e a soma de duas categorias.",
+      "Anote os acertos de cada formato e repita com o dado em tabela de texto."
+    ],
+    "sucesso": "Você tem uma tabela de acertos por formato (pizza, barras, texto) que mostra se o formato de entrada muda o resultado."
+  },
+  "consolidado_em": "2026-11-05T10:25:10+00:00"
+}
