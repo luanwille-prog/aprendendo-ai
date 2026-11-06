@@ -1,0 +1,297 @@
+{
+  "id": "YqJ4asgj1R8",
+  "titulo": "Stop Giving Your AI Agents API Keys - Kim Maida, Keycard & Mason Egger, Temporal",
+  "titulo_curto": "Stop Giving Your AI Agents API Keys",
+  "palestrante": "Kim Maida, Keycard & Mason Egger, Temporal",
+  "url": "https://www.youtube.com/watch?v=YqJ4asgj1R8",
+  "duracao": 3156,
+  "publicado_ts": 1793912416,
+  "edicao": "2026-11-05",
+  "tese": "Agente seguro precisa de identidade própria e token curto por chamada; agente confiável precisa de execução durável que não guarda segredo.",
+  "tldr": [
+    "Chaves de API compartilhadas não dizem quem agiu, dão acesso total e não deixam rastro. A saída mostrada é o token exchange (troca de tokens), que emite um token curto, restrito a uma única chamada de ferramenta e ligado ao agente e ao usuário.",
+    "No workshop, Kim Maida registra um agente de despesas no Keycard, pede um token por chamada e lê o log de auditoria. Depois soma o login humano, limites de aprovação e a cadeia de delegação entre os dois saltos.",
+    "Mason Egger mostra que o Temporal (durable execution, execução durável) retoma um agente morto no ponto exato, sem refazer chamadas ao LLM. Um interceptor mantém as credenciais fora do histórico de eventos."
+  ],
+  "tema": "agentes",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "Chave de API compartilhada apaga a autoria",
+      "texto": "No estado inicial do workshop, todos usam o mesmo servidor MCP com chaves de API. O log mostra que a despesa foi criada pela chave, sem usuário nem agente. Também não há registro de quem aprovou. Além disso, a chave dá acesso a tudo que ela permite, e colocar um humano para aprovar cada passo não escala.",
+      "t": 688,
+      "legenda": "O log só registra a chave, não quem fez nem quem aprovou.",
+      "print": "img/YqJ4asgj1R8/0.jpg",
+      "descricao": "Expense Desk com a despesa EXP102 selecionada: 'Created by workshop', US$ 75,00, status Pending e botão Approve."
+    },
+    {
+      "titulo": "Um token novo para cada chamada de ferramenta",
+      "texto": "O agente apresenta suas credenciais e o token do usuário (subject token) ao serviço de tokens. A política avalia quem pede, em nome de quem e qual acesso. Se passar, sai um token de poucos minutos, válido só naquele servidor MCP. O MCP faz um segundo salto para obter um token para a API do ledger, e descarta o token ao terminar.",
+      "t": 407,
+      "legenda": "Cada salto da cadeia gera um token novo e mais restrito.",
+      "print": "img/YqJ4asgj1R8/1.jpg",
+      "descricao": "Slide 'Keycard evaluates request against policy': usuário, agente, servidor MCP e banco, com documento de política sendo avaliado antes do acesso."
+    },
+    {
+      "titulo": "Registrar o agente como aplicação e como recurso",
+      "texto": "No console, o agente vira uma aplicação (pode pedir tokens) e também um recurso (pode receber o token do usuário). Depois se declaram as dependências: servidor MCP, endpoint de usuário e a chave do LLM guardada em um cofre. Sem a associação entre aplicação e recurso, as trocas são rejeitadas. No código, o toolset do MCP chama a função de mint a cada tool call.",
+      "t": 1128,
+      "legenda": "O agente só troca tokens para o que está declarado nas dependências.",
+      "print": "img/YqJ4asgj1R8/2.jpg",
+      "descricao": "Console Keycard, passo 6: tabela de dependências do agente (Agent Resource, Expense MCP em localhost:8100/mcp, LLM API da OpenAI e OpenID UserInfo)."
+    },
+    {
+      "titulo": "Delegação sem se passar pelo usuário",
+      "texto": "Com o usuário logado, a despesa aparece criada pelo e-mail dele. O agente tem limite próprio de aprovação (abaixo de 50 dólares), então aprova sozinho o valor pequeno. Acima disso a despesa fica pendente. O agente recusa aprovar a despesa do próprio usuário, porque agora sabe quem é quem. O log registra quem criou e quem aprovou.",
+      "t": 2087,
+      "legenda": "Autoria e aprovação ficam separadas e rastreáveis.",
+      "print": "img/YqJ4asgj1R8/3.jpg",
+      "descricao": "Expense Desk: despesa de US$ 30 aprovada pelo agente. Texto: 'Status: approved. Decided by: Expense Desk Agent (kmaida)'."
+    },
+    {
+      "titulo": "Matar o worker e retomar sem refazer nada",
+      "texto": "No Temporal, o loop do agente é um workflow e cada tool call é uma activity. Mason derruba o worker durante uma liquidação. O histórico guarda o resultado do débito já feito. Ao reiniciar, o estado é reconstruído a partir do histórico, sem novas chamadas ao LLM. Um interceptor injeta as credenciais na hora e elas não entram no histórico.",
+      "t": 2842,
+      "legenda": "O resultado de cada activity fica gravado e permite retomar do ponto da queda.",
+      "print": "img/YqJ4asgj1R8/4.jpg",
+      "descricao": "Temporal UI: atividade debit_ledger concluída em 988 ms, com entrada 4200 e agendamento da activity no histórico do workflow."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Token exchange",
+      "traducao": "troca de tokens (extensão do OAuth 2)",
+      "nivel": "intermediario",
+      "chave": "token exchange",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "OAuth",
+      "traducao": "login delegado, sem repassar senha ao app",
+      "nivel": "basico",
+      "chave": "oauth",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Delegation chain",
+      "traducao": "cadeia de delegação humano → agente",
+      "nivel": "intermediario",
+      "chave": "delegation chain",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Credencial de curta duração",
+      "traducao": "token que expira sozinho e vale só para uma tarefa",
+      "nivel": "basico",
+      "chave": "credencial de curta duração",
+      "analogia": "Uma credencial de curta duração é como a senha do wi-fi de um hotel que só vale por algumas horas e só para o seu quarto.",
+      "explicacao": [
+        "Uma credencial é a prova que você mostra a um sistema para ser aceito. Uma credencial de curta duração é uma prova que expira sozinha, em poucos minutos.",
+        "Se alguém roubar essa credencial, ela já perdeu a validade quando o ladrão tentar usá-la. O estrago fica pequeno.",
+        "No workshop, o serviço de tokens emite um token para uma única chamada de ferramenta do agente. Ele vale só para o servidor MCP daquela chamada.",
+        "O servidor MCP descarta o token ao terminar e troca por outro, ainda mais restrito, para falar com a API do ledger (o livro-caixa). Ninguém guarda o token."
+      ],
+      "pre_requisitos": [
+        "Token",
+        "API",
+        "Agente de IA",
+        "MCP"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "AGENTE PEDE",
+            "nota": "uma chamada de ferramenta"
+          },
+          {
+            "rotulo": "POLÍTICA AVALIA",
+            "nota": "quem pede e em nome de quem"
+          },
+          {
+            "rotulo": "TOKEN EMITIDO",
+            "nota": "vale minutos, só naquele servidor"
+          },
+          {
+            "rotulo": "TOKEN DESCARTADO",
+            "nota": "nada fica guardado"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Identidade de agente",
+      "traducao": "agent identity: como um agente é reconhecido e confiável",
+      "nivel": "intermediario",
+      "chave": "identidade de agente",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Audit trail",
+      "traducao": "trilha de auditoria",
+      "nivel": "basico",
+      "chave": "audit trail",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Durable execution",
+      "traducao": "execução durável",
+      "nivel": "intermediario",
+      "chave": "durable execution",
+      "analogia": "Execução durável é como um videogame com save automático a cada fase, que volta exatamente de onde você parou depois de uma queda de luz.",
+      "explicacao": [
+        "Programas comuns perdem tudo o que estava na memória quando travam ou o servidor cai. Execução durável (durable execution) evita essa perda.",
+        "Uma plataforma como o Temporal executa seu código e grava o resultado de cada passo importante num histórico de eventos.",
+        "Se o processo morrer, a plataforma reconstrói o estado a partir desse histórico e segue do ponto da falha. Passos já concluídos não rodam de novo.",
+        "Para agentes, isso evita refazer chamadas ao LLM, que custam tokens e tempo, e traz retentativas automáticas quando um serviço externo falha."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "LLM",
+        "Token"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PASSO CONCLUÍDO",
+            "nota": "resultado vai ao histórico"
+          },
+          {
+            "rotulo": "PROCESSO CAI",
+            "nota": "o estado em memória some"
+          },
+          {
+            "rotulo": "REINÍCIO",
+            "nota": "estado refeito pelo histórico"
+          },
+          {
+            "rotulo": "EXECUÇÃO SEGUE",
+            "nota": "sem repetir LLM nem passos"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Workflow, activity e worker",
+      "traducao": "fluxo, atividade e processo executor da Temporal",
+      "nivel": "intermediario",
+      "chave": "workflow, activity e worker",
+      "analogia": "Workflow, activity e worker são como uma receita (workflow), cada etapa dela, como picar ou assar (activity), e o cozinheiro que executa (worker).",
+      "explicacao": [
+        "Uma receita lista etapas em ordem. Quem cozinha pode ser trocado no meio do preparo, e a receita continua valendo.",
+        "No Temporal, o workflow (fluxo) é a função principal que coordena tudo. Aqui, ele é o loop do agente. Cada execução dele tem um identificador próprio.",
+        "A activity (atividade) é uma etapa que pode falhar, como uma chamada de ferramenta ou o débito no ledger. Falhou, o Temporal tenta de novo ou reconstrói o estado.",
+        "O worker (processo executor) é o programa que roda workflows e activities. O serviço Temporal guarda o estado, e uma frota de workers faz o trabalho.",
+        "Se você derruba um worker no meio de uma liquidação, outro worker retoma a partir do histórico, sem repetir o que já foi feito."
+      ],
+      "pre_requisitos": [
+        "Durable execution",
+        "Agente de IA",
+        "LLM"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "WORKFLOW",
+            "nota": "loop do agente, função principal"
+          },
+          {
+            "rotulo": "ACTIVITY",
+            "nota": "cada chamada de ferramenta"
+          },
+          {
+            "rotulo": "WORKER",
+            "nota": "processo que executa o código"
+          },
+          {
+            "rotulo": "HISTÓRICO",
+            "nota": "resultado de cada activity gravado"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É um workshop de dois fornecedores, Keycard e Temporal, e cada um mostra o próprio produto. Não há comparação com alternativas como gateways de API, vault com chaves rotativas ou outros provedores de identidade. A demo roda em sandbox com organização compartilhada, usa client secret em arquivo .env e deixa workload identity só como recomendação. Faltam números de latência da troca de token a cada chamada e de custo operacional. A garantia de que o Temporal não guarda segredos depende do interceptor feito pela Keycard ou de criptografia que você mesmo configura.",
+  "acoes": [
+    "Liste os agentes e scripts que hoje usam uma chave de API compartilhada e anote, para cada um, o que a chave permite e quem a usa.",
+    "Cheque se o seu provedor de identidade (Okta, Auth0, Keycloak ou outro) suporta token exchange (RFC 8693) antes de pensar em ferramenta nova.",
+    "Escreva a política de aprovação do seu agente: valor máximo que ele aprova sozinho e o que sempre exige outra pessoa, inclusive a regra de não aprovar o próprio pedido.",
+    "Revise o histórico de eventos ou os logs do seu orquestrador e procure tokens ou segredos em texto puro."
+  ],
+  "numeros": [
+    {
+      "valor": "2020",
+      "contexto": "ano em que o padrão de token exchange existe, estendendo o OAuth 2",
+      "t": 125
+    },
+    {
+      "valor": "US$ 100",
+      "contexto": "limite de aprovação do usuário da demo",
+      "t": 1988
+    },
+    {
+      "valor": "US$ 49,99",
+      "contexto": "teto de aprovação sozinha pelo agente",
+      "t": 2087
+    },
+    {
+      "valor": "4.200",
+      "contexto": "valor debitado salvo no histórico antes da queda do worker",
+      "t": 2842
+    }
+  ],
+  "rotulo": "Identidade e tokens curtos para agentes de IA",
+  "objetivo": "desenhar um fluxo em que cada chamada de ferramenta do agente usa um token curto, ligado ao agente e ao usuário, em vez de uma chave de API compartilhada",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que três informações o serviço de tokens recebe para decidir se emite o token de uma chamada de ferramenta?",
+      "resposta": "A identidade do agente que pede, a identidade do usuário em nome de quem ele age (subject token) e o nível de acesso que o usuário delegou. A política avalia isso contra o recurso pedido."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Seu agente de suporte chama uma API interna com uma chave única de serviço. O que você mudaria para saber quem fez cada ação?",
+      "resposta": "Dar ao agente uma identidade própria, exigir o login do usuário e trocar o token dele por um token curto por chamada, com escopo mínimo. Assim o log registra agente, usuário e recurso em cada salto."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que lacunas de evidência existem num talk dado por quem vende Keycard e Temporal?",
+      "resposta": "Não há comparação com alternativas, nem medição de latência e custo de uma troca de token por chamada. A demo usa sandbox e secret em arquivo. A ausência de segredos no histórico depende de um interceptor do próprio fornecedor ou de criptografia configurada por você."
+    }
+  ],
+  "experimento": {
+    "titulo": "Mapear o risco de chaves compartilhadas em um agente",
+    "minutos": 25,
+    "precisa": "Claude ou ChatGPT e o código ou a configuração de um agente seu",
+    "passos": [
+      "Liste cada ferramenta ou API que o seu agente chama e a credencial usada em cada uma.",
+      "Peça ao modelo para classificar cada credencial: tem dono identificável, tem escopo mínimo, expira e aparece nos logs.",
+      "Desenhe a cadeia desejada: usuário, agente, servidor de ferramentas, API, e marque onde caberia um token curto por chamada.",
+      "Escreva três regras de política, por exemplo valor máximo aprovado pelo agente e proibição de aprovar o próprio pedido."
+    ],
+    "sucesso": "Você tem uma tabela com todas as credenciais classificadas e uma lista curta de trocas prioritárias, cada uma com um dono e um escopo definidos."
+  },
+  "consolidado_em": "2026-11-06T11:04:05+00:00"
+}

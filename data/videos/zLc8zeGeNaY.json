@@ -1,0 +1,266 @@
+{
+  "id": "zLc8zeGeNaY",
+  "titulo": "How Netflix Evaluates AI When There's No Right Answer - Cameron Wolfe, Netflix",
+  "titulo_curto": "How Netflix Evaluates AI When There's No Right Answer",
+  "palestrante": "Cameron Wolfe, Netflix",
+  "url": "https://www.youtube.com/watch?v=zLc8zeGeNaY",
+  "duracao": 1072,
+  "publicado_ts": 1793908825,
+  "edicao": "2026-11-05",
+  "tese": "Em tarefas subjetivas, a avaliação precisa de humanos calibrados, juízes automáticos checados contra eles e testes em produção, com estatística contra o ruído.",
+  "tldr": [
+    "Avaliar tarefas sem resposta certa, como escrita criativa, é difícil porque o agente e o avaliador são não determinísticos, e o conjunto de testes costuma ser pequeno.",
+    "Cameron Wolfe propõe três partes: avaliação humana calibrada como referência, evals offline com LLM-as-a-judge ou rubricas validadas contra dados de ouro, e A/B test com monitoramento em produção.",
+    "Em todas as etapas, power analysis, barras de erro e reamostragem reduzem o ruído, e as falhas achadas em produção voltam para os evals."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "O ruído vem de dois lados",
+      "texto": "Numa avaliação, o agente gera uma solução diferente a cada execução e o avaliador dá o veredito. Em tarefas verificáveis, o avaliador é uma função determinística. Em tarefas subjetivas, ele vira outro modelo, e o ruído se soma ao do agente. Como rodar benchmarks custa caro, o conjunto de tarefas costuma ser pequeno, o que piora a confiança no resultado.",
+      "t": 106,
+      "legenda": "Mostra onde o ruído entra: no agente e, em tarefas subjetivas, também no avaliador.",
+      "print": "img/zLc8zeGeNaY/0.jpg",
+      "descricao": "Slide 'Motivation' com diagrama da avaliação: suite de tarefas, rollout do modelo com harness, trajetória, outcome e grader com Pass/Fail."
+    },
+    {
+      "titulo": "Tarefas ficam num espectro de verificabilidade",
+      "texto": "Matemática se verifica com comparação de texto ou prova simbólica. Escrita criativa não tem gabarito, e até humanos discordam. Quanto mais à direita no espectro, mais você depende de juiz de LLM ou rubrica, e mais precisa checar esse juiz.",
+      "t": 168,
+      "legenda": "Posiciona cada tarefa entre verificação por função e julgamento subjetivo.",
+      "print": "img/zLc8zeGeNaY/1.jpg",
+      "descricao": "Slide 'Motivation': espectro de tarefas, das não verificáveis (chat, escrita criativa) às verificáveis (matemática, programação)."
+    },
+    {
+      "titulo": "Humanos calibrados são a referência",
+      "texto": "Especialistas escrevem diretrizes de qualidade com poucos critérios, escala binária ou Likert e exemplos. Vários avaliadores julgam os mesmos itens, você mede a concordância e reescreve as diretrizes onde há desacordo. Só depois disso a avaliação humana serve de Estrela do Norte para o resto do processo.",
+      "t": 293,
+      "legenda": "Mostra como reduzir a subjetividade humana antes de automatizar.",
+      "print": "img/zLc8zeGeNaY/2.jpg",
+      "descricao": "Slide 'Step One: Human Evaluation': North Star e diretrizes de qualidade com SMEs; checklist de poucos critérios, como avaliar e exemplos específicos."
+    },
+    {
+      "titulo": "Rubrica é um checklist verificado item a item",
+      "texto": "O LLM-as-a-judge recebe diretrizes gerais de qualidade. A rubrica define uma lista específica da tarefa, e cada item é verificado separadamente pelo juiz. No exemplo do paper Dr. Tulu, os itens checam como adaptar um livro culturalmente para um filme, o que deixa a nota mais objetiva.",
+      "t": 540,
+      "legenda": "Exemplo concreto de rubrica específica da tarefa.",
+      "print": "img/zLc8zeGeNaY/3.jpg",
+      "descricao": "Slide 'Step Two: Offline Evaluation' com o exemplo do DR Tulu e o diagrama de rubricas evolutivas."
+    },
+    {
+      "titulo": "Valide o juiz contra dados de ouro",
+      "texto": "Como o juiz é só um proxy, você mede a concordância dele com exemplos humanos confiáveis, usando correlação e acurácia binária. A meta é igualar a concordância entre humanos. No Netflix, as notas de um juiz de LLM foram ligadas a abandono de séries, um sinal real de produção.",
+      "t": 633,
+      "legenda": "Prova que o juiz foi checado contra um resultado real, não só contra opinião.",
+      "print": "img/zLc8zeGeNaY/4.jpg",
+      "descricao": "Slide com o post do Netflix Tech Blog sobre avaliar sinopses com LLM-as-a-judge."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Eval",
+      "traducao": "avaliação",
+      "nivel": "basico",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Rollout",
+      "traducao": "execução de um modelo sobre uma tarefa de avaliação",
+      "nivel": "intermediario",
+      "chave": "rollout",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo de linguagem usado para avaliar respostas",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Rubric",
+      "traducao": "rubrica de critérios de avaliação",
+      "nivel": "intermediario",
+      "chave": "rubric",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Conjunto de ouro (golden dataset)",
+      "traducao": "exemplos com veredicto humano confiável",
+      "nivel": "intermediario",
+      "chave": "conjunto de ouro (golden dataset)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Power analysis",
+      "traducao": "cálculo de quantos dados são necessários",
+      "nivel": "avancado",
+      "chave": "power analysis",
+      "analogia": "Power analysis é como decidir quantas vezes jogar uma moeda para provar que ela é viciada, já que poucos lançamentos não convencem ninguém.",
+      "explicacao": [
+        "Se você compara dois modelos com poucos exemplos, a diferença pode ser sorte. Power analysis é a conta que diz quantos exemplos você precisa para confiar no resultado.",
+        "A conta usa três entradas. A primeira é o tamanho da diferença que você quer detectar (effect size, tamanho do efeito).",
+        "A segunda é o nível de ruído que você observa, que dá para estimar rodando o modelo várias vezes sobre as mesmas tarefas (resampling, reamostragem). A terceira é o nível de significância, ou seja, o quanto você quer ter certeza de que a diferença não é ruído.",
+        "Diferenças pequenas e ruído alto exigem conjuntos maiores. Na palestra, a mesma conta serve para avaliação humana, evals offline e para decidir quanto tempo rodar um teste A/B."
+      ],
+      "pre_requisitos": [
+        "Eval",
+        "Teste A/B"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "EFEITO ALVO",
+            "nota": "menor diferença que importa"
+          },
+          {
+            "rotulo": "RUÍDO",
+            "nota": "medido com reamostragem"
+          },
+          {
+            "rotulo": "SIGNIFICÂNCIA",
+            "nota": "confiança desejada no resultado"
+          },
+          {
+            "rotulo": "TAMANHO DO EVAL",
+            "nota": "quantos exemplos ou dias usar"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Teste A/B",
+      "traducao": "teste A/B (comparação entre dois grupos ou processos)",
+      "nivel": "basico",
+      "chave": "teste a/b",
+      "analogia": "Teste A/B é como uma padaria que serve duas receitas de pão em dias iguais para clientes parecidos e vê qual vende mais.",
+      "explicacao": [
+        "Você tem duas versões de uma coisa e quer saber qual funciona melhor. Mostra a versão A para um grupo de pessoas e a versão B para outro grupo.",
+        "Os grupos são sorteados e atendidos ao mesmo tempo. Assim, a diferença no resultado vem da versão, e não do dia ou do tipo de usuário.",
+        "Com IA, A costuma ser o agente atual e B o novo. Você compara métricas de produção, como curtidas, tamanho da sessão ou taxa de abandono (quando o usuário desiste no meio).",
+        "Na palestra, o teste A/B funciona como um deploy suave (soft deployment). O modelo novo atende só parte dos usuários até você ver que está bem, e só então vai para todos.",
+        "Quanto tempo rodar o teste vem de uma conta estatística ligada à power analysis."
+      ],
+      "pre_requisitos": [
+        "Eval",
+        "Métrica proxy",
+        "Power analysis"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "SORTEIO",
+            "nota": "usuários divididos em dois grupos"
+          },
+          {
+            "rotulo": "A: ATUAL",
+            "nota": "grupo 1 usa o agente de hoje"
+          },
+          {
+            "rotulo": "B: NOVO",
+            "nota": "grupo 2 usa o agente candidato"
+          },
+          {
+            "rotulo": "COMPARAÇÃO",
+            "nota": "métricas de produção lado a lado"
+          },
+          {
+            "rotulo": "DECISÃO",
+            "nota": "lançar para todos ou voltar atrás"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Métrica proxy",
+      "traducao": "indicador indireto de valor",
+      "nivel": "intermediario",
+      "chave": "métrica proxy",
+      "analogia": "Métrica proxy é como medir a febre para saber se alguém está doente, porque o termômetro mostra um sinal que aponta para o problema real.",
+      "explicacao": [
+        "Muitas vezes você não consegue medir direto o que importa, como a qualidade de um texto. Então mede outra coisa, mais fácil, que costuma andar junto com ela. Esse indicador indireto é a métrica proxy.",
+        "Na palestra, o juiz de LLM (LLM-as-a-judge) e a rubrica são proxies da avaliação humana. Eles escalam rápido e barato, mas são imperfeitos.",
+        "Em produção, sinais como tempo de sessão, abandono e curtidas funcionam como proxies de que o agente atendeu bem o usuário.",
+        "Todo proxy precisa de meta-avaliação (checar o medidor). Você compara a nota dele com um conjunto de ouro humano, usando correlação e acurácia binária.",
+        "No Netflix, as notas de um juiz de LLM se ligaram ao abandono de séries. Esse resultado deu mais base para confiar no proxy."
+      ],
+      "pre_requisitos": [
+        "LLM-as-a-judge",
+        "Rubric",
+        "Eval"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É um panorama de método, sem experimento aberto que mostre quanto cada etapa reduz o ruído. A ligação entre o juiz e o abandono no Netflix é citada em uma frase, sem dados nem tamanho de amostra, e remete a um blog externo. O quadro supõe orçamento para especialistas, avaliação humana repetida e A/B tests, o que times pequenos raramente têm. O palestrante é de uma empresa de streaming, e o método foi pensado para uma escala de produto grande. Vale tratá-lo como roteiro, não como receita comprovada.",
+  "acoes": [
+    "Escolha uma tarefa subjetiva do seu produto e escreva de 3 a 5 critérios de qualidade com escala binária e um exemplo bom e um ruim para cada.",
+    "Peça a duas pessoas que avaliem as mesmas 20 saídas com as suas diretrizes, calcule a concordância e reescreva os critérios que geraram discordância.",
+    "Rode o mesmo juiz de LLM três vezes sobre as mesmas saídas e registre quanto a nota varia, antes de confiar numa diferença entre dois modelos.",
+    "Defina uma métrica de produção implícita (abandono, tamanho da sessão ou refação do pedido) para acompanhar depois do deploy."
+  ],
+  "numeros": [
+    {
+      "valor": "US$ 50–100 mil",
+      "contexto": "custo citado para rodar alguns benchmarks recentes",
+      "t": 106
+    }
+  ],
+  "rotulo": "Como o Netflix avalia IA quando não há resposta certa",
+  "objetivo": "desenhar um processo de avaliação em três etapas (humana, offline e produção) para uma tarefa subjetiva do seu produto",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são as três partes do framework de Wolfe e qual é o papel de cada uma?",
+      "resposta": "Avaliação humana define e calibra a qualidade (a Estrela do Norte). Evals offline com juízes de LLM ou rubricas escalam os experimentos. Produção, com A/B test e monitoramento, confirma o resultado no mundo real e traz novas falhas de volta."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você tem um assistente que resume reuniões e quer trocar o modelo. Como aplicaria o método para decidir se o novo modelo é melhor?",
+      "resposta": "Escreva diretrizes de qualidade com especialistas e calibre humanos por concordância. Crie um juiz ou rubrica e valide contra exemplos humanos de ouro. Compare os modelos offline com barras de erro e reamostragem. Mande o melhor para revisão humana e depois a um A/B test com métricas de uso."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que lacuna de evidência existe na afirmação de que o juiz do Netflix se liga a abandono de séries?",
+      "resposta": "O talk só cita o resultado de passagem, sem tamanho de amostra, efeito medido ou método detalhado, e remete a um blog. Não dá para saber a força da relação nem se ela vale fora do Netflix."
+    }
+  ],
+  "experimento": {
+    "titulo": "Meça o ruído do seu juiz de LLM",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT, uma planilha e 15 a 20 textos curtos do seu trabalho",
+    "passos": [
+      "Escreva uma rubrica de 4 critérios sim/não para avaliar esses textos (por exemplo, clareza, tom, completude e correção).",
+      "Peça ao modelo que aplique a rubrica a cada texto, em conversas novas, 3 vezes, e registre as respostas na planilha.",
+      "Calcule para cada texto e critério se as 3 respostas coincidem e some a taxa de coincidência.",
+      "Avalie você mesmo 10 textos e compare suas notas com a maioria das 3 rodadas do modelo."
+    ],
+    "sucesso": "Você tem uma taxa de coincidência entre rodadas e uma taxa de concordância com o seu julgamento, e sabe quais critérios do juiz são confiáveis."
+  },
+  "consolidado_em": "2026-11-06T11:04:05+00:00"
+}

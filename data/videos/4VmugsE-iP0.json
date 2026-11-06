@@ -1,0 +1,268 @@
+{
+  "id": "4VmugsE-iP0",
+  "titulo": "How We Took an AI Agent From 41% to 97% Accurate - Milind Sunil Shah, Brainbase Labs",
+  "titulo_curto": "How We Took an AI Agent From 41% to 97% Accurate",
+  "palestrante": "Milind Sunil Shah, Brainbase Labs",
+  "url": "https://www.youtube.com/watch?v=4VmugsE-iP0",
+  "duracao": 802,
+  "publicado_ts": 1793869212,
+  "edicao": "2026-11-05",
+  "tese": "Agente de back-office melhora com definições escritas, evals em camadas e iteração sobre falhas reais, antes de qualquer troca de modelo.",
+  "tldr": [
+    "A Brainbase levou um agente que consulta preços de concorrentes da Domino's de 41% para 97% de acerto em 11 versões, só mudando instruções, skills e playbooks.",
+    "O método tem seis passos: alinhar o que é sucesso, definir cada termo, montar benchmark e evals, lançar um agente estreito, iterar sobre as falhas e entregar o ciclo inteiro ao cliente.",
+    "Cada falha vista no trace virou uma regra ou um caso de teste, como olhar a página inteira em vez da seção do link e consultar o HTML antes de dar zoom em imagens."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Resultado em 11 versões sem trocar de modelo",
+      "texto": "A versão 1 acertava 41%, custava US$ 2 por fonte e levava 129 minutos por execução. A versão 11 chegou a 97%, US$ 1 por fonte e 71 minutos. A mudança veio de instruções, skills e playbooks. Por isso o palestrante manda corrigir instruções antes de pensar em outro modelo.",
+      "t": 96,
+      "legenda": "Antes e depois: 41% para 97%, US$ 2 para US$ 1, 129 para 71 minutos.",
+      "print": "img/4VmugsE-iP0/0.jpg",
+      "descricao": "Slide 'Hill-climbing took it from worse than an analyst to 97% right': versão 1 vs 11, acerto 41% → 97%, custo por fonte US$ 2,11 → US$ 1,01, minutos 129 → 71."
+    },
+    {
+      "titulo": "Ontologia: toda palavra tem definição escrita",
+      "texto": "O agente recebe uma tabela de itens-alvo, grava o que viu numa tabela de observações de preço e segue um arquivo de regras. Uma regra veio de falha real: registrar o preço pago no checkout, não o preço riscado. Se a célula está errada, aponta a página e a regra usada. O que não está escrito, o agente chuta.",
+      "t": 250,
+      "legenda": "O caso do preço 24 riscado e 19 de venda mostra por que a regra precisa existir.",
+      "print": "img/4VmugsE-iP0/1.jpg",
+      "descricao": "Slide 'The agent looks it up instead of guessing': alvo ID 14, preço 19 (não 24 riscado), tabela price_observations e regras do arquivo."
+    },
+    {
+      "titulo": "Três tipos de eval no mesmo agente",
+      "texto": "Código confere o que é determinístico, como células substituídas e variação de 20% contra a execução anterior. LLM-as-a-judge olha o trace para ver se o item e a promoção certos foram escolhidos. Um agente juiz abre cada preço sinalizado e confirma se o alerta era válido. O analista revisa só o que sobra.",
+      "t": 405,
+      "legenda": "Cada camada cobre um tipo de erro que as outras não pegam.",
+      "print": "img/4VmugsE-iP0/2.jpg",
+      "descricao": "Slide 'A benchmark before shipping, evals on every run': evals em código a cada execução, LLM judge lendo o trace e agente juiz abrindo a página."
+    },
+    {
+      "titulo": "Comece estreito e meça desde o dia um",
+      "texto": "A versão 1 serve para ser medida, não para ser boa. O escopo cresceu de um app, um item e uma cidade para hambúrgueres, entrega e retirada, outro app e outros sites. Cada ampliação veio depois de uma linha de base. Mudar uma coisa por vez deixa claro qual ajuste funcionou.",
+      "t": 560,
+      "legenda": "A curva mostra a evolução por versão, com acerto subindo e custo caindo.",
+      "print": null,
+      "descricao": null
+    },
+    {
+      "titulo": "Falha no trace: o loop de zoom em imagens",
+      "texto": "Numa página de promoções com preços dentro de imagens, o agente olhou 26 imagens e deu zoom de 4x a 6x. Achou o card certo no minuto 13 e continuou conferindo até ser parado no minuto 15. A regra nova manda ler o HTML primeiro e limitar o zoom. Resultado: um terço das leituras de imagem e custo mais de 50% menor.",
+      "t": 650,
+      "legenda": "Só a leitura manual do trace revelou o loop que nenhum eval automático pegou.",
+      "print": "img/4VmugsE-iP0/4.jpg",
+      "descricao": "Slide 'Same answer, half the cost': antes US$ 6,93 com 61 leituras de imagem e zoom 4x a 6x; depois US$ 3,17 com 21 leituras, títulos lidos do HTML."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Hill climbing",
+      "traducao": "melhoria em pequenos passos guiada pela métrica",
+      "nivel": "intermediario",
+      "chave": "hill climbing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Ontologia de tarefa",
+      "traducao": "glossário escrito de termos, fontes e regras que o agente segue",
+      "nivel": "intermediario",
+      "chave": "ontologia de tarefa",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Benchmark",
+      "traducao": "teste padronizado de desempenho",
+      "nivel": "basico",
+      "chave": "benchmark",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação",
+      "nivel": "basico",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo de linguagem usado para avaliar respostas",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Baseline",
+      "traducao": "linha de base",
+      "nivel": "basico",
+      "chave": "baseline",
+      "analogia": "Baseline é como a marca na parede onde você registra a altura de uma criança: sem a primeira marca, ninguém sabe se ela cresceu.",
+      "explicacao": [
+        "Baseline (linha de base) é o resultado da primeira medição, feita antes de qualquer melhoria. Ela serve de ponto de comparação.",
+        "Você roda a primeira versão do sistema e anota números simples: acerto, custo e tempo por execução.",
+        "Depois de cada mudança, você mede de novo e compara com esse número inicial. Assim sabe se o ajuste ajudou ou piorou.",
+        "No talk, a versão 1 do agente tinha 41% de acerto, US$ 2 por fonte e 129 minutos por execução. O escopo só cresceu depois que essa linha existia."
+      ],
+      "pre_requisitos": [
+        "Benchmark",
+        "Eval",
+        "Agente de IA"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "AGENTE ESTREITO",
+            "nota": "versão 1, escopo pequeno"
+          },
+          {
+            "rotulo": "MEDIR",
+            "nota": "acerto, custo e tempo"
+          },
+          {
+            "rotulo": "LINHA DE BASE",
+            "nota": "41%, US$ 2, 129 min"
+          },
+          {
+            "rotulo": "COMPARAR",
+            "nota": "cada mudança contra a base"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Trace",
+      "traducao": "registro estruturado da execução",
+      "nivel": "intermediario",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Browser agent",
+      "traducao": "agente de navegador",
+      "nivel": "intermediario",
+      "chave": "browser agent",
+      "analogia": "Browser agent é como um assistente de escritório que abre o site do concorrente, procura o produto, confere o preço e anota na planilha.",
+      "explicacao": [
+        "Um browser agent (agente de navegador) é um programa que usa um site como uma pessoa usa: abre páginas, clica, rola e lê o que aparece.",
+        "Por trás dele há um LLM (modelo de linguagem) que decide o próximo passo. Cada passo é uma chamada de ferramenta, como clicar ou dar zoom em uma imagem.",
+        "Ele pode ler o texto da página, o HTML ou imagens da tela. Ler imagens custa mais caro e demora mais do que ler o texto.",
+        "No talk, o agente olhou 26 imagens de promoção e deu zoom de 4x a 6x em loop. A regra nova manda ler o HTML primeiro e limitar o zoom, e o custo caiu mais de 50%."
+      ],
+      "pre_requisitos": [
+        "LLM",
+        "Agente de IA",
+        "Trace",
+        "Prompt"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "LINK DO ITEM",
+            "nota": "página do concorrente"
+          },
+          {
+            "rotulo": "LER HTML",
+            "nota": "texto e títulos primeiro"
+          },
+          {
+            "rotulo": "IMAGEM SE PRECISAR",
+            "nota": "zoom com limite"
+          },
+          {
+            "rotulo": "PREÇO NA TABELA",
+            "nota": "valor pago e origem"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk vem da empresa que vende o serviço e usa um único cliente como caso. O palestrante não diz como o acerto de 97% foi medido, qual o tamanho do benchmark nem se o conjunto de teste ficou separado dos casos usados para criar as regras, o que pode inflar o número por overfitting. Os dados de concorrentes mudam com o tempo e o vídeo não mostra a estabilidade do acerto depois do lançamento. A afirmação de que o método serve a outros casos não traz exemplos.",
+  "acoes": [
+    "Escreva um arquivo de regras para um agente seu, com a definição de cada termo do domínio e o que fazer quando não souber a resposta.",
+    "Guarde os traces das execuções desde a primeira versão e reserve um caso de falha real para virar teste de regressão.",
+    "Separe seus checks em três grupos: o que o código verifica, o que um LLM julga e o que exige um agente abrindo o artefato.",
+    "Ao corrigir uma falha, mude uma única instrução por vez e meça acerto, custo e tempo antes e depois."
+  ],
+  "numeros": [
+    {
+      "valor": "41% → 97%",
+      "contexto": "acerto da versão 1 à versão 11",
+      "t": 93
+    },
+    {
+      "valor": "US$ 2 → US$ 1",
+      "contexto": "custo por fonte",
+      "t": 93
+    },
+    {
+      "valor": "129 → 71 min",
+      "contexto": "tempo por execução",
+      "t": 93
+    },
+    {
+      "valor": "26 imagens",
+      "contexto": "imagens que o agente analisou no loop de zoom",
+      "t": 621
+    }
+  ],
+  "rotulo": "Como subir um agente de 41% para 97% de acerto",
+  "objetivo": "montar um ciclo de melhoria para um agente de back-office, com ontologia, evals em camadas e iteração guiada por traces",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são os três tipos de avaliação que o talk usa e o que cada um verifica?",
+      "resposta": "Código verifica o que é determinístico, como células preenchidas e variação de preço. LLM-as-a-judge confere no trace se o item e a promoção certos foram escolhidos. Agente como juiz abre cada preço sinalizado e confirma se o alerta era válido."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você vai automatizar a conciliação de faturas com um agente. Como aplicaria os passos de ontologia e de agente estreito?",
+      "resposta": "Escreva a definição de cada termo (fatura, vencimento, desconto), a origem de cada dado e o que fazer quando faltar informação. Comece com um fornecedor e um tipo de fatura, meça acerto, custo e tempo como linha de base e só depois amplie o escopo."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que informação falta para confiar nos 97% de acerto?",
+      "resposta": "Falta o tamanho e a composição do benchmark, quem definiu o gabarito e se os casos de teste ficaram separados dos casos usados para escrever as regras. Também falta saber se o acerto se mantém quando os sites mudam. Os dados vêm da empresa que vende o serviço."
+    }
+  ],
+  "experimento": {
+    "titulo": "Regras e eval em camadas para um agente de preços",
+    "minutos": 40,
+    "precisa": "Claude ou ChatGPT, uma planilha e 10 produtos de uma loja online pública",
+    "passos": [
+      "Liste 10 produtos e anote à mão o preço final pago em cada um. Esse é o seu gabarito.",
+      "Peça ao modelo para ler cada página e preencher uma tabela com preço cheio, preço final e origem, sem nenhuma regra extra.",
+      "Escreva um arquivo de regras com as definições (preço final, promoção, frete) e a instrução de registrar uma lacuna quando não tiver certeza. Rode de novo.",
+      "Compare as duas rodadas com o gabarito e calcule o percentual de acerto de cada uma."
+    ],
+    "sucesso": "A segunda rodada acerta mais produtos que a primeira, e cada erro restante aponta para uma regra que falta ou para uma lacuna sinalizada."
+  },
+  "consolidado_em": "2026-11-06T11:04:05+00:00"
+}

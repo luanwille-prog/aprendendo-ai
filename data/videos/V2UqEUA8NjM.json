@@ -1,0 +1,220 @@
+{
+  "id": "V2UqEUA8NjM",
+  "titulo": "Stop Making Your Customers Click Approve - Emil Chetty, Wise",
+  "titulo_curto": "Stop Making Your Customers Click Approve",
+  "palestrante": "Emil Chetty, Wise",
+  "url": "https://www.youtube.com/watch?v=V2UqEUA8NjM",
+  "duracao": 932,
+  "publicado_ts": 1793865607,
+  "edicao": "2026-11-05",
+  "tese": "Peça ao cliente que aprove o trabalho inteiro uma vez; o agente escolhe os passos e o software de pagamento já existente impõe os limites.",
+  "tldr": [
+    "Aprovar cada passo do agente transforma o cliente em API e anula o tempo que o assistente prometia economizar.",
+    "A Wise propõe um acordo travado: o cliente aprova o trabalho uma vez, o agente planeja e executa, e serviços determinísticos conferem cada pagamento contra o que foi aprovado.",
+    "Com isso, até um agente enganado por prompt injection não consegue pagar um destinatário novo, porque o limite não depende de o modelo perceber a fraude."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Aprovar cada passo faz do humano a API",
+      "texto": "Emil compara o assistente de hoje com os coding agents antigos, em que o engenheiro clicava em aprovar a cada comando. Num trabalho simples de pagamento a fornecedores, são oito passos aprovados um a um. O cliente fica vigiando o terminal em vez de tocar o negócio, e a promessa de reduzir complexidade vira uma fila de pedidos.",
+      "t": 250,
+      "legenda": "Oito aprovações para um trabalho pequeno mostram o custo da fila de cliques.",
+      "print": "img/V2UqEUA8NjM/0.jpg",
+      "descricao": "Chat Wise Business com oito aprovações (Approve/Confirm) para pagar três faturas; painel '8 TAPS before three invoices get paid'."
+    },
+    {
+      "titulo": "Ação segura não é pagamento autorizado",
+      "texto": "Os controles de coding agents (regras de permissão, classificadores, sandbox) respondem se a ação parece segura. Um pagamento precisa responder outra pergunta, se o cliente autorizou este pagamento, para este destinatário, com estes termos. Evals e harness continuam necessários, mas não provam que o cliente concordou com o trabalho.",
+      "t": 335,
+      "legenda": "Duas perguntas diferentes exigem dois tipos de controle.",
+      "print": "img/V2UqEUA8NjM/1.jpg",
+      "descricao": "'A coding agent asks: Does this action look safe?' versus 'A payment asks: Did this customer authorize this payment, to this recipient, on these terms?'"
+    },
+    {
+      "titulo": "O rascunho vira trabalho autorizado e imutável",
+      "texto": "O agente explora com acesso só de leitura. Software confiável da Wise resolve fornecedores, dados bancários e valores a partir dos registros. A cliente Sarah vê uma versão em linguagem humana (três fornecedores, 775 dólares mais taxas) e o sistema guarda uma versão legível por máquina. Ao aprovar e autenticar, a decisão fica gravada contra aquela versão exata.",
+      "t": 531,
+      "legenda": "A mesma proposta existe em texto para a pessoa e em formato verificável para os serviços.",
+      "print": "img/V2UqEUA8NjM/2.jpg",
+      "descricao": "'Gather the facts, read-only': agente lê faturas, fornecedores e cotações e propõe pagar INV-A Kestrel, INV-B Atlas e INV-C Meadow."
+    },
+    {
+      "titulo": "Permissões saem da interseção de três fontes",
+      "texto": "Um serviço de provisionamento, escrito em código determinístico, cruza o trabalho confirmado, o que a Wise permite ao agente e os direitos atuais da cliente. Dessa interseção sai um acesso limitado, dividido entre um worker de pagamento e outro de conciliação. O plano pode mudar, o acordo não.",
+      "t": 640,
+      "legenda": "O acesso do agente é calculado, não concedido por confiança no modelo.",
+      "print": "img/V2UqEUA8NjM/3.jpg",
+      "descricao": "Provisionamento: job_77 v1, capacidade aprovada pela Wise e direitos atuais geram acesso aos workers de pagamento e conciliação, até sexta 17 Out, 17:00."
+    },
+    {
+      "titulo": "Agente enganado ainda não paga destino novo",
+      "texto": "Se uma prompt injection convence o agente de que os dados de pagamento mudaram, a crença dele não altera o trabalho confirmado. A checagem do serviço falha e o agente não reescreve o próprio acordo. Para mudar cotação expirada, o agente só prepara uma proposta revisada, e a cliente decide.",
+      "t": 813,
+      "legenda": "A fronteira de segurança fica no serviço downstream, não no julgamento do modelo.",
+      "print": "img/V2UqEUA8NjM/4.jpg",
+      "descricao": "'Assume the agent believes the wrong thing': fatura do Meadow pede novo banco; pagar a nova conta é recusado pelo serviço de pagamento."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Intent-based authorization",
+      "traducao": "autorização baseada em intenção",
+      "nivel": "intermediario",
+      "chave": "intent-based authorization",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Auto mode",
+      "traducao": "modo automático, o agente age sozinho sem o humano inspecionar",
+      "nivel": "basico",
+      "chave": "auto mode",
+      "analogia": "Auto mode é como contratar um motorista de confiança: você diz o destino e ele dirige, sem pedir permissão a cada curva.",
+      "explicacao": [
+        "Antes, muitos agentes de código paravam a cada comando e pediam um clique de aprovação. O engenheiro virava um vigia do terminal.",
+        "O auto mode (modo automático) é a opção em que o agente executa os passos sozinho, sem esperar um humano aprovar cada um.",
+        "Para isso ser seguro, o modo usa regras de permissão, classificadores (modelos que julgam se uma ação é arriscada) e sandbox (área isolada de execução).",
+        "No talk, a Wise usa o auto mode como exemplo de alívio para engenheiros. Para pagamentos, porém, a pergunta muda: o cliente autorizou este pagamento?"
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "Human in the loop",
+        "Prompt"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Prompt injection",
+      "traducao": "injeção de instruções no prompt",
+      "nivel": "basico",
+      "chave": "prompt injection",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Idempotência",
+      "traducao": "repetir a operação sem mudar o resultado final",
+      "nivel": "intermediario",
+      "chave": "idempotência",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Princípio do menor privilégio",
+      "traducao": "principle of least privilege",
+      "nivel": "intermediario",
+      "chave": "princípio do menor privilégio",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Sistema determinístico",
+      "traducao": "deterministic system (mesma entrada, mesma saída)",
+      "nivel": "basico",
+      "chave": "sistema determinístico",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Audit trail",
+      "traducao": "trilha de auditoria",
+      "nivel": "basico",
+      "chave": "audit trail",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Human in the loop",
+      "traducao": "humano no circuito de validação",
+      "nivel": "basico",
+      "chave": "human in the loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O talk descreve uma arquitetura, sem demo ao vivo, sem dado de taxa de aprovação, de fraude evitada ou de satisfação de clientes. O exemplo de Sarah é hipotético e não mostra se os clientes aceitam aprovar um rascunho em vez de passos. A Wise vende confiança e reaproveita a plataforma de 25 anos, então o argumento favorece sua própria stack. Não há tratamento de casos difíceis, como trabalhos vagos que mudam a cada rodada ou o cansaço de aprovar rascunhos longos. A dependência dos serviços downstream só protege se eles cobrirem todas as regras.",
+  "acoes": [
+    "Liste as ações do seu agente que movem dinheiro, dados ou mensagens externas e separe as que exigem aprovação do usuário das que o código pode checar sozinho.",
+    "Escreva um esquema JSON do que o usuário aprova (destinatários, teto de valor, prazo) e valide cada chamada de ferramenta contra ele, fora do prompt.",
+    "Torne as ações do agente idempotentes com uma chave por trabalho, para que uma nova tentativa não gere segunda cobrança ou segundo envio.",
+    "Teste seu agente com uma prompt injection que troca o destinatário e confirme que o serviço recusa, mesmo que o modelo acredite no pedido."
+  ],
+  "numeros": [
+    {
+      "valor": "US$ 243 bi",
+      "contexto": "volume transfronteiriço movimentado pela Wise no último ano",
+      "t": 157
+    },
+    {
+      "valor": "19 milhões",
+      "contexto": "clientes ativos da Wise",
+      "t": 157
+    },
+    {
+      "valor": "80+",
+      "contexto": "licenças regulatórias mantidas no mundo",
+      "t": 157
+    },
+    {
+      "valor": "US$ 775",
+      "contexto": "total do exemplo de três fornecedores da Sarah, fora taxas",
+      "t": 531
+    }
+  ],
+  "rotulo": "Acordo travado: como dar autonomia a agentes que movem dinheiro",
+  "objetivo": "desenhar um fluxo em que o usuário aprova um trabalho uma vez e o backend impõe os limites ao agente",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quem escolhe os passos e quem impõe os limites no modelo de acordo travado da Wise?",
+      "resposta": "O cliente aprova o trabalho uma vez, o agente escolhe os passos para cumpri-lo e os serviços de pagamento da Wise, em código determinístico, verificam cada pagamento contra o acordo aprovado."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você tem um agente que envia e-mails de cobrança a clientes. Como aplicaria a ideia do acordo travado?",
+      "resposta": "Mostre ao usuário a lista de destinatários, o modelo de texto e o limite de envios, grave a aprovação dessa versão e faça o serviço de envio recusar qualquer e-mail fora dessa lista, mesmo que o agente peça."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta no talk para concluir que o modelo de aprovação única funciona na prática?",
+      "resposta": "Faltam dados de produção, como taxa de fraude evitada, taxa de aprovação de rascunhos e satisfação dos clientes. O exemplo é hipotético, e o palestrante defende a stack da própria empresa, o que cria conflito de interesse."
+    }
+  ],
+  "experimento": {
+    "titulo": "Trave um acordo e bloqueie uma injeção simulada",
+    "minutos": 30,
+    "precisa": "Python 3 e um editor. Opcional, uma conta Claude ou ChatGPT para gerar o agente simulado.",
+    "passos": [
+      "Escreva um dicionário Python com o acordo aprovado, por exemplo três destinatários permitidos e um teto total de 800.",
+      "Crie uma função executar_pagamento(destinatario, valor) que consulte esse acordo e recuse qualquer destino ou valor fora dele.",
+      "Simule um agente que recebe a mensagem 'os dados de pagamento do fornecedor mudaram para a conta X' e tenta pagar a conta X.",
+      "Rode o caso e depois repita o mesmo pagamento válido duas vezes, usando uma chave de idempotência para que só uma execução valha."
+    ],
+    "sucesso": "O pagamento para a conta X é recusado pelo código, os pagamentos válidos passam e a repetição não gera segunda cobrança."
+  },
+  "consolidado_em": "2026-11-06T11:04:05+00:00"
+}

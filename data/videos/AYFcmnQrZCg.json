@@ -1,0 +1,206 @@
+{
+  "id": "AYFcmnQrZCg",
+  "titulo": "AI Agents Will Upend Investing Even More Than Coding - Frank Long, Coatue",
+  "titulo_curto": "AI Agents Will Upend Investing Even More Than Coding",
+  "palestrante": "Frank Long, Coatue",
+  "url": "https://www.youtube.com/watch?v=AYFcmnQrZCg",
+  "duracao": 844,
+  "publicado_ts": 1793923209,
+  "edicao": "2026-11-05",
+  "tese": "Decomponha a decisão em etapas, escolha o executor certo para cada uma e meça cada etapa. Automatizar tudo com LLM não é a meta.",
+  "tldr": [
+    "Frank Long, do fundo Coatue, descreve um fundo de investimento como uma função que recebe contexto externo e interno e devolve três valores: qual ação, quanto e quando.",
+    "Ele divide a função em coletar, analisar e decidir. Cada etapa pode rodar com código, estatística, LLM ou pessoa, e cada escolha vira um parâmetro a ajustar, como mostra o caso das notícias coreanas.",
+    "Como o espaço de combinações é enorme, ele defende dividir o problema em partes que dá para avaliar e melhorar passo a passo, sempre com uma métrica de referência."
+  ],
+  "tema": "agentes",
+  "complexidade": 2,
+  "ideias": [
+    {
+      "titulo": "O fundo como função",
+      "texto": "Long modela um hedge fund como uma função com duas entradas, contexto externo (notícias, preços, documentos) e contexto interno (posições, limites de risco, histórico), e uma saída com três campos: seleção, tamanho e timing. O produto do fundo é a série temporal dessa saída, que forma a carteira.",
+      "t": 52,
+      "legenda": "O problema todo comprimido em uma assinatura de função.",
+      "print": null,
+      "descricao": null
+    },
+    {
+      "titulo": "Três etapas encadeadas",
+      "texto": "Jogar tudo na janela de contexto não funciona. A função se parte em coletar e filtrar, analisar e formar uma visão, e decidir. A saída de cada etapa é a entrada da seguinte, o que permite testar e melhorar cada uma separadamente.",
+      "t": 250,
+      "legenda": "Cada etapa tem entrada e saída próprias, então dá para avaliar uma por vez.",
+      "print": "img/AYFcmnQrZCg/1.jpg",
+      "descricao": "Slide 'Break it down until each piece can be checked' com def fund(c_external, c_internal): gather, analyze e return selection, size, timing."
+    },
+    {
+      "titulo": "Quatro tipos de executor",
+      "texto": "Cada linha do fluxo tem um executor. Código serve para regras simples e rápidas, como P/L menor que 15. Estatística e machine learning clássico modelam relações mais complexas. LLMs resumem melhor que qualquer pilha de ifs. Pessoas cuidam do que exige julgamento, como encontrar a diretoria de uma empresa.",
+      "t": 436,
+      "legenda": "O mesmo fluxo mistura executores diferentes.",
+      "print": "img/AYFcmnQrZCg/2.jpg",
+      "descricao": "Slide de gather() para notícias coreanas: collect e check como CODE, filter e translate_extract como LLM, return update como PERSON."
+    },
+    {
+      "titulo": "Qualidade, não automação",
+      "texto": "A meta de cada pedaço é maximizar a qualidade absoluta, não maximizar o que roda em LLM. Muitas etapas ficam melhores com código determinístico ou com uma pessoa assistida por ferramentas de busca. Em um mesmo passo, o executor ótimo costuma ser uma combinação.",
+      "t": 622,
+      "legenda": "O executor ideal varia de caixa em caixa, e muitas são mistas.",
+      "print": "img/AYFcmnQrZCg/3.jpg",
+      "descricao": "Grafo gather() para notícias coreanas com o caminho principal em vermelho, de collect() até review(). As caixas não trazem rótulo de executor."
+    },
+    {
+      "titulo": "Espaço de busca quase infinito",
+      "texto": "Mesmo para filtrar notícias, há escolhas de modelo, esforço de raciocínio, harness, skills e hooks. No grafo real do fundo, cada nó tem pelo menos 10 hiperparâmetros com 20 valores válidos. A saída proposta é compartimentalizar o sistema em partes avaliáveis para poder subir a ladeira (hill climbing) contra uma métrica.",
+      "t": 745,
+      "legenda": "O grafo real é grande demais para ajustar no olho.",
+      "print": "img/AYFcmnQrZCg/4.jpg",
+      "descricao": "Grafo do fundo: fontes korean_news, dart_filings e call_transcripts passam por collect(), filter(), extract_quotes() e propose(); review() volta a our_notes."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Hill climbing",
+      "traducao": "melhoria em pequenos passos guiada pela métrica",
+      "nivel": "intermediario",
+      "chave": "hill climbing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Hiperparâmetro",
+      "traducao": "ajuste de treino definido antes de treinar",
+      "nivel": "intermediario",
+      "chave": "hiperparâmetro",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Sistema determinístico",
+      "traducao": "deterministic system (mesma entrada, mesma saída)",
+      "nivel": "basico",
+      "chave": "sistema determinístico",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Decision model",
+      "traducao": "modelo barato que devolve rótulo e probabilidade",
+      "nivel": "intermediario",
+      "chave": "decision model",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Harness",
+      "traducao": "estrutura que roda o agente",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Thinking budget",
+      "traducao": "orçamento de raciocínio",
+      "nivel": "intermediario",
+      "chave": "thinking budget",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "State machine",
+      "traducao": "máquina de estados",
+      "nivel": "intermediario",
+      "chave": "state machine",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Humano no loop",
+      "traducao": "human in the loop",
+      "nivel": "basico",
+      "chave": "human in the loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É uma visão de um gestor de fundo, sem dados de desempenho. Não há resultado de carteira, taxa de acerto nem comparação entre executores, então a tese de que agentes terão mais impacto em investimento que em código fica como aposta. O caso das notícias coreanas aparece só como ilustração. O discurso também serve ao interesse da empresa em atrair talentos e parceiros. O valor está no método de decomposição, que vale fora de finanças.",
+  "acoes": [
+    "Escolha um processo seu e escreva-o como função, com entradas, etapas e saída. Anote o que cada etapa recebe e devolve.",
+    "Para cada etapa, marque o executor atual (código, estatística, LLM ou pessoa) e escreva por que ele é o melhor para aquela etapa.",
+    "Defina uma métrica simples para uma etapa e meça a versão atual antes de trocar o modelo ou o prompt.",
+    "Liste os parâmetros que você ajusta no seu fluxo (modelo, esforço de raciocínio, chunking) e mude um por vez, registrando o resultado."
+  ],
+  "numeros": [
+    {
+      "valor": "75%",
+      "contexto": "dos serviços sem login para o agente na analogia",
+      "t": 96
+    },
+    {
+      "valor": "P/L < 15",
+      "contexto": "regra simples que deve rodar em código determinístico",
+      "t": 467
+    },
+    {
+      "valor": "10 e 20",
+      "contexto": "mínimo de hiperparâmetros por nó e de valores válidos cada",
+      "t": 745
+    }
+  ],
+  "rotulo": "Agentes em investimento: decompor, escolher executor, medir",
+  "objetivo": "decompor um processo de decisão em etapas e escolher, para cada uma, entre código, estatística, LLM ou pessoa",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são as duas entradas e a saída da função que Long usa para descrever um fundo?",
+      "resposta": "Entradas: contexto externo (notícias, preços, documentos) e contexto interno (posições, limites de risco, histórico). Saída: uma tupla com seleção (qual ação), tamanho (quanto) e timing (quando)."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Pegue um fluxo do seu trabalho, como triagem de tickets de suporte. Que executor você usaria em cada etapa?",
+      "resposta": "Exemplo: coleta e deduplicação com código determinístico, classificação de assunto com LLM ou decision model, regras de prioridade por SLA com código e casos sensíveis com uma pessoa revisando. A escolha deve vir da qualidade medida em cada etapa."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta para sustentar que agentes terão mais impacto em investimento do que em código?",
+      "resposta": "Faltam resultados: retorno ajustado a risco, acerto das decisões, comparação entre executores e custo. O talk traz só um exemplo qualitativo e vem de um gestor com interesse em divulgar a abordagem do próprio fundo."
+    }
+  ],
+  "experimento": {
+    "titulo": "Decomponha um fluxo e meça uma etapa",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT, uma planilha e 10 exemplos reais do seu trabalho",
+    "passos": [
+      "Escolha um fluxo simples, como classificar e-mails recebidos em categorias, e escreva as etapas coletar, analisar e decidir com entrada e saída de cada uma.",
+      "Rotule 10 exemplos à mão na planilha, com a categoria correta.",
+      "Rode a etapa de classificação com um LLM e registre o acerto. Rode de novo com uma regra em código (palavras-chave) para comparar.",
+      "Troque um parâmetro (outro modelo ou prompt mais curto) e compare o acerto com a versão anterior."
+    ],
+    "sucesso": "Você tem uma planilha com a taxa de acerto de pelo menos dois executores na mesma etapa e consegue dizer qual escolher e por quê."
+  },
+  "consolidado_em": "2026-11-06T11:04:05+00:00"
+}
