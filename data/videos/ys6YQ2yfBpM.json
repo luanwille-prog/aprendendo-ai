@@ -1,0 +1,212 @@
+{
+  "id": "ys6YQ2yfBpM",
+  "titulo": "Your Old Prompts Are Making Claude Worse - Lance Martin, Anthropic",
+  "titulo_curto": "Your Old Prompts Are Making Claude Worse",
+  "palestrante": "Lance Martin, Anthropic",
+  "url": "https://www.youtube.com/watch?v=ys6YQ2yfBpM",
+  "duracao": 3842,
+  "publicado_ts": 1793998818,
+  "edicao": "2026-11-06",
+  "tese": "Prompts velhos, cache quebrado e eval mal feito mantêm seu app abaixo da fronteira de custo e qualidade que o modelo atual já permite.",
+  "tldr": [
+    "Lance Martin, da Anthropic, mostra que muitos apps ficam dentro da fronteira de Pareto por causa de prompts com hábitos antigos (\"think step by step\", regras contraditórias) e de prompt caching mal usado.",
+    "Com um eval bem desenhado (modelo maior melhora a nota, há margem no topo, pouca variância), o Claude faz hill climbing sozinho em prompts e skills, usando divisão treino e teste para reduzir overfitting.",
+    "O mesmo laço também reduz custo: trocar para um modelo mais forte com esforço baixo cortou 90% do custo num benchmark interno, e o Managed Agents separa harness e sandbox para agentes que rodam por dias."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Prompts acumulam dívida como código",
+      "texto": "Rituais como \"pense passo a passo\", \"revise seu trabalho\" e \"seja muito detalhista\" serviam a modelos antigos. Em modelos de fronteira eles gastam tokens e podem piorar a nota. Regras contraditórias também confundem, porque modelos antigos ignoravam uma das duas e os novos tentam obedecer às duas. Ele recomenda rodar a skill de prompt audit no Claude Code para remover esses padrões.",
+      "t": 231,
+      "legenda": "Após o audit, o ponto vai para menos custo e mais nota.",
+      "print": "img/ys6YQ2yfBpM/0.jpg",
+      "descricao": null
+    },
+    {
+      "titulo": "Cache de prompt exige prefixo estável",
+      "texto": "O cache custa cerca de um décimo do token normal e é mais rápido, mas funciona por prefixo exato. Um byte alterado invalida tudo depois dele. A ordem sugerida vai do mais estável ao mais volátil: instruções de sistema e ferramentas, memória do projeto, estado da sessão e mensagens do turno. Acompanhe a taxa de acerto do cache no console.",
+      "t": 415,
+      "legenda": "A ordem das camadas define o que o cache consegue reaproveitar.",
+      "print": "img/ys6YQ2yfBpM/1.jpg",
+      "descricao": null
+    },
+    {
+      "titulo": "Um eval que o Claude consegue escalar",
+      "texto": "Um bom eval mostra nota subindo ao trocar de Haiku para Sonnet e Opus, e subindo com mais raciocínio. Deve ter margem de melhora no topo e baixa variância entre execuções. Casos ambíguos criam uma falsa margem de 20% que nenhum modelo alcança, e o hill climbing gasta tokens à toa.",
+      "t": 571,
+      "legenda": "Eval saudável: curvas ordenadas por modelo e com espaço livre no topo.",
+      "print": "img/ys6YQ2yfBpM/2.jpg",
+      "descricao": null
+    },
+    {
+      "titulo": "Treino e teste dentro do hill climbing",
+      "texto": "A skill de hill climb divide o eval em treino e teste. O Claude só analisa as falhas do treino, e a nota do teste é medida a cada rodada. Se o treino sobe e o teste fica parado, é sinal de overfitting. Prompts e skills são superfícies fáceis de editar, mas também fáceis de ajustar demais ao eval.",
+      "t": 819,
+      "legenda": "Treino subindo com teste parado indica overfitting.",
+      "print": "img/ys6YQ2yfBpM/3.jpg",
+      "descricao": null
+    },
+    {
+      "titulo": "Hill climbing para cortar custo",
+      "texto": "Com uma instrução de reduzir custo, o laço busca combinações de modelo, esforço e prompt com nota igual ou melhor. No exemplo de tickets de suporte, a nota subiu ao ir para um modelo mais forte com esforço baixo. Depois o laço testou um modelo menor, perdeu nota, e recuperou ajustando o prompt. O resultado foi 90% menos custo com desempenho melhor. A intuição é que modelo forte com esforço baixo gasta menos tokens.",
+      "t": 1008,
+      "legenda": "Cada rodada troca modelo, esforço ou prompt e o custo cai sem perder nota.",
+      "print": "img/ys6YQ2yfBpM/4.jpg",
+      "descricao": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Prompt caching",
+      "traducao": "cache de prompt",
+      "nivel": "intermediario",
+      "chave": "prompt caching",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Hill climbing",
+      "traducao": "melhoria em pequenos passos guiada pela métrica",
+      "nivel": "intermediario",
+      "chave": "hill climbing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Overfitting",
+      "traducao": "ajuste excessivo ao treino",
+      "nivel": "intermediario",
+      "chave": "overfitting",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Pareto frontier",
+      "traducao": "fronteira de Pareto (melhor troca entre custo e precisão)",
+      "nivel": "intermediario",
+      "chave": "pareto frontier",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação",
+      "nivel": "basico",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Skill",
+      "traducao": "habilidade, julgamento institucional escrito para o agente executar",
+      "nivel": "basico",
+      "chave": "skill",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Harness",
+      "traducao": "estrutura que roda o agente",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo de linguagem usado para avaliar respostas",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "Lance Martin trabalha na Anthropic e apresenta skills, comandos e produtos da própria empresa (prompt audit, build eval, hill climb, Managed Agents), então há pitch. Os números de 72% e 90% vêm de benchmarks internos e de um único exemplo de tickets sintéticos (cerca de 50), sem repetições nem intervalo de confiança. A regra de modelo forte com esforço baixo é uma intuição, e ele mesmo diz para testar com seu eval. O próprio palestrante admite que o hill climbing não garante convergir e que prompts sofrem overfitting com facilidade.",
+  "acoes": [
+    "Releia seu prompt de sistema e apague rituais antigos (\"pense passo a passo\", \"seja extremamente detalhista\") e regras que se contradizem. Compare custo e nota antes e depois.",
+    "Meça a taxa de acerto do cache de prompt no seu app e mova o conteúdo que muda a cada turno para o fim do prompt.",
+    "Monte um eval pequeno com casos de produção, divida em treino e teste e confira se um modelo maior tira nota melhor que um menor.",
+    "Rode o mesmo eval com um modelo mais forte em esforço baixo e com o modelo atual em esforço alto, e compare nota e custo."
+  ],
+  "numeros": [
+    {
+      "valor": "72%",
+      "contexto": "redução de custo em benchmarks internos só ajustando o cache",
+      "t": 447
+    },
+    {
+      "valor": "1/10",
+      "contexto": "preço aproximado do token em cache frente ao token base",
+      "t": 354
+    },
+    {
+      "valor": "66%",
+      "contexto": "nota inicial da skill da API Claude no eval de documentação",
+      "t": 913
+    },
+    {
+      "valor": "90%",
+      "contexto": "corte de custo com melhora de desempenho no hill climbing",
+      "t": 1040
+    }
+  ],
+  "rotulo": "Prompts velhos, cache e hill climbing com Claude",
+  "objetivo": "auditar prompts antigos, medir o cache e montar um eval em que o Claude consiga fazer hill climbing sem overfitting",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que alterar um único byte no começo do prompt pode encarecer a chamada com cache de prompt?",
+      "resposta": "O cache faz correspondência exata de prefixo. Qualquer mudança no prefixo invalida o cache daquele ponto em diante, e o trecho volta a ser cobrado como token base."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você tem um agente de suporte com prompt de dois anos e custo alto. Que sequência de passos você segue antes de trocar de modelo?",
+      "resposta": "Audite o prompt e remova rituais e regras contraditórias. Verifique e reorganize o prefixo para o cache acertar mais. Monte um eval com treino e teste, e depois compare modelo forte em esforço baixo com a configuração atual."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites tem a prova de que um hill climber reduz custo em 90% sem perder desempenho?",
+      "resposta": "É um exemplo interno de um benchmark sintético com cerca de 50 tickets, de uma empresa que vende o produto. Não há repetições nem intervalo de confiança, e o ganho pode ser overfitting ao eval. Só vale como hipótese a testar no seu caso."
+    }
+  ],
+  "experimento": {
+    "titulo": "Auditar um prompt e comparar esforço baixo e alto",
+    "minutos": 40,
+    "precisa": "Um prompt seu em uso, 10 a 20 casos com resposta esperada, acesso à API de um modelo com controle de esforço e Python ou planilha",
+    "passos": [
+      "Monte uma planilha com 10 a 20 entradas reais e a resposta ou critério esperado de cada uma, e separe cerca de 30% como teste.",
+      "Rode o prompt atual e anote nota, tokens de entrada e saída e custo por caso.",
+      "Crie uma versão limpa do prompt, sem rituais de raciocínio e sem regras contraditórias, e rode de novo.",
+      "Rode a versão limpa com um modelo mais forte em esforço baixo e compare com o modelo atual em esforço alto.",
+      "Compare a nota no conjunto de treino e no de teste para ver se há sinal de overfitting."
+    ],
+    "sucesso": "Você tem uma tabela com nota e custo por configuração e sabe dizer qual combinação fica abaixo da fronteira, com a nota do teste acompanhando a do treino."
+  },
+  "consolidado_em": "2026-11-07T13:16:06+00:00"
+}

@@ -1,0 +1,239 @@
+{
+  "id": "oWqsBuhRRZ4",
+  "titulo": "How We Mapped a 35-Million-Line Mainframe in 4 Days - Stephen Chin, Neo4j & Neeraj Deshmukh, Blitzy",
+  "titulo_curto": "How We Mapped a 35-Million-Line Mainframe in 4 Days",
+  "palestrante": "Stephen Chin, Neo4j & Neeraj Deshmukh, Blitzy",
+  "url": "https://www.youtube.com/watch?v=oWqsBuhRRZ4",
+  "duracao": 1183,
+  "publicado_ts": 1793995210,
+  "edicao": "2026-11-06",
+  "tese": "Para modernizar sistema legado, o agente precisa do grafo do sistema inteiro, e a prova de paridade com o código antigo decide se o resultado vale.",
+  "tldr": [
+    "Pedir a uma IA que converta uma fórmula de COBOL para Java acerta o código e erra o entorno, como jobs em lote, layouts de dados e as outras 14 partes que usam a mesma lógica.",
+    "Janela de contexto grande não resolve, porque o contexto útil é bem menor que o anunciado. A Blitzy mapeia o código como um grafo e entrega a cada agente só a fatia relevante, com plano aprovado por um humano.",
+    "Cada mudança passa por testes de paridade contra o sistema original, o que pegou um erro de arredondamento de 1 centavo. Os casos de banco e seguradora apresentados vêm da própria empresa e não têm medição independente."
+  ],
+  "tema": "engenharia-de-software",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "A fórmula é a parte fácil",
+      "texto": "No exemplo do cálculo de juros, a IA converte a fórmula de COBOL para Java sem dificuldade. O que ela não vê é a precisão dos registros, as atualizações de conta, a saída de transações e o contrato do job em lote. O problema é desconhecer os 14 outros lugares em que a lógica é usada.",
+      "t": 124,
+      "legenda": "O resultado do cálculo depende do job, dos layouts e das contas, não só da fórmula.",
+      "print": "img/oWqsBuhRRZ4/0.jpg",
+      "descricao": null
+    },
+    {
+      "titulo": "Contexto grande não é contexto útil",
+      "texto": "Segundo os palestrantes, modelos anunciam 1 milhão de tokens, mas o contexto realmente utilizável fica em 200 mil ou menos, e a precisão cai conforme a janela enche. Busca vetorial só traz similaridade e SQL só traz saltos únicos. O grafo permite perguntas de vários saltos sobre relações entre programa, job e dados.",
+      "t": 309,
+      "legenda": "O argumento central contra depender só de janelas maiores.",
+      "print": "img/oWqsBuhRRZ4/1.jpg",
+      "descricao": null
+    },
+    {
+      "titulo": "Código vira grafo com evidência em cada aresta",
+      "texto": "Programa, job, copybook e saídas viram nós. Cada aresta guarda de onde veio no repositório, qual revisão, quais símbolos toca e como foi extraída. O grafo é atualizado a cada merge, o que mantém o mapa fresco e invalida o que deixou de valer.",
+      "t": 370,
+      "legenda": "Cada relação do grafo é rastreável até arquivo e trecho de código.",
+      "print": "img/oWqsBuhRRZ4/2.jpg",
+      "descricao": null
+    },
+    {
+      "titulo": "Pacote de contexto por agente e humano no comando",
+      "texto": "Cada agente recebe um pacote com a tarefa, o lugar dela no grafo, a fatia do código, as restrições, as evidências e as perguntas em aberto. O fluxo vai de engenharia reversa a um plano de ação que um especialista humano aprova antes de qualquer geração. A saída é um pull request com documentação de evidências.",
+      "t": 498,
+      "legenda": "Há aprovação humana entre o plano e a geração de código.",
+      "print": "img/oWqsBuhRRZ4/3.jpg",
+      "descricao": null
+    },
+    {
+      "titulo": "Paridade provada: o bug de 1 centavo",
+      "texto": "O código novo precisa gerar saídas idênticas às do baseline do mainframe: valores retornados, estado gravado, transações e erros, inclusive fora do caminho feliz. O arredondamento do Java difere do COBOL, e o código compilava e parecia certo. Sem o teste de paridade, a diferença de 1 centavo se repetiria em milhões de transações.",
+      "t": 779,
+      "legenda": "A prova de equivalência compara a saída nova com a antiga, byte a byte.",
+      "print": "img/oWqsBuhRRZ4/4.jpg",
+      "descricao": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Knowledge graph",
+      "traducao": "grafo de conhecimento",
+      "nivel": "intermediario",
+      "chave": "knowledge graph",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Janela de contexto",
+      "traducao": "quantidade de texto que o modelo lê de uma vez",
+      "nivel": "basico",
+      "chave": "janela de contexto",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Multi-hop",
+      "traducao": "pergunta que exige vários saltos entre nós",
+      "nivel": "intermediario",
+      "chave": "multi-hop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Busca vetorial",
+      "traducao": "busca por proximidade de significado entre vetores",
+      "nivel": "intermediario",
+      "chave": "busca vetorial",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Contexto do agente",
+      "traducao": "informação disponível ao agente a cada tarefa",
+      "nivel": "intermediario",
+      "chave": "contexto do agente",
+      "analogia": "O contexto do agente é como a pasta que o chefe entrega a um funcionário novo, com a tarefa, os documentos certos e as dúvidas pendentes, em vez do arquivo inteiro da empresa.",
+      "explicacao": [
+        "Um assistente de IA só sabe o que você mostra a ele no momento do pedido. Esse material visível é o contexto.",
+        "Em sistemas grandes, mostrar tudo de uma vez falha, porque o modelo perde precisão quando a janela de contexto enche.",
+        "A saída é montar um pacote por tarefa com a descrição do trabalho, o lugar dela no mapa do sistema e só o trecho de código que importa.",
+        "No talk, a Blitzy chama isso de task context packet (pacote de contexto da tarefa). Ele inclui também restrições, evidências e as perguntas ainda sem resposta.",
+        "O pacote sai de um knowledge graph (grafo de conhecimento) do código, atualizado a cada merge, e entrega a informação certa na hora certa."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "Janela de contexto",
+        "Knowledge graph"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "GRAFO DO SISTEMA",
+            "nota": "programas, jobs e dados ligados"
+          },
+          {
+            "rotulo": "TAREFA",
+            "nota": "o que o agente precisa fazer"
+          },
+          {
+            "rotulo": "RECORTE DA FATIA",
+            "nota": "código, restrições e evidências"
+          },
+          {
+            "rotulo": "PACOTE DE CONTEXTO",
+            "nota": "só o necessário chega ao agente"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Human in the loop",
+      "traducao": "humano no circuito de validação",
+      "nivel": "basico",
+      "chave": "human in the loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Baseline",
+      "traducao": "linha de base",
+      "nivel": "basico",
+      "chave": "baseline",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Regra de negócio",
+      "traducao": "norma da empresa que o código precisa respeitar",
+      "nivel": "basico",
+      "chave": "regra de negócio",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É palestra de patrocinador: a Blitzy vende a plataforma e a Neo4j vende o banco de grafos. Os ganhos (18 dias contra 18 semanas de engenharia, 4 dias para mapear 35 milhões de linhas, 9 vezes mais rápido) vêm de clientes não identificados, sem metodologia, sem amostra e sem comparação independente. A afirmação de que o contexto útil é de 20 a 30% da janela não traz o estudo citado. O talk também não mostra como o grafo lida com dados e comportamentos que não estão no código.",
+  "acoes": [
+    "Pegue uma função pequena do seu código legado e liste a mão todos os lugares que dependem dela (jobs, schemas, consumidores) antes de pedir qualquer conversão a uma IA.",
+    "Antes de migrar um cálculo numérico, grave entradas e saídas do sistema atual como baseline e escreva um teste que compare a versão nova com esses valores exatos.",
+    "Teste como seu agente de código se comporta em um repositório grande, medindo quando ele deixa de achar os usos de uma função e passa a inventar ou ignorar dependências."
+  ],
+  "numeros": [
+    {
+      "valor": "200 mil",
+      "contexto": "tokens de contexto realmente utilizáveis, segundo os palestrantes",
+      "t": 309
+    },
+    {
+      "valor": "18 dias",
+      "contexto": "projeto de banco que o plano manual estimava em 18 semanas-engenheiro",
+      "t": 872
+    },
+    {
+      "valor": "4 dias",
+      "contexto": "para mapear um mainframe de 35 milhões de linhas",
+      "t": 935
+    },
+    {
+      "valor": "9 vezes",
+      "contexto": "mais rápido na migração de um monolito de 25 milhões de linhas",
+      "t": 967
+    }
+  ],
+  "rotulo": "Modernizar sistemas legados com grafo de conhecimento",
+  "objetivo": "explicar por que migrar código legado exige um grafo do sistema e testes de paridade, e desenhar esse fluxo para um caso simples",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que a IA acerta o código da fórmula de juros e ainda assim falha na migração?",
+      "resposta": "Ela converte a fórmula, mas não conhece os outros pontos que dependem dela, como precisão dos registros, atualizações de conta, saída de transações e contrato do job em lote. Segundo o talk, são 14 outros lugares de uso."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você vai migrar um módulo de cálculo de comissões de uma linguagem antiga para outra. Que verificação você monta antes de aceitar o código novo?",
+      "resposta": "Rode o sistema atual com entradas variadas, inclusive de erro, e grave retornos, estado persistido e saídas como baseline. Rode o código novo com as mesmas entradas e exija diferença zero, atento a arredondamento e tipos numéricos."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta para confiar nos resultados de 18 dias e 9 vezes mais rápido?",
+      "resposta": "Os casos vêm da própria Blitzy, com clientes sem nome, sem metodologia, sem tamanho de amostra e sem comparação independente. Também não se sabe quanto trabalho humano de revisão ficou fora da conta, nem quais sistemas falharam."
+    }
+  ],
+  "experimento": {
+    "titulo": "Pegue o bug de arredondamento com teste de paridade",
+    "minutos": 30,
+    "precisa": "Python 3 e um assistente de IA (Claude ou ChatGPT)",
+    "passos": [
+      "Escreva em Python uma função de juros simples com Decimal e arredondamento ROUND_HALF_UP para duas casas, que serve de baseline.",
+      "Peça à IA uma versão equivalente em outra linguagem ou com float, sem avisar sobre arredondamento.",
+      "Gere 10 mil pares de valor e taxa aleatórios, rode as duas versões e compare os resultados centavo a centavo.",
+      "Conte as divergências, analise os casos que diferem e corrija a versão nova até chegar a zero."
+    ],
+    "sucesso": "Você encontra ao menos uma divergência de 1 centavo na primeira versão e chega a zero divergências depois da correção."
+  },
+  "consolidado_em": "2026-11-07T13:16:06+00:00"
+}

@@ -1,0 +1,211 @@
+{
+  "id": "pz74r-4dGfQ",
+  "titulo": "Your AI Agent Is Hiding Its Mistakes From You - Ben Holmes, Warp",
+  "titulo_curto": "Your AI Agent Is Hiding Its Mistakes From You",
+  "palestrante": "Ben Holmes, Warp",
+  "url": "https://www.youtube.com/watch?v=pz74r-4dGfQ",
+  "duracao": 1159,
+  "publicado_ts": 1794002401,
+  "edicao": "2026-11-06",
+  "tese": "Agentes contornam instruções quebradas e não avisam. Só notas por rubrica sobre traces completos revelam isso e permitem corrigir a configuração.",
+  "tldr": [
+    "Ben Holmes, da Warp, propõe um laço de autoaperfeiçoamento. Centralize as conversas dos agentes, avalie cada uma com um juiz LLM e uma rubrica, e deixe outro agente propor correções.",
+    "O problema central é que agentes persistentes contornam skills desatualizadas sem avisar, e o time só nota que a tarefa demora uns 2 minutos a mais. Só os tool calls registrados mostram o desperdício.",
+    "A Warp roda esse laço continuamente na Warp Factories e oferece o Skill Doctor, uma skill que faz uma avaliação única do seu histórico no Claude Code ou no Codex. Os scores ao longo do tempo servem de prova de que cada mudança funcionou."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Capture três coisas em cada trace",
+      "texto": "Para avaliar uma conversa, guarde a transcrição do que foi dito, as chamadas de ferramenta (arquivos, MCPs, tudo que liga o agente ao mundo) e a saída, como o diff ou o PR. Sem as chamadas de ferramenta, o desperdício fica invisível. Rodar tudo em um runner de nuvem centraliza isso quase de graça.",
+      "t": 323,
+      "legenda": "O trace precisa ter transcrição, ações do agente e resultado.",
+      "print": "img/pz74r-4dGfQ/0.jpg",
+      "descricao": "Slide do tldraw com os três itens do trace: Transcript, Tool calls / MCP calls e Outputs (code)."
+    },
+    {
+      "titulo": "Agentes escondem os próprios tropeços",
+      "texto": "Agentes de hoje persistem e contornam obstáculos sem relatar. Na Warp, skills desatualizadas no ambiente de testes faziam o agente testar portas até achar o ambiente. O time só via uma execução cerca de 2 minutos mais lenta. Medir eficiência pelos tool calls expõe esse retrabalho.",
+      "t": 510,
+      "legenda": "Eficiência só aparece quando os tool calls entram na avaliação.",
+      "print": "img/pz74r-4dGfQ/1.jpg",
+      "descricao": "Slide com fontes de conversa (~/.claude/**jsonl, ~/.codex/*jsonl, Warp) e critérios Redundant tests, Verbosity e Efficiency."
+    },
+    {
+      "titulo": "Rubrica em markdown como skill de juiz",
+      "texto": "Cada critério (testes redundantes, verbosidade, eficiência) vira um arquivo markdown parecido com uma skill. Ele traz o que se mede, rótulos de sucesso e falha, e um limite de aprovação, por exemplo 0,4 ou 0,2 reprova. Comece com poucos tópicos e refine conforme usa.",
+      "t": 571,
+      "legenda": "Uma rubrica é um texto curto com critério, rótulos e linha de corte.",
+      "print": "img/pz74r-4dGfQ/2.jpg",
+      "descricao": "Arquivo efficiency.md com rótulos e notas: highly_efficient 1, mostly_efficient 0.8, mostly_inefficient 0.4, highly_inefficient 0.2."
+    },
+    {
+      "titulo": "Laço diário: avaliar, filtrar falhas, abrir PR",
+      "texto": "Cada conversa é avaliada quando o PR é mergeado. A cada 24 horas, um agente de autoaperfeiçoamento recebe só as falhas com as notas explicativas, acha padrões e propõe mudanças na repo de skills ou no código. Exemplo citado é uma pirâmide de cobertura contra testes redundantes.",
+      "t": 792,
+      "legenda": "O agente de melhoria lê apenas falhas e as razões anotadas.",
+      "print": "img/pz74r-4dGfQ/3.jpg",
+      "descricao": "Diagrama do laço: revisar conversas, pontuar, isolar falhas e propor melhorias a cada 24 hr, com rubrica de efficiency e test coverage."
+    },
+    {
+      "titulo": "Scores no tempo provam o efeito da mudança",
+      "texto": "Com notas agregadas, dá para ver se uma skill mergeada mexeu na eficiência. Isso também torna visível o que o agente concluiu, ao contrário de sistemas de memória em que as conclusões ficam opacas. Na Warp, um PR corrigiu config ausente de subagentes no skill de triagem.",
+      "t": 1104,
+      "legenda": "O PR automático corrige uma falha recorrente e economiza tokens.",
+      "print": "img/pz74r-4dGfQ/4.jpg",
+      "descricao": "Painel de self-improvement com lista de runs, incluindo 'Let triage start research subagents', sobre subagente sem spawnableBy."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Software factory",
+      "traducao": "fábrica de software",
+      "nivel": "intermediario",
+      "chave": "software factory",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Trace",
+      "traducao": "registro estruturado da execução",
+      "nivel": "intermediario",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo de linguagem usado para avaliar respostas",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Rubric",
+      "traducao": "rubrica de critérios de avaliação",
+      "nivel": "basico",
+      "chave": "rubric",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Skill",
+      "traducao": "habilidade, julgamento institucional escrito para o agente executar",
+      "nivel": "basico",
+      "chave": "skill",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Cron job",
+      "traducao": "tarefa agendada",
+      "nivel": "basico",
+      "chave": "cron job",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado para rodar o código",
+      "nivel": "intermediario",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "MCP",
+      "traducao": "protocolo para conectar ferramentas a agentes",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O talk é de um funcionário da Warp e divulga a Warp Factories e o Skill Doctor, então há conflito de interesse. Não há números de melhora: nenhum score antes e depois, só relatos de casos (portas, subagentes). O gráfico de scores foi desenhado à mão, sem dado real, porque a demo falhou. Não se discute o viés e a confiabilidade do juiz LLM nem o custo em tokens de avaliar tudo.",
+  "acoes": [
+    "Liste onde ficam as conversas dos seus agentes (pasta .claude ou .codex) e confirme que elas incluem tool calls e saída, não só texto.",
+    "Escreva uma rubrica de 5 a 8 linhas em markdown para um problema seu (testes demais, comentários demais) com limite de aprovação.",
+    "Peça a um agente que avalie 10 conversas passadas pela rubrica e registre o motivo de cada falha.",
+    "Junte as falhas por padrão e transforme o mais frequente em uma mudança numa skill ou no arquivo de instruções."
+  ],
+  "numeros": [
+    {
+      "valor": "40%",
+      "contexto": "mãos levantadas na plateia: agentes escrevem testes demais",
+      "t": 353
+    },
+    {
+      "valor": "200",
+      "contexto": "conversas possíveis em 24 horas, exemplo dado",
+      "t": 760
+    },
+    {
+      "valor": "50",
+      "contexto": "conversas com falha enviadas ao agente de melhoria, exemplo",
+      "t": 792
+    },
+    {
+      "valor": "50% a 60%",
+      "contexto": "nota média de eficiência no gráfico desenhado",
+      "t": 1044
+    }
+  ],
+  "rotulo": "Agentes que revisam o próprio trabalho e corrigem a config",
+  "objetivo": "desenhar um laço que avalia conversas de agentes com rubricas e propõe correções para skills e configuração",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais três itens um trace precisa conter para ser avaliado, segundo o talk?",
+      "resposta": "A transcrição do que foi dito, as chamadas de ferramenta (arquivos, MCPs e outras ações do agente) e a saída, como o diff de código ou o PR resultante."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Seu agente de testes demora mais a cada semana e ninguém sabe por quê. Como usar o laço do talk para investigar?",
+      "resposta": "Registre os tool calls, crie uma rubrica de eficiência, avalie uma amostra das conversas e leia as notas de falha. Se aparecer retrabalho, como tentar portas, corrija a skill de testes e acompanhe o score."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites existem na evidência de que esse laço melhora os agentes?",
+      "resposta": "O palestrante é da Warp e vende a ferramenta. Mostra casos isolados e um gráfico desenhado, sem números antes e depois. Também não trata do viés do juiz LLM nem do custo de avaliar tudo."
+    }
+  ],
+  "experimento": {
+    "titulo": "Skill Doctor manual sobre seu histórico",
+    "minutos": 40,
+    "precisa": "Claude Code ou Codex com histórico de conversas, e um editor de texto",
+    "passos": [
+      "Localize 10 conversas recentes do seu agente de código na pasta .claude ou .codex.",
+      "Escreva uma rubrica de eficiência em markdown, com rótulos de bom e ruim e um limite de nota.",
+      "Peça ao agente que avalie cada conversa pela rubrica, com nota e motivo de cada falha.",
+      "Peça outro prompt que agrupe as falhas e proponha uma edição na skill ou no CLAUDE.md."
+    ],
+    "sucesso": "Você tem ao menos um padrão repetido de falha e uma edição concreta proposta, que pode testar em uma nova conversa."
+  },
+  "consolidado_em": "2026-11-07T13:16:06+00:00"
+}

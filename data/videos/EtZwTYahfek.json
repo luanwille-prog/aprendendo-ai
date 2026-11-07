@@ -1,0 +1,241 @@
+{
+  "id": "EtZwTYahfek",
+  "titulo": "7 Things Your AI Coworker Needs - Philipp Schmid, Google DeepMind",
+  "titulo_curto": "7 Things Your AI Coworker Needs",
+  "palestrante": "Philipp Schmid, Google DeepMind",
+  "url": "https://www.youtube.com/watch?v=EtZwTYahfek",
+  "duracao": 1047,
+  "publicado_ts": 1793959200,
+  "edicao": "2026-11-06",
+  "tese": "Um colega de IA precisa de sete peças, e a mais delicada é a credencial, que o agente nunca deve ver de verdade.",
+  "tldr": [
+    "Philipp Schmid, do Google DeepMind, divide um agente autônomo em sete necessidades. São cérebro, computador, playbooks (roteiros de trabalho), ferramentas, credenciais, regras da casa e agenda.",
+    "Ele monta cada peça com os Managed Agents da API do Gemini. O agente ganha uma sandbox própria, skills como arquivos, ferramentas por MCP, hooks de aprovação e gatilhos cron.",
+    "As credenciais ficam fora da sandbox. Um proxy de rede troca um valor falso pelo segredo real só nos domínios autorizados, o que barra o roubo por prompt injection. A demo mostra uma auditoria de carteira que atualiza uma planilha todo dia."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Sete necessidades de um colega de IA",
+      "texto": "O palestrante compara o agente a um funcionário novo. Ele precisa de cérebro (o modelo), computador (onde guarda artefatos e itera), playbooks, ferramentas, credenciais, regras da casa e horários. A lista serve de checklist para projetar qualquer agente.",
+      "t": 63,
+      "legenda": "O checklist de sete peças que organiza o resto do talk.",
+      "print": "img/EtZwTYahfek/0.jpg",
+      "descricao": "Slide 'What a coworker needs to do the job' com sete itens: A brain, A computer, A playbook, Tools, Logins, House rules e A schedule."
+    },
+    {
+      "titulo": "Managed Agents trocam o laço de tool calling por uma sandbox",
+      "texto": "No laço comum, o modelo gera uma chamada de função, você a executa na sua máquina e devolve o resultado. Nos Managed Agents, o Gemini usa uma sandbox remota para executar código e escrever arquivos. Você chama o agente pelo ID dele em vez do ID do modelo.",
+      "t": 314,
+      "legenda": "Uma chamada de API basta para dar um computador ao modelo.",
+      "print": "img/EtZwTYahfek/1.jpg",
+      "descricao": "Código hello_buck.py: client.interactions.create com agent='antigravity-preview-09-2026' e environment='remote' para auditar o portfólio."
+    },
+    {
+      "titulo": "Conhecimento em três camadas e skills enxutas",
+      "texto": "Tudo no agente vive como arquivo. As instruções de sistema entram em toda requisição, então devem ser curtas. As skills têm descrição curta e o agente decide quando lê-las. Referências e scripts ficam em fatias separadas, porque contexto custa caro.",
+      "t": 499,
+      "legenda": "Skill dividida em instruções, script e referências para poupar contexto.",
+      "print": "img/EtZwTYahfek/2.jpg",
+      "descricao": "Slide 'Knowledge in 3 layers': AGENTS.md sempre carregado, SKILL.md ao disparar (menos de 500 linhas), scripts e references sob demanda."
+    },
+    {
+      "titulo": "Proxy de rede troca a credencial só no domínio certo",
+      "texto": "A credencial é gravada fora da sandbox e não pode ser lida de volta, só sobrescrita. O agente recebe um valor falso na variável de ambiente. O proxy vê a chamada, confere o domínio e troca pelo segredo real. Um atacante que peça para imprimir o .env só obtém o valor falso.",
+      "t": 685,
+      "legenda": "O segredo real nunca entra na sandbox, então não há o que vazar.",
+      "print": "img/EtZwTYahfek/3.jpg",
+      "descricao": "Slide 'Use the login where it is needed': o proxy adiciona o token só no domínio permitido e a sandbox vê apenas um placeholder."
+    },
+    {
+      "titulo": "Demo: auditoria de carteira agendada",
+      "texto": "Um gatilho simulado chama o agente, que lê a skill, consulta serviços financeiros e atualiza uma planilha. Em produção, rodaria todo dia às 8h30 sem intervenção. Com acesso ao Slack, poderia também postar o resumo do que mudou.",
+      "t": 873,
+      "legenda": "O agente lê a skill, checa preços e atualiza a planilha sozinho.",
+      "print": null,
+      "descricao": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado para rodar o código",
+      "nivel": "basico",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Interactions API",
+      "traducao": "API do Gemini pensada para agentes com vários passos",
+      "nivel": "intermediario",
+      "chave": "interactions api",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Skill",
+      "traducao": "habilidade, julgamento institucional escrito para o agente executar",
+      "nivel": "intermediario",
+      "chave": "skill",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "MCP",
+      "traducao": "protocolo para conectar ferramentas a agentes",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Prompt injection",
+      "traducao": "injeção de instruções no prompt",
+      "nivel": "intermediario",
+      "chave": "prompt injection",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Segredo por placeholder",
+      "traducao": "credencial trocada só no envio da requisição",
+      "nivel": "avancado",
+      "chave": "segredo por placeholder",
+      "analogia": "Segredo por placeholder é como o manobrista que recebe só a chave de manobra do carro, enquanto a chave do porta-malas fica com o dono e só abre na garagem certa.",
+      "explicacao": [
+        "Um agente precisa de senhas e chaves para usar serviços, mas quem guarda a senha pode ser enganado e entregá-la a um estranho.",
+        "Com o placeholder (valor de mentira), o agente recebe só um valor falso na variável de ambiente e nunca vê a credencial verdadeira.",
+        "A credencial real fica gravada fora da sandbox (ambiente isolado) e só pode ser sobrescrita, nunca lida de volta.",
+        "Um proxy de rede (intermediário que vigia o tráfego) confere o domínio de cada chamada e troca o valor falso pelo real só nos domínios autorizados.",
+        "Se uma prompt injection pedir ao agente que imprima o arquivo .env, o atacante recebe apenas o valor falso, que não abre nada."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "API",
+        "Sandbox",
+        "Prompt injection"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "AGENTE USA VALOR FALSO",
+            "nota": "Variável de ambiente com placeholder"
+          },
+          {
+            "rotulo": "PROXY VIGIA A CHAMADA",
+            "nota": "Confere o domínio de destino"
+          },
+          {
+            "rotulo": "TROCA PELO SEGREDO REAL",
+            "nota": "Só nos domínios que você definiu"
+          },
+          {
+            "rotulo": "CHAMADA SEGURA",
+            "nota": "Serviço responde e o segredo não vaza"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Hooks",
+      "traducao": "gatilhos determinísticos em pontos do fluxo do agente",
+      "nivel": "intermediario",
+      "chave": "hooks",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Cron job",
+      "traducao": "tarefa agendada",
+      "nivel": "basico",
+      "chave": "cron job",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É um talk de produto do Google sobre o próprio Gemini 4 e os Managed Agents, sem comparação com alternativas. A afirmação de que o modelo é bom e não só otimizado para benchmarks (t=125) vem sem dado. A demo roda numa réplica de planilha feita pelo palestrante, e ele admite que o resultado era só aproximado. Ele afirma que o proxy impede o roubo de credenciais, mas não mostra um ataque real nem fala do que acontece com um domínio autorizado comprometido. Webhooks ainda estão em desenvolvimento, e só há gatilhos cron.",
+  "acoes": [
+    "Reescreva as instruções de sistema do seu agente em poucas linhas e mova procedimentos longos para arquivos de skill com descrição curta.",
+    "Liste as credenciais que seu agente enxerga hoje e troque as chaves em variáveis de ambiente por um esquema com valor falso e troca no proxy.",
+    "Defina duas ou três ações do agente que exigem aprovação humana e escreva um hook com regex para interceptá-las.",
+    "Escolha uma tarefa recorrente sua e agende uma execução do agente por cron, com entrada fixa e resultado salvo em arquivo."
+  ],
+  "numeros": [
+    {
+      "valor": "1 milhão",
+      "contexto": "tokens de janela e de saída do Gemini 4",
+      "t": 125
+    },
+    {
+      "valor": "64K tokens",
+      "contexto": "espaço de raciocínio em tarefas de matemática",
+      "t": 125
+    },
+    {
+      "valor": "$2 / $10",
+      "contexto": "preço por entrada e por saída (Gemini 4)",
+      "t": 156
+    },
+    {
+      "valor": "8h30",
+      "contexto": "horário diário do gatilho da auditoria na demo",
+      "t": 935
+    }
+  ],
+  "rotulo": "Sete peças para construir um colega de IA autônomo",
+  "objetivo": "desenhar um agente autônomo com sandbox, skills, ferramentas, credenciais protegidas, hooks e agendamento",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Como o proxy de rede impede que uma prompt injection roube a credencial do agente?",
+      "resposta": "O agente só tem um valor falso na variável de ambiente. O proxy, que observa o tráfego da sandbox, troca o valor pelo segredo real apenas em chamadas aos domínios que você definiu. Pedir ao agente que imprima o .env revela só o valor falso."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você tem um agente que concilia relatórios toda semana. Como usaria skills e instruções de sistema para manter o custo baixo?",
+      "resposta": "Deixe nas instruções de sistema só o essencial, pois entram em toda requisição. Coloque o passo a passo da conciliação numa skill com descrição curta, e scripts e referências em arquivos separados que o agente lê quando precisa."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta para confiar que o desenho de credenciais do talk é seguro em produção?",
+      "resposta": "Não há teste de ataque nem auditoria independente. O palestrante é do Google e vende o produto. Também faltam respostas sobre domínio autorizado comprometido, MCP malicioso no mesmo domínio e vazamento por outros canais além do .env."
+    }
+  ],
+  "experimento": {
+    "titulo": "Teste o truque do valor falso para segredos",
+    "minutos": 30,
+    "precisa": "Python 3, um terminal e uma API pública de teste como httpbin.org",
+    "passos": [
+      "Crie um script que lê a variável API_KEY do ambiente e faz uma requisição a httpbin.org/headers, enviando a chave em um cabeçalho.",
+      "Defina API_KEY=valor-falso no ambiente e escreva um pequeno proxy (por exemplo com mitmproxy) que troca valor-falso por um segredo de teste só quando o domínio é httpbin.org.",
+      "Rode o script via proxy e confira na resposta que o cabeçalho chegou com o segredo de teste.",
+      "Aponte o mesmo script para outro domínio e verifique que o valor falso segue sem troca. Depois imprima API_KEY e veja que só aparece o valor falso."
+    ],
+    "sucesso": "O domínio autorizado recebe o segredo de teste, qualquer outro recebe o valor falso, e o ambiente do script nunca contém o segredo real."
+  },
+  "consolidado_em": "2026-11-07T13:16:06+00:00"
+}
