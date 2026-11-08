@@ -1,0 +1,1122 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Agentes em finanças precisam mostrar de onde veio cada número · Aprendendo AI</title>
+<meta name="description" content="Resumos diários dos talks do canal AI Engineer, explicados no estilo Quadro Anotado.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" title="Aprendendo AI: edições" href="../feed.xml">
+<script>document.documentElement.classList.add("js");try{var t=localStorage.getItem("tema");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;500;700;900&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=Kalam:wght@400;700&display=swap">
+<link rel="stylesheet" href="../estilo.css">
+</head>
+<body class="pg-edicao">
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<header class="topo wrap">
+  <a class="marca" href="../index.html">Aprendendo <span>AI</span></a>
+  <nav class="topo-links" aria-label="Navegação principal">
+    <a href="../index.html#edicoes" aria-current="page">Edições</a>
+    <a href="../talks.html">Talks</a>
+    <a href="../glossario.html">Glossário</a>
+    <button type="button" class="tema-botao js-only" aria-label="Tema de cores: automático">◐</button>
+  </nav>
+</header>
+<main id="conteudo" class="wrap" tabindex="-1">
+<div class="edicao" id="e-2026-11-07">
+  <div class="edicao-corpo">
+  <header class="edicao-head">
+    <nav class="paginacao-topo" aria-label="Edições vizinhas">
+<a rel="prev" href="2026-11-06.html">← 6 nov</a>      <a href="../index.html#edicoes">Todas as edições</a>
+    </nav>
+    <h1 class="h-edicao">Agentes em finanças precisam mostrar de onde veio cada número</h1>
+    <p class="meta">Talks de sábado, 7 nov 2026 · 6 talks · ≈ 33 min de leitura</p>
+<p class="abertura">Quatro talks levam agentes para dentro de bancos, auditorias e gestoras, e todos chegam à mesma exigência: cada número e cada decisão precisam apontar para uma fonte que alguém consiga conferir. Você vai ver como separar o que o código extrai do que o modelo decide, que controles tornam um agente auditável e como deixar ao humano só o sim ou não. Em volta disso, dois talks tratam da base: a infraestrutura que os agentes precisam para rodar e quando vale pagar por um time de agentes em vez de um só.</p>    <div class="plano card">
+      <div class="plano-txt">
+        <p class="rotulo-mao">Hoje você vai conseguir</p>
+        <ul class="acoes"><li>desenhar um fluxo em que o modelo cita IDs de fatos extraídos por código e nunca escreve o número sozinho</li><li>desenhar quatro controles (autorização, registro de execução, proveniência e integridade de eval) para um agente que toma decisões auditáveis</li><li>decidir em qual etapa de uma tarefa longa de código vale delegar a subagentes e qual modelo usar no lead e nos workers</li></ul>
+<p class="muted plano-radar">Os outros 3 talks ficam no <a href="#radar">radar</a>, resumidos, para abrir se o tema interessar.</p>      </div>
+      <a class="botao plano-cta" href="#v-RdQCY_-SXbA">Começar pelos 3 essenciais · ≈ 17 min <span aria-hidden="true">↓</span></a>
+    </div>
+  </header>
+
+    <details class="indice card" id="indice" open>
+      <summary class="indice-titulo">Ordem de leitura <span class="muted">(6)</span></summary>
+      <div class="indice-progresso">
+        <span class="progresso" data-ids="RdQCY_-SXbA gdzsJZJ6DDs maitMe9HCvw" data-rotulo="essenciais"></span>
+<span class="progresso" data-ids="RdQCY_-SXbA gdzsJZJ6DDs maitMe9HCvw kIlVNGZZr8o ZJjRgvjhq3M _0SQh8a1Osk" data-sufixo="no total"></span>      </div>
+      <p class="indice-grupo">Essenciais</p>
+      <ol><li data-id="RdQCY_-SXbA"><a href="#v-RdQCY_-SXbA"><span class="ind-t">Como impedir que a IA invente números</span><span class="ind-min">6 min</span></a></li><li data-id="gdzsJZJ6DDs"><a href="#v-gdzsJZJ6DDs"><span class="ind-t">Quatro controles para um agente financeiro defensável</span><span class="ind-min">4 min</span></a></li><li data-id="maitMe9HCvw"><a href="#v-maitMe9HCvw"><span class="ind-t">Onde colocar agentes extras num time de agentes de código</span><span class="ind-min">7 min</span></a></li></ol>
+      <p class="indice-grupo">Radar</p>
+      <ol start="4"><li data-id="kIlVNGZZr8o"><a href="#v-kIlVNGZZr8o"><span class="ind-t">Agentes na nuvem que checam dados de ativos privados</span><span class="ind-min">4 min</span></a></li><li data-id="ZJjRgvjhq3M"><a href="#v-ZJjRgvjhq3M"><span class="ind-t">Construir plugins financeiros no ChatGPT Work e no Codex</span><span class="ind-min">6 min</span></a></li><li data-id="_0SQh8a1Osk"><a href="#v-_0SQh8a1Osk"><span class="ind-t">O que agentes exigem da infraestrutura de sandbox</span><span class="ind-min">6 min</span></a></li></ol>
+      <p class="indice-atalhos js-only"><button type="button" class="abrir-atalhos">Atalhos de teclado <kbd>?</kbd></button></p>
+    </details>
+
+    <div class="talks">
+<article class="video essencial" id="v-RdQCY_-SXbA" data-tema="dados-e-rag" data-n="1" data-total="6" aria-labelledby="t-RdQCY_-SXbA">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">01</span>
+    <div class="sec-titulo">
+<p class="selo-essencial">essencial do dia<span>: Mostra uma arquitetura concreta em que o modelo só aponta para fatos extraídos por código, com números de produção sobre recusas e correções.</span></p>      <h2 id="t-RdQCY_-SXbA">Como impedir que a IA invente números</h2>
+      <p class="titulo-original" lang="en">AI Can&#39;t Make Up a Number It Can&#39;t Look Up</p>
+      <p class="tese">Para ter números confiáveis, deixe o modelo só apontar para fatos que o código já extraiu, em vez de conferir o texto depois.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <a class="chip chip-tema" href="../trilhas/dados-e-rag.html">Dados e RAG<span class="sr">: ver a trilha do tema</span></a>
+    <span class="chip">≈ 6 min de leitura</span>
+    <span class="chip" role="img" aria-label="Complexidade 4 de 5">nível ●●●●○</span>
+<span class="chip">Vinoo Ganesh, Kepler</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=RdQCY_-SXbA" target="_blank" rel="noopener" data-yt="RdQCY_-SXbA" data-t="0"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>Assistir (18:28)</a>
+  </div>
+
+<p class="objetivo"><span class="objetivo-rotulo">Depois deste talk você consegue</span> desenhar um fluxo em que o modelo cita IDs de fatos extraídos por código e nunca escreve o número sozinho</p>
+  <section class="card resumo">
+    <h3>Em 3 frases</h3>
+<p>Vinoo Ganesh, CEO da Kepler, diz que números errados vêm de três falhas: documento errado, número errado no documento certo e conta feita de cabeça pelo modelo.</p><p>A Kepler extrai cada fato com código, dá um ID a ele e deixa o modelo apenas planejar e apontar para esses IDs. Se o ponteiro não resolve, o número não aparece, e a citação é corrigida ou recusada.</p><p>A busca é larga e depois estreita (ANN mais BM25, fusão, cross-encoder), e o acesso aos documentos é limitado por cliente. Ele fecha com perguntas para fazer a qualquer fornecedor de IA.</p>  </section>
+
+  <section class="antes-de-ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-RdQCY_-SXbA-reciprocal-rank-fusion-rrf"><strong>Reciprocal rank fusion (RRF)</strong> <span>fusão por posição no ranking</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-RdQCY_-SXbA-re-ranker"><strong>Re-ranker</strong> <span>modelo que reordena candidatos e escolhe os melhores</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-hallucination"><strong>Hallucination</strong> <span>alucinação</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-sistema-deterministico"><strong>Sistema determinístico</strong> <span>deterministic system (mesma entrada, mesma saída)</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-grounding"><strong>Grounding</strong> <span>ancoragem nos dados</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-provenance"><strong>Provenance</strong> <span>proveniência (origem da informação)</span> <em>analogia no glossário</em></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-busca-hibrida"><strong>Busca híbrida</strong> <span>combinação de keyword e semântica</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-multi-tenancy"><strong>Multi-tenancy</strong> <span>vários clientes isolados no mesmo sistema</span> <em>analogia no glossário</em></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Três origens de número errado</h3>
+    <p>O palestrante separa o problema em três falhas: recuperar o documento errado, tirar o número errado do documento certo (por exemplo, o ano errado em um 10-K) e deixar o modelo fazer conta. Cada falha pede um conserto diferente, e um filtro no fim só pega parte delas.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/RdQCY_-SXbA/0.jpg" data-legenda="O erro numérico tem três causas distintas, não uma só."><img src="../img/RdQCY_-SXbA/0.jpg" alt="Slide &#39;Wrong numbers come from three jobs&#39;: fonte errada, número errado na fonte certa e conta de cabeça, cada falha com sua correção." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>O erro numérico tem três causas distintas, não uma só.</span><a class="minuto" href="https://www.youtube.com/watch?v=RdQCY_-SXbA&amp;t=261s" target="_blank" rel="noopener" data-yt="RdQCY_-SXbA" data-t="261" aria-label="Assistir a partir de 04:21"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:21</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Código escreve o número, o modelo planeja</h3>
+    <p>Um pré-processamento transforma dados não estruturados em um repositório estruturado, e cada fato recebe um ponteiro com ID único. O modelo planeja e pede a busca, mas só imprime um número se conseguir resolver o ponteiro. Sem ponteiro válido, o fato não sai na resposta.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/RdQCY_-SXbA/1.jpg" data-legenda="O modelo aponta para fatos pré-extraídos em vez de gerar o número."><img src="../img/RdQCY_-SXbA/1.jpg" alt="Slide &#39;Code writes every number and pointer&#39;: o modelo planeja e lê ponteiros; o código recupera, calcula e verifica cada número." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>O modelo aponta para fatos pré-extraídos em vez de gerar o número.</span><a class="minuto" href="https://www.youtube.com/watch?v=RdQCY_-SXbA&amp;t=354s" target="_blank" rel="noopener" data-yt="RdQCY_-SXbA" data-t="354" aria-label="Assistir a partir de 05:54"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:54</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Busca larga, depois estreita</h3>
+    <p>A busca combina ANN (vizinhos aproximados em vetores) e BM25, devolve até 200 documentos, funde os rankings até chegar a cerca de 60 e aplica um cross-encoder sobre consulta e trecho. Ele diz que LLMs tendem a buscar em profundidade porque buscar largo custa caro.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/RdQCY_-SXbA/2.jpg" data-legenda="O funil de recuperação reduz centenas de candidatos a poucos documentos."><img src="../img/RdQCY_-SXbA/2.jpg" alt="Funil de busca: até 200 candidatos, 100 de cada busca, 20 docs e 10 para o modelo; RRF com k=60 e zerank-2 como cross-encoder." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>O funil de recuperação reduz centenas de candidatos a poucos documentos.</span><a class="minuto" href="https://www.youtube.com/watch?v=RdQCY_-SXbA&amp;t=572s" target="_blank" rel="noopener" data-yt="RdQCY_-SXbA" data-t="572" aria-label="Assistir a partir de 09:32"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:32</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Cinco falhas de segurança na busca</h3>
+    <p>Ele lista erros comuns ao montar busca de documentos: esquecer o filtro de cliente, aceitar quem afirma ser outra empresa, devolver dado desatualizado, ler direto sem passar pelas regras de busca e consultar índice não populado. A saída é escopar toda busca com segurança embutida.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/RdQCY_-SXbA/3.jpg" data-legenda="Isolamento por cliente precisa estar na própria busca."><img src="../img/RdQCY_-SXbA/3.jpg" alt="Cinco vazamentos entre clientes fechados em código: filtro de tenant, identidade falsa, arquivo apagado, leitura direta e índice pela metade." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Isolamento por cliente precisa estar na própria busca.</span><a class="minuto" href="https://www.youtube.com/watch?v=RdQCY_-SXbA&amp;t=667s" target="_blank" rel="noopener" data-yt="RdQCY_-SXbA" data-t="667" aria-label="Assistir a partir de 11:07"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>11:07</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Verificado, corrigido ou recusado</h3>
+    <p>Os IDs de fonte são hashes. Se o modelo pede um ID que não existe, é como ler uma chave ausente em um hash map: volta nada. Por isso toda citação sai verificada, corrigida na busca ou recusada. Nos dados de produção, as recusas caíram muito, mas não a zero.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/RdQCY_-SXbA/4.jpg" data-legenda="Recusas caíram, mas não zeraram, e há uma etapa final de checagem."><img src="../img/RdQCY_-SXbA/4.jpg" alt="Gráfico de recusas por 100 fontes: cai de 116,6 (4 mai) para 15,4 (18 mai) e 1,4 (29 jun), após o citation framework v2." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Recusas caíram, mas não zeraram, e há uma etapa final de checagem.</span><a class="minuto" href="https://www.youtube.com/watch?v=RdQCY_-SXbA&amp;t=946s" target="_blank" rel="noopener" data-yt="RdQCY_-SXbA" data-t="946" aria-label="Assistir a partir de 15:46"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:46</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=RdQCY_-SXbA&amp;t=43s" target="_blank" rel="noopener" data-yt="RdQCY_-SXbA" data-t="43"><strong>US$ 270 mi</strong><span>capital de VC em camadas de verificação formal em 3 meses</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>00:43<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=RdQCY_-SXbA&amp;t=199s" target="_blank" rel="noopener" data-yt="RdQCY_-SXbA" data-t="199"><strong>80% e 31%</strong><span>execs de finanças que confiam nos números e que acham erros</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:19<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=RdQCY_-SXbA&amp;t=572s" target="_blank" rel="noopener" data-yt="RdQCY_-SXbA" data-t="572"><strong>até 200</strong><span>documentos devolvidos por ANN mais BM25</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:32<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=RdQCY_-SXbA&amp;t=572s" target="_blank" rel="noopener" data-yt="RdQCY_-SXbA" data-t="572"><strong>60</strong><span>documentos após a fusão de rankings</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:32<span class="sr">, assistir neste minuto</span></span></a>
+  </div>
+
+  <div class="casper" id="a-RdQCY_-SXbA-reciprocal-rank-fusion-rrf">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Reciprocal rank fusion (RRF) (fusão por posição no ranking).</strong> RRF é como juntar o ranking de dois jurados de um campeonato de ginástica, somando pontos pela posição que cada atleta recebeu de cada jurado.</p>
+    <ol class="passos"><li>Quando duas buscas diferentes devolvem duas listas de resultados, é preciso decidir uma ordem final única.</li><li>Reciprocal rank fusion (RRF, fusão por posição recíproca) junta as listas olhando só a posição de cada documento, sem comparar as notas originais.</li><li>Cada documento ganha 1 dividido por (k + posição) em cada lista, com k perto de 60, e os pontos das listas são somados.</li><li>Isso resolve um problema prático. A nota do BM25 (busca por palavra) e a similaridade de vetores usam escalas diferentes, mas a posição vale para as duas.</li><li>No talk, a Kepler parte de até 200 documentos vindos de ANN e BM25 e usa a fusão para ficar com cerca de 60 antes do re-ranker.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>BUSCA ANN</strong><span>lista ordenada por vetores</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>BUSCA BM25</strong><span>lista ordenada por palavras</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>SOMA 1/(K+POSIÇÃO)</strong><span>pontos por posição em cada lista</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>LISTA ÚNICA</strong><span>cerca de 60 documentos no topo</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-busca-hibrida">Busca híbrida</a>, <a href="../glossario.html#g-rag">RAG</a>, <a href="../glossario.html#g-embedding">Embedding</a></p>  </div>
+  <div class="casper" id="a-RdQCY_-SXbA-re-ranker">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Re-ranker (modelo que reordena candidatos e escolhe os melhores).</strong> Um re-ranker é como o técnico que recebe 60 nomes da peneira e assiste cada jogador em campo antes de escolher os titulares.</p>
+    <ol class="passos"><li>Um re-ranker (reordenador) pega uma lista curta de resultados de busca e coloca os mais úteis no topo.</li><li>A primeira busca é rápida e larga, mas erra a ordem. O re-ranker é mais lento e mais preciso, por isso roda só sobre poucos candidatos.</li><li>O tipo comum é o cross-encoder (codificador cruzado). Ele lê a pergunta e o trecho juntos e devolve uma nota de relevância para o par.</li><li>A busca por vetores compara resumos feitos separadamente. O cross-encoder enxerga as palavras da pergunta e do trecho ao mesmo tempo e pega detalhes que a busca perde.</li><li>Na Kepler, o funil busca largo com ANN e BM25, funde os rankings e aplica o cross-encoder no fim, porque o LLM sozinho tende a parar no primeiro documento.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>BUSCA LARGA</strong><span>até 200 candidatos rápidos</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>FUSÃO DE RANKINGS</strong><span>sobram cerca de 60</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>CROSS-ENCODER</strong><span>nota para cada par pergunta e trecho</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>TOPO REORDENADO</strong><span>poucos trechos vão ao modelo</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-rag">RAG</a>, <a href="../glossario.html#g-busca-hibrida">Busca híbrida</a>, <a href="../glossario.html#g-embedding">Embedding</a>, <a href="../glossario.html#g-llm">LLM</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é pitch da Kepler, e o palestrante é o CEO. Ele cita a concorrência sem nomeá-la e diz que copiaram só a parte errada, sem prova. Os dados de produção aparecem em um gráfico sem valores ditos em voz alta e sem comparação com outro método. O ponteiro garante que o número existe na base, mas não que a extração do 10-K esteja correta nem que o fato escolhido responda à pergunta. O talk também não explica como a Kepler mede erro de extração.</p>
+  </div>
+
+  <section class="card autoteste">
+    <h3>Teste você mesmo</h3>
+    <p class="muted">Responda de cabeça antes de abrir. Lembrar com esforço é o que fixa.</p>
+    <ol class="perguntas">
+      <li><span class="tipo">lembrar</span> Por que o modelo da Kepler não consegue imprimir um número que não existe na base?
+        <details class="resposta"><summary>Ver resposta</summary><p>Porque o código extrai antes cada fato e lhe dá um ID (hash). O modelo só imprime um número se resolver o ponteiro desse ID. Se o ID não existe, nada volta, como ao ler uma chave ausente de um hash map.</p></details>
+      </li>
+      <li><span class="tipo">aplicar</span> Você tem um assistente que responde sobre contratos e valores. Como aplicaria a ideia dos ponteiros?
+        <details class="resposta"><summary>Ver resposta</summary><p>Extraia os valores dos contratos com código, guarde cada um com um ID e a fonte, e faça o modelo citar apenas IDs. Um passo em código troca o ID pelo valor e recusa qualquer ID que não resolva. Somas e comparações também rodam em código.</p></details>
+      </li>
+      <li><span class="tipo">criticar</span> O que o talk não prova sobre a confiabilidade desse método?
+        <details class="resposta"><summary>Ver resposta</summary><p>O ponteiro garante que o número existe na base, não que a extração do documento está certa nem que é o fato certo para a pergunta. Os dados de produção vêm da própria empresa, sem valores ditos nem comparação com outro método, e as recusas não chegaram a zero.</p></details>
+      </li>
+    </ol>
+  </section>
+
+  <div class="casper experimento">
+    <span class="tag">experimente · 30 min</span>
+    <p class="exp-titulo"><strong>Mini verificador de ponteiros em Python</strong></p>
+    <p class="muted">Você precisa de: Python 3 e acesso a Claude ou ChatGPT</p>
+    <ol class="passos"><li>Crie um dicionário com 5 fatos numéricos de um relatório seu, cada um com um ID curto gerado por hash (hashlib) e a fonte.</li><li>Peça ao modelo para responder uma pergunta usando apenas IDs, no formato [id:abc123], sem escrever nenhum número.</li><li>Escreva uma função que troca cada [id:...] pelo valor do dicionário e marca como recusado qualquer ID que não exista.</li><li>Repita a pergunta com a instrução de escrever os números direto e compare as duas respostas com o relatório original.</li></ol>
+    <p><strong>Deu certo se:</strong> Toda resposta por ponteiros traz só valores presentes no dicionário, e IDs inventados aparecem como recusados.</p>
+  </div>
+
+  <section class="card painel">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Revise uma ferramenta de IA que você usa com números e pergunte ao fornecedor se o modelo escreve ponteiros e se cada citação e cada conta são checadas na fonte.</li><li>Liste os três tipos de erro (documento, número, conta) nas falhas do seu sistema de RAG e conte quantas ocorrências caem em cada um.</li><li>Troque contas feitas pelo modelo por chamadas a uma função em código que recebe IDs de fatos e devolve o resultado.</li><li>Confira se toda consulta de documentos do seu sistema filtra por cliente e usuário antes da busca, e escreva um teste que tenta ler dado de outro cliente.</li></ul>
+  </section>
+
+  <section class="relacionados">
+    <h3 class="rotulo-mao">Conversa com outros talks</h3>
+    <ul>
+<li><span class="relacao">aprofunda</span> <a href="../edicoes/2026-10-25.html#v-dZgA6btnb_s">Como impedir o modelo de inventar números</a> <span class="muted">· O mesmo palestrante da Kepler volta ao tema e detalha busca, verificação e os resultados em produção.</span></li><li><a href="../edicoes/2026-10-25.html#v-dZgA6btnb_s">Como impedir o modelo de inventar números</a> <span class="muted">· 25 out · em comum: Busca híbrida, Hallucination, Multi-tenancy</span></li><li><a href="../edicoes/2026-10-12.html#v-ksjwtQop4os">Busca híbrida para agentes com BM25 e vetores</a> <span class="muted">· 12 out · em comum: Busca híbrida, Re-ranker, Reciprocal rank fusion (RRF)</span></li><li><a href="../edicoes/2026-10-20.html#v-UHbODjuviAU">Onde fica a vantagem do investidor na era da IA</a> <span class="muted">· 20 out · em comum: Hallucination, Provenance, Sistema determinístico</span></li>    </ul>
+  </section>
+
+  <footer class="talk-fim">
+    <div class="talk-acoes">
+      <label class="estudei js-only"><input type="checkbox" data-id="RdQCY_-SXbA"> <span class="estudei-txt">Marquei como estudado</span><span class="sr">: <span lang="en">AI Can&#39;t Make Up a Number It Can&#39;t Look Up</span></span></label>
+      <details class="levo js-only" data-levo="RdQCY_-SXbA">
+        <summary>O que eu levo deste talk</summary>
+        <label class="sr" for="nota-RdQCY_-SXbA">O que eu levo deste talk (fica só neste aparelho)</label>
+        <textarea id="nota-RdQCY_-SXbA" data-nota="RdQCY_-SXbA" rows="2" placeholder="Uma frase com as suas palavras. Fica salva só neste aparelho."></textarea>
+      </details>
+    </div>
+    <div class="talk-nav">
+      <a class="voltar-indice" href="#indice">↑ Índice</a>
+      <a class="proximo" href="#v-gdzsJZJ6DDs">Próximo <span>Quatro controles para um agente financeiro defensável</span> <span aria-hidden="true">↓</span></a>
+    </div>
+  </footer>
+</article><article class="video essencial" id="v-gdzsJZJ6DDs" data-tema="agentes" data-n="2" data-total="6" aria-labelledby="t-gdzsJZJ6DDs">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">02</span>
+    <div class="sec-titulo">
+<p class="selo-essencial">essencial do dia<span>: Dá quatro controles reutilizáveis (autorização, registro de execução, proveniência e integridade do eval) para qualquer agente que precise ser auditado.</span></p>      <h2 id="t-gdzsJZJ6DDs">Quatro controles para um agente financeiro defensável</h2>
+      <p class="titulo-original" lang="en">Your Financial Agent Needs to Show Its Work</p>
+      <p class="tese">Em finanças, acertar não basta. O agente precisa deixar rastro suficiente para um auditor novo seguir cada decisão.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <a class="chip chip-tema" href="../trilhas/agentes.html">Agentes<span class="sr">: ver a trilha do tema</span></a>
+    <span class="chip">≈ 4 min de leitura</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Anirudh Veeraragavan, Fieldguide</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=gdzsJZJ6DDs" target="_blank" rel="noopener" data-yt="gdzsJZJ6DDs" data-t="0"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>Assistir (13:27)</a>
+  </div>
+
+<p class="objetivo"><span class="objetivo-rotulo">Depois deste talk você consegue</span> desenhar quatro controles (autorização, registro de execução, proveniência e integridade de eval) para um agente que toma decisões auditáveis</p>
+  <section class="card resumo">
+    <h3>Em 3 frases</h3>
+<p>Anirudh Veeraragavan, da Fieldguide, defende que um agente financeiro só é defensável se um auditor experiente, mas novo no trabalho, conseguir seguir o que o agente fez e por quê.</p><p>Ele propõe quatro controles, todos necessários: autorização por objeto e estado, registro de execução por passos, citações com identidade e versão, e auditoria do próprio dado de eval.</p><p>Quando algo foge do padrão, o agente deve parar e passar a decisão a uma pessoa, com poucos alertas e com o problema explicado, para evitar que o humano aprove tudo no automático.</p>  </section>
+
+  <section class="antes-de-ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-runtime-authorization"><strong>Runtime authorization</strong> <span>autorização em tempo de execução</span></a></li><li><a href="../glossario.html#g-trace"><strong>Trace</strong> <span>registro estruturado da execução</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-provenance"><strong>Provenance</strong> <span>proveniência (origem da informação)</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-golden-dataset"><strong>Golden dataset</strong> <span>conjunto de referência rotulado por humanos</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-eval"><strong>Eval</strong> <span>avaliação</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-human-in-the-loop"><strong>Human in the loop</strong> <span>humano no circuito de validação</span> <em>analogia no glossário</em></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-audit-trail"><strong>Audit trail</strong> <span>trilha de auditoria</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-sistema-deterministico"><strong>Sistema determinístico</strong> <span>deterministic system (mesma entrada, mesma saída)</span> <em>analogia no glossário</em></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Autorização depende do objeto e do estado</h3>
+    <p>O agente tinha permissão, evidência e chegou à conclusão certa, mas não podia sobrescrever uma linha que um humano já revisou. A pergunta certa é se a chamada é permitida para este objeto, neste estado, neste momento. O agente pode rascunhar linhas não revisadas, e sua saída vira sugestão, nunca verdade autoritativa.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/gdzsJZJ6DDs/0.jpg" data-legenda="Permissão de ferramenta não basta: a linha revisada por humano fica protegida."><img src="../img/gdzsJZJ6DDs/0.jpg" alt="Slide &#39;The Signature Outlived the Answer&#39;: exceção marcada em 01/21, assinatura em 01/22, e depois OC-14 &#39;No exception.&#39; ainda assinado." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Permissão de ferramenta não basta: a linha revisada por humano fica protegida.</span><a class="minuto" href="https://www.youtube.com/watch?v=gdzsJZJ6DDs&amp;t=291s" target="_blank" rel="noopener" data-yt="gdzsJZJ6DDs" data-t="291" aria-label="Assistir a partir de 04:51"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:51</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Execução como cadeia de passos gravados</h3>
+    <p>Logs mostram que o agente buscou evidência e respondeu, mas não permitem comparar uma execução de 2027 com outra de 2028. Cada passo precisa de ID, entradas e saídas, separando passos determinísticos (código) dos feitos pelo modelo. Assim dá para reexecutar só um passo e achar onde as duas execuções divergem.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/gdzsJZJ6DDs/1.jpg" data-legenda="Cada passo tem ID, entrada e saída, e pode ser reexecutado isoladamente."><img src="../img/gdzsJZJ6DDs/1.jpg" alt="Diagrama &#39;A Run Is a Chain of Recorded Steps&#39;: FETCH (código), EXTRACT (modelo), MATCH (código), CONCLUDE (modelo), com ID &#39;run · item · step&#39;." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Cada passo tem ID, entrada e saída, e pode ser reexecutado isoladamente.</span><a class="minuto" href="https://www.youtube.com/watch?v=gdzsJZJ6DDs&amp;t=383s" target="_blank" rel="noopener" data-yt="gdzsJZJ6DDs" data-t="383" aria-label="Assistir a partir de 06:23"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:23</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Citação é identidade, não texto</h3>
+    <p>A citação &#39;extrato de janeiro, página 2&#39; não diz qual documento, qual versão, quem enviou nem de onde veio. Uma citação útil carrega ID, versão e hash do conteúdo. Com isso dá para impor regras, como aceitar só evidência vinda direto do banco e não de arquivo que o cliente poderia adulterar.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/gdzsJZJ6DDs/2.jpg" data-legenda="Citação rastreável amarra a conclusão a uma versão exata do documento."><img src="../img/gdzsJZJ6DDs/2.jpg" alt="Slide &#39;Right Bank, Right Month, Wrong Account&#39;: extrato de janeiro citado da conta 4488 (folha) não bate com a conta 4471 (operacional)." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Citação rastreável amarra a conclusão a uma versão exata do documento.</span><a class="minuto" href="https://www.youtube.com/watch?v=gdzsJZJ6DDs&amp;t=476s" target="_blank" rel="noopener" data-yt="gdzsJZJ6DDs" data-t="476" aria-label="Assistir a partir de 07:56"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:56</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Nota alta de eval pode esconder falhas</h3>
+    <p>Um eval com 97% parece ótimo. Mas das nove falhas, quatro eram erro do gabarito, o que favorece o agente. Além disso, 12 exemplos marcados como corretos ficaram obsoletos por mudança de regra ou de metodologia, e nesses o agente erra de fato. A nota única não diz se o agente está melhor ou pior do que parece.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/gdzsJZJ6DDs/3.jpg" data-legenda="O mesmo 97% esconde erro de gabarito e acertos que já não valem."><img src="../img/gdzsJZJ6DDs/3.jpg" alt="Slide &#39;The Score Hid It&#39;: card &#39;V1 · Overall&#39; com nota 97% e selo &#39;SHIPS&#39;. Não mostra as falhas decompostas nem os exemplos de gabarito." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>O mesmo 97% esconde erro de gabarito e acertos que já não valem.</span><a class="minuto" href="https://www.youtube.com/watch?v=gdzsJZJ6DDs&amp;t=569s" target="_blank" rel="noopener" data-yt="gdzsJZJ6DDs" data-t="569" aria-label="Assistir a partir de 09:29"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:29</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Escalar para o humano com critério</h3>
+    <p>O agente deve parar quando tenta mudar trabalho já revisado, quando uma nova execução discorda da anterior ou quando a evidência quebra as regras. O alerta precisa ser fácil de verificar: dizer qual é a divergência e o que investigar. Alertas demais geram viés de automação e o humano passa a aprovar tudo.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/gdzsJZJ6DDs/4.jpg" data-legenda="O alerta aponta a divergência exata, em vez de pedir um &#39;sim&#39; genérico."><img src="../img/gdzsJZJ6DDs/4.jpg" alt="Slide &#39;Stop and Ask a Human When...&#39; com cinco gatilhos e o alerta do agente: &#39;DIT-03: cleared 01/19, 11 business days out, from an affiliate.&#39;" loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>O alerta aponta a divergência exata, em vez de pedir um &#39;sim&#39; genérico.</span><a class="minuto" href="https://www.youtube.com/watch?v=gdzsJZJ6DDs&amp;t=640s" target="_blank" rel="noopener" data-yt="gdzsJZJ6DDs" data-t="640" aria-label="Assistir a partir de 10:40"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:40</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=gdzsJZJ6DDs&amp;t=136s" target="_blank" rel="noopener" data-yt="gdzsJZJ6DDs" data-t="136"><strong>US$ 200 mi</strong><span>Saldo declarado pela Peregrine, contra US$ 5 mi reais no banco</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:16<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=gdzsJZJ6DDs&amp;t=229s" target="_blank" rel="noopener" data-yt="gdzsJZJ6DDs" data-t="229"><strong>41</strong><span>Itens de conciliação que explicam a diferença no exemplo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:49<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=gdzsJZJ6DDs&amp;t=569s" target="_blank" rel="noopener" data-yt="gdzsJZJ6DDs" data-t="569"><strong>97%</strong><span>Nota do eval, com 4 de 9 falhas causadas pelo próprio gabarito</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:29<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=gdzsJZJ6DDs&amp;t=662s" target="_blank" rel="noopener" data-yt="gdzsJZJ6DDs" data-t="662"><strong>80% / 20%</strong><span>Casos que o agente resolve sozinho contra os que vão ao humano</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>11:02<span class="sr">, assistir neste minuto</span></span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é curto e conceitual, com um exemplo fictício (a Freight Lines) e sem dados reais de produção. Os números de 97%, 80% e 20% são ilustrativos, sem amostra nem método. O palestrante trabalha na Fieldguide, que está contratando e vende auditoria agêntica, então o enquadramento favorece a empresa. Faltam custos: gravar cada passo, versionar documentos e escalar para humanos tem preço e latência, e o talk não os mede. A prova de que auditores aceitam esse rastro como suficiente também não aparece.</p>
+  </div>
+
+  <section class="card autoteste">
+    <h3>Teste você mesmo</h3>
+    <p class="muted">Responda de cabeça antes de abrir. Lembrar com esforço é o que fixa.</p>
+    <ol class="perguntas">
+      <li><span class="tipo">lembrar</span> Quais são os quatro controles do talk e o que acontece se você pular um deles?
+        <details class="resposta"><summary>Ver resposta</summary><p>Autorização, controle de execução, proveniência da evidência e integridade do eval. Sem autorização, a resposta muda por baixo de quem revisou. Sem execução registrada, você acerta sem poder mostrar como. Sem proveniência, erra sem saber a origem. Sem integridade do eval, a nota não diz a realidade.</p></details>
+      </li>
+      <li><span class="tipo">aplicar</span> Seu agente de suporte reescreve respostas que um atendente já aprovou. Que regra de autorização você aplicaria?
+        <details class="resposta"><summary>Ver resposta</summary><p>Permitir que o agente rascunhe apenas itens não revisados e grave a mudança proposta como sugestão separada. A permissão depende do objeto e do estado (já revisado ou não) naquele momento, e não só de a ferramenta estar liberada.</p></details>
+      </li>
+      <li><span class="tipo">criticar</span> Que ressalvas você faria às evidências do talk de que esses quatro controles funcionam?
+        <details class="resposta"><summary>Ver resposta</summary><p>O exemplo é fictício, sem dados de produção nem comparação com agentes sem os controles. Os percentuais são ilustrativos. Não há medida de custo ou latência, e o palestrante vende auditoria agêntica, o que cria conflito de interesse.</p></details>
+      </li>
+    </ol>
+  </section>
+
+  <div class="casper experimento">
+    <span class="tag">experimente · 30 min</span>
+    <p class="exp-titulo"><strong>Auditar a nota de um eval pequeno</strong></p>
+    <p class="muted">Você precisa de: Uma planilha e o resultado de um eval seu (ou 20 exemplos de perguntas e respostas esperadas), mais Claude ou ChatGPT.</p>
+    <ol class="passos"><li>Rode seu agente ou prompt em 20 exemplos com resposta esperada e calcule a taxa de acerto.</li><li>Para cada falha, leia o caso e classifique em erro do agente, gabarito errado ou gabarito desatualizado.</li><li>Para cada acerto, confira se a resposta esperada ainda vale pelas regras atuais.</li><li>Recalcule a nota corrigindo os gabaritos e compare com a nota original.</li></ol>
+    <p><strong>Deu certo se:</strong> Você tem duas notas lado a lado e uma tabela que mostra quantas falhas vieram do gabarito, e consegue dizer se o agente está melhor ou pior do que a nota original sugeria.</p>
+  </div>
+
+  <section class="card painel">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Liste as ações que seu agente faz em dados já revisados por uma pessoa e bloqueie a sobrescrita, deixando a saída do agente como sugestão separada.</li><li>Grave em cada execução um ID por passo, com entrada e saída, marcando se o passo foi código ou modelo.</li><li>Troque as citações do seu agente por ID do documento, versão e hash do conteúdo.</li><li>Abra suas falhas de eval e classifique cada uma em erro do agente, gabarito errado ou gabarito desatualizado antes de confiar na nota.</li></ul>
+  </section>
+
+  <section class="relacionados">
+    <h3 class="rotulo-mao">Conversa com outros talks</h3>
+    <ul>
+<li><span class="relacao">complementa</span> <a href="../edicoes/2026-10-17.html#v-IavxrdVnwXM">Autorização para agentes além do OAuth</a> <span class="muted">· Ambos usam autorização em tempo de execução para impedir que o agente aja além do que deveria.</span></li><li><a href="../edicoes/2026-10-20.html#v-UHbODjuviAU">Onde fica a vantagem do investidor na era da IA</a> <span class="muted">· 20 out · em comum: Audit trail, Human in the loop, Provenance</span></li><li><a href="../edicoes/2026-10-07.html#v-TeErpYBUIeM">Como fechar o loop de melhoria de um agente</a> <span class="muted">· 7 out · em comum: Eval, Golden dataset, Human in the loop</span></li><li><a href="../edicoes/2026-10-19.html#v-_4Ph2dhmUFI">Quando um agente pode trabalhar sem supervisão</a> <span class="muted">· 19 out · em comum: Eval, Human in the loop, Sistema determinístico</span></li>    </ul>
+  </section>
+
+  <footer class="talk-fim">
+    <div class="talk-acoes">
+      <label class="estudei js-only"><input type="checkbox" data-id="gdzsJZJ6DDs"> <span class="estudei-txt">Marquei como estudado</span><span class="sr">: <span lang="en">Your Financial Agent Needs to Show Its Work</span></span></label>
+      <details class="levo js-only" data-levo="gdzsJZJ6DDs">
+        <summary>O que eu levo deste talk</summary>
+        <label class="sr" for="nota-gdzsJZJ6DDs">O que eu levo deste talk (fica só neste aparelho)</label>
+        <textarea id="nota-gdzsJZJ6DDs" data-nota="gdzsJZJ6DDs" rows="2" placeholder="Uma frase com as suas palavras. Fica salva só neste aparelho."></textarea>
+      </details>
+    </div>
+    <div class="talk-nav">
+      <a class="voltar-indice" href="#indice">↑ Índice</a>
+      <a class="proximo" href="#v-maitMe9HCvw">Próximo <span>Onde colocar agentes extras num time de agentes de código</span> <span aria-hidden="true">↓</span></a>
+    </div>
+  </footer>
+</article><article class="video essencial" id="v-maitMe9HCvw" data-tema="agentes" data-n="3" data-total="6" aria-labelledby="t-maitMe9HCvw">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">03</span>
+    <div class="sec-titulo">
+<p class="selo-essencial">essencial do dia<span>: Traz experimentos que mostram onde um time de agentes compensa o custo extra e como montar lead e workers para gastar menos.</span></p>      <h2 id="t-maitMe9HCvw">Onde colocar agentes extras num time de agentes de código</h2>
+      <p class="titulo-original" lang="en">How to Get Frontier Coding Results at 70% Lower Cost</p>
+      <p class="tese">Time de agentes rende mais quando os workers vão para a etapa gargalo da tarefa, com um lead forte que espera e workers baratos.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <a class="chip chip-tema" href="../trilhas/agentes.html">Agentes<span class="sr">: ver a trilha do tema</span></a>
+    <span class="chip">≈ 7 min de leitura</span>
+    <span class="chip" role="img" aria-label="Complexidade 4 de 5">nível ●●●●○</span>
+<span class="chip">Nouha Dziri, Cohere</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=maitMe9HCvw" target="_blank" rel="noopener" data-yt="maitMe9HCvw" data-t="0"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>Assistir (31:22)</a>
+  </div>
+
+<p class="objetivo"><span class="objetivo-rotulo">Depois deste talk você consegue</span> decidir em qual etapa de uma tarefa longa de código vale delegar a subagentes e qual modelo usar no lead e nos workers</p>
+  <section class="card resumo">
+    <h3>Em 3 frases</h3>
+<p>Na pesquisa da Cohere, um time de agentes de código superou o agente sozinho em quase 10 pontos no ProgramBench, mas custou de 4 a 7 vezes mais.</p><p>Colocar workers só na etapa que trava a tarefa (planejamento no ProgramBench, implementação no Commit0) manteve o resultado pela metade do custo.</p><p>Um lead forte com workers de planejamento baratos chegou perto do time todo de modelos de ponta com custo cerca de 70% menor, e a troca de mensagens entre workers quase não aconteceu.</p>  </section>
+
+  <section class="antes-de-ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-maitMe9HCvw-agent-teams"><strong>Agent teams</strong> <span>times de agentes</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-maitMe9HCvw-lead-bloqueante-e-lead-assincrono"><strong>Lead bloqueante e lead assíncrono</strong> <span>líder que espera os workers versus líder que segue trabalhando</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-orchestrator-e-workers"><strong>Orchestrator e workers</strong> <span>orquestrador e agentes executores</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-janela-de-contexto"><strong>Janela de contexto</strong> <span>quantidade de texto que o modelo lê de uma vez</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-harness"><strong>Harness</strong> <span>estrutura que roda o agente</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-benchmark"><strong>Benchmark</strong> <span>teste padronizado de desempenho</span> <em>analogia no glossário</em></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-ablation-study"><strong>Ablation study</strong> <span>estudo de ablação, que testa uma variável por vez</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-pareto-frontier"><strong>Pareto frontier</strong> <span>fronteira de Pareto (melhor troca entre custo e precisão)</span> <em>analogia no glossário</em></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Time de agentes ganha do agente solo, mas custa caro</h3>
+    <p>Pensar mais tempo enche a janela de contexto, e amostrar várias tentativas repete a tarefa inteira em cada uma. A alternativa é um lead que divide o trabalho e workers que começam com contexto limpo e devolvem só um relatório compacto. No ProgramBench, que pede para reimplementar um programa a partir do executável, o time com lead bloqueante bateu o solo por quase 10 pontos, com custo de 4 a 7 vezes maior.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/maitMe9HCvw/0.jpg" data-legenda="O time ganha cerca de 10 pontos sobre o solo, pagando de 4 a 7 vezes mais"><img src="../img/maitMe9HCvw/0.jpg" alt="Slide &#39;Teams beat a single agent, at 4-7× the cost&#39;: +9.7 pts do time sobre o solo e 4-7× o custo. O gráfico mostra só o ponto do solo." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>O time ganha cerca de 10 pontos sobre o solo, pagando de 4 a 7 vezes mais</span><a class="minuto" href="https://www.youtube.com/watch?v=maitMe9HCvw&amp;t=475s" target="_blank" rel="noopener" data-yt="maitMe9HCvw" data-t="475" aria-label="Assistir a partir de 07:55"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:55</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Lead bloqueante espera; lead assíncrono atropela os workers</h3>
+    <p>O lead bloqueante distribui as subtarefas e espera todos responderem. O assíncrono segue trabalhando e, com prompt mínimo, constrói sobre palpites antes de os relatórios chegarem, ignora resultados ou declara a tarefa pronta com workers ainda rodando. Com um prompt detalhado de coordenação (o PIV, de planejar, implementar e verificar), o assíncrono alcança o bloqueante, ao preço de muito ajuste manual de prompt.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/maitMe9HCvw/1.jpg" data-legenda="Instruções melhores sobem o solo em cerca de 6 pontos e igualam o lead assíncrono"><img src="../img/maitMe9HCvw/1.jpg" alt="Slide &#39;With heavy prompting, better performance&#39;: solo vai de 52,1% a 57,7% com prompt PIV; blocking e async chegam a ~63%, com setas por tipo de prompt." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Instruções melhores sobem o solo em cerca de 6 pontos e igualam o lead assíncrono</span><a class="minuto" href="https://www.youtube.com/watch?v=maitMe9HCvw&amp;t=640s" target="_blank" rel="noopener" data-yt="maitMe9HCvw" data-t="640" aria-label="Assistir a partir de 10:40"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:40</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Ponha os workers na etapa que trava a tarefa</h3>
+    <p>Com workers só no planejamento, o time chegou à mesma recompensa do time PIV completo pela metade do custo, e cada dólar em planejamento rendeu cerca de 1,6 vez mais recompensa que nas outras etapas. No ProgramBench o gargalo é descobrir o comportamento do binário, e vários exploradores com contexto limpo veem mais que um só. No Commit0, onde a especificação e os testes já vêm prontos, o ganho apareceu ao dobrar agentes na implementação.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/maitMe9HCvw/2.jpg" data-legenda="Com guia de planejamento, a delegação acontece numa rajada inicial antes de escrever código"><img src="../img/maitMe9HCvw/2.jpg" alt="Slide &#39;Why planning wins&#39;: 674 chamadas de planejamento numa rajada antes de qualquer código e 2,4× mais recompensa por chamada de planejamento." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Com guia de planejamento, a delegação acontece numa rajada inicial antes de escrever código</span><a class="minuto" href="https://www.youtube.com/watch?v=maitMe9HCvw&amp;t=931s" target="_blank" rel="noopener" data-yt="maitMe9HCvw" data-t="931" aria-label="Assistir a partir de 15:31"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:31</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>O lead define o teto, os workers definem o preço</h3>
+    <p>Com três variantes de modelo em ordem de capacidade e custo (Luna, Terra e Sol), trocar os workers Sol por Luna manteve quase a mesma recompensa com cerca de 60% menos custo. O inverso falhou: workers baratos não compensam um lead fraco, e Terra com workers Luna ficou abaixo de Sol sozinho (51% contra 57%). Com Sol como lead e 16 planejadores Luna, o time custou cerca de 70% menos que o time com workers em todas as etapas.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/maitMe9HCvw/3.jpg" data-legenda="Sol como lead com workers Luna empata com o time todo Sol a um custo bem menor"><img src="../img/maitMe9HCvw/3.jpg" alt="Slide &#39;Can the lead be cheap?&#39;: custo em escala log com Sol+Luna, Terra+Luna e Sol+Sol. Legenda: &#39;The lead sets the ceiling and workers set the price!&#39;" loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Sol como lead com workers Luna empata com o time todo Sol a um custo bem menor</span><a class="minuto" href="https://www.youtube.com/watch?v=maitMe9HCvw&amp;t=1290s" target="_blank" rel="noopener" data-yt="maitMe9HCvw" data-t="1290" aria-label="Assistir a partir de 21:30"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>21:30</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Os workers mandam tudo para o lead e quase não falam entre si</h3>
+    <p>Mesmo com uma ferramenta para mandar mensagem a qualquer agente, 84% das mensagens foram de worker para o lead, e houve menos de uma mensagem entre workers por tarefa. Mais conversa não trouxe mais recompensa: nos modelos fortes o efeito ficou dentro do ruído e nos times Luna caiu de 4 a 7 pontos. A autora atribui parte disso ao harness, que isolava as subtarefas e não mostrava aos workers quem mais estava no ambiente.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/maitMe9HCvw/4.jpg" data-legenda="Mais mensagens entre agentes não aumentaram a recompensa"><img src="../img/maitMe9HCvw/4.jpg" alt="Slide sobre mensagens entre pares: cerca de metade das mensagens de Luna foi rejeitada; Sol envia 3,4× mais mensagens que Luna sem ganho de recompensa." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Mais mensagens entre agentes não aumentaram a recompensa</span><a class="minuto" href="https://www.youtube.com/watch?v=maitMe9HCvw&amp;t=1500s" target="_blank" rel="noopener" data-yt="maitMe9HCvw" data-t="1500" aria-label="Assistir a partir de 25:00"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>25:00</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=maitMe9HCvw&amp;t=468s" target="_blank" rel="noopener" data-yt="maitMe9HCvw" data-t="468"><strong>4 a 7x</strong><span>custo do time de agentes em relação ao agente solo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:48<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=maitMe9HCvw&amp;t=809s" target="_blank" rel="noopener" data-yt="maitMe9HCvw" data-t="809"><strong>1,6x</strong><span>recompensa por dólar no planejamento frente às outras etapas</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:29<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=maitMe9HCvw&amp;t=1338s" target="_blank" rel="noopener" data-yt="maitMe9HCvw" data-t="1338"><strong>70%</strong><span>economia de 16 planejadores baratos frente a workers em todas as etapas</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>22:18<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=maitMe9HCvw&amp;t=1435s" target="_blank" rel="noopener" data-yt="maitMe9HCvw" data-t="1435"><strong>84%</strong><span>mensagens que foram de worker para o lead</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>23:55<span class="sr">, assistir neste minuto</span></span></a>
+  </div>
+
+  <div class="casper" id="a-maitMe9HCvw-agent-teams">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Agent teams (times de agentes).</strong> Um time de agentes é como uma cozinha de restaurante, onde o chef divide os pratos entre os cozinheiros e cada um entrega só o prato pronto.</p>
+    <ol class="passos"><li>Em vez de um único assistente de IA fazer uma tarefa grande sozinho, vários assistentes dividem o trabalho.</li><li>Um agente principal, o lead (líder), recebe a tarefa, quebra em partes e entrega cada parte a um worker (agente executor).</li><li>Cada worker começa com a janela de contexto limpa, lê arquivos, roda testes e devolve só um relatório compacto ao lead.</li><li>Assim o lead guarda a visão geral sem encher o próprio contexto, e partes independentes andam em paralelo.</li><li>O custo sobe rápido, porque cada agente extra gasta tokens; no ProgramBench o time ganhou quase 10 pontos sobre o agente solo, pagando de 4 a 7 vezes mais.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>LEAD RECEBE A TAREFA</strong><span>guarda a visão geral</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>DIVIDE EM SUBTAREFAS</strong><span>uma parte para cada worker</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>WORKERS EXECUTAM</strong><span>cada um com contexto limpo</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>RELATÓRIOS COMPACTOS</strong><span>só o resultado volta ao lead</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>LEAD JUNTA E ENTREGA</strong><span>tarefa concluída</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-agente-de-ia">Agente de IA</a>, <a href="../glossario.html#g-janela-de-contexto">Janela de contexto</a>, <a href="../glossario.html#g-token">Token</a></p>  </div>
+  <div class="casper" id="a-maitMe9HCvw-lead-bloqueante-e-lead-assincrono">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Lead bloqueante e lead assíncrono (líder que espera os workers versus líder que segue trabalhando).</strong> O lead bloqueante é como o professor que espera todos os grupos apresentarem antes de fechar a nota, e o assíncrono é como o professor que fecha a nota enquanto alguns grupos ainda falam.</p>
+    <ol class="passos"><li>Quando um agente líder distribui tarefas para outros agentes, ele precisa decidir o que faz enquanto os outros trabalham.</li><li>O lead bloqueante (blocking lead) entrega as subtarefas e fica parado até todos os workers responderem.</li><li>O lead assíncrono (async lead) segue trabalhando, acompanha os workers e pode mandar correções no meio do caminho.</li><li>Com prompt mínimo, o assíncrono constrói sobre palpites, ignora relatórios que chegam tarde ou declara a tarefa pronta com workers rodando, e o trabalho deles se perde.</li><li>Com um prompt detalhado de coordenação (PIV, de planejar, implementar e verificar), o assíncrono aprende quando esperar e alcança o bloqueante, ao preço de muito ajuste manual de prompt.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>LEAD DELEGA</strong><span>subtarefas vão aos workers</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>BLOQUEANTE ESPERA</strong><span>só segue com todos os relatórios</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>ASSÍNCRONO SEGUE</strong><span>trabalha e supervisiona em paralelo</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>RISCO DO ASSÍNCRONO</strong><span>age antes dos relatórios chegarem</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>RESULTADO CONSOLIDADO</strong><span>PIV iguala os dois modos</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-agente-de-ia">Agente de IA</a>, <a href="../glossario.html#g-prompt">Prompt</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>É pesquisa da própria Cohere, com pouco interesse comercial direto, mas os resultados vêm de dois benchmarks e os números do Commit0 ficam no apêndice do artigo, sem aparecer no talk. Os 70% de economia comparam com o time de workers em todas as etapas, e não com o agente solo. O prompt PIV levou muito ajuste manual, o que mistura efeito do time com efeito das instruções. O teto de 16 workers veio de limite de orçamento, e a falta de conversa entre workers pode ser efeito do harness, como a autora admite.</p>
+  </div>
+
+  <section class="card autoteste">
+    <h3>Teste você mesmo</h3>
+    <p class="muted">Responda de cabeça antes de abrir. Lembrar com esforço é o que fixa.</p>
+    <ol class="perguntas">
+      <li><span class="tipo">lembrar</span> No ProgramBench, em qual etapa os workers extras mais compensaram, e por quê?
+        <details class="resposta"><summary>Ver resposta</summary><p>No planejamento e exploração. O agente só recebe o executável e a documentação, então descobrir o comportamento do programa é o gargalo, e vários exploradores com contexto limpo cobrem mais casos e devolvem relatórios compactos ao lead.</p></details>
+      </li>
+      <li><span class="tipo">aplicar</span> Você vai pedir a um agente de código para migrar um módulo grande com testes já escritos. Onde colocaria subagentes e qual modelo usaria em cada papel?
+        <details class="resposta"><summary>Ver resposta</summary><p>Com a especificação e os testes prontos, o gargalo tende a ser a implementação, como no Commit0. Dividiria a implementação em partes independentes para os workers, deixaria o modelo mais forte como lead e testaria workers mais baratos, conferindo se a recompensa se mantém.</p></details>
+      </li>
+      <li><span class="tipo">criticar</span> Por que a conclusão de que mensagens entre workers não ajudam merece cautela?
+        <details class="resposta"><summary>Ver resposta</summary><p>O harness isolava as subtarefas e não mostrava aos workers quem mais estava no ambiente, então havia pouco motivo para conversar. Os testes cobriram só dois benchmarks e até 16 workers. A própria autora diz que times maiores devem precisar dessa comunicação.</p></details>
+      </li>
+    </ol>
+  </section>
+
+  <div class="casper experimento">
+    <span class="tag">experimente · 40 min</span>
+    <p class="exp-titulo"><strong>Exploração delegada a subagentes baratos no Claude Code</strong></p>
+    <p class="muted">Você precisa de: Claude Code e um repositório público de tamanho médio que você não conhece</p>
+    <ol class="passos"><li>Peça ao Claude Code, sozinho, um plano de onde mudar o código para adicionar um recurso pequeno, e anote os tokens e o custo exibidos ao fim.</li><li>Crie um subagente de exploração em .claude/agents com um modelo mais barato (por exemplo, Haiku) e instrução de devolver só um relatório curto com arquivos e funções relevantes.</li><li>Numa sessão nova, peça o mesmo plano mandando o agente principal disparar três desses subagentes em partes diferentes do repositório e esperar todos antes de planejar.</li><li>Compare os dois planos lado a lado: arquivos certos encontrados, casos esquecidos, tokens e custo.</li></ol>
+    <p><strong>Deu certo se:</strong> Você tem uma tabela com custo e qualidade dos dois planos e sabe dizer se a exploração delegada achou mais pontos relevantes por real gasto.</p>
+  </div>
+
+  <section class="card painel">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Antes de criar subagentes numa tarefa longa, escreva qual etapa trava o trabalho (descoberta, implementação ou verificação) e delegue só essa.</li><li>Configure seus subagentes de exploração com um modelo mais barato e mantenha o modelo mais forte no agente principal.</li><li>Meça tokens e custo de uma mesma tarefa com agente solo e com subagentes, e anote a diferença de resultado ao lado do custo.</li><li>No prompt do agente principal, mande esperar o retorno de todos os subagentes antes de seguir e defina em que pasta cada um pode escrever.</li></ul>
+  </section>
+
+  <section class="relacionados">
+    <h3 class="rotulo-mao">Conversa com outros talks</h3>
+    <ul>
+<li><a href="../edicoes/2026-10-19.html#v-7Y4sbZgBdnc">O que sobra do harness quando o modelo melhora</a> <span class="muted">· 19 out · em comum: Agent harness, Benchmark, Orchestrator e workers</span></li><li><a href="../edicoes/2026-10-09.html#v-TyPpSRXGhbc">Modelo pequeno treinado com RL em perguntas financeiras</a> <span class="muted">· 9 out · em comum: Ablation study, Janela de contexto</span></li><li><a href="../edicoes/2026-09-23.html#v-RQi7x-navxU">Camada de contexto de documentos para agentes</a> <span class="muted">· 23 set · em comum: Agent harness, Benchmark, Pareto frontier</span></li>    </ul>
+  </section>
+
+  <footer class="talk-fim">
+    <div class="talk-acoes">
+      <label class="estudei js-only"><input type="checkbox" data-id="maitMe9HCvw"> <span class="estudei-txt">Marquei como estudado</span><span class="sr">: <span lang="en">How to Get Frontier Coding Results at 70% Lower Cost</span></span></label>
+      <details class="levo js-only" data-levo="maitMe9HCvw">
+        <summary>O que eu levo deste talk</summary>
+        <label class="sr" for="nota-maitMe9HCvw">O que eu levo deste talk (fica só neste aparelho)</label>
+        <textarea id="nota-maitMe9HCvw" data-nota="maitMe9HCvw" rows="2" placeholder="Uma frase com as suas palavras. Fica salva só neste aparelho."></textarea>
+      </details>
+    </div>
+    <div class="talk-nav">
+      <a class="voltar-indice" href="#indice">↑ Índice</a>
+      <a class="proximo" href="#v-kIlVNGZZr8o">Próximo <span>Agentes na nuvem que checam dados de ativos privados</span> <span aria-hidden="true">↓</span></a>
+    </div>
+  </footer>
+</article>
+      <section class="radar" id="radar" aria-labelledby="radar-titulo">
+        <h2 id="radar-titulo">Radar</h2>
+        <p class="hand">os outros talks do dia, em resumo. Abra o que interessar.</p>
+        <details class="radar-item" data-id="kIlVNGZZr8o">
+          <summary>
+            <span class="radar-n" aria-hidden="true">04</span>
+            <span class="radar-txt">
+              <strong>Agentes na nuvem que checam dados de ativos privados</strong>
+              <span class="radar-tese">Agente na nuvem investiga cada mudança nos dados, cita fontes e deixa ao humano só o sim ou não. Meta realista: 95% de automação.</span>
+              <span class="radar-meta">Agentes · ≈ 4 min · <span lang="en">How Agents Cut Hour-Long Data Checks to 5 Minutes</span></span>
+            </span>
+          </summary>
+          <article class="video" id="v-kIlVNGZZr8o" data-tema="agentes" data-n="4" data-total="6" aria-labelledby="t-kIlVNGZZr8o">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">04</span>
+    <div class="sec-titulo">
+      <h2 id="t-kIlVNGZZr8o">Agentes na nuvem que checam dados de ativos privados</h2>
+      <p class="titulo-original" lang="en">How Agents Cut Hour-Long Data Checks to 5 Minutes</p>
+      <p class="tese">Agente na nuvem investiga cada mudança nos dados, cita fontes e deixa ao humano só o sim ou não. Meta realista: 95% de automação.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <a class="chip chip-tema" href="../trilhas/agentes.html">Agentes<span class="sr">: ver a trilha do tema</span></a>
+    <span class="chip">≈ 4 min de leitura</span>
+    <span class="chip" role="img" aria-label="Complexidade 2 de 5">nível ●●○○○</span>
+<span class="chip">Amol Kapoor &amp; Clifford Ressel, Nori Agentic</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=kIlVNGZZr8o" target="_blank" rel="noopener" data-yt="kIlVNGZZr8o" data-t="0"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>Assistir (19:34)</a>
+  </div>
+
+<p class="objetivo"><span class="objetivo-rotulo">Depois deste talk você consegue</span> desenhar um fluxo em que um agente investiga mudanças em dados, cita fontes e deixa a decisão final a um humano</p>
+  <section class="card resumo">
+    <h3>Em 3 frases</h3>
+<p>Ativos privados vivem em PDFs, e-mails e anotações, então o banco mestre de ativos (security master) de um gestor de investimentos exige muita checagem manual.</p><p>Num gestor Fortune 200, cada célula alterada custava cerca de uma hora de análise humana. Um cloud agent agora investiga a mudança, cita fontes, recomenda manter ou descartar e avisa o dono no Slack, o que reduz o trabalho humano a uns 5 minutos.</p><p>O agente ganha conhecimento de domínio por instruções em texto simples, roda em infraestrutura genérica e mantém um humano no circuito, com as lições de colaboração com especialistas, 95% de automação e menor custo da complexidade acidental.</p>  </section>
+
+  <section class="antes-de-ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-security-master"><strong>Security master</strong> <span>banco mestre de ativos, fonte de verdade dos instrumentos financeiros</span></a></li><li><a href="../glossario.html#g-cloud-agent"><strong>Cloud agent</strong> <span>agente na nuvem, que roda em ambiente remoto e dispara sozinho</span></a></li><li><a href="../glossario.html#g-human-in-the-loop"><strong>Human in the loop</strong> <span>humano no circuito de validação</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-skill"><strong>Skill</strong> <span>habilidade, julgamento institucional escrito para o agente executar</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-claude-md-agents-md"><strong>CLAUDE.md / AGENTS.md</strong> <span>arquivo de instruções carregado no contexto do agente</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-complexidade-essencial-e-acidental"><strong>Complexidade essencial e acidental</strong> <span>essential and accidental complexity (Fred Brooks)</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-on-premise"><strong>On premise</strong> <span>rodar nos próprios servidores</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-golden-source-of-truth"><strong>Golden source of truth</strong> <span>fonte de verdade definida como correta</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Ativos privados quebram o modelo de identificadores</h3>
+    <p>Ações públicas como a do Google têm identificadores compartilhados (ticker, ISIN, CUSIP, FIGI), então o código consegue mapear qualquer dado de entrada. Um empréstimo para uma usina ou um terreno não tem identificador comum. O ativo é definido só pelos documentos, e o volume de dados cresce na proporção do número de ativos.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/kIlVNGZZr8o/0.jpg" data-legenda="Com identificadores compartilhados, o código mapeia o dado sozinho."><img src="../img/kIlVNGZZr8o/0.jpg" alt="Slide &#39;Public data maps cleanly&#39;: secmaster da Alphabet com uma linha por listagem (ISIN, CUSIP, venue, ticker GOOGL/GOOG/ABEA) e feed alternativo só com nome" loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Com identificadores compartilhados, o código mapeia o dado sozinho.</span><a class="minuto" href="https://www.youtube.com/watch?v=kIlVNGZZr8o&amp;t=476s" target="_blank" rel="noopener" data-yt="kIlVNGZZr8o" data-t="476" aria-label="Assistir a partir de 07:56"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:56</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>O problema: uma hora por célula alterada</h3>
+    <p>O gestor compara a tabela dia a dia. Com 50 mil ativos e cerca de 200 colunas, mesmo mudanças raras geram muitas células por dia. Cada uma ia para uma equipe que conferia documentos e fontes para decidir se a mudança estava certa, em média uma hora por célula.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/kIlVNGZZr8o/1.jpg" data-legenda="Cada célula alterada ia para uma equipe conferir à mão."><img src="../img/kIlVNGZZr8o/1.jpg" alt="Slide do estudo de caso: tabela de 50.000 ativos por 200 colunas, 10M de células, 47 alteradas no dia 1, com a mudança diária &#39;day-over-day&#39;" loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Cada célula alterada ia para uma equipe conferir à mão.</span><a class="minuto" href="https://www.youtube.com/watch?v=kIlVNGZZr8o&amp;t=664s" target="_blank" rel="noopener" data-yt="kIlVNGZZr8o" data-t="664" aria-label="Assistir a partir de 11:04"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>11:04</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>O agente monta o caso, o humano decide</h3>
+    <p>A cada mudança, um cloud agent sobe sozinho, roda um modelo open source implantado no ambiente do cliente e usa Box, APIs públicas e parte do e-mail. Ele explica a mudança, traz citações, recomenda manter ou descartar e avisa o dono da célula no Slack. O humano só responde sim ou não, em cerca de 5 minutos.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/kIlVNGZZr8o/2.jpg" data-legenda="O agente reúne evidências e o humano só aprova ou rejeita."><img src="../img/kIlVNGZZr8o/2.jpg" alt="Slide &#39;Cloud agent triage&#39;: agente lê a mudança na célula do Parcel 7 (Holdco A para Holdco B) e usa Box, Bloomberg e email, avisando o dono" loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>O agente reúne evidências e o humano só aprova ou rejeita.</span><a class="minuto" href="https://www.youtube.com/watch?v=kIlVNGZZr8o&amp;t=790s" target="_blank" rel="noopener" data-yt="kIlVNGZZr8o" data-t="790" aria-label="Assistir a partir de 13:10"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:10</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Conhecimento de domínio em arquivos de texto</h3>
+    <p>O agente aprende como um analista novo, por instruções escritas em inglês simples sobre onde ficam os documentos, quais fontes confiar e como julgar uma mudança. Isso vai em arquivos markdown como skills ou AGENTS.md, sobre um agente genérico como Claude Code ou Open Code. A maior parte da customização vem de configs e credenciais do ambiente.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/kIlVNGZZr8o/3.jpg" data-legenda="Mudar o comportamento do agente é editar texto, não reescrever código."><img src="../img/kIlVNGZZr8o/3.jpg" alt="Slide com AGENTS.md: &#39;Secmaster triage&#39;, &#39;Box deal folder first&#39;, &#39;Bloomberg wins on prices&#39;, &#39;Flag ownership changes&#39;, ligado ao agente e ao revisor" loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Mudar o comportamento do agente é editar texto, não reescrever código.</span><a class="minuto" href="https://www.youtube.com/watch?v=kIlVNGZZr8o&amp;t=911s" target="_blank" rel="noopener" data-yt="kIlVNGZZr8o" data-t="911" aria-label="Assistir a partir de 15:11"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:11</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Uma infraestrutura para vários agentes</h3>
+    <p>O agente do security master deveria rodar na mesma infraestrutura do agente de auditoria ou de code review. Cada um muda em instruções, ferramentas, gatilhos e contexto, que pertencem à empresa. Orquestração, segurança e integrações ficam iguais. Os palestrantes defendem que um fornecedor cuide dessa camada, o que também é o produto deles.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/kIlVNGZZr8o/4.jpg" data-legenda="Instruções e tools mudam por tarefa, a infraestrutura é comum."><img src="../img/kIlVNGZZr8o/4.jpg" alt="Slide &#39;Use flexible agent infrastructure&#39;: quatro agentes (secmaster triage, reconciliation, doc intake, reporting) sobre a mesma plataforma de agentes" loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Instruções e tools mudam por tarefa, a infraestrutura é comum.</span><a class="minuto" href="https://www.youtube.com/watch?v=kIlVNGZZr8o&amp;t=1003s" target="_blank" rel="noopener" data-yt="kIlVNGZZr8o" data-t="1003" aria-label="Assistir a partir de 16:43"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>16:43</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=kIlVNGZZr8o&amp;t=31s" target="_blank" rel="noopener" data-yt="kIlVNGZZr8o" data-t="31"><strong>US$ 240 bilhões</strong><span>volume de secundárias em 2025, alta de 50% sobre 2024</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>00:31<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=kIlVNGZZr8o&amp;t=62s" target="_blank" rel="noopener" data-yt="kIlVNGZZr8o" data-t="62"><strong>US$ 32 trilhões</strong><span>projeção de ativos alternativos sob gestão em 2030</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:02<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=kIlVNGZZr8o&amp;t=664s" target="_blank" rel="noopener" data-yt="kIlVNGZZr8o" data-t="664"><strong>50 mil x 200</strong><span>ativos por colunas na tabela do exemplo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>11:04<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=kIlVNGZZr8o&amp;t=850s" target="_blank" rel="noopener" data-yt="kIlVNGZZr8o" data-t="850"><strong>1 h para 5 min</strong><span>trabalho humano por célula alterada, segundo o palestrante</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:10<span class="sr">, assistir neste minuto</span></span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é pitch da Nori Agentic, que vende a camada de cloud agents e defende que um fornecedor a controle. O corte de uma hora para 5 minutos vem de um único cliente, sem método de medição, sem amostra e sem taxa de erro do agente. Não se sabe quantas recomendações o humano reverte, nem se aprovar rápido vira aprovação automática. Citações do agente também não são a prova de que a fonte esteja certa.</p>
+  </div>
+
+  <section class="card autoteste">
+    <h3>Teste você mesmo</h3>
+    <p class="muted">Responda de cabeça antes de abrir. Lembrar com esforço é o que fixa.</p>
+    <ol class="perguntas">
+      <li><span class="tipo">lembrar</span> Quais etapas o agente executa a cada mudança detectada na tabela do gestor de ativos?
+        <details class="resposta"><summary>Ver resposta</summary><p>Ele sobe sozinho, investiga a origem da mudança com Box, APIs públicas e parte do e-mail, monta uma explicação com citações, recomenda manter ou descartar e avisa o dono da célula no Slack.</p></details>
+      </li>
+      <li><span class="tipo">aplicar</span> Pense numa tarefa de conferência de dados no seu trabalho. Como você a adaptaria ao padrão do talk?
+        <details class="resposta"><summary>Ver resposta</summary><p>Detectar a mudança por comparação diária, disparar um agente com instruções em markdown e acesso às fontes, exigir explicação, citações e recomendação, e enviar ao dono só para aprovar ou rejeitar.</p></details>
+      </li>
+      <li><span class="tipo">criticar</span> Que evidência falta para confiar na redução de uma hora para 5 minutos?
+        <details class="resposta"><summary>Ver resposta</summary><p>Faltam medição independente, mais de um cliente, taxa de acerto do agente e de reversões pelo humano, e o risco de aprovação por hábito. Os palestrantes vendem a plataforma, então há conflito de interesse.</p></details>
+      </li>
+    </ol>
+  </section>
+
+  <div class="casper experimento">
+    <span class="tag">experimente · 30 min</span>
+    <p class="exp-titulo"><strong>Agente que audita uma mudança em dados com citações</strong></p>
+    <p class="muted">Você precisa de: Claude ou ChatGPT, uma planilha com duas versões de uma tabela e 2 ou 3 documentos de apoio</p>
+    <ol class="passos"><li>Crie uma planilha pequena de 10 linhas e outra versão com 5 células alteradas, 2 delas erradas de propósito.</li><li>Escreva um prompt em markdown com as fontes confiáveis, as regras de julgamento e o formato de saída com explicação, citação e recomendação de manter ou descartar.</li><li>Envie as mudanças e os documentos ao modelo, um item por vez, e leia as recomendações.</li><li>Compare com seu gabarito e conte acertos e itens em que a citação não sustenta a conclusão.</li></ol>
+    <p><strong>Deu certo se:</strong> O modelo sinaliza as 2 células erradas, cada recomendação traz citação verificável e você decide cada item em poucos minutos.</p>
+  </div>
+
+  <section class="card painel">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Liste no seu trabalho uma tarefa de conferência manual que consome horas e anote o tempo médio por item, para ter um valor de base.</li><li>Escreva em markdown uma instrução de uma página para essa tarefa, com onde ficam os documentos, quais fontes confiar e como julgar um item.</li><li>Peça a um agente que entregue sempre explicação, citações e recomendação de manter ou descartar, e compare o veredicto dele com o seu em 10 itens reais.</li></ul>
+  </section>
+
+  <section class="relacionados">
+    <h3 class="rotulo-mao">Conversa com outros talks</h3>
+    <ul>
+<li><a href="../edicoes/2026-10-16.html#v-BOWYujhIQuo">IA em finanças: fonte certa e engenheiro na operação</a> <span class="muted">· 16 out · em comum: Golden source of truth, Human in the loop</span></li><li><a href="../edicoes/2026-10-02.html#v-48YUYDjwfYY">Custo por tarefa e roteamento automático de modelos</a> <span class="muted">· 2 out · em comum: Human in the loop, On premise</span></li><li><a href="../edicoes/2026-10-12.html#v--AKPRSYccJc">Quatro barreiras de qualidade para agentes de código</a> <span class="muted">· 12 out · em comum: CLAUDE.md / AGENTS.md, Skill</span></li>    </ul>
+  </section>
+
+  <footer class="talk-fim">
+    <div class="talk-acoes">
+      <label class="estudei js-only"><input type="checkbox" data-id="kIlVNGZZr8o"> <span class="estudei-txt">Marquei como estudado</span><span class="sr">: <span lang="en">How Agents Cut Hour-Long Data Checks to 5 Minutes</span></span></label>
+      <details class="levo js-only" data-levo="kIlVNGZZr8o">
+        <summary>O que eu levo deste talk</summary>
+        <label class="sr" for="nota-kIlVNGZZr8o">O que eu levo deste talk (fica só neste aparelho)</label>
+        <textarea id="nota-kIlVNGZZr8o" data-nota="kIlVNGZZr8o" rows="2" placeholder="Uma frase com as suas palavras. Fica salva só neste aparelho."></textarea>
+      </details>
+    </div>
+    <div class="talk-nav">
+      <a class="voltar-indice" href="#indice">↑ Índice</a>
+      <a class="proximo" href="#v-ZJjRgvjhq3M">Próximo <span>Construir plugins financeiros no ChatGPT Work e no Codex</span> <span aria-hidden="true">↓</span></a>
+    </div>
+  </footer>
+</article>
+        </details>
+        <details class="radar-item" data-id="ZJjRgvjhq3M">
+          <summary>
+            <span class="radar-n" aria-hidden="true">05</span>
+            <span class="radar-txt">
+              <strong>Construir plugins financeiros no ChatGPT Work e no Codex</strong>
+              <span class="radar-tese">Em vez de construir um app novo, empacote o fluxo como plugin dentro do ChatGPT Work ou do Codex e herde login, permissões e distribuição.</span>
+              <span class="radar-meta">Agentes · ≈ 6 min · <span lang="en">Build Your Own Finance Agent Inside ChatGPT</span></span>
+            </span>
+          </summary>
+          <article class="video" id="v-ZJjRgvjhq3M" data-tema="agentes" data-n="5" data-total="6" aria-labelledby="t-ZJjRgvjhq3M">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">05</span>
+    <div class="sec-titulo">
+      <h2 id="t-ZJjRgvjhq3M">Construir plugins financeiros no ChatGPT Work e no Codex</h2>
+      <p class="titulo-original" lang="en">Build Your Own Finance Agent Inside ChatGPT</p>
+      <p class="tese">Em vez de construir um app novo, empacote o fluxo como plugin dentro do ChatGPT Work ou do Codex e herde login, permissões e distribuição.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <a class="chip chip-tema" href="../trilhas/agentes.html">Agentes<span class="sr">: ver a trilha do tema</span></a>
+    <span class="chip">≈ 6 min de leitura</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Stefano Fabbri &amp; Oliver Steffmann, OpenAI</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=ZJjRgvjhq3M" target="_blank" rel="noopener" data-yt="ZJjRgvjhq3M" data-t="0"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>Assistir (1:50:32)</a>
+  </div>
+
+<p class="objetivo"><span class="objetivo-rotulo">Depois deste talk você consegue</span> escolher entre skill, plugin e plugin extension para levar um fluxo de trabalho interno ao ChatGPT Work ou ao Codex</p>
+  <section class="card resumo">
+    <h3>Em 3 frases</h3>
+<p>A OpenAI mostra o ChatGPT for financial services, com dados de mercado embutidos e plugins prontos de skills e MCP, usando o fluxo de um consultor de patrimônio como exemplo.</p><p>Para ir além, o desenvolvedor usa o Codex para criar skills, plugins com dados internos e plugin extensions que mudam a interface, distribuídos pelos controles corporativos já aprovados.</p><p>Com boas skills, modelos menores chegam perto do melhor resultado; a sandbox do Codex limita o que o plugin acessa, e evals continuam sendo o gargalo para levar agentes à produção.</p>  </section>
+
+  <section class="antes-de-ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-ZJjRgvjhq3M-plugin"><strong>Plugin</strong> <span>pacote de skills, apps e servidores MCP</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-ZJjRgvjhq3M-compaction"><strong>Compaction</strong> <span>compactação do contexto</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-ZJjRgvjhq3M-goal"><strong>Goal</strong> <span>meta com critério de término que o agente persegue por horas</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-skill"><strong>Skill</strong> <span>habilidade, julgamento institucional escrito para o agente executar</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-mcp"><strong>MCP</strong> <span>protocolo para conectar ferramentas a agentes</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-sandbox"><strong>Sandbox</strong> <span>ambiente isolado para rodar o código</span> <em>analogia no glossário</em></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-model-routing"><strong>Model routing</strong> <span>roteamento de modelos</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-eval"><strong>Eval</strong> <span>avaliação</span> <em>analogia no glossário</em></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Plugin é skill mais conexões mais interface</h3>
+    <p>Uma skill é um conjunto de arquivos markdown reutilizáveis. Quando o fluxo precisa de dados internos e login, entra o plugin, que empacota skills, servidor MCP, configuração de ferramentas e componentes de interface. Os plugins financeiros prontos servem de base: a OpenAI fala em 80% pronto e 20% de personalização.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/ZJjRgvjhq3M/0.jpg" data-legenda="Um plugin reúne skills, MCP e interface num único pacote."><img src="../img/ZJjRgvjhq3M/0.jpg" alt="Página &#39;Plugin architecture&#39; da documentação da OpenAI, com a árvore: Plugin &gt; Skills, MCP server (opcional) &gt; Tools e UI resources (opcional)." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Um plugin reúne skills, MCP e interface num único pacote.</span><a class="minuto" href="https://www.youtube.com/watch?v=ZJjRgvjhq3M&amp;t=2870s" target="_blank" rel="noopener" data-yt="ZJjRgvjhq3M" data-t="2870" aria-label="Assistir a partir de 47:50"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>47:50</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Superfícies e o que cada uma suporta</h3>
+    <p>O ChatGPT for financial services só existe na interface web do ChatGPT Work e não tem acesso por CLI. Skills funcionam no Codex, o MCP local só no desktop, e as plugin extensions (mudanças de interface) ainda só no desktop. O desenvolvedor precisa escolher a superfície antes de desenhar a solução.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/ZJjRgvjhq3M/1.jpg" data-legenda="Cada superfície aceita um conjunto diferente de recursos."><img src="../img/ZJjRgvjhq3M/1.jpg" alt="Diagrama &#39;What runs where&#39;: Codex e MCP stdio no computador, plugin no ChatGPT, MCP HTTPS e sistemas internos na empresa." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Cada superfície aceita um conjunto diferente de recursos.</span><a class="minuto" href="https://www.youtube.com/watch?v=ZJjRgvjhq3M&amp;t=2900s" target="_blank" rel="noopener" data-yt="ZJjRgvjhq3M" data-t="2900" aria-label="Assistir a partir de 48:20"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>48:20</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Plugin extension muda a interface conforme o contexto</h3>
+    <p>Uma extension adiciona um ícone, telas de configuração ou navegação próprias. Dependendo da conversa, por exemplo preparar uma reunião com cliente, aparece uma interface sua com as métricas de um sistema interno. O usuário não sai da ferramenta em que já trabalha.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/ZJjRgvjhq3M/2.jpg" data-legenda="A extension abre uma interface própria dentro do ChatGPT."><img src="../img/ZJjRgvjhq3M/2.jpg" alt="Página &#39;Plugin Extensions&#39; com &#39;Sidebar apps&#39;: um item no menu lateral abre a interface MCP em tela cheia do plugin Bits &amp; Bolts Remote." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>A extension abre uma interface própria dentro do ChatGPT.</span><a class="minuto" href="https://www.youtube.com/watch?v=ZJjRgvjhq3M&amp;t=3407s" target="_blank" rel="noopener" data-yt="ZJjRgvjhq3M" data-t="3407" aria-label="Assistir a partir de 56:47"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>56:47</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Skill bem feita permite usar modelo menor</h3>
+    <p>Para tarefas repetíveis, um contexto bom (a skill) aproxima modelos baratos do desempenho do melhor. Em sistemas multiagente, só o orquestrador precisa do modelo mais forte. O palestrante cita cerca de 95% do resultado com subagentes menores e lembra que isso exige medir com evals.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=ZJjRgvjhq3M&amp;t=2591s" target="_blank" rel="noopener" data-yt="ZJjRgvjhq3M" data-t="2591" aria-label="Assistir a partir de 43:11"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>43:11</a> Modelos menores com skill certa reduzem custo e tempo.</p>  </div>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Sandbox e política central no Codex</h3>
+    <p>Um arquivo config.toml, definido pelo administrador e enviado às máquinas, restringe URLs, pastas e plugins permitidos. Um recurso chamado guardian automatiza a decisão de aprovar ações sensíveis, para equilibrar segurança e comodidade do usuário.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=ZJjRgvjhq3M&amp;t=5414s" target="_blank" rel="noopener" data-yt="ZJjRgvjhq3M" data-t="5414" aria-label="Assistir a partir de 1:30:14"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>1:30:14</a> A política do administrador limita o que o plugin alcança.</p>  </div>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=ZJjRgvjhq3M&amp;t=502s" target="_blank" rel="noopener" data-yt="ZJjRgvjhq3M" data-t="502"><strong>15 min</strong><span>atraso dos dados de mercado embutidos</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:22<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=ZJjRgvjhq3M&amp;t=693s" target="_blank" rel="noopener" data-yt="ZJjRgvjhq3M" data-t="693"><strong>80% / 20%</strong><span>base pronta do plugin versus personalização sua</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>11:33<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=ZJjRgvjhq3M&amp;t=2622s" target="_blank" rel="noopener" data-yt="ZJjRgvjhq3M" data-t="2622"><strong>95%</strong><span>resultado com subagentes menores, segundo o palestrante</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>43:42<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=ZJjRgvjhq3M&amp;t=191s" target="_blank" rel="noopener" data-yt="ZJjRgvjhq3M" data-t="191"><strong>300 tokens/s</strong><span>velocidade média do modo ultra rápido</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:11<span class="sr">, assistir neste minuto</span></span></a>
+  </div>
+
+  <div class="casper" id="a-ZJjRgvjhq3M-plugin">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Plugin (pacote de skills, apps e servidores MCP).</strong> Um plugin é como uma maleta de técnico que já vem com o manual de serviço, as chaves do prédio do cliente e o crachá de acesso.</p>
+    <ol class="passos"><li>Um plugin é um pacote que você instala numa ferramenta para ela ganhar uma capacidade nova sem trocar de programa.</li><li>No ChatGPT Work e no Codex, o plugin junta skills (habilidades), que são instruções em markdown sobre como fazer uma tarefa.</li><li>Ele também traz servidores MCP (protocolo de contexto de modelo), que conectam o agente aos dados e sistemas internos da empresa.</li><li>O pacote inclui configuração de ferramentas, autenticação e, com plugin extensions (extensões), componentes que mudam a interface.</li><li>Como roda dentro de uma ferramenta já aprovada, o plugin herda login, permissões e distribuição, e os prontos da OpenAI servem de base de 80% para você personalizar os 20% restantes.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>SKILLS</strong><span>instruções reutilizáveis em markdown</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>SERVIDOR MCP</strong><span>conecta dados e sistemas internos</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>INTERFACE</strong><span>extension muda a tela do app</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>PLUGIN</strong><span>pacote instalado no ChatGPT ou Codex</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-skill">Skill</a>, <a href="../glossario.html#g-mcp">MCP</a>, <a href="../glossario.html#g-agente-de-ia">Agente de IA</a></p>  </div>
+  <div class="casper" id="a-ZJjRgvjhq3M-compaction">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Compaction (compactação do contexto).</strong> Compaction é como a secretária que, numa reunião longa, troca as páginas de anotações por um resumo enxuto para a mesa não transbordar.</p>
+    <ol class="passos"><li>Uma conversa longa com um assistente de IA acumula muito texto, e chega uma hora em que ele não consegue guardar tudo.</li><li>Esse limite se chama janela de contexto (context window), a quantidade máxima de tokens que o modelo lê de uma vez.</li><li>Compaction (compactação) usa um segundo modelo que relê a conversa, tira as repetições e reescreve o histórico em versão menor.</li><li>No Codex isso roda em segundo plano, e a API também oferece o recurso, então o agente segue trabalhando sem estourar o limite.</li><li>Com isso, tarefas de horas ficam viáveis, como replicar o código de um artigo de finanças quantitativas e conferir os resultados.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>CONVERSA CRESCE</strong><span>histórico se aproxima do limite</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>MODELO SECUNDÁRIO</strong><span>relê e remove redundâncias</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>HISTÓRICO RESUMIDO</strong><span>cabe de novo na janela</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>TAREFA LONGA SEGUE</strong><span>agente trabalha por horas</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-token">Token</a>, <a href="../glossario.html#g-llm">LLM</a>, <a href="../glossario.html#g-agente-de-ia">Agente de IA</a></p>  </div>
+  <div class="casper" id="a-ZJjRgvjhq3M-goal">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Goal (meta com critério de término que o agente persegue por horas).</strong> Um goal é como o técnico de natação que define o tempo a bater e deixa o atleta repetir e ajustar o nado até chegar lá.</p>
+    <ol class="passos"><li>Um goal (meta) é um objetivo que você entrega ao agente para ele perseguir sozinho até atingir.</li><li>No goal mode do Codex, você define o alvo, de preferência um número, como a nota de um benchmark (teste de referência).</li><li>O agente olha o alvo, testa uma ideia, mede o resultado e tenta uma nova hipótese, num ciclo que pode durar horas.</li><li>Um exemplo é pedir que ele ajuste o prompt de outro agente para maximizar a nota num conjunto de evals.</li><li>Assim, seu trabalho passa a ser definir bem a meta e a métrica, e o agente cuida de orquestrar subagentes e tentativas.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>DEFINIR ALVO</strong><span>número ou score mensurável</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>TESTAR HIPÓTESE</strong><span>agente muda prompt ou código</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>MEDIR</strong><span>compara o score com o alvo</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>META ATINGIDA</strong><span>repete até chegar ao alvo</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-agente-de-ia">Agente de IA</a>, <a href="../glossario.html#g-eval">Eval</a>, <a href="../glossario.html#g-prompt">Prompt</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>É um workshop de uma empresa que vende o produto: não há comparação com concorrentes nem dado independente. Afirmações como 95% do resultado com modelos menores e ganho de semanas em vez de meses vêm sem metodologia. O acesso a dados financeiros só funciona na web, sem CLI, e não se enxergam as estruturas internas. Dados de mercado têm atraso de 15 minutos. A qualidade dos dados vem de parcerias que o público não pode auditar.</p>
+  </div>
+
+  <section class="card autoteste">
+    <h3>Teste você mesmo</h3>
+    <p class="muted">Responda de cabeça antes de abrir. Lembrar com esforço é o que fixa.</p>
+    <ol class="perguntas">
+      <li><span class="tipo">lembrar</span> Qual a diferença entre uma skill e um plugin, segundo o palestrante?
+        <details class="resposta"><summary>Ver resposta</summary><p>A skill é um conjunto de arquivos markdown reutilizáveis. O plugin é um pacote maior com skills, servidor MCP, configuração de ferramentas, autenticação e componentes de interface.</p></details>
+      </li>
+      <li><span class="tipo">aplicar</span> Seu time gera todo mês o mesmo relatório com dados de um banco interno. Que formato você escolheria e por quê?
+        <details class="resposta"><summary>Ver resposta</summary><p>Um plugin com servidor MCP para o banco e uma skill com o formato do relatório e exemplos antigos. A skill sozinha não conecta ao banco nem autentica o usuário.</p></details>
+      </li>
+      <li><span class="tipo">criticar</span> Que evidência falta para aceitar que modelos menores com boas skills dão 95% do resultado?
+        <details class="resposta"><summary>Ver resposta</summary><p>Faltam tarefas, métricas e amostra. O número vem de relato dos palestrantes, que vendem o produto, sem evals publicados. Você precisa medir com seus próprios casos antes de trocar de modelo.</p></details>
+      </li>
+    </ol>
+  </section>
+
+  <div class="casper experimento">
+    <span class="tag">experimente · 35 min</span>
+    <p class="exp-titulo"><strong>Skill com modelo menor contra modelo forte</strong></p>
+    <p class="muted">Você precisa de: Claude Code ou Codex, um modelo menor e um maior, e uma tarefa repetitiva sua.</p>
+    <ol class="passos"><li>Escolha uma tarefa repetida, como resumir um relatório, e junte 5 entradas reais com a saída ideal de cada uma.</li><li>Escreva uma skill em markdown com objetivo, formato da saída, regras e um exemplo.</li><li>Rode as 5 entradas no modelo forte sem a skill e no modelo menor com a skill.</li><li>Marque cada saída como aceitável ou não e some os acertos. Corrija a skill onde o modelo menor errou e repita.</li></ol>
+    <p><strong>Deu certo se:</strong> O modelo menor com skill acerta quase tanto quanto o forte nos 5 casos, e você sabe dizer qual regra da skill corrigiu cada erro.</p>
+  </div>
+
+  <section class="card painel">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Liste os fluxos repetidos do seu time e marque os que cabem numa skill simples, os que precisam de dados internos (plugin com MCP) e os que exigem interface própria.</li><li>Escreva uma skill markdown para uma tarefa recorrente, com exemplos de saída anteriores como referência, e rode com um modelo menor e com o mais forte.</li><li>Compare os dois resultados com 5 a 10 casos reais e anote onde a skill precisa de correção.</li><li>Se usa Codex, revise o config.toml do seu projeto e restrinja pastas e domínios de rede ao mínimo necessário.</li></ul>
+  </section>
+
+  <section class="relacionados">
+    <h3 class="rotulo-mao">Conversa com outros talks</h3>
+    <ul>
+<li><a href="../edicoes/2026-10-05.html#v-FwiS44-xyYw">Do pedido avulso ao fluxo repetível com Codex</a> <span class="muted">· 5 out · em comum: Goal, Plugin</span></li><li><a href="../edicoes/2026-10-21.html#v-DouK81O8R3o">War room com agentes para código legado</a> <span class="muted">· 21 out · em comum: MCP, Plugin</span></li><li><a href="../edicoes/2026-10-12.html#v-bI8WyG9YB0I">Verificar código de agente dentro do loop com SonarQube</a> <span class="muted">· 12 out · em comum: MCP, Plugin</span></li>    </ul>
+  </section>
+
+  <footer class="talk-fim">
+    <div class="talk-acoes">
+      <label class="estudei js-only"><input type="checkbox" data-id="ZJjRgvjhq3M"> <span class="estudei-txt">Marquei como estudado</span><span class="sr">: <span lang="en">Build Your Own Finance Agent Inside ChatGPT</span></span></label>
+      <details class="levo js-only" data-levo="ZJjRgvjhq3M">
+        <summary>O que eu levo deste talk</summary>
+        <label class="sr" for="nota-ZJjRgvjhq3M">O que eu levo deste talk (fica só neste aparelho)</label>
+        <textarea id="nota-ZJjRgvjhq3M" data-nota="ZJjRgvjhq3M" rows="2" placeholder="Uma frase com as suas palavras. Fica salva só neste aparelho."></textarea>
+      </details>
+    </div>
+    <div class="talk-nav">
+      <a class="voltar-indice" href="#indice">↑ Índice</a>
+      <a class="proximo" href="#v-_0SQh8a1Osk">Próximo <span>O que agentes exigem da infraestrutura de sandbox</span> <span aria-hidden="true">↓</span></a>
+    </div>
+  </footer>
+</article>
+        </details>
+        <details class="radar-item" data-id="_0SQh8a1Osk">
+          <summary>
+            <span class="radar-n" aria-hidden="true">06</span>
+            <span class="radar-txt">
+              <strong>O que agentes exigem da infraestrutura de sandbox</strong>
+              <span class="radar-tese">Agentes precisam de primitivas de infraestrutura sólidas: workspace, estado, recursos elásticos, rede controlada. Construir isso com vibe coding custa caro.</span>
+              <span class="radar-meta">Infraestrutura · ≈ 6 min · <span lang="en">Don&#39;t Vibe Code Your Agent Infrastructure</span></span>
+            </span>
+          </summary>
+          <article class="video" id="v-_0SQh8a1Osk" data-tema="infraestrutura" data-n="6" data-total="6" aria-labelledby="t-_0SQh8a1Osk">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">06</span>
+    <div class="sec-titulo">
+      <h2 id="t-_0SQh8a1Osk">O que agentes exigem da infraestrutura de sandbox</h2>
+      <p class="titulo-original" lang="en">Don&#39;t Vibe Code Your Agent Infrastructure</p>
+      <p class="tese">Agentes precisam de primitivas de infraestrutura sólidas: workspace, estado, recursos elásticos, rede controlada. Construir isso com vibe coding custa caro.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <a class="chip chip-tema" href="../trilhas/infraestrutura.html">Infraestrutura<span class="sr">: ver a trilha do tema</span></a>
+    <span class="chip">≈ 6 min de leitura</span>
+    <span class="chip" role="img" aria-label="Complexidade 4 de 5">nível ●●●●○</span>
+<span class="chip">Akshat Bubna, Modal</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=_0SQh8a1Osk" target="_blank" rel="noopener" data-yt="_0SQh8a1Osk" data-t="0"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>Assistir (17:35)</a>
+  </div>
+
+<p class="objetivo"><span class="objetivo-rotulo">Depois deste talk você consegue</span> listar as primitivas de infraestrutura que um agente precisa e decidir quando comprar uma plataforma de sandbox em vez de construir</p>
+  <section class="card resumo">
+    <h3>Em 3 frases</h3>
+<p>O CTO da Modal usa uma planilha em que cada célula é um agente para listar o que a infraestrutura precisa dar: workspace isolado, estado que persiste sem pagar computação ociosa, recursos elásticos, GPUs, arquivos compartilhados e controle de rede.</p><p>Ele separa o harness (o ciclo do agente) da sandbox onde as ferramentas rodam, e defende que a segurança exige controlar domínios, caminhos e credenciais que o agente nunca enxerga.</p><p>Ele argumenta contra montar a própria plataforma de sandbox por vibe coding, por causa de confiabilidade, segurança e escala, e prevê agentes que criam e descartam ambientes por conta própria.</p>  </section>
+
+  <section class="antes-de-ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-_0SQh8a1Osk-allow-list"><strong>Allow list</strong> <span>lista de permissões (nega tudo por padrão)</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-_0SQh8a1Osk-vibe-coding"><strong>Vibe coding</strong> <span>programar descrevendo o resultado e deixando a IA escrever o código</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-_0SQh8a1Osk-pet-e-cattle"><strong>Pet e cattle</strong> <span>máquina insubstituível e máquina descartável</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-sandbox"><strong>Sandbox</strong> <span>ambiente isolado para rodar o código</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-harness"><strong>Harness</strong> <span>estrutura que roda o agente</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-sidecar"><strong>Sidecar</strong> <span>processo auxiliar que escuta eventos externos</span> <em>analogia no glossário</em></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-template-e-snapshot-de-sandbox"><strong>Template e snapshot de sandbox</strong> <span>modelo de VM congelada com memória e disco</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-recursive-self-improvement"><strong>Recursive self-improvement</strong> <span>autoaperfeiçoamento recursivo</span> <em>analogia no glossário</em></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Harness separado da sandbox</h3>
+    <p>O harness chama o modelo, executa o laço e decide as ferramentas. As chamadas de ferramenta rodam em outro container dentro da sandbox, por segurança e isolamento. Um sidecar e um armazenamento compartilhado completam o desenho, e tudo precisa subir em segundos para milhares de células.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/_0SQh8a1Osk/0.jpg" data-legenda="Cada agente roda numa sandbox com harness e ferramentas em containers separados."><img src="../img/_0SQh8a1Osk/0.jpg" alt="Diagrama da sandbox: agent harness (planeja, chama o modelo, escolhe ferramenta) liga ao sidecar de tool execution; shared volumes embaixo." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Cada agente roda numa sandbox com harness e ferramentas em containers separados.</span><a class="minuto" href="https://www.youtube.com/watch?v=_0SQh8a1Osk&amp;t=106s" target="_blank" rel="noopener" data-yt="_0SQh8a1Osk" data-t="106" aria-label="Assistir a partir de 01:46"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:46</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Estado persistente sem computação ociosa</h3>
+    <p>No caso do Basis, o agente espera dias pela resposta do contador. O estado fica guardado e a computação só liga quando há trabalho. Há três formas de persistir: snapshot do sistema de arquivos inteiro, de um diretório ou um volume compartilhado.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/_0SQh8a1Osk/1.jpg" data-legenda="Persistir o estado por dias e pagar só quando o agente trabalha."><img src="../img/_0SQh8a1Osk/1.jpg" alt="Slide &#39;Agents need their work to persist&#39;: linha STATE contínua sob COMPUTE, ociosa em &#39;Accountant responds&#39; (waiting for input)." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Persistir o estado por dias e pagar só quando o agente trabalha.</span><a class="minuto" href="https://www.youtube.com/watch?v=_0SQh8a1Osk&amp;t=328s" target="_blank" rel="noopener" data-yt="_0SQh8a1Osk" data-t="328" aria-label="Assistir a partir de 05:28"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:28</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Uso de recursos varia muito</h3>
+    <p>Os dados do Ramp Inspect mostram que CPU e memória oscilam entre sandboxes e dentro da mesma sandbox. Provisionar pelo pico daria cerca de 15 núcleos e 15 GB para cada uma, o que não fecha a conta. A saída é pedir recursos sob demanda e pagar só pela duração do uso.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/_0SQh8a1Osk/2.jpg" data-legenda="O pico varia tanto que provisionar por ele desperdiça recursos."><img src="../img/_0SQh8a1Osk/2.jpg" alt="Gráficos Ramp Inspect: CPU (cores) e memória (GiB) de 57 sandboxes oscilam, com picos isolados de CPU perto de 15 cores e de memória perto de 12 GiB." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>O pico varia tanto que provisionar por ele desperdiça recursos.</span><a class="minuto" href="https://www.youtube.com/watch?v=_0SQh8a1Osk&amp;t=422s" target="_blank" rel="noopener" data-yt="_0SQh8a1Osk" data-t="422" aria-label="Assistir a partir de 07:02"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:02</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Controle de rede além da lista de domínios</h3>
+    <p>Controlar IPs de entrada e domínios de saída não basta. Usuários querem regras por caminho e por operação em serviços como GitHub e Datadog. Um padrão é um proxy leve próprio no sidecar, que também injeta credenciais para que o agente nunca as veja.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/_0SQh8a1Osk/3.jpg" data-legenda="Regras finas de rede e credenciais invisíveis ao agente reduzem vazamento."><img src="../img/_0SQh8a1Osk/3.jpg" alt="Proxy sidecar com regras de egress: Datadog (GET e POST em endpoints liberados), GitHub (bloqueia mutations GraphQL), Modal (bloqueia gRPC)." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Regras finas de rede e credenciais invisíveis ao agente reduzem vazamento.</span><a class="minuto" href="https://www.youtube.com/watch?v=_0SQh8a1Osk&amp;t=641s" target="_blank" rel="noopener" data-yt="_0SQh8a1Osk" data-t="641" aria-label="Assistir a partir de 10:41"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:41</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>De pets a cattle a microbes</h3>
+    <p>Antes, servidores eram pets, únicos e cuidados à mão. Com Kubernetes viraram cattle, cópias iguais e descartáveis. O palestrante prevê que agentes criem, congelem e descartem ambientes sob demanda, como um oceano de microrganismos.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/_0SQh8a1Osk/4.jpg" data-legenda="Ambientes homogêneos dão lugar a ambientes dinâmicos criados pelo agente."><img src="../img/_0SQh8a1Osk/4.jpg" alt="Slide &#39;Pets → Cattle → ???&#39;: à esquerda, pets (poucas máquinas únicas); à direita, cattle (grade de instâncias iguais); a terceira etapa está em branco." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Ambientes homogêneos dão lugar a ambientes dinâmicos criados pelo agente.</span><a class="minuto" href="https://www.youtube.com/watch?v=_0SQh8a1Osk&amp;t=950s" target="_blank" rel="noopener" data-yt="_0SQh8a1Osk" data-t="950" aria-label="Assistir a partir de 15:50"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:50</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=_0SQh8a1Osk&amp;t=422s" target="_blank" rel="noopener" data-yt="_0SQh8a1Osk" data-t="422"><strong>15 núcleos</strong><span>CPU e 15 GB de RAM se provisionar pelo pico, por sandbox</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:02<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=_0SQh8a1Osk&amp;t=796s" target="_blank" rel="noopener" data-yt="_0SQh8a1Osk" data-t="796"><strong>20 milhões</strong><span>snapshots por semana na Modal</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:16<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=_0SQh8a1Osk&amp;t=826s" target="_blank" rel="noopener" data-yt="_0SQh8a1Osk" data-t="826"><strong>2,6 milhões</strong><span>volumes criados por semana</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:46<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=_0SQh8a1Osk&amp;t=826s" target="_blank" rel="noopener" data-yt="_0SQh8a1Osk" data-t="826"><strong>10.000/s</strong><span>sandboxes criadas por segundo no caso do assistente pessoal</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:46<span class="sr">, assistir neste minuto</span></span></a>
+  </div>
+
+  <div class="casper" id="a-_0SQh8a1Osk-allow-list">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Allow list (lista de permissões (nega tudo por padrão)).</strong> Allow list é como a lista de convidados na portaria de uma festa: só entra quem tem o nome escrito, e todo o resto fica do lado de fora.</p>
+    <ol class="passos"><li>Uma allow list (lista de permissões) diz o que pode passar. Tudo o que não está na lista fica bloqueado.</li><li>Para um agente de IA, a lista costuma conter os domínios da internet que ele pode acessar, como api.github.com. Qualquer outro endereço recebe recusa.</li><li>Isso reduz o estrago quando o agente erra ou é enganado, porque ele não consegue mandar dados sensíveis para um site desconhecido.</li><li>O palestrante mostra que a lista por domínio é pouco. Os usuários querem regras por caminho e por operação, por exemplo liberar leitura de um repositório no GitHub e bloquear a exclusão.</li><li>Um padrão comum é um proxy (intermediário de rede) leve no sidecar. Ele confere cada requisição contra as regras e injeta as credenciais no envio, assim o agente nunca vê o segredo.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>AGENTE PEDE ACESSO</strong><span>requisição para um domínio e caminho</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>PROXY CONFERE A LISTA</strong><span>domínio, caminho e operação</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>INJETA CREDENCIAL</strong><span>o agente não vê o token</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>LIBERA OU BLOQUEIA</strong><span>fora da lista, a resposta é negar</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-agente-de-ia">Agente de IA</a>, <a href="../glossario.html#g-api">API</a></p>  </div>
+  <div class="casper" id="a-_0SQh8a1Osk-vibe-coding">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Vibe coding (programar descrevendo o resultado e deixando a IA escrever o código).</strong> Vibe coding é como pedir um prato ao cozinheiro dizendo só o sabor que você quer, sem olhar a receita nem entrar na cozinha.</p>
+    <ol class="passos"><li>Vibe coding (programar pela intenção) é descrever em palavras o que você quer e deixar a IA escrever o código.</li><li>A pessoa conversa com o modelo, testa o resultado e pede ajustes, quase sem ler o código gerado.</li><li>Funciona bem para protótipos e ferramentas pequenas, porque você chega rápido a algo que roda.</li><li>O palestrante desaconselha usar isso para construir uma plataforma de sandbox, por três motivos: confiabilidade em falhas raras, segurança que muda o tempo todo e escala de milhões de ambientes.</li><li>Nesses sistemas, o problema aparece nos casos extremos, e quem não entende o código gerado tem dificuldade para prever e corrigir essas falhas.</li></ol>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-llm">LLM</a>, <a href="../glossario.html#g-prompt">Prompt</a></p>  </div>
+  <div class="casper" id="a-_0SQh8a1Osk-pet-e-cattle">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Pet e cattle (máquina insubstituível e máquina descartável).</strong> Pet e cattle é como a diferença entre o cachorro da família, que tem nome e é tratado com cuidado, e o gado de uma fazenda, em que cada animal pode ser trocado por outro igual.</p>
+    <ol class="passos"><li>Servidores pet (bicho de estimação) são máquinas únicas. Cada uma tem configuração própria e alguém cuida dela à mão.</li><li>Servidores cattle (gado) são cópias iguais criadas a partir de um mesmo modelo. Se uma falha, o sistema descarta e sobe outra.</li><li>A mudança de pet para cattle veio com containers e Kubernetes, que permitem aumentar e reduzir o número de cópias de forma automática.</li><li>Hoje muitos agentes rodam no modelo cattle, em ambientes idênticos. O palestrante acha isso limitado, porque os modelos sabem lidar com ambientes variados.</li><li>Ele propõe a etapa microbes (micróbios): o próprio agente cria, congela em snapshot e descarta ambientes diferentes conforme a tarefa pede.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>PETS</strong><span>servidor único cuidado à mão</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>CATTLE</strong><span>cópias iguais e descartáveis</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>MICROBES</strong><span>agente cria e descarta ambientes</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-agente-de-ia">Agente de IA</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é de um CTO de fornecedor de sandboxes, então o argumento de não construir a própria plataforma serve ao negócio dele. Os três motivos (confiabilidade, segurança, escala) não vêm com casos de falha nem comparação de custo. Os números de escala são da própria Modal e sem metodologia. O gráfico do Ramp Inspect mostra variação de uso, mas não quanto custa a elasticidade nem quantas sandboxes foram amostradas.</p>
+  </div>
+
+  <section class="card autoteste">
+    <h3>Teste você mesmo</h3>
+    <p class="muted">Responda de cabeça antes de abrir. Lembrar com esforço é o que fixa.</p>
+    <ol class="perguntas">
+      <li><span class="tipo">lembrar</span> Por que o palestrante separa o harness do lugar onde as ferramentas rodam?
+        <details class="resposta"><summary>Ver resposta</summary><p>Para ganhar segurança e isolamento. O harness cuida do laço e das chamadas ao modelo, e as chamadas de ferramenta rodam em outro container dentro da sandbox.</p></details>
+      </li>
+      <li><span class="tipo">aplicar</span> Seu agente consulta a API do GitHub com um token. Como reduzir o risco de vazamento usando o que o talk propõe?
+        <details class="resposta"><summary>Ver resposta</summary><p>Colocar um proxy no sidecar que injeta o token na requisição, restringir domínios e caminhos permitidos, e manter o token fora do ambiente que o agente enxerga.</p></details>
+      </li>
+      <li><span class="tipo">criticar</span> Que limites existem no argumento de que não se deve fazer vibe coding da plataforma de sandbox?
+        <details class="resposta"><summary>Ver resposta</summary><p>O palestrante vende uma plataforma de sandbox, então há conflito de interesse. Ele não mostra casos de falha de plataformas caseiras nem compara custos, e os números de escala são dele mesmo.</p></details>
+      </li>
+    </ol>
+  </section>
+
+  <div class="casper experimento">
+    <span class="tag">experimente · 30 min</span>
+    <p class="exp-titulo"><strong>Medir o pico de recursos de um agente</strong></p>
+    <p class="muted">Você precisa de: Python, um script que rode uma tarefa de agente ou código de análise, a biblioteca psutil</p>
+    <ol class="passos"><li>Instale psutil e escreva um monitor que registre CPU e memória do processo a cada segundo.</li><li>Rode três tarefas diferentes do seu agente ou script de análise, cada uma com o monitor ligado.</li><li>Anote média e pico de CPU e memória de cada execução numa planilha.</li><li>Calcule quanto de recurso você pagaria se provisionasse pelo pico máximo das três.</li></ol>
+    <p><strong>Deu certo se:</strong> Você tem uma tabela com média e pico por tarefa e vê a diferença entre provisionar pelo pico e pelo uso real.</p>
+  </div>
+
+  <section class="card painel">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Meça CPU e memória de algumas execuções reais do seu agente e compare o pico com a média para ver quanto sobraria de recurso ocioso.</li><li>Liste as credenciais que seu agente lê hoje e planeje trocá-las por um proxy que injeta o segredo no envio da requisição.</li><li>Escreva uma allow list de domínios e caminhos para o seu agente e teste o que quebra ao bloquear todo o resto.</li></ul>
+  </section>
+
+  <section class="relacionados">
+    <h3 class="rotulo-mao">Conversa com outros talks</h3>
+    <ul>
+<li><span class="relacao">complementa</span> <a href="../edicoes/2026-11-04.html#v-XIHZpZtYCzo">Rodar agentes em qualquer computação do cliente</a> <span class="muted">· Os dois tratam do ambiente onde o agente roda; aqui o foco é estado persistente, recursos elásticos e rede controlada.</span></li><li><a href="../edicoes/2026-10-12.html#v-Uv0nAf_7tyU">Cérebro e mãos separados no Claude Managed Agents</a> <span class="muted">· 12 out · em comum: Harness, Pet e cattle, Sandbox</span></li><li><a href="../edicoes/2026-11-04.html#v-XIHZpZtYCzo">Rodar agentes em qualquer computação do cliente</a> <span class="muted">· 4 nov · em comum: Sandbox, Template e snapshot de sandbox</span></li><li><a href="../edicoes/2026-10-05.html#v-fz6-NS7qpZc">Operar sandboxes de agentes sem perder o controle</a> <span class="muted">· 5 out · em comum: Sandbox, Template e snapshot de sandbox</span></li>    </ul>
+  </section>
+
+  <footer class="talk-fim">
+    <div class="talk-acoes">
+      <label class="estudei js-only"><input type="checkbox" data-id="_0SQh8a1Osk"> <span class="estudei-txt">Marquei como estudado</span><span class="sr">: <span lang="en">Don&#39;t Vibe Code Your Agent Infrastructure</span></span></label>
+      <details class="levo js-only" data-levo="_0SQh8a1Osk">
+        <summary>O que eu levo deste talk</summary>
+        <label class="sr" for="nota-_0SQh8a1Osk">O que eu levo deste talk (fica só neste aparelho)</label>
+        <textarea id="nota-_0SQh8a1Osk" data-nota="_0SQh8a1Osk" rows="2" placeholder="Uma frase com as suas palavras. Fica salva só neste aparelho."></textarea>
+      </details>
+    </div>
+    <div class="talk-nav">
+      <a class="voltar-indice" href="#indice">↑ Índice</a>
+      <a class="proximo" href="#fim">Fechar a edição <span aria-hidden="true">↓</span></a>
+    </div>
+  </footer>
+</article>
+        </details>
+      </section>
+
+      <section class="fim-edicao card" id="fim" aria-labelledby="fim-titulo">
+        <h2 id="fim-titulo">Fim da edição</h2>
+        <span class="progresso" data-ids="RdQCY_-SXbA gdzsJZJ6DDs maitMe9HCvw kIlVNGZZr8o ZJjRgvjhq3M _0SQh8a1Osk"></span>
+        <div class="revise">
+          <h3>Revise</h3>
+          <p class="muted">Uma pergunta de dias anteriores. Responda de cabeça antes de abrir: é a revisão espaçada que faz o conteúdo ficar.</p>
+          <ol class="perguntas">
+            <li><span class="tipo">ontem</span> Quais três itens um trace precisa conter para ser avaliado, segundo o talk?
+              <details class="resposta"><summary>Ver resposta</summary><p>A transcrição do que foi dito, as chamadas de ferramenta (arquivos, MCPs e outras ações do agente) e a saída, como o diff de código ou o PR resultante.</p><p class="muted">Do talk <a href="../edicoes/2026-11-06.html#v-pz74r-4dGfQ">Agentes que revisam o próprio trabalho e corrigem a config</a>, edição de 6 nov.</p></details>
+            </li>
+            <li><span class="tipo">há 8 dias</span> Por que um modelo com preço por token menor pode custar mais?
+              <details class="resposta"><summary>Ver resposta</summary><p>Porque gasta mais tokens para fazer o trabalho. No benchmark de impostos, o modelo de segunda linha saiu cerca de 14% mais caro e ainda tirou nota 3% menor. Compare custo por tarefa, não por token.</p><p class="muted">Do talk <a href="../edicoes/2026-10-30.html#v-rWtbOgl5FTU">O modelo mais barato que sai mais caro</a>, edição de 30 out.</p></details>
+            </li>
+            <li><span class="tipo">há 30 dias</span> Que regra a Postman impõe a cada dado do grafo de contexto de API?
+              <details class="resposta"><summary>Ver resposta</summary><p>Cada ponto precisa apontar para uma verdade concreta, que é uma linha de código ou um trace de telemetria de produção. O LLM indexa tudo, mas o dado precisa ter lastro.</p><p class="muted">Do talk <a href="../edicoes/2026-10-08.html#v-k2ClBT4aqAg">Um mapa de APIs para agentes em microsserviços</a>, edição de 8 out.</p></details>
+            </li>
+          </ol>
+        </div>
+        <p>Termos novos no glossário:
+<a href="../glossario.html#g-allow-list">Allow list</a>, <a href="../glossario.html#g-vibe-coding">Vibe coding</a>, <a href="../glossario.html#g-pet-e-cattle">Pet e cattle</a>, <a href="../glossario.html#g-plugin">Plugin</a>, <a href="../glossario.html#g-compaction">Compaction</a>, <a href="../glossario.html#g-goal">Goal</a>, <a href="../glossario.html#g-reciprocal-rank-fusion-rrf">Reciprocal rank fusion (RRF)</a>, <a href="../glossario.html#g-re-ranker">Re-ranker</a>, <a href="../glossario.html#g-agent-teams">Agent teams</a>, <a href="../glossario.html#g-lead-bloqueante-e-lead-assincrono">Lead bloqueante e lead assíncrono</a>.
+        </p>
+        <nav class="paginacao" aria-label="Outras edições">
+<a rel="prev" href="2026-11-06.html"><span class="paginacao-dir">← Edição anterior</span><strong>Agentes que aprendem com os próprios erros</strong><span class="muted">sexta, 6 nov 2026</span></a>          <a class="voltar" href="../index.html#edicoes"><span class="paginacao-dir">Todas as edições</span><strong>Voltar ao início</strong></a>
+        </nav>
+      </section>
+    </div>
+  </div>
+
+  <div class="progresso-leitura js-only" aria-hidden="true"><i></i></div>
+  <nav class="barra-leitura js-only" aria-label="Navegação da leitura" hidden>
+    <a href="#indice" class="bl-indice">Índice</a>
+    <span class="bl-pos" aria-live="off"></span>
+    <a href="#fim" class="bl-proximo">Próximo ↓</a>
+  </nav>
+</div>
+</main>
+<footer class="rodape wrap">
+  <p>Resumos em português dos talks do canal <a href="https://www.youtube.com/@aiDotEngineer" target="_blank" rel="noopener">AI Engineer<span class="sr"> (abre em nova aba)</span></a>. Atualizado em 8 nov 2026, 07:17. <a href="../status.html">Status da rotina</a> · <a href="../feed.xml">Assinar por RSS</a></p>
+</footer>
+<script src="../app.js" defer></script>
+</body>
+</html>

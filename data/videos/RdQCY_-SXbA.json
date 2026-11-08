@@ -1,0 +1,270 @@
+{
+  "id": "RdQCY_-SXbA",
+  "titulo": "AI Can't Make Up a Number It Can't Look Up - Vinoo Ganesh, Kepler",
+  "titulo_curto": "AI Can't Make Up a Number It Can't Look Up",
+  "palestrante": "Vinoo Ganesh, Kepler",
+  "url": "https://www.youtube.com/watch?v=RdQCY_-SXbA",
+  "duracao": 1108,
+  "publicado_ts": 1794038425,
+  "edicao": "2026-11-07",
+  "tese": "Para ter números confiáveis, deixe o modelo só apontar para fatos que o código já extraiu, em vez de conferir o texto depois.",
+  "tldr": [
+    "Vinoo Ganesh, CEO da Kepler, diz que números errados vêm de três falhas: documento errado, número errado no documento certo e conta feita de cabeça pelo modelo.",
+    "A Kepler extrai cada fato com código, dá um ID a ele e deixa o modelo apenas planejar e apontar para esses IDs. Se o ponteiro não resolve, o número não aparece, e a citação é corrigida ou recusada.",
+    "A busca é larga e depois estreita (ANN mais BM25, fusão, cross-encoder), e o acesso aos documentos é limitado por cliente. Ele fecha com perguntas para fazer a qualquer fornecedor de IA."
+  ],
+  "tema": "dados-e-rag",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "Três origens de número errado",
+      "texto": "O palestrante separa o problema em três falhas: recuperar o documento errado, tirar o número errado do documento certo (por exemplo, o ano errado em um 10-K) e deixar o modelo fazer conta. Cada falha pede um conserto diferente, e um filtro no fim só pega parte delas.",
+      "t": 261,
+      "legenda": "O erro numérico tem três causas distintas, não uma só.",
+      "print": "img/RdQCY_-SXbA/0.jpg",
+      "descricao": "Slide 'Wrong numbers come from three jobs': fonte errada, número errado na fonte certa e conta de cabeça, cada falha com sua correção."
+    },
+    {
+      "titulo": "Código escreve o número, o modelo planeja",
+      "texto": "Um pré-processamento transforma dados não estruturados em um repositório estruturado, e cada fato recebe um ponteiro com ID único. O modelo planeja e pede a busca, mas só imprime um número se conseguir resolver o ponteiro. Sem ponteiro válido, o fato não sai na resposta.",
+      "t": 354,
+      "legenda": "O modelo aponta para fatos pré-extraídos em vez de gerar o número.",
+      "print": "img/RdQCY_-SXbA/1.jpg",
+      "descricao": "Slide 'Code writes every number and pointer': o modelo planeja e lê ponteiros; o código recupera, calcula e verifica cada número."
+    },
+    {
+      "titulo": "Busca larga, depois estreita",
+      "texto": "A busca combina ANN (vizinhos aproximados em vetores) e BM25, devolve até 200 documentos, funde os rankings até chegar a cerca de 60 e aplica um cross-encoder sobre consulta e trecho. Ele diz que LLMs tendem a buscar em profundidade porque buscar largo custa caro.",
+      "t": 572,
+      "legenda": "O funil de recuperação reduz centenas de candidatos a poucos documentos.",
+      "print": "img/RdQCY_-SXbA/2.jpg",
+      "descricao": "Funil de busca: até 200 candidatos, 100 de cada busca, 20 docs e 10 para o modelo; RRF com k=60 e zerank-2 como cross-encoder."
+    },
+    {
+      "titulo": "Cinco falhas de segurança na busca",
+      "texto": "Ele lista erros comuns ao montar busca de documentos: esquecer o filtro de cliente, aceitar quem afirma ser outra empresa, devolver dado desatualizado, ler direto sem passar pelas regras de busca e consultar índice não populado. A saída é escopar toda busca com segurança embutida.",
+      "t": 667,
+      "legenda": "Isolamento por cliente precisa estar na própria busca.",
+      "print": "img/RdQCY_-SXbA/3.jpg",
+      "descricao": "Cinco vazamentos entre clientes fechados em código: filtro de tenant, identidade falsa, arquivo apagado, leitura direta e índice pela metade."
+    },
+    {
+      "titulo": "Verificado, corrigido ou recusado",
+      "texto": "Os IDs de fonte são hashes. Se o modelo pede um ID que não existe, é como ler uma chave ausente em um hash map: volta nada. Por isso toda citação sai verificada, corrigida na busca ou recusada. Nos dados de produção, as recusas caíram muito, mas não a zero.",
+      "t": 946,
+      "legenda": "Recusas caíram, mas não zeraram, e há uma etapa final de checagem.",
+      "print": "img/RdQCY_-SXbA/4.jpg",
+      "descricao": "Gráfico de recusas por 100 fontes: cai de 116,6 (4 mai) para 15,4 (18 mai) e 1,4 (29 jun), após o citation framework v2."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Hallucination",
+      "traducao": "alucinação",
+      "nivel": "basico",
+      "chave": "hallucination",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Sistema determinístico",
+      "traducao": "deterministic system (mesma entrada, mesma saída)",
+      "nivel": "basico",
+      "chave": "sistema determinístico",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Grounding",
+      "traducao": "ancoragem nos dados",
+      "nivel": "intermediario",
+      "chave": "grounding",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Provenance",
+      "traducao": "proveniência (origem da informação)",
+      "nivel": "intermediario",
+      "chave": "provenance",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Busca híbrida",
+      "traducao": "combinação de keyword e semântica",
+      "nivel": "intermediario",
+      "chave": "busca híbrida",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Reciprocal rank fusion (RRF)",
+      "traducao": "fusão por posição no ranking",
+      "nivel": "avancado",
+      "chave": "reciprocal rank fusion (rrf)",
+      "analogia": "RRF é como juntar o ranking de dois jurados de um campeonato de ginástica, somando pontos pela posição que cada atleta recebeu de cada jurado.",
+      "explicacao": [
+        "Quando duas buscas diferentes devolvem duas listas de resultados, é preciso decidir uma ordem final única.",
+        "Reciprocal rank fusion (RRF, fusão por posição recíproca) junta as listas olhando só a posição de cada documento, sem comparar as notas originais.",
+        "Cada documento ganha 1 dividido por (k + posição) em cada lista, com k perto de 60, e os pontos das listas são somados.",
+        "Isso resolve um problema prático. A nota do BM25 (busca por palavra) e a similaridade de vetores usam escalas diferentes, mas a posição vale para as duas.",
+        "No talk, a Kepler parte de até 200 documentos vindos de ANN e BM25 e usa a fusão para ficar com cerca de 60 antes do re-ranker."
+      ],
+      "pre_requisitos": [
+        "Busca híbrida",
+        "RAG",
+        "Embedding"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "BUSCA ANN",
+            "nota": "lista ordenada por vetores"
+          },
+          {
+            "rotulo": "BUSCA BM25",
+            "nota": "lista ordenada por palavras"
+          },
+          {
+            "rotulo": "SOMA 1/(K+POSIÇÃO)",
+            "nota": "pontos por posição em cada lista"
+          },
+          {
+            "rotulo": "LISTA ÚNICA",
+            "nota": "cerca de 60 documentos no topo"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Re-ranker",
+      "traducao": "modelo que reordena candidatos e escolhe os melhores",
+      "nivel": "avancado",
+      "chave": "re-ranker",
+      "analogia": "Um re-ranker é como o técnico que recebe 60 nomes da peneira e assiste cada jogador em campo antes de escolher os titulares.",
+      "explicacao": [
+        "Um re-ranker (reordenador) pega uma lista curta de resultados de busca e coloca os mais úteis no topo.",
+        "A primeira busca é rápida e larga, mas erra a ordem. O re-ranker é mais lento e mais preciso, por isso roda só sobre poucos candidatos.",
+        "O tipo comum é o cross-encoder (codificador cruzado). Ele lê a pergunta e o trecho juntos e devolve uma nota de relevância para o par.",
+        "A busca por vetores compara resumos feitos separadamente. O cross-encoder enxerga as palavras da pergunta e do trecho ao mesmo tempo e pega detalhes que a busca perde.",
+        "Na Kepler, o funil busca largo com ANN e BM25, funde os rankings e aplica o cross-encoder no fim, porque o LLM sozinho tende a parar no primeiro documento."
+      ],
+      "pre_requisitos": [
+        "RAG",
+        "Busca híbrida",
+        "Embedding",
+        "LLM"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "BUSCA LARGA",
+            "nota": "até 200 candidatos rápidos"
+          },
+          {
+            "rotulo": "FUSÃO DE RANKINGS",
+            "nota": "sobram cerca de 60"
+          },
+          {
+            "rotulo": "CROSS-ENCODER",
+            "nota": "nota para cada par pergunta e trecho"
+          },
+          {
+            "rotulo": "TOPO REORDENADO",
+            "nota": "poucos trechos vão ao modelo"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Multi-tenancy",
+      "traducao": "vários clientes isolados no mesmo sistema",
+      "nivel": "intermediario",
+      "chave": "multi-tenancy",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O talk é pitch da Kepler, e o palestrante é o CEO. Ele cita a concorrência sem nomeá-la e diz que copiaram só a parte errada, sem prova. Os dados de produção aparecem em um gráfico sem valores ditos em voz alta e sem comparação com outro método. O ponteiro garante que o número existe na base, mas não que a extração do 10-K esteja correta nem que o fato escolhido responda à pergunta. O talk também não explica como a Kepler mede erro de extração.",
+  "acoes": [
+    "Revise uma ferramenta de IA que você usa com números e pergunte ao fornecedor se o modelo escreve ponteiros e se cada citação e cada conta são checadas na fonte.",
+    "Liste os três tipos de erro (documento, número, conta) nas falhas do seu sistema de RAG e conte quantas ocorrências caem em cada um.",
+    "Troque contas feitas pelo modelo por chamadas a uma função em código que recebe IDs de fatos e devolve o resultado.",
+    "Confira se toda consulta de documentos do seu sistema filtra por cliente e usuário antes da busca, e escreva um teste que tenta ler dado de outro cliente."
+  ],
+  "numeros": [
+    {
+      "valor": "US$ 270 mi",
+      "contexto": "capital de VC em camadas de verificação formal em 3 meses",
+      "t": 43
+    },
+    {
+      "valor": "80% e 31%",
+      "contexto": "execs de finanças que confiam nos números e que acham erros",
+      "t": 199
+    },
+    {
+      "valor": "até 200",
+      "contexto": "documentos devolvidos por ANN mais BM25",
+      "t": 572
+    },
+    {
+      "valor": "60",
+      "contexto": "documentos após a fusão de rankings",
+      "t": 572
+    }
+  ],
+  "rotulo": "Como impedir que a IA invente números",
+  "objetivo": "desenhar um fluxo em que o modelo cita IDs de fatos extraídos por código e nunca escreve o número sozinho",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que o modelo da Kepler não consegue imprimir um número que não existe na base?",
+      "resposta": "Porque o código extrai antes cada fato e lhe dá um ID (hash). O modelo só imprime um número se resolver o ponteiro desse ID. Se o ID não existe, nada volta, como ao ler uma chave ausente de um hash map."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você tem um assistente que responde sobre contratos e valores. Como aplicaria a ideia dos ponteiros?",
+      "resposta": "Extraia os valores dos contratos com código, guarde cada um com um ID e a fonte, e faça o modelo citar apenas IDs. Um passo em código troca o ID pelo valor e recusa qualquer ID que não resolva. Somas e comparações também rodam em código."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que o talk não prova sobre a confiabilidade desse método?",
+      "resposta": "O ponteiro garante que o número existe na base, não que a extração do documento está certa nem que é o fato certo para a pergunta. Os dados de produção vêm da própria empresa, sem valores ditos nem comparação com outro método, e as recusas não chegaram a zero."
+    }
+  ],
+  "experimento": {
+    "titulo": "Mini verificador de ponteiros em Python",
+    "minutos": 30,
+    "precisa": "Python 3 e acesso a Claude ou ChatGPT",
+    "passos": [
+      "Crie um dicionário com 5 fatos numéricos de um relatório seu, cada um com um ID curto gerado por hash (hashlib) e a fonte.",
+      "Peça ao modelo para responder uma pergunta usando apenas IDs, no formato [id:abc123], sem escrever nenhum número.",
+      "Escreva uma função que troca cada [id:...] pelo valor do dicionário e marca como recusado qualquer ID que não exista.",
+      "Repita a pergunta com a instrução de escrever os números direto e compare as duas respostas com o relatório original."
+    ],
+    "sucesso": "Toda resposta por ponteiros traz só valores presentes no dicionário, e IDs inventados aparecem como recusados."
+  },
+  "consolidado_em": "2026-11-08T10:16:40+00:00"
+}

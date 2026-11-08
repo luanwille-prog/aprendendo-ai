@@ -1,0 +1,298 @@
+{
+  "id": "ZJjRgvjhq3M",
+  "titulo": "Build Your Own Finance Agent Inside ChatGPT - Stefano Fabbri & Oliver Steffmann, OpenAI",
+  "titulo_curto": "Build Your Own Finance Agent Inside ChatGPT",
+  "palestrante": "Stefano Fabbri & Oliver Steffmann, OpenAI",
+  "url": "https://www.youtube.com/watch?v=ZJjRgvjhq3M",
+  "duracao": 6632,
+  "publicado_ts": 1794078033,
+  "edicao": "2026-11-07",
+  "tese": "Em vez de construir um app novo, empacote o fluxo como plugin dentro do ChatGPT Work ou do Codex e herde login, permissões e distribuição.",
+  "tldr": [
+    "A OpenAI mostra o ChatGPT for financial services, com dados de mercado embutidos e plugins prontos de skills e MCP, usando o fluxo de um consultor de patrimônio como exemplo.",
+    "Para ir além, o desenvolvedor usa o Codex para criar skills, plugins com dados internos e plugin extensions que mudam a interface, distribuídos pelos controles corporativos já aprovados.",
+    "Com boas skills, modelos menores chegam perto do melhor resultado; a sandbox do Codex limita o que o plugin acessa, e evals continuam sendo o gargalo para levar agentes à produção."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Plugin é skill mais conexões mais interface",
+      "texto": "Uma skill é um conjunto de arquivos markdown reutilizáveis. Quando o fluxo precisa de dados internos e login, entra o plugin, que empacota skills, servidor MCP, configuração de ferramentas e componentes de interface. Os plugins financeiros prontos servem de base: a OpenAI fala em 80% pronto e 20% de personalização.",
+      "t": 2870,
+      "legenda": "Um plugin reúne skills, MCP e interface num único pacote.",
+      "print": "img/ZJjRgvjhq3M/0.jpg",
+      "descricao": "Página 'Plugin architecture' da documentação da OpenAI, com a árvore: Plugin > Skills, MCP server (opcional) > Tools e UI resources (opcional)."
+    },
+    {
+      "titulo": "Superfícies e o que cada uma suporta",
+      "texto": "O ChatGPT for financial services só existe na interface web do ChatGPT Work e não tem acesso por CLI. Skills funcionam no Codex, o MCP local só no desktop, e as plugin extensions (mudanças de interface) ainda só no desktop. O desenvolvedor precisa escolher a superfície antes de desenhar a solução.",
+      "t": 2900,
+      "legenda": "Cada superfície aceita um conjunto diferente de recursos.",
+      "print": "img/ZJjRgvjhq3M/1.jpg",
+      "descricao": "Diagrama 'What runs where': Codex e MCP stdio no computador, plugin no ChatGPT, MCP HTTPS e sistemas internos na empresa."
+    },
+    {
+      "titulo": "Plugin extension muda a interface conforme o contexto",
+      "texto": "Uma extension adiciona um ícone, telas de configuração ou navegação próprias. Dependendo da conversa, por exemplo preparar uma reunião com cliente, aparece uma interface sua com as métricas de um sistema interno. O usuário não sai da ferramenta em que já trabalha.",
+      "t": 3407,
+      "legenda": "A extension abre uma interface própria dentro do ChatGPT.",
+      "print": "img/ZJjRgvjhq3M/2.jpg",
+      "descricao": "Página 'Plugin Extensions' com 'Sidebar apps': um item no menu lateral abre a interface MCP em tela cheia do plugin Bits & Bolts Remote."
+    },
+    {
+      "titulo": "Skill bem feita permite usar modelo menor",
+      "texto": "Para tarefas repetíveis, um contexto bom (a skill) aproxima modelos baratos do desempenho do melhor. Em sistemas multiagente, só o orquestrador precisa do modelo mais forte. O palestrante cita cerca de 95% do resultado com subagentes menores e lembra que isso exige medir com evals.",
+      "t": 2591,
+      "legenda": "Modelos menores com skill certa reduzem custo e tempo.",
+      "print": null,
+      "descricao": null
+    },
+    {
+      "titulo": "Sandbox e política central no Codex",
+      "texto": "Um arquivo config.toml, definido pelo administrador e enviado às máquinas, restringe URLs, pastas e plugins permitidos. Um recurso chamado guardian automatiza a decisão de aprovar ações sensíveis, para equilibrar segurança e comodidade do usuário.",
+      "t": 5414,
+      "legenda": "A política do administrador limita o que o plugin alcança.",
+      "print": null,
+      "descricao": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Plugin",
+      "traducao": "pacote de skills, apps e servidores MCP",
+      "nivel": "intermediario",
+      "chave": "plugin",
+      "analogia": "Um plugin é como uma maleta de técnico que já vem com o manual de serviço, as chaves do prédio do cliente e o crachá de acesso.",
+      "explicacao": [
+        "Um plugin é um pacote que você instala numa ferramenta para ela ganhar uma capacidade nova sem trocar de programa.",
+        "No ChatGPT Work e no Codex, o plugin junta skills (habilidades), que são instruções em markdown sobre como fazer uma tarefa.",
+        "Ele também traz servidores MCP (protocolo de contexto de modelo), que conectam o agente aos dados e sistemas internos da empresa.",
+        "O pacote inclui configuração de ferramentas, autenticação e, com plugin extensions (extensões), componentes que mudam a interface.",
+        "Como roda dentro de uma ferramenta já aprovada, o plugin herda login, permissões e distribuição, e os prontos da OpenAI servem de base de 80% para você personalizar os 20% restantes."
+      ],
+      "pre_requisitos": [
+        "Skill",
+        "MCP",
+        "Agente de IA"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "SKILLS",
+            "nota": "instruções reutilizáveis em markdown"
+          },
+          {
+            "rotulo": "SERVIDOR MCP",
+            "nota": "conecta dados e sistemas internos"
+          },
+          {
+            "rotulo": "INTERFACE",
+            "nota": "extension muda a tela do app"
+          },
+          {
+            "rotulo": "PLUGIN",
+            "nota": "pacote instalado no ChatGPT ou Codex"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Skill",
+      "traducao": "habilidade, julgamento institucional escrito para o agente executar",
+      "nivel": "basico",
+      "chave": "skill",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "MCP",
+      "traducao": "protocolo para conectar ferramentas a agentes",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado para rodar o código",
+      "nivel": "intermediario",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Compaction",
+      "traducao": "compactação do contexto",
+      "nivel": "avancado",
+      "chave": "compaction",
+      "analogia": "Compaction é como a secretária que, numa reunião longa, troca as páginas de anotações por um resumo enxuto para a mesa não transbordar.",
+      "explicacao": [
+        "Uma conversa longa com um assistente de IA acumula muito texto, e chega uma hora em que ele não consegue guardar tudo.",
+        "Esse limite se chama janela de contexto (context window), a quantidade máxima de tokens que o modelo lê de uma vez.",
+        "Compaction (compactação) usa um segundo modelo que relê a conversa, tira as repetições e reescreve o histórico em versão menor.",
+        "No Codex isso roda em segundo plano, e a API também oferece o recurso, então o agente segue trabalhando sem estourar o limite.",
+        "Com isso, tarefas de horas ficam viáveis, como replicar o código de um artigo de finanças quantitativas e conferir os resultados."
+      ],
+      "pre_requisitos": [
+        "Token",
+        "LLM",
+        "Agente de IA"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "CONVERSA CRESCE",
+            "nota": "histórico se aproxima do limite"
+          },
+          {
+            "rotulo": "MODELO SECUNDÁRIO",
+            "nota": "relê e remove redundâncias"
+          },
+          {
+            "rotulo": "HISTÓRICO RESUMIDO",
+            "nota": "cabe de novo na janela"
+          },
+          {
+            "rotulo": "TAREFA LONGA SEGUE",
+            "nota": "agente trabalha por horas"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Model routing",
+      "traducao": "roteamento de modelos",
+      "nivel": "intermediario",
+      "chave": "model routing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Goal",
+      "traducao": "meta com critério de término que o agente persegue por horas",
+      "nivel": "intermediario",
+      "chave": "goal",
+      "analogia": "Um goal é como o técnico de natação que define o tempo a bater e deixa o atleta repetir e ajustar o nado até chegar lá.",
+      "explicacao": [
+        "Um goal (meta) é um objetivo que você entrega ao agente para ele perseguir sozinho até atingir.",
+        "No goal mode do Codex, você define o alvo, de preferência um número, como a nota de um benchmark (teste de referência).",
+        "O agente olha o alvo, testa uma ideia, mede o resultado e tenta uma nova hipótese, num ciclo que pode durar horas.",
+        "Um exemplo é pedir que ele ajuste o prompt de outro agente para maximizar a nota num conjunto de evals.",
+        "Assim, seu trabalho passa a ser definir bem a meta e a métrica, e o agente cuida de orquestrar subagentes e tentativas."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "Eval",
+        "Prompt"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "DEFINIR ALVO",
+            "nota": "número ou score mensurável"
+          },
+          {
+            "rotulo": "TESTAR HIPÓTESE",
+            "nota": "agente muda prompt ou código"
+          },
+          {
+            "rotulo": "MEDIR",
+            "nota": "compara o score com o alvo"
+          },
+          {
+            "rotulo": "META ATINGIDA",
+            "nota": "repete até chegar ao alvo"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação",
+      "nivel": "intermediario",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "É um workshop de uma empresa que vende o produto: não há comparação com concorrentes nem dado independente. Afirmações como 95% do resultado com modelos menores e ganho de semanas em vez de meses vêm sem metodologia. O acesso a dados financeiros só funciona na web, sem CLI, e não se enxergam as estruturas internas. Dados de mercado têm atraso de 15 minutos. A qualidade dos dados vem de parcerias que o público não pode auditar.",
+  "acoes": [
+    "Liste os fluxos repetidos do seu time e marque os que cabem numa skill simples, os que precisam de dados internos (plugin com MCP) e os que exigem interface própria.",
+    "Escreva uma skill markdown para uma tarefa recorrente, com exemplos de saída anteriores como referência, e rode com um modelo menor e com o mais forte.",
+    "Compare os dois resultados com 5 a 10 casos reais e anote onde a skill precisa de correção.",
+    "Se usa Codex, revise o config.toml do seu projeto e restrinja pastas e domínios de rede ao mínimo necessário."
+  ],
+  "numeros": [
+    {
+      "valor": "15 min",
+      "contexto": "atraso dos dados de mercado embutidos",
+      "t": 502
+    },
+    {
+      "valor": "80% / 20%",
+      "contexto": "base pronta do plugin versus personalização sua",
+      "t": 693
+    },
+    {
+      "valor": "95%",
+      "contexto": "resultado com subagentes menores, segundo o palestrante",
+      "t": 2622
+    },
+    {
+      "valor": "300 tokens/s",
+      "contexto": "velocidade média do modo ultra rápido",
+      "t": 191
+    }
+  ],
+  "rotulo": "Construir plugins financeiros no ChatGPT Work e no Codex",
+  "objetivo": "escolher entre skill, plugin e plugin extension para levar um fluxo de trabalho interno ao ChatGPT Work ou ao Codex",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Qual a diferença entre uma skill e um plugin, segundo o palestrante?",
+      "resposta": "A skill é um conjunto de arquivos markdown reutilizáveis. O plugin é um pacote maior com skills, servidor MCP, configuração de ferramentas, autenticação e componentes de interface."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Seu time gera todo mês o mesmo relatório com dados de um banco interno. Que formato você escolheria e por quê?",
+      "resposta": "Um plugin com servidor MCP para o banco e uma skill com o formato do relatório e exemplos antigos. A skill sozinha não conecta ao banco nem autentica o usuário."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta para aceitar que modelos menores com boas skills dão 95% do resultado?",
+      "resposta": "Faltam tarefas, métricas e amostra. O número vem de relato dos palestrantes, que vendem o produto, sem evals publicados. Você precisa medir com seus próprios casos antes de trocar de modelo."
+    }
+  ],
+  "experimento": {
+    "titulo": "Skill com modelo menor contra modelo forte",
+    "minutos": 35,
+    "precisa": "Claude Code ou Codex, um modelo menor e um maior, e uma tarefa repetitiva sua.",
+    "passos": [
+      "Escolha uma tarefa repetida, como resumir um relatório, e junte 5 entradas reais com a saída ideal de cada uma.",
+      "Escreva uma skill em markdown com objetivo, formato da saída, regras e um exemplo.",
+      "Rode as 5 entradas no modelo forte sem a skill e no modelo menor com a skill.",
+      "Marque cada saída como aceitável ou não e some os acertos. Corrija a skill onde o modelo menor errou e repita."
+    ],
+    "sucesso": "O modelo menor com skill acerta quase tanto quanto o forte nos 5 casos, e você sabe dizer qual regra da skill corrigiu cada erro."
+  },
+  "consolidado_em": "2026-11-08T10:16:39+00:00"
+}

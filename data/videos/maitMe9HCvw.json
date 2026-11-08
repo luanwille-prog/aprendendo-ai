@@ -1,0 +1,276 @@
+{
+  "id": "maitMe9HCvw",
+  "titulo": "How to Get Frontier Coding Results at 70% Lower Cost - Nouha Dziri, Cohere",
+  "titulo_curto": "How to Get Frontier Coding Results at 70% Lower Cost",
+  "palestrante": "Nouha Dziri, Cohere",
+  "url": "https://www.youtube.com/watch?v=maitMe9HCvw",
+  "duracao": 1882,
+  "publicado_ts": 1794038433,
+  "edicao": "2026-11-07",
+  "tese": "Time de agentes rende mais quando os workers vão para a etapa gargalo da tarefa, com um lead forte que espera e workers baratos.",
+  "tldr": [
+    "Na pesquisa da Cohere, um time de agentes de código superou o agente sozinho em quase 10 pontos no ProgramBench, mas custou de 4 a 7 vezes mais.",
+    "Colocar workers só na etapa que trava a tarefa (planejamento no ProgramBench, implementação no Commit0) manteve o resultado pela metade do custo.",
+    "Um lead forte com workers de planejamento baratos chegou perto do time todo de modelos de ponta com custo cerca de 70% menor, e a troca de mensagens entre workers quase não aconteceu."
+  ],
+  "tema": "agentes",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "Time de agentes ganha do agente solo, mas custa caro",
+      "texto": "Pensar mais tempo enche a janela de contexto, e amostrar várias tentativas repete a tarefa inteira em cada uma. A alternativa é um lead que divide o trabalho e workers que começam com contexto limpo e devolvem só um relatório compacto. No ProgramBench, que pede para reimplementar um programa a partir do executável, o time com lead bloqueante bateu o solo por quase 10 pontos, com custo de 4 a 7 vezes maior.",
+      "t": 475,
+      "legenda": "O time ganha cerca de 10 pontos sobre o solo, pagando de 4 a 7 vezes mais",
+      "print": "img/maitMe9HCvw/0.jpg",
+      "descricao": "Slide 'Teams beat a single agent, at 4-7× the cost': +9.7 pts do time sobre o solo e 4-7× o custo. O gráfico mostra só o ponto do solo."
+    },
+    {
+      "titulo": "Lead bloqueante espera; lead assíncrono atropela os workers",
+      "texto": "O lead bloqueante distribui as subtarefas e espera todos responderem. O assíncrono segue trabalhando e, com prompt mínimo, constrói sobre palpites antes de os relatórios chegarem, ignora resultados ou declara a tarefa pronta com workers ainda rodando. Com um prompt detalhado de coordenação (o PIV, de planejar, implementar e verificar), o assíncrono alcança o bloqueante, ao preço de muito ajuste manual de prompt.",
+      "t": 640,
+      "legenda": "Instruções melhores sobem o solo em cerca de 6 pontos e igualam o lead assíncrono",
+      "print": "img/maitMe9HCvw/1.jpg",
+      "descricao": "Slide 'With heavy prompting, better performance': solo vai de 52,1% a 57,7% com prompt PIV; blocking e async chegam a ~63%, com setas por tipo de prompt."
+    },
+    {
+      "titulo": "Ponha os workers na etapa que trava a tarefa",
+      "texto": "Com workers só no planejamento, o time chegou à mesma recompensa do time PIV completo pela metade do custo, e cada dólar em planejamento rendeu cerca de 1,6 vez mais recompensa que nas outras etapas. No ProgramBench o gargalo é descobrir o comportamento do binário, e vários exploradores com contexto limpo veem mais que um só. No Commit0, onde a especificação e os testes já vêm prontos, o ganho apareceu ao dobrar agentes na implementação.",
+      "t": 931,
+      "legenda": "Com guia de planejamento, a delegação acontece numa rajada inicial antes de escrever código",
+      "print": "img/maitMe9HCvw/2.jpg",
+      "descricao": "Slide 'Why planning wins': 674 chamadas de planejamento numa rajada antes de qualquer código e 2,4× mais recompensa por chamada de planejamento."
+    },
+    {
+      "titulo": "O lead define o teto, os workers definem o preço",
+      "texto": "Com três variantes de modelo em ordem de capacidade e custo (Luna, Terra e Sol), trocar os workers Sol por Luna manteve quase a mesma recompensa com cerca de 60% menos custo. O inverso falhou: workers baratos não compensam um lead fraco, e Terra com workers Luna ficou abaixo de Sol sozinho (51% contra 57%). Com Sol como lead e 16 planejadores Luna, o time custou cerca de 70% menos que o time com workers em todas as etapas.",
+      "t": 1290,
+      "legenda": "Sol como lead com workers Luna empata com o time todo Sol a um custo bem menor",
+      "print": "img/maitMe9HCvw/3.jpg",
+      "descricao": "Slide 'Can the lead be cheap?': custo em escala log com Sol+Luna, Terra+Luna e Sol+Sol. Legenda: 'The lead sets the ceiling and workers set the price!'"
+    },
+    {
+      "titulo": "Os workers mandam tudo para o lead e quase não falam entre si",
+      "texto": "Mesmo com uma ferramenta para mandar mensagem a qualquer agente, 84% das mensagens foram de worker para o lead, e houve menos de uma mensagem entre workers por tarefa. Mais conversa não trouxe mais recompensa: nos modelos fortes o efeito ficou dentro do ruído e nos times Luna caiu de 4 a 7 pontos. A autora atribui parte disso ao harness, que isolava as subtarefas e não mostrava aos workers quem mais estava no ambiente.",
+      "t": 1500,
+      "legenda": "Mais mensagens entre agentes não aumentaram a recompensa",
+      "print": "img/maitMe9HCvw/4.jpg",
+      "descricao": "Slide sobre mensagens entre pares: cerca de metade das mensagens de Luna foi rejeitada; Sol envia 3,4× mais mensagens que Luna sem ganho de recompensa."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Agent teams",
+      "traducao": "times de agentes",
+      "nivel": "intermediario",
+      "chave": "agent teams",
+      "analogia": "Um time de agentes é como uma cozinha de restaurante, onde o chef divide os pratos entre os cozinheiros e cada um entrega só o prato pronto.",
+      "explicacao": [
+        "Em vez de um único assistente de IA fazer uma tarefa grande sozinho, vários assistentes dividem o trabalho.",
+        "Um agente principal, o lead (líder), recebe a tarefa, quebra em partes e entrega cada parte a um worker (agente executor).",
+        "Cada worker começa com a janela de contexto limpa, lê arquivos, roda testes e devolve só um relatório compacto ao lead.",
+        "Assim o lead guarda a visão geral sem encher o próprio contexto, e partes independentes andam em paralelo.",
+        "O custo sobe rápido, porque cada agente extra gasta tokens; no ProgramBench o time ganhou quase 10 pontos sobre o agente solo, pagando de 4 a 7 vezes mais."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "Janela de contexto",
+        "Token"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "LEAD RECEBE A TAREFA",
+            "nota": "guarda a visão geral"
+          },
+          {
+            "rotulo": "DIVIDE EM SUBTAREFAS",
+            "nota": "uma parte para cada worker"
+          },
+          {
+            "rotulo": "WORKERS EXECUTAM",
+            "nota": "cada um com contexto limpo"
+          },
+          {
+            "rotulo": "RELATÓRIOS COMPACTOS",
+            "nota": "só o resultado volta ao lead"
+          },
+          {
+            "rotulo": "LEAD JUNTA E ENTREGA",
+            "nota": "tarefa concluída"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Orchestrator e workers",
+      "traducao": "orquestrador e agentes executores",
+      "nivel": "intermediario",
+      "chave": "orchestrator e workers",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Janela de contexto",
+      "traducao": "quantidade de texto que o modelo lê de uma vez",
+      "nivel": "basico",
+      "chave": "janela de contexto",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Harness",
+      "traducao": "estrutura que roda o agente",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Lead bloqueante e lead assíncrono",
+      "traducao": "líder que espera os workers versus líder que segue trabalhando",
+      "nivel": "intermediario",
+      "chave": "lead bloqueante e lead assíncrono",
+      "analogia": "O lead bloqueante é como o professor que espera todos os grupos apresentarem antes de fechar a nota, e o assíncrono é como o professor que fecha a nota enquanto alguns grupos ainda falam.",
+      "explicacao": [
+        "Quando um agente líder distribui tarefas para outros agentes, ele precisa decidir o que faz enquanto os outros trabalham.",
+        "O lead bloqueante (blocking lead) entrega as subtarefas e fica parado até todos os workers responderem.",
+        "O lead assíncrono (async lead) segue trabalhando, acompanha os workers e pode mandar correções no meio do caminho.",
+        "Com prompt mínimo, o assíncrono constrói sobre palpites, ignora relatórios que chegam tarde ou declara a tarefa pronta com workers rodando, e o trabalho deles se perde.",
+        "Com um prompt detalhado de coordenação (PIV, de planejar, implementar e verificar), o assíncrono aprende quando esperar e alcança o bloqueante, ao preço de muito ajuste manual de prompt."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "Prompt"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "LEAD DELEGA",
+            "nota": "subtarefas vão aos workers"
+          },
+          {
+            "rotulo": "BLOQUEANTE ESPERA",
+            "nota": "só segue com todos os relatórios"
+          },
+          {
+            "rotulo": "ASSÍNCRONO SEGUE",
+            "nota": "trabalha e supervisiona em paralelo"
+          },
+          {
+            "rotulo": "RISCO DO ASSÍNCRONO",
+            "nota": "age antes dos relatórios chegarem"
+          },
+          {
+            "rotulo": "RESULTADO CONSOLIDADO",
+            "nota": "PIV iguala os dois modos"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Benchmark",
+      "traducao": "teste padronizado de desempenho",
+      "nivel": "basico",
+      "chave": "benchmark",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Ablation study",
+      "traducao": "estudo de ablação, que testa uma variável por vez",
+      "nivel": "intermediario",
+      "chave": "ablation study",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Pareto frontier",
+      "traducao": "fronteira de Pareto (melhor troca entre custo e precisão)",
+      "nivel": "avancado",
+      "chave": "pareto frontier",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "É pesquisa da própria Cohere, com pouco interesse comercial direto, mas os resultados vêm de dois benchmarks e os números do Commit0 ficam no apêndice do artigo, sem aparecer no talk. Os 70% de economia comparam com o time de workers em todas as etapas, e não com o agente solo. O prompt PIV levou muito ajuste manual, o que mistura efeito do time com efeito das instruções. O teto de 16 workers veio de limite de orçamento, e a falta de conversa entre workers pode ser efeito do harness, como a autora admite.",
+  "acoes": [
+    "Antes de criar subagentes numa tarefa longa, escreva qual etapa trava o trabalho (descoberta, implementação ou verificação) e delegue só essa.",
+    "Configure seus subagentes de exploração com um modelo mais barato e mantenha o modelo mais forte no agente principal.",
+    "Meça tokens e custo de uma mesma tarefa com agente solo e com subagentes, e anote a diferença de resultado ao lado do custo.",
+    "No prompt do agente principal, mande esperar o retorno de todos os subagentes antes de seguir e defina em que pasta cada um pode escrever."
+  ],
+  "numeros": [
+    {
+      "valor": "4 a 7x",
+      "contexto": "custo do time de agentes em relação ao agente solo",
+      "t": 468
+    },
+    {
+      "valor": "1,6x",
+      "contexto": "recompensa por dólar no planejamento frente às outras etapas",
+      "t": 809
+    },
+    {
+      "valor": "70%",
+      "contexto": "economia de 16 planejadores baratos frente a workers em todas as etapas",
+      "t": 1338
+    },
+    {
+      "valor": "84%",
+      "contexto": "mensagens que foram de worker para o lead",
+      "t": 1435
+    }
+  ],
+  "rotulo": "Onde colocar agentes extras num time de agentes de código",
+  "objetivo": "decidir em qual etapa de uma tarefa longa de código vale delegar a subagentes e qual modelo usar no lead e nos workers",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "No ProgramBench, em qual etapa os workers extras mais compensaram, e por quê?",
+      "resposta": "No planejamento e exploração. O agente só recebe o executável e a documentação, então descobrir o comportamento do programa é o gargalo, e vários exploradores com contexto limpo cobrem mais casos e devolvem relatórios compactos ao lead."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você vai pedir a um agente de código para migrar um módulo grande com testes já escritos. Onde colocaria subagentes e qual modelo usaria em cada papel?",
+      "resposta": "Com a especificação e os testes prontos, o gargalo tende a ser a implementação, como no Commit0. Dividiria a implementação em partes independentes para os workers, deixaria o modelo mais forte como lead e testaria workers mais baratos, conferindo se a recompensa se mantém."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que a conclusão de que mensagens entre workers não ajudam merece cautela?",
+      "resposta": "O harness isolava as subtarefas e não mostrava aos workers quem mais estava no ambiente, então havia pouco motivo para conversar. Os testes cobriram só dois benchmarks e até 16 workers. A própria autora diz que times maiores devem precisar dessa comunicação."
+    }
+  ],
+  "experimento": {
+    "titulo": "Exploração delegada a subagentes baratos no Claude Code",
+    "minutos": 40,
+    "precisa": "Claude Code e um repositório público de tamanho médio que você não conhece",
+    "passos": [
+      "Peça ao Claude Code, sozinho, um plano de onde mudar o código para adicionar um recurso pequeno, e anote os tokens e o custo exibidos ao fim.",
+      "Crie um subagente de exploração em .claude/agents com um modelo mais barato (por exemplo, Haiku) e instrução de devolver só um relatório curto com arquivos e funções relevantes.",
+      "Numa sessão nova, peça o mesmo plano mandando o agente principal disparar três desses subagentes em partes diferentes do repositório e esperar todos antes de planejar.",
+      "Compare os dois planos lado a lado: arquivos certos encontrados, casos esquecidos, tokens e custo."
+    ],
+    "sucesso": "Você tem uma tabela com custo e qualidade dos dois planos e sabe dizer se a exploração delegada achou mais pontos relevantes por real gasto."
+  },
+  "consolidado_em": "2026-11-08T10:16:39+00:00"
+}

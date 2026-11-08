@@ -1,0 +1,210 @@
+{
+  "id": "kIlVNGZZr8o",
+  "titulo": "How Agents Cut Hour-Long Data Checks to 5 Minutes - Amol Kapoor & Clifford Ressel, Nori Agentic",
+  "titulo_curto": "How Agents Cut Hour-Long Data Checks to 5 Minutes",
+  "palestrante": "Amol Kapoor & Clifford Ressel, Nori Agentic",
+  "url": "https://www.youtube.com/watch?v=kIlVNGZZr8o",
+  "duracao": 1174,
+  "publicado_ts": 1794034818,
+  "edicao": "2026-11-07",
+  "tese": "Agente na nuvem investiga cada mudança nos dados, cita fontes e deixa ao humano só o sim ou não. Meta realista: 95% de automação.",
+  "tldr": [
+    "Ativos privados vivem em PDFs, e-mails e anotações, então o banco mestre de ativos (security master) de um gestor de investimentos exige muita checagem manual.",
+    "Num gestor Fortune 200, cada célula alterada custava cerca de uma hora de análise humana. Um cloud agent agora investiga a mudança, cita fontes, recomenda manter ou descartar e avisa o dono no Slack, o que reduz o trabalho humano a uns 5 minutos.",
+    "O agente ganha conhecimento de domínio por instruções em texto simples, roda em infraestrutura genérica e mantém um humano no circuito, com as lições de colaboração com especialistas, 95% de automação e menor custo da complexidade acidental."
+  ],
+  "tema": "agentes",
+  "complexidade": 2,
+  "ideias": [
+    {
+      "titulo": "Ativos privados quebram o modelo de identificadores",
+      "texto": "Ações públicas como a do Google têm identificadores compartilhados (ticker, ISIN, CUSIP, FIGI), então o código consegue mapear qualquer dado de entrada. Um empréstimo para uma usina ou um terreno não tem identificador comum. O ativo é definido só pelos documentos, e o volume de dados cresce na proporção do número de ativos.",
+      "t": 476,
+      "legenda": "Com identificadores compartilhados, o código mapeia o dado sozinho.",
+      "print": "img/kIlVNGZZr8o/0.jpg",
+      "descricao": "Slide 'Public data maps cleanly': secmaster da Alphabet com uma linha por listagem (ISIN, CUSIP, venue, ticker GOOGL/GOOG/ABEA) e feed alternativo só com nome"
+    },
+    {
+      "titulo": "O problema: uma hora por célula alterada",
+      "texto": "O gestor compara a tabela dia a dia. Com 50 mil ativos e cerca de 200 colunas, mesmo mudanças raras geram muitas células por dia. Cada uma ia para uma equipe que conferia documentos e fontes para decidir se a mudança estava certa, em média uma hora por célula.",
+      "t": 664,
+      "legenda": "Cada célula alterada ia para uma equipe conferir à mão.",
+      "print": "img/kIlVNGZZr8o/1.jpg",
+      "descricao": "Slide do estudo de caso: tabela de 50.000 ativos por 200 colunas, 10M de células, 47 alteradas no dia 1, com a mudança diária 'day-over-day'"
+    },
+    {
+      "titulo": "O agente monta o caso, o humano decide",
+      "texto": "A cada mudança, um cloud agent sobe sozinho, roda um modelo open source implantado no ambiente do cliente e usa Box, APIs públicas e parte do e-mail. Ele explica a mudança, traz citações, recomenda manter ou descartar e avisa o dono da célula no Slack. O humano só responde sim ou não, em cerca de 5 minutos.",
+      "t": 790,
+      "legenda": "O agente reúne evidências e o humano só aprova ou rejeita.",
+      "print": "img/kIlVNGZZr8o/2.jpg",
+      "descricao": "Slide 'Cloud agent triage': agente lê a mudança na célula do Parcel 7 (Holdco A para Holdco B) e usa Box, Bloomberg e email, avisando o dono"
+    },
+    {
+      "titulo": "Conhecimento de domínio em arquivos de texto",
+      "texto": "O agente aprende como um analista novo, por instruções escritas em inglês simples sobre onde ficam os documentos, quais fontes confiar e como julgar uma mudança. Isso vai em arquivos markdown como skills ou AGENTS.md, sobre um agente genérico como Claude Code ou Open Code. A maior parte da customização vem de configs e credenciais do ambiente.",
+      "t": 911,
+      "legenda": "Mudar o comportamento do agente é editar texto, não reescrever código.",
+      "print": "img/kIlVNGZZr8o/3.jpg",
+      "descricao": "Slide com AGENTS.md: 'Secmaster triage', 'Box deal folder first', 'Bloomberg wins on prices', 'Flag ownership changes', ligado ao agente e ao revisor"
+    },
+    {
+      "titulo": "Uma infraestrutura para vários agentes",
+      "texto": "O agente do security master deveria rodar na mesma infraestrutura do agente de auditoria ou de code review. Cada um muda em instruções, ferramentas, gatilhos e contexto, que pertencem à empresa. Orquestração, segurança e integrações ficam iguais. Os palestrantes defendem que um fornecedor cuide dessa camada, o que também é o produto deles.",
+      "t": 1003,
+      "legenda": "Instruções e tools mudam por tarefa, a infraestrutura é comum.",
+      "print": "img/kIlVNGZZr8o/4.jpg",
+      "descricao": "Slide 'Use flexible agent infrastructure': quatro agentes (secmaster triage, reconciliation, doc intake, reporting) sobre a mesma plataforma de agentes"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Security master",
+      "traducao": "banco mestre de ativos, fonte de verdade dos instrumentos financeiros",
+      "nivel": "basico",
+      "chave": "security master",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Cloud agent",
+      "traducao": "agente na nuvem, que roda em ambiente remoto e dispara sozinho",
+      "nivel": "basico",
+      "chave": "cloud agent",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Human in the loop",
+      "traducao": "humano no circuito de validação",
+      "nivel": "basico",
+      "chave": "human in the loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Skill",
+      "traducao": "habilidade, julgamento institucional escrito para o agente executar",
+      "nivel": "intermediario",
+      "chave": "skill",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "CLAUDE.md / AGENTS.md",
+      "traducao": "arquivo de instruções carregado no contexto do agente",
+      "nivel": "intermediario",
+      "chave": "claude.md / agents.md",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Complexidade essencial e acidental",
+      "traducao": "essential and accidental complexity (Fred Brooks)",
+      "nivel": "intermediario",
+      "chave": "complexidade essencial e acidental",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "On premise",
+      "traducao": "rodar nos próprios servidores",
+      "nivel": "basico",
+      "chave": "on premise",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Golden source of truth",
+      "traducao": "fonte de verdade definida como correta",
+      "nivel": "intermediario",
+      "chave": "golden source of truth",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é pitch da Nori Agentic, que vende a camada de cloud agents e defende que um fornecedor a controle. O corte de uma hora para 5 minutos vem de um único cliente, sem método de medição, sem amostra e sem taxa de erro do agente. Não se sabe quantas recomendações o humano reverte, nem se aprovar rápido vira aprovação automática. Citações do agente também não são a prova de que a fonte esteja certa.",
+  "acoes": [
+    "Liste no seu trabalho uma tarefa de conferência manual que consome horas e anote o tempo médio por item, para ter um valor de base.",
+    "Escreva em markdown uma instrução de uma página para essa tarefa, com onde ficam os documentos, quais fontes confiar e como julgar um item.",
+    "Peça a um agente que entregue sempre explicação, citações e recomendação de manter ou descartar, e compare o veredicto dele com o seu em 10 itens reais."
+  ],
+  "numeros": [
+    {
+      "valor": "US$ 240 bilhões",
+      "contexto": "volume de secundárias em 2025, alta de 50% sobre 2024",
+      "t": 31
+    },
+    {
+      "valor": "US$ 32 trilhões",
+      "contexto": "projeção de ativos alternativos sob gestão em 2030",
+      "t": 62
+    },
+    {
+      "valor": "50 mil x 200",
+      "contexto": "ativos por colunas na tabela do exemplo",
+      "t": 664
+    },
+    {
+      "valor": "1 h para 5 min",
+      "contexto": "trabalho humano por célula alterada, segundo o palestrante",
+      "t": 850
+    }
+  ],
+  "rotulo": "Agentes na nuvem que checam dados de ativos privados",
+  "objetivo": "desenhar um fluxo em que um agente investiga mudanças em dados, cita fontes e deixa a decisão final a um humano",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais etapas o agente executa a cada mudança detectada na tabela do gestor de ativos?",
+      "resposta": "Ele sobe sozinho, investiga a origem da mudança com Box, APIs públicas e parte do e-mail, monta uma explicação com citações, recomenda manter ou descartar e avisa o dono da célula no Slack."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Pense numa tarefa de conferência de dados no seu trabalho. Como você a adaptaria ao padrão do talk?",
+      "resposta": "Detectar a mudança por comparação diária, disparar um agente com instruções em markdown e acesso às fontes, exigir explicação, citações e recomendação, e enviar ao dono só para aprovar ou rejeitar."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta para confiar na redução de uma hora para 5 minutos?",
+      "resposta": "Faltam medição independente, mais de um cliente, taxa de acerto do agente e de reversões pelo humano, e o risco de aprovação por hábito. Os palestrantes vendem a plataforma, então há conflito de interesse."
+    }
+  ],
+  "experimento": {
+    "titulo": "Agente que audita uma mudança em dados com citações",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT, uma planilha com duas versões de uma tabela e 2 ou 3 documentos de apoio",
+    "passos": [
+      "Crie uma planilha pequena de 10 linhas e outra versão com 5 células alteradas, 2 delas erradas de propósito.",
+      "Escreva um prompt em markdown com as fontes confiáveis, as regras de julgamento e o formato de saída com explicação, citação e recomendação de manter ou descartar.",
+      "Envie as mudanças e os documentos ao modelo, um item por vez, e leia as recomendações.",
+      "Compare com seu gabarito e conte acertos e itens em que a citação não sustenta a conclusão."
+    ],
+    "sucesso": "O modelo sinaliza as 2 células erradas, cada recomendação traz citação verificável e você decide cada item em poucos minutos."
+  },
+  "consolidado_em": "2026-11-08T10:16:40+00:00"
+}

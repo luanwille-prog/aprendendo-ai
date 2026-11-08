@@ -1,0 +1,270 @@
+{
+  "id": "_0SQh8a1Osk",
+  "titulo": "Don't Vibe Code Your Agent Infrastructure - Akshat Bubna, Modal",
+  "titulo_curto": "Don't Vibe Code Your Agent Infrastructure",
+  "palestrante": "Akshat Bubna, Modal",
+  "url": "https://www.youtube.com/watch?v=_0SQh8a1Osk",
+  "duracao": 1055,
+  "publicado_ts": 1794081613,
+  "edicao": "2026-11-07",
+  "tese": "Agentes precisam de primitivas de infraestrutura sólidas: workspace, estado, recursos elásticos, rede controlada. Construir isso com vibe coding custa caro.",
+  "tldr": [
+    "O CTO da Modal usa uma planilha em que cada célula é um agente para listar o que a infraestrutura precisa dar: workspace isolado, estado que persiste sem pagar computação ociosa, recursos elásticos, GPUs, arquivos compartilhados e controle de rede.",
+    "Ele separa o harness (o ciclo do agente) da sandbox onde as ferramentas rodam, e defende que a segurança exige controlar domínios, caminhos e credenciais que o agente nunca enxerga.",
+    "Ele argumenta contra montar a própria plataforma de sandbox por vibe coding, por causa de confiabilidade, segurança e escala, e prevê agentes que criam e descartam ambientes por conta própria."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "Harness separado da sandbox",
+      "texto": "O harness chama o modelo, executa o laço e decide as ferramentas. As chamadas de ferramenta rodam em outro container dentro da sandbox, por segurança e isolamento. Um sidecar e um armazenamento compartilhado completam o desenho, e tudo precisa subir em segundos para milhares de células.",
+      "t": 106,
+      "legenda": "Cada agente roda numa sandbox com harness e ferramentas em containers separados.",
+      "print": "img/_0SQh8a1Osk/0.jpg",
+      "descricao": "Diagrama da sandbox: agent harness (planeja, chama o modelo, escolhe ferramenta) liga ao sidecar de tool execution; shared volumes embaixo."
+    },
+    {
+      "titulo": "Estado persistente sem computação ociosa",
+      "texto": "No caso do Basis, o agente espera dias pela resposta do contador. O estado fica guardado e a computação só liga quando há trabalho. Há três formas de persistir: snapshot do sistema de arquivos inteiro, de um diretório ou um volume compartilhado.",
+      "t": 328,
+      "legenda": "Persistir o estado por dias e pagar só quando o agente trabalha.",
+      "print": "img/_0SQh8a1Osk/1.jpg",
+      "descricao": "Slide 'Agents need their work to persist': linha STATE contínua sob COMPUTE, ociosa em 'Accountant responds' (waiting for input)."
+    },
+    {
+      "titulo": "Uso de recursos varia muito",
+      "texto": "Os dados do Ramp Inspect mostram que CPU e memória oscilam entre sandboxes e dentro da mesma sandbox. Provisionar pelo pico daria cerca de 15 núcleos e 15 GB para cada uma, o que não fecha a conta. A saída é pedir recursos sob demanda e pagar só pela duração do uso.",
+      "t": 422,
+      "legenda": "O pico varia tanto que provisionar por ele desperdiça recursos.",
+      "print": "img/_0SQh8a1Osk/2.jpg",
+      "descricao": "Gráficos Ramp Inspect: CPU (cores) e memória (GiB) de 57 sandboxes oscilam, com picos isolados de CPU perto de 15 cores e de memória perto de 12 GiB."
+    },
+    {
+      "titulo": "Controle de rede além da lista de domínios",
+      "texto": "Controlar IPs de entrada e domínios de saída não basta. Usuários querem regras por caminho e por operação em serviços como GitHub e Datadog. Um padrão é um proxy leve próprio no sidecar, que também injeta credenciais para que o agente nunca as veja.",
+      "t": 641,
+      "legenda": "Regras finas de rede e credenciais invisíveis ao agente reduzem vazamento.",
+      "print": "img/_0SQh8a1Osk/3.jpg",
+      "descricao": "Proxy sidecar com regras de egress: Datadog (GET e POST em endpoints liberados), GitHub (bloqueia mutations GraphQL), Modal (bloqueia gRPC)."
+    },
+    {
+      "titulo": "De pets a cattle a microbes",
+      "texto": "Antes, servidores eram pets, únicos e cuidados à mão. Com Kubernetes viraram cattle, cópias iguais e descartáveis. O palestrante prevê que agentes criem, congelem e descartem ambientes sob demanda, como um oceano de microrganismos.",
+      "t": 950,
+      "legenda": "Ambientes homogêneos dão lugar a ambientes dinâmicos criados pelo agente.",
+      "print": "img/_0SQh8a1Osk/4.jpg",
+      "descricao": "Slide 'Pets → Cattle → ???': à esquerda, pets (poucas máquinas únicas); à direita, cattle (grade de instâncias iguais); a terceira etapa está em branco."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado para rodar o código",
+      "nivel": "basico",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Harness",
+      "traducao": "estrutura que roda o agente",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Sidecar",
+      "traducao": "processo auxiliar que escuta eventos externos",
+      "nivel": "avancado",
+      "chave": "sidecar",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Template e snapshot de sandbox",
+      "traducao": "modelo de VM congelada com memória e disco",
+      "nivel": "intermediario",
+      "chave": "template e snapshot de sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Allow list",
+      "traducao": "lista de permissões (nega tudo por padrão)",
+      "nivel": "intermediario",
+      "chave": "allow list",
+      "analogia": "Allow list é como a lista de convidados na portaria de uma festa: só entra quem tem o nome escrito, e todo o resto fica do lado de fora.",
+      "explicacao": [
+        "Uma allow list (lista de permissões) diz o que pode passar. Tudo o que não está na lista fica bloqueado.",
+        "Para um agente de IA, a lista costuma conter os domínios da internet que ele pode acessar, como api.github.com. Qualquer outro endereço recebe recusa.",
+        "Isso reduz o estrago quando o agente erra ou é enganado, porque ele não consegue mandar dados sensíveis para um site desconhecido.",
+        "O palestrante mostra que a lista por domínio é pouco. Os usuários querem regras por caminho e por operação, por exemplo liberar leitura de um repositório no GitHub e bloquear a exclusão.",
+        "Um padrão comum é um proxy (intermediário de rede) leve no sidecar. Ele confere cada requisição contra as regras e injeta as credenciais no envio, assim o agente nunca vê o segredo."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "API"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "AGENTE PEDE ACESSO",
+            "nota": "requisição para um domínio e caminho"
+          },
+          {
+            "rotulo": "PROXY CONFERE A LISTA",
+            "nota": "domínio, caminho e operação"
+          },
+          {
+            "rotulo": "INJETA CREDENCIAL",
+            "nota": "o agente não vê o token"
+          },
+          {
+            "rotulo": "LIBERA OU BLOQUEIA",
+            "nota": "fora da lista, a resposta é negar"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Recursive self-improvement",
+      "traducao": "autoaperfeiçoamento recursivo",
+      "nivel": "avancado",
+      "chave": "recursive self-improvement",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Vibe coding",
+      "traducao": "programar descrevendo o resultado e deixando a IA escrever o código",
+      "nivel": "basico",
+      "chave": "vibe coding",
+      "analogia": "Vibe coding é como pedir um prato ao cozinheiro dizendo só o sabor que você quer, sem olhar a receita nem entrar na cozinha.",
+      "explicacao": [
+        "Vibe coding (programar pela intenção) é descrever em palavras o que você quer e deixar a IA escrever o código.",
+        "A pessoa conversa com o modelo, testa o resultado e pede ajustes, quase sem ler o código gerado.",
+        "Funciona bem para protótipos e ferramentas pequenas, porque você chega rápido a algo que roda.",
+        "O palestrante desaconselha usar isso para construir uma plataforma de sandbox, por três motivos: confiabilidade em falhas raras, segurança que muda o tempo todo e escala de milhões de ambientes.",
+        "Nesses sistemas, o problema aparece nos casos extremos, e quem não entende o código gerado tem dificuldade para prever e corrigir essas falhas."
+      ],
+      "pre_requisitos": [
+        "LLM",
+        "Prompt"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Pet e cattle",
+      "traducao": "máquina insubstituível e máquina descartável",
+      "nivel": "intermediario",
+      "chave": "pet e cattle",
+      "analogia": "Pet e cattle é como a diferença entre o cachorro da família, que tem nome e é tratado com cuidado, e o gado de uma fazenda, em que cada animal pode ser trocado por outro igual.",
+      "explicacao": [
+        "Servidores pet (bicho de estimação) são máquinas únicas. Cada uma tem configuração própria e alguém cuida dela à mão.",
+        "Servidores cattle (gado) são cópias iguais criadas a partir de um mesmo modelo. Se uma falha, o sistema descarta e sobe outra.",
+        "A mudança de pet para cattle veio com containers e Kubernetes, que permitem aumentar e reduzir o número de cópias de forma automática.",
+        "Hoje muitos agentes rodam no modelo cattle, em ambientes idênticos. O palestrante acha isso limitado, porque os modelos sabem lidar com ambientes variados.",
+        "Ele propõe a etapa microbes (micróbios): o próprio agente cria, congela em snapshot e descarta ambientes diferentes conforme a tarefa pede."
+      ],
+      "pre_requisitos": [
+        "Agente de IA"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PETS",
+            "nota": "servidor único cuidado à mão"
+          },
+          {
+            "rotulo": "CATTLE",
+            "nota": "cópias iguais e descartáveis"
+          },
+          {
+            "rotulo": "MICROBES",
+            "nota": "agente cria e descarta ambientes"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é de um CTO de fornecedor de sandboxes, então o argumento de não construir a própria plataforma serve ao negócio dele. Os três motivos (confiabilidade, segurança, escala) não vêm com casos de falha nem comparação de custo. Os números de escala são da própria Modal e sem metodologia. O gráfico do Ramp Inspect mostra variação de uso, mas não quanto custa a elasticidade nem quantas sandboxes foram amostradas.",
+  "acoes": [
+    "Meça CPU e memória de algumas execuções reais do seu agente e compare o pico com a média para ver quanto sobraria de recurso ocioso.",
+    "Liste as credenciais que seu agente lê hoje e planeje trocá-las por um proxy que injeta o segredo no envio da requisição.",
+    "Escreva uma allow list de domínios e caminhos para o seu agente e teste o que quebra ao bloquear todo o resto."
+  ],
+  "numeros": [
+    {
+      "valor": "15 núcleos",
+      "contexto": "CPU e 15 GB de RAM se provisionar pelo pico, por sandbox",
+      "t": 422
+    },
+    {
+      "valor": "20 milhões",
+      "contexto": "snapshots por semana na Modal",
+      "t": 796
+    },
+    {
+      "valor": "2,6 milhões",
+      "contexto": "volumes criados por semana",
+      "t": 826
+    },
+    {
+      "valor": "10.000/s",
+      "contexto": "sandboxes criadas por segundo no caso do assistente pessoal",
+      "t": 826
+    }
+  ],
+  "rotulo": "O que agentes exigem da infraestrutura de sandbox",
+  "objetivo": "listar as primitivas de infraestrutura que um agente precisa e decidir quando comprar uma plataforma de sandbox em vez de construir",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que o palestrante separa o harness do lugar onde as ferramentas rodam?",
+      "resposta": "Para ganhar segurança e isolamento. O harness cuida do laço e das chamadas ao modelo, e as chamadas de ferramenta rodam em outro container dentro da sandbox."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Seu agente consulta a API do GitHub com um token. Como reduzir o risco de vazamento usando o que o talk propõe?",
+      "resposta": "Colocar um proxy no sidecar que injeta o token na requisição, restringir domínios e caminhos permitidos, e manter o token fora do ambiente que o agente enxerga."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites existem no argumento de que não se deve fazer vibe coding da plataforma de sandbox?",
+      "resposta": "O palestrante vende uma plataforma de sandbox, então há conflito de interesse. Ele não mostra casos de falha de plataformas caseiras nem compara custos, e os números de escala são dele mesmo."
+    }
+  ],
+  "experimento": {
+    "titulo": "Medir o pico de recursos de um agente",
+    "minutos": 30,
+    "precisa": "Python, um script que rode uma tarefa de agente ou código de análise, a biblioteca psutil",
+    "passos": [
+      "Instale psutil e escreva um monitor que registre CPU e memória do processo a cada segundo.",
+      "Rode três tarefas diferentes do seu agente ou script de análise, cada uma com o monitor ligado.",
+      "Anote média e pico de CPU e memória de cada execução numa planilha.",
+      "Calcule quanto de recurso você pagaria se provisionasse pelo pico máximo das três."
+    ],
+    "sucesso": "Você tem uma tabela com média e pico por tarefa e vê a diferença entre provisionar pelo pico e pelo uso real."
+  },
+  "consolidado_em": "2026-11-08T10:16:39+00:00"
+}
