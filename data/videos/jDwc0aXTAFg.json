@@ -1,0 +1,248 @@
+{
+  "id": "jDwc0aXTAFg",
+  "titulo": "Your Company Has No Model of Itself. Agents Can Build One - Joao Wenzel, Citadel Securities",
+  "titulo_curto": "Your Company Has No Model of Itself. Agents Can Build One",
+  "palestrante": "Joao Wenzel, Citadel Securities",
+  "url": "https://www.youtube.com/watch?v=jDwc0aXTAFg",
+  "duracao": 1136,
+  "publicado_ts": 1794121236,
+  "edicao": "2026-11-08",
+  "tese": "Memória institucional para agentes exige tratar crenças como estimativas que envelhecem, ganham evidência e são cobradas contra o que acontece depois.",
+  "tldr": [
+    "Joao Wenzel, da Citadel Securities, descreve um sistema de agentes que lê decks de status, Slack, PRs e traces para montar um registro longitudinal do que acontece na empresa.",
+    "Ele empresta da robótica o state estimator (estimador de estado) e organiza o sistema num laço de cinco etapas: atualizar, envelhecer, observar, avaliar e corrigir, com RAG simples considerado insuficiente.",
+    "O backtest mostra que projetos verdes marcados pelo agente tinham o dobro de chance de virar amarelo ou vermelho, e o autor admite problemas abertos como identificadores sem chave comum."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Evidência de cima para baixo e de baixo para cima",
+      "texto": "Decks, documentos de estratégia e relatórios de status são limpos, mas carregam opinião de quem os escreve, o que gera projetos melancia (verdes por fora, vermelhos por dentro). Reuniões, Slack, mudanças de código e traces de agentes são ruidosos, mas têm sinal valioso. O modelo é o ponto onde as duas fontes se encontram.",
+      "t": 130,
+      "legenda": "As duas fontes de evidência e o lugar onde se encontram",
+      "print": null,
+      "descricao": null
+    },
+    {
+      "titulo": "Extrair um deck combinando XML e visão",
+      "texto": "Ler só o XML do PowerPoint não diz o que é verde. Mandar só uma captura para um modelo de visão faz ele errar números pequenos. Combinar o XML com a saída do modelo de visão dá a imagem verdadeira, e o histórico mensal permite rastrear projetos que mudam de nome.",
+      "t": 260,
+      "legenda": "Duas leituras do mesmo slide se completam",
+      "print": "img/jDwc0aXTAFg/1.jpg",
+      "descricao": "Tabela 'Platform Services · Project status' (3 projetos On track, 1 At risk), com as opções 'Parse the file' e 'Show a model the picture'."
+    },
+    {
+      "titulo": "O laço: atualizar, envelhecer, observar, avaliar, corrigir",
+      "texto": "O estimador de estado vira cinco etapas. Atualizar grava o que foi reportado e o que a evidência indica. Envelhecer reduz a confiança em fatos antigos. Observar usa agentes especialistas. Avaliar compara a previsão com o que ocorreu. Corrigir recebe feedback humano. O modelo propõe, e código e pessoas decidem o que entra no registro.",
+      "t": 375,
+      "legenda": "O desenho central do sistema em cinco etapas",
+      "print": "img/jDwc0aXTAFg/2.jpg",
+      "descricao": "Diagrama 'A world model is a loop you can grade': Update, Age, Observe, Grade e Correct em laço, com Correct vindo de uma pessoa."
+    },
+    {
+      "titulo": "Backtest mostra o valor do sinal",
+      "texto": "Com um snapshot de fevereiro, o time comparou o que o agente sinalizou com o que aconteceu depois. Projetos verdes mas sinalizados viraram amarelo ou vermelho com o dobro da frequência. O resultado não prevê o problema exato, mas indica onde olhar. Essa avaliação só funciona porque os meses anteriores nunca são reescritos.",
+      "t": 700,
+      "legenda": "Sinalizados pelo agente pioram com o dobro da frequência",
+      "print": "img/jDwc0aXTAFg/3.jpg",
+      "descricao": "Gráfico 'The future is the label': projetos de 2024 a 2026 em faixas, com o marco 'What it flagged in Feb 2026' e o resultado depois (Then)."
+    },
+    {
+      "titulo": "Perguntar regra, não fato, e decidir por risco",
+      "texto": "Uma correção humana que trata de um fato conserta uma saída. Uma que trata de uma regra melhora todas as saídas que a regra cobre. No fim, Wenzel propõe aplicar automaticamente quando o modelo tem certeza e o risco é baixo, esperar evidência quando há dúvida e risco baixo, e escolher com cuidado quem perguntar quando o risco é alto.",
+      "t": 1030,
+      "legenda": "Quando aplicar, esperar ou perguntar a uma pessoa",
+      "print": "img/jDwc0aXTAFg/4.jpg",
+      "descricao": "Matriz de risco (alto/baixo) versus certeza do modelo: perguntar ao dono, pedir confirmação em um clique, esperar evidência ou aplicar automaticamente."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "State estimator",
+      "traducao": "estimador de estado, que mantém uma crença e a atualiza com evidências",
+      "nivel": "intermediario",
+      "chave": "state estimator",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "RAG",
+      "traducao": "geração com recuperação de memória",
+      "nivel": "basico",
+      "chave": "rag",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Parsing de documentos",
+      "traducao": "converter PDF e slides em texto estruturado",
+      "nivel": "basico",
+      "chave": "parsing de documentos",
+      "analogia": "Parsing de documentos é como pedir a um assistente que passe a limpo uma planilha desenhada à mão, copiando cada número para uma tabela organizada.",
+      "explicacao": [
+        "Um slide ou PDF foi feito para o olho humano ler. Um programa precisa dele em forma de dados, com campos e valores.",
+        "Parsing (análise e conversão) é o passo que transforma esse arquivo em texto estruturado, por exemplo uma tabela com projeto, status e data.",
+        "Abrir o arquivo do PowerPoint dá um XML, que guarda formas e códigos de cor, mas não diz o que significa o verde do semáforo.",
+        "Mandar só uma captura de tela para um modelo de visão (modelo que lê imagens) também falha, porque ele confunde números pequenos como 31 e 81.",
+        "No talk, a solução foi combinar as duas leituras: o XML dá o texto exato e o modelo de visão dá o que aparece na imagem."
+      ],
+      "pre_requisitos": [
+        "LLM",
+        "Prompt"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "SLIDE DE STATUS",
+            "nota": "arquivo feito para humanos"
+          },
+          {
+            "rotulo": "LEITURA DO XML",
+            "nota": "texto e cores exatas"
+          },
+          {
+            "rotulo": "MODELO DE VISÃO",
+            "nota": "o que aparece na imagem"
+          },
+          {
+            "rotulo": "REGISTRO ESTRUTURADO",
+            "nota": "projeto, status, data"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Backtest",
+      "traducao": "teste com dados históricos",
+      "nivel": "intermediario",
+      "chave": "backtest",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação",
+      "nivel": "basico",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Human in the loop",
+      "traducao": "humano no circuito de validação",
+      "nivel": "basico",
+      "chave": "human in the loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Entity resolution",
+      "traducao": "resolução de entidades",
+      "nivel": "intermediario",
+      "chave": "entity resolution",
+      "analogia": "Entity resolution é como descobrir que o João da padaria, o Joãozinho do bairro e o J. Silva do cartão de fidelidade são a mesma pessoa.",
+      "explicacao": [
+        "Uma mesma pessoa ou empresa costuma aparecer com nomes e números diferentes em listas diferentes.",
+        "Entity resolution (resolução de entidades) é o trabalho de decidir quais registros falam da mesma coisa real e juntá-los em um só.",
+        "O caso difícil é quando não existe um identificador comum, chamado canonical identifier (identificador canônico), como um CPF ou código de cliente que valha em todos os sistemas.",
+        "No talk, um cliente aparece com quatro registros em quatro sistemas sem chave comum. O palestrante diz que não tem uma resposta clara para ligá-los.",
+        "Na prática, usa-se pistas como nome, participantes, datas e objetivos parecidos, como o agente fez para reconhecer um projeto renomeado como Project Northstar."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "LLM"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Watermelon project",
+      "traducao": "projeto melancia: verde por fora, vermelho por dentro",
+      "nivel": "basico",
+      "chave": "watermelon project",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É um talk de experiência interna, sem código nem dados abertos. O backtest tem poucos casos (cerca de 18 com veredito do agente, aos 718 s), o dobro de chance não traz intervalo de confiança e a definição de projeto que escorrega não é detalhada. Faltam números sobre custo e sobre quantos sinalizados foram falso positivo. A afirmação final de melhora material é relato do autor, sem medição mostrada.",
+  "acoes": [
+    "Escolha 5 projetos ativos, junte status oficial e conversas recentes de cada um e peça a um modelo para apontar onde os dois divergem.",
+    "Grave cada fato extraído com data, fonte e nível de confiança, sem sobrescrever registros antigos.",
+    "Escolha uma previsão simples do seu agente (por exemplo, o que vai atrasar) e registre-a para comparar com o resultado no mês seguinte.",
+    "Ao receber uma correção humana, escreva a regra por trás dela e teste se a regra melhora outras saídas."
+  ],
+  "numeros": [
+    {
+      "valor": "3 anos",
+      "contexto": "tempo de coleta de registros mensais de decks",
+      "t": 467
+    },
+    {
+      "valor": "50% em 2 meses",
+      "contexto": "datas de entrega que mudam em até 2 meses",
+      "t": 562
+    },
+    {
+      "valor": "90%",
+      "contexto": "dessas mudanças levam a data para depois da original",
+      "t": 562
+    },
+    {
+      "valor": "2x",
+      "contexto": "chance de verde sinalizado virar amarelo ou vermelho",
+      "t": 686
+    }
+  ],
+  "rotulo": "Agentes que constroem a memória institucional da empresa",
+  "objetivo": "desenhar um laço de atualização, envelhecimento e avaliação para os fatos que um agente guarda sobre projetos da sua empresa",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são as três coisas que o agente deve considerar ao produzir uma atualização, segundo o modelo do estimador de estado?",
+      "resposta": "Há quanto tempo o sinal foi recebido, de onde ele veio e se ainda é confiável, e se concorda com os outros sensores."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você aplicaria a etapa de envelhecer a um agente que responde sobre o status de projetos no seu time?",
+      "resposta": "Guarde a data de cada afirmação e dê mais peso às recentes na resposta. Para datas de entrega, trate as antigas como incertas e peça confirmação quando passarem de um limite."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que limita a conclusão de que projetos sinalizados têm o dobro de chance de escorregar?",
+      "resposta": "Poucos casos, sem intervalo de confiança, sem dados sobre falsos positivos e sem grupo de comparação aberto. É um relato interno, então o resultado não pode ser verificado por fora."
+    }
+  ],
+  "experimento": {
+    "titulo": "Detector de projetos melancia com um modelo",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT, e dois textos reais de um projeto (relatório de status e conversas recentes)",
+    "passos": [
+      "Escolha um projeto e copie o último relatório de status e as mensagens recentes de chat sobre ele, sem dados sensíveis.",
+      "Peça ao modelo que liste o que foi reportado, a evidência que aponta outra direção, a cor sugerida e o motivo.",
+      "Peça que cada afirmação tenha data e fonte, e que afirmações antigas tenham confiança reduzida.",
+      "Repita com mais dois projetos e compare onde o modelo discorda do status oficial."
+    ],
+    "sucesso": "O modelo aponta ao menos uma divergência real entre status e conversas, com fonte e data, e você concorda com a cor sugerida em pelo menos um dos três casos."
+  },
+  "consolidado_em": "2026-11-09T10:17:50+00:00"
+}

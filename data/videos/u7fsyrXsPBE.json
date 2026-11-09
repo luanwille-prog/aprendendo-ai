@@ -1,0 +1,211 @@
+{
+  "id": "u7fsyrXsPBE",
+  "titulo": "Claude Code Looked Right but Missed $800K - Natalia Connolly & Kevin Madura, AlixPartners",
+  "titulo_curto": "Claude Code Looked Right but Missed $800K",
+  "palestrante": "Natalia Connolly & Kevin Madura, AlixPartners",
+  "url": "https://www.youtube.com/watch?v=u7fsyrXsPBE",
+  "duracao": 1112,
+  "publicado_ts": 1794160808,
+  "edicao": "2026-11-08",
+  "tese": "Resposta bem formatada do agente não prova que está certa; estruture os dados antes e rastreie cada número até a fonte.",
+  "tldr": [
+    "A AlixPartners usou o Claude Code para analisar mais de 40 mil contratos de duas empresas de saúde fundidas. A primeira resposta parecia completa, mas errou um total em cerca de US$ 800 mil e errou em um mês a data limite de uma renovação automática.",
+    "As causas estavam nos dados: contratos longos que falharam em silêncio, aditivos órfãos, valores repetidos e tabelas quebradas entre páginas. A solução foi um pipeline de cinco etapas e ferramentas com regras de negócio embutidas.",
+    "Outras lições: erros de acesso não podem parecer zero, achados de agentes paralelos precisam ser deduplicados, e o agente precisa saber o que a empresa já está fazendo. A conclusão dos palestrantes é investir cedo em dados estruturados e em contexto de negócio."
+  ],
+  "tema": "dados-e-rag",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "O caso: duas empresas, uma pergunta de negociação",
+      "texto": "Após a fusão, o time de compras quer saber se consegue termos melhores com um fornecedor em comum, quanto economiza e em quanto tempo precisa agir. Quem negocia precisa de citação exata: página do contrato ou linha da fatura. Rastreabilidade é requisito, não luxo.",
+      "t": 94,
+      "legenda": "O cenário: dois compradores ligados ao mesmo fornecedor após a fusão",
+      "print": "img/u7fsyrXsPBE/0.jpg",
+      "descricao": "Diagrama: Harbor adquiriu Summit; as duas compram da Acme Health Services em contratos separados (US$ 4,64 mi e 3,06 mi/ano), sem visão combinada."
+    },
+    {
+      "titulo": "Resposta bonita, dois erros graves",
+      "texto": "Gasto anual, divisão entre empresas e contagem de contratos estavam certos. O valor total do contrato errou por cerca de US$ 800 mil, e a data limite para evitar a renovação automática saiu como 1º de dezembro, quando o correto era 1º de novembro. Só a checagem contra o data warehouse revelou isso.",
+      "t": 155,
+      "legenda": "Formato e plausibilidade escondem erro de valor e de data",
+      "print": "img/u7fsyrXsPBE/1.jpg",
+      "descricao": "Slide 'Two of the agent's five numbers were wrong': gasto total US$ 7.699.213, 4 contratos, valor atual US$ 16,7 mi e prazo 2026-12-01 (CW-10033)."
+    },
+    {
+      "titulo": "Quatro armadilhas dos dados de contrato",
+      "texto": "Contratos longos travam no pré-processamento e somem sem aviso. Aditivos órfãos não se ligam ao contrato-mãe. Vários aditivos repetem o valor total, e somar os números dá resultado inflado, pois vale o do aditivo mais recente. Tabelas de tarifas atravessam páginas e perdem o cabeçalho.",
+      "t": 280,
+      "legenda": "Somar os valores extraídos infla o total; o texto diz qual vale",
+      "print": "img/u7fsyrXsPBE/2.jpg",
+      "descricao": "Slide 'Break 03 · History': MSA US$ 4,0 mi, Aditivo 1 US$ 6,0 mi, Aditivo 2 (restates) US$ 7,0 mi; somar daria US$ 17,0 mi, mas vale US$ 7,0 mi."
+    },
+    {
+      "titulo": "Pipeline de cinco etapas antes do agente",
+      "texto": "As etapas: pré-processamento com OCR, classificação do tipo de contrato, extração de termos, tarifas e gastos, e mapeamento dos serviços para categorias de gasto. Só depois o Claude Code analisa as tabelas. Levou cerca de duas semanas para construir e processou os 40 mil contratos em uma noite. Tabelas estruturadas também permitem conferir cada resposta por código.",
+      "t": 374,
+      "legenda": "Estrutura primeiro, análise do agente depois",
+      "print": "img/u7fsyrXsPBE/3.jpg",
+      "descricao": "Slide 'Two weeks of building, then 40,000 contracts processed overnight': revisão manual por time de 10 pessoas em semanas versus pipeline em uma noite."
+    },
+    {
+      "titulo": "Ferramentas com regra de negócio embutida",
+      "texto": "Sobre os dados estruturados, o Claude Code ajudou a criar ferramentas como buscar a página da tabela de tarifas ou o gasto por fornecedor. A regra de negócio, como usar a cláusula de renovação e não a de rescisão, fica no código da ferramenta, não só no prompt. Isso preserva o conhecimento entre sessões e agentes novos.",
+      "t": 529,
+      "legenda": "Regras vivem na ferramenta, e todo agente novo as herda",
+      "print": "img/u7fsyrXsPBE/4.jpg",
+      "descricao": "Diagrama: o agente acessa dados só por ferramentas (execute_sql, get_rate_card_page, get_amendment_chain, get_vendor_spend), com regras no servidor."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Parsing de documentos",
+      "traducao": "converter PDF e slides em texto estruturado",
+      "nivel": "basico",
+      "chave": "parsing de documentos",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "OCR",
+      "traducao": "reconhecimento óptico de caracteres",
+      "nivel": "basico",
+      "chave": "ocr",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Structured output",
+      "traducao": "saída estruturada em JSON Schema",
+      "nivel": "intermediario",
+      "chave": "structured output",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "DSPy",
+      "traducao": "framework que isola cada chamada de LLM atrás de interfaces tipadas",
+      "nivel": "avancado",
+      "chave": "dspy",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Custom tool",
+      "traducao": "ferramenta customizada, executada por você",
+      "nivel": "intermediario",
+      "chave": "custom tool",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Regra de negócio",
+      "traducao": "norma da empresa que o código precisa respeitar",
+      "nivel": "basico",
+      "chave": "regra de negócio",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP",
+      "traducao": "protocolo para conectar ferramentas a agentes",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Subagente",
+      "traducao": "agente auxiliar criado por outro agente",
+      "nivel": "intermediario",
+      "chave": "subagente",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O caso é um único projeto de consultoria, com dados sintéticos replicando a situação real, e não há taxa de erro medida antes e depois do pipeline. Só dois erros aparecem, e não se sabe quantos outros passaram sem checagem. Os palestrantes vendem uma metodologia da própria firma. Eles também admitem que parte do trabalho de estruturação pode ficar obsoleto em 6 a 12 meses com modelos melhores. Não há custo em tokens nem comparação com um pipeline mais simples.",
+  "acoes": [
+    "Pegue uma pergunta que seu agente já respondeu e confira o número contra a fonte original. Registre se o erro vem do dado, da extração ou do raciocínio.",
+    "Faça seu pipeline registrar toda falha de processamento (timeout, arquivo vazio) em um log visível, em vez de seguir adiante em silêncio.",
+    "Troque no código das suas ferramentas qualquer resposta de erro de acesso que hoje volta como zero ou vazio por uma mensagem explícita de erro.",
+    "Mova uma regra de negócio repetida no prompt para dentro de uma função ou view do banco e faça o agente chamá-la."
+  ],
+  "numeros": [
+    {
+      "valor": "40 mil",
+      "contexto": "contratos distintos no caso real de pós-fusão",
+      "t": 63
+    },
+    {
+      "valor": "US$ 800 mil",
+      "contexto": "erro no valor total do contrato",
+      "t": 155
+    },
+    {
+      "valor": "1º dez/1º nov",
+      "contexto": "data apontada pelo agente versus data correta",
+      "t": 187
+    },
+    {
+      "valor": "2 semanas",
+      "contexto": "tempo para construir o pipeline de dados",
+      "t": 343
+    }
+  ],
+  "rotulo": "Por que o Claude Code errou US$ 800 mil em contratos",
+  "objetivo": "desenhar um pipeline que estrutura documentos antes do agente e deixa cada resposta rastreável até a fonte",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que somar os valores em dólar extraídos de um contrato e seus aditivos pode dar um total errado?",
+      "resposta": "Cada aditivo pode reafirmar o valor total do contrato. Somar os números infla o resultado. O texto mostra que vale o valor do aditivo mais recente."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você tem 5 mil PDFs de faturas e quer que um agente responda perguntas de gasto. O que fazer antes de liberar o agente?",
+      "resposta": "Montar um pipeline que processe os PDFs, classifique, extraia campos em tabelas e registre falhas. Depois dar ao agente ferramentas sobre essas tabelas, com regras de negócio no código, e conferir as respostas por código contra a fonte."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta para concluir que o pipeline de cinco etapas foi o que corrigiu os erros?",
+      "resposta": "Faltam taxa de erro antes e depois, comparação com um pipeline mais simples e custo. O relato cobre um caso, com dados sintéticos, e os palestrantes vendem o método da própria firma."
+    }
+  ],
+  "experimento": {
+    "titulo": "Pegue o erro do total em aditivos de contrato",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT e três textos curtos de contrato inventados (um MSA e dois aditivos)",
+    "passos": [
+      "Escreva um MSA com valor total de US$ 5 milhões e dois aditivos, cada um dizendo que o valor total passa a ser US$ 6 e US$ 7 milhões.",
+      "Peça ao modelo só os valores em dólar de cada documento em JSON e some tudo por código. Anote o total.",
+      "Em outra conversa, entregue os textos completos e pergunte o valor total vigente do contrato. Compare com o passo anterior.",
+      "Adicione ao prompt ou a uma função a regra 'aditivo posterior que reafirma o total substitui o anterior' e repita."
+    ],
+    "sucesso": "A soma dos números dá US$ 18 milhões, o modelo lendo o texto ou a regra embutida dá US$ 7 milhões, e você explica a diferença."
+  },
+  "consolidado_em": "2026-11-09T10:17:50+00:00"
+}

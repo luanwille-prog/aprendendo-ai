@@ -1,0 +1,240 @@
+{
+  "id": "WJTQBENv0KI",
+  "titulo": "How Ramp Tests Its AI Bookkeeping Agent Before Customers Do - Ryan Stevens, Ramp",
+  "titulo_curto": "How Ramp Tests Its AI Bookkeeping Agent Before Customers Do",
+  "palestrante": "Ryan Stevens, Ramp",
+  "url": "https://www.youtube.com/watch?v=WJTQBENv0KI",
+  "duracao": 1119,
+  "publicado_ts": 1794164427,
+  "edicao": "2026-11-08",
+  "tese": "Eval de ponta a ponta sobre negócios sintéticos funciona como backtest do agente e rende mais em skills e memória do que em ajuste automático de prompt.",
+  "tldr": [
+    "A Ramp dividiu o trabalho do contador em tarefas e montou, com a Mercor, empresas sintéticas completas para testar o agente Stack sempre nos mesmos dados. Cada tarefa tem de 10 a 20 critérios, e só o resultado final é avaliado.",
+    "Os modelos de fronteira ainda erram sobretudo por raciocínio, não por falta de dados. A acurácia sai alta e o pass@1 (acertar tudo na primeira execução) sai baixo, o que deixa espaço para otimizar o harness (a estrutura que roda o agente).",
+    "O ajuste automático de prompts falhou. Funcionaram a ablação de skills (tirar uma por vez para ver o efeito), o teste de memórias em dois períodos e as rodadas agendadas de regressão, que avisam no Slack quando algo piora."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Empresas sintéticas como mundo de teste",
+      "texto": "Sem usuários suficientes, a Ramp criou negócios fictícios completos, com ERP, lista de clientes e fornecedores e contas a pagar. Cada conjunto de dados é chamado de world (mundo). Um mundo também pode ser um snapshot de produção. O ponto é manter o estado fixo para repetir o teste dia após dia, como um backtest.",
+      "t": 288,
+      "legenda": "Cada empresa sintética traz livros e documentos completos para teste offline.",
+      "print": "img/WJTQBENv0KI/0.jpg",
+      "descricao": "Slide 'We built synthetic businesses with payments, bills, and ERP data', com tabela de uma empresa sintética (imagem pequena, pouco legível)."
+    },
+    {
+      "titulo": "Avaliar só o resultado final, com critérios",
+      "texto": "Cada tarefa, como uma conciliação, recebe de 10 a 20 critérios que definem sucesso. A equipe não julgou a trajetória (ferramentas chamadas, skills usadas, caminho eficiente). No início, o time quer que o agente acerte, seja barato e rápido, e o caminho importa menos.",
+      "t": 435,
+      "legenda": "O eval mede o produto final contra critérios, sem inspecionar o caminho.",
+      "print": "img/WJTQBENv0KI/1.jpg",
+      "descricao": "Diagrama em quatro etapas: Task, World (dados ERP e de negócio sintéticos), Trajectory (3 passos) e Score (saída final, 4 de 6 critérios, 67%)."
+    },
+    {
+      "titulo": "Acurácia com crédito parcial contra pass@k",
+      "texto": "Uma tarefa com seis critérios e quatro acertos dá 67% de acurácia. O pass@k conta como sucesso só quando todos os critérios passam. No exemplo, três execuções acertam 4, 5 e 6 critérios, então pass@1 e pass@2 valem zero e pass@3 vale um. Em contabilidade, onde um passo errado tira a confiança do contador, o pass@k é a métrica a perseguir.",
+      "t": 562,
+      "legenda": "Mesma tarefa, duas métricas: crédito parcial versus tudo ou nada.",
+      "print": "img/WJTQBENv0KI/2.jpg",
+      "descricao": "Slide com acurácia (4 de 6 critérios, 67%) e pass@k: tentativas 4/6, 5/6 e 6/6 dão pass@1=0, pass@2=0, pass@3=1."
+    },
+    {
+      "titulo": "Ablação de skills para enxugar contexto",
+      "texto": "Como em machine learning clássico, a equipe tirou ou colocou uma skill por vez e comparou com um baseline sem skills. O gráfico mostra skills que ajudam e outras que atrapalham. O resultado gera uma lista de candidatas a apagar ou comprimir, o que economiza contexto. O palestrante admite ter confundido o sinal no gráfico.",
+      "t": 860,
+      "legenda": "A ablação aponta quais skills ajudam, quais atrapalham e quais podem sair.",
+      "print": "img/WJTQBENv0KI/3.jpg",
+      "descricao": "Gráfico 'Average skill impact': skills A (+0.55%) e B (+0.47%) ajudam; C a G atrapalham, até G com -1.67% contra o baseline sem skills."
+    },
+    {
+      "titulo": "Memórias testadas em dois períodos",
+      "texto": "Nos roll forward worlds, o agente faz a mesma tarefa em dois períodos. Após o primeiro, um prompt de memória comprime o aprendido (regras implícitas do cliente). No segundo, a memória é injetada ou buscada. O tipo de memória escrita dependeu muito do prompt, e o ganho foi um dos maiores que o time viu com esses evals.",
+      "t": 939,
+      "legenda": "A memória é medida pela melhora na mesma tarefa no período seguinte.",
+      "print": "img/WJTQBENv0KI/4.jpg",
+      "descricao": "Slide 'Roll Forward Worlds': diagrama de memória em dois meses e gráfico 'Memory on vs. off', 56% sem memória e 61,5% com memória (+5,5 pp)."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Eval",
+      "traducao": "avaliação",
+      "nivel": "basico",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Backtest",
+      "traducao": "teste com dados históricos",
+      "nivel": "intermediario",
+      "chave": "backtest",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Dados sintéticos",
+      "traducao": "dados gerados artificialmente para treino",
+      "nivel": "intermediario",
+      "chave": "dados sintéticos",
+      "analogia": "Dados sintéticos são como um simulador de voo, onde o piloto treina com cenários criados de propósito antes de pegar um avião de verdade.",
+      "explicacao": [
+        "Dados sintéticos são informações inventadas que imitam o formato e o comportamento de dados reais, como uma lista de clientes que nunca existiu.",
+        "Eles servem quando você ainda não tem usuários ou dados suficientes para testar ou treinar um sistema.",
+        "Um agente de IA (programa que usa um modelo para executar tarefas) basicamente chama ferramentas que consultam um banco de dados. Se você monta o banco falso, consegue simular o uso real.",
+        "Na Ramp, a equipe criou empresas fictícias completas, com ERP (sistema de gestão), clientes, fornecedores e contas a pagar, para testar o agente contábil.",
+        "Como o estado fica fixo, o mesmo teste roda dia após dia e os resultados são comparáveis."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "Eval",
+        "Backtest"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "SEM USUÁRIOS",
+            "nota": "Faltam dados reais para testar"
+          },
+          {
+            "rotulo": "EMPRESA FICTÍCIA",
+            "nota": "ERP, clientes, fornecedores, contas"
+          },
+          {
+            "rotulo": "AGENTE RODA",
+            "nota": "Mesma tarefa, mesmos dados"
+          },
+          {
+            "rotulo": "TESTE REPETÍVEL",
+            "nota": "Resultado comparável dia a dia"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "pass@k e pass^k",
+      "traducao": "acertou ao menos uma vez versus acertou em todas as repetições",
+      "nivel": "intermediario",
+      "chave": "pass@k e pass^k",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Ablation study",
+      "traducao": "estudo de ablação, que testa uma variável por vez",
+      "nivel": "intermediario",
+      "chave": "ablation study",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Skill",
+      "traducao": "habilidade, julgamento institucional escrito para o agente executar",
+      "nivel": "intermediario",
+      "chave": "skill",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Autoresearch",
+      "traducao": "pesquisa automática por experimentos",
+      "nivel": "avancado",
+      "chave": "autoresearch",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Teste de regressão",
+      "traducao": "teste que detecta o que quebrou após uma mudança",
+      "nivel": "basico",
+      "chave": "teste de regressão",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O talk é de uma empresa que vende o agente, e os resultados vêm de um benchmark interno feito com um parceiro comercial (Mercor), sem números publicados dos ganhos de skills ou memória. Não há amostra, variância nem intervalo de confiança. A afirmação de que os modelos falham por raciocínio vem de uma classificação interna sem critério detalhado. A rejeição do ajuste automático de prompts parte de uma tentativa só, que o palestrante admite poder ser problema do próprio agente. A recusa de travar o CI com evals é opinião, sem comparação.",
+  "acoes": [
+    "Liste as tarefas do processo que seu agente automatiza e escreva de 5 a 10 critérios verificáveis de sucesso para uma delas.",
+    "Congele um conjunto de dados fixo (real anonimizado ou sintético) e rode o agente nele toda semana, registrando a acurácia parcial e o pass@k.",
+    "Faça uma ablação das suas skills ou instruções, removendo uma por vez e medindo o efeito contra um baseline sem elas.",
+    "Agende o eval para rodar sozinho e envie o resultado para um canal, em vez de bloquear o CI por causa de variação normal."
+  ],
+  "numeros": [
+    {
+      "valor": "70.000+",
+      "contexto": "empresas clientes da Ramp",
+      "t": 1
+    },
+    {
+      "valor": "10 a 20",
+      "contexto": "critérios de avaliação por tarefa",
+      "t": 435
+    },
+    {
+      "valor": "4 a 6 meses",
+      "contexto": "tempo para construir o conjunto de evals antes do lançamento",
+      "t": 499
+    },
+    {
+      "valor": "67%",
+      "contexto": "acurácia de 4 critérios certos em 6",
+      "t": 562
+    }
+  ],
+  "rotulo": "Como a Ramp testa um agente contábil antes dos clientes",
+  "objetivo": "desenhar um conjunto de evals de ponta a ponta com dados sintéticos e usá-lo para podar skills, testar memória e detectar regressões",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Qual a diferença entre acurácia e pass@k no exemplo da conciliação com seis critérios?",
+      "resposta": "A acurácia dá crédito parcial, e quatro de seis critérios certos valem 67%. O pass@k só conta sucesso quando todos os critérios passam em alguma das k execuções, então pode valer zero mesmo com acurácia alta."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Seu agente de suporte tem 12 skills e o contexto está pesado. Como você decidiria quais manter, seguindo o talk?",
+      "resposta": "Rode o eval com um baseline sem skills e depois com cada skill adicionada ou removida, uma por vez. Compare o efeito na métrica e gere uma lista de candidatas a apagar ou comprimir, validando de novo depois."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limitações da evidência do talk devem fazer você desconfiar das conclusões sobre memória e ajuste automático de prompts?",
+      "resposta": "Os dados são internos e não foram publicados. Não há números de ganho, variância nem repetições. A falha do ajuste automático vem de uma tentativa só, e o palestrante admite que pode ser o agente. A empresa também tem interesse em vender o produto."
+    }
+  ],
+  "experimento": {
+    "titulo": "Mini ablação de instruções com pass@k",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT, planilha e um prompt de sistema seu com 3 a 5 regras",
+    "passos": [
+      "Escolha uma tarefa e escreva de 5 a 6 critérios de sucesso verificáveis, como itens de checklist.",
+      "Prepare 5 entradas realistas da tarefa e rode cada uma 3 vezes com o prompt completo, anotando quantos critérios passam.",
+      "Repita removendo uma regra por vez do prompt, mantendo as mesmas entradas e o mesmo número de execuções.",
+      "Calcule na planilha a acurácia média e o pass@3 (todos os critérios passaram em alguma execução) de cada variação."
+    ],
+    "sucesso": "Você tem uma tabela comparando o prompt completo com cada variação e identifica pelo menos uma regra que pode sair sem perder desempenho, ou que faz falta."
+  },
+  "consolidado_em": "2026-11-09T10:17:50+00:00"
+}
