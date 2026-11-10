@@ -1,0 +1,239 @@
+{
+  "id": "Xw9utONfhIY",
+  "titulo": "What Your Coding Agent Can't See in the Code - Tom Moor, Linear",
+  "titulo_curto": "What Your Coding Agent Can't See in the Code",
+  "palestrante": "Tom Moor, Linear",
+  "url": "https://www.youtube.com/watch?v=Xw9utONfhIY",
+  "duracao": 1272,
+  "publicado_ts": 1794211203,
+  "edicao": "2026-11-09",
+  "tese": "Com código barato, o risco passa a ser a coerência do produto; carregar o contexto do intake ao merge protege essa coerência.",
+  "tldr": [
+    "Tom Moor, da Linear, diz que escrever código deixou de ser o gargalo e que o difícil agora é manter o produto coerente enquanto agentes entregam cada vez mais.",
+    "A Linear leva contexto da triagem de issues até a revisão de PRs e usa uma automação diária para transformar feedback de revisão em lições no AGENTS.md.",
+    "Os exemplos mostram o revisor com histórico pegando problemas que revisores comuns não pegam, mas todos vêm do próprio produto da Linear e sem medição de ganho."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "O gargalo mudou de lugar",
+      "texto": "Quando agentes rodam por horas e o custo por tarefa cai, humanos não conseguem delegar e acompanhar cada execução. O contexto sai do laço interno (você conduzindo um agente local) e vai para o laço externo (sistemas que orquestram agentes). O risco deixa de ser construir pouco e passa a ser construir muita coisa sem sentido de conjunto.",
+      "t": 247,
+      "legenda": "Custo em queda e tarefas mais longas empurram o contexto para o laço externo",
+      "print": "img/Xw9utONfhIY/0.jpg",
+      "descricao": "Slide '2027 and beyond' (inteligência fica mais barata e abundante). Gráfico em US$: ano 0 = 100, ano 1 = 7,7, ano 2 = 0,6, ano 3 = 0,05."
+    },
+    {
+      "titulo": "Triagem que investiga antes de o agente codar",
+      "texto": "O agente de triagem rotula, agrupa, fecha duplicatas e roteia o trabalho. Também investiga: anexa à issue dados do cliente, stack traces, logs do Datadog, issues relacionadas e decisões anteriores. Em um caso reproduziu o bug e achou uma ação automática do navegador confundida com intenção do usuário, o que ajudou a correção automática.",
+      "t": 591,
+      "legenda": "A issue vira o contexto-base que o agente de código recebe",
+      "print": "img/Xw9utONfhIY/1.jpg",
+      "descricao": "Slide 'Triage agent': enriquece a issue com dados do cliente, issues relacionadas, responsável e projeto. Diagrama 'Incoming' com quatro rotas."
+    },
+    {
+      "titulo": "Revisão com histórico do produto",
+      "texto": "Revisores comuns olham o código e a correção lógica. O agente de revisão da Linear parte da issue original e consulta decisões anteriores, reverts, regressões, incidentes, mudanças em conflito, a sessão completa do agente e os donos da área. A pergunta passa de 'o código está correto?' para 'é a mudança certa para o produto?'.",
+      "t": 871,
+      "legenda": "O revisor recebe bem mais que o diff do PR",
+      "print": "img/Xw9utONfhIY/2.jpg",
+      "descricao": "Slide 'Review': fontes de contexto para revisão: issue original, histórico do produto, issues relacionadas, outros PRs, sessão do agente e ownership."
+    },
+    {
+      "titulo": "Decisões de design que o código não guarda",
+      "texto": "Num exemplo, um PR tentou recolocar um ícone que a equipe havia removido um ano antes por poluir a interface. Noutro, rótulos de workspace apareciam abaixo dos de time, e um revert anterior ligado a isso apareceu na revisão. Nenhum ponto do código define essa regra, então só o histórico a revela.",
+      "t": 996,
+      "legenda": "O comentário cita uma decisão antiga que o código não registra",
+      "print": "img/Xw9utONfhIY/3.jpg",
+      "descricao": "Card de revisão do agente: ícones de checks foram removidos por deixar as linhas cheias. Comentários de 1 ano e 4 semanas atrás no Linear."
+    },
+    {
+      "titulo": "Lições diárias de volta ao repositório",
+      "texto": "Uma automação roda uma vez ao dia sobre o que foi mergeado. Procura comentários de revisão e reverts recorrentes, extrai lições e as grava no AGENTS.md ou na documentação. Moor avisa que o arquivo não pode crescer sem limite, então o prompt exige ajuste contínuo.",
+      "t": 1150,
+      "legenda": "O julgamento humano da revisão vira contexto para o próximo ciclo",
+      "print": "img/Xw9utONfhIY/4.jpg",
+      "descricao": "Slide 'Distill Loop': automação 'Learn from merged PR reviews', que analisa PRs mergeados nas últimas 24 h e atualiza o AGENTS.md."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Inner, outer e meta loop",
+      "traducao": "ciclo interno, externo e meta",
+      "nivel": "intermediario",
+      "chave": "inner, outer e meta loop",
+      "analogia": "Os três ciclos são como uma cozinha de restaurante: o cozinheiro prova o molho a cada minuto, o chefe distribui os pedidos entre as bancadas, e no fim do dia a equipe revisa o que deu errado e ajusta as receitas.",
+      "explicacao": [
+        "Quem trabalha com agentes de IA repete ciclos de pedir, conferir e corrigir. Esses ciclos acontecem em três escalas de tempo e de distância do trabalho.",
+        "O inner loop (ciclo interno) é você sentado com um agente de código local, dando instruções e conferindo cada resposta em minutos.",
+        "O outer loop (ciclo externo) é um sistema que recebe as tarefas, distribui para vários agentes que rodam por horas ou dias e junta os resultados. O humano para de iniciar e parar cada execução.",
+        "Tom Moor defende que, com tarefas mais baratas e mais longas, o contexto precisa sair da sua cabeça no ciclo interno e ir para o ciclo externo, anexado às issues e à revisão de PRs.",
+        "O meta loop (ciclo meta) melhora o próprio sistema. Na Linear, uma automação diária lê os PRs mergeados, extrai lições das revisões e dos reverts e as grava no AGENTS.md para o próximo ciclo."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "Prompt"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "INNER LOOP",
+            "nota": "você conduz um agente local"
+          },
+          {
+            "rotulo": "OUTER LOOP",
+            "nota": "sistema orquestra vários agentes"
+          },
+          {
+            "rotulo": "META LOOP",
+            "nota": "lições voltam ao AGENTS.md"
+          },
+          {
+            "rotulo": "PRÓXIMO CICLO MELHOR",
+            "nota": "agentes recebem mais contexto"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Contexto do agente",
+      "traducao": "informação disponível ao agente a cada tarefa",
+      "nivel": "basico",
+      "chave": "contexto do agente",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Triage",
+      "traducao": "triagem de tarefas",
+      "nivel": "basico",
+      "chave": "triage",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "MCP",
+      "traducao": "protocolo para conectar ferramentas a agentes",
+      "nivel": "intermediario",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Revert",
+      "traducao": "reversão de um PR já mergeado",
+      "nivel": "basico",
+      "chave": "revert",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "CLAUDE.md / AGENTS.md",
+      "traducao": "arquivo de instruções carregado no contexto do agente",
+      "nivel": "basico",
+      "chave": "claude.md / agents.md",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Coding agent",
+      "traducao": "agente de código",
+      "nivel": "basico",
+      "chave": "coding agent",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Software factory",
+      "traducao": "fábrica de software",
+      "nivel": "intermediario",
+      "chave": "software factory",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O talk é em parte pitch da Linear, que vende o sistema descrito. Todos os exemplos de revisão vêm do próprio produto, de poucas semanas, sem taxa de acerto, falsos positivos ou custo. A comparação com o Codex é um caso isolado. Moor admite não saber quanto do código de agentes que rodam no fim de semana chega a produção. A queda de preço de US$ 100 para 5 centavos vem de um gráfico sem fonte e sem definição de 'inteligência'.",
+  "acoes": [
+    "Liste as fontes de contexto que seu agente de código não enxerga hoje (decisões, reverts, incidentes, donos) e escolha uma para anexar às issues.",
+    "Revise seus últimos 10 PRs e marque os comentários de revisão repetidos; esses são candidatos a regras no AGENTS.md.",
+    "Escreva um prompt de revisão que receba a issue original, o diff e a lista de reverts recentes da área alterada.",
+    "Defina um limite de tamanho para o AGENTS.md e revise o arquivo a cada mês, removendo regras obsoletas."
+  ],
+  "numeros": [
+    {
+      "valor": "US$ 100 a 5 c",
+      "contexto": "custo de certa inteligência há 3 anos versus hoje, segundo o gráfico",
+      "t": 247
+    },
+    {
+      "valor": "6 e 7 meses",
+      "contexto": "idade das mudanças que o revisor achou e marcou como risco de incidente",
+      "t": 965
+    },
+    {
+      "valor": "1 ano",
+      "contexto": "idade da decisão de remover um ícone, citada pelo revisor",
+      "t": 996
+    },
+    {
+      "valor": "1 vez ao dia",
+      "contexto": "frequência da automação que extrai lições dos PRs mergeados",
+      "t": 1119
+    }
+  ],
+  "rotulo": "Contexto de produto na triagem e revisão de agentes",
+  "objetivo": "desenhar um fluxo que leva contexto de produto da triagem de issues até a revisão de PRs feitos por agentes",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que tipo de contexto o agente de revisão da Linear usa além do código do PR?",
+      "resposta": "A issue original e seu contexto-base, decisões anteriores, reverts, regressões e incidentes na mesma área, mudanças em conflito, a sessão do agente que escreveu o código e os donos da área."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você montaria uma versão simples da automação de lições no seu repositório?",
+      "resposta": "Rode um job diário que leia os PRs mergeados no dia, agrupe comentários de revisão e reverts repetidos, peça a um modelo para extrair regras curtas e abra um PR que as acrescente ao AGENTS.md. Defina um limite de tamanho para o arquivo."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta para concluir que o revisor com histórico supera revisores comuns?",
+      "resposta": "Faltam taxa de acerto, falsos positivos e comparação sistemática com outros revisores em muitos PRs. Os exemplos são casos escolhidos pela própria Linear, que vende o produto, e a comparação com o Codex aparece só uma vez."
+    }
+  ],
+  "experimento": {
+    "titulo": "Revisão de PR com histórico de reverts",
+    "minutos": 30,
+    "precisa": "Um repositório seu ou público com GitHub, e acesso ao Claude ou ChatGPT.",
+    "passos": [
+      "Escolha um PR mergeado recente e copie o diff, a descrição e a issue ligada.",
+      "Liste com git log os reverts e fixes dos últimos 6 meses nos mesmos arquivos e copie as mensagens.",
+      "Peça a revisão do diff duas vezes ao modelo, a primeira só com o diff e a segunda com a issue e o histórico.",
+      "Compare os comentários e marque os que dependem do histórico."
+    ],
+    "sucesso": "Você identifica ao menos um comentário que só apareceu com o histórico e decide se ele é útil ou ruído."
+  },
+  "consolidado_em": "2026-11-10T10:25:08+00:00"
+}

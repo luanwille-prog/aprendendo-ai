@@ -1,0 +1,239 @@
+{
+  "id": "ktbAVYsAxpk",
+  "titulo": "The Agents Were Fine. Everything Around Them Broke. - Joey Wang, Harvey",
+  "titulo_curto": "The Agents Were Fine. Everything Around Them Broke.",
+  "palestrante": "Joey Wang, Harvey",
+  "url": "https://www.youtube.com/watch?v=ktbAVYsAxpk",
+  "duracao": 777,
+  "publicado_ts": 1794276024,
+  "edicao": "2026-11-09",
+  "tese": "Depois de 10 mil PRs de agentes, o que quebrou foi a infraestrutura ao redor deles: fila, cluster e merge. O agente em si funcionou.",
+  "tldr": [
+    "A Harvey construiu a Spectre, uma plataforma interna de agentes na nuvem que roda o agente que o engenheiro preferir (Claude Code, Codex, Cursor) e cuida do que vem depois do código: CI, correção de falhas, revisão e merge.",
+    "A regra 'se uma pessoa clica, um agente chama' abriu a plataforma para agentes que comandam outros agentes, e isso causou uma tempestade de alertas com cerca de 900 tarefas e um cluster lotado por um único laptop.",
+    "As correções foram deduplicar alertas, criar uma fila justa de lançamento e dar limites às automações, mas a fila de merge continua sem solução quando os PRs sobem 60% em um mês."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "A plataforma roda o agente, não compete com ele",
+      "texto": "A Spectre não tenta ser melhor que Claude Code ou Cursor. Ela fornece o que o agente de laptop não tem: segredos, a stack real, alertas, regras únicas e capacidade. O engenheiro escolhe o agente favorito, e a plataforma cuida do que acontece depois que o código é escrito.",
+      "t": 125,
+      "legenda": "Por que uma camada de nuvem existe sob qualquer agente.",
+      "print": "img/ktbAVYsAxpk/0.jpg",
+      "descricao": "Slide 'Why build, when Claude Code and Cursor exist?': 'We don't replace them. We run them.' Cards: segredos, stack real, gatilhos, política única."
+    },
+    {
+      "titulo": "O loop de acompanhamento fecha o trabalho",
+      "texto": "Um alerta dispara de madrugada, o agente escreve a correção, sobe uma cópia real da stack e posta a prova no PR. Se o CI falha, o loop lê o erro e empurra outra correção. Pela manhã o PR entra na mesma fila de revisão de qualquer outro. Quatro em cada cinco PRs de agente no backend passaram por esse loop.",
+      "t": 253,
+      "legenda": "O follow-up loop separa agente que escreve de agente que termina.",
+      "print": "img/ktbAVYsAxpk/1.jpg",
+      "descricao": "Slide 'Writing the code is step one' com 6 etapas: triggers, E2E validation, follow-up loop, review policy, nudges e merging (auto-merge)."
+    },
+    {
+      "titulo": "Tornar toda ação chamável por agentes cria novos riscos",
+      "texto": "Com a regra de que tudo que uma pessoa clica um agente também chama, a CLI chegou a cerca de 6.500 tarefas por mês. Um agente coordenador dividiu um projeto em dez marcos, cada um com sandbox própria. O mesmo poder deixou um engenheiro lotar o cluster com 950 tarefas em 3 horas.",
+      "t": 347,
+      "legenda": "A CLI cresceu sem reduzir o uso do app web.",
+      "print": "img/ktbAVYsAxpk/2.jpg",
+      "descricao": "Terminal com comandos spectre: task create, babysit, pr auto-merge e artifact publish. Legenda: 'Agents can drive Spectre, not just people.'"
+    },
+    {
+      "titulo": "Fila justa de lançamento contra a tempestade de tarefas",
+      "texto": "Tarefas passaram a receber um lugar na fila e o despachante só inicia quando há espaço. Quem está no teclado vai primeiro, cada pessoa tem uma parte justa e pode emprestar capacidade ociosa. No teste com rajada de 300 tarefas, a espera caiu de quase 2 segundos para 70 milissegundos.",
+      "t": 535,
+      "legenda": "A fila justa reduziu a latência de lançamento no teste de carga.",
+      "print": null,
+      "descricao": null
+    },
+    {
+      "titulo": "O próximo gargalo é a fila de merge",
+      "texto": "Os PRs da empresa subiram cerca de 60% em um mês, e merges de 15 a 30 minutos passaram de uma hora. A merge queue refaz rebase e CI a cada PR, então uma quebra na main trava todos. O palestrante admite que ainda não resolveu isso.",
+      "t": 599,
+      "legenda": "Mais PRs de agentes saturaram a fila de merge.",
+      "print": null,
+      "descricao": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Harness",
+      "traducao": "estrutura que roda o agente",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Cloud agent",
+      "traducao": "agente na nuvem, que roda em ambiente remoto e dispara sozinho",
+      "nivel": "intermediario",
+      "chave": "cloud agent",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Merge queue",
+      "traducao": "fila de merge",
+      "nivel": "intermediario",
+      "chave": "merge queue",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado para rodar o código",
+      "nivel": "basico",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "CLI",
+      "traducao": "interface de linha de comando",
+      "nivel": "basico",
+      "chave": "cli",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Audit trail",
+      "traducao": "trilha de auditoria",
+      "nivel": "intermediario",
+      "chave": "audit trail",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Back pressure",
+      "traducao": "Contrapressão: recusar carga acima do limite",
+      "nivel": "avancado",
+      "chave": "back pressure",
+      "analogia": "Back pressure é como a senha do restaurante lotado: o garçom só chama a próxima mesa quando uma vaga abre, e quem chega espera na fila sem entupir a cozinha.",
+      "explicacao": [
+        "Todo sistema aguenta uma quantidade limitada de trabalho ao mesmo tempo, como uma cozinha com poucos fogões.",
+        "Back pressure (contrapressão) é o sistema avisar a quem envia trabalho que está cheio, para segurar, atrasar ou recusar o que passa do limite.",
+        "Sem isso, um único usuário pode mandar centenas de tarefas e ocupar toda a capacidade. Na Harvey, cerca de 950 tarefas vindas de um laptop lotaram o cluster de agentes.",
+        "A correção foi uma fila justa de lançamento (fair launch queue). Cada tarefa ganha um lugar na fila, e o despachante só a inicia quando há espaço livre.",
+        "A fila também define prioridade e cotas. Quem está no teclado vai primeiro, cada pessoa tem sua parte e pode usar capacidade ociosa. No teste com 300 tarefas, a espera caiu de quase 2 segundos para 70 milissegundos."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "Pull request"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PEDIDO DE TAREFA",
+            "nota": "Pessoa ou agente envia trabalho"
+          },
+          {
+            "rotulo": "LUGAR NA FILA",
+            "nota": "Tarefa espera e vê sua posição"
+          },
+          {
+            "rotulo": "DESPACHANTE CHECA",
+            "nota": "Só inicia se há vaga no cluster"
+          },
+          {
+            "rotulo": "CLUSTER ESTÁVEL",
+            "nota": "Ninguém fica sem capacidade"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Spend cap",
+      "traducao": "teto de gasto por time, usuário ou agente",
+      "nivel": "intermediario",
+      "chave": "spend cap",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É um relato de dentro da Harvey, e o palestrante diz que as opiniões são dele. Os números (10 mil PRs, 460 pessoas, 4 em 5 PRs com follow-up loop) não trazem grupo de comparação nem medem a qualidade das mudanças. Ele admite que várias correções saíram juntas, então não sabe qual ajudou mais. A melhora na taxa de término das tarefas aparece sem valores exatos. O talk também divulga a plataforma e a empresa, e a fila de merge segue sem solução.",
+  "acoes": [
+    "Liste as ações do seu fluxo que uma pessoa faz clicando e confira quais já têm CLI ou API que um agente possa chamar.",
+    "Defina um limite de tarefas simultâneas por pessoa, por alerta e por automação no seu orquestrador de agentes.",
+    "Configure deduplicação de alertas para que um alerta repetido entre na investigação já aberta em vez de criar outra tarefa.",
+    "Faça cada automação de agente se desligar após cinco falhas seguidas e ganhar um orçamento ou data de expiração."
+  ],
+  "numeros": [
+    {
+      "valor": "10.000",
+      "contexto": "PRs escritos por agentes na plataforma",
+      "t": 31
+    },
+    {
+      "valor": "4 em 5",
+      "contexto": "PRs de agente no backend que passaram pelo follow-up loop",
+      "t": 253
+    },
+    {
+      "valor": "900",
+      "contexto": "tarefas disparadas em cerca de 4h pela tempestade de alertas",
+      "t": 473
+    },
+    {
+      "valor": "2s para 70ms",
+      "contexto": "latência de lançamento no teste com 300 tarefas",
+      "t": 568
+    }
+  ],
+  "rotulo": "O que quebrou ao escalar agentes de código na Harvey",
+  "objetivo": "listar os pontos de falha de uma plataforma de agentes na nuvem e escolher limites e filas para cada um",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que fez a tempestade de alertas de agosto criar cerca de 900 tarefas, e como a Harvey corrigiu?",
+      "resposta": "Um bug de release disparou um alerta por workspace, e um workflow marcava o agente em cada alerta, iniciando uma tarefa por alerta. A correção fez um alerta repetido entrar na investigação já aberta."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "No seu time, um colega pode mandar centenas de tarefas a um agente na nuvem. Que mecanismo você colocaria antes de liberar isso?",
+      "resposta": "Uma fila justa: cada tarefa ganha um lugar, o despachante só inicia quando há capacidade, cada pessoa tem uma cota justa e pode emprestar capacidade ociosa. Também um teto de tarefas por pessoa e por automação."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites tem a evidência de que a fila justa e as outras correções funcionaram?",
+      "resposta": "Várias mudanças saíram juntas, então não dá para atribuir o efeito a uma delas. O teste de 300 tarefas é de carga sintética, e a taxa de término melhorou sem números exatos. Não há grupo de comparação."
+    }
+  ],
+  "experimento": {
+    "titulo": "Simular fila justa contra um usuário que lota o cluster",
+    "minutos": 30,
+    "precisa": "Python 3 e um editor de texto, ou Claude ou ChatGPT para gerar o código base",
+    "passos": [
+      "Escreva uma simulação com 20 vagas de execução, tarefas de duração fixa e uma fila FIFO simples.",
+      "Faça um usuário enviar 950 tarefas de uma vez e outros cinco enviarem 5 tarefas cada. Meça a espera média dos cinco.",
+      "Troque a fila por uma fila justa que sorteia o próximo usuário em rodízio e some o tempo de espera de novo.",
+      "Adicione um teto de tarefas simultâneas por usuário e compare os três resultados em uma tabela."
+    ],
+    "sucesso": "A espera média dos cinco usuários pequenos cai muito na fila justa, e o usuário com 950 tarefas ainda termina tudo."
+  },
+  "consolidado_em": "2026-11-10T10:25:07+00:00"
+}

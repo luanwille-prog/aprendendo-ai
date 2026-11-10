@@ -1,0 +1,246 @@
+{
+  "id": "yH7_SIIgI-Y",
+  "titulo": "An Agent That Fixes Its Own Mistakes - Saloni Gandhi & Ziwei Guo, LinkedIn",
+  "titulo_curto": "An Agent That Fixes Its Own Mistakes",
+  "palestrante": "Saloni Gandhi & Ziwei Guo, LinkedIn",
+  "url": "https://www.youtube.com/watch?v=yH7_SIIgI-Y",
+  "duracao": 2330,
+  "publicado_ts": 1794268813,
+  "edicao": "2026-11-09",
+  "tese": "Um agente só melhora sozinho se o juiz e o diagnóstico de causa raiz forem confiáveis; calibrar o avaliador vem antes de otimizar o prompt.",
+  "tldr": [
+    "O LinkedIn montou um laço de sete etapas em que o agente de entendimento de usuário roda, é avaliado por um juiz LLM, tem as falhas diagnosticadas e recebe novas versões de prompt geradas com GEPA.",
+    "Comparando o juiz com cerca de 180 a 200 revisões humanas, o time achou concordância baixa nas notas fracas e rubricas ambíguas; ajustar as rubricas subiu a concordância de 57% para 64%.",
+    "A reflexão de causa raiz (L2) também errou, por exemplo culpando a rubrica quando o juiz estava errado, e o plano é transformar avaliação, reflexão e otimização em infraestrutura compartilhada entre times."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "O laço de sete etapas",
+      "texto": "O processo roda o agente e registra traces, avalia com um juiz, faz reflexão de causa raiz, propõe edições, valida as edições com o mesmo juiz, evolui o prompt e confirma em um conjunto de holdout. O prompt aprovado vira a nova baseline e o ciclo repete em cadência semanal, quinzenal ou mensal.",
+      "t": 317,
+      "legenda": "O laço completo, da geração de traces até a nova baseline.",
+      "print": "img/yH7_SIIgI-Y/0.jpg",
+      "descricao": "Slide 'Our RSI Strategy' com 7 etapas: amostras K, juiz de avaliação, reflexão (causa raiz), propostas de edição, validação."
+    },
+    {
+      "titulo": "Juiz com notas de 1 a 3 e justificativa",
+      "texto": "O agente de entendimento de usuário recebe um ID de membro e devolve campos como cargo preferido, com confiança, citações e raciocínio. O juiz dá nota de 1 a 3 em cerca de 15 dimensões, cada uma com justificativa em texto. Essas notas por dimensão permitem agrupar falhas e saber onde otimizar.",
+      "t": 761,
+      "legenda": "Notas por dimensão com justificativa guiam o diagnóstico.",
+      "print": "img/yH7_SIIgI-Y/1.jpg",
+      "descricao": "Slide 'Step 2: Evaluation Judge': JSON com score_overall 2.31 e dimensão goal_summary com score 1 e notes, com rótulos Dimension, Score e Rationale."
+    },
+    {
+      "titulo": "Reflexão em quatro mini etapas",
+      "texto": "A reflexão agrupa as linhas que falharam por dimensão, usa um segundo juiz (L2) para atribuir causa raiz a cada linha, funde causas quase duplicadas em rótulos canônicos e ordena por frequência. O resultado alimenta um placar para humanos e uma memória que orienta o diagnóstico seguinte.",
+      "t": 855,
+      "legenda": "Quatro passos transformam notas baixas em causas raiz priorizadas.",
+      "print": "img/yH7_SIIgI-Y/2.jpg",
+      "descricao": "Slide 'Step 3: Agent Reflection' com 4 etapas: cluster, L2 judge (causa raiz), fusão de duplicatas e ranking, com saídas para scorecard e cache de problemas."
+    },
+    {
+      "titulo": "O juiz acerta mais nas notas altas",
+      "texto": "Contra 180 a 200 revisões humanas, a concordância total foi de cerca de 55% para nota 1, 57% para nota 2 e 80% para nota 3. Das 37 avaliações julgadas duras demais, 31 eram nota 1. Dimensões como cargo preferido, domínio e tipo de trabalho tiveram concordância mais baixa.",
+      "t": 1520,
+      "legenda": "Concordância de cerca de 80% só aparece na nota 3.",
+      "print": "img/yH7_SIIgI-Y/3.jpg",
+      "descricao": "Slide 'Human Review - MU Eval (L1)': concordância 55,7% (nota 1), 57,5% (nota 2) e 80,4% (nota 3); cargo preferido é a dimensão mais fraca, com 33,3%."
+    },
+    {
+      "titulo": "Camadas que dependem umas das outras",
+      "texto": "O diagrama final empilha agente base, avaliação, reflexão agêntica e laço de RSI. Sem avaliação padronizada e diagnóstico confiável, o laço de otimização não é confiável. Por isso o time propõe infraestrutura compartilhada de evals para outras equipes.",
+      "t": 2050,
+      "legenda": "A otimização automática só funciona se as camadas abaixo forem sólidas.",
+      "print": null,
+      "descricao": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Recursive self-improvement",
+      "traducao": "autoaperfeiçoamento recursivo",
+      "nivel": "intermediario",
+      "chave": "recursive self-improvement",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo de linguagem usado para avaliar respostas",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Rubric",
+      "traducao": "rubrica de critérios de avaliação",
+      "nivel": "intermediario",
+      "chave": "rubric",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Root cause analysis (RCA)",
+      "traducao": "análise de causa raiz",
+      "nivel": "intermediario",
+      "chave": "root cause analysis (rca)",
+      "analogia": "A análise de causa raiz é como o mecânico que troca a peça gasta em vez de só completar o óleo que vaza toda semana.",
+      "explicacao": [
+        "Root cause analysis (análise de causa raiz) é perguntar por que algo deu errado até chegar ao motivo de origem, sem parar no primeiro sintoma.",
+        "Num agente de IA, o sintoma é uma nota baixa dada por um juiz. A causa pode estar no prompt, no modelo, numa ferramenta, nos dados de entrada ou até no próprio juiz e na rubrica.",
+        "O LinkedIn agrupa as respostas que falharam por dimensão e usa um segundo juiz LLM (L2) para atribuir uma causa e uma etiqueta a cada caso.",
+        "Como as causas saem em texto livre, o time funde as quase duplicadas em rótulos canônicos e ordena por frequência para achar os gargalos principais.",
+        "O ranking vira um placar para humanos e uma memória que guia o próximo diagnóstico. As edições de prompt são propostas a partir dessas causas."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "Eval",
+        "LLM",
+        "Prompt"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "AGRUPAR FALHAS",
+            "nota": "linhas com nota baixa por dimensão"
+          },
+          {
+            "rotulo": "JUIZ L2",
+            "nota": "causa e etiqueta para cada linha"
+          },
+          {
+            "rotulo": "FUNDIR DUPLICADAS",
+            "nota": "textos parecidos viram um rótulo"
+          },
+          {
+            "rotulo": "RANQUEAR",
+            "nota": "ordena causas por frequência"
+          },
+          {
+            "rotulo": "PLACAR DE CAUSAS",
+            "nota": "guia humanos e o próximo ciclo"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Otimização de prompt",
+      "traducao": "ajuste automático do texto de instrução do modelo",
+      "nivel": "intermediario",
+      "chave": "otimização de prompt",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Holdout set",
+      "traducao": "conjunto de validação separado",
+      "nivel": "basico",
+      "chave": "holdout set",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Harness",
+      "traducao": "estrutura que roda o agente",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Trace",
+      "traducao": "registro estruturado da execução",
+      "nivel": "basico",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O talk descreve um piloto em um único agente e relata um primeiro PR em produção, sem números de ganho no produto final. Os números citados vêm de 180 a 200 revisões humanas, amostra pequena para medir concordância por dimensão. A concordância subiu de 57% para 64%, mas segue baixa, e o juiz foi ajustado nos mesmos dados em que foi medido, o que pode inflar o resultado. O palestrante apresenta a infraestrutura compartilhada como visão, sem evidência de adoção por outros times.",
+  "acoes": [
+    "Separe de 30 a 50 saídas do seu agente, peça a uma pessoa para notá-las e calcule em planilha a concordância do seu juiz LLM com ela, por nota e por dimensão.",
+    "Leia as justificativas do juiz onde ele discordou do humano e reescreva a rubrica com regras explícitas de crédito parcial e de formatação irrelevante.",
+    "Adicione a categoria 'o juiz errou' à sua lista de causas raiz para que a reflexão não culpe a rubrica ou o prompt à toa.",
+    "Reserve um conjunto de holdout que nunca entra na otimização e use-o só para aprovar uma nova versão de prompt."
+  ],
+  "numeros": [
+    {
+      "valor": "180 a 200",
+      "contexto": "revisões humanas usadas para medir o juiz L1",
+      "t": 1489
+    },
+    {
+      "valor": "55%, 57%, 80%",
+      "contexto": "concordância do juiz nas notas 1, 2 e 3",
+      "t": 1520
+    },
+    {
+      "valor": "31 de 37",
+      "contexto": "julgamentos duros demais que eram nota 1",
+      "t": 1675
+    },
+    {
+      "valor": "57% para 64%",
+      "contexto": "concordância com humanos após ajustar rubricas",
+      "t": 1738
+    }
+  ],
+  "rotulo": "Agente que corrige os próprios erros no LinkedIn",
+  "objetivo": "desenhar um laço de autoaperfeiçoamento de prompt com juiz LLM, diagnóstico de causa raiz e validação em holdout",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são as quatro mini etapas da reflexão (L2) que o time do LinkedIn usa para achar a causa raiz das falhas?",
+      "resposta": "Agrupar as linhas que falharam por dimensão, atribuir uma causa raiz a cada linha com o juiz L2, fundir causas quase duplicadas em rótulos canônicos e agrupar e ranquear por frequência, gerando um placar para humanos."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você tem um agente de suporte avaliado por um juiz LLM. Como checaria se esse juiz merece guiar uma otimização automática do prompt?",
+      "resposta": "Peça a humanos que notem uma amostra das saídas, compare com as notas do juiz por nota e por dimensão, estude os desacordos, corrija a rubrica e só então use o juiz para validar edições, sempre confirmando em um holdout."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites tem a evidência de que o laço funciona, segundo o que foi mostrado no talk?",
+      "resposta": "A amostra humana é pequena, a concordância subiu só de 57% para 64%, o juiz foi ajustado nos dados em que foi medido e não há medida do ganho final no produto. Existe um único agente e um primeiro PR em produção."
+    }
+  ],
+  "experimento": {
+    "titulo": "Medir a concordância entre um juiz LLM e você",
+    "minutos": 40,
+    "precisa": "Claude ou ChatGPT, uma planilha e 20 saídas de qualquer tarefa sua (resumos, e-mails, respostas)",
+    "passos": [
+      "Escreva uma rubrica curta com 3 dimensões e notas de 1 a 3, como 1 ruim, 2 razoável e 3 bom.",
+      "Dê sua nota às 20 saídas na planilha antes de ver a de qualquer modelo.",
+      "Peça ao modelo para dar nota e justificativa a cada saída com a mesma rubrica e cole na planilha.",
+      "Calcule a porcentagem de concordância total por nota (1, 2 e 3) e por dimensão.",
+      "Escolha os 3 maiores desacordos, reescreva a rubrica para eliminar a ambiguidade e rode de novo."
+    ],
+    "sucesso": "Você tem a tabela de concordância por nota e dimensão, e a segunda rodada com a rubrica corrigida concorda mais com você do que a primeira."
+  },
+  "consolidado_em": "2026-11-10T10:25:07+00:00"
+}

@@ -1,0 +1,220 @@
+{
+  "id": "SE6POOEjh4I",
+  "titulo": "Can AI Agents Beat Wall Street at Predicting Earnings? - Ashwin Paranjape, Samaya AI",
+  "titulo_curto": "Can AI Agents Beat Wall Street at Predicting Earnings?",
+  "palestrante": "Ashwin Paranjape, Samaya AI",
+  "url": "https://www.youtube.com/watch?v=SE6POOEjh4I",
+  "duracao": 921,
+  "publicado_ts": 1794211211,
+  "edicao": "2026-11-09",
+  "tese": "Prever resultados trimestrais serve de teste para agentes financeiros, desde que o ambiente bloqueie qualquer dado do futuro e use dados vivos.",
+  "tldr": [
+    "A Samaya AI escolheu prever resultados trimestrais de empresas em vez de ações, porque há número real, linha de base de analistas e explicação para cada surpresa.",
+    "Num ambiente com portão de ponto no tempo, que impede acesso a dados futuros, os modelos mais novos passaram a bater o consenso de analistas em mais de 450 balanços.",
+    "Os agentes ganham quando acham evidência rara e se afastam do consenso, perdem quando veem a evidência e não agem, e dependem sobretudo de dados atualizados."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Por que balanço e não cotação",
+      "texto": "Prever preço de ação tem muito ruído e não mostra se o raciocínio do modelo estava certo. O balanço trimestral traz números reais, um consenso de analistas como linha de base e comentários que explicam cada surpresa. Isso dá gabarito quantitativo e qualitativo ao mesmo tempo.",
+      "t": 222,
+      "legenda": "O balanço oferece gabarito numérico, baseline humana e explicação.",
+      "print": "img/SE6POOEjh4I/0.jpg",
+      "descricao": "Slide 'Earnings prediction': EPS Q1 $0,98, analistas $1,08/$1,04/$1,00, consenso $1,04, Q2 $1,09 e surpresa de +$0,05."
+    },
+    {
+      "titulo": "Ambiente com portão de ponto no tempo",
+      "texto": "O agente roda dentro do harness de produção da Samaya, com documentos, preços, consenso e notícias. Um portão programático, protegido por token de autenticação, bloqueia qualquer informação posterior à data da previsão (cinco sessões antes do balanço). A web aberta é mais difícil de travar, então usam fluxos de notícias com data como aproximação.",
+      "t": 346,
+      "legenda": "O portão evita vazamento do futuro e torna o teste confiável.",
+      "print": "img/SE6POOEjh4I/1.jpg",
+      "descricao": "Slide 'Harness' com 5 passos, incluindo 'Enforce point-in-time gate: programmatic with an auth-token' e notícias com data no lugar da web."
+    },
+    {
+      "titulo": "Modelos novos passam o consenso",
+      "texto": "Com sete modelos de fronteira, o erro do consenso foi de 1,5 vez a volatilidade histórica, e 1,18 depois de corrigir o viés de otimismo. O erro cai conforme os modelos ficam mais novos, e em receita o GPT-6 Astra supera até o consenso corrigido. Hit rate e correlação de surpresa seguem o mesmo padrão.",
+      "t": 439,
+      "legenda": "O erro cai a cada geração de modelo e cruza a linha dos analistas.",
+      "print": "img/SE6POOEjh4I/2.jpg",
+      "descricao": "Gráfico 'Prediction error' (barras ainda não visíveis): legenda consenso bruto 1,57σ e consenso corrigido 1,18σ; menor é melhor."
+    },
+    {
+      "titulo": "Quando o agente acerta e quando erra",
+      "texto": "Na Macom, o agente achou um fornecedor pequeno no Reino Unido, inferiu a receita de data centers e chegou perto do resultado real, longe do consenso. Na Ross Stores, viu um reembolso de tarifas em um concorrente, mas deixou de fora da margem e ficou colado ao consenso. A falha foi falta de convicção, não falta de dado.",
+      "t": 598,
+      "legenda": "O acerto veio de evidência rara e ajuste afastado do consenso.",
+      "print": "img/SE6POOEjh4I/3.jpg",
+      "descricao": "Slide Macom (MTSI, Adj. EPS FQ3 2026): consenso $1,352, consenso corrigido $1,357, previsão da IA $1,39 e resultado real $1,40."
+    },
+    {
+      "titulo": "Dado vivo pesa mais que o modelo",
+      "texto": "Sem acesso a dados, o modelo não vai bem mesmo tendo sido treinado até junho de 2026. Com dados 11 semanas velhos, a queda fica entre 12 e 15 pontos, igual à distância entre Sonnet e Fable 5.1. Guia de especialista aumenta a pesquisa, e os melhores modelos reconstroem o consenso sem vê-lo.",
+      "t": 724,
+      "legenda": "Dados atuais valem mais que a memória do modelo.",
+      "print": "img/SE6POOEjh4I/4.jpg",
+      "descricao": "Gráfico 'Access to live data': GPT-6 Astra 0,51 e Claude Fable 5.1 0,52, contra consenso corrigido de 0,45; dados frescos (T-5)."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Harness",
+      "traducao": "estrutura que roda o agente",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Look-ahead bias",
+      "traducao": "viés de olhar para frente",
+      "nivel": "intermediario",
+      "chave": "look-ahead bias",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Knowledge cutoff",
+      "traducao": "data de corte do conhecimento",
+      "nivel": "basico",
+      "chave": "knowledge cutoff",
+      "analogia": "Knowledge cutoff é como a data de impressão de um livro escolar: tudo que aconteceu depois disso simplesmente não está nas páginas.",
+      "explicacao": [
+        "Um modelo de IA aprende lendo uma enorme pilha de textos, e essa leitura para em um dia específico.",
+        "Esse dia se chama knowledge cutoff (data de corte do conhecimento). Fatos posteriores a ele ficam fora da memória do modelo.",
+        "Depois do corte, o modelo só conhece novidades se alguém entregar esses dados no prompt ou por ferramentas de busca.",
+        "Em testes de previsão, a data de corte define onde começa a amostra. A Samaya só usou balanços a partir de julho porque o Fable 5.1 tinha corte em junho, e assim o modelo não podia ter decorado as respostas.",
+        "A memória do treino também envelhece rápido. No mesmo estudo, o modelo sem acesso a dados foi mal, e dados com 11 semanas de atraso custaram de 12 a 15 pontos."
+      ],
+      "pre_requisitos": [
+        "LLM",
+        "Prompt",
+        "Eval"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Baseline",
+      "traducao": "linha de base",
+      "nivel": "basico",
+      "chave": "baseline",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Ground truth",
+      "traducao": "gabarito rotulado por especialistas",
+      "nivel": "basico",
+      "chave": "ground truth",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação",
+      "nivel": "basico",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Portão de ponto no tempo",
+      "traducao": "point-in-time gate, bloqueio de dados posteriores à data da previsão",
+      "nivel": "intermediario",
+      "chave": "portão de ponto no tempo",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Agente",
+      "traducao": "agent (programa de IA que executa tarefas em etapas)",
+      "nivel": "basico",
+      "chave": "agente de ia",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O palestrante é líder de IA da Samaya, que vende o produto avaliado, e o produto está em alpha, então há conflito de interesse. A amostra é de pouco mais de 450 balanços, a partir de julho, sem período longo nem variedade de mercado. Os exemplos Macom e Ross foram escolhidos a dedo. A web não tem portão rígido, só proxy com notícias datadas, e o risco de vazamento persiste. Não se mostra se a vantagem sobre o consenso viraria retorno após custos.",
+  "acoes": [
+    "Liste uma tarefa do seu trabalho com gabarito conhecido depois (churn, SLA, previsão de métrica) e defina a baseline humana contra a qual o agente será medido.",
+    "Se seu agente consulta dados com datas, adicione um filtro por data de corte na camada de ferramentas e teste se ele impede acesso a registros posteriores.",
+    "Rode o mesmo prompt em duas condições, sem dados e com dados atuais, e meça a diferença para saber quanto vem do modelo e quanto vem dos dados."
+  ],
+  "numeros": [
+    {
+      "valor": "450",
+      "contexto": "balanços trimestrais avaliados, a partir de julho",
+      "t": 376
+    },
+    {
+      "valor": "1,5",
+      "contexto": "erro do consenso em vezes a volatilidade histórica",
+      "t": 439
+    },
+    {
+      "valor": "1,18",
+      "contexto": "erro do consenso após correção de viés",
+      "t": 439
+    },
+    {
+      "valor": "12 a 15",
+      "contexto": "pontos perdidos com dados velhos de 11 semanas",
+      "t": 755
+    }
+  ],
+  "rotulo": "Agentes de IA conseguem prever balanços melhor que analistas?",
+  "objetivo": "desenhar um ambiente de avaliação sem vazamento do futuro para testar um agente em previsões com gabarito conhecido",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Para que serve o portão de ponto no tempo e como ele é protegido contra o agente?",
+      "resposta": "Ele bloqueia por programação qualquer acesso a informação posterior à data da previsão. É protegido por um token de autenticação, então o agente não consegue contorná-lo."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você quer testar um agente que prevê o cancelamento de clientes no próximo mês. Como evitar vazamento do futuro?",
+      "resposta": "Congele os dados na data da previsão, aplique um filtro de data em todas as ferramentas de consulta e compare a previsão com o que ocorreu depois. Use também uma baseline, como a taxa histórica do time de CS."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites tornam frágil a conclusão de que os agentes superam analistas?",
+      "resposta": "A amostra é de cerca de 450 balanços em um período curto, o palestrante vende o produto, os exemplos foram selecionados, o portão não cobre bem a web aberta e não há medida de retorno financeiro real."
+    }
+  ],
+  "experimento": {
+    "titulo": "Teste de previsão com corte de data",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT, planilha e 10 resultados trimestrais públicos já divulgados",
+    "passos": [
+      "Escolha 10 balanços recentes de empresas abertas e anote o resultado real e o consenso, que costuma aparecer em sites financeiros.",
+      "Peça ao modelo uma previsão de beat ou miss para cada empresa, dando só dados anteriores à data do balanço e pedindo que cite as evidências.",
+      "Registre na planilha se o modelo acertou o lado do consenso e compare com a baseline de repetir a maioria dos últimos quatro trimestres.",
+      "Repita sem dados nenhum, só com o nome da empresa, e compare as duas taxas de acerto."
+    ],
+    "sucesso": "Você tem uma planilha com as três taxas de acerto (com dados, sem dados e baseline) e consegue dizer qual condição pesa mais."
+  },
+  "consolidado_em": "2026-11-10T10:25:08+00:00"
+}

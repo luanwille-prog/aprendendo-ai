@@ -1,0 +1,240 @@
+{
+  "id": "dznCt8xPW7o",
+  "titulo": "Right Answer, Wrong Reasons: AI Forecasts Costco - Hassan El Mghari & Omar El Mghari, Together AI",
+  "titulo_curto": "Right Answer, Wrong Reasons: AI Forecasts Costco",
+  "palestrante": "Hassan El Mghari & Omar El Mghari, Together AI",
+  "url": "https://www.youtube.com/watch?v=dznCt8xPW7o",
+  "duracao": 925,
+  "publicado_ts": 1794211221,
+  "edicao": "2026-11-09",
+  "tese": "Acertar o número não prova que o modelo está certo. Dois erros podem se cancelar, e só um especialista de domínio vê isso.",
+  "tldr": [
+    "Hassan e Omar El Mghari deram ao GPT-OSS-120B só os documentos públicos da Costco anteriores ao aumento da anuidade de 2024. O modelo escreveu o modelo financeiro como fórmulas estruturadas, rodou 16 vezes em paralelo, e a previsão ficou a 4,4% do resultado real.",
+    "Omar, ex-CFO e ex-chefe de auditoria interna, abriu as premissas e achou dois erros que se compensavam. O modelo aplicou o aumento a todos os membros em vez de só EUA e Canadá, e inventou 15% de membros executivos quando o dado real era 45%.",
+    "Corrigindo só um dos erros, o desvio subiu para 28%. A lição é pôr um especialista no circuito e transformar as checagens dele em código, como as três linhas de defesa da auditoria."
+  ],
+  "tema": "evals",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Modelo com data de corte antes do evento",
+      "texto": "Para prever um evento, o modelo não pode ter visto o resultado no treino. Modelos novos já sabiam do aumento da anuidade da Costco. Os autores usaram modelos de pesos abertos mais antigos, GPT-OSS-120B e Llama 3.3 70B, cujo treino termina antes de julho de 2024.",
+      "t": 313,
+      "legenda": "O pipeline filtra os fatos para só usar o que existia antes do corte.",
+      "print": "img/dznCt8xPW7o/0.jpg",
+      "descricao": "Diagrama: 214 documentos, 3.310 fatos, corte em 30/06/2024, 16 × gpt-oss-120b, verificações e 'Pick a winner' com retentativas."
+    },
+    {
+      "titulo": "Modelo escreve fórmulas, não faz a conta",
+      "texto": "O modelo transforma frases dos relatórios em JSON estruturado, por exemplo receita de anuidade reconhecida ao longo de 52 semanas. A conta roda depois em código, em cerca de 10 milissegundos, e é auditável. O modelo só escreve premissas e fórmulas.",
+      "t": 344,
+      "legenda": "Texto do relatório vira fórmula estruturada que o código executa.",
+      "print": "img/dznCt8xPW7o/1.jpg",
+      "descricao": "Frase do relatório da Costco ao lado do JSON da fórmula ratable de 52 semanas e do resultado: US$ 65 em setembro viram US$ 5,42 por mês."
+    },
+    {
+      "titulo": "16 execuções baratas com checagens e retentativa",
+      "texto": "Em vez de ajustar um prompt sem fim, eles rodaram 16 sessões em paralelo. Cada uma passava por checagens simples, como fórmula que não depende de si mesma e aumento de preço que precisa elevar a receita. Erros voltavam ao modelo até duas vezes. Cinco execuções passaram.",
+      "t": 466,
+      "legenda": "Muitas tentativas baratas com filtro automático substituem um prompt perfeito.",
+      "print": "img/dznCt8xPW7o/2.jpg",
+      "descricao": "Diagrama de retentativa: o erro volta ao modelo até 2 vezes. Exemplo: fee_increase_date altera as receitas de FY2024Q4 em +124M."
+    },
+    {
+      "titulo": "4,4% de erro, mas pelos motivos errados",
+      "texto": "O gráfico compara o lucro previsto com o real extraído dos relatórios. A média das cinco versões ficou a 4,4%, com faixa de 0,7% a 5,2%. O resultado parecia ótimo até Omar auditar as premissas.",
+      "t": 560,
+      "legenda": "A previsão acompanha o real de perto, mas esconde premissas erradas.",
+      "print": "img/dznCt8xPW7o/3.jpg",
+      "descricao": "Gráfico 'The fee increase, revealed': previsão de junho de 2024 (linha azul), receita real da Costco (pontos laranja) e faixa das 5 versões."
+    },
+    {
+      "titulo": "Erros que se cancelam: corrija um e o desvio explode",
+      "texto": "Truque de auditor. Se dois erros se compensam, corrija um só e o resultado piora. Ao trocar os 15% inventados pelos 45% reais, o erro saltou para 28%. Sorte não é controle.",
+      "t": 777,
+      "legenda": "Consertar só uma premissa derruba a precisão e expõe a compensação.",
+      "print": "img/dznCt8xPW7o/4.jpg",
+      "descricao": "Slide 'If you fix one of the two': erro de 1,7% com 15% de executivos e 28,6% com a proporção real de 45,4% do 10-K."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Knowledge cutoff",
+      "traducao": "data de corte do conhecimento",
+      "nivel": "basico",
+      "chave": "knowledge cutoff",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Look-ahead bias",
+      "traducao": "viés de olhar para frente",
+      "nivel": "intermediario",
+      "chave": "look-ahead bias",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Open weights",
+      "traducao": "pesos abertos",
+      "nivel": "basico",
+      "chave": "open weights",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Structured output",
+      "traducao": "saída estruturada em JSON Schema",
+      "nivel": "intermediario",
+      "chave": "structured output",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Hallucination",
+      "traducao": "alucinação",
+      "nivel": "basico",
+      "chave": "hallucination",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Modelo de três linhas",
+      "traducao": "three lines model",
+      "nivel": "intermediario",
+      "chave": "modelo de três linhas",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Human in the loop",
+      "traducao": "humano no circuito de validação",
+      "nivel": "basico",
+      "chave": "human in the loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Subject matter expert",
+      "traducao": "especialista de domínio",
+      "nivel": "basico",
+      "chave": "subject matter expert",
+      "analogia": "Um especialista de domínio é como o mecânico experiente que escuta o motor e percebe o defeito que o painel do carro não acusa.",
+      "explicacao": [
+        "Subject matter expert (SME, especialista de domínio) é a pessoa que conhece a fundo uma área, como contabilidade, medicina ou direito.",
+        "Quem programa o sistema de IA costuma não ter esse conhecimento, então aceita um resultado que só parece bom.",
+        "O especialista confere as premissas, as entradas e as saídas do modelo ou do agente e aponta o que está errado.",
+        "No caso da Costco, o ex-CFO viu dois erros que se cancelavam, como os 15% de membros executivos inventados quando o dado real era 45%.",
+        "Cada checagem do especialista vira código que roda sozinho em toda execução, e o sistema fica mais autônomo e confiável."
+      ],
+      "pre_requisitos": [
+        "Human in the loop",
+        "Agente de IA",
+        "Eval"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "SAÍDA DO MODELO",
+            "nota": "Previsão com premissas e fórmulas"
+          },
+          {
+            "rotulo": "REVISÃO DO ESPECIALISTA",
+            "nota": "Confere premissas contra os dados"
+          },
+          {
+            "rotulo": "CHECAGEM EM CÓDIGO",
+            "nota": "Regra do especialista vira teste"
+          },
+          {
+            "rotulo": "SISTEMA CONFIÁVEL",
+            "nota": "Erros de domínio barrados sozinhos"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É um único caso, a Costco, com 5 execuções aprovadas e faixa de 0,7% a 5,2%, o que mostra o peso do acaso. Os autores admitem que tiveram sorte. A correção para 45% veio depois de ver o resultado real, o que mistura diagnóstico e ajuste. As 16 execuções erraram juntas a estimativa do aumento da anuidade, sinal de erro sistemático. O palestrante trabalha na Together AI, que vende os modelos usados, então há também demonstração de produto. Serve como exemplo de auditoria, não prova que modelos abertos prevejam lucros em geral.",
+  "acoes": [
+    "Liste as premissas que o seu modelo ou agente inventa e confira cada uma contra um dado citado na fonte, anotando as que não têm número de apoio.",
+    "Escolha a data de corte do seu teste e use um modelo cujo treino termine antes do evento que você quer prever.",
+    "Rode a mesma tarefa 10 a 16 vezes com um modelo barato, aplique checagens automáticas e compare os resultados que passam.",
+    "Quando o resultado parecer bom, mude uma premissa por vez e veja se a saída piora muito, para detectar erros que se cancelam."
+  ],
+  "numeros": [
+    {
+      "valor": "4,4%",
+      "contexto": "desvio médio da previsão das 5 versões aprovadas",
+      "t": 560
+    },
+    {
+      "valor": "US$ 0,19",
+      "contexto": "custo das 16 execuções do GPT-OSS-120B",
+      "t": 497
+    },
+    {
+      "valor": "45%",
+      "contexto": "parcela real de membros executivos nos relatórios",
+      "t": 685
+    },
+    {
+      "valor": "28%",
+      "contexto": "erro após corrigir só a premissa dos executivos",
+      "t": 777
+    }
+  ],
+  "rotulo": "Previsão da Costco por IA: acerto pelos motivos errados",
+  "objetivo": "desenhar checagens de domínio que revelem erros que se cancelam na saída de um modelo",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que o modelo escreve fórmulas em JSON em vez de calcular o lucro direto?",
+      "resposta": "Porque a conta fica em código determinístico e auditável. O modelo só propõe premissas e fórmulas, que podem ser checadas, e o cálculo roda em milissegundos."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você tem um agente que estima prazos de projeto. Como aplicaria a lição dos erros que se cancelam?",
+      "resposta": "Liste as premissas do agente, peça a um especialista para conferir cada uma contra dados reais e transforme as correções em checagens automáticas. Depois altere uma premissa por vez e veja se o erro final sobe muito."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que limita a conclusão de que o modelo aberto consegue prever lucros?",
+      "resposta": "É um caso só, com cinco execuções aprovadas e erro entre 0,7% e 5,2%. O acerto vinha de erros compensados, as 16 execuções falharam juntas na estimativa do aumento da anuidade e a fala também promove a Together AI."
+    }
+  ],
+  "experimento": {
+    "titulo": "Teste de erros que se cancelam num modelo de planilha",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT e uma planilha (Google Sheets ou Excel)",
+    "passos": [
+      "Peça ao modelo uma estimativa simples, como receita anual de uma assinatura, escrita como lista de premissas e fórmulas, sem fazer a conta.",
+      "Monte as fórmulas na planilha e registre o resultado final.",
+      "Confira cada premissa contra uma fonte pública e marque as que o modelo inventou.",
+      "Corrija uma premissa por vez, anotando quanto o resultado muda a cada correção."
+    ],
+    "sucesso": "Você identifica pelo menos uma premissa sem fonte e mostra, com a planilha, quanto o resultado depende dela."
+  },
+  "consolidado_em": "2026-11-10T10:25:08+00:00"
+}

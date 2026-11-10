@@ -1,0 +1,240 @@
+{
+  "id": "nKjPBAw_N_0",
+  "titulo": "How to Build a Software Factory That Improves Itself - Zach Lloyd, Warp",
+  "titulo_curto": "How to Build a Software Factory That Improves Itself",
+  "palestrante": "Zach Lloyd, Warp",
+  "url": "https://www.youtube.com/watch?v=nKjPBAw_N_0",
+  "duracao": 1321,
+  "publicado_ts": 1794211217,
+  "edicao": "2026-11-09",
+  "tese": "Trate a fábrica de agentes como infraestrutura definida em código, com medição sobre suas próprias tarefas, e deixe os agentes proporem melhorias nela.",
+  "tldr": [
+    "Zach Lloyd, CEO da Warp, defende sair de agentes rodando no laptop de cada engenheiro para uma fábrica de software na nuvem, com sandbox, governança e custo visível.",
+    "A fábrica deve ser aberta, integrada às ferramentas existentes e definida em código versionado, o que permite testar versões e deixar agentes alterarem a própria fábrica.",
+    "Cada execução recebe notas de um LLM juiz, as falhas alimentam um laço de autoaperfeiçoamento, e benchmarks montados com tarefas passadas comparam custo e qualidade entre modelos."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Do prompt interativo à fábrica na nuvem",
+      "texto": "Agentes locais dependem de uma pessoa operando, são difíceis de governar e, se forem comprometidos, herdam tudo o que o usuário logado pode fazer. A proposta é mover os agentes para sandboxes na nuvem, num ciclo em que humanos colocam trabalho e agentes fazem triagem, especificação, implementação e verificação.",
+      "t": 495,
+      "legenda": "Todo o trabalho dos agentes fica visível num painel central",
+      "print": "img/nKjPBAw_N_0/0.jpg",
+      "descricao": "Dashboard do Warp: Human interactions per PR 16.6, cycle time mediano (kickoff a merge 13h, PR a primeira revisão 2h) e gráfico de pull requests e runs"
+    },
+    {
+      "titulo": "A fábrica definida em código",
+      "texto": "Um agente orquestrador decide se a próxima etapa é triagem, especificação, implementação ou revisão. Cada etapa é uma definição de agente com segredos, MCPs, prompt e modelo. Um repositório guarda tudo (agentes, automações, benchmarks, skills, webhooks), o que permite versionar, testar versões e deixar agentes editarem a fábrica.",
+      "t": 651,
+      "legenda": "Cada etapa é uma definição de agente guardada em repositório",
+      "print": "img/nKjPBAw_N_0/1.jpg",
+      "descricao": "Página Agents da fábrica: wilson Foreman orquestra as etapas code-review, implementation, spec e triage, cada uma como definição de agente"
+    },
+    {
+      "titulo": "Scores como evals online",
+      "texto": "Agentes avaliadores olham as execuções e usam LLM como juiz para dizer se foram boas. O exemplo é um score que detecta testes redundantes, falha comum em agentes de código. Cada falha detectada vira uma oportunidade de melhorar a fábrica, e avaliar com agentes escala mais que corrigir à mão.",
+      "t": 743,
+      "legenda": "O score mostra quando agentes escreveram testes desnecessários",
+      "print": "img/nKjPBAw_N_0/2.jpg",
+      "descricao": "Aba Scorers: Redundant Tests em 100% (27 passed, 0 failed) ao lado de Computer-Use Ask em 98%, com séries de 8 a 13 de outubro"
+    },
+    {
+      "titulo": "Laço de autoaperfeiçoamento",
+      "texto": "Agentes agregam as falhas, buscam padrões e propõem uma mudança na definição da fábrica via PR. No exemplo, a sugestão de ler skills antes de implementar vem de uma falha vista 37 vezes. O laço fecha quando o problema identificado vira uma correção revisável.",
+      "t": 834,
+      "legenda": "Uma falha repetida vira um PR contra a definição da fábrica",
+      "print": "img/nKjPBAw_N_0/3.jpg",
+      "descricao": "Self-improvement com 31 itens em revisão, incluindo 'Read matching repository skills before implementing' e outras propostas de PR"
+    },
+    {
+      "titulo": "Benchmark com suas próprias tarefas",
+      "texto": "Benchmarks públicos dizem pouco sobre o seu código. A ideia é reaproveitar execuções passadas, rodar com vários modelos e plotar custo contra qualidade. No exemplo, um modelo mais barato acertou 93% a US$ 2 e outro 95% por cerca de três vezes mais, base para uma estratégia de roteamento.",
+      "t": 990,
+      "legenda": "Custo e acerto por modelo, medidos nas tarefas reais do time",
+      "print": "img/nKjPBAw_N_0/4.jpg",
+      "descricao": "Gráfico WarpBench 0.1 de correção contra custo médio: glm 5.3 flash a 92,9% e US$ 1,99; gpt-5.6-sol a cerca de 95%; claude opus 5 a cerca de 91%"
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Software factory",
+      "traducao": "fábrica de software",
+      "nivel": "intermediario",
+      "chave": "software factory",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado para rodar o código",
+      "nivel": "basico",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Harness",
+      "traducao": "estrutura que roda o agente",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Online scoring",
+      "traducao": "avaliação automática do tráfego real de produção",
+      "nivel": "intermediario",
+      "chave": "online scoring",
+      "analogia": "Online scoring é como um fiscal de qualidade na linha de produção de uma padaria, que prova os pães enquanto saem do forno e anota quais vieram com defeito.",
+      "explicacao": [
+        "Quando um sistema trabalha sozinho o dia todo, alguém precisa conferir se o trabalho saiu bom. Online scoring (pontuação online) faz essa conferência de forma automática, enquanto o sistema está em uso.",
+        "Cada execução real de um agente de código vira um registro. Um avaliador lê esse registro e dá uma nota, sem esperar um teste preparado em laboratório.",
+        "O avaliador costuma ser outro modelo de linguagem, no papel de LLM as a judge (LLM como juiz). Ele recebe um critério, como \"o agente escreveu testes redundantes?\", e responde se a execução passou.",
+        "As notas formam um gráfico ao longo do tempo. Você vê quando uma falha começou a aparecer e quantas vezes ela se repete.",
+        "Cada falha registrada alimenta o laço de melhoria. Outros agentes agrupam as falhas, acham padrões e propõem mudanças na configuração da fábrica, o que escala mais que uma pessoa corrigindo à mão."
+      ],
+      "pre_requisitos": [
+        "Eval",
+        "LLM",
+        "Agente de IA"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "EXECUÇÃO REAL",
+            "nota": "Agente faz uma tarefa do time"
+          },
+          {
+            "rotulo": "LLM JUIZ",
+            "nota": "Aplica um critério ao registro"
+          },
+          {
+            "rotulo": "NOTA NO GRÁFICO",
+            "nota": "Falhas aparecem ao longo do tempo"
+          },
+          {
+            "rotulo": "MELHORIA",
+            "nota": "Falha repetida vira proposta de ajuste"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo de linguagem usado para avaliar respostas",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Benchmark",
+      "traducao": "teste padronizado de desempenho",
+      "nivel": "basico",
+      "chave": "benchmark",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Model routing",
+      "traducao": "roteamento de modelos",
+      "nivel": "avancado",
+      "chave": "model routing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Spec-driven development",
+      "traducao": "desenvolvimento guiado por especificação",
+      "nivel": "intermediario",
+      "chave": "spec-driven development",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O talk é demonstração do produto Warp Factories, e o palestrante é o CEO da empresa. Não há dado de ganho de produtividade nem comparação com outras abordagens. O exemplo de benchmark (93% a US$ 2 contra 95% a cerca de três vezes o custo) mostra poucos modelos, sem tamanho da amostra, e a correção vem só de LLM como juiz, o que ele próprio admite. A plataforma não é open source, apesar da defesa de uma fábrica aberta, e ele recomenda o produto para times de cerca de 10 pessoas ou mais.",
+  "acoes": [
+    "Liste suas tarefas recentes com agente de código e escolha 5 (pequenas, médias e difíceis) para formar um benchmark manual.",
+    "Escreva um score simples com LLM juiz para uma falha que você já viu, como testes redundantes, e aplique nas últimas 20 execuções.",
+    "Registre o custo por PR gerado por agente numa planilha, separando o que vai para avaliação e benchmarks.",
+    "Guarde skills, prompts e configurações de MCP do seu agente num repositório versionado, em vez de configurações locais soltas."
+  ],
+  "numeros": [
+    {
+      "valor": "37 vezes",
+      "contexto": "falha vista antes de o laço propor um PR",
+      "t": 834
+    },
+    {
+      "valor": "93%",
+      "contexto": "acerto do modelo barato no benchmark, a US$ 2",
+      "t": 990
+    },
+    {
+      "valor": "95%",
+      "contexto": "acerto do outro modelo, a cerca de 3 vezes o custo",
+      "t": 990
+    },
+    {
+      "valor": "10 engenheiros",
+      "contexto": "tamanho de time a partir do qual o sistema compensa",
+      "t": 1303
+    }
+  ],
+  "rotulo": "Fábrica de software com agentes que se melhora sozinha",
+  "objetivo": "desenhar uma fábrica de software com agentes na nuvem, definida em código e medida com notas e benchmarks próprios",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais dois problemas dos agentes locais o palestrante cita para justificar mover os agentes para a nuvem?",
+      "resposta": "Segurança, porque um agente comprometido herda o acesso do usuário logado no laptop, e governança, porque cada pessoa configura seus MCPs, skills e ferramentas sem auditoria. Ele também cita o gargalo de depender de uma pessoa e o custo difícil de controlar."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você montaria um benchmark próprio para decidir qual modelo usar nas tarefas de front-end do seu time?",
+      "resposta": "Separe execuções reais passadas de front-end, de pequenas a difíceis, rode cada uma com vários modelos, avalie a correção com um juiz (de preferência com revisão humana) e compare custo e acerto. Use o resultado para definir qual modelo atende cada tipo de tarefa."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites tem o gráfico de custo contra qualidade mostrado na demo?",
+      "resposta": "A correção vem de LLM como juiz, sem avaliação humana, e o palestrante admite isso. Não se sabe o tamanho do conjunto de tarefas, e a diferença entre 93% e 95% pode ser ruído. Além disso, ele vende o produto que gera o gráfico."
+    }
+  ],
+  "experimento": {
+    "titulo": "Mini-benchmark de modelos com suas tarefas",
+    "minutos": 40,
+    "precisa": "Uma conta no Claude ou ChatGPT, um repositório seu e uma planilha",
+    "passos": [
+      "Escolha 5 tarefas reais pequenas do seu repositório e escreva cada uma como um prompt autocontido, com o resultado esperado.",
+      "Rode cada prompt em dois modelos ou configurações diferentes e guarde as respostas na planilha.",
+      "Crie um prompt de juiz que dê nota de 0 a 1 por critério e aplique às 10 respostas, conferindo você mesmo 3 notas.",
+      "Anote o custo estimado de cada modelo e compare acerto e custo por modelo."
+    ],
+    "sucesso": "Você tem uma tabela com acerto e custo por modelo e consegue dizer qual usar para cada tipo de tarefa, apontando onde o juiz errou."
+  },
+  "consolidado_em": "2026-11-10T10:25:08+00:00"
+}

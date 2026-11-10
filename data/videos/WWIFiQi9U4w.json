@@ -1,0 +1,239 @@
+{
+  "id": "WWIFiQi9U4w",
+  "titulo": "The One Thing Every AI Agent Framework Agrees On - Mislav Ivanda, Daytona",
+  "titulo_curto": "The One Thing Every AI Agent Framework Agrees On",
+  "palestrante": "Mislav Ivanda, Daytona",
+  "url": "https://www.youtube.com/watch?v=WWIFiQi9U4w",
+  "duracao": 935,
+  "publicado_ts": 1794211227,
+  "edicao": "2026-11-09",
+  "tese": "Framework, modelo e prompt se trocam depois. O lugar onde o código do agente roda define a arquitetura e precisa ser escolhido primeiro.",
+  "tldr": [
+    "O palestrante integrou a Daytona a vários frameworks de agentes e viu que todos acabam usando as mesmas três operações de sandbox: criar, rodar código e apagar.",
+    "Ele compara três formas de executar código gerado por agente (allow list com aprovação, runtime embutido e computador separado) e defende que só a terceira impede que um passo comprometido comprometa o app.",
+    "A conclusão prática é definir uma interface própria para a fronteira de execução antes de escolher o framework, porque o resto é fácil de trocar."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Frameworks rivais usam as mesmas três chamadas",
+      "texto": "CrewAI, LangGraph, OpenAI Agents SDK e outros discordam sobre o que é um agente e quem controla o fluxo. Ainda assim, a integração com a Daytona se reduz a criar a sandbox, rodar código ou tarefa nela e apagá-la. Quando concorrentes convergem, o palestrante vê necessidade, não moda.",
+      "t": 93,
+      "legenda": "Integrações diferentes falam o mesmo protocolo de três passos.",
+      "print": "img/WWIFiQi9U4w/0.jpg",
+      "descricao": "Slide 'Different logos. Same three lines.': LangChain, CrewAI, Google ADK, Pydantic AI, OpenAI Agents SDK e Mastra usam daytona.create(), code_run() e delete()."
+    },
+    {
+      "titulo": "Allow list e aprovação definem o que o modelo deve usar, não o que pode",
+      "texto": "Liberar um comando como python -c permite abrir sockets, mexer no sistema de arquivos e executar qualquer código. O clique em aprovar costuma ser automático. Se o modelo for comprometido, a lista de permissões vira porta dos fundos na sua máquina.",
+      "t": 283,
+      "legenda": "Um comando liberado dá acesso a rede, arquivos e execução livre.",
+      "print": "img/WWIFiQi9U4w/1.jpg",
+      "descricao": "Slide 'On your machine, behind an allowlist.': command allowlists, approval prompts, interception hooks. 'A permission model is not isolation.'"
+    },
+    {
+      "titulo": "Runtime embutido isola o código, mas não as ferramentas",
+      "texto": "V8 ou QuickJS dão isolamento de rede e de arquivos ao script gerado. As ferramentas que o script chama, como consultar banco ou enviar e-mail, rodam fora do runtime, no seu host. Um agente malicioso age por elas, por exemplo com uma ferramenta de apagar banco.",
+      "t": 345,
+      "legenda": "O código fica isolado, mas as chamadas de ferramenta continuam no host.",
+      "print": "img/WWIFiQi9U4w/2.jpg",
+      "descricao": "Slide 'In an interpreter, inside your process.': QuickJS/V8 isolates, sem filesystem e sem rede, tools bridged to the host. 'It isolates the glue."
+    },
+    {
+      "titulo": "Computador separado: passo comprometido não compromete o app",
+      "texto": "Na opção 3 o agente usa uma VM por API, sem tocar na rede ou nos arquivos locais. O pior código possível fica contido e a sandbox é descartada e recriada. Nas outras opções, um passo mal comportado atinge a aplicação inteira.",
+      "t": 407,
+      "legenda": "A fronteira da VM contém o dano de um passo ruim.",
+      "print": "img/WWIFiQi9U4w/3.jpg",
+      "descricao": "Slide 'On a separate computer.': container ou microVM, alcançado por API, sem acesso à infra. 'A compromised step is not a compromised app.'"
+    },
+    {
+      "titulo": "Frameworks são opinião, a fronteira de execução é compromisso",
+      "texto": "Trocar framework, modelo, prompt, eval, tracing e memória é viável. Já a postura de execução (local ou sandbox externa) molda como você escreve as ferramentas. Muitos começam local na prova de conceito e levam isso até produção. A sugestão é definir cedo uma interface própria para a fronteira.",
+      "t": 850,
+      "legenda": "A mensagem final: escolha a fronteira de execução antes do framework.",
+      "print": "img/WWIFiQi9U4w/4.jpg",
+      "descricao": "Slide final 'Pick the boundary before the framework.': Frameworks are opinions. The boundary is a commitment."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado para rodar o código",
+      "nivel": "basico",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Allow list",
+      "traducao": "lista de permissões (nega tudo por padrão)",
+      "nivel": "basico",
+      "chave": "allow list",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Embedded runtime",
+      "traducao": "runtime embutido (V8, QuickJS) no próprio processo",
+      "nivel": "intermediario",
+      "chave": "embedded runtime",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Tool calling",
+      "traducao": "chamada de ferramentas por um agente",
+      "nivel": "basico",
+      "chave": "tool calling",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Blast radius",
+      "traducao": "raio de impacto",
+      "nivel": "intermediario",
+      "chave": "blast radius",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Agent loop",
+      "traducao": "ciclo do agente",
+      "nivel": "basico",
+      "chave": "agent loop",
+      "analogia": "O agent loop é como um cozinheiro que prova o molho, acrescenta sal, prova de novo e repete até o prato ficar pronto.",
+      "explicacao": [
+        "Agent loop (ciclo do agente) é a repetição que faz um programa de IA trabalhar em etapas até terminar uma tarefa.",
+        "A cada volta, o modelo recebe o objetivo e o histórico do que já aconteceu e decide o próximo passo.",
+        "Esse passo costuma ser uma chamada de ferramenta (tool call), como rodar código, ler um arquivo ou consultar um banco.",
+        "O resultado da ferramenta volta para o contexto do LLM, e o ciclo segue até o modelo dar a resposta final ou bater um limite de voltas.",
+        "No talk, o OpenAI Agents SDK define o agente justamente como esse loop em volta do modelo, e é dentro dele que o código gerado precisa de um lugar seguro para rodar."
+      ],
+      "pre_requisitos": [
+        "LLM",
+        "Agente de IA",
+        "Tool calling",
+        "Prompt"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "OBJETIVO",
+            "nota": "tarefa e histórico entram no modelo"
+          },
+          {
+            "rotulo": "MODELO DECIDE",
+            "nota": "escolhe o próximo passo"
+          },
+          {
+            "rotulo": "FERRAMENTA RODA",
+            "nota": "executa código ou consulta"
+          },
+          {
+            "rotulo": "RESULTADO VOLTA",
+            "nota": "entra no contexto e repete"
+          },
+          {
+            "rotulo": "RESPOSTA FINAL",
+            "nota": "o modelo para quando termina"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Claude Agent SDK",
+      "traducao": "kit para construir agentes sobre o Claude",
+      "nivel": "intermediario",
+      "chave": "claude agent sdk",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Durable execution",
+      "traducao": "execução durável",
+      "nivel": "avancado",
+      "chave": "durable execution",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O palestrante trabalha na Daytona, que vende sandboxes, então a conclusão favorece o produto dele. As evidências são anedotas sobre mudanças de frameworks (abril de 2026 para o CrewAI) e a experiência de integração, sem dados de incidentes ou custo. A opção 3 também tem custo, latência e complexidade que o talk não discute. Ele mesmo admite que o Claude Agent SDK usa sandbox só de processo e que o OpenAI Agents SDK ainda permite execução local, o que enfraquece a ideia de convergência total.",
+  "acoes": [
+    "Liste os lugares onde o seu agente executa código ou shell e classifique cada um como allow list, runtime embutido ou máquina separada.",
+    "Revise as ferramentas do agente que apagam ou enviam algo (banco, e-mail) e anote qual dano cada uma causaria se o modelo fosse comprometido.",
+    "Escreva uma interface mínima de três métodos (criar, executar, apagar) para a execução do agente e use-a no lugar de chamadas diretas ao shell."
+  ],
+  "numeros": [
+    {
+      "valor": "3",
+      "contexto": "operações que toda integração de sandbox repete",
+      "t": 93
+    },
+    {
+      "valor": "3",
+      "contexto": "tipos de isolamento para executar código do agente",
+      "t": 219
+    },
+    {
+      "valor": "abril/2026",
+      "contexto": "CrewAI removeu a ferramenta de execução local de código",
+      "t": 470
+    }
+  ],
+  "rotulo": "Onde rodar o código do agente antes de escolher framework",
+  "objetivo": "comparar três formas de isolar a execução de código de um agente e justificar a escolha de uma sandbox separada",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que o runtime embutido (V8, QuickJS) ainda deixa o app exposto, segundo o palestrante?",
+      "resposta": "Porque ele isola só o código gerado. As ferramentas que esse código chama, como consultar banco ou enviar e-mail, rodam no host fora do runtime e podem ser usadas para ações maliciosas."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Seu agente de suporte executa scripts Python gerados e tem uma ferramenta de reembolso. Como você aplicaria a ideia do talk?",
+      "resposta": "Rodar os scripts numa sandbox separada, sem acesso à rede e aos arquivos do app. Manter a ferramenta de reembolso atrás de uma interface própria, com limites e autorização, para que um passo comprometido não a use livremente."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que pontos enfraquecem o argumento de que todos os frameworks convergem para sandboxes?",
+      "resposta": "O autor vende sandboxes, os exemplos são pontuais e sem dados de incidentes, o Claude Agent SDK usa só isolamento de processo e o OpenAI Agents SDK ainda permite execução local. O talk também ignora custo e latência da VM."
+    }
+  ],
+  "experimento": {
+    "titulo": "Mapear a fronteira de execução de um agente seu",
+    "minutos": 25,
+    "precisa": "Um projeto com agente que executa código ou shell (ou Claude Code) e um editor de texto",
+    "passos": [
+      "Liste cada ponto em que o agente roda comandos ou código e marque qual das três opções do talk ele usa.",
+      "Para cada ferramenta com efeito externo, escreva uma linha com o pior dano possível se o modelo fosse comprometido.",
+      "Crie uma interface com criar(), executar(codigo) e apagar() e faça o agente chamá-la, mesmo com implementação local por enquanto.",
+      "Troque a implementação local por um container Docker descartável e rode o mesmo teste."
+    ],
+    "sucesso": "O agente executa a tarefa só pela interface, e um comando destrutivo de teste dentro do container não altera arquivos do seu projeto."
+  },
+  "consolidado_em": "2026-11-10T10:25:07+00:00"
+}

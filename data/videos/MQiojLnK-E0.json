@@ -1,0 +1,211 @@
+{
+  "id": "MQiojLnK-E0",
+  "titulo": "60% of Our Data PRs Now Merge With No Human Review - Chetas Joshi, Robinhood",
+  "titulo_curto": "60% of Our Data PRs Now Merge With No Human Review",
+  "palestrante": "Chetas Joshi, Robinhood",
+  "url": "https://www.youtube.com/watch?v=MQiojLnK-E0",
+  "duracao": 1680,
+  "publicado_ts": 1794272408,
+  "edicao": "2026-11-09",
+  "tese": "Script prova o que dá para provar, o agente julga o que exige contexto e a pessoa decide o que só ela pode decidir.",
+  "tldr": [
+    "A Robinhood recebe PRs de pipelines de dados na velocidade das máquinas, mas poucas pessoas têm contexto para revisá-los com segurança.",
+    "A solução tem três camadas: scripts checam fatos em fontes de verdade, um agente lê o código e dá nota de risco, e humanos mantêm as decisões protegidas, como acesso a dados sensíveis.",
+    "Segundo o palestrante, cerca de 60% desses PRs entram sem revisão humana, com taxa de erro de aprovação de cerca de 2%, mas a revisão do próprio revisor ainda é manual e a arquitetura tem limitações admitidas."
+  ],
+  "tema": "engenharia-de-software",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Três deveres, três donos",
+      "texto": "Scripts determinísticos consultam fontes de verdade, como o schema registry e o catálogo, e deixam o CI vermelho se algo falhar. O agente cuida só do que os scripts não cobrem e aprova ou escala. Isso também reduz custo, porque a IA não redescobre fatos que um script consulta.",
+      "t": 219,
+      "legenda": "A divisão de trabalho entre script, agente e humano.",
+      "print": "img/MQiojLnK-E0/0.jpg",
+      "descricao": "Slide 'Use AI only where proof runs out': scripts para fatos, agente para julgamento, pessoas para decisões protegidas. Diagrama com só a caixa 'PR'."
+    },
+    {
+      "titulo": "O agente acha o consumidor que o lineage não conhecia",
+      "texto": "O PR alarga uma coluna de integer para big integer e passa em todos os checks. O agente varre o repositório e encontra um job fora do lineage que grava a coluna em outra tabela, ainda como integer. O primeiro valor grande faria a escrita falhar. O humano confirmou que o job estava ativo, e a tabela de destino foi corrigida antes do merge.",
+      "t": 724,
+      "legenda": "A cadeia que o agente destacou no comentário de revisão.",
+      "print": "img/MQiojLnK-E0/1.jpg",
+      "descricao": "Slide 'The rules cover gaps, not facts scripts prove': regras do agente, com 'Consumers outside lineage' e 'Consumers lineage never recorded' ligados ao."
+    },
+    {
+      "titulo": "Limite honesto da busca no código",
+      "texto": "O agente só enxerga o repositório. Consultas ad hoc e dashboards ficam invisíveis. Por isso ele não pode afirmar que não há consumidores. Ele diz que não encontrou nenhum nos lugares onde buscou.",
+      "t": 853,
+      "legenda": "Nada encontrado não prova que nada existe.",
+      "print": "img/MQiojLnK-E0/2.jpg",
+      "descricao": "Slide ''None found' doesn't mean 'none exist'': caixa verde com 'no consumers found in the places I searched' e caixa vermelha contrastante. Imagem pequena."
+    },
+    {
+      "titulo": "Três casos em que o agente nunca aprova",
+      "texto": "Concessões de acesso a dados sensíveis, migrações que mudam o significado dos dados e vereditos em que o próprio agente tem pouca confiança vão sempre para uma pessoa. Nesses casos o agente só levanta o risco e o raciocínio. A decisão fica com o humano.",
+      "t": 1041,
+      "legenda": "Onde o agente sinaliza e nunca libera.",
+      "print": "img/MQiojLnK-E0/3.jpg",
+      "descricao": "Slide 'Some calls always stay with a person': agente pode aprovar tudo que passa nos checks; sempre com pessoa, 'Sensitive data grants' e 'Migration intent'."
+    },
+    {
+      "titulo": "Medir erro de aprovação e falsa escalação",
+      "texto": "Uma matriz separa quatro resultados. O erro grave é aprovar um PR ruim. O custo escondido é escalar um PR bom, porque um portão que escala tudo não reduz a carga de revisão. Cada erro vira regra nova, revisada à mão toda semana pelo plantonista.",
+      "t": 1233,
+      "legenda": "As duas formas de errar e como cada uma gera aprendizado.",
+      "print": "img/MQiojLnK-E0/4.jpg",
+      "descricao": "Slide 'Grade misses and false escalations' (as of Aug 31, 2026): matriz 2x2 com colunas 'PR was fine'/'PR was bad' e linhas 'Agent approved'/'Agent escalated'."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Pull request",
+      "traducao": "pedido de integração de código",
+      "nivel": "basico",
+      "chave": "pull request",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "CI (integração contínua)",
+      "traducao": "testes e checagens automáticas a cada mudança",
+      "nivel": "basico",
+      "chave": "ci (integração contínua)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Schema registry",
+      "traducao": "catálogo central de formatos de dados",
+      "nivel": "intermediario",
+      "chave": "schema registry",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Blast radius",
+      "traducao": "raio de impacto",
+      "nivel": "intermediario",
+      "chave": "blast radius",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Staging",
+      "traducao": "ambiente de homologação antes da produção",
+      "nivel": "intermediario",
+      "chave": "staging",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Sistema determinístico",
+      "traducao": "deterministic system (mesma entrada, mesma saída)",
+      "nivel": "basico",
+      "chave": "sistema determinístico",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Human in the loop",
+      "traducao": "humano no circuito de validação",
+      "nivel": "basico",
+      "chave": "human in the loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Falso positivo",
+      "traducao": "alerta de problema que não existe",
+      "nivel": "intermediario",
+      "chave": "falso positivo",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "É relato de caso da própria equipe, sem comparação externa nem metodologia. Os números de 60%, 75%, 132 horas e 30% a menos de incidentes não mostram como foram medidos nem o período. A taxa de erro de 2% vem de uma data só, e não há número de falsas escalações. O palestrante admite que o ciclo de aprendizado é manual e que a arquitetura em duas camadas isoladas é um erro. A proposta de ponto de entrada único ainda não existe.",
+  "acoes": [
+    "Liste as checagens do seu CI que consultam uma fonte de verdade e mova para script qualquer regra que hoje depende de um LLM para responder sim ou não.",
+    "Escreva no prompt de um revisor de PRs uma lista curta de mudanças que o modelo nunca aprova sozinho, como acessos, migrações e baixa confiança.",
+    "Faça o agente responder 'não encontrei nos lugares pesquisados' em vez de 'não existem', e liste esses lugares na resposta.",
+    "Registre por duas semanas quantos PRs o revisor aprovou errado e quantos escalou sem necessidade."
+  ],
+  "numeros": [
+    {
+      "valor": "60%",
+      "contexto": "PRs de pipelines de dados que entram sem revisão humana",
+      "t": 1389
+    },
+    {
+      "valor": "132 h/mês",
+      "contexto": "horas de engenharia economizadas",
+      "t": 1420
+    },
+    {
+      "valor": "30%",
+      "contexto": "queda de incidentes ligados a esses PRs",
+      "t": 1420
+    },
+    {
+      "valor": "2%",
+      "contexto": "taxa de erro de aprovação em 31/08/2026",
+      "t": 1233
+    }
+  ],
+  "rotulo": "Revisor híbrido de PRs de dados na Robinhood",
+  "objetivo": "desenhar um revisor de PRs que separa checagens por script, julgamento de agente e decisões que ficam com humanos",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Que tipo de problema o agente de camada 2 achou no PR de alargamento de coluna e que os scripts da camada 1 não viram?",
+      "resposta": "Um job que lê a coluna alargada e grava em outra tabela onde ela ainda é integer. Ele não estava registrado no lineage, então os checks não o viam."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "No seu repositório, que regras você moveria para script e quais deixaria para um agente julgar?",
+      "resposta": "Vão para script as regras com resposta verificável numa fonte de verdade, como schema, dono e tags. O agente fica com o que exige ler código e contexto, como consumidores fora do registro e padrões de consulta arriscados."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta para confiar no número de 60% de PRs sem revisão humana?",
+      "resposta": "Faltam a metodologia, o período, a comparação com revisão humana e o número de falsas escalações. A taxa de 2% de aprovações erradas vem de uma data só e o relato é da própria equipe que construiu o sistema."
+    }
+  ],
+  "experimento": {
+    "titulo": "Revisor de PR em duas camadas com um diff real",
+    "minutos": 30,
+    "precisa": "Um repositório com um PR de mudança de schema, um script simples e Claude ou ChatGPT.",
+    "passos": [
+      "Escreva um script que verifique um fato objetivo do PR, como se toda coluna nova tem dono e descrição, e rode no diff.",
+      "Cole o diff no modelo e peça nota de risco, comentários por linha e uma decisão entre aprovar e escalar.",
+      "Inclua no prompt a lista do que o script já cobre e as três categorias que o modelo nunca aprova sozinho.",
+      "Peça que o modelo diga onde pesquisou e o que não consegue ver, sem afirmar que não há outros consumidores."
+    ],
+    "sucesso": "O script falha em pelo menos um caso proposital, e o modelo aponta um risco que o script não cobre, citando linhas do diff e declarando o limite da busca."
+  },
+  "consolidado_em": "2026-11-10T10:25:07+00:00"
+}

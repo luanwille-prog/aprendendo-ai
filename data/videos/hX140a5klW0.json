@@ -1,0 +1,326 @@
+{
+  "id": "hX140a5klW0",
+  "titulo": "AI Writes Code Faster Than Uber Can Merge It - Preetam Dwivedi & Manjari Akella, Uber",
+  "titulo_curto": "AI Writes Code Faster Than Uber Can Merge It",
+  "palestrante": "Preetam Dwivedi & Manjari Akella, Uber",
+  "url": "https://www.youtube.com/watch?v=hX140a5klW0",
+  "duracao": 1655,
+  "publicado_ts": 1794207615,
+  "edicao": "2026-11-09",
+  "tese": "Quando a IA acelera o código, a fila de merge vira o gargalo, e a saída foi aceitar um tronco quebrado às vezes e validar depois do merge.",
+  "tldr": [
+    "No Uber, as mudanças geradas por IA elevaram os pedidos de merge de 90 para 130 por hora em dois meses, e o tempo de espera P95 saltou de 30 minutos para 3 a 4 horas.",
+    "O time respondeu com três ajustes na SubmitQueue: barrar mudanças caras em horário de pico, adiar essas mudanças para uma fila secundária e relaxar conflitos fracos entre mudanças para rodar mais coisas em paralelo.",
+    "Como o relaxamento deixa combinações sem teste, o sistema Stovepipe valida o tronco depois do merge e guarda um ponteiro para o último estado verde, o que levou o pico a cerca de 300 merges por hora com P95 de 30 minutos."
+  ],
+  "tema": "engenharia-de-software",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "Por que o merge isolado quebra o tronco",
+      "texto": "Dois PRs passam no CI cada um com sua base. Quando A entra, o tronco continua verde. Quando B entra, quebra, porque ninguém testou A e B juntos. Com milhares de pessoas no mesmo monorepo, isso acontece o tempo todo. A fila de merge existe para testar a combinação antes de aterrissar.",
+      "t": 131,
+      "legenda": "O PR B nunca foi testado junto com A, e por isso o tronco quebra.",
+      "print": "img/hX140a5klW0/0.jpg",
+      "descricao": "Slide 'A lands green. B turns main red.': A e B passam isolados, mas H+A+B falha; B foi testado só em H, não em H+A."
+    },
+    {
+      "titulo": "Três otimizações que já existiam",
+      "texto": "A SubmitQueue usa análise de alvos para paralelizar mudanças que não se tocam, especulação probabilística para priorizar os builds com mais chance de serem usados e bypass de mudanças grandes para que as pequenas não esperem. Isso bastava para o ritmo humano.",
+      "t": 260,
+      "legenda": "As bases de throughput da fila antes da IA.",
+      "print": "img/hX140a5klW0/1.jpg",
+      "descricao": "Slide 'How SubmitQueue scales': Target analysis (separa trabalho independente), Probabilistic speculation (builds prováveis) e Bypass large changes."
+    },
+    {
+      "titulo": "A IA derruba o tempo de espera",
+      "texto": "Em janeiro de 2026 eram cerca de 90 pedidos por hora. Em março, 130. O P95 de espera foi de 30 minutos para 3 a 4 horas. O tronco seguiu verde, mas o preço foi o desenvolvedor esperando horas para integrar.",
+      "t": 354,
+      "legenda": "Um aumento de 44% no volume multiplicou a espera por seis a oito.",
+      "print": "img/hX140a5klW0/2.jpg",
+      "descricao": "Slide 'AI changed the pace of integration': pico de merges por hora sobe de ~90 (janeiro 2026) para ~130 (março), aumento de ~44% em dois meses."
+    },
+    {
+      "titulo": "Relaxar conflitos pelo score de Jaccard",
+      "texto": "Antes, qualquer alvo em comum forçava duas mudanças a entrarem em série. Agora cada par recebe um score de 0 a 1 de sobreposição. O sistema derruba as arestas mais fracas até atingir o grau de paralelismo configurado. No exemplo, cortar as ligações B-C e B-E transforma uma cadeia de seis em três filas de duas. A decisão é tomada uma vez, na chegada, para preservar builds especulativos.",
+      "t": 951,
+      "legenda": "Cortar as arestas fracas separa o grafo em três componentes paralelos.",
+      "print": "img/hX140a5klW0/3.jpg",
+      "descricao": "Grafo A-F com pesos 0,90 a 0,70; cortar as pontes fracas B-C (0,08) e D-E (0,04) gera 3 filas virtuais, com alvo de 3 queues."
+    },
+    {
+      "titulo": "Stovepipe e o ponteiro de main verificado",
+      "texto": "Depois do merge, o Stovepipe valida a faixa de commits novos. Se falha, o ponteiro verified main fica no último commit bom. Quando uma faixa posterior passa, o ponteiro avança. Em caso de falha, o on-call recebe alerta e prepara um fix ou revert, que entra pela própria fila.",
+      "t": 1292,
+      "legenda": "O ponteiro verificado só avança quando a faixa inteira de commits passa.",
+      "print": "img/hX140a5klW0/4.jpg",
+      "descricao": "Slide 'Stovepipe: one history, two moving refs': D falha na validação; main chega a D, mas verified/main fica em A, último commit validado."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Merge queue",
+      "traducao": "fila de merge",
+      "nivel": "intermediario",
+      "chave": "merge queue",
+      "analogia": "Uma merge queue é como o fiscal de uma obra que só deixa cada equipe instalar sua peça depois de conferir que ela encaixa com tudo o que as outras equipes já montaram.",
+      "explicacao": [
+        "Em um projeto grande, muitas pessoas enviam mudanças para o mesmo código principal, chamado tronco (trunk ou main).",
+        "Cada pull request (PR, pedido de integração) passa nos testes sozinho. Mas se A e B entram em sequência sem ninguém testar os dois juntos, o tronco pode quebrar.",
+        "A fila de merge (merge queue) organiza a entrada das mudanças e testa a combinação delas com o tronco antes de juntar.",
+        "A SubmitQueue do Uber prevê futuros possíveis (A sozinho, B sozinho, A mais B) e roda builds especulativos para aterrissar o que mantém o tronco verde.",
+        "Para ganhar vazão, ela paraleliza mudanças sem alvos em comum, prioriza builds com mais chance de uso e deixa mudanças pequenas passarem à frente das grandes."
+      ],
+      "pre_requisitos": [
+        "Pull request",
+        "CI (integração contínua)",
+        "Git"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PRS NA FILA",
+            "nota": "cada um verde na própria base"
+          },
+          {
+            "rotulo": "COMBINAÇÕES",
+            "nota": "testa A, B e A mais B"
+          },
+          {
+            "rotulo": "BUILD ESPECULATIVO",
+            "nota": "prioriza o mais provável"
+          },
+          {
+            "rotulo": "TRONCO VERDE",
+            "nota": "só entra o que passou junto"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Admission controller",
+      "traducao": "controlador de admissão",
+      "nivel": "intermediario",
+      "chave": "admission controller",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Throughput",
+      "traducao": "vazão, tokens gerados por segundo",
+      "nivel": "basico",
+      "chave": "throughput",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "CI (integração contínua)",
+      "traducao": "testes e checagens automáticas a cada mudança",
+      "nivel": "basico",
+      "chave": "ci (integração contínua)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Revert",
+      "traducao": "reversão de um PR já mergeado",
+      "nivel": "basico",
+      "chave": "revert",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Conflict relaxation",
+      "traducao": "relaxamento de conflitos entre mudanças",
+      "nivel": "avancado",
+      "chave": "conflict relaxation",
+      "analogia": "Conflict relaxation é como uma cozinha que antes mandava fazer em sequência todo prato que dividisse qualquer ingrediente e agora só segura na fila os pratos que usam quase as mesmas panelas.",
+      "explicacao": [
+        "Quando duas mudanças de código mexem nas mesmas partes do sistema, a fila de merge (junção) faz uma esperar a outra para evitar quebras.",
+        "Antes, bastava um alvo de build (target, pedaço compilável do código) em comum para as duas mudanças entrarem em série. Seis mudanças ligadas em cadeia viravam uma fila única.",
+        "Com o relaxamento de conflitos (conflict relaxation), cada par recebe uma nota de 0 a 1 que mede quanto as mudanças se sobrepõem.",
+        "O sistema remove as ligações mais fracas até atingir o grau de paralelismo configurado. No exemplo do Uber, cortar B-C e B-E transformou uma cadeia de seis em três filas de duas.",
+        "A decisão acontece uma vez, quando a mudança chega, para preservar builds especulativos. O custo é que algumas combinações entram sem teste conjunto e o tronco pode quebrar."
+      ],
+      "pre_requisitos": [
+        "Merge queue",
+        "CI (integração contínua)",
+        "Pull request"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "GRAFO DE CONFLITO",
+            "nota": "liga mudanças com alvos em comum"
+          },
+          {
+            "rotulo": "SCORE POR ARESTA",
+            "nota": "nota de 0 a 1 de sobreposição"
+          },
+          {
+            "rotulo": "CORTE DAS FRACAS",
+            "nota": "até o paralelismo configurado"
+          },
+          {
+            "rotulo": "FILAS PARALELAS",
+            "nota": "mais vazão, risco de tronco quebrado"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Similaridade de Jaccard",
+      "traducao": "mede a sobreposição entre dois conjuntos de alvos, de 0 a 1",
+      "nivel": "avancado",
+      "chave": "similaridade de jaccard",
+      "analogia": "A similaridade de Jaccard é como comparar a lista de compras de duas pessoas e contar quantos itens elas têm em comum em relação a todos os itens das duas listas juntas.",
+      "explicacao": [
+        "A similaridade de Jaccard é um número de 0 a 1 que diz o quanto dois grupos de coisas se parecem.",
+        "A conta divide o número de itens em comum (interseção) pelo número total de itens diferentes nos dois grupos (união).",
+        "Se os grupos são idênticos, o resultado é 1. Se não têm nada em comum, é 0. Valores intermediários mostram sobreposição parcial.",
+        "No Uber, cada grupo é o conjunto de alvos de build que uma mudança toca. O score combina alvos sobrepostos e novas dependências introduzidas.",
+        "A fila de merge usa esse score para achar as ligações fracas entre mudanças e decidir quais pode separar para rodar em paralelo."
+      ],
+      "pre_requisitos": [
+        "Merge queue",
+        "Pull request"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "DOIS CONJUNTOS",
+            "nota": "alvos tocados por cada mudança"
+          },
+          {
+            "rotulo": "INTERSEÇÃO",
+            "nota": "alvos que aparecem nos dois"
+          },
+          {
+            "rotulo": "UNIÃO",
+            "nota": "todos os alvos distintos"
+          },
+          {
+            "rotulo": "SCORE DE 0 A 1",
+            "nota": "interseção dividida pela união"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Verified main",
+      "traducao": "ponteiro para o último commit do tronco validado como verde",
+      "nivel": "intermediario",
+      "chave": "verified main",
+      "analogia": "O verified main é como o marcador de página que você só avança depois de revisar um capítulo inteiro e ver que ele faz sentido.",
+      "explicacao": [
+        "O tronco do código recebe mudanças o tempo todo, e às vezes uma delas quebra o build. É preciso saber qual foi a última versão que funcionava.",
+        "O verified main (main verificado) é um segundo ponteiro que marca o último commit (registro de mudança) do tronco confirmado como verde.",
+        "O ponteiro main avança a cada merge. O Stovepipe, sistema de validação pós-merge do Uber, testa a faixa de commits novos sobre o último commit bom.",
+        "Se a faixa falha, o verified main fica parado. Quando uma faixa posterior passa, como de A até G no exemplo, o ponteiro pula para o commit novo.",
+        "Na falha, o on-call (plantonista) recebe alerta e prepara um fix ou revert, que entra pela própria fila de merge."
+      ],
+      "pre_requisitos": [
+        "Merge queue",
+        "Git",
+        "Revert",
+        "CI (integração contínua)"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "MERGE NO MAIN",
+            "nota": "ponteiro main avança"
+          },
+          {
+            "rotulo": "VALIDA A FAIXA",
+            "nota": "commits novos sobre o último bom"
+          },
+          {
+            "rotulo": "FALHOU",
+            "nota": "alerta, fix ou revert pela fila"
+          },
+          {
+            "rotulo": "VERIFIED MAIN",
+            "nota": "avança só quando a faixa passa"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk vem do próprio time que construiu o sistema e não traz dados de quantas quebras do tronco o relaxamento causou, nem quanto tempo o on-call gasta com elas. O ganho de vazão aparece sem custo medido em incidentes. A atribuição do aumento de volume à IA é afirmada, sem separar de outras causas. A recuperação ainda é manual e o monorepo é de Go, então o resultado pode não valer para outros contextos. O código é aberto, o que ajuda a verificar.",
+  "acoes": [
+    "Meça no seu repositório o tempo de espera P95 entre abrir o PR e mergear, e anote em uma planilha por semana para ver se o volume de código com IA já pressiona sua fila.",
+    "Classifique seus últimos 50 PRs em pequenos e caros, usando como critério quantos módulos ou alvos de build cada um toca, e veja quantos caros concentram o tempo de CI.",
+    "Escreva um script que roda o build completo do tronco após cada merge e registra o último commit verde, para ter o equivalente simples de um verified main."
+  ],
+  "numeros": [
+    {
+      "valor": "90 para 130",
+      "contexto": "pedidos de merge por hora, de janeiro a março de 2026",
+      "t": 354
+    },
+    {
+      "valor": "3 a 4 horas",
+      "contexto": "tempo de espera P95 com o volume maior, contra 30 minutos antes",
+      "t": 386
+    },
+    {
+      "valor": "160 para 250",
+      "contexto": "merges por hora após o relaxamento de conflitos",
+      "t": 1075
+    },
+    {
+      "valor": "300 por hora",
+      "contexto": "pico atual, com P95 de 30 minutos (233% sobre janeiro)",
+      "t": 1417
+    }
+  ],
+  "rotulo": "Como o Uber escalou a fila de merge para código de IA",
+  "objetivo": "explicar como uma fila de merge troca teste antes do merge por validação depois do merge para aguentar o volume de código gerado por IA",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que o relaxamento de conflitos exige validar o tronco depois do merge?",
+      "resposta": "Ao derrubar arestas fracas do grafo de conflito, algumas combinações de mudanças entram sem teste conjunto. O tronco pode quebrar, então o Stovepipe valida o que já aterrissou."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Seu time começou a usar agentes de código e o CI do monorepo está congestionado. Qual das três medidas do Uber você testaria primeiro e como?",
+      "resposta": "Barrar ou adiar mudanças caras em horário de pico é a mais simples. Classifique PRs pelo número de módulos tocados e deixe os grandes rodarem fora do pico, com reenvio automático, antes de mexer em grafo de conflito."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta para concluir que a abordagem híbrida do Uber compensa?",
+      "resposta": "Faltam dados de quantas vezes o tronco quebrou depois do relaxamento, quanto tempo levou a recuperação manual e quanto custou ao on-call. Sem isso, só se vê o ganho de vazão e o P95, e a fonte é o time que construiu o sistema."
+    }
+  ],
+  "experimento": {
+    "titulo": "Simular score de conflito entre PRs com Jaccard",
+    "minutos": 30,
+    "precisa": "Python 3 e um repositório público com pelo menos 20 PRs recentes",
+    "passos": [
+      "Liste os 20 PRs mais recentes de um repositório público e salve, para cada um, o conjunto de diretórios de primeiro nível que ele altera.",
+      "Para cada par de PRs, calcule o score de Jaccard: tamanho da interseção dividido pelo tamanho da união dos conjuntos.",
+      "Monte o grafo de conflito ligando pares com score maior que zero e conte os componentes conectados.",
+      "Remova as arestas com score abaixo de um limiar, como 0,3, e conte de novo os componentes."
+    ],
+    "sucesso": "Você vê o número de componentes conectados aumentar depois de remover as arestas fracas, o que mostra o paralelismo recuperado."
+  },
+  "consolidado_em": "2026-11-10T10:25:08+00:00"
+}

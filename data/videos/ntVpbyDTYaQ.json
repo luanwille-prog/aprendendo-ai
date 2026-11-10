@@ -1,0 +1,311 @@
+{
+  "id": "ntVpbyDTYaQ",
+  "titulo": "Your Self-Hosted LLM Needs to Say No - Harshul Jain & Parv Khatri, Audible & SAP",
+  "titulo_curto": "Your Self-Hosted LLM Needs to Say No",
+  "palestrante": "Harshul Jain & Parv Khatri, Audible & SAP",
+  "url": "https://www.youtube.com/watch?v=ntVpbyDTYaQ",
+  "duracao": 3128,
+  "publicado_ts": 1794265223,
+  "edicao": "2026-11-09",
+  "tese": "Quem hospeda o próprio LLM precisa de uma camada que recuse requests antes da GPU, e medir isso exige contar também o que foi recusado.",
+  "tldr": [
+    "Agentes de código disparam dezenas de chamadas em segundos, e um servidor de LLM próprio que aceita tudo estoura memória e perde o prazo dos pedidos importantes.",
+    "A solução é uma camada de admissão na entrada do motor, que olha o pedido e o estado do motor e responde admitir, adiar (503 com Retry-After) ou rejeitar (429 ou 529).",
+    "Os palestrantes comparam estratégias de papers, propõem medir por goodput sob admissão e mostram a ferramenta admit-perf, com um teste em que a fila foi o sinal certo e o KV cache não."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "A decisão que falta no pipeline",
+      "texto": "Agente, gateway, roteador e motor tomam decisões, mas ninguém pergunta se há espaço para o pedido. O motor só descobre depois de já ter dito sim. Os postmortems da OpenAI (nov/2023) e da Anthropic (jan/2026) terminam em ações de load shedding e detecção antecipada de limite, ou seja, decidir cedo.",
+      "t": 545,
+      "legenda": "A camada de admissão é a caixa que faltava entre o cliente e o motor.",
+      "print": "img/ntVpbyDTYaQ/0.jpg",
+      "descricao": "Slide 'Both follow-ups point at the front door': pipeline Client → Admit → Queue → Route → Engine, com Admit, Hold e Reject (429, 503 ou 529)."
+    },
+    {
+      "titulo": "Oito sinais viram regras simples",
+      "texto": "Do lado do pedido: tamanho da entrada, tenant, sessão do agente e prazo. Do lado do motor: uso do KV cache, tempo de espera do mais antigo, taxa de acerto de cache de prompt e carga dos pools. Cada sinal, comparado a um limiar, empurra para admitir, adiar ou rejeitar. Vale o sinal que muda em segundos, não a média de um minuto.",
+      "t": 1236,
+      "legenda": "Cada sinal tem um limiar e um resultado associado.",
+      "print": "img/ntVpbyDTYaQ/1.jpg",
+      "descricao": "Oito métricas: pedido (input length, tenant, sessão, deadline) e motor (KV cache, queue age, cache hit rate, carga por pool), cada uma com admit."
+    },
+    {
+      "titulo": "Adiar bem exige Retry-After e jitter",
+      "texto": "Um 503 com Retry-After diz quando voltar. Sem isso, cada agente escolhe seu atraso, quase sempre zero, e 40 chamadas viram 80. Com jitter (atraso aleatório pequeno) as tentativas se espalham. Para 429 o agente reduz a própria carga. Para 529 insistir piora, então espere, troque de provedor ou estacione a tarefa.",
+      "t": 1519,
+      "legenda": "Sem Retry-After os clientes voltam juntos; com jitter, espalhados.",
+      "print": "img/ntVpbyDTYaQ/2.jpg",
+      "descricao": "Slide 'Handling a defer': 503 com Retry-After: 2 e sleep(retry_after + jitter). Dez retries sem Retry-After chegam juntos; com jitter, espalham-se em 2 s."
+    },
+    {
+      "titulo": "Admitir por sessão, não por request",
+      "texto": "Se duas tarefas de 20 chamadas cada são admitidas request a request, metade de cada uma entra e nenhuma termina. Admitindo por sessão, uma conclui e a outra recebe uma resposta clara para voltar depois. Os palestrantes dizem que a maioria dos papers só admite requests isolados, embora agentes enviem sessões.",
+      "t": 1897,
+      "legenda": "Por request, usa-se toda a capacidade e nada termina.",
+      "print": "img/ntVpbyDTYaQ/3.jpg",
+      "descricao": "Slide 'Admit single requests or whole sessions?': por request, metade de duas sessões de 20 chamadas entra e nenhuma termina; por sessão, uma termina."
+    },
+    {
+      "titulo": "Goodput sob admissão e o teste na GPU",
+      "texto": "Goodput sob admissão divide os requests que cumpriram o SLO por todos os que chegaram, inclusive os rejeitados. Recusar 95% e atender 5% bem dá 100% de SLO se só contar os aceitos, mas 5% no goodput. No teste com Qwen 2.5 0,5B numa A10, o KV cache chegou a 0,5% enquanto a fila chegou a 24, então uma política por KV não recusaria nada.",
+      "t": 2880,
+      "legenda": "A política por fila reduziu o P95 de TTFT de cerca de 2,5 s para 1 s.",
+      "print": "img/ntVpbyDTYaQ/4.jpg",
+      "descricao": "Tabela admitperf (Qwen2.5-0.5B, A10G): sem admissão, 100% admitido, TTFT P95 2285 ms, goodput 0,319; fila com max_waiting=2, 63,1%, 951 ms, goodput 0,319."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Admission controller",
+      "traducao": "controlador de admissão",
+      "nivel": "intermediario",
+      "chave": "admission controller",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "KV cache",
+      "traducao": "cache de chaves e valores da atenção",
+      "nivel": "intermediario",
+      "chave": "kv cache",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Prefill e decode",
+      "traducao": "leitura do contexto e geração de tokens",
+      "nivel": "intermediario",
+      "chave": "prefill e decode",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Rate limiting",
+      "traducao": "limite de taxa de requisições",
+      "nivel": "basico",
+      "chave": "rate limiting",
+      "analogia": "Rate limiting é como a catraca do restaurante por quilo que deixa cada cliente pegar só três pratos por hora, não importa se a cozinha está cheia ou vazia.",
+      "explicacao": [
+        "Rate limiting (limite de taxa) é uma regra que define quantos pedidos cada cliente pode fazer num intervalo de tempo.",
+        "O gateway (porta de entrada) identifica o cliente pela chave de API e conta os pedidos dele dentro de uma janela, por exemplo 100 por minuto.",
+        "Quando o cliente passa da cota, o gateway responde 429 (muitas requisições) e o pedido nem chega ao modelo.",
+        "A regra serve para manter a divisão justa entre clientes, mas a cota é fixa e definida antes, então ela não acompanha a carga real da GPU.",
+        "Por isso o talk diz que contar pedidos não mede custo: uma chamada curta e uma longa contam igual, embora gastem memória de KV cache bem diferente."
+      ],
+      "pre_requisitos": [
+        "API",
+        "KV cache"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PEDIDO CHEGA",
+            "nota": "com a chave de API do cliente"
+          },
+          {
+            "rotulo": "CONTA NA JANELA",
+            "nota": "pedidos do cliente no último minuto"
+          },
+          {
+            "rotulo": "COMPARA COM A COTA",
+            "nota": "limite fixo definido antes"
+          },
+          {
+            "rotulo": "PASSA OU 429",
+            "nota": "dentro da cota segue, fora volta"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Retry policy",
+      "traducao": "política de nova tentativa",
+      "nivel": "intermediario",
+      "chave": "retry policy",
+      "analogia": "Uma retry policy é como a regra do consultório que diz ao paciente para voltar daqui a 20 minutos, cada um num horário um pouco diferente, para a recepção não lotar de novo.",
+      "explicacao": [
+        "Retry policy (política de nova tentativa) é a regra que diz ao cliente quando e quantas vezes tentar de novo um pedido que falhou.",
+        "Quando o servidor responde 503 com o cabeçalho Retry-After, o agente espera os segundos indicados e soma um jitter, um atraso aleatório pequeno.",
+        "Sem Retry-After cada agente escolhe o próprio atraso, quase sempre zero, e todos voltam juntos; assim 40 chamadas viram 80.",
+        "O código muda a reação: em 429 o agente reduz quantas chamadas tem em andamento, e em 529 insistir piora, então ele espera, troca de provedor ou estaciona a tarefa.",
+        "Em qualquer caso vale um orçamento de tentativas com backoff exponencial (espera maior a cada falha) e, depois de poucas tentativas, avisar o usuário."
+      ],
+      "pre_requisitos": [
+        "API",
+        "Agente de IA",
+        "Rate limiting"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PEDIDO FALHA",
+            "nota": "503, 429 ou 529"
+          },
+          {
+            "rotulo": "LÊ O CÓDIGO",
+            "nota": "adiar, cota ou provedor cheio"
+          },
+          {
+            "rotulo": "ESPERA COM JITTER",
+            "nota": "Retry-After e backoff exponencial"
+          },
+          {
+            "rotulo": "CONFERE O ORÇAMENTO",
+            "nota": "poucas tentativas no máximo"
+          },
+          {
+            "rotulo": "TENTA OU AVISA",
+            "nota": "nova chamada ou aviso ao usuário"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Time to first token (TTFT)",
+      "traducao": "Tempo até o primeiro token",
+      "nivel": "intermediario",
+      "chave": "time to first token (ttft)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Goodput",
+      "traducao": "vazão que cumpre o SLO, contando também os rejeitados",
+      "nivel": "avancado",
+      "chave": "goodput",
+      "analogia": "Goodput é como a nota de uma pizzaria que conta quantas pizzas chegaram quentes e no prazo dividido por todos os pedidos que tocaram o telefone, inclusive os que ela recusou.",
+      "explicacao": [
+        "Goodput é a fração de pedidos que foram atendidos bem, dentro do prazo combinado.",
+        "O prazo vem do SLO (service level objective, meta de nível de serviço), por exemplo a resposta começar a tempo e não travar entre um token e outro.",
+        "O talk propõe o goodput sob admissão: no numerador ficam os pedidos que cumpriram o SLO e no denominador todos os que chegaram, inclusive os rejeitados.",
+        "O denominador importa porque recusar 95% e atender 5% com perfeição daria 100% de SLO contando só os aceitos, mas apenas 5% de goodput.",
+        "Para comparar políticas, roda-se a mesma carga com e sem a política, de 0,5x a 2x da capacidade medida, e compara-se o goodput."
+      ],
+      "pre_requisitos": [
+        "Eval",
+        "Time to first token (TTFT)",
+        "Admission controller"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "TODOS QUE CHEGARAM",
+            "nota": "inclui os rejeitados"
+          },
+          {
+            "rotulo": "CUMPRIRAM O SLO",
+            "nota": "começou a tempo e sem travar"
+          },
+          {
+            "rotulo": "DIVIDE UM PELO OUTRO",
+            "nota": "cumpriram / chegaram"
+          },
+          {
+            "rotulo": "GOODPUT",
+            "nota": "nota honesta da política"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "vLLM",
+      "traducao": "motor open source para servir LLMs",
+      "nivel": "basico",
+      "chave": "vllm",
+      "analogia": "O vLLM é como a cozinha de um restaurante, que recebe as comandas, junta pratos parecidos na mesma leva e organiza as bancadas para ninguém ficar parado.",
+      "explicacao": [
+        "O vLLM é um programa gratuito e de código aberto que roda um modelo de linguagem num servidor seu e responde aos pedidos que chegam.",
+        "Ele é o inference engine (motor de inferência), a última etapa do caminho: app ou agente, gateway, roteador e então o motor.",
+        "O motor carrega os pesos do modelo na GPU e agrupa vários pedidos num mesmo batch (lote) para a GPU não ficar ociosa.",
+        "Para cada pedido em andamento ele guarda um KV cache, a memória que cresce enquanto a resposta é escrita.",
+        "O vLLM decide a ordem dos pedidos já aceitos, mas só descobre que falta memória depois de aceitar; por isso o talk coloca a camada de admissão na frente dele, sem modificar o motor."
+      ],
+      "pre_requisitos": [
+        "LLM",
+        "Token",
+        "KV cache"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "Os palestrantes são autores do admit-perf e do handbook que promovem, então o talk também apresenta o próprio projeto. O único resultado medido é pequeno (modelo de 0,5B, uma A10, 8 requests, 2 repetições), e a vantagem da fila ali não prova que valha para modelos grandes ou tráfego real de agentes. Os números dos papers (10 a 25%, 40 a 90%, deadline miss de 99% a zero) vêm de motores e cargas diferentes, e eles mesmos avisam que não são um ranking. As conclusões sobre os postmortems são interpretação deles.",
+  "acoes": [
+    "Liste os sinais que seu servidor de LLM expõe (uso de KV cache, profundidade da fila, tempo de espera) e confira qual deles realmente se move quando a carga sobe.",
+    "Faça seu cliente tratar 429 e 529 de forma distinta, usando Retry-After, backoff exponencial com jitter e um orçamento máximo de tentativas.",
+    "Ao medir uma política, calcule o goodput dividindo pelo total de requests que chegaram, inclusive os recusados, e teste cargas de 0,5x a 2x da capacidade medida.",
+    "Escreva uma política que falhe de forma ruidosa na inicialização quando o sinal que ela lê não existir, em vez de tratar o sinal ausente como zero."
+  ],
+  "numeros": [
+    {
+      "valor": "40 em 2 s",
+      "contexto": "chamadas que um agente de código pode enviar",
+      "t": 1296
+    },
+    {
+      "valor": "5 s",
+      "contexto": "tempo por decisão do otimizador QLM",
+      "t": 2089
+    },
+    {
+      "valor": "63%",
+      "contexto": "requests admitidos pela política de fila no teste",
+      "t": 2912
+    },
+    {
+      "valor": "0,5%",
+      "contexto": "pico de uso do KV cache no teste",
+      "t": 2943
+    }
+  ],
+  "rotulo": "Controle de admissão para LLM hospedado por você",
+  "objetivo": "desenhar uma política de admissão (admitir, adiar ou rejeitar) para um servidor de LLM próprio e medir se ela funciona",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são as três respostas possíveis de uma camada de admissão e que código HTTP acompanha cada uma?",
+      "resposta": "Admitir (200 e o stream começa), adiar (503 com cabeçalho Retry-After) e rejeitar (429 se o cliente passou da sua cota, 529 se o provedor inteiro está sobrecarregado)."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Seu time hospeda um modelo com vLLM e um agente de código dispara rajadas. Qual sinal você leria primeiro para decidir a admissão e como saberia se ele serve?",
+      "resposta": "Escolheria o sinal que muda em segundos e que de fato se move sob carga, como a profundidade da fila ou o uso de KV cache. Para saber, rodaria um teste de carga acima da capacidade e veria se o sinal reage. No teste do talk, o KV cache ficou quase parado e a fila cresceu."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites existem na evidência do talk, considerando quem o apresenta e o teste mostrado?",
+      "resposta": "Os autores promovem a própria ferramenta, e o teste foi com um modelo de 0,5B numa A10, com duas repetições. Os resultados dos papers vêm de cenários distintos e não se comparam diretamente. Falta evidência com tráfego real de agentes e modelos maiores."
+    }
+  ],
+  "experimento": {
+    "titulo": "Simular admissão por fila e medir goodput",
+    "minutos": 30,
+    "precisa": "Python 3 e uma planilha ou o próprio terminal; não precisa de GPU",
+    "passos": [
+      "Escreva em Python um servidor falso com capacidade de 4 requests simultâneos e tempo de serviço aleatório entre 0,5 e 3 segundos.",
+      "Gere uma carga de 40 chamadas em 2 segundos e rode sem controle de admissão, anotando quantas cumprem um SLO de 4 segundos.",
+      "Adicione uma política que rejeita com 429 quando já há 2 requests na fila e rode a mesma carga de novo.",
+      "Calcule o goodput dividindo os requests dentro do SLO pelo total que chegou, inclusive os rejeitados, e compare com a rodada sem política."
+    ],
+    "sucesso": "Você obtém dois números de goodput para a mesma carga, consegue explicar a diferença e mostra que contar só os aceitos daria um resultado enganoso."
+  },
+  "consolidado_em": "2026-11-10T10:25:07+00:00"
+}

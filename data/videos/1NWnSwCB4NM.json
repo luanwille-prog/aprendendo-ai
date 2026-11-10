@@ -1,0 +1,304 @@
+{
+  "id": "1NWnSwCB4NM",
+  "titulo": "Your KV Cache Can Spot Attacks on Your AI Agents - Ari Azarafrooz, Intrinsec AI",
+  "titulo_curto": "Your KV Cache Can Spot Attacks on Your AI Agents",
+  "palestrante": "Ari Azarafrooz, Intrinsec AI",
+  "url": "https://www.youtube.com/watch?v=1NWnSwCB4NM",
+  "duracao": 431,
+  "publicado_ts": 1794211238,
+  "edicao": "2026-11-09",
+  "tese": "O KV cache que o motor de inferência já grava registra a computação do modelo e pode servir de sinal de segurança, somado aos guardrails de entrada e saída.",
+  "tldr": [
+    "Ari Azarafrooz, fundador da Intrinsec AI, propõe usar as páginas do KV cache (cache de chaves e valores da atenção) para detectar ataques e falhas em agentes.",
+    "A receita tem três passos: aprender uma linha de base do tráfego normal, marcar as páginas raras em relação a ela e depois classificar e explicar esses desvios.",
+    "Os testes com um agente de voz e com o benchmark ATBench parecem promissores, mas os dois gargalos de produção continuam abertos: modelos que mudam e páginas de KV pesadas demais para mover em tempo real."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "Guardrails olham a borda, o KV cache olha a computação",
+      "texto": "Hoje a defesa típica de um agente fica na borda: um modelo juiz confere entradas e saídas contra a política, ou um classificador por tipo de falha. O palestrante lembra que toda entrada vira computação antes de o modelo responder ou chamar uma ferramenta. O KV cache é o registro dessa computação. Um ataque que passa pelo filtro de texto ainda deixa marca ali. O dado também fica dentro do motor, o que ajuda quando você não pode ler prompts e respostas por privacidade.",
+      "t": 93,
+      "legenda": "Os três argumentos para usar o KV cache como sinal de segurança",
+      "print": "img/1NWnSwCB4NM/0.jpg",
+      "descricao": "Slide 'KV-first security': ameaças do agente chegam a juízes de entrada e saída; as páginas de KV no meio mostram o ponto cego dos guardrails."
+    },
+    {
+      "titulo": "Receita em três passos",
+      "texto": "Primeiro, aprenda uma linha de base (baseline) de como as páginas de KV do seu tráfego costumam ser. Segundo, marque as páginas raras em relação a essa base, que são as anomalias. Terceiro, classifique e explique esses desvios com um modelo treinado sobre as próprias páginas. O método dispensa um classificador por tipo de ataque, porque procura o que foge do normal.",
+      "t": 124,
+      "legenda": "O fluxo baseline, anomalia e explicação",
+      "print": null,
+      "descricao": null
+    },
+    {
+      "titulo": "Dois pontos de integração na pilha",
+      "texto": "O KV cache tornou a inferência um processo com estado. O LMCache move as páginas da GPU para armazenamento remoto. O llm-d e o NVIDIA Dynamo mandam cada requisição ao worker que já tem a página em cache. Daí saem duas opções. Dentro do motor (vLLM, SGLang), o detector roda em tempo real e o alerta pode acompanhar a próxima chamada de ferramenta. Na camada de cache, ele lê as páginas guardadas e serve para descobrir ameaças depois do fato.",
+      "t": 155,
+      "legenda": "Onde o detector entra: motor em tempo real ou camada de cache",
+      "print": "img/1NWnSwCB4NM/2.jpg",
+      "descricao": "Diagrama 'Inference is stateful now': roteador (llm-d, Dynamo), motor (vLLM, SGLang) e KV store via LMCache, com engine tap ao vivo e cache tap em repouso."
+    },
+    {
+      "titulo": "Agente de voz, um caso sem texto para filtrar",
+      "texto": "O teste usou um modelo Gemma com entrada de áudio (a legenda não deixa claro o nome exato). A base tinha 72 clipes comuns em quatro vozes, cortados em páginas de 16 tokens. No teste, um clipe limpo e outro com uma instrução escondida na fala. A detecção simples de anomalias marcou o ataque e apontou em qual página ele estava. Um modelo treinado sobre as páginas, sem treino em áudio, ainda rotulou dados pessoais como endereço e destino de viagem.",
+      "t": 265,
+      "legenda": "A anomalia aparece na página exata onde está a instrução falada",
+      "print": "img/1NWnSwCB4NM/3.jpg",
+      "descricao": "Gráfico 'No text to filter': áudio limpo tem 0 páginas raras; com instrução falada escondida, 3 páginas raras, rotuladas como endereço e destino de viagem."
+    },
+    {
+      "titulo": "Agentes de texto e os limites em produção",
+      "texto": "Com Qwen3 14B servido em vLLM com LMCache e o ATBench do Hugging Face (oito tipos de falha de agente), de 7 a 8 dos 10 primeiros alertas eram anomalias úteis. Em produção há dois problemas. Cada modelo, fine-tune ou rota escreve as páginas em coordenadas próprias, então é preciso uma base por modelo ou um espaço de representação comum. E uma fatia de 256 tokens do Qwen3 14B pesa cerca de 40 MB de KV, caro de mover em tempo real.",
+      "t": 311,
+      "legenda": "No ATBench, a maioria dos 10 primeiros alertas era relevante",
+      "print": "img/1NWnSwCB4NM/4.jpg",
+      "descricao": "Slide 'Normal stays together': histograma de ataques acima e tráfego normal abaixo; AUROC de 0,68 a 0,78 em oito tipos de falha do agente (ATBench)."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "KV cache",
+      "traducao": "cache de chaves e valores da atenção",
+      "nivel": "intermediario",
+      "chave": "kv cache",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Paged KV cache",
+      "traducao": "KV cache paginado",
+      "nivel": "avancado",
+      "chave": "paged kv cache",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Guardrails de entrada e saída",
+      "traducao": "filtros antes e depois do modelo",
+      "nivel": "basico",
+      "chave": "guardrails de entrada e saída",
+      "analogia": "Guardrails de entrada e saída são como o segurança na porta de uma festa, que confere quem entra e revista quem sai, mas não vê o que acontece lá dentro.",
+      "explicacao": [
+        "Guardrails (barreiras de proteção) são filtros que conferem o que chega a um sistema de IA e o que ele devolve.",
+        "Na entrada, o filtro lê o pedido do usuário e bloqueia o que viola a política, como uma tentativa de prompt injection (injeção de instruções).",
+        "Na saída, outro filtro lê a resposta ou a chamada de ferramenta antes de ela chegar ao usuário ou ao sistema.",
+        "O filtro costuma ser um modelo juiz que compara o texto com a política, ou um classificador treinado para um tipo de falha.",
+        "Como olham só a borda, os guardrails deixam escapar ataques que não aparecem como texto, por exemplo uma instrução escondida num áudio."
+      ],
+      "pre_requisitos": [
+        "LLM",
+        "Prompt",
+        "Prompt injection",
+        "Agente de IA"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "ENTRADA",
+            "nota": "pedido do usuário ou documento"
+          },
+          {
+            "rotulo": "FILTRO DE ENTRADA",
+            "nota": "juiz confere contra a política"
+          },
+          {
+            "rotulo": "MODELO",
+            "nota": "gera a resposta"
+          },
+          {
+            "rotulo": "FILTRO DE SAÍDA",
+            "nota": "confere resposta e ferramenta"
+          },
+          {
+            "rotulo": "RESPOSTA LIBERADA",
+            "nota": "ou bloqueada pela política"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Prompt injection",
+      "traducao": "injeção de instruções no prompt",
+      "nivel": "basico",
+      "chave": "prompt injection",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Baseline",
+      "traducao": "linha de base",
+      "nivel": "basico",
+      "chave": "baseline",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Detecção de anomalias",
+      "traducao": "anomaly detection, marcar o que foge do padrão normal",
+      "nivel": "intermediario",
+      "chave": "detecção de anomalias",
+      "analogia": "Detecção de anomalias é como o porteiro do prédio que conhece todos os moradores e estranha na hora quem nunca viu antes.",
+      "explicacao": [
+        "Detecção de anomalias (anomaly detection) é marcar o que foge do padrão normal, sem precisar saber antes qual problema procurar.",
+        "Primeiro você junta exemplos do uso comum e aprende uma baseline (linha de base) de como as coisas costumam ser.",
+        "Depois cada item novo ganha uma nota de raridade, e os que ficam longe da base viram alerta.",
+        "No talk, os itens são páginas do KV cache, e um ataque escondido num áudio apareceu como página rara no ponto exato da instrução.",
+        "A vantagem é dispensar um classificador por tipo de ataque. O custo é revisar falsos positivos e refazer a base quando o modelo muda."
+      ],
+      "pre_requisitos": [
+        "Baseline",
+        "KV cache",
+        "Eval"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "TRÁFEGO NORMAL",
+            "nota": "amostra do uso comum"
+          },
+          {
+            "rotulo": "BASELINE",
+            "nota": "aprende como é o normal"
+          },
+          {
+            "rotulo": "NOTA DE RARIDADE",
+            "nota": "compara cada página nova"
+          },
+          {
+            "rotulo": "ALERTA",
+            "nota": "marca e explica o desvio"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Cache-aware routing",
+      "traducao": "roteamento ciente de cache",
+      "nivel": "avancado",
+      "chave": "cache-aware routing",
+      "analogia": "Cache-aware routing é como mandar o cliente de volta ao mesmo atendente do banco, que já tem a pasta dele aberta na mesa.",
+      "explicacao": [
+        "Quando muita gente usa um modelo, os pedidos são divididos entre várias máquinas, e alguém decide para qual máquina cada pedido vai.",
+        "Cada máquina guarda na memória um KV cache (cache de chaves e valores), o cálculo já feito sobre o começo de conversas anteriores.",
+        "Cache-aware routing (roteamento ciente de cache) manda o pedido novo ao worker (máquina de trabalho) que já guarda o cache daquele começo de texto.",
+        "Assim o modelo pula a parte repetida do cálculo, responde mais rápido e gasta menos GPU. Ferramentas como llm-d e NVIDIA Dynamo fazem isso.",
+        "Por causa disso a inferência passa a ter estado, e esse estado guardado nas páginas de KV vira um ponto onde se pode ler sinais de segurança."
+      ],
+      "pre_requisitos": [
+        "KV cache",
+        "Token",
+        "LLM"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "NOVA REQUISIÇÃO",
+            "nota": "chega com um prefixo de texto"
+          },
+          {
+            "rotulo": "ROTEADOR",
+            "nota": "procura quem já tem o cache"
+          },
+          {
+            "rotulo": "WORKER COM CACHE",
+            "nota": "reaproveita as páginas de KV"
+          },
+          {
+            "rotulo": "RESPOSTA MAIS RÁPIDA",
+            "nota": "menos cálculo repetido"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Voice agent",
+      "traducao": "agente de voz em tempo real",
+      "nivel": "intermediario",
+      "chave": "voice agent",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O talk termina em pitch: a Intrinsec AI diz resolver justamente os dois problemas abertos e procura clientes. Os números vêm de testes pequenos e sem detalhe de método. O caso de voz tem 72 clipes de base e um único clipe atacado. No ATBench, o resultado é precisão nos 10 primeiros alertas, sem taxa de falso positivo nem comparação com um juiz de entrada e saída. Os nomes dos modelos saem confusos na legenda. Nada mostra o custo de rodar isso em tempo real.",
+  "acoes": [
+    "Liste em que pontos da sua pilha de inferência o KV cache já existe e se você consegue ler as páginas, por exemplo via vLLM ou LMCache.",
+    "Separe uma amostra de tráfego normal do seu agente e guarde como baseline, para testar qualquer detector de anomalias depois.",
+    "Calcule o tamanho do KV por token do modelo que você usa (camadas, cabeças de KV, dimensão e bytes) para saber se mover essas páginas cabe no seu orçamento de latência.",
+    "Mapeie quais ataques passam pelos seus guardrails atuais, como instruções em áudio ou imagem, e anote onde um sinal interno ao modelo ajudaria."
+  ],
+  "numeros": [
+    {
+      "valor": "72",
+      "contexto": "clipes de áudio comuns na baseline do agente de voz",
+      "t": 245
+    },
+    {
+      "valor": "16 tokens",
+      "contexto": "tamanho de cada página de KV usada no teste",
+      "t": 249
+    },
+    {
+      "valor": "7 a 8 de 10",
+      "contexto": "dos 10 primeiros alertas no ATBench eram anomalias úteis",
+      "t": 342
+    },
+    {
+      "valor": "40 MB",
+      "contexto": "KV de uma fatia de 256 tokens do Qwen3 14B",
+      "t": 404
+    }
+  ],
+  "rotulo": "KV cache como sinal de segurança para agentes",
+  "objetivo": "desenhar onde um detector de anomalias sobre o KV cache entra numa pilha com vLLM ou LMCache e o que ele cobre além dos guardrails",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são os três passos da receita proposta para usar o KV cache como sinal de segurança?",
+      "resposta": "Aprender uma baseline das páginas de KV do tráfego normal, marcar as páginas raras em relação a ela como anomalias e depois classificar e explicar essas anomalias."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Seu agente de atendimento lê PDFs enviados por clientes e você não pode registrar o conteúdo por privacidade. Como a ideia do talk se aplicaria?",
+      "resposta": "Você treina uma baseline sobre as páginas de KV de documentos normais dentro do próprio motor de inferência e alerta quando uma página foge do padrão, sem ler o texto. O alerta pode bloquear ou exigir revisão antes da próxima chamada de ferramenta."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta para confiar que esse método funciona em produção?",
+      "resposta": "Faltam amostras maiores, taxa de falso positivo, comparação com juízes e classificadores na mesma base e medida de custo e latência. O palestrante vende a solução dos dois gargalos que ele mesmo aponta, o que é conflito de interesse."
+    }
+  ],
+  "experimento": {
+    "titulo": "Detectar uma injeção pelas páginas de KV de um modelo pequeno",
+    "minutos": 45,
+    "precisa": "Python com transformers, torch e scikit-learn; um modelo aberto pequeno do Hugging Face, como Qwen2.5-0.5B-Instruct",
+    "passos": [
+      "Escreva 30 prompts normais de um agente fictício e 5 prompts iguais com uma instrução maliciosa escondida no meio do texto.",
+      "Rode cada prompt no modelo com use_cache=True e extraia past_key_values da última camada.",
+      "Corte cada sequência em páginas de 16 tokens e tire a média das chaves de cada página para formar um vetor por página.",
+      "Treine um IsolationForest só com as páginas dos prompts normais e calcule a nota de anomalia das páginas dos prompts atacados.",
+      "Ordene as páginas pela nota e veja se as que contêm a instrução maliciosa aparecem no topo."
+    ],
+    "sucesso": "As páginas com a instrução escondida ficam entre as mais anômalas em pelo menos 3 dos 5 prompts atacados, e você anota quantas páginas normais aparecem como falso positivo."
+  },
+  "consolidado_em": "2026-11-10T10:25:07+00:00"
+}

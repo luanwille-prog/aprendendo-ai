@@ -1,0 +1,249 @@
+{
+  "id": "6TjFjHPjVH0",
+  "titulo": "I Let Agents Refactor My Codebase for 3 Weeks. Then I Read the Code. — Keiji Kanazawa, Microsoft",
+  "titulo_curto": "I Let Agents Refactor My Codebase for 3 Weeks. Then I Read the Code.",
+  "palestrante": "Keiji Kanazawa, Microsoft",
+  "url": "https://www.youtube.com/watch?v=6TjFjHPjVH0",
+  "duracao": 1190,
+  "publicado_ts": 1794195009,
+  "edicao": "2026-11-09",
+  "tese": "Aprovar plano sem conferir o que o nome promete falha. Quem define a meta e a rubrica ainda precisa vigiar o agente e a própria rubrica.",
+  "tldr": [
+    "Keiji Kanazawa, gerente de produto na Microsoft, deixou agentes de código refatorarem por três semanas seu assistente de pesquisa e, ao ler o código, achou um workflow fixo, skills sem SKILL.md e testes unitários chamando a inferência de produção.",
+    "Ele recomeçou com specs melhores, um runtime em que tudo é agente e uma rubrica de objetivo para o agente buscar. O exemplo é um agente que extrai 440 quadros de uma aula em vídeo, pareia equações do quadro com explicações e deixa ele perguntar sobre cada trecho.",
+    "A rubrica foi escrita por agentes e otimizada em ciclos. Uma versão ficou ajustada a um só vídeo e foi mal em outros cinco, então ele passou a revisar também a rubrica. Ele continua sem ler a maior parte do código, mas é dono das metas e da avaliação."
+  ],
+  "tema": "agentes",
+  "complexidade": 2,
+  "ideias": [
+    {
+      "titulo": "Nomes plausíveis escondiam o mesmo código",
+      "texto": "O agente de código criou constructos chamados skills, actions e agents, mas eram a mesma coisa por baixo. A skill não tinha SKILL.md nem scripts, e os agentes não rodavam em nenhum SDK de agentes. Ele aprovou os planos pelas palavras, sem conferir a implementação.",
+      "t": 324,
+      "legenda": "Três nomes distintos apontavam para a mesma implementação.",
+      "print": "img/6TjFjHPjVH0/0.jpg",
+      "descricao": "Slide de código: 'So the next morning I read the code'. Se 'skill' ou 'action' existir, vira step 'skill'; 'agent' é outro tipo."
+    },
+    {
+      "titulo": "Testes unitários gastando tokens de produção",
+      "texto": "O Codex ligou os testes unitários à inferência de produção e rodou cerca de 30 ciclos em um dia. Um alerta do provedor mostrou gasto cinco vezes maior que o semanal normal. Além disso, o agente de reflexão diária rodava todo dia e gerava relatórios vazios, porque a refatoração quebrou os prompts.",
+      "t": 417,
+      "legenda": "O alerta de custo revelou testes chamando o modelo de produção.",
+      "print": "img/6TjFjHPjVH0/1.jpg",
+      "descricao": "Slide 'First, the bill': alerta 'You've passed your monthly spending limit' às 2:13 AM. Texto: 'Codex wired unit tests to hit production'."
+    },
+    {
+      "titulo": "Bake-off entre quatro frameworks de agentes",
+      "texto": "Ele pediu a cada framework que criasse a mesma experiência: digitar num chat e ver o agente escrever numa tela à direita. Ficou com Claude Code, Codex e Copilot CLI. O Pi gerou uma interface bonita, mas fez perguntas de engenheiro, como banco SQLite e APIs em TypeScript, que um gerente de produto não quer decidir.",
+      "t": 637,
+      "legenda": "A saída do Pi mostra a qualidade visual, mas o fluxo era voltado a engenheiros.",
+      "print": "img/6TjFjHPjVH0/2.jpg",
+      "descricao": "Slide 'The bake-off' com Claude Code, Codex, Pi e Copilot CLI. Pi fez o trabalho rápido, mas perguntou coisas de engenheiro. Ao lado."
+    },
+    {
+      "titulo": "Agente que transforma vídeo em canvas explorável",
+      "texto": "O agente extrai 440 quadros de uma aula em quadro-negro, escolhe os melhores com uma rubrica, separa as equações e as pareia com explicações. Ele pula para uma seção, destaca uma equação e conversa com o agente sobre ela. O mesmo vale para slides, demos de código e terminais.",
+      "t": 794,
+      "legenda": "O canvas liga cada equação à sua explicação e ao ponto do vídeo.",
+      "print": "img/6TjFjHPjVH0/3.jpg",
+      "descricao": "Slide 'AG2 in action': agente de vídeo sobre inferência de Reiner Pope. 440 → ~80 frames, 8–12 equações, nota ~90/100, a few $ por episódio."
+    },
+    {
+      "titulo": "A rubrica também precisa de revisão",
+      "texto": "Ele deixa o agente subir a rubrica (hill climbing) e depois ajusta a rubrica. Um agente criou uma rubrica feita só para passar na aula do Reiner Pope. Em outros cinco vídeos, foi mal. Ao pedir uma versão que generalizasse, as notas subiram em tudo. Também usa revisão adversarial entre Claude e Codex.",
+      "t": 1014,
+      "legenda": "Rubrica sobreajustada a um vídeo falhou nos demais.",
+      "print": "img/6TjFjHPjVH0/4.jpg",
+      "descricao": "Slide 'Then I hill-climb to the bar': loop até nota ≥ ~90/100 com juiz de 9 categorias × 3 amostras. A rubrica pode ser burlada; notas reais subiram +3 a +11."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Agente",
+      "traducao": "agent (programa de IA que executa tarefas em etapas)",
+      "nivel": "basico",
+      "chave": "agente de ia",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Workflow",
+      "traducao": "fluxo de trabalho com passos definidos",
+      "nivel": "basico",
+      "chave": "workflow",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Skill",
+      "traducao": "habilidade, julgamento institucional escrito para o agente executar",
+      "nivel": "intermediario",
+      "chave": "skill",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Trace",
+      "traducao": "registro estruturado da execução",
+      "nivel": "intermediario",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Rubric",
+      "traducao": "rubrica de critérios de avaliação",
+      "nivel": "intermediario",
+      "chave": "rubric",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Hill climbing",
+      "traducao": "melhoria em pequenos passos guiada pela métrica",
+      "nivel": "intermediario",
+      "chave": "hill climbing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Overfitting",
+      "traducao": "ajuste excessivo ao treino",
+      "nivel": "intermediario",
+      "chave": "overfitting",
+      "analogia": "Overfitting é como o aluno que decora as respostas da prova do ano passado e tira zero quando o professor muda as perguntas.",
+      "explicacao": [
+        "Overfitting (sobreajuste) acontece quando algo fica bom demais nos exemplos que viu e ruim em exemplos novos.",
+        "O sistema aprende detalhes e manias do exemplo usado no ajuste, em vez da regra geral que vale para outros casos.",
+        "Na palestra, um agente escreveu uma rubrica de avaliação feita sob medida para uma única aula em vídeo. Ela passava nesse vídeo e falhava em outros cinco.",
+        "Para detectar, separe exemplos de ajuste e exemplos de teste. Se a nota cai muito nos exemplos novos, houve sobreajuste.",
+        "A correção do autor foi pedir ao agente uma rubrica que generalizasse, sem mirar o vídeo original. As notas subiram em todos os vídeos."
+      ],
+      "pre_requisitos": [
+        "Eval",
+        "Agente de IA"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Adversarial review",
+      "traducao": "revisão adversarial por outro modelo",
+      "nivel": "intermediario",
+      "chave": "adversarial review",
+      "analogia": "Adversarial review é como pedir a um colega de outra equipe que confira sua planilha procurando erros antes de você entregar ao chefe.",
+      "explicacao": [
+        "Adversarial review (revisão adversarial) é colocar um revisor cuja tarefa é achar falhas no trabalho de outro.",
+        "Com IA, um modelo escreve ou altera o código e outro modelo, de outro fornecedor, lê esse código procurando erros.",
+        "Modelos diferentes erram de jeitos diferentes, então um tende a notar o que o outro deixou passar.",
+        "No caso da palestra, Claude e Codex revisam um ao outro em detalhe e sugerem correções, por várias rodadas.",
+        "O ciclo repete até as revisões pararem de achar problemas relevantes. Ele reduz a revisão humana, mas a pessoa continua dona da meta."
+      ],
+      "pre_requisitos": [
+        "LLM",
+        "Agente de IA",
+        "Pull request"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "MODELO A ESCREVE",
+            "nota": "Claude gera ou altera o código"
+          },
+          {
+            "rotulo": "MODELO B CRITICA",
+            "nota": "Codex procura falhas a fundo"
+          },
+          {
+            "rotulo": "CORRIGE E REPETE",
+            "nota": "Aplica sugestões por várias rodadas"
+          },
+          {
+            "rotulo": "CÓDIGO REVISADO",
+            "nota": "Menos erros sem leitura humana total"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É um relato de caso único: um projeto pessoal, um autor e nenhuma medição. As notas melhores após a rubrica generalizada aparecem sem números. A conclusão de não ler o código vem de quem tem o risco baixo de um projeto próprio; em produção com clientes, o custo de erro muda. O autor trabalha na Microsoft e elogia o Copilot CLI, que diz usar em 90% do tempo no trabalho. A fala sobre token maxing no final é frase de efeito sem evidência.",
+  "acoes": [
+    "Abra uma refatoração recente feita por agente e confira se cada termo do plano (skill, agent, workflow) existe de verdade no código e faz o que o nome diz.",
+    "Rode a suíte de testes com a rede bloqueada ou chaves de produção removidas, para ver se algum teste unitário chama o modelo de produção.",
+    "Defina um alerta de gasto de tokens no provedor que use, com limite diário baixo.",
+    "Para a próxima tarefa, escreva uma rubrica de 5 critérios observáveis junto com a spec e peça ao agente que se meça contra ela."
+  ],
+  "numeros": [
+    {
+      "valor": "440",
+      "contexto": "quadros-chave extraídos da aula em vídeo",
+      "t": 761
+    },
+    {
+      "valor": "~30 ciclos",
+      "contexto": "testes unitários rodando em inferência de produção",
+      "t": 417
+    },
+    {
+      "valor": "5x",
+      "contexto": "gasto acima do que ele gastava por semana, cerca de US$ 100",
+      "t": 386
+    },
+    {
+      "valor": "5 vídeos",
+      "contexto": "outros vídeos em que a rubrica sobreajustada falhou",
+      "t": 1014
+    }
+  ],
+  "rotulo": "O que acontece quando agentes refatoram seu código sem revisão",
+  "objetivo": "escrever uma rubrica de objetivo para um agente e desconfiar dela com testes em exemplos diferentes",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que o autor concluiu que seu sistema não era um agente de verdade quando procurou os traces?",
+      "resposta": "O Claude Code respondeu que não havia traces porque o sistema ainda era um workflow determinístico. As skills não tinham SKILL.md nem scripts e os agentes não rodavam em SDKs de agentes."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você pediu a um agente uma refatoração grande. Que três checagens faria antes de aprovar o resultado?",
+      "resposta": "Conferir no código se cada conceito do plano existe com o comportamento prometido, rodar os testes sem acesso à produção para ver se algum chama o modelo real e comparar a saída final com uma rubrica de objetivo escrita antes da tarefa."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "A conclusão de que dá para continuar sem ler a maior parte do código se aplica a qualquer equipe?",
+      "resposta": "Não necessariamente. O caso é um projeto pessoal, de risco baixo, sem medidas de qualidade. Em sistemas com clientes, o custo de erros como os que ele achou (gasto indevido, relatórios vazios) é maior, e a nota de melhora após a rubrica generalizada não vem com números."
+    }
+  ],
+  "experimento": {
+    "titulo": "Teste uma rubrica contra sobreajuste",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT e 4 textos ou páginas diferentes para resumir",
+    "passos": [
+      "Escolha uma tarefa simples, como resumir um artigo em 5 tópicos, e peça ao modelo uma rubrica de 5 critérios observáveis para o resultado.",
+      "Use só um dos textos para iterar: peça ao modelo que resuma, se autoavalie pela rubrica e melhore o resumo duas vezes.",
+      "Aplique o mesmo processo, sem mudar a rubrica, aos outros 3 textos e anote a nota de cada um.",
+      "Se a nota cair nos outros textos, peça uma rubrica que generalize, sem citar o texto original, e repita o teste nos 4 textos."
+    ],
+    "sucesso": "Você vê a diferença entre a nota no texto de ajuste e nos outros, e a nova rubrica reduz essa diferença."
+  },
+  "consolidado_em": "2026-11-10T10:25:08+00:00"
+}

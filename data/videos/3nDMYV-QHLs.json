@@ -1,0 +1,299 @@
+{
+  "id": "3nDMYV-QHLs",
+  "titulo": "Training Your Own Agent Models With RL Is Now Practical - Jason Mancuso, Modal",
+  "titulo_curto": "Training Your Own Agent Models With RL Is Now Practical",
+  "palestrante": "Jason Mancuso, Modal",
+  "url": "https://www.youtube.com/watch?v=3nDMYV-QHLs",
+  "duracao": 1251,
+  "publicado_ts": 1794211225,
+  "edicao": "2026-11-09",
+  "tese": "Quem já tem agente em produção tem harness, evals e traces, o suficiente para treinar o próprio modelo com RL usando uma receita estável.",
+  "tldr": [
+    "Jason Mancuso, da Modal, defende que trocar de modelo a cada lançamento é uma estratégia perdedora para quem compete em custo e qualidade de agente.",
+    "Ele explica por que RL (aprendizado por reforço) generaliza melhor que SFT (ajuste fino supervisionado) em agentes e apresenta uma receita de RL assíncrono baseada em GRPO com três correções de descompasso.",
+    "Como as atualizações de pesos são muito esparsas, a Modal espalhou os rollouts por várias nuvens, tipos de GPU e níveis de quantização, com treino estável e rollouts 15% mais baratos (17:56)."
+  ],
+  "tema": "modelos",
+  "complexidade": 5,
+  "ideias": [
+    {
+      "titulo": "SFT quebra quando o agente segue outro ramo",
+      "texto": "No SFT você treina com traces gravados em produção. Um agente com vários turnos gera uma árvore de sessões possíveis, e o modelo implantado pode cair num ramo que nunca viu no treino. No RL, o modelo explora esses ramos durante o treino. É isso que as pessoas querem dizer quando falam que RL generaliza melhor.",
+      "t": 245,
+      "legenda": "Um trace gravado cobre só um ramo da árvore de sessões do agente",
+      "print": "img/3nDMYV-QHLs/0.jpg",
+      "descricao": "Slide 'Why RL, and not SFT?': árvore de turnos com o trace do SFT em branco e um ramo em vermelho marcado 'In prod: off the trace, out of distribution'."
+    },
+    {
+      "titulo": "Você já tem os ingredientes de um ambiente de RL",
+      "texto": "O harness (estrutura que roda o agente) mais os evals, ou testes A/B, ou qualquer forma de controlar mudanças, formam um ambiente de RL. Os traces de produção fornecem as tarefas. Você garimpa casos em que o agente falha e gera tarefas sintéticas a partir deles, para o treino atacar justamente esses pontos.",
+      "t": 309,
+      "legenda": "Harness, evals e traces reais bastam para montar o ambiente de treino",
+      "print": "img/3nDMYV-QHLs/1.jpg",
+      "descricao": "Slide 'But isn't it hard to do RL?' com três cartões marcados: Agent harness (deployed in prod)."
+    },
+    {
+      "titulo": "RL assíncrono economiza GPU e cria defasagem",
+      "texto": "O ciclo do RL tem samplers que geram rollouts e um trainer que atualiza os pesos e os devolve aos samplers. Rodar em sequência deixa GPU ociosa. Rodar em paralelo aproveita melhor o hardware, mas os rollouts vêm de uma versão antiga do modelo (staleness). Diferenças de sistema entre trainer e sampler somam mais descompasso e desestabilizam o treino.",
+      "t": 432,
+      "legenda": "O loop de RL alterna geração de rollouts e atualização de pesos",
+      "print": "img/3nDMYV-QHLs/2.jpg",
+      "descricao": "Slide 'How does RL work?': vários samplers enviam trajetórias e log-probabilities ao trainer, e os novos pesos voltam aos samplers em vermelho."
+    },
+    {
+      "titulo": "Receita estável com GRPO e três correções",
+      "texto": "A base é o GRPO, criado pela DeepSeek para o R1. Masked importance sampling corrige o descompasso token a token. Score centering remove a deriva que se acumula nos pesos ao longo do treino. Top-p sampling com mask replay impede que o trainer use tokens raros que o sampler nunca sortearia, e torna exata a correção do score centering. A ablação em Qwen 3.6 35B MoE, avaliada no SWE-Bench Pro, mostra o treino mais estável com as três juntas.",
+      "t": 724,
+      "legenda": "A combinação das três correções gera a curva de treino mais estável",
+      "print": "img/3nDMYV-QHLs/3.jpg",
+      "descricao": "Slide 'Training Qwen3.6-35B-A3B on agentic coding': pass@4 no HARD-51 e no full set, com seis curvas de GRPO, MIS, top-p e SC até 200 passos."
+    },
+    {
+      "titulo": "Pesos esparsos liberam a inferência do cluster",
+      "texto": "No RL de agentes há cerca de duas GPUs de inferência para cada GPU de treino. A diferença entre os pesos de um passo e do seguinte é de 100 a 1.000 vezes mais esparsa que o modelo completo, e com compressão comum o tráfego cai cerca de 1.000 vezes. Assim a Modal treinou no GCP e rodou rollouts em várias nuvens, em B200, H200, H100 e A100, inclusive em FP8, sem perder estabilidade.",
+      "t": 1024,
+      "legenda": "Rollouts distribuídos por vários tipos de GPU sem desestabilizar o treino",
+      "print": "img/3nDMYV-QHLs/4.jpg",
+      "descricao": "Slide 'Many GPU types, many precisions': participação nas requisições por GPU e precisão, com B300 NVFP4 em 29%, B200 NVFP4 em 20% e H200 FP8 em 18%."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "SFT e RL",
+      "traducao": "ajuste fino supervisionado e aprendizado por reforço",
+      "nivel": "intermediario",
+      "chave": "sft e rl",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Harness",
+      "traducao": "estrutura que roda o agente",
+      "nivel": "basico",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Rollout",
+      "traducao": "execução de um modelo sobre uma tarefa de avaliação",
+      "nivel": "intermediario",
+      "chave": "rollout",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Staleness",
+      "traducao": "defasagem entre a versão que gerou o rollout e a que está treinando",
+      "nivel": "avancado",
+      "chave": "staleness",
+      "analogia": "Staleness é como um time que treina com o vídeo do jogo do mês passado, quando o elenco já mudou e joga de outro jeito.",
+      "explicacao": [
+        "Staleness (defasagem) acontece quando você aprende com exemplos produzidos por uma versão antiga de você mesmo.",
+        "No RL (aprendizado por reforço), samplers geram rollouts (execuções do modelo em tarefas) e um trainer usa esses rollouts para atualizar os pesos do modelo.",
+        "Rodar as duas etapas em sequência deixa GPU parada. Rodar em paralelo, de forma assíncrona, aproveita melhor o hardware.",
+        "O preço do paralelo é que o rollout pode ter saído da versão V1 enquanto o trainer já atualiza a V3, e a matemática do RL supõe que as duas são a mesma.",
+        "Essa defasagem, somada a pequenas diferenças de sistema entre trainer e sampler, desestabiliza o treino e pede correções como o masked importance sampling."
+      ],
+      "pre_requisitos": [
+        "Rollout",
+        "SFT e RL",
+        "LLM"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "SAMPLER COM V1",
+            "nota": "gera rollouts com pesos antigos"
+          },
+          {
+            "rotulo": "TRAINER JÁ NA V3",
+            "nota": "atualiza pesos em paralelo"
+          },
+          {
+            "rotulo": "DADO DEFASADO",
+            "nota": "rollout de V1 treina a V3"
+          },
+          {
+            "rotulo": "TREINO INSTÁVEL",
+            "nota": "sem correção, o aprendizado oscila"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "GRPO",
+      "traducao": "algoritmo de RL que transforma notas de várias execuções em ajuste de pesos",
+      "nivel": "avancado",
+      "chave": "grpo",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Masked importance sampling",
+      "traducao": "amostragem por importância com máscara, que corrige o descompasso por token",
+      "nivel": "avancado",
+      "chave": "masked importance sampling",
+      "analogia": "Masked importance sampling é como um professor que corrige provas antigas dando peso menor às respostas que a turma de hoje nunca daria e descartando as que destoam demais.",
+      "explicacao": [
+        "Quando você aprende com exemplos de outra pessoa, precisa ajustar quanto cada exemplo vale para você.",
+        "Importance sampling (amostragem por importância) faz esse ajuste com uma razão entre a probabilidade que o modelo em treino dá a um token e a probabilidade que o modelo que gerou o rollout deu.",
+        "A correção é feita token a token e cobre os dois descompassos do RL assíncrono, a staleness e as diferenças de sistema entre trainer e sampler.",
+        "Quando a razão fica extrema, ela pode dominar o gradiente. A máscara zera esses tokens para que a correção não afogue o sinal de treino.",
+        "Na receita da Modal, essa técnica entra sobre o GRPO junto com score centering e top-p sampling com mask replay."
+      ],
+      "pre_requisitos": [
+        "Token",
+        "Staleness",
+        "GRPO",
+        "Rollout"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "TOKEN DO ROLLOUT",
+            "nota": "sorteado pelo sampler"
+          },
+          {
+            "rotulo": "RAZÃO DE PROBABILIDADE",
+            "nota": "trainer dividido por sampler"
+          },
+          {
+            "rotulo": "MÁSCARA",
+            "nota": "zera razões extremas"
+          },
+          {
+            "rotulo": "GRADIENTE CORRIGIDO",
+            "nota": "token conta na medida certa"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Top-p sampling",
+      "traducao": "amostragem só entre os tokens que somam a maior parte da probabilidade",
+      "nivel": "intermediario",
+      "chave": "top-p sampling",
+      "analogia": "Top-p sampling é como escolher o prato do almoço só entre os mais pedidos do restaurante, ignorando os que quase ninguém pede.",
+      "explicacao": [
+        "Um modelo de linguagem escolhe a próxima palavra sorteando entre várias opções, cada uma com uma chance.",
+        "Top-p sampling (amostragem pelo topo da probabilidade) ordena os tokens da maior para a menor chance e mantém só os que somam p, como 0,95 ou 0,98, do total.",
+        "Os tokens raros que sobram fora desse corte, quase sempre ruins, nunca são sorteados.",
+        "No RL, se o sampler usa top-p e o trainer considera um desses tokens raros, o descompasso pode ser catastrófico. O mask replay repete no trainer a mesma máscara usada pelo sampler.",
+        "Com o top-p aplicado nos dois lados, a correção de deriva do score centering passa de aproximada a exata."
+      ],
+      "pre_requisitos": [
+        "Token",
+        "LLM",
+        "Masked importance sampling"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "ORDENA TOKENS",
+            "nota": "da maior para a menor chance"
+          },
+          {
+            "rotulo": "CORTE EM P",
+            "nota": "mantém os que somam 95%"
+          },
+          {
+            "rotulo": "MASK REPLAY",
+            "nota": "trainer usa o mesmo corte"
+          },
+          {
+            "rotulo": "SEM TOKENS RAROS",
+            "nota": "trainer e sampler alinhados"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Quantization",
+      "traducao": "quantização",
+      "nivel": "intermediario",
+      "chave": "quantization",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O talk termina com convite ao estande e a receita serve de vitrine para clusters, inferência e sandboxes da Modal. A ablação usa um único modelo (Qwen 3.6 35B MoE) e um ambiente de código, sem números de ganho no benchmark citados em fala. A economia de 15% vem de uma única execução. A afirmação de que a ciência do RL está resolvida e de que o descompasso tolerado é inédito não traz comparação externa. O talk também não mede quanto custa, em tempo de equipe, manter o próprio modelo.",
+  "acoes": [
+    "Separe 20 traces de produção em que o seu agente falhou e escreva, para cada um, uma tarefa reproduzível com um critério automático de sucesso.",
+    "Liste quais evals ou testes A/B que você já roda podem virar função de recompensa e quais dependem de julgamento humano.",
+    "Rode o mesmo conjunto de tarefas do seu eval num modelo open weights em BF16 e em FP8 e compare as notas para medir o efeito da quantização.",
+    "Leia o blog post técnico da Modal sobre a receita e anote como cada correção se encaixaria no seu pipeline."
+  ],
+  "numeros": [
+    {
+      "valor": "2 para 1",
+      "contexto": "GPUs de inferência para cada GPU de treino em RL de agentes",
+      "t": 867
+    },
+    {
+      "valor": "1.000x",
+      "contexto": "redução de dados enviados do trainer aos rollouts com delta esparso",
+      "t": 929
+    },
+    {
+      "valor": "4 a 5x",
+      "contexto": "mais descompasso tolerado com GPUs mistas, com treino estável",
+      "t": 1054
+    },
+    {
+      "valor": "15%",
+      "contexto": "rollouts mais baratos ao usar GPUs de menor demanda",
+      "t": 1076
+    }
+  ],
+  "rotulo": "Como treinar o próprio modelo de agente com RL",
+  "objetivo": "listar o que o seu agente em produção já oferece para montar um ambiente de RL e explicar as três correções que estabilizam o RL assíncrono",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são as três correções que a Modal soma ao GRPO e o que cada uma corrige?",
+      "resposta": "Masked importance sampling corrige o descompasso token a token. Score centering remove a deriva acumulada nos pesos ao longo do treino. Top-p sampling com mask replay impede o uso de tokens raros que o sampler nunca sortearia e torna exata a correção de deriva."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Seu agente de suporte erra ao lidar com pedidos de reembolso. Como transformar isso em material para RL, segundo o talk?",
+      "resposta": "Garimpe nos traces de produção as sessões de reembolso que falharam, gere tarefas sintéticas a partir delas e rode-as no harness atual. Use o eval ou o teste A/B que você já tem como sinal de recompensa. Esse conjunto vira o ambiente de RL."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta para aceitar que a receita funciona de forma geral?",
+      "resposta": "A ablação cobre um só modelo e um ambiente de código, e a economia de 15% vem de uma execução. Faltam outros domínios, ganhos absolutos no benchmark e comparação com receitas de terceiros. A Modal vende a infraestrutura que a receita usa, o que pede verificação independente."
+    }
+  ],
+  "experimento": {
+    "titulo": "Simule o descompasso entre trainer e sampler em Python",
+    "minutos": 30,
+    "precisa": "Python com numpy, ou Claude/ChatGPT para gerar o script",
+    "passos": [
+      "Crie uma distribuição de 1.000 tokens com softmax para o sampler e outra igual com pequeno ruído nos logits para o trainer.",
+      "Sorteie 10.000 tokens do sampler e calcule a razão de importância entre a probabilidade do trainer e a do sampler para cada um.",
+      "Aplique uma máscara que zera tokens com razão fora de 0,5 a 2 e conte quantos foram descartados.",
+      "Repita sorteando com top-p 0,95 nos dois lados e compare o maior valor de razão e o número de tokens mascarados."
+    ],
+    "sucesso": "Você vê razões extremas concentradas nos tokens raros e observa que o top-p reduz o maior valor e a quantidade de tokens mascarados."
+  },
+  "consolidado_em": "2026-11-10T10:25:08+00:00"
+}
