@@ -1,0 +1,211 @@
+{
+  "id": "vg3JdjGuJwM",
+  "titulo": "Every Correction You Give Your Agent Is Data - Brian Douglas, Paper Compute",
+  "titulo_curto": "Every Correction You Give Your Agent Is Data",
+  "palestrante": "Brian Douglas, Paper Compute",
+  "url": "https://www.youtube.com/watch?v=vg3JdjGuJwM",
+  "duracao": 768,
+  "publicado_ts": 1794333440,
+  "edicao": "2026-11-10",
+  "tese": "Cada vez que um especialista contradiz o agente, ele revela uma regra do time. Se você guarda e rotula esse momento, ele vira skill, eval ou dado de treino.",
+  "tldr": [
+    "Brian Douglas escreve Rust com agentes sem dominar a linguagem e só descobre as convenções do time quando um colega reprova o PR. Esses reparos já existiam nas sessões do agente, mas ninguém os guardava.",
+    "Na Paper Compute ele captura as sessões com Tapes, rotula os momentos de pushback (quando um engenheiro corrige o agente) e usa esses traces para montar o Twin Review, um revisor que imita o colega.",
+    "Ele recomenda começar por uma skill testável, depois evals, e deixar o treino de modelo (QLoRA em um Qwen pequeno) para o fim, porque DPO exige hardware pesado."
+  ],
+  "tema": "engenharia-de-software",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Código que compila ainda pode violar decisões do time",
+      "texto": "Brian aceita o Rust gerado pelo agente porque não sabe julgá-lo. O compilador passa, mas o código ignora como a API foi estruturada e duplica serviços que já existem. Um colega só aponta isso no review do PR, tarde demais.",
+      "t": 312,
+      "legenda": "Compilar não prova que o código segue as decisões do time.",
+      "print": null,
+      "descricao": null
+    },
+    {
+      "titulo": "Capture sessões e rotule o pushback",
+      "texto": "O Paper Console centraliza as sessões do time e permite aplicar rótulos. O mais útil é pushback, que marca cada vez que um engenheiro corrige o agente. Para Brian, essa correção indica um conhecimento que o agente não tinha.",
+      "t": 251,
+      "legenda": "O rótulo pushback marca onde um humano soube mais que o agente.",
+      "print": "img/vg3JdjGuJwM/1.jpg",
+      "descricao": "Paper Console: lista de sessões dos últimos 7 dias, com usuário, modelo, turnos e custo. O rótulo pushback não aparece neste frame."
+    },
+    {
+      "titulo": "Twin Review revisa o PR como o colega faria",
+      "texto": "Com as sessões rotuladas num dataset, Brian roda uma CLI que revisa o PR 381 imitando o colega Matt. O modelo foi pós-treinado só com traces, sem usar comentários do GitHub. Isso importa porque o time cada vez mais revisa no terminal, onde nada fica registrado no repositório.",
+      "t": 380,
+      "legenda": "Um revisor treinado em correções passadas comenta o PR no terminal.",
+      "print": null,
+      "descricao": null
+    },
+    {
+      "titulo": "Quatro tipos de rótulo para os traces",
+      "texto": "Brian procura pushbacks, pedidos de desculpa do agente, golden sessions (sessões marcadas como exemplo a seguir) e regressões. Um padrão recorrente de regressão é o agente reinventar bibliotecas Go ou mocks de teste que já existem.",
+      "t": 497,
+      "legenda": "Os rótulos separam o que ensinar do que evitar.",
+      "print": "img/vg3JdjGuJwM/3.jpg",
+      "descricao": "README do tapes-eject-fireworks listando os rótulos pushback, apology, golden e regression, com a regra de cada um."
+    },
+    {
+      "titulo": "Escada de maturidade: skill, eval, depois modelo",
+      "texto": "Primeiro transforme os traces em skills. Com skills você monta evals. Só então vale fazer post-training em um modelo aberto. Brian diz que uma skill já rende a maior parte do ganho e que DPO exige modelos de 70B ou mais.",
+      "t": 590,
+      "legenda": "A ordem recomendada vai do mais barato ao mais caro.",
+      "print": "img/vg3JdjGuJwM/4.jpg",
+      "descricao": "Arquivo SKILL.md do tapes no GitHub: name e description de uma skill que consulta sessões gravadas em SQLite."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Trace",
+      "traducao": "registro estruturado da execução",
+      "nivel": "basico",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Vibe coding",
+      "traducao": "programar descrevendo o resultado e deixando a IA escrever o código",
+      "nivel": "basico",
+      "chave": "vibe coding",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Skill",
+      "traducao": "habilidade, julgamento institucional escrito para o agente executar",
+      "nivel": "intermediario",
+      "chave": "skill",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação",
+      "nivel": "intermediario",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Fine-tuning",
+      "traducao": "ajuste fino de um modelo",
+      "nivel": "intermediario",
+      "chave": "fine-tuning",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "LoRA",
+      "traducao": "adaptador leve de fine-tuning que especializa um modelo numa tarefa",
+      "nivel": "avancado",
+      "chave": "lora",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Quantization",
+      "traducao": "quantização",
+      "nivel": "avancado",
+      "chave": "quantization",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "DPO",
+      "traducao": "otimização direta de preferências",
+      "nivel": "avancado",
+      "chave": "dpo",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O próprio resumo admite que o Twin Review é uma demonstração, sem comparação com um conjunto de avaliação independente. Não há métrica de quantos comentários do revisor sintético coincidem com os do colega real. O código não é público, e Brian corrige no meio da fala que nem o Twin Review foi aberto. Ele é fundador de uma empresa que vende captura e rotulagem de traces (Tapes, Paper Console), então a tese favorece o produto. O número de quase 80 mil sessões não diz quantas têm pushback útil. O modelo citado muda entre 38B e 4B na legenda, o que sugere erro de transcrição.",
+  "acoes": [
+    "Ative o registro de sessões do seu agente de código (ou use uma ferramenta de captura) e guarde as conversas de uma semana num único lugar.",
+    "Percorra essas sessões e marque as vezes em que você ou um colega corrigiu o agente. Anote a regra por trás de cada correção.",
+    "Escreva uma skill com as cinco regras mais repetidas e rode o agente em dois PRs antigos para ver se ele deixa de repetir os erros.",
+    "Releia os comentários dos últimos PRs do time e liste os que se repetem. Eles são candidatos a regra de skill."
+  ],
+  "numeros": [
+    {
+      "valor": "200",
+      "contexto": "sandboxes Daytona em paralelo para tarefas bem definidas",
+      "t": 159
+    },
+    {
+      "valor": "80 mil",
+      "contexto": "sessões do time disponíveis para gerar skills",
+      "t": 621
+    },
+    {
+      "valor": "4B",
+      "contexto": "tamanho do modelo Qwen ajustado com QLoRA",
+      "t": 651
+    },
+    {
+      "valor": "70B+",
+      "contexto": "porte necessário para tentar DPO",
+      "t": 681
+    }
+  ],
+  "rotulo": "Transforme correções ao agente em skills e dados de treino",
+  "objetivo": "montar um fluxo que captura sessões de agente, rotula as correções de um revisor e as converte em uma skill testável",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que Brian considera o pushback de um engenheiro um sinal valioso nos traces?",
+      "resposta": "Porque indica que o engenheiro sabe algo que o agente não sabe, como decisões de estrutura da API ou serviços que já existem. Esse conhecimento não aparece só porque o código compila."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você usaria a ideia do talk no seu time sem treinar nenhum modelo?",
+      "resposta": "Colete as sessões do agente, marque as correções de um revisor experiente, extraia as regras que se repetem e escreva uma skill. Depois teste a skill rodando o agente em PRs antigos e compare com o que o revisor apontou."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta para confiar que o Twin Review reproduz bem o revisor humano?",
+      "resposta": "Falta uma comparação com um conjunto de avaliação independente, medindo quantos comentários do modelo coincidem com os do colega e quantos são ruído. O talk mostra só uma demonstração, e o autor vende as ferramentas de captura."
+    }
+  ],
+  "experimento": {
+    "titulo": "Extraia uma skill das correções de revisão",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT e um repositório com pelo menos 10 comentários de revisão de PR",
+    "passos": [
+      "Copie de 10 a 20 comentários de revisão de PRs antigos do seu repositório para um arquivo de texto.",
+      "Peça ao modelo para agrupar os comentários por regra e listar as 5 regras que mais se repetem, com um exemplo cada.",
+      "Transforme essas regras em um arquivo SKILL.md curto, com instruções diretas ao agente.",
+      "Dê ao agente um diff antigo e peça uma revisão com e sem a skill. Compare com os comentários humanos."
+    ],
+    "sucesso": "Com a skill, a revisão do agente aponta pelo menos um problema que o revisor humano apontou e que a versão sem skill deixou passar."
+  },
+  "consolidado_em": "2026-11-11T12:01:16+00:00"
+}

@@ -1,0 +1,235 @@
+{
+  "id": "3Krz7Rdd4JI",
+  "titulo": "Every Company Is Building Agents That Can't Work Together - Justin Schroeder, Standard Agents",
+  "titulo_curto": "Every Company Is Building Agents That Can't Work Together",
+  "palestrante": "Justin Schroeder, Standard Agents",
+  "url": "https://www.youtube.com/watch?v=3Krz7Rdd4JI",
+  "duracao": 2089,
+  "publicado_ts": 1794340831,
+  "edicao": "2026-11-10",
+  "tese": "Agentes pequenos e específicos rendem mais que um modelo gigante com muitas skills, mas só escalam se o harness virar um padrão aberto.",
+  "tldr": [
+    "Justin Schroeder diz que empresas continuam construindo agentes próprios porque querem integração com seus processos, confiança no que o agente pode fazer e eficácia medida por eval (avaliação).",
+    "O problema é que cada time monta seu harness (a estrutura que roda o agente) de um jeito, então os agentes não se compartilham nem se combinam. Existem padrões para ferramentas, prompts e comunicação, mas não para o runtime do agente.",
+    "Ele apresenta a Standard Agent Specification, uma especificação aberta em TypeScript, e o Standard Agent Builder, primeiro runtime que a implementa. Na demo, o Claude Code gera um agente de garantia de bateria em 5 min 21 s."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Três motivos para construir agentes próprios",
+      "texto": "Mesmo com MCP e skills, as empresas seguem criando agentes. O palestrante lista integração com processos internos, confiança (restringir o que o agente pode fazer) e eficácia (concluir a tarefa bem, medida por eval). Ele afirma que um agente que pode tudo pode fazer qualquer coisa, e isso é um risco.",
+      "t": 254,
+      "legenda": "Menos ferramentas disponíveis significa menos ações indevidas possíveis.",
+      "print": "img/3Krz7Rdd4JI/0.jpg",
+      "descricao": "Slide 'Three factors': cards 01 Integration (apagado) e 02 Trust: 'The agent does what it was told, and nothing else.'"
+    },
+    {
+      "titulo": "Agente pequeno e específico contra modelo grande com skills",
+      "texto": "O argumento é que um agente de Gmail com um modelo barato (ele cita DeepSeek V4.1 Flash) e prompt próprio pode ser avaliado, otimizado e composto. Ele também pode ser exposto como servidor MCP para um modelo maior. A ideia é tratar cada processo de negócio, como uma garantia, como um agente com seu próprio eval.",
+      "t": 442,
+      "legenda": "A tese central, a favor de agentes de domínio no lugar de um modelo único.",
+      "print": "img/3Krz7Rdd4JI/1.jpg",
+      "descricao": "Slide 'One agent that does everything': system prompt, 112 tool definitions, 41 skills e histórico, todos no Claude Opus 5.5."
+    },
+    {
+      "titulo": "O mapa de peças de um agente padrão",
+      "texto": "A especificação define o agente como um pacote em código. As peças são modelo, system prompt, tools, sub-agents, regras, hooks, effects e thread. O modelo é fixado de forma exata, com fallback. Cada thread funciona como uma sandbox com mensagens, KV store e sistema de arquivos próprios.",
+      "t": 910,
+      "legenda": "Resume o que o padrão especifica dentro de um agente.",
+      "print": "img/3Krz7Rdd4JI/2.jpg",
+      "descricao": "Diagrama 'Here's the map': Runtime e Package com Thread, Hooks, Effects, Agent rules, Subagents, Tools, System prompt e Model."
+    },
+    {
+      "titulo": "Composição por parent hooks e tools de três tipos",
+      "texto": "Uma tool pode ser função em TypeScript, um prompt (inferência simples) ou um agente inteiro. Com parent hooks, instalar o agente de Gmail sob um agente pai já ensina o pai a usá-lo, sem editar o prompt do pai. O padrão também permite dois lados de IA conversando, o que serve de QA embutido.",
+      "t": 1406,
+      "legenda": "Mostra como agentes se combinam sem configuração extra.",
+      "print": "img/3Krz7Rdd4JI/3.jpg",
+      "descricao": "Slide 'Required parent hooks': defineAgent com parentHooks (hook gmail_context, stage before_parent) e a regra 'No hook, no run'."
+    },
+    {
+      "titulo": "Demo: agente de garantia criado em minutos",
+      "texto": "O Claude Code leu um PDF do processo de garantia de bateria e escreveu prompts, tools e modelo. Como a arquitetura já vem resolvida pela especificação, o agente ficou pronto em 5 min 21 s. O painel do builder mostra tools enviadas, custo, tokens e taxa de cache de 94%.",
+      "t": 1905,
+      "legenda": "Observabilidade do agente de garantia, com 94% de cache.",
+      "print": "img/3Krz7Rdd4JI/4.jpg",
+      "descricao": "AgentBuilder: lista com Battery Warranty (13 threads) e walkthrough_agent. O painel de custo e cache não aparece neste frame."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Agente",
+      "traducao": "agent (programa de IA que executa tarefas em etapas)",
+      "nivel": "basico",
+      "chave": "agente de ia",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Harness",
+      "traducao": "estrutura que roda o agente",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "MCP",
+      "traducao": "protocolo para conectar ferramentas a agentes",
+      "nivel": "basico",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Skill",
+      "traducao": "habilidade, julgamento institucional escrito para o agente executar",
+      "nivel": "basico",
+      "chave": "skill",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação",
+      "nivel": "intermediario",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Sub-agent",
+      "traducao": "subagente (agente filho)",
+      "nivel": "intermediario",
+      "chave": "subagente",
+      "analogia": "Um sub-agent é como o chefe de cozinha que pede a sobremesa ao confeiteiro da equipe e só recebe o doce pronto, sem precisar acompanhar cada etapa da receita.",
+      "explicacao": [
+        "Um sub-agent (subagente, agente filho) é um assistente de IA que trabalha a pedido de outro assistente, o agente pai.",
+        "O agente pai recebe a tarefa grande e entrega uma parte dela ao subagente, que tem prompt, modelo e ferramentas próprios.",
+        "Para o pai, o subagente aparece como mais uma tool (ferramenta) que ele pode chamar e da qual recebe a resposta.",
+        "Na especificação do talk, o mesmo subagente pode ter várias instâncias, como um agente de calendário usado para a agenda de trabalho e para a pessoal.",
+        "Com parent hooks (gatilhos do pai), instalar um subagente como o de Gmail já ensina o pai a usá-lo, sem editar o prompt do pai."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "Prompt",
+        "LLM"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "AGENTE PAI",
+            "nota": "recebe a tarefa completa"
+          },
+          {
+            "rotulo": "CHAMA O SUBAGENTE",
+            "nota": "usa o filho como uma tool"
+          },
+          {
+            "rotulo": "SUBAGENTE TRABALHA",
+            "nota": "prompt e ferramentas próprios"
+          },
+          {
+            "rotulo": "RESULTADO AO PAI",
+            "nota": "o pai junta e conclui a tarefa"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Hooks",
+      "traducao": "gatilhos determinísticos em pontos do fluxo do agente",
+      "nivel": "intermediario",
+      "chave": "hooks",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Decision model",
+      "traducao": "modelo barato que devolve rótulo e probabilidade",
+      "nivel": "avancado",
+      "chave": "decision model",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O talk é lançamento de produto. O palestrante vende a especificação, o runtime e a nuvem própria, então há conflito de interesse. Não há medição que compare agente pequeno com modelo grande e skills, e a afirmação de que fine-tuning de prompt supera fine-tuning de modelo vem de uma menção rápida a um paper. A demo é um único caso, sem taxa de acerto, e o padrão é novo, sem adoção por terceiros. A escolha de TypeScript como linguagem única é opinião do time.",
+  "acoes": [
+    "Liste três processos do seu trabalho que viram agente próprio e anote, para cada um, as ferramentas mínimas de que ele precisa.",
+    "Escolha uma tarefa que hoje usa um modelo grande com skills e teste o mesmo prompt num modelo barato, comparando o resultado em 10 casos reais.",
+    "Escreva a lista de ferramentas permitidas de um agente e remova toda ação que ele não precisa para concluir a tarefa.",
+    "Leia o site da especificação e confira se o formato de pacote atende ao que você precisa distribuir antes de adotá-lo."
+  ],
+  "numeros": [
+    {
+      "valor": "5 min 21 s",
+      "contexto": "tempo real para o Claude Code gerar o agente de garantia",
+      "t": 1844
+    },
+    {
+      "valor": "94%",
+      "contexto": "taxa de acerto de cache na execução do agente demonstrado",
+      "t": 1905
+    },
+    {
+      "valor": "6 tools",
+      "contexto": "ferramentas enviadas ao modelo na chamada demonstrada",
+      "t": 1905
+    }
+  ],
+  "rotulo": "Um padrão aberto para empacotar e combinar agentes",
+  "objetivo": "comparar um agente especializado com um modelo grande cheio de skills e desenhar um agente portável com ferramentas restritas",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são os três tipos de tool previstos na especificação e para que serve o parent hook?",
+      "resposta": "Tool pode ser função em código, um prompt (inferência simples) ou um agente inteiro. O parent hook faz o agente pai aprender a usar um sub-agente assim que ele é instalado, sem alterar o prompt do pai."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você transformaria um processo do seu trabalho, como triagem de chamados, num agente com escopo restrito?",
+      "resposta": "Defina um modelo fixo, um prompt só para o processo e poucas tools (consultar cadastro, anexar arquivo, abrir chamado). Rode um eval com casos reais e deixe de fora qualquer ferramenta que não faça parte do fluxo."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta para aceitar que agentes pequenos superam um modelo grande com skills, e que conflito pesa sobre o palestrante?",
+      "resposta": "Faltam comparações medidas com eval, número de casos e taxa de acerto. A demo mostra um só agente e a menção ao paper é rápida. O palestrante vende a especificação, o builder e a nuvem, então tem interesse em que o padrão seja adotado."
+    }
+  ],
+  "experimento": {
+    "titulo": "Compare agente restrito e modelo geral numa tarefa",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT, acesso a um modelo barato e uma planilha",
+    "passos": [
+      "Escolha uma tarefa pequena e repetível, como classificar 10 e-mails de suporte, e escreva o resultado esperado de cada um.",
+      "Rode a tarefa num modelo grande com um prompt genérico e anote os acertos numa planilha.",
+      "Escreva um prompt restrito, com tom, regras e a lista curta de ações permitidas, e rode no modelo barato.",
+      "Compare acertos, custo estimado e ações fora do escopo entre os dois."
+    ],
+    "sucesso": "Você tem uma planilha com acertos e custo dos dois cenários e sabe dizer se o agente restrito atende à tarefa."
+  },
+  "consolidado_em": "2026-11-11T12:01:16+00:00"
+}

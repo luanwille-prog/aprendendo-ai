@@ -1,0 +1,298 @@
+{
+  "id": "hFNbPmzzcEs",
+  "titulo": "Your Agent Doesn't Need an LLM for Every Decision - Raymond Weitekamp, OpenProse",
+  "titulo_curto": "Your Agent Doesn't Need an LLM for Every Decision",
+  "palestrante": "Raymond Weitekamp, OpenProse",
+  "url": "https://www.youtube.com/watch?v=hFNbPmzzcEs",
+  "duracao": 3108,
+  "publicado_ts": 1794351607,
+  "edicao": "2026-11-10",
+  "tese": "Muita tarefa que parece pedir raciocínio se resolve com uma árvore de decisões pequenas e rápidas, e o LLM entra só onde há geração.",
+  "tldr": [
+    "Raymond Weitekamp propõe os Recursive Decision Models (RDM): um modelo de decisão (classificador rápido, o System One) que pode chamar outras decisões em árvore, com profundidade máxima e contexto mantido fora do modelo.",
+    "Ele mostra exemplos sem nenhum LLM, como busca em categorias de produto, Doom e Factorio, e depois junta decisão e geração com um mapa compartilhado e um árbitro que decide qual ação pode alterar o estado.",
+    "O talk termina com o Earshot, um protótipo de voz que aprende em tempo real, e com a prévia do oSo, um agente de computer use ainda em lista de espera."
+  ],
+  "tema": "agentes",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "Raciocínio como muitas decisões pequenas",
+      "texto": "Decision models só escolhem entre opções e não geram texto. Isso os faz convergir, ao contrário do LLM, que diverge. A pergunta que guia o talk é se tarefas que parecem exigir raciocínio podem virar milhares de escolhas rápidas.",
+      "t": 277,
+      "legenda": "Decisão converge, geração diverge: o par que o talk explora.",
+      "print": null,
+      "descricao": null
+    },
+    {
+      "titulo": "As três regras do RDM",
+      "texto": "Primeira, o contexto fica fora do modelo e o código entrega fatias a cada decisão. Segunda, uma decisão pode chamar outra até uma profundidade máxima. Terceira, tudo precisa funcionar sem modelo generativo e também compor com LLMs e agentes.",
+      "t": 773,
+      "legenda": "As três regras que definem uma arquitetura RDM.",
+      "print": null,
+      "descricao": null
+    },
+    {
+      "titulo": "Busca hierárquica sem o feixe",
+      "texto": "No cookbook da Type Safe, uma consulta é casada com uma de 12 mil categorias de produto. Em vez de pôr tudo no contexto, o RDM desce pela árvore e pergunta a cada nível qual subcategoria explorar. O código escolhe se segue só a melhor ou as três melhores.",
+      "t": 1089,
+      "legenda": "Cada nível da árvore recebe só as subcategorias do pai.",
+      "print": "img/hFNbPmzzcEs/2.jpg",
+      "descricao": "Slide 'Hierarchical search, without the beam': árvore de categorias do exemplo da mochila de laptop."
+    },
+    {
+      "titulo": "O mapa conecta decisão e LLM",
+      "texto": "O decision model só aponta para itens de uma lista. O mapa guarda nomes, descrições e funções (por exemplo, ligar a TV). O LLM edita o mapa e aprende combinações novas, como o 'assistir filme', e o modelo de decisão passa a usá-las.",
+      "t": 1780,
+      "legenda": "O mapa é a interface compartilhada entre decisão e geração.",
+      "print": "img/hFNbPmzzcEs/3.jpg",
+      "descricao": "Demo da casa inteligente com o painel 'The map' listando salas e rotinas (movie time, finish, good night) e a decisão 'finish' com 0.64 no log."
+    },
+    {
+      "titulo": "Árbitro para decisões em paralelo",
+      "texto": "Como os modelos de decisão são baratos, dá para rodar vários em paralelo. O árbitro funciona como um lock de escrita. Ele escolhe qual voto pode mudar o estado e só deixa passar quando há confiança, evitando colisões.",
+      "t": 2032,
+      "legenda": "O árbitro bloqueia escritas concorrentes sobre o estado.",
+      "print": "img/hFNbPmzzcEs/4.jpg",
+      "descricao": "Slide 'Many parallel streams, one stream of actions': canais em paralelo e o árbitro com as opções 'act now: which', 'wait for more', 'do nothing'."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Decision model",
+      "traducao": "modelo barato que devolve rótulo e probabilidade",
+      "nivel": "intermediario",
+      "chave": "decision model",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Recursive decision model (RDM)",
+      "traducao": "modelo de decisão recursivo: uma decisão que pode chamar outras",
+      "nivel": "avancado",
+      "chave": "recursive decision model (rdm)",
+      "analogia": "Um RDM é como um jogo de perguntas de sim ou não em que cada resposta leva a uma nova pergunta, até chegar ao objeto certo.",
+      "explicacao": [
+        "Uma tarefa grande vira uma sequência de escolhas pequenas, cada uma entre poucas opções.",
+        "Cada escolha é feita por um decision model (modelo de decisão), um modelo rápido e barato que só aponta uma opção da lista e não escreve texto.",
+        "Uma decisão pode chamar outra decisão, formando uma árvore, e o código limita a profundidade máxima para o processo terminar.",
+        "O contexto completo fica fora do modelo, no código, que entrega a cada decisão só a fatia de informação de que ela precisa.",
+        "A arquitetura precisa funcionar sem nenhum modelo generativo e também se combinar com LLMs e agentes quando há algo a gerar."
+      ],
+      "pre_requisitos": [
+        "Decision model",
+        "LLM",
+        "Agente de IA"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "CONTEXTO NO CÓDIGO",
+            "nota": "o estado completo fica fora do modelo"
+          },
+          {
+            "rotulo": "FATIA PARA DECIDIR",
+            "nota": "o código entrega só o necessário"
+          },
+          {
+            "rotulo": "DECISÃO ESCOLHE",
+            "nota": "aponta uma opção ou chama outra decisão"
+          },
+          {
+            "rotulo": "LIMITE DE PROFUNDIDADE",
+            "nota": "a árvore para no nível máximo"
+          },
+          {
+            "rotulo": "AÇÃO FINAL",
+            "nota": "resultado sem gerar texto"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "System 2 thinking",
+      "traducao": "pensamento lento e deliberado",
+      "nivel": "basico",
+      "chave": "system 2 thinking",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Beam search",
+      "traducao": "busca em feixe",
+      "nivel": "intermediario",
+      "chave": "beam search",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Computer use",
+      "traducao": "agente que usa a interface do computador",
+      "nivel": "intermediario",
+      "chave": "computer use",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Arbiter",
+      "traducao": "árbitro: porta que decide qual decisão pode alterar o estado",
+      "nivel": "avancado",
+      "chave": "arbiter",
+      "analogia": "O árbitro é como o juiz de futebol que ouve vários jogadores pedindo falta ao mesmo tempo e só apita quando tem certeza do lance.",
+      "explicacao": [
+        "Quando várias partes de um sistema querem mudar a mesma coisa ao mesmo tempo, alguém precisa decidir qual mudança vale.",
+        "Modelos de decisão são baratos, então dá para rodar vários em paralelo quando há dúvida, cada um votando numa ação.",
+        "Se todos alterassem o estado livremente, haveria colisões, como um modelo mais rápido mudar algo que outro mudaria no sentido oposto.",
+        "O arbiter (árbitro) funciona como um lock (trava) de escrita na CPU, em que muitos leem ao mesmo tempo e só um escreve por vez.",
+        "Ele junta os votos dos vários canais e só deixa uma ação mudar o estado quando tem confiança suficiente nela."
+      ],
+      "pre_requisitos": [
+        "Decision model"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "DECISÕES EM PARALELO",
+            "nota": "vários modelos baratos rodam juntos"
+          },
+          {
+            "rotulo": "VOTOS POR AÇÃO",
+            "nota": "cada raia propõe uma mudança"
+          },
+          {
+            "rotulo": "ÁRBITRO AVALIA",
+            "nota": "pesa a confiança de cada voto"
+          },
+          {
+            "rotulo": "ESTADO ALTERADO",
+            "nota": "só a ação liberada escreve"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Mapa compartilhado",
+      "traducao": "lista de ponteiros e funções que decisão e LLM usam em comum",
+      "nivel": "avancado",
+      "chave": "mapa compartilhado",
+      "analogia": "O mapa compartilhado é como o cardápio de um restaurante, em que o cliente só aponta o prato, a cozinha sabe como fazer, e o chef pode incluir pratos novos.",
+      "explicacao": [
+        "Duas ferramentas diferentes precisam de uma lista em comum para conseguir trabalhar juntas.",
+        "O modelo de decisão só sabe apontar itens de uma lista, e o LLM, na forma crua, solta texto livre sem estrutura.",
+        "O mapa é essa lista comum, em que cada item tem um nome (como TV ligada), uma descrição curta e uma função no código que executa a ação.",
+        "O modelo de decisão escolhe o item certo do mapa, e o código roda a função ligada a ele.",
+        "O LLM edita o mapa e cria combinações novas aprendidas com o usuário, como assistir filme igual a ligar a TV e apagar as luzes, que o modelo de decisão passa a usar."
+      ],
+      "pre_requisitos": [
+        "Decision model",
+        "LLM"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "LLM EDITA O MAPA",
+            "nota": "cria itens como assistir filme"
+          },
+          {
+            "rotulo": "MAPA DE ITENS",
+            "nota": "nome, descrição e função"
+          },
+          {
+            "rotulo": "DECISÃO APONTA ITEM",
+            "nota": "escolhe a entrada certa"
+          },
+          {
+            "rotulo": "FUNÇÃO EXECUTA",
+            "nota": "o código liga a TV e apaga a luz"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "DSPy",
+      "traducao": "framework que isola cada chamada de LLM atrás de interfaces tipadas",
+      "nivel": "intermediario",
+      "chave": "dspy",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O talk é uma proposta de pesquisa e também uma prévia de produto (oSo, com lista de espera). Não há benchmark, comparação com um LLM nem taxa de acerto. Os exemplos de Doom, Factorio e smart home são demos curtas, e o próprio autor chama alguns de toy examples e admite que um classificador só resolveria. O Factorio fez um caminho ruim. A tese de que dá para evitar raciocínio exige que alguém enumere antes todas as decisões possíveis, o que pesa em tarefas abertas. O autor tem interesse direto no conceito e no oSo.",
+  "acoes": [
+    "Liste três decisões do seu agente que são classificações com opções finitas (roteamento, aprovação de ferramenta, escolha de categoria) e anote qual delas poderia sair do LLM.",
+    "Meça latência e custo de uma dessas decisões num modelo pequeno (classificador ou embedding) contra seu LLM atual, em 20 exemplos reais.",
+    "Escreva um catálogo com 10 a 20 ações de um fluxo simples, com nome e descrição curta, e teste se um classificador escolhe a ação certa."
+  ],
+  "numeros": [
+    {
+      "valor": "12.000",
+      "contexto": "categorias de produto da Shopify na busca hierárquica",
+      "t": 1057
+    },
+    {
+      "valor": "40 a 100 ms",
+      "contexto": "fatia de áudio lida pelo modelo pequeno do Earshot",
+      "t": 2687
+    },
+    {
+      "valor": "45 ms",
+      "contexto": "atraso final do Earshot depois de aprender",
+      "t": 2779
+    },
+    {
+      "valor": "150 ms",
+      "contexto": "classificação de rabiscos no navegador (projeto Hunch)",
+      "t": 2873
+    }
+  ],
+  "rotulo": "Modelos de decisão recursivos no lugar de LLMs",
+  "objetivo": "desenhar uma árvore de decisões pequenas que resolve uma busca ou navegação e decidir em que ponto um LLM entra",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são as três regras que Weitekamp usa para definir um Recursive Decision Model?",
+      "resposta": "O contexto fica fora do modelo e o código entrega fatias. Uma decisão pode chamar outra decisão até uma profundidade máxima. Deve funcionar sem modelo generativo e também compor com LLMs e agentes."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você tem um catálogo com milhares de itens e quer casar a consulta do usuário com a categoria certa. Como aplicar a ideia da busca hierárquica?",
+      "resposta": "Organize as categorias em árvore. A cada nível, mostre ao modelo de decisão só as subcategorias do pai atual e peça a mais provável. O código decide se segue uma (greedy) ou as top 3. Assim o contexto nunca carrega todo o catálogo."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites e conflitos de interesse enfraquecem a tese de que muito raciocínio vira decisões pequenas?",
+      "resposta": "Faltam métricas e comparação com um LLM. Os exemplos são demos curtas, alguns admitidamente resolvíveis com uma chamada só. As decisões possíveis precisam ser enumeradas antes, o que limita tarefas abertas. O autor divulga o oSo e o próprio conceito."
+    }
+  ],
+  "experimento": {
+    "titulo": "Busca hierárquica com decisões pequenas",
+    "minutos": 40,
+    "precisa": "Python, uma API de LLM ou um modelo de embeddings, e uma lista de categorias aninhadas (pode ser gerada pelo Claude)",
+    "passos": [
+      "Crie uma árvore com cerca de 100 categorias de produtos em 3 níveis e 15 consultas de teste com a categoria final esperada.",
+      "Escreva um laço que, em cada nível, envia ao modelo só as subcategorias do pai e a consulta, e exige uma única opção como resposta.",
+      "Compare com uma chamada única que recebe todas as categorias de uma vez e anote acertos, chamadas e tempo total.",
+      "Experimente seguir as duas melhores opções por nível e veja se a taxa de acerto sobe."
+    ],
+    "sucesso": "Você tem uma tabela com acertos, número de chamadas e tempo das duas abordagens e consegue dizer em qual cenário a descida em árvore compensa."
+  },
+  "consolidado_em": "2026-11-11T12:01:16+00:00"
+}

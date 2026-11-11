@@ -1,0 +1,244 @@
+{
+  "id": "_NBx2NNOuA4",
+  "titulo": "Give Your On-Call Its Own AI Teammate - Swaapnika Motapothula, Chinmay Gandhi & Vlad Tsvang, Meta",
+  "titulo_curto": "Give Your On-Call Its Own AI Teammate",
+  "palestrante": "Swaapnika Motapothula, Chinmay Gandhi & Vlad Tsvang, Meta",
+  "url": "https://www.youtube.com/watch?v=_NBx2NNOuA4",
+  "duracao": 941,
+  "publicado_ts": 1794333440,
+  "edicao": "2026-11-10",
+  "tese": "Um agente por rotação de on-call, com memória do time e autonomia conquistada degrau a degrau, entrega decisões ao humano em vez de tarefas.",
+  "tldr": [
+    "A Meta afirma que cerca de três quartos do código novo já sai com IA, mas o on-call não acelerou junto, então o gargalo passou para operar o código em produção.",
+    "A solução é um agente por rotação, que investiga alertas, rascunha correções e posta um resumo às 9h, com identidade própria, memória compartilhada do time e uma escada de três níveis de autonomia.",
+    "A autonomia só sobe quando o erro é barato e fácil de pegar e o agente já tem histórico naquela ação. Os palestrantes dizem que ainda não medem o tempo economizado e que isso depende de um estudo rigoroso."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "O humano como cola entre as ferramentas",
+      "texto": "Mesmo com um bom assistente, o engenheiro escolhe cada próximo passo e liga as perguntas. Cada automação (script de alerta, bot de triagem, bot de deploy) guarda o próprio contexto e esquece. Todas as pistas existiam, mas nada as conectava. Por isso o on-call virava a cola.",
+      "t": 95,
+      "legenda": "O lado esquerdo mostra o humano escolhendo todo próximo passo.",
+      "print": "img/_NBx2NNOuA4/0.jpg",
+      "descricao": "Slide com 2:00 AM e 12 alertas: à esquerda o assistente espera comandos e a correção fica com você; à direita o agente já tem hipótese e correção pronta."
+    },
+    {
+      "titulo": "Um agente por rotação, não por pessoa",
+      "texto": "O agente pertence ao time, com identidade própria e só o acesso que o time aceita conceder. Ele cruza alertas, tickets, deploys e incidentes passados num único laço. Por baixo, é o agente mais simples possível: um modelo usando ferramentas em laço e lendo o retorno. O resto é a estrutura que torna seguro deixá-lo rodando.",
+      "t": 252,
+      "legenda": "Resume a arquitetura: um laço, uma memória, uma identidade, um portão.",
+      "print": "img/_NBx2NNOuA4/1.jpg",
+      "descricao": "Slide: cada agente vê um pedaço (alertas, tickets, deploys, incidentes); à direita, um teammate por rotação com memória do time, identidade e portão humano."
+    },
+    {
+      "titulo": "Escada de autonomia em três níveis",
+      "texto": "No nível 1 o agente investiga e relata, sem alterar nada. No nível 2 rascunha a correção, mas nada chega à produção sem aprovação humana. No nível 3 resolve sozinho o trabalho de baixa criticidade. O teste para subir é duplo: quanto custa errar e quão fácil é pegar o erro (testes, CI, revisão), mais um histórico do agente naquela ação exata.",
+      "t": 315,
+      "legenda": "Mostra os três níveis e o critério para subir de degrau.",
+      "print": "img/_NBx2NNOuA4/2.jpg",
+      "descricao": "Escada de autonomia: 1 Advise (investiga, não altera), 2 Act with approval (rascunha, humano aprova), 3 Autonomous (resolve baixa criticidade sozinho)."
+    },
+    {
+      "titulo": "Fila de decisão menor, não só menos trabalho por item",
+      "texto": "No exemplo do quadro, 23 itens chegaram, 18 foram tratados pelo agente e só 3 pedem o humano. Cada item diz o que precisa de você, com um botão de ação. Um resumo diário às 9h chega no chat, e dá para responder na thread e pedir evidências ou aprovar o rollback com um toque.",
+      "t": 439,
+      "legenda": "Mostra a fila de decisão encolhida pelo nível 3.",
+      "print": "img/_NBx2NNOuA4/3.jpg",
+      "descricao": "Nível 3: 23 itens chegaram, 18 resolvidos sozinhos, 2 com o agente e 3 que pedem humano (incidente de checkout, cota e alerta de outro time)."
+    },
+    {
+      "titulo": "Memória do time que se promove e se aposenta",
+      "texto": "Na segunda, Sam ensina ao agente a regra de reverter primeiro o push de config quando o checkout dá timeout. Três dias depois, Jordan cai no mesmo alerta e recebe a correção de Sam, com a origem e o rollback já rascunhado. A memória é recuperada por semântica, pontuada pela utilidade real e promovida ou aposentada. Uma correção humana reabre o item e vira nova memória.",
+      "t": 718,
+      "legenda": "Prova que uma lição ensinada uma vez atende o próximo plantonista.",
+      "print": "img/_NBx2NNOuA4/4.jpg",
+      "descricao": "Sam ensina na segunda a reverter o push de config; na quinta, o agente de Jordan usa a memória do time e propõe o rollback com botão 'Approve rollback'."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Agente",
+      "traducao": "agent (programa de IA que executa tarefas em etapas)",
+      "nivel": "basico",
+      "chave": "agente de ia",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Agent loop",
+      "traducao": "ciclo do agente",
+      "nivel": "intermediario",
+      "chave": "agent loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Triage",
+      "traducao": "triagem de tarefas",
+      "nivel": "basico",
+      "chave": "triage",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Runbook",
+      "traducao": "roteiro de resposta a incidente",
+      "nivel": "basico",
+      "chave": "runbook",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Rollback",
+      "traducao": "reversão de mudança",
+      "nivel": "basico",
+      "chave": "rollback",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Root cause analysis (RCA)",
+      "traducao": "análise de causa raiz",
+      "nivel": "intermediario",
+      "chave": "root cause analysis (rca)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Human in the loop",
+      "traducao": "humano no circuito de validação",
+      "nivel": "intermediario",
+      "chave": "human in the loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Persistent memory",
+      "traducao": "memória persistente",
+      "nivel": "intermediario",
+      "chave": "persistent memory",
+      "analogia": "Memória persistente é como o caderno de passagem de turno de um hospital, onde a enfermeira da noite anota o que aprendeu e a da manhã lê antes de começar.",
+      "explicacao": [
+        "Um modelo de IA esquece tudo quando a conversa acaba. Memória persistente (persistent memory) é um lugar fora da conversa onde o agente guarda o que aprendeu para usar depois.",
+        "No talk, Sam ensina ao agente uma regra numa segunda-feira. O agente salva essa regra, e três dias depois entrega a mesma correção a Jordan, dizendo de onde ela veio.",
+        "A memória pertence ao time, não a uma pessoa. Passagens de turno, decisões e correções entram nela, então o turno 30 sai melhor que o turno 1.",
+        "Para usar a memória, o agente busca por sentido (busca semântica), e não por palavra exata. Assim ele acha a regra certa mesmo quando o alerta vem escrito de outro jeito.",
+        "Memória velha atrapalha, então cada item ganha uma nota pela ajuda real que deu. Itens úteis sobem, itens inúteis saem, e uma correção humana reabre o item e vira memória nova."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "LLM"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "HUMANO ENSINA",
+            "nota": "Sam dita uma regra ao agente"
+          },
+          {
+            "rotulo": "SALVA NA MEMÓRIA",
+            "nota": "Regra fica guardada para o time"
+          },
+          {
+            "rotulo": "BUSCA SEMÂNTICA",
+            "nota": "Novo alerta puxa a regra parecida"
+          },
+          {
+            "rotulo": "PONTUA E FILTRA",
+            "nota": "Útil sobe, inútil é aposentado"
+          },
+          {
+            "rotulo": "TURNO SEGUINTE",
+            "nota": "Jordan recebe a correção pronta"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É um relato de dentro da Meta sobre uma ferramenta própria, sem demonstração ao vivo. O cenário das 2h é declaradamente ilustrativo e simplificado. Os palestrantes dizem que há sinais promissores de redução de carga, mas não dão número e reservam a conclusão a um estudo rigoroso (t=842). Não há taxa de acerto das hipóteses nem proporção de rascunhos aceitos, só a frase de que a maioria dos rascunhos não é incorporada (t=408). O dado de três quartos do código com IA é declarado, sem fonte. O custo de integrar e manter isso fora da Meta também não aparece.",
+  "acoes": [
+    "Liste as ações que um agente faria no seu on-call e classifique cada uma por custo do erro e facilidade de detecção, para decidir o nível 1, 2 ou 3.",
+    "Escreva uma nota de memória no formato 'se o alerta X vier após a mudança Y, faça Z primeiro' para um incidente recorrente do seu time.",
+    "Registre por duas semanas quantos alertas foram duplicados ou ruidosos, para ter uma linha de base antes de automatizar a triagem.",
+    "Defina uma métrica de tempo economizado no on-call, como minutos até a causa provável, e meça antes de qualquer agente."
+  ],
+  "numeros": [
+    {
+      "valor": "~3/4",
+      "contexto": "do código novo escrito com IA, segundo os palestrantes",
+      "t": 32
+    },
+    {
+      "valor": "12",
+      "contexto": "alertas disparando no exemplo das 2h da manhã",
+      "t": 64
+    },
+    {
+      "valor": "23 / 3 / 18",
+      "contexto": "itens recebidos, que exigem humano, tratados (resumo das 9h)",
+      "t": 501
+    },
+    {
+      "valor": "9h",
+      "contexto": "horário do resumo diário e da passagem de turno",
+      "t": 501
+    }
+  ],
+  "rotulo": "Um agente de IA por rotação de on-call na Meta",
+  "objetivo": "desenhar uma escada de autonomia para um agente de on-call, decidindo o que ele pode fazer sozinho e o que exige aprovação",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Qual é o critério que o time da Meta usa para subir o agente de um nível de autonomia para o seguinte?",
+      "resposta": "A ação só sobe quando errar custa pouco, o erro é fácil de pegar (testes, CI ou revisão) e o agente já tem histórico bom naquela ação específica."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "No seu time, que ação de on-call você deixaria no nível 3 e qual manteria no nível 2? Justifique pelo critério de custo do erro.",
+      "resposta": "Exemplo: fechar um alerta ruidoso e duplicado fica no nível 3, porque o erro é barato e fácil de reabrir. Um rollback em produção fica no nível 2, porque o erro custa caro e exige aprovação humana."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta no talk para afirmar que esse agente reduz a carga de on-call?",
+      "resposta": "Falta uma medição de tempo economizado. Os palestrantes dizem que os sinais são promissores, mas reservam o número a um estudo rigoroso. O exemplo das 2h é ilustrativo, e não há taxa de acerto nem de rascunhos aceitos."
+    }
+  ],
+  "experimento": {
+    "titulo": "Montar a escada de autonomia de um agente de on-call",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT, o texto de um postmortem seu ou público, e uma planilha ou arquivo de texto",
+    "passos": [
+      "Escolha um postmortem de incidente e liste de 8 a 10 ações que um agente poderia tomar, de ler dashboards a reverter um deploy.",
+      "Para cada ação, anote o custo do erro (baixo, médio, alto) e como o erro seria detectado (teste, CI, revisão ou ninguém).",
+      "Atribua o nível 1, 2 ou 3 de acordo com o critério do talk e exija histórico prévio para subir.",
+      "Cole o postmortem no modelo e peça uma hipótese de causa, uma forma de verificá-la em 30 segundos e um rascunho de correção, sem aplicar nada.",
+      "Compare a resposta com a causa real e registre se a hipótese acertou."
+    ],
+    "sucesso": "Você tem uma tabela de ações com nível e justificativa, e sabe dizer se a hipótese do modelo bateu com a causa real do incidente."
+  },
+  "consolidado_em": "2026-11-11T12:01:16+00:00"
+}

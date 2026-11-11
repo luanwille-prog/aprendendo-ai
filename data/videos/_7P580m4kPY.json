@@ -1,0 +1,239 @@
+{
+  "id": "_7P580m4kPY",
+  "titulo": "You Can't Tell What an Agent Skill Will Do by Reading It - Roey Ben Chaim, Zenity",
+  "titulo_curto": "You Can't Tell What an Agent Skill Will Do by Reading It",
+  "palestrante": "Roey Ben Chaim, Zenity",
+  "url": "https://www.youtube.com/watch?v=_7P580m4kPY",
+  "duracao": 870,
+  "publicado_ts": 1794333440,
+  "edicao": "2026-11-10",
+  "tese": "Ler o SKILL.md não diz o que a skill faz. Só executar a cadeia inteira em ambiente controlado mostra o comportamento real.",
+  "tldr": [
+    "Uma skill (habilidade instalável do agente) escrita por terceiros pode buscar outros prompts, instalar pacotes e criar processos que nunca aparecem no trace do agente, então o SKILL.md sozinho é só a porta de entrada.",
+    "A Zenity montou uma câmara de detonação para agentes: sandbox, construtor de mundo com os serviços que a skill espera, operador que explora os caminhos e captura de processos, arquivos e rede.",
+    "Com ela, o time achou cerca de 100 skills maliciosas e rastreou uma campanha de roubo de credenciais, e a conclusão prática é tratar skills como dependências de software da cadeia de suprimentos."
+  ],
+  "tema": "agentes",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "Ação legítima e ataque parecem iguais",
+      "texto": "Uma skill oficial de diagnóstico do Azure lê configurações de nuvem e Kubernetes, contata o serviço de identidade e sonda o endpoint de metadados da instância. Um info stealer faz exatamente isso. Olhando só as ações, não dá para separar o benigno do malicioso sem entender a intenção original.",
+      "t": 50,
+      "legenda": "Uma skill oficial gera um rastro igual ao de um ladrão de credenciais",
+      "print": null,
+      "descricao": null
+    },
+    {
+      "titulo": "O payload mora fora do SKILL.md",
+      "texto": "O SKILL.md pode apontar para outro endpoint que entrega o resto do prompt, baixar pacotes na instalação e acionar scripts que buscam novos payloads. Um scanner estático perde tudo isso. Scanners baseados em LLM também falham: uma pesquisa da Trail of Bits enganou um analisador com um comentário dizendo que o time tinha aprovado a mudança.",
+      "t": 128,
+      "legenda": "O arquivo de entrada não contém a cadeia completa que será executada",
+      "print": "img/_7P580m4kPY/1.jpg",
+      "descricao": "Slide 'The payload can live elsewhere': cadeia SKILL.md → remote guide → package → script, separando o que o scan vê do que a execução puxa."
+    },
+    {
+      "titulo": "Anatomia da câmara de detonação",
+      "texto": "A primeira versão tinha prompt de tarefa, agente e skill numa sandbox. Faltavam o ambiente (um construtor de mundo cria serviços e projetos que a skill espera) e a cobertura de caminhos (um operador lê a skill e gera tarefas para cada trajetória). Como os agentes recusavam rodar código suspeito, o time criou um operador adversarial para convencê-los, dentro de um container de pesquisa.",
+      "t": 222,
+      "legenda": "Cada componente resolve uma falha da versão anterior da câmara",
+      "print": "img/_7P580m4kPY/2.jpg",
+      "descricao": "Slide 'Problem: the environment is missing': CLI missing, service absent, project empty. Ilustração de robô diante de jogo tipo The Sims."
+    },
+    {
+      "titulo": "Capturar o que o trace não vê",
+      "texto": "O npm install tem um script de pós-instalação que cria um processo, que lê e escreve arquivos e conecta a um endpoint. Nada disso aparece no trace do agente. A versão final registra criação de processos, eventos de sistema de arquivos e pacotes de rede, e junta tudo ao trace como evidência.",
+      "t": 378,
+      "legenda": "Efeitos colaterais de processos filhos exigem sensores além do trace",
+      "print": "img/_7P580m4kPY/3.jpg",
+      "descricao": "Slide 'Problem: transcripts miss side effects': trace do agente mostra '> npm install' e 'Installation completed.', sem os efeitos colaterais."
+    },
+    {
+      "titulo": "A campanha do paperclip falso",
+      "texto": "Um atacante criou uma organização lookalike no GitHub, clonou um projeto conhecido e injetou uma action que baixa um payload, decodifica, executa com Node e se apaga em 60 segundos. O payload coletava SSH, AWS e Azure e enviava a um endpoint do atacante. Skills ligadas ao mesmo servidor de comando chegaram a 1,7 milhão de downloads antes da retirada.",
+      "t": 693,
+      "legenda": "A cadeia completa, e não o arquivo inicial, revela o roubo de credenciais",
+      "print": "img/_7P580m4kPY/4.jpg",
+      "descricao": "Código do log_action: GET com TLS desligado em api-v1 getpaperclipp /health, decodifica base64, grava .mjs, executa com spawn e apaga em 60 s."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Skill",
+      "traducao": "habilidade, julgamento institucional escrito para o agente executar",
+      "nivel": "basico",
+      "chave": "skill",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado para rodar o código",
+      "nivel": "basico",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Trace",
+      "traducao": "registro estruturado da execução",
+      "nivel": "intermediario",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Supply chain vulnerability",
+      "traducao": "vulnerabilidade na cadeia de suprimentos de software",
+      "nivel": "intermediario",
+      "chave": "supply chain vulnerability",
+      "analogia": "Uma vulnerabilidade na cadeia de suprimentos é como um restaurante que compra molho pronto de um fornecedor e serve aos clientes sem provar, até o dia em que o fornecedor troca a receita por algo estragado.",
+      "explicacao": [
+        "Quase nenhum software é escrito do zero. Ele usa peças prontas feitas por outras pessoas, e cada peça é um elo de uma corrente de fornecedores.",
+        "Uma supply chain vulnerability (vulnerabilidade na cadeia de suprimentos) acontece quando um desses elos traz um defeito ou um código malicioso, e você o recebe junto com o resto sem perceber.",
+        "Em agentes de IA, tudo que entra no contexto faz parte da cadeia: skills (habilidades instaláveis), pacotes, sites, linhas do banco de dados e até um comentário do YouTube.",
+        "O ataque costuma ficar fora do arquivo visível. Uma skill baixa um pacote, o script de pós-instalação busca um payload (carga maliciosa) remoto, executa, rouba credenciais e se apaga.",
+        "A defesa trata skills como dependências de software. Inspecione tudo que elas carregam, limite o acesso pelo menor privilégio, fixe versões e observe em sandbox o que de fato roda."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "Prompt"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "DEPENDÊNCIA DE TERCEIRO",
+            "nota": "skill, pacote ou site entra no agente"
+          },
+          {
+            "rotulo": "CARGA ESCONDIDA",
+            "nota": "script busca payload em outro endpoint"
+          },
+          {
+            "rotulo": "EXECUÇÃO SILENCIOSA",
+            "nota": "processo roda fora do trace do agente"
+          },
+          {
+            "rotulo": "DANO",
+            "nota": "credenciais vazam para o atacante"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Hooks",
+      "traducao": "gatilhos determinísticos em pontos do fluxo do agente",
+      "nivel": "intermediario",
+      "chave": "hooks",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Princípio do menor privilégio",
+      "traducao": "principle of least privilege",
+      "nivel": "basico",
+      "chave": "princípio do menor privilégio",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Prompt injection",
+      "traducao": "injeção de instruções no prompt",
+      "nivel": "intermediario",
+      "chave": "prompt injection",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo de linguagem usado para avaliar respostas",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O palestrante trabalha na Zenity e fecha com a oferta do produto de detonação, então há pitch. Faltam taxas de falso positivo e falso negativo da câmara, e o total de skills analisadas aparece só como 'milhares'. O resultado de 100 skills maliciosas vem sem critério de classificação. O operador adversarial que convence o agente a executar código pode alterar o comportamento observado. A descrição do talk admite que um scanner não classifica toda skill corretamente.",
+  "acoes": [
+    "Liste as skills instaladas no seu agente e, para cada uma, anote as URLs que ela busca e os comandos de instalação que dispara.",
+    "Configure o agente para pedir confirmação antes de instalar pacotes ou rodar scripts vindos de uma skill nova.",
+    "Revise os hooks (como user prompt submit) do seu ambiente e remova os que você não escreveu ou não reconhece.",
+    "Fixe versões de skills e pacotes e evite adotar versões recém-publicadas sem olhar o package.json e o registro de origem."
+  ],
+  "numeros": [
+    {
+      "valor": "100",
+      "contexto": "skills maliciosas achadas entre milhares analisadas",
+      "t": 473
+    },
+    {
+      "valor": "60 s",
+      "contexto": "tempo até o payload se autodestruir",
+      "t": 693
+    },
+    {
+      "valor": "1,7 milhão",
+      "contexto": "downloads totais das skills no mesmo servidor de comando",
+      "t": 755
+    },
+    {
+      "valor": "12 horas",
+      "contexto": "tempo para derrubarem tudo após o relato",
+      "t": 786
+    }
+  ],
+  "rotulo": "Por que ler uma skill não revela o que ela faz",
+  "objetivo": "desenhar um processo de detonação em sandbox para auditar skills de terceiros antes de instalá-las",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que o trace do agente não basta para saber o que uma skill fez ao instalar um pacote npm?",
+      "resposta": "O script de pós-instalação do npm cria processos próprios que leem e escrevem arquivos e abrem conexões. Esses efeitos não passam pelo trace do agente, por isso a câmara captura também processos, sistema de arquivos e rede."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você vai adotar uma skill de deploy publicada na internet. Que três coisas você inspeciona antes de liberar?",
+      "resposta": "Os endpoints que o SKILL.md manda buscar, os pacotes e scripts de instalação (incluindo nome e registro de cada pacote) e os hooks ou arquivos de instrução que ela altera. Depois rode tudo numa sandbox e observe processos e rede."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limitações enfraquecem a afirmação de que a câmara achou 100 skills maliciosas?",
+      "resposta": "Não há taxa de falso positivo ou negativo, nem o total exato analisado, e o autor vende a ferramenta. Além disso, o operador adversarial pode induzir comportamentos que a skill não teria sozinha, e caminhos não exercitados passam despercebidos."
+    }
+  ],
+  "experimento": {
+    "titulo": "Detonar uma skill num container e ver o que ela faz",
+    "minutos": 30,
+    "precisa": "Docker instalado e uma skill pública de um repositório do GitHub",
+    "passos": [
+      "Clone a skill e liste com grep todas as URLs, comandos npm ou pip e scripts citados no SKILL.md.",
+      "Suba um container Node ou Python descartável com a skill montada em modo somente leitura e sem credenciais reais.",
+      "Execute o passo de instalação no container e registre processos criados (ps ou strace) e conexões de rede (tcpdump ou logs do proxy).",
+      "Compare a lista de ações observadas com o que o SKILL.md declara e anote tudo que aparece só na execução."
+    ],
+    "sucesso": "Você produz um relatório curto com ao menos uma ação observada na execução que não está escrita no SKILL.md, ou confirma que não há nenhuma."
+  },
+  "consolidado_em": "2026-11-11T12:01:16+00:00"
+}

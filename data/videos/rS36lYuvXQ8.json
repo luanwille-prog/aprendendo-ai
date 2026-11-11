@@ -1,0 +1,211 @@
+{
+  "id": "rS36lYuvXQ8",
+  "titulo": "Your Agent Hates Your CLI - Ayush Bhardwaj, Allos AI",
+  "titulo_curto": "Your Agent Hates Your CLI",
+  "palestrante": "Ayush Bhardwaj, Allos AI",
+  "url": "https://www.youtube.com/watch?v=rS36lYuvXQ8",
+  "duracao": 740,
+  "publicado_ts": 1794333440,
+  "edicao": "2026-11-10",
+  "tese": "O que o agente faz logo depois de chamar sua ferramenta mostra o que falta nela. O workaround é o relato de bug.",
+  "tldr": [
+    "Ayush Bhardwaj analisou cerca de 20 mil chamadas de agentes de código e viu que muitas saídas de CLI passam por head, tail, grep ou Python. Cada corte é uma aposta sobre onde está a resposta, e o pipe pode até esconder uma falha de teste.",
+    "No CLI de histórico de chat dele, as repetições viraram flags: ler só o trecho ao redor do match, resultado compacto e inspeção de várias sessões numa chamada. O uso de pipe caiu de 82% para cerca de um quarto das leituras.",
+    "A flag só funciona se o skill e o help ensinarem o agente a usá-la, e o ganho precisa ser medido em turnos e respostas certas, não só em tokens. Transcrições reais servem de casos de replay e de gabarito aproximado."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Cada pipe é uma aposta sobre onde está a resposta",
+      "texto": "Claude Code, Codex e Cursor cortaram a saída em 40 ou 80 linhas com tail ou head. Cada corte assume que a resposta está no fim, e isso nem sempre vale. Um pipe isolado diz pouco. O mesmo pipe repetido muitas vezes aponta algo que a ferramenta não oferece.",
+      "t": 20,
+      "legenda": "Três agentes cortaram a saída por suposição sobre onde estava a resposta.",
+      "print": "img/rS36lYuvXQ8/0.jpg",
+      "descricao": "Terminal com Bash(curl ... | grep -n -i -A3 \"cleanupPeriodDays\" | head -40) e a marcação GUESS sobre onde está a resposta."
+    },
+    {
+      "titulo": "Pipe pode mentir sobre falha",
+      "texto": "No bash sem pipefail, um pipeline devolve o código de saída do último comando. Cargo test com head pode parecer sucesso mesmo com testes quebrados. O corte também pode remover a mensagem de erro, e o agente relata que deu certo. A regra do palestrante é falhar alto, com um resumo curto e o caminho do log completo nas últimas linhas.",
+      "t": 135,
+      "legenda": "O status saiu verde mesmo com o erro de compilação.",
+      "print": "img/rS36lYuvXQ8/1.jpg",
+      "descricao": "Slide 'Failed runs came back green': cargo test | grep | head -30 marcado 'tool: success' mesmo com erro E0061 e 'could not compile'."
+    },
+    {
+      "titulo": "A lista de pipes vira roadmap",
+      "texto": "Na tabela do talk, a coluna da esquerda é o bug report. Filtrar com rg e sed virou uma flag para ler só o trecho ao redor do match. Python sobre JSON virou um modo compacto, com uma linha por resultado. Um laço manual sobre várias sessões virou uma chamada em lote. Uma sessão inteira tinha 1,2 milhão de caracteres e o trecho útil, cerca de 3 mil.",
+      "t": 300,
+      "legenda": "Cada workaround recorrente virou uma flag da própria ferramenta.",
+      "print": "img/rS36lYuvXQ8/2.jpg",
+      "descricao": "Slide 'First, build what the pipes ask for': view --plain | rg | head -60 vira view --around 42 --grep --tail 6 --max-chars 1500."
+    },
+    {
+      "titulo": "O skill precisa ensinar a flag nova",
+      "texto": "O autor transformou a flag deep em operação vazia e deixou o skill mandando usá-la. Em 95 buscas, 95 ainda passaram a flag. Com o skill reescrito, nenhuma busca a passou e os agentes testaram as flags novas na primeira leitura. Skill, help e mensagens de erro são a interface, e documentação velha é bug.",
+      "t": 410,
+      "legenda": "O agente seguiu o skill velho ao pé da letra, mesmo com a flag inútil.",
+      "print": "img/rS36lYuvXQ8/3.jpg",
+      "descricao": "Slide 'Then teach it in your docs': 95/95 buscas ainda passaram --deep com o skill antigo; 0/9 depois que o skill parou de citar a flag."
+    },
+    {
+      "titulo": "Meça turnos e acertos, não só tokens",
+      "texto": "O modo agente do DuckDB reduziu em 59% o que o modelo leu, mas isso era cerca de 0,5% dos tokens totais. Custo e tempo não mudaram. O palestrante cita o caso da Infracost, em que o acerto foi de zero a seis em seis questões difíceis. Por isso o critério é resposta correta e menos turnos.",
+      "t": 592,
+      "legenda": "Saída menor não garante fluxo mais rápido nem mais barato.",
+      "print": "img/rS36lYuvXQ8/4.jpg",
+      "descricao": "Slide 'Agent mode cut output 59%': a economia de 59% equivale a ≈0,5% de todos os tokens lidos pelo modelo, mostrado em barra."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "CLI",
+      "traducao": "interface de linha de comando",
+      "nivel": "basico",
+      "chave": "cli",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Pipes do Unix e jq",
+      "traducao": "encadear comandos e filtrar JSON no terminal",
+      "nivel": "basico",
+      "chave": "pipes do unix e jq",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Skill",
+      "traducao": "habilidade, julgamento institucional escrito para o agente executar",
+      "nivel": "intermediario",
+      "chave": "skill",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Harness",
+      "traducao": "estrutura que roda o agente",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Trace",
+      "traducao": "registro estruturado da execução",
+      "nivel": "intermediario",
+      "chave": "trace",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Record and replay",
+      "traducao": "gravar e repetir fluxos de uso",
+      "nivel": "intermediario",
+      "chave": "record and replay",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Holdout",
+      "traducao": "conjunto reservado para teste",
+      "nivel": "intermediario",
+      "chave": "holdout",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "MCP",
+      "traducao": "protocolo para conectar ferramentas a agentes",
+      "nivel": "basico",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "A base principal são as transcrições do próprio autor, com cerca de 1.000 chamadas no estudo do CLI e um único usuário. Os testes do skill usaram só duas sessões. O autor promove o chat-history no fim, então há interesse em mostrar que o problema existe. Os casos da Infracost e do DuckDB vêm de terceiros e são citados sem detalhe de método. A afirmação de que agentes projetam mal ferramentas para agentes se apoia em estudos citados de passagem, sem mostrar os números.",
+  "acoes": [
+    "Exporte as transcrições do seu agente, faça backup e conte quantas chamadas de uma ferramenta seguem para head, tail, grep ou Python.",
+    "Escolha o pipe mais repetido e implemente a flag equivalente, como limite, offset ou saída compacta, com uma linha final dizendo como pedir mais.",
+    "Atualize o skill e o help da ferramenta para citar as flags novas e confira nas próximas sessões se o agente as usa.",
+    "Faça a falha terminar a saída com um resumo curto e o caminho do log completo."
+  ],
+  "numeros": [
+    {
+      "valor": "83%",
+      "contexto": "dos pipes repetiam um padrão visto 10 vezes ou mais",
+      "t": 252
+    },
+    {
+      "valor": "1,2 mi vs 3 mil",
+      "contexto": "caracteres da sessão inteira contra o trecho do match",
+      "t": 270
+    },
+    {
+      "valor": "95 de 95",
+      "contexto": "buscas ainda passaram a flag deep com o skill antigo",
+      "t": 408
+    },
+    {
+      "valor": "0,5%",
+      "contexto": "dos tokens lidos foi o que o DuckDB economizou, apesar dos 59%",
+      "t": 592
+    }
+  ],
+  "rotulo": "Como ler as transcrições do agente para melhorar seu CLI",
+  "objetivo": "auditar as chamadas de um agente a uma ferramenta de linha de comando e transformar os pipes repetidos em flags, skill e testes de replay",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que cargo test com head pode parecer bem-sucedido mesmo com testes falhando?",
+      "resposta": "No bash sem pipefail, um pipeline devolve o código de saída do último comando, no caso o head. O sucesso dele mascara a falha do cargo test."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você mantém uma CLI interna usada por um agente de código. Como descobrir o que melhorar nela?",
+      "resposta": "Leia as transcrições, procure o nome da ferramenta seguido de pipe e agrupe os padrões repetidos. Cada padrão recorrente indica uma flag ou formato de saída faltando. Se o agente repete a chamada com outros argumentos, há um caso de falha."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites tem a evidência do experimento do skill com a flag deep?",
+      "resposta": "A amostra é pequena, com duas sessões de skill reescrito, vem de um único autor e de um único tipo de ferramenta. Mostra que o agente segue instruções velhas, mas não prova que o resultado vale para outras ferramentas ou modelos."
+    }
+  ],
+  "experimento": {
+    "titulo": "Auditoria de pipes nas suas sessões do Claude Code",
+    "minutos": 30,
+    "precisa": "Claude Code com histórico local, terminal e Python 3",
+    "passos": [
+      "Copie a pasta ~/.claude/projects para outra pasta, para ter um backup das transcrições.",
+      "Escreva um script curto em Python que leia os arquivos .jsonl e extraia os comandos Bash que contêm um pipe para head, tail, grep, sed ou python.",
+      "Agrupe os comandos pelo primeiro programa e pelo programa depois do pipe, e liste os 5 grupos mais frequentes.",
+      "Escolha o grupo mais frequente e escreva em uma frase qual flag ou formato de saída evitaria aquele pipe."
+    ],
+    "sucesso": "Você tem uma lista ordenada dos pipes mais repetidos e ao menos uma flag candidata, justificada por quantas vezes o padrão apareceu."
+  },
+  "consolidado_em": "2026-11-11T12:01:16+00:00"
+}

@@ -1,0 +1,211 @@
+{
+  "id": "iK9gmxXyBR0",
+  "titulo": "Pick Problems That Survive When AI Solves Coding - Ara Khan, Cline",
+  "titulo_curto": "Pick Problems That Survive When AI Solves Coding",
+  "palestrante": "Ara Khan, Cline",
+  "url": "https://www.youtube.com/watch?v=iK9gmxXyBR0",
+  "duracao": 1609,
+  "publicado_ts": 1794355232,
+  "edicao": "2026-11-10",
+  "tese": "Se um agente já melhora o próprio harness, escolha problemas que ganham com modelos melhores e não somem com o próximo lançamento.",
+  "tldr": [
+    "Ara Khan, da Cline, mostra um agente (GPT 5.6) que rodou 17 horas sozinho, leu as falhas de um benchmark e reescreveu o harness do Cline para subir a nota do modelo Kimi K 3.",
+    "Ele argumenta que o mesmo laço de melhoria já aparece em kernels de GPU, treino, avaliação e até hardware, e chama isso de autoaperfeiçoamento recursivo (RSI).",
+    "O conselho final é trabalhar perto desse laço (inferência, pós-treino, pipelines, hardware) e evitar problemas que o próximo modelo resolve sozinho."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "A nota ficou abaixo do que o paper prometia",
+      "texto": "O Cline mediu o Kimi K 3 no Terminal Bench 2.1 e obteve 77,5%. O paper de lançamento do modelo falava em 85% ou mais. Essa diferença indicava que o harness, a estrutura que roda o agente, estava deixando nota na mesa. Esse é o ponto de partida do trabalho de hill climbing (subir a nota em pequenos passos).",
+      "t": 203,
+      "legenda": "Mostra a lacuna entre a nota medida e a nota anunciada pelo modelo",
+      "print": "img/iK9gmxXyBR0/0.jpg",
+      "descricao": "Gráfico 'Kimi K3 + Cline score on Terminal-Bench 2.1': baseline 77,5% (69/89), melhorias até 88,8% (79/89) e 86,5% com pilha congelada (77/89)."
+    },
+    {
+      "titulo": "Como uma suíte de eval de agente funciona",
+      "texto": "O Terminal Bench 2.1 tem 89 tarefas. Cada uma roda em um container isolado, em paralelo. Avaliadores independentes medem turnos, tokens, latência, chamadas de ferramenta e a trajetória, e checam se houve reward hacking (trapaça para subir a métrica). As falhas são agrupadas em categorias, como ferramenta quebrada ou inferência lenta demais.",
+      "t": 632,
+      "legenda": "Mostra o pipeline de eval: sandboxes em paralelo, nota agregada e falhas agrupadas",
+      "print": "img/iK9gmxXyBR0/1.jpg",
+      "descricao": "Diagrama: Harbor Run divide 89 containers para 89 tarefas, rodando no Modal. Datasets listados: SWE Bench, Terminal Bench, MMLU, Aider Polyglot."
+    },
+    {
+      "titulo": "Agente principal e meta agente",
+      "texto": "O GPT 5.6 atuou como agente líder. Ele rodava o benchmark, lia as falhas, mudava o harness do Cline e rodava de novo. O Kimi K 3 executava as tarefas. Em 17 horas sem intervenção, o líder achou problemas como loop detection (agente girando em círculos), processos em segundo plano que rodavam demais e falhas no índice de arquivos. O resultado é um laço de dois níveis, com um meta agente observando o harness.",
+      "t": 755,
+      "legenda": "Mostra os dois níveis do laço: harness agindo e meta agente corrigindo",
+      "print": "img/iK9gmxXyBR0/2.jpg",
+      "descricao": "Slide 'Our Cline experiment': 'One agent improved the harness that another agent used'. GPT-5.6 Sol liderou o trabalho; Kimi K3 rodou as tarefas."
+    },
+    {
+      "titulo": "O laço aparece em toda a pilha",
+      "texto": "Segundo um post que ele atribui à OpenAI, o GPT 5.6 reescreveu kernels de produção e cortou o custo de serving em 20%, com 15% mais eficiência na geração de tokens. Khan cita ainda um vencedor de competição de kernels que disse nunca ter escrito um operador de GPU à mão. A tese é que avaliação, harness, dados, pós-treino e inferência podem entrar no mesmo laço.",
+      "t": 913,
+      "legenda": "Mostra o ganho reportado em kernels reescritos pelo próprio modelo",
+      "print": "img/iK9gmxXyBR0/3.jpg",
+      "descricao": "Slide 'A model can improve its own inference': GPT-5.6 Sol reescreveu kernels de produção com Codex e reduziu o custo de serving em 20%."
+    },
+    {
+      "titulo": "Critérios para escolher um problema",
+      "texto": "O slide final sugere prazos curtos e colaborações ambiciosas e focadas. Khan complementa com um filtro. Prefira problemas que se beneficiam de escala e evite os que a escala resolve sozinha. Ele pergunta se vale esperar o próximo modelo e recomenda trabalhar em pipelines de dados, hardware, inferência e pós-treino.",
+      "t": 1443,
+      "legenda": "Resume os critérios para escolher problemas que durem",
+      "print": "img/iK9gmxXyBR0/4.jpg",
+      "descricao": "Slide sobre 1-5 anos para contribuir: prefira colaborações ambiciosas e rápidas, projetos que ganham com escala e evite os que a escala resolve sozinha."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Recursive self-improvement",
+      "traducao": "autoaperfeiçoamento recursivo",
+      "nivel": "intermediario",
+      "chave": "recursive self-improvement",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Harness",
+      "traducao": "estrutura que roda o agente",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Terminal Bench",
+      "traducao": "benchmark de tarefas de agente no terminal",
+      "nivel": "intermediario",
+      "chave": "terminal bench",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Hill climbing",
+      "traducao": "melhoria em pequenos passos guiada pela métrica",
+      "nivel": "intermediario",
+      "chave": "hill climbing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Reward hacking",
+      "traducao": "trapaça do agente para melhorar a métrica",
+      "nivel": "intermediario",
+      "chave": "reward hacking",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado para rodar o código",
+      "nivel": "basico",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "GPU kernel",
+      "traducao": "operador de baixo nível executado na GPU",
+      "nivel": "avancado",
+      "chave": "gpu kernel",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Post-training",
+      "traducao": "pós-treino",
+      "nivel": "intermediario",
+      "chave": "post-training",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "Khan é engenheiro da Cline, que vende o harness que ele otimizou, então o caso serve também de vitrine. O experimento é um único run de 17 horas, com um modelo e um benchmark. Ele não diz quanto a nota subiu no fim, só cita a linha de base de 27% de forma confusa. Não há prova de que os ganhos generalizam além do Terminal Bench nem de que não houve overfitting ao benchmark. Os números sobre kernels vêm de um post da OpenAI citado de memória. A visão de que o RSI está perto é opinião dele, e ele mesmo admite que pode errar os prazos.",
+  "acoes": [
+    "Pegue um benchmark ou conjunto de tarefas do seu agente, rode e agrupe as falhas por categoria (ferramenta, lentidão, loop) antes de mexer em qualquer prompt.",
+    "Compare a nota que você mede com a nota que o paper ou o fornecedor do modelo anuncia. Se houver lacuna, investigue o harness primeiro.",
+    "Liste os problemas em que você trabalha e marque quais o próximo modelo provavelmente resolve sozinho."
+  ],
+  "numeros": [
+    {
+      "valor": "77,5%",
+      "contexto": "nota do Kimi K 3 com Cline no Terminal Bench 2.1",
+      "t": 203
+    },
+    {
+      "valor": "89 tarefas",
+      "contexto": "tamanho do Terminal Bench 2.1, uma por container",
+      "t": 602
+    },
+    {
+      "valor": "17 horas",
+      "contexto": "duração do run autônomo de hill climbing",
+      "t": 755
+    },
+    {
+      "valor": "20%",
+      "contexto": "menos custo de serving com kernels reescritos pelo modelo",
+      "t": 913
+    }
+  ],
+  "rotulo": "Escolher problemas que sobrevivem a agentes de código melhores",
+  "objetivo": "descrever como um agente pode melhorar o harness de outro agente e usar esse critério para escolher em que problema trabalhar",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são os dois papéis dos modelos no laço de melhoria do harness descrito por Khan?",
+      "resposta": "O GPT 5.6 atua como agente líder (meta agente): roda o benchmark, lê as falhas e altera o harness. O Kimi K 3 executa as tarefas do benchmark dentro do harness do Cline."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você aplicaria a ideia de hill climbing automático a um agente de suporte que seu time mantém?",
+      "resposta": "Monte um conjunto fixo de tarefas com avaliação automática, rode, agrupe as falhas em categorias e deixe um agente propor mudanças no harness (prompts, ferramentas, limites). Reexecute o conjunto e aceite só ganhos reais, checando reward hacking."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites de evidência fazem o caso de 17 horas valer menos do que parece?",
+      "resposta": "É um único run, com um modelo e um benchmark, apresentado por quem vende o harness. O ganho final não é quantificado com clareza e não há teste de generalização fora do Terminal Bench. Também há risco de overfitting ao benchmark."
+    }
+  ],
+  "experimento": {
+    "titulo": "Agrupar as falhas de um mini benchmark do seu agente",
+    "minutos": 40,
+    "precisa": "Claude Code ou outro agente de código e 10 tarefas simples escritas por você",
+    "passos": [
+      "Escreva 10 tarefas pequenas com resultado verificável (por exemplo, criar um arquivo com conteúdo exato).",
+      "Rode o agente em cada tarefa e registre sucesso ou falha, tempo e número de turnos.",
+      "Agrupe as falhas em categorias, como ferramenta errada, lentidão ou loop.",
+      "Peça a um segundo agente que proponha uma mudança nas instruções do primeiro para a categoria mais comum.",
+      "Rode as 10 tarefas de novo e compare a taxa de sucesso."
+    ],
+    "sucesso": "Você tem uma tabela de falhas por categoria e uma comparação antes e depois da mudança, com a nota subindo ou a hipótese descartada com base nos dados."
+  },
+  "consolidado_em": "2026-11-11T12:01:16+00:00"
+}

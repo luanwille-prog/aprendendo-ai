@@ -1,0 +1,264 @@
+{
+  "id": "gbeuC0ud1p4",
+  "titulo": "Your PR Says the Tests Passed. Prove It. - Stephen Chin & Cassandra Chin",
+  "titulo_curto": "Your PR Says the Tests Passed. Prove It. - Stephen Chin & Cassandra Chin",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=gbeuC0ud1p4",
+  "duracao": 1380,
+  "publicado_ts": 1794333441,
+  "edicao": "2026-11-10",
+  "tese": "Descrição de PR confiável nasce de evidência ligada antes da escrita, não de mais rodadas de revisão com modelo.",
+  "tldr": [
+    "O Tracetune lê as sessões de agente de um branch para escrever a descrição do pull request, mas ainda afirmava que os testes passaram sem prova, por exemplo ao rodar bun test e tsc ao mesmo tempo.",
+    "A nova versão usa o Relate, um banco de dados em grafo embutido em Rust, para montar um brief conectado com o porquê, o código e os checks, e cada afirmação aponta para sua fonte.",
+    "Com isso o escritor fica forte, os revisores podem ser mais baratos, e no PR Bench dos próprios autores a nota subiu 2 a 4 pontos com cerca de metade dos tokens."
+  ],
+  "tema": "engenharia-de-software",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "O PR rejeitado pelo conteúdo, não pelo código",
+      "texto": "Cassandra afirma que muitos PRs são rejeitados porque a descrição traz informação errada ou é mal lida. Um agente que escreve o PR a partir do log da própria sessão sofre com a compactação do contexto, que o deixa mais impreciso. O Tracetune, em vez disso, lê várias sessões do computador para reconstruir o que aconteceu de fato.",
+      "t": 157,
+      "legenda": "Um PR real do Tracetune com pedidos de evidência exata.",
+      "print": "img/gbeuC0ud1p4/0.jpg",
+      "descricao": "Quadrinho: revisora pergunta 'Why this change? What was checked?' e a legenda diz que uma descrição não confiável trava o trabalho de Alex."
+    },
+    {
+      "titulo": "Afirmação de teste sem prova",
+      "texto": "O PR dizia que os checks passaram, mas o trace mostra bun test e bun x tsc rodando ao mesmo tempo, algo que precisa ser sequencial para o teste passar. A alegação de verificação não bate com o que o código fez. Esse é o erro que o loop de revisão com mais contexto ainda deixava escapar.",
+      "t": 553,
+      "legenda": "A claim de testes passando contradiz o trace gravado.",
+      "print": null,
+      "descricao": null
+    },
+    {
+      "titulo": "Brief de vizinhança no grafo",
+      "texto": "O Relate guarda relações entre o porquê da mudança, o código e os checks, com atribuição de fonte. O brief de vizinhança devolve esse conjunto conectado em um pacote só. O escritor erra menos e faz menos passes, e os revisores recebem o mesmo brief compacto. O custo do grafo é computação local, sem chamadas a LLM.",
+      "t": 805,
+      "legenda": "O brief junta fatos e fontes antes de qualquer escrita.",
+      "print": "img/gbeuC0ud1p4/2.jpg",
+      "descricao": "Quadrinho: 'Just the evidence for this change... with its sources.' Legenda: Relate dá ao Tracetune um pacote de evidências conectado."
+    },
+    {
+      "titulo": "Escritor forte, revisores baratos",
+      "texto": "Os autores dizem que escritores mais baratos pioraram a qualidade, porque transformam o texto em checklist mecânico. Revisar e cruzar afirmações com o brief é mais mecânico, então Haiku faz isso bem. Resultado: um escritor classe Sonnet com revisores Haiku, ou Luna no caso do Codex.",
+      "t": 835,
+      "legenda": "O modelo caro fica na escrita e o barato na checagem.",
+      "print": null,
+      "descricao": null
+    },
+    {
+      "titulo": "Saída final e resultados no PR Bench",
+      "texto": "A nova descrição diz por que o log do CWD existe, qual é a exceção, e o que passou (typecheck mais 71 testes) sobre o conteúdo submetido. No PR Bench, juízes LLM com revisão humana deram notas de 74 para 76 e de 82 para 86 em escala de 1 a 100, com cerca de metade dos tokens.",
+      "t": 992,
+      "legenda": "Ganho de 2 a 4 pontos nos dois agentes segundo os autores.",
+      "print": "img/gbeuC0ud1p4/4.jpg",
+      "descricao": "Gráfico 'Better PRs in the Final Comparison', nota de qualidade de 0 a 100: Claude 74,2→76,2 (+2,0); Codex 82,4→86,8 (+4,4)."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Pull request",
+      "traducao": "pedido de integração de código",
+      "nivel": "basico",
+      "chave": "pull request",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Provenance",
+      "traducao": "proveniência (origem da informação)",
+      "nivel": "intermediario",
+      "chave": "provenance",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Audit trail",
+      "traducao": "trilha de auditoria",
+      "nivel": "intermediario",
+      "chave": "audit trail",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Banco de dados em grafo",
+      "traducao": "banco que guarda nós e relações",
+      "nivel": "intermediario",
+      "chave": "banco de dados em grafo",
+      "analogia": "Um banco de dados em grafo é como um quadro de investigação na parede, com fotos presas por barbantes que mostram quem conhece quem.",
+      "explicacao": [
+        "Um banco de dados guarda informações para consulta depois. O banco em grafo guarda coisas e também as ligações entre elas.",
+        "Cada coisa vira um nó (node), como um commit, um teste ou o motivo de uma mudança. Cada ligação vira uma aresta (edge), como \"este teste rodou neste commit\".",
+        "Para responder uma pergunta, o banco segue as arestas a partir de um nó. Ele encontra fatos conectados sem cruzar várias tabelas, como faria um banco relacional.",
+        "No talk, o Relate é um banco em grafo embutido (embedded), escrito em Rust e mantido em memória. Ele roda dentro da aplicação, com custo só de computação local e sem chamadas a LLM.",
+        "O Tracetune liga o porquê, o código e os checks no grafo e devolve um brief de vizinhança. Esse pacote traz cada fato com sua fonte para o agente que escreve o PR."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "LLM",
+        "Token"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "FATOS DA SESSÃO",
+            "nota": "Motivo, código, comandos e checks"
+          },
+          {
+            "rotulo": "NÓS E ARESTAS",
+            "nota": "Cada fato ligado à sua fonte"
+          },
+          {
+            "rotulo": "CONSULTA NO GRAFO",
+            "nota": "Segue ligações a partir de um nó"
+          },
+          {
+            "rotulo": "BRIEF CONECTADO",
+            "nota": "Pacote único para o escritor do PR"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Multi-hop",
+      "traducao": "pergunta que exige vários saltos entre nós",
+      "nivel": "avancado",
+      "chave": "multi-hop",
+      "analogia": "Uma consulta multi-hop é como perguntar ao amigo de um amigo pelo telefone de um encanador, passando de pessoa em pessoa até chegar à resposta.",
+      "explicacao": [
+        "Algumas perguntas têm resposta direta. Outras exigem juntar várias informações, uma levando à seguinte.",
+        "Multi-hop (vários saltos) é a pergunta que precisa atravessar várias ligações. Por exemplo, \"este PR veio de qual commit, e quais testes rodaram nesse commit?\".",
+        "Em um banco de dados em grafo, cada salto segue uma aresta de um nó para outro. Duas ou três arestas encadeadas respondem a pergunta inteira.",
+        "Sem o grafo, um agente faz cada salto com uma busca e uma chamada ao modelo. Isso gasta mais tokens e aumenta a chance de erro a cada passo.",
+        "O talk cita consultas multi-hop como vantagem do Relate. O caminho percorrido fica registrado, o que deixa o rastro da resposta mais fácil de explicar."
+      ],
+      "pre_requisitos": [
+        "Banco de dados em grafo",
+        "Agente de IA",
+        "Token"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PERGUNTA",
+            "nota": "Quais testes provam este PR?"
+          },
+          {
+            "rotulo": "SALTO 1",
+            "nota": "PR leva ao commit"
+          },
+          {
+            "rotulo": "SALTO 2",
+            "nota": "Commit leva aos testes rodados"
+          },
+          {
+            "rotulo": "RESPOSTA COM CAMINHO",
+            "nota": "Fato e a rota que o sustenta"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Benchmark",
+      "traducao": "teste padronizado de desempenho",
+      "nivel": "basico",
+      "chave": "benchmark",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo de linguagem usado para avaliar respostas",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Compactação de contexto",
+      "traducao": "resumir o histórico para caber na janela do modelo",
+      "nivel": "intermediario",
+      "chave": "compactação de contexto",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O talk é também uma apresentação de produto: Stephen trabalha na Neo4j e lançou o Relate na mesma semana, e Cassandra vende o Tracetune. Os ganhos vêm do PR Bench, criado pelos próprios autores, com juízes LLM e revisão humana sem detalhes. Não há número de PRs testados, intervalo de confiança nem comparação com um fluxo sem grafo, mas com mais tempo de pesquisa. A diferença de 2 a 4 pontos é pequena. Os autores dizem que a economia de tokens vale para qualquer projeto, sem evidência fora do Tracetune.",
+  "acoes": [
+    "Escolha 3 PRs seus recentes e confira se cada frase como 'testes passaram' tem o comando, o horário e o commit que a sustentam.",
+    "Rode checks de tipo e testes em sequência no seu CI e anote no PR a ordem e a versão do código em que cada um rodou.",
+    "Teste um revisor mais barato que apenas confronte as afirmações de um rascunho com uma lista de evidências, e compare seus achados com os de um revisor caro.",
+    "Escreva em uma planilha as relações motivo, mudança, comando e resultado de um PR e veja que partes faltam."
+  ],
+  "numeros": [
+    {
+      "valor": "71 testes",
+      "contexto": "Testes citados na saída melhorada do PR, junto do typecheck",
+      "t": 931
+    },
+    {
+      "valor": "74→76, 82→86",
+      "contexto": "Notas dos juízes no PR Bench, escala de 1 a 100",
+      "t": 1023
+    },
+    {
+      "valor": "cerca de 50%",
+      "contexto": "Tokens do Tracetune com grafo, em relação à versão anterior",
+      "t": 1087
+    }
+  ],
+  "rotulo": "Provar nos PRs que os testes passaram, com grafo de evidências",
+  "objetivo": "desenhar um fluxo que liga cada afirmação de uma descrição de PR à evidência de comandos, tempo e versão do código",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Qual erro concreto o Tracetune ainda cometia no PR e o que o trace mostrava?",
+      "resposta": "O PR afirmava que os testes e checks passaram, mas o trace mostrava bun test e bun x tsc rodando ao mesmo tempo, quando precisam rodar em sequência."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você usaria a ideia do brief conectado para gerar a descrição dos PRs do seu time?",
+      "resposta": "Antes de escrever, reúna em um pacote o motivo da mudança, o diff, os comandos executados com horário e a versão do código, cada item com sua fonte. O escritor e os revisores usam só esse pacote, e toda afirmação como 'testes passaram' aponta para um comando registrado."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "O que limita a conclusão de que o grafo melhora a qualidade e corta pela metade os tokens?",
+      "resposta": "Os dados vêm do PR Bench, feito pelos próprios autores, que têm interesse no Relate e no Tracetune. A amostra, a variância e o método dos juízes não foram mostrados, o ganho é de 2 a 4 pontos, e o resultado vale para o projeto deles, não para qualquer código."
+    }
+  ],
+  "experimento": {
+    "titulo": "Auditar as claims de um PR contra os logs",
+    "minutos": 30,
+    "precisa": "Um repositório seu com um PR recente, terminal e Claude ou ChatGPT",
+    "passos": [
+      "Copie a descrição de um PR seu e liste cada afirmação verificável, como testes passando ou bug corrigido.",
+      "Para cada afirmação, procure no histórico do terminal ou no CI o comando, o horário e o commit em que ela se baseia.",
+      "Monte uma tabela com afirmação, comando, horário, commit e status: provada, parcial ou sem prova.",
+      "Peça a um modelo que reescreva a descrição usando só a tabela e marque como 'não verificado' o que ficou sem prova."
+    ],
+    "sucesso": "Você tem uma tabela em que toda afirmação aponta para um comando e um commit, ou está marcada como não verificada na nova descrição."
+  },
+  "consolidado_em": "2026-11-11T12:01:16+00:00"
+}

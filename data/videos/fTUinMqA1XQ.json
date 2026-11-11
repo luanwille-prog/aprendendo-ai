@@ -1,0 +1,223 @@
+{
+  "id": "fTUinMqA1XQ",
+  "titulo": "Your Team's Agents Are All Shipping to the Same Code at Once - Patrick Debois, Tessl",
+  "titulo_curto": "Your Team's Agents Are All Shipping to the Same Code at Once",
+  "palestrante": "Patrick Debois, Tessl",
+  "url": "https://www.youtube.com/watch?v=fTUinMqA1XQ",
+  "duracao": 1369,
+  "publicado_ts": 1794344402,
+  "edicao": "2026-11-10",
+  "tese": "Quando todo o time roda agentes no mesmo repositório, o gargalo vira coordenação e revisão, e o pipeline precisa ser desenhado para concorrência.",
+  "tldr": [
+    "Debois diz que ligar uma fábrica de software multiplayer multiplica os pull requests, gera conflitos entre agentes e deixa o CI mais lento e mais caro.",
+    "Ele propõe o que chama de entrega concorrente. Isso inclui dividir o trabalho antes de codar, reservar tickets e arquivos, isolar cada agente, fundir por função e por intenção e usar filas de merge especulativas.",
+    "Do lado das pessoas, ele defende um quadro compartilhado onde agentes entram na conversa, refinam o ticket, fazem perguntas com opções e registram decisões, com revisão humana guiada pelo risco da mudança."
+  ],
+  "tema": "engenharia-de-software",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Da entrega contínua à entrega concorrente",
+      "texto": "O pipeline clássico (build, teste, merge) é serial. Com vários agentes e pessoas, cada merge obriga os outros PRs a refazer rebase e testes. O concorrente passa a tratar conflito como rotina, e não como exceção.",
+      "t": 159,
+      "legenda": "Cada merge força rebase e novos testes nos PRs em espera.",
+      "print": "img/fTUinMqA1XQ/0.jpg",
+      "descricao": "Slide 'Resolving merge conflicts all day': 1) mesmas linhas, o merge para e volta a uma pessoa; 2) metas opostas, 'turf war' entre agentes."
+    },
+    {
+      "titulo": "Planejar para não colidir",
+      "texto": "Dividir o trabalho antes de executar, até usando o grafo da AST para achar cortes limpos. O agente reserva o ticket e anuncia os arquivos que vai tocar. Cada agente ganha seu worktree, seu contexto, seu banco com snapshot e serviços simulados.",
+      "t": 285,
+      "legenda": "Reserva de ticket e isolamento evitam que agentes se sobreponham.",
+      "print": "img/fTUinMqA1XQ/1.jpg",
+      "descricao": "Slide 'Claim the work before anyone writes it': A1 reserva a task #42 e A3 é desviado; quadro de intenções acusa sobreposição em billing/api."
+    },
+    {
+      "titulo": "Conflito de intenção sem conflito de código",
+      "texto": "Um PR muda o total da fatura para centavos de dólar e outro muda o relatório. Os dois fundem e passam nos testes, mas a intenção diverge. Agentes podem comparar intenções entre PRs e avisar. Merge trains especulativos testam PRs compatíveis em paralelo.",
+      "t": 439,
+      "legenda": "Dois PRs podem passar nos testes e ainda assim se contradizer.",
+      "print": "img/fTUinMqA1XQ/2.jpg",
+      "descricao": "Slide 'Agents check merges for intent': A muda total() para centavos, B assume dólares; testes verdes e fatura de $129.900,00 (devia ser $1.299,00)."
+    },
+    {
+      "titulo": "Quadro compartilhado com agente na conversa",
+      "texto": "O agente entra no chat do time, absorve pistas de várias pessoas e refina o ticket, que vira um plano compartilhado. Ele propõe opções em vez de perguntas abertas e cada decisão vai para um registro consultável. Áreas como vendas e suporte também participam, dentro do mesmo pipeline.",
+      "t": 630,
+      "legenda": "O ticket vira um plano compartilhado, refinado por pessoas e agente.",
+      "print": "img/fTUinMqA1XQ/3.jpg",
+      "descricao": "Slide 'The agent joins the chat': canal #billing com decisões de Ana e Raj; o agente abre BIL-142 e a decisão sincroniza no ticket."
+    },
+    {
+      "titulo": "Revisão humana guiada por risco",
+      "texto": "Além de reduzir falhas com revisão adversarial e provas (vídeos, screenshots), a revisão escolhe o nível de atenção pelo impacto. Documentação passa fácil, autenticação exige humano. Lançamento gradual e restauração barata reduzem o custo do erro.",
+      "t": 1006,
+      "legenda": "O esforço de revisão sobe com o impacto da mudança em produção.",
+      "print": "img/fTUinMqA1XQ/4.jpg",
+      "descricao": "Slide 'Spend people's review where the risk is': low ships, medium canary, high mais verificação, critical exige aprovação humana; feature flags e rollback."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Software factory",
+      "traducao": "fábrica de software",
+      "nivel": "intermediario",
+      "chave": "software factory",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Agente multiplayer",
+      "traducao": "agente compartilhado por várias pessoas do time",
+      "nivel": "intermediario",
+      "chave": "agente multiplayer",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Git worktree",
+      "traducao": "cópia de trabalho paralela do repositório",
+      "nivel": "intermediario",
+      "chave": "git worktree",
+      "analogia": "Um git worktree é como dar a cada cozinheiro a própria bancada com uma cópia da mesma receita, para que ninguém esbarre na panela do outro.",
+      "explicacao": [
+        "Quando várias pessoas mexem na mesma pasta de arquivos ao mesmo tempo, uma apaga ou estraga o trabalho da outra.",
+        "O Git guarda o histórico do projeto num repositório. Um worktree (cópia de trabalho) é uma pasta extra ligada a esse mesmo repositório.",
+        "Cada worktree fica numa branch (ramo de desenvolvimento) própria. Você cria um com o comando git worktree add, apontando a pasta e a branch.",
+        "Num time com vários agentes de código, cada agente recebe seu worktree. Assim ele edita e roda testes sem tocar nos arquivos dos outros.",
+        "O isolamento evita colisões durante o trabalho. Na hora do merge (junção) no main, os conflitos ainda podem aparecer e precisam de outras práticas."
+      ],
+      "pre_requisitos": [
+        "Agente de IA"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "REPOSITÓRIO ÚNICO",
+            "nota": "Um histórico Git compartilhado"
+          },
+          {
+            "rotulo": "UM WORKTREE POR AGENTE",
+            "nota": "Pasta e branch separadas"
+          },
+          {
+            "rotulo": "TRABALHO EM PARALELO",
+            "nota": "Edição e testes sem colisão"
+          },
+          {
+            "rotulo": "MERGE NO MAIN",
+            "nota": "Mudanças se juntam no fim"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Digital twin",
+      "traducao": "gêmeo digital",
+      "nivel": "intermediario",
+      "chave": "digital twin",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Conflict relaxation",
+      "traducao": "relaxamento de conflitos entre mudanças",
+      "nivel": "avancado",
+      "chave": "conflict relaxation",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Merge queue",
+      "traducao": "fila de merge",
+      "nivel": "avancado",
+      "chave": "merge queue",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Adversarial review",
+      "traducao": "revisão adversarial por outro modelo",
+      "nivel": "intermediario",
+      "chave": "adversarial review",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Risk-based review",
+      "traducao": "revisão baseada em risco",
+      "nivel": "intermediario",
+      "chave": "risk-based review",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O palestrante é fundador da Tessl e cita fábricas e ferramentas próprias, com convite para testá-las. Não há dados de medição. O único número, o salto de cerca de 10 vezes em PRs, aparece como observação sem fonte. Boa parte das técnicas (merge por intenção, merge trains especulativos, pré-visão de mudanças) é descrita como direção, não como prática comprovada. O talk também não discute o custo dos agentes extras de revisão.",
+  "acoes": [
+    "Liste os arquivos que seus agentes mais editam ao mesmo tempo e separe o trabalho por módulo antes de iniciar a próxima rodada.",
+    "Dê um git worktree a cada agente que rodar em paralelo e confira se o conflito de merge diminui.",
+    "Classifique os tipos de mudança do seu repositório em baixo, médio e alto risco e defina qual nível exige revisão humana.",
+    "Crie um arquivo de decisões (decision log) no repositório e peça aos agentes que registrem nele cada escolha relevante."
+  ],
+  "numeros": [
+    {
+      "valor": "10x",
+      "contexto": "aumento aproximado de pull requests ao ligar a fábrica multiplayer",
+      "t": 126
+    }
+  ],
+  "rotulo": "Agentes de código em time: entrega concorrente",
+  "objetivo": "listar os pontos de atrito de vários agentes no mesmo repositório e escolher práticas de planejamento, merge e revisão para reduzi-los",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que o CI fica mais lento e caro quando vários agentes mergeiam no mesmo main?",
+      "resposta": "Cada merge obriga os outros PRs abertos a fazer rebase e rodar os testes de novo. Com muitos PRs em paralelo, essa repetição enche a fila e consome mais CI."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você roda três agentes no mesmo repositório e eles sempre colidem. Que três mudanças de processo você testaria primeiro?",
+      "resposta": "Dividir as tarefas por módulo antes de executar, fazer cada agente reservar o ticket e declarar os arquivos que vai tocar e dar um git worktree separado a cada um. Depois, medir quantos conflitos sobram."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta para aceitar que fundir por função ou por intenção resolve os conflitos entre agentes?",
+      "resposta": "O talk mostra um exemplo (fatura em centavos versus relatório) e descreve a ideia, mas não traz medições de taxa de conflito, custo ou erros. O palestrante também vende uma plataforma ligada ao tema."
+    }
+  ],
+  "experimento": {
+    "titulo": "Dois agentes, um repositório, com e sem reserva",
+    "minutos": 40,
+    "precisa": "Claude Code ou outro agente de código, um repositório pequeno seu e Git",
+    "passos": [
+      "Crie dois tickets que tocam arquivos próximos e rode dois agentes ao mesmo tempo no mesmo diretório. Anote os conflitos.",
+      "Repita com um git worktree por agente e peça que cada um escreva num arquivo CLAIMS.md quais arquivos vai alterar antes de começar.",
+      "Depois de um merge, peça a um terceiro agente que compare a intenção dos dois PRs e aponte contradições.",
+      "Compare o número de conflitos e o tempo de retrabalho entre as duas rodadas."
+    ],
+    "sucesso": "A rodada com worktree e reserva tem menos conflitos de merge e você consegue citar pelo menos uma contradição de intenção que o terceiro agente detectou."
+  },
+  "consolidado_em": "2026-11-11T12:01:16+00:00"
+}

@@ -1,0 +1,271 @@
+{
+  "id": "DxP5aW4VknQ",
+  "titulo": "Your Sub-Agents Are a Distributed System. Treat Them Like One. - Girish Konda, Microsoft",
+  "titulo_curto": "Your Sub-Agents Are a Distributed System. Treat Them Like One.",
+  "palestrante": "Girish Konda, Microsoft",
+  "url": "https://www.youtube.com/watch?v=DxP5aW4VknQ",
+  "duracao": 1380,
+  "publicado_ts": 1794348007,
+  "edicao": "2026-11-10",
+  "tese": "Orquestrador com subagentes já é sistema distribuído, então herda falhas parciais, leituras sujas e retries duplicados, e precisa das mesmas defesas.",
+  "tldr": [
+    "Quando um orquestrador delega a subagentes, surgem as falhas clássicas de sistemas distribuídos: trabalho pela metade reportado como sucesso, palpite lido como fato, limite de taxa invisível e retry que repete efeitos colaterais.",
+    "Girish Konda propõe o modelo SAFE de hand-off: fatos com fonte e data, efeitos no máximo uma vez, orçamento de fanout e resultados com estado explícito, tudo verificado em código pelo orquestrador.",
+    "O modelo custa latência e recusas, não garante entrega exata, não desfaz nada sozinho e só serve com um único orquestrador; para subagentes que apenas rascunham texto para um humano, é exagero."
+  ],
+  "tema": "agentes",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "Quatro falhas clássicas, agora com texto fluente",
+      "texto": "Falha parcial, leitura suja, fanout sem limite e retry sem idempotência já existem há décadas. A diferença é que o subagente devolve texto que parece sucesso, o contexto compartilhado não tem isolamento e o retry reexecuta a tarefa inteira com os efeitos dela.",
+      "t": 123,
+      "legenda": "Cada falha de agentes tem um equivalente conhecido em sistemas distribuídos.",
+      "print": "img/DxP5aW4VknQ/0.jpg",
+      "descricao": "Slide 'Four failures we already know': falha parcial tratada por exceção ou código de erro vs. com subagente, 'texto que parece sucesso'. Só 1 linha."
+    },
+    {
+      "titulo": "Três alertas, a mesma resposta, trabalhos diferentes",
+      "texto": "Num agente de triagem de alertas, um caminho analisou telemetria, outro casou com um título já visto e o terceiro não fez nada. Os três disseram benigno com a mesma confiança. O orquestrador lê a conclusão, mas não mede o esforço por trás dela.",
+      "t": 247,
+      "legenda": "Respostas idênticas escondem trabalho real, palpite e ausência de trabalho.",
+      "print": null,
+      "descricao": null
+    },
+    {
+      "titulo": "Quórum de subagentes não é independência",
+      "texto": "Votação ponderada funciona porque leitura e escrita se sobrepõem entre réplicas. Três subagentes lendo o mesmo contexto compartilhado leem o mesmo palpite. A concordância é uma fonte contada três vezes, como no exemplo do erro que 'caiu 80%' sem medição.",
+      "t": 460,
+      "legenda": "Três artefatos concordam porque todos leram o mesmo palpite.",
+      "print": "img/DxP5aW4VknQ/2.jpg",
+      "descricao": "Slide 'One shared context, no isolation': Sub-agent A (triage) grava 'Error rate fell 80%' no contexto compartilhado, marcado 'inferred, never measured'."
+    },
+    {
+      "titulo": "SAFE: quatro regras de hand-off",
+      "texto": "S: fatos carregam fonte e versão. A: efeitos no máximo uma vez, com aprovação ligada à ação exata e leitura de volta. F: orçamento de fanout com recusa contada como falha. E: todo hand-off termina em estado nomeado, e timeout vira 'desconhecido'.",
+      "t": 617,
+      "legenda": "O modelo SAFE resume as quatro garantias do hand-off.",
+      "print": "img/DxP5aW4VknQ/3.jpg",
+      "descricao": "Slide 'Pick a consistency model on purpose': de Linearizable a Eventual, com Causal e Session guarantees marcados como base do SAFE."
+    },
+    {
+      "titulo": "O orquestrador recalcula antes de aceitar",
+      "texto": "Saída de agente é entrada não confiável. O subagente disse que a taxa de erro caiu de 10 em 1.000 para 6 em 600, mas as duas taxas são 1%. O código do orquestrador recalcula, vê a diferença e recusa com motivo, sem repassar o texto com um aviso embaixo.",
+      "t": 1145,
+      "legenda": "Recalcular a métrica em código derruba uma afirmação que o texto sustentava.",
+      "print": "img/DxP5aW4VknQ/4.jpg",
+      "descricao": "Slide 'Check sub-agent output in code': saída do subagente passa por validador em código: schema, evidence, freshness, recompute."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Sistema distribuído",
+      "traducao": "Distributed system",
+      "nivel": "intermediario",
+      "chave": "sistema distribuído",
+      "analogia": "Um sistema distribuído é como uma cozinha de restaurante com vários cozinheiros, em que cada um prepara uma parte do prato e o chef junta tudo sem ver cada panela de perto.",
+      "explicacao": [
+        "Sistema distribuído (distributed system) é um conjunto de programas que rodam separados e trabalham juntos numa mesma tarefa.",
+        "Cada parte conversa com as outras por mensagens e pode falhar sozinha, enquanto o resto continua rodando.",
+        "Daí vêm falhas clássicas, como resposta perdida, trabalho feito pela metade, leitura de um dado ainda não confirmado e repetição que duplica efeitos.",
+        "Um orquestrador que divide a tarefa entre subagentes paralelos, com estado compartilhado e resultados juntados no final, forma exatamente esse desenho.",
+        "Por isso valem as defesas antigas, como timeout tratado como suspeita, limite de concorrência, idempotência e estado explícito em cada resposta."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "Subagente",
+        "Orchestrator e workers",
+        "API"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "ORQUESTRADOR DIVIDE",
+            "nota": "quebra a tarefa em partes"
+          },
+          {
+            "rotulo": "WORKERS EM PARALELO",
+            "nota": "leem estado compartilhado"
+          },
+          {
+            "rotulo": "CHAMADAS EXTERNAS",
+            "nota": "APIs, banco, CI, deploy"
+          },
+          {
+            "rotulo": "MERGE DOS RESULTADOS",
+            "nota": "falhas parciais chegam juntas"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Subagente",
+      "traducao": "agente auxiliar criado por outro agente",
+      "nivel": "basico",
+      "chave": "subagente",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Orchestrator e workers",
+      "traducao": "orquestrador e agentes executores",
+      "nivel": "basico",
+      "chave": "orchestrator e workers",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Idempotência",
+      "traducao": "repetir a operação sem mudar o resultado final",
+      "nivel": "intermediario",
+      "chave": "idempotência",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Provenance",
+      "traducao": "proveniência (origem da informação)",
+      "nivel": "intermediario",
+      "chave": "provenance",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Back pressure",
+      "traducao": "Contrapressão: recusar carga acima do limite",
+      "nivel": "avancado",
+      "chave": "back pressure",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "MCP",
+      "traducao": "protocolo para conectar ferramentas a agentes",
+      "nivel": "basico",
+      "chave": "mcp",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "A2A",
+      "traducao": "Agent2Agent, protocolo de comunicação entre agentes",
+      "nivel": "intermediario",
+      "chave": "a2a",
+      "analogia": "O A2A é como o formulário padrão de pedido entre setores de um escritório, com um campo para marcar se o serviço foi concluído, recusado ou ficou esperando informação.",
+      "explicacao": [
+        "A2A (Agent2Agent, de agente para agente) é um protocolo, ou seja, um combinado de formato para um agente pedir trabalho a outro.",
+        "Um agente envia uma tarefa e o outro responde seguindo campos fixos, em vez de só devolver texto livre.",
+        "Cada tarefa termina num estado nomeado, como concluída, falhou, cancelada, rejeitada ou parada pedindo mais informação.",
+        "Esse estado deixa o orquestrador decidir em código, sem precisar interpretar a frase do subagente.",
+        "O talk alerta que o campo sozinho não basta, porque o agente pode marcar concluída e dizer outra coisa no texto, então o orquestrador precisa conferir."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "Subagente",
+        "MCP",
+        "API"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "AGENTE ENVIA TAREFA",
+            "nota": "pedido em formato padrão"
+          },
+          {
+            "rotulo": "AGENTE REMOTO EXECUTA",
+            "nota": "faz o trabalho delegado"
+          },
+          {
+            "rotulo": "ESTADO NOMEADO",
+            "nota": "concluída, falhou, rejeitada..."
+          },
+          {
+            "rotulo": "ORQUESTRADOR CONFERE",
+            "nota": "estado bate com o texto?"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O próprio autor diz que SAFE é o modelo que ele usa, baseado no próprio projeto open source e em rascunhos próprios, e não um padrão. Não há medição de ganho, taxa de falha antes e depois ou comparação com alternativas. Os exemplos numéricos são inventados para ilustrar. O talk assume um único orquestrador e admite custo de latência e recusas.",
+  "acoes": [
+    "Liste os campos que o subagente devolve hoje e acrescente status (completed, partial, failed, unknown), evidência e efeitos colaterais.",
+    "Escreva no orquestrador uma checagem em código que recalcule uma métrica citada pelo subagente antes de aceitá-la.",
+    "Troque todo timeout de chamada a subagente por um estado 'unknown' e leia o efeito de volta antes de qualquer retry.",
+    "Registre em cada fato do contexto compartilhado a fonte, o horário da leitura e um prazo de validade."
+  ],
+  "numeros": [
+    {
+      "valor": "30 segundos",
+      "contexto": "timeout de chamada que fez servidor lento parecer quebrado",
+      "t": 339
+    },
+    {
+      "valor": "5 minutos",
+      "contexto": "limite de frescor do fato no exemplo",
+      "t": 744
+    },
+    {
+      "valor": "15 segundos",
+      "contexto": "espera máxima no portão de cold starts",
+      "t": 1054
+    },
+    {
+      "valor": "10/1000 e 6/600",
+      "contexto": "erros e requisições, ambos 1% de taxa",
+      "t": 1145
+    }
+  ],
+  "rotulo": "Subagentes como sistema distribuído: o modelo SAFE",
+  "objetivo": "desenhar um hand-off entre orquestrador e subagentes que registre fonte, estado e efeitos colaterais, e recuse resultados sem evidência",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que três subagentes concordando não valem como quórum quando leem o mesmo contexto compartilhado?",
+      "resposta": "Porque não são cópias independentes. Todos leem o mesmo palpite, então a concordância é uma única fonte contada três vezes. Quórum só dá garantia quando leitura e escrita se sobrepõem entre réplicas."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Seu subagente abre um pull request e a resposta se perde por timeout. O que fazer antes de repetir a tarefa?",
+      "resposta": "Marcar o resultado como 'desconhecido', identificar o efeito (por exemplo, pelo título ou id do PR) e ler de volta se ele existe. Só repetir se não existir, com aprovação ligada àquela ação exata, usada uma vez."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta para adotar o SAFE no seu sistema, e onde ele não serve?",
+      "resposta": "Faltam medições de ganho e de custo em latência e recusas; o autor baseia o modelo no próprio trabalho. Ele não serve com vários orquestradores ou agentes pares, nem para subagentes que só rascunham texto que um humano revisa."
+    }
+  ],
+  "experimento": {
+    "titulo": "Hand-off com status e recálculo em Python",
+    "minutos": 30,
+    "precisa": "Python 3 e um editor; sem chamada real a LLM, uma função simulada basta",
+    "passos": [
+      "Defina um dataclass Resultado com status (completed, partial, failed, unknown), conclusao, evidencia e efeitos.",
+      "Escreva um subagente simulado que devolva a afirmação 'taxa caiu' com 10/1000 antes e 6/600 depois, sem evidência anexada.",
+      "Escreva uma função validar() que recalcule as taxas, confira a evidência e devolva uma recusa com motivo.",
+      "Simule um timeout e faça o orquestrador gravar status unknown em vez de repetir a chamada."
+    ],
+    "sucesso": "A afirmação do subagente é recusada com motivo claro, e o timeout vira unknown sem disparar nenhum retry automático."
+  },
+  "consolidado_em": "2026-11-11T12:01:16+00:00"
+}

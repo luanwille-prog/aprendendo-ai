@@ -1,0 +1,250 @@
+{
+  "id": "TlOAhw9t5DA",
+  "titulo": "Merge Is the Bottleneck - Prasanna Sankar, Vorflux",
+  "titulo_curto": "Merge Is the Bottleneck",
+  "palestrante": "Prasanna Sankar, Vorflux",
+  "url": "https://www.youtube.com/watch?v=TlOAhw9t5DA",
+  "duracao": 1206,
+  "publicado_ts": 1794333440,
+  "edicao": "2026-11-10",
+  "tese": "Quando agentes rodam por horas, o gargalo sai do código e vai para planejar, revisar, integrar e até iniciar o trabalho.",
+  "tldr": [
+    "Prasanna Sankar, da Vorflux, conta como a empresa tirou agentes de código do laptop e os levou para a nuvem, resolvendo um gargalo por vez: ambiente, planejamento, testes, revisão e merge.",
+    "Com 20 a 30 tarefas em paralelo, o gargalo passa a ser gerenciar projeto e iniciar o trabalho. A Vorflux 2.0 responde com bots permanentes (Autobots) que reagem a chamadas de clientes, alertas e pipelines de CI.",
+    "Automação sem critério gera enxurrada de PRs, alertas ruidosos e conta de tokens alta. O remédio proposto é tratar o bot como um funcionário novo, com orçamento, trabalho visível, dono nomeado e responsabilidade que cresce com os resultados."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Migrar o ambiente local para a nuvem",
+      "texto": "A maioria dos agentes na nuvem roda às cegas, só com o serviço que você muda. Para testar de verdade, o agente precisa espelhar o ambiente do laptop. A Vorflux gasta tokens no início: subagentes montam uma instância EC2 com o ambiente completo, portas, segredos, autenticação e dados de teste.",
+      "t": 256,
+      "legenda": "Configurar o ambiente completo é o primeiro gargalo para sair do laptop.",
+      "print": "img/TlOAhw9t5DA/0.jpg",
+      "descricao": "Slide 'Vorflux 1.0: six bottlenecks' com 'Environment: the cloud mirrors localhost' em destaque; subagentes configuram portas, segredos, auth e dados."
+    },
+    {
+      "titulo": "Gastar tokens onde o humano perde tempo",
+      "texto": "Ao medir onde as pessoas gastavam tempo, o planejamento apareceu como o maior custo. Os planejadores voltavam em um ou dois minutos e exigiam muitas idas e vindas. A Vorflux lançou subagentes de exploração em paralelo, que montam arquiteturas e produzem um plano de planos resumido. O plano sai com grafo de dependências para que subagentes executem as partes independentes.",
+      "t": 350,
+      "legenda": "Mais computação no planejamento reduz o vaivém humano.",
+      "print": "img/TlOAhw9t5DA/1.jpg",
+      "descricao": "Slide 'Vorflux 1.0: six bottlenecks' com 'Planning: tokens where humans wait' em destaque; 'Parallel explore sub-agents write a plan of plans'."
+    },
+    {
+      "titulo": "Prova de que funciona: vídeo e link de staging",
+      "texto": "Para não puxar o código de volta ao laptop, o agente roda testes de navegador e de ponta a ponta na própria máquina. A saída é um vídeo que mostra a funcionalidade rodando e um link de staging para o usuário clicar. Isso troca a leitura do diff por uma inspeção concreta.",
+      "t": 412,
+      "legenda": "O agente entrega evidência visual, não só código.",
+      "print": "img/TlOAhw9t5DA/2.jpg",
+      "descricao": "Slide 'Vorflux 1.0: six bottlenecks' com 'Testing: proof without localhost' em destaque; 'Browser and end-to-end tests, a video and a staging link'."
+    },
+    {
+      "titulo": "O gargalo se desloca para a gestão de projeto",
+      "texto": "O desktop sustentava 3 a 5 tarefas em paralelo. Agentes na nuvem sustentam 20 a 30. Acima de 10 tarefas, o contexto humano não dá conta de lembrar e iniciar tudo. A Vorflux também aponta que os modelos recentes foram treinados para orquestrar, empurrando o trabalho pesado para subagentes.",
+      "t": 537,
+      "legenda": "Paralelismo alto transfere o limite do código para a atenção humana.",
+      "print": null,
+      "descricao": null
+    },
+    {
+      "titulo": "Do áudio da chamada ao PR e ao e-mail ao cliente",
+      "texto": "Um Autobot leu a transcrição de uma chamada, achou o bug mencionado e localizou o momento na gravação de tela. Pediu permissão, marcou o engenheiro responsável, abriu o PR e, após o deploy, redigiu o retorno ao cliente. O humano só aprovou os passos.",
+      "t": 939,
+      "legenda": "Exemplo de ponta a ponta de um bot que inicia o trabalho a partir de um sinal.",
+      "print": "img/TlOAhw9t5DA/4.jpg",
+      "descricao": "Slide 'Vorflux 2.0' com 'From customer call to shipped fix': lê a transcrição, marca o engenheiro, redige o follow-up; 'Approve, approve, approve'."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Cloud agent",
+      "traducao": "agente na nuvem, que roda em ambiente remoto e dispara sozinho",
+      "nivel": "basico",
+      "chave": "cloud agent",
+      "analogia": "Um cloud agent é como mandar o bolo para a padaria assar no forno grande dela, em vez de ocupar o fogão da sua casa a tarde inteira.",
+      "explicacao": [
+        "Um cloud agent (agente na nuvem) é um assistente de IA que trabalha num computador remoto, fora do seu notebook.",
+        "Você entrega a tarefa, fecha o notebook e o agente continua rodando por horas, enquanto você cuida de outras coisas.",
+        "Para testar de verdade, ele precisa de uma cópia fiel do seu ambiente local (localhost): serviços dependentes, portas, segredos, login e dados de teste.",
+        "A Vorflux gasta tokens no começo: subagentes montam uma máquina virtual (instância EC2) e configuram tudo isso antes da primeira tarefa.",
+        "Com o ambiente pronto, o agente roda testes na própria máquina e devolve provas, como um vídeo ou um link de staging (homologação)."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "Token",
+        "LLM"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "MÁQUINA NA NUVEM",
+            "nota": "subagentes criam a instância EC2"
+          },
+          {
+            "rotulo": "ESPELHAR AMBIENTE",
+            "nota": "portas, segredos, login, dados"
+          },
+          {
+            "rotulo": "TAREFA POR HORAS",
+            "nota": "agente roda sem o seu notebook"
+          },
+          {
+            "rotulo": "PROVA ENTREGUE",
+            "nota": "vídeo e link de staging"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Subagente",
+      "traducao": "agente auxiliar criado por outro agente",
+      "nivel": "intermediario",
+      "chave": "subagente",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Merge queue",
+      "traducao": "fila de merge",
+      "nivel": "intermediario",
+      "chave": "merge queue",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Staging",
+      "traducao": "ambiente de homologação antes da produção",
+      "nivel": "basico",
+      "chave": "staging",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Orquestração",
+      "traducao": "camada que coordena agentes e infraestrutura",
+      "nivel": "intermediario",
+      "chave": "orquestração",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Agente proativo",
+      "traducao": "agente que sugere temas sem ser perguntado",
+      "nivel": "intermediario",
+      "chave": "agente proativo",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Agente persistente",
+      "traducao": "agente que mantém objetivo e contexto e trabalha em segundo plano",
+      "nivel": "intermediario",
+      "chave": "agente persistente",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Mandato do agente",
+      "traducao": "escopo, meta, acessos e orçamento do agente",
+      "nivel": "avancado",
+      "chave": "mandato do agente",
+      "analogia": "O mandato do agente é como o combinado com um estagiário novo, que recebe uma meta, um chefe, uma mesa visível e um limite de gastos no cartão da empresa.",
+      "explicacao": [
+        "O mandato é a lista do que um agente pode fazer sozinho: qual meta ele persegue, quem responde por ele e quanto pode gastar.",
+        "Sem mandato, uma ordem vaga como \"resolva todos os alertas\" gera uma enxurrada de PRs (pull requests, pedidos de mudança no código), avisos o dia inteiro e alertas silenciados sem achar a causa.",
+        "O palestrante propõe tratar o bot como um funcionário novo: ele começa por tarefas importantes, presta contas com frequência e trabalha dentro de um orçamento.",
+        "Na prática, o mandato define meta, dono nomeado, canal onde o trabalho fica visível, teto de tokens e as ações que exigem permissão humana.",
+        "A autonomia cresce quando os resultados se sustentam e diminui quando falham, como numa avaliação de desempenho."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "Token",
+        "Prompt"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é um pitch da Vorflux, empresa do palestrante, que vende exatamente os Autobots descritos. Não há medição de ganho: nenhum dado de tempo economizado, de taxa de PRs aceitos nem de custo por tarefa. Os exemplos são relatos únicos, escolhidos pela empresa. A meta de empresa com zero funcionários é aspiração declarada, e o próprio autor admite que os bots erram. A economia citada com assinaturas ou modelos abertos também vem sem números.",
+  "acoes": [
+    "Liste onde você perde tempo em um dia de trabalho com agentes (planejar, testar, revisar, integrar) e escolha o maior item para atacar primeiro.",
+    "Peça ao agente de código, ao fim de cada tarefa, um vídeo ou link de staging que prove a funcionalidade, em vez de ler só o diff.",
+    "Antes de ligar uma automação a alertas ou webhooks, escreva meta, dono, canal e teto de gasto por semana.",
+    "Teste um segundo modelo como revisor do PR, com um ângulo de revisão diferente por revisor (segurança, testes, legibilidade)."
+  ],
+  "numeros": [
+    {
+      "valor": "US$ 15 mi",
+      "contexto": "captação da Vorflux, segundo o palestrante",
+      "t": 100
+    },
+    {
+      "valor": "3 a 5",
+      "contexto": "tarefas em paralelo no desktop",
+      "t": 537
+    },
+    {
+      "valor": "20 a 30",
+      "contexto": "tarefas em paralelo com agentes na nuvem",
+      "t": 537
+    },
+    {
+      "valor": "10",
+      "contexto": "tarefas em paralelo a partir das quais fica difícil gerenciar",
+      "t": 567
+    }
+  ],
+  "rotulo": "Merge é o gargalo: agentes de código na nuvem",
+  "objetivo": "listar os gargalos de agentes de código de longa duração e definir limites (orçamento, dono, canal) para um bot que inicia trabalho sozinho",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que o palestrante diz que o gargalo muda de lugar quando os agentes passam a rodar por horas na nuvem?",
+      "resposta": "Com 20 a 30 tarefas em paralelo, escrever código deixa de limitar. O limite passa a ser lembrar, iniciar, acompanhar e integrar as tarefas, ou seja, gestão de projeto."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você quer ligar um agente aos alertas do seu time de produção. Que limites definiria antes?",
+      "resposta": "Meta clara, dono nomeado, canal onde o trabalho fica visível, teto de gasto e começar pelo triage e investigação antes de abrir PRs. Ampliar a responsabilidade conforme os resultados justificarem."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta para aceitar a ideia de que Autobots reduzem o trabalho do time?",
+      "resposta": "Faltam métricas: tempo economizado, taxa de PRs aceitos, custo por tarefa e taxa de erro. O talk traz um exemplo escolhido pela própria empresa que vende o produto, sem comparação com um grupo de controle."
+    }
+  ],
+  "experimento": {
+    "titulo": "Plano de autonomia para um bot de triagem",
+    "minutos": 25,
+    "precisa": "Claude ou ChatGPT e um exemplo real de alerta ou ticket do seu trabalho",
+    "passos": [
+      "Escolha uma fonte de sinal (alerta, ticket ou ata de reunião) e cole 3 exemplos reais, sem dados sensíveis.",
+      "Peça ao modelo que classifique cada um como trabalho que o bot pode iniciar sozinho ou que exige julgamento humano, com justificativa.",
+      "Escreva o mandato do bot em 5 linhas: meta, dono, canal, orçamento semanal e o que ele nunca faz sem pedir permissão.",
+      "Peça ao modelo que aponte três modos de falha desse mandato, como enxurrada de PRs, alerta silenciado ou gasto sem controle, e ajuste o texto."
+    ],
+    "sucesso": "Você tem um mandato escrito com dono e teto de gasto e uma lista de modos de falha com uma mitigação para cada."
+  },
+  "consolidado_em": "2026-11-11T12:01:16+00:00"
+}
