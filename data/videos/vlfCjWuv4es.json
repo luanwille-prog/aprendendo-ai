@@ -1,0 +1,239 @@
+{
+  "id": "vlfCjWuv4es",
+  "titulo": "Rethinking Claude Code Best Practices — Lydia Hallie, Anthropic",
+  "titulo_curto": "Rethinking Claude Code Best Practices",
+  "palestrante": null,
+  "url": "https://www.youtube.com/watch?v=vlfCjWuv4es",
+  "duracao": 1051,
+  "publicado_ts": 1794454015,
+  "edicao": "2026-11-15",
+  "tese": "Quando o humano sai do loop, modelo, harness e ambiente assumem as tarefas que ele fazia: guiar, aprovar, restringir e verificar.",
+  "tldr": [
+    "Lydia Hallie, da equipe do Claude Code, diz que modelos mais fortes tornam antigas boas práticas desnecessárias: gritar regras no CLAUDE.md e aprovar cada comando agora atrapalham.",
+    "Para rodar sessões por horas sem supervisão, ela propõe quatro camadas: auto mode para aprovar, regras de negação para o que não pode acontecer, sandbox ou sessão na nuvem para limitar o alcance, e hooks e CI para verificar.",
+    "O passo final é ter uma sessão orquestradora que dispara e confere as outras, de modo que a pessoa só inicia a primeira e revisa o resultado."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "De uma sessão vigiada a dezenas em paralelo",
+      "texto": "Antes, o desenvolvedor corrigia o modelo, aprovava cada comando e rodava uma sessão por vez. Hoje, na Anthropic, rodam dezenas de sessões por horas, que se verificam sozinhas e até orquestram outras. Cada ponto onde o humano saiu do loop precisa ser assumido pelo modelo, pelo harness ou pelo ambiente.",
+      "t": 63,
+      "legenda": "Mostra o humano passando de operador a gerente de sessões.",
+      "print": "img/vlfCjWuv4es/0.jpg",
+      "descricao": "Trajeto de uma sessão (Read, Edit, npm test) com notas do humano e pedido 'Allow Claude to run this command?' para git reset --hard."
+    },
+    {
+      "titulo": "CLAUDE.md só com o que o código não mostra",
+      "texto": "Avisos como IMPORTANT e NEVER eram comuns com modelos antigos. Com os atuais, eles levam a mais chamadas de ferramenta e resultado pior. O arquivo deve guardar só o que Claude não enxerga no código, como uma dependência legada sem referência direta. O comando de auditoria de prompt checa o que o modelo novo já dispensa.",
+      "t": 217,
+      "legenda": "Prova que instruções enfáticas viraram ruído e que o arquivo encolhe.",
+      "print": "img/vlfCjWuv4es/1.jpg",
+      "descricao": "CLAUDE.md com 'IMPORTANT: always use the auth helper', 'Think hard and be thorough.' e 'src/legacy still serves our mobile apps' (linha 5 destacada)."
+    },
+    {
+      "titulo": "Auto mode erra menos que humano, mas não é garantia",
+      "texto": "Em um estudo de agosto, só cerca de 14% das pessoas no loop pegaram um comando claramente perigoso. O auto mode bloqueou 89%, o que ainda deixa passar cerca de um em dez. Quem precisa de garantia aplica deny rules, que o Claude Code consulta antes do classificador, e o classificador nem chega a ver a chamada negada.",
+      "t": 342,
+      "legenda": "Compara a taxa de captura de comandos perigosos entre humanos e auto mode.",
+      "print": null,
+      "descricao": null
+    },
+    {
+      "titulo": "Permissão decide se roda, sandbox limita o alcance",
+      "texto": "Um npm test pode rodar um script comprometido que lê o .env ou as chaves SSH. A permissão só vê o comando npm test e não o que ele abre depois. O sandbox repassa as regras ao sistema operacional, que vale também para processos filhos. Ele cobre só os comandos de shell, então MCP e hooks seguem fora. A sessão na nuvem isola a máquina inteira.",
+      "t": 529,
+      "legenda": "Mostra o ponto em que o sistema operacional bloqueia o acesso que a permissão não vê.",
+      "print": "img/vlfCjWuv4es/3.jpg",
+      "descricao": "Sandbox: deny rules para .env e ~/.ssh e host não aprovado, aplicados pelo sistema operacional aos processos do npm test."
+    },
+    {
+      "titulo": "Hooks garantem a verificação que o prompt só pede",
+      "texto": "Pedir no prompt que o modelo teste não garante nada. Hooks são scripts que o Claude Code executa em pontos definidos, como depois de editar um arquivo, ao concluir uma tarefa ou ao encerrar a sessão. Se o teste falha, o script deve sair com código 2 para mandar o modelo corrigir. Com código 1, a tarefa é marcada como concluída mesmo assim.",
+      "t": 745,
+      "legenda": "Mostra os três pontos em que um hook pode barrar o agente.",
+      "print": "img/vlfCjWuv4es/4.jpg",
+      "descricao": "Hooks: cada edição roda lint (PostToolUse), cada tarefa roda seus testes (TaskCompleted) e o fim da sessão roda todos os testes (Stop)."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Auto mode",
+      "traducao": "modo automático, o agente age sozinho sem o humano inspecionar",
+      "nivel": "basico",
+      "chave": "auto mode",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "CLAUDE.md / AGENTS.md",
+      "traducao": "arquivo de instruções carregado no contexto do agente",
+      "nivel": "basico",
+      "chave": "claude.md / agents.md",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Harness",
+      "traducao": "estrutura que roda o agente",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado para rodar o código",
+      "nivel": "intermediario",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Cloud agent",
+      "traducao": "agente na nuvem, que roda em ambiente remoto e dispara sozinho",
+      "nivel": "intermediario",
+      "chave": "cloud agent",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Hooks",
+      "traducao": "gatilhos determinísticos em pontos do fluxo do agente",
+      "nivel": "intermediario",
+      "chave": "hooks",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "CI (integração contínua)",
+      "traducao": "testes e checagens automáticas a cada mudança",
+      "nivel": "basico",
+      "chave": "ci (integração contínua)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Orquestrador de agentes",
+      "traducao": "orchestrator",
+      "nivel": "intermediario",
+      "chave": "orquestrador de agentes",
+      "analogia": "Um orquestrador de agentes é como o chefe de cozinha que divide os pratos entre os cozinheiros, prova cada um e devolve o que não ficou pronto.",
+      "explicacao": [
+        "Você conversa com um único assistente e pede um trabalho grande. Ele divide o trabalho em partes menores e entrega cada parte a outro assistente.",
+        "Esse assistente principal é o orquestrador (orchestrator, em inglês). Ele não escreve o código. Ele decide o que fazer, abre uma sessão nova para cada tarefa e acompanha o que volta.",
+        "Quando uma sessão entrega algo incompleto ou com teste falhando, o orquestrador devolve a tarefa até ela passar em todas as checagens.",
+        "Dá para usar modelos diferentes em cada papel. Um modelo bom em julgar e planejar fica no orquestrador, e um modelo bom em executar fica nas sessões filhas.",
+        "No Claude Code projects, ainda em beta, o próprio sistema cuida do contexto de cada sessão. A pessoa só inicia a primeira conversa e revisa o resultado final."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "LLM",
+        "Prompt"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PEDIDO",
+            "nota": "você descreve o trabalho uma vez"
+          },
+          {
+            "rotulo": "ORQUESTRADOR DIVIDE",
+            "nota": "quebra em tarefas e abre sessões"
+          },
+          {
+            "rotulo": "SESSÕES EXECUTAM",
+            "nota": "cada uma escreve o código da sua parte"
+          },
+          {
+            "rotulo": "ORQUESTRADOR CONFERE",
+            "nota": "devolve o que não passou nos testes"
+          },
+          {
+            "rotulo": "RESULTADO PRONTO",
+            "nota": "você só revisa a entrega final"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "A palestrante trabalha na Anthropic e fala de produtos da própria empresa (Claude Code, Opus 5.5, Fable, Claude Code projects em beta). Os números do estudo de auto mode e o salto de 2.500 para 30.000 mudanças por dia não vêm com método, tamanho de amostra ou separação entre ganho do modelo e outros fatores. Falta dado sobre custo de rodar dezenas de sessões e sobre taxa de erro de PRs mesclados sem revisão humana. O conselho de enxugar o CLAUDE.md vale para esses modelos e pode não valer para outros.",
+  "acoes": [
+    "Revise seu CLAUDE.md e remova avisos em caixa alta, descrição de stack e dicas de onde achar arquivos. Mantenha só o que o código não revela.",
+    "Crie uma deny rule para ler o .env no settings do projeto e teste pedindo ao Claude para abrir o arquivo com cat.",
+    "Configure um hook que rode os testes ao concluir tarefas e confirme que o script sai com código 2 quando falha.",
+    "Ative CI com os checks que importam e dê ao Claude uma tarefa maior que o habitual, para ver onde você ainda precisa intervir."
+  ],
+  "numeros": [
+    {
+      "valor": "14%",
+      "contexto": "pessoas no loop que pegaram um comando claramente perigoso",
+      "t": 342
+    },
+    {
+      "valor": "89%",
+      "contexto": "comandos perigosos bloqueados pelo auto mode",
+      "t": 342
+    },
+    {
+      "valor": "2.500 a 30.000",
+      "contexto": "mudanças por dia na Anthropic, de maio a setembro",
+      "t": 93
+    }
+  ],
+  "rotulo": "Boas práticas do Claude Code para modelos novos",
+  "objetivo": "configurar auto mode, regras de negação, hooks e CI para deixar sessões do Claude Code rodando sem você aprovar cada passo",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que uma deny rule garante mais que o auto mode, e por que ela ainda não basta contra um npm test comprometido?",
+      "resposta": "O Claude Code checa a deny rule antes do classificador do auto mode, que nem vê a chamada negada. Mas a regra só decide se o comando roda. Ela não limita o que o script acessa depois, e isso exige sandbox ou ambiente isolado."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você quer que o Claude nunca termine uma tarefa no seu projeto com os testes de autenticação quebrados. Que mecanismo usa e que detalhe do script importa?",
+      "resposta": "Um hook disparado ao marcar a tarefa como concluída, que roda os testes da área alterada. O script deve sair com código 2 quando falha, porque com código 1 a tarefa é marcada como concluída mesmo assim."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites existem nos números de 14% e 89% do estudo sobre auto mode, e que conflito de interesse afeta a leitura?",
+      "resposta": "O talk não informa amostra, tipo de comando nem método, e a comparação vem da própria Anthropic, que vende o auto mode. Cerca de um em dez comandos perigosos passou. Sem os dados do estudo, não dá para saber se vale para o seu projeto."
+    }
+  ],
+  "experimento": {
+    "titulo": "Hook que barra a conclusão com testes quebrados",
+    "minutos": 30,
+    "precisa": "Claude Code instalado e um repositório pequeno com testes automatizados",
+    "passos": [
+      "Adicione uma deny rule para ler .env nas configurações do projeto e peça ao Claude para executar cat .env. Confirme que ele é bloqueado.",
+      "Escreva um script que rode a suíte de testes e saia com código 2 se algo falhar. Registre-o como hook de parada da sessão.",
+      "Peça ao Claude uma mudança que quebre de propósito um teste existente e observe o que ele faz ao tentar encerrar.",
+      "Troque o código de saída do script para 1, repita e compare o comportamento."
+    ],
+    "sucesso": "Com código 2, o Claude volta a corrigir o teste antes de terminar. Com código 1, ele encerra sem corrigir, e o .env continua bloqueado."
+  },
+  "consolidado_em": "2026-11-16T13:22:40+00:00"
+}

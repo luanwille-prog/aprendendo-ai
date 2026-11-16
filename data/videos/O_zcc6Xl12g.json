@@ -1,0 +1,280 @@
+{
+  "id": "O_zcc6Xl12g",
+  "titulo": "All Code Is Slop (Except Mine) — Lauren Tan, SpaceXSI",
+  "titulo_curto": "All Code Is Slop (Except Mine)",
+  "palestrante": "Lauren Tan, SpaceXSI",
+  "url": "https://www.youtube.com/watch?v=O_zcc6Xl12g",
+  "duracao": 1051,
+  "publicado_ts": 1794681009,
+  "edicao": "2026-11-15",
+  "tese": "Agentes copiam o que veem no código. Transforme cada correção em regra automática e a base de código passa a segurar a qualidade.",
+  "tldr": [
+    "Lauren Tan, do time do Grok Bot, defende que a confiança em agentes de código vem do ambiente: arquitetura, lint, testes e verificação, com prosa (regras e skills) só por cima.",
+    "Cada vez que ela corrige um agente, transforma a correção em uma checagem determinística, como banir useEffect em código de produto ou proibir imports entre pastas, em vez de escrever mais uma linha de instrução.",
+    "O time diz ter enviado 11 mil pull requests em um mês, com taxa de reversão estável perto de 0,5%, e gasta a maior parte dos tokens em verificação, incluindo TLA+ e Lean."
+  ],
+  "tema": "engenharia-de-software",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Pirâmide invertida de confiança",
+      "texto": "Lauren organiza o ambiente do agente em camadas. As duas primeiras são determinísticas (arquitetura, API, lint, tipos, testes). Depois vêm as verificações em runtime e formais. A prosa (rules, skills, agents.md) fica no topo, porque exige julgamento e é menos reprodutível.",
+      "t": 100,
+      "legenda": "Onde investir primeiro no ambiente do agente.",
+      "print": null,
+      "descricao": null
+    },
+    {
+      "titulo": "Código é o maior input do agente",
+      "texto": "O agente copia o que encontra. Workarounds, código obsoleto e dívida técnica parecem padrão estabelecido e se espalham, como ervas daninhas num jardim. Por isso a base precisa estar o mais limpa possível, e cada correção deve virar uma checagem em código, não mais uma linha em regras.",
+      "t": 252,
+      "legenda": "Restrições do codebase funcionam como fundação para o código novo.",
+      "print": "img/O_zcc6Xl12g/1.jpg",
+      "descricao": "Slide 'Organic Architecture': prédio com varandas cobertas de plantas e pessoas trabalhando, ilustrando a analogia do codebase."
+    },
+    {
+      "titulo": "Banir o que exige nuance",
+      "texto": "No framework Dune, o time proibiu useEffect em código de produto, porque agentes o usam mal. Também separou pastas electron-main e electron-renderer, com imports entre elas bloqueados por lint. Cada regra elimina uma categoria de problema e tira um item da revisão de código.",
+      "t": 345,
+      "legenda": "Regras simples de lint eliminam classes inteiras de erro.",
+      "print": "img/O_zcc6Xl12g/2.jpg",
+      "descricao": "Slide com o texto 'nuance tends to lead to slop' e o subtítulo 'just design better APIs', com ilustração da autora."
+    },
+    {
+      "titulo": "Comentários viram escape para o agente",
+      "texto": "Agentes escreviam comentários longos para justificar atalhos, como timers em cascata que degradaram a performance do Cursor. O Grok Bot baniu 99% dos comentários. No lugar, usa lint com mensagens de erro que mandam corrigir a causa raiz.",
+      "t": 469,
+      "legenda": "O agente usa comentários para justificar o atalho em vez de corrigir.",
+      "print": "img/O_zcc6Xl12g/3.jpg",
+      "descricao": "Slide 'quick fixes considered harmful': comentário '// release later, in case it comes back' com setTimeout, copiado até chegar a 183 timers."
+    },
+    {
+      "titulo": "Revisão por artefatos de verificação",
+      "texto": "A revisão encolheu para olhar vídeos, screenshots, diagramas e provas formais. O agente roda o app (feature map, CLI reutilizável) e o time usa TLA+ e Lean em fluxos críticos. Cerca de 70% dos tokens, segundo ela e a citação de uma colega, vão para verificação.",
+      "t": 592,
+      "legenda": "A revisão passa a olhar evidências geradas pelo agente.",
+      "print": "img/O_zcc6Xl12g/4.jpg",
+      "descricao": "Slide 'verification is the most important step' sobre a pirâmide de confiança: análise estática, verificação formal/runtime e revisão humana na base."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Slop",
+      "traducao": "trabalho que parece pronto, sem raciocínio por trás",
+      "nivel": "basico",
+      "chave": "slop",
+      "analogia": "Slop é como uma redação escolar copiada às pressas: tem cara de trabalho entregue, mas ninguém pensou no que está escrito.",
+      "explicacao": [
+        "Slop (lavagem, em tradução livre) é o nome que se dá a um conteúdo feito rápido, que parece pronto e tem pouca qualidade.",
+        "Em código, slop aparece como trechos que funcionam por acaso, atalhos sem justificativa e padrões repetidos sem entender o motivo.",
+        "Agentes de IA geram slop com facilidade porque copiam o que encontram no repositório, inclusive gambiarras e código obsoleto.",
+        "Na palestra, a defesa contra o slop está no ambiente: lint, testes e arquitetura barram o padrão ruim antes do merge, sem depender de alguém notar na revisão."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "LLM"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Software factory",
+      "traducao": "fábrica de software",
+      "nivel": "intermediario",
+      "chave": "software factory",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Linter",
+      "traducao": "analisador estático de código",
+      "nivel": "basico",
+      "chave": "linter",
+      "analogia": "Um linter é como o corretor ortográfico do editor de texto: sublinha o erro assim que você escreve, sem esperar o professor ler.",
+      "explicacao": [
+        "Um linter (analisador estático) é um programa que lê o código sem executá-lo e aponta trechos que quebram regras combinadas pelo time.",
+        "Cada regra descreve um padrão proibido, como usar useEffect em código de produto ou importar arquivos de uma pasta vetada.",
+        "Como a checagem é determinística, a mesma regra dá o mesmo resultado toda vez, ao contrário de uma instrução em texto que o agente pode ignorar.",
+        "A mensagem de erro serve de instrução para o agente. Uma boa mensagem diz qual é a causa raiz e como corrigi-la.",
+        "Quando cada correção vira uma regra de lint, a revisão de código fica menor e uma categoria inteira de erro some do projeto."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "Prompt"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "AGENTE ESCREVE CÓDIGO",
+            "nota": "pode repetir um padrão ruim"
+          },
+          {
+            "rotulo": "LINTER LÊ O CÓDIGO",
+            "nota": "compara com as regras do time"
+          },
+          {
+            "rotulo": "MENSAGEM DE ERRO",
+            "nota": "aponta a causa raiz a corrigir"
+          },
+          {
+            "rotulo": "CÓDIGO CORRIGIDO",
+            "nota": "o padrão ruim não entra no projeto"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Sistema determinístico",
+      "traducao": "deterministic system (mesma entrada, mesma saída)",
+      "nivel": "intermediario",
+      "chave": "sistema determinístico",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Skill",
+      "traducao": "habilidade, julgamento institucional escrito para o agente executar",
+      "nivel": "intermediario",
+      "chave": "skill",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Runtime verification",
+      "traducao": "verificação em tempo de execução: o agente roda o app e o inspeciona",
+      "nivel": "intermediario",
+      "chave": "runtime verification",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Formal verification",
+      "traducao": "verificação formal, com provas ou model checking (TLA+ e Lean)",
+      "nivel": "avancado",
+      "chave": "formal verification",
+      "analogia": "Verificação formal é como conferir uma planta de prédio com cálculo de engenharia: você prova que a estrutura aguenta antes de erguer qualquer parede.",
+      "explicacao": [
+        "Formal verification (verificação formal) é usar matemática para mostrar que um programa sempre se comporta como deveria.",
+        "Um teste comum checa alguns casos escolhidos. A verificação formal cobre todos os estados possíveis de um modelo do sistema.",
+        "Model checking com TLA+ descreve o sistema como estados e transições e procura uma sequência que viole uma regra, como notificações fora de ordem entre dispositivos.",
+        "Provas com Lean demonstram propriedades de um algoritmo, como a ausência de tremidas numa biblioteca de virtualização de listas.",
+        "Escrever essas especificações custava caro. Agentes baixam esse custo, e a palestra usa a técnica como mais uma camada de verificação."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "Eval"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "MODELO DO SISTEMA",
+            "nota": "estados e transições possíveis"
+          },
+          {
+            "rotulo": "PROPRIEDADES",
+            "nota": "regras que sempre devem valer"
+          },
+          {
+            "rotulo": "CHECAGEM OU PROVA",
+            "nota": "TLA+ explora, Lean demonstra"
+          },
+          {
+            "rotulo": "GARANTIA OU BUG",
+            "nota": "prova aceita ou contraexemplo"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Revert",
+      "traducao": "reversão de um PR já mergeado",
+      "nivel": "basico",
+      "chave": "revert",
+      "analogia": "Um revert é como devolver um produto com defeito à loja: a compra aconteceu, mas você desfaz e volta à situação anterior.",
+      "explicacao": [
+        "Revert (reversão) é desfazer uma mudança que já entrou no código principal do projeto.",
+        "No Git, o comando cria uma nova alteração que apaga o efeito do pull request original, mantendo o histórico registrado.",
+        "Times revertem quando uma mudança quebra algo em produção e consertar na hora levaria mais tempo do que voltar atrás.",
+        "A taxa de revert, a fração de PRs desfeitos, serve como sinal de qualidade. A palestra cita 0,5% estáveis com 11 mil PRs no mês, embora bugs nunca revertidos fiquem fora dessa conta."
+      ],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "A palestrante trabalha no time que vende o Grok Bot e promove o plugin pstack, então os resultados servem também de propaganda. Os 11 mil PRs e os 0,5% de reversão são dados internos, sem metodologia aberta. PR pequeno e automático infla a contagem, e reversão baixa pode vir de falhas que ninguém reverteu. A melhora de performance também não traz medidas. Os 70% de tokens em verificação vêm de uma terceira pessoa. Banir 99% dos comentários é uma escolha radical sem evidência de que serve a outros times.",
+  "acoes": [
+    "Liste as três últimas correções que você fez em código de agente e escreva uma regra de lint ou teste para cada uma, em vez de acrescentar linhas no AGENTS.md.",
+    "Procure no seu repositório um padrão que o agente repete e que exige nuance, e proíba esse padrão com uma regra do linter.",
+    "Peça ao agente que rode o app e entregue um screenshot ou vídeo do fluxo alterado antes de você revisar o diff.",
+    "Escreva uma mensagem de erro de lint que diga ao agente para corrigir a causa raiz e teste se ele obedece."
+  ],
+  "numeros": [
+    {
+      "valor": "11.000",
+      "contexto": "pull requests enviados pelo time em um mês",
+      "t": 809
+    },
+    {
+      "valor": "0,5%",
+      "contexto": "taxa de PRs revertidos, estável",
+      "t": 841
+    },
+    {
+      "valor": "70%",
+      "contexto": "dos tokens diários em verificação (relato de Cindy)",
+      "t": 716
+    },
+    {
+      "valor": "227",
+      "contexto": "pessoas com ao menos um PR em outubro",
+      "t": 841
+    }
+  ],
+  "rotulo": "Como tornar um codebase seguro para agentes de código",
+  "objetivo": "transformar correções repetidas em agentes de código em regras de lint e checagens automáticas",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que Lauren prefere uma checagem determinística a uma linha em rules ou agents.md?",
+      "resposta": "Porque o código é reprodutível e dá mais confiança. Prosa exige julgamento do agente, e uma regra em texto pode ser ignorada ou exagerada."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Seu agente importa módulos de camadas proibidas no seu projeto. Que mecanismo do talk você usaria?",
+      "resposta": "Separar as camadas em diretórios convencionais e bloquear imports entre elas com lint ou analisador de dependências, como em electron-main e electron-renderer."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites existem nos números de 11 mil PRs e 0,5% de reversão como prova de qualidade?",
+      "resposta": "Os dados são internos e sem metodologia aberta, e a palestrante tem interesse no produto. Contar PRs mede volume. Reversão baixa não captura bugs que ninguém reverteu."
+    }
+  ],
+  "experimento": {
+    "titulo": "Transforme uma correção repetida em regra de lint",
+    "minutos": 30,
+    "precisa": "Um repositório seu com linter (ESLint, Ruff ou similar) e um agente de código como Claude Code.",
+    "passos": [
+      "Escolha um erro que o agente comete com frequência no repositório e anote o padrão exato.",
+      "Escreva uma regra de lint ou um teste que falhe quando o padrão aparecer, com uma mensagem que mande corrigir a causa raiz.",
+      "Peça ao agente uma tarefa que normalmente produz o erro e rode o linter.",
+      "Observe se o agente corrige sozinho ao ler a mensagem de erro e ajuste o texto se ele fizer um atalho."
+    ],
+    "sucesso": "O linter bloqueia o padrão e o agente conserta a causa raiz sem você mandar nada no prompt."
+  },
+  "consolidado_em": "2026-11-16T13:22:40+00:00"
+}

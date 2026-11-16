@@ -1,0 +1,291 @@
+{
+  "id": "cWrYEBlWpcY",
+  "titulo": "Stop Shipping LLM Settings That Only Win on Paper - Rohan Pandey & Balaji Varadarajan, DigitalOcean",
+  "titulo_curto": "Stop Shipping LLM Settings That Only Win on Paper",
+  "palestrante": "Rohan Pandey & Balaji Varadarajan, DigitalOcean",
+  "url": "https://www.youtube.com/watch?v=cWrYEBlWpcY",
+  "duracao": 332,
+  "publicado_ts": 1794441627,
+  "edicao": "2026-11-15",
+  "tese": "Um agente com otimização bayesiana testa receitas de vLLM em loop e entrega a melhor, mas o ganho só vale se superar o ruído entre execuções.",
+  "tldr": [
+    "A DigitalOcean construiu um agente que busca a melhor configuração de serving do vLLM para um modelo, sem ajuste manual.",
+    "O agente usa Bayesian optimization (otimização bayesiana) pelo Optuna: a cada trial (tentativa) ele mede a vazão, ajusta a receita e repete até acabar o número de tentativas.",
+    "Na demo, o GPT-OSS 120B ganhou 17,5% em tokens gerados e o DeepSeek R1 Distill dobrou a vazão, com um relatório HTML e um YAML final."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "A receita inicial é o ponto de partida",
+      "texto": "Ao baixar os pesos de um modelo, você ganha uma receita padrão de serving em YAML. O agente parte dela e a testa em quatro regimes de carga: chat curto, chat longo, RAG e classificação em lote. Cada regime tem seus próprios tamanhos de entrada e saída em tokens, que você pode mudar conforme o seu uso.",
+      "t": 129,
+      "legenda": "A receita inicial define os regimes e os tamanhos de token que o agente vai testar.",
+      "print": null,
+      "descricao": null
+    },
+    {
+      "titulo": "Bayesian optimization dentro de um laço do Optuna",
+      "texto": "A otimização bayesiana usa o resultado das tentativas anteriores para escolher a próxima, o que reduz o espaço de busca. O Optuna executa o laço: pega a receita, roda uma trial, atribui uma nota, propõe uma mudança e repete até o fim das tentativas. Isso substitui a busca manual, que o palestrante diz levar muito tempo.",
+      "t": 96,
+      "legenda": "O Optuna avalia cada receita, pontua e propõe a próxima dentro do laço.",
+      "print": null,
+      "descricao": null
+    },
+    {
+      "titulo": "Um comando e quatro entradas",
+      "texto": "Você roda o script tuner.py informando o nome do estudo, o YAML inicial, o hardware e o número de trials. Na demo foram 24 trials. Uma execução leva de poucas horas a cerca de quatro ou cinco horas no GPT-OSS, então o agente roda em segundo plano.",
+      "t": 191,
+      "legenda": "O comando mostra as quatro entradas do tuner e o número de trials.",
+      "print": "img/cWrYEBlWpcY/2.jpg",
+      "descricao": "Terminal com o comando tuner.py: --study-name demo_run, --regimes regimes-gptoss.yaml, --hardware mi325x, --search-profile goodput_v4, --n-trials 24."
+    },
+    {
+      "titulo": "O relatório HTML aponta a melhor trial",
+      "texto": "Ao final, o agente gera um relatório HTML que indica qual trial foi a melhor e um YAML otimizado com os valores achados. A métrica é a quantidade de goodput tokens (tokens que cumprem a meta de latência) gerados. No GPT-OSS a melhora sobre a primeira configuração foi de 17,5%.",
+      "t": 252,
+      "legenda": "O relatório mostra a melhor trial e a melhora de 17,5% sobre a receita inicial.",
+      "print": "img/cWrYEBlWpcY/3.jpg",
+      "descricao": "Relatório HTML do GPT-OSS 120B: melhor trial #47 de 50, melhora de +17,5% vs primeira config, objetivo 1.586 tok/s ponderados sob SLO."
+    },
+    {
+      "titulo": "No DeepSeek, vazão dobra e ITL cai quase pela metade",
+      "texto": "No segundo relatório, do DeepSeek R1 Distill, a melhor receita veio na nona e última trial de nove. A vazão de tokens dobrou e a inter-token latency (ITL) caiu quase à metade. O fato de a melhor trial ser a última sugere que mais tentativas poderiam render mais.",
+      "t": 284,
+      "legenda": "Em nove trials, a última foi a melhor, com vazão dobrada e ITL reduzido.",
+      "print": null,
+      "descricao": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Bayesian optimization",
+      "traducao": "otimização bayesiana, busca que aprende com cada tentativa",
+      "nivel": "avancado",
+      "chave": "bayesian optimization",
+      "analogia": "Bayesian optimization é como acertar o tempero de uma receita provando cada versão e usando o gosto das anteriores para decidir quanto sal pôr na próxima.",
+      "explicacao": [
+        "Bayesian optimization (otimização bayesiana) é um jeito de achar a melhor combinação de ajustes sem testar todas as combinações possíveis.",
+        "Cada teste custa caro, como horas de GPU, então o método tenta acertar com poucas tentativas.",
+        "Depois de cada tentativa, ele guarda o resultado e monta um palpite sobre quais regiões dos ajustes parecem promissoras.",
+        "Esse palpite vem de um modelo estatístico que estima o resultado esperado e a incerteza de cada combinação ainda não testada.",
+        "A próxima tentativa equilibra explorar áreas desconhecidas e refinar áreas boas, o que encolhe o espaço de busca a cada rodada."
+      ],
+      "pre_requisitos": [
+        "Eval"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "TESTA UMA COMBINAÇÃO",
+            "nota": "mede o resultado de uma tentativa"
+          },
+          {
+            "rotulo": "ATUALIZA O PALPITE",
+            "nota": "modelo estima onde está o melhor"
+          },
+          {
+            "rotulo": "ESCOLHE A PRÓXIMA",
+            "nota": "equilibra explorar e refinar"
+          },
+          {
+            "rotulo": "MELHOR CONFIGURAÇÃO",
+            "nota": "achada com poucas tentativas"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Optuna",
+      "traducao": "biblioteca de otimização de hiperparâmetros em Python",
+      "nivel": "intermediario",
+      "chave": "optuna",
+      "analogia": "O Optuna é como o técnico de um time que anota o placar de cada treino, muda a escalação e marca o próximo treino até acabar a temporada.",
+      "explicacao": [
+        "Optuna é uma biblioteca em Python que procura automaticamente os melhores valores para os ajustes de um sistema.",
+        "Você escreve uma função que recebe valores sugeridos, roda o teste e devolve uma nota.",
+        "Cada execução dessa função se chama trial (tentativa), e o conjunto de trials forma um study (estudo).",
+        "O Optuna usa uma estratégia, como a otimização bayesiana, para sugerir os valores da próxima trial com base nas notas anteriores.",
+        "No vídeo, o Optuna roda o laço sobre a receita de serving do vLLM até completar o número de trials pedido."
+      ],
+      "pre_requisitos": [
+        "Eval"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "SUGERE VALORES",
+            "nota": "estratégia propõe a próxima receita"
+          },
+          {
+            "rotulo": "RODA A TRIAL",
+            "nota": "executa o teste com esses valores"
+          },
+          {
+            "rotulo": "REGISTRA A NOTA",
+            "nota": "guarda o placar no study"
+          },
+          {
+            "rotulo": "MELHOR TRIAL",
+            "nota": "valores com a nota mais alta"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "vLLM",
+      "traducao": "motor open source para servir LLMs",
+      "nivel": "intermediario",
+      "chave": "vllm",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Agente de otimização",
+      "traducao": "optimization agent engine",
+      "nivel": "intermediario",
+      "chave": "agente de otimização",
+      "analogia": "O agente de otimização é como um mecânico que ajusta o motor sozinho durante a noite e de manhã entrega o carro com uma ficha das regulagens que funcionaram melhor.",
+      "explicacao": [
+        "Um agente de otimização é um programa que procura sozinho a melhor configuração de um sistema enquanto você faz outra coisa.",
+        "No vídeo, o sistema é o vLLM, motor que serve um LLM, e a configuração é a receita em YAML que define como o modelo atende pedidos.",
+        "Você informa o nome do estudo, o YAML inicial, o hardware e o número de trials, e o agente roda em segundo plano por algumas horas.",
+        "Ele testa a receita em regimes de carga como chat curto, chat longo, RAG e classificação em lote, e usa o Optuna para propor ajustes.",
+        "No fim, entrega um relatório HTML com a melhor trial e um YAML otimizado, cujo ganho você deve comparar com o ruído entre execuções."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "LLM",
+        "Token"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "RECEITA INICIAL",
+            "nota": "YAML padrão do modelo"
+          },
+          {
+            "rotulo": "TESTE DE CARGA",
+            "nota": "quatro regimes de uso"
+          },
+          {
+            "rotulo": "AJUSTE PELO OPTUNA",
+            "nota": "propõe nova receita a cada trial"
+          },
+          {
+            "rotulo": "RELATÓRIO E YAML",
+            "nota": "melhor trial e receita otimizada"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Goodput",
+      "traducao": "vazão que cumpre o SLO, contando também os rejeitados",
+      "nivel": "avancado",
+      "chave": "goodput",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Throughput",
+      "traducao": "vazão, tokens gerados por segundo",
+      "nivel": "basico",
+      "chave": "throughput",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Inter-token latency (ITL)",
+      "traducao": "tempo entre um token e o seguinte",
+      "nivel": "intermediario",
+      "chave": "inter-token latency (itl)",
+      "analogia": "Inter-token latency é como o intervalo entre uma palavra e outra quando alguém dita um texto devagar para você anotar.",
+      "explicacao": [
+        "Um modelo de linguagem escreve a resposta aos pedaços, e cada pedaço aparece na tela um depois do outro.",
+        "Esses pedaços se chamam tokens, e inter-token latency (ITL, latência entre tokens) mede quanto tempo passa entre um token e o seguinte.",
+        "ITL baixa faz o texto fluir rápido para quem lê, enquanto ITL alta deixa a resposta arrastada mesmo que ela comece cedo.",
+        "A ITL depende de como o servidor agrupa pedidos e usa a GPU, por isso muda quando você altera a receita de serving.",
+        "No vídeo, a melhor receita do DeepSeek R1 Distill reduziu a ITL quase pela metade, junto com o dobro de vazão."
+      ],
+      "pre_requisitos": [
+        "Token",
+        "LLM"
+      ],
+      "desenho": null,
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "É uma demo curta de ferramenta interna da DigitalOcean, sem comparação com outras formas de busca e sem repetição das execuções. Os números (17,5% e vazão dobrada) vêm de uma única corrida por modelo, sem intervalo de confiança. A descrição do evento fala de um ganho de 4% que era ruído, mas a demo não mostra esse caso nem como o agente o evita. O palestrante cita 24 trials no comando e 50 no relatório, uma inconsistência que ele não explica. Os modelos e o hardware (AMD MI355) limitam a generalização.",
+  "acoes": [
+    "Anote a configuração atual do seu servidor vLLM em um YAML e meça throughput e ITL como linha de base antes de mudar qualquer parâmetro.",
+    "Repita a mesma medição de benchmark pelo menos três vezes sem mudar nada, para estimar o ruído entre execuções.",
+    "Instale o Optuna e escreva um estudo pequeno que varia dois parâmetros do seu serving e registra uma nota por trial."
+  ],
+  "numeros": [
+    {
+      "valor": "17,5%",
+      "contexto": "ganho em tokens gerados no GPT-OSS sobre a primeira config",
+      "t": 252
+    },
+    {
+      "valor": "24",
+      "contexto": "trials usadas no comando da demo",
+      "t": 191
+    },
+    {
+      "valor": "9",
+      "contexto": "trials no estudo do DeepSeek R1 Distill; a nona foi a melhor",
+      "t": 284
+    },
+    {
+      "valor": "4 a 5 h",
+      "contexto": "duração da execução para o GPT-OSS",
+      "t": 221
+    }
+  ],
+  "rotulo": "Agente que otimiza a configuração de serving do vLLM",
+  "objetivo": "descrever como um laço de otimização bayesiana com Optuna busca a melhor receita de vLLM e o que checar antes de adotar o resultado",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Qual é o papel do Optuna em relação à otimização bayesiana no agente?",
+      "resposta": "A otimização bayesiana é a estratégia que escolhe os próximos valores. O Optuna é a ferramenta que roda o laço: avalia cada receita, dá uma nota, propõe a mudança e repete até acabar as trials."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você serve um modelo com vLLM para um chat de suporte. Que informações daria ao tuner e como mediria o resultado?",
+      "resposta": "Daria o YAML inicial, o hardware, o número de trials e regimes que imitam seu tráfego, com tamanhos reais de entrada e saída. Mediria goodput, ou seja, tokens que cumprem sua meta de latência, e não só a vazão bruta."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que o ganho de 17,5% deve ser lido com cautela?",
+      "resposta": "Vem de uma única corrida, sem repetição nem intervalo de confiança. Sem medir o ruído entre execuções, parte do ganho pode ser variação normal. Os dados também são de uma equipe que vende a infraestrutura testada."
+    }
+  ],
+  "experimento": {
+    "titulo": "Otimização bayesiana com ruído usando Optuna",
+    "minutos": 30,
+    "precisa": "Python 3 com pip install optuna",
+    "passos": [
+      "Escreva uma função que simule o throughput de um servidor a partir de dois parâmetros, como batch size e tamanho de fila, somando ruído aleatório de cerca de 3%.",
+      "Crie um estudo do Optuna com direction maximize e rode 30 trials sobre essa função.",
+      "Anote a melhor trial e o valor, depois rode a função 10 vezes com esses parâmetros e com os parâmetros iniciais.",
+      "Compare a diferença entre as duas médias com o desvio padrão das 10 repetições."
+    ],
+    "sucesso": "Você consegue dizer se o ganho encontrado é maior que o ruído medido nas repetições."
+  },
+  "consolidado_em": "2026-11-16T13:22:40+00:00"
+}

@@ -1,0 +1,200 @@
+{
+  "id": "oeknLUsN_GE",
+  "titulo": "Agents Made Code Free. Maintaining It Didn't Get Cheaper. - Dmitry Buykin, Maersk",
+  "titulo_curto": "Agents Made Code Free. Maintaining It Didn't Get Cheaper.",
+  "palestrante": "Dmitry Buykin, Maersk",
+  "url": "https://www.youtube.com/watch?v=oeknLUsN_GE",
+  "duracao": 1083,
+  "publicado_ts": 1794427212,
+  "edicao": "2026-11-15",
+  "tese": "Agentes baratearam o código, mas não a manutenção. Poda semanal, evidência real e laços de feedback seguram o crescimento.",
+  "tldr": [
+    "Dmitry Buykin, da Maersk, conta que um projeto escrito quase todo por agentes cresceu até virar caos. Ele apagou metade, perdeu peças úteis e viu a bagunça voltar.",
+    "A saída que ele propõe é uma terceira via. Pequenas podas semanais, humanos só onde o julgamento pesa, o runtime controlando o que o modelo vê e escreve, e evidência de tarefas reais no lugar de testes verdes.",
+    "Ele organiza o método em seis perguntas, inspiradas nas Joias do Infinito, e fecha com um checklist de 18 perguntas para auditar um repositório escrito por IA."
+  ],
+  "tema": "engenharia-de-software",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Instruções em prosa também precisam de engenharia",
+      "texto": "Na Maersk, cerca de três quartos do sistema são instruções em prosa para agentes, aplicadas em 110 países. Ele emprestou o teste de mutação. Quebrar uma frase de propósito quase nunca deixou um teste vermelho. Para prosa, só pessoas dizem o que precisa sobreviver a uma reescrita.",
+      "t": 127,
+      "legenda": "Mostra que a maior parte do sistema é prosa e que os testes mal a cobrem.",
+      "print": "img/oeknLUsN_GE/0.jpg",
+      "descricao": "Slide 'Our system: a code skeleton, filled with prose instructions': roteador, agente com blocos de prosa (amarelo) e código (azul), controles e escrita."
+    },
+    {
+      "titulo": "Contradição silenciosa entre prosa e código",
+      "texto": "A prosa diz que o limite de uma ordem é 1.500 e o código diz 1.000. A mesma ordem passa num lugar e falha no outro, sem nenhum erro. Por isso o time criou um compilador para a prosa, com lint em cada arquivo alterado e um livro-razão. Fluxos repetidos e iguais entre países viram código. O que varia fica em prosa.",
+      "t": 319,
+      "legenda": "Prova que a divergência entre prosa e código não gera erro algum.",
+      "print": "img/oeknLUsN_GE/1.jpg",
+      "descricao": "Slide 'At scale, prose becomes a soup': limite prose 1,500 · code 1,000; exemplo 'amount 1,250, limit 1,000, approved' e rótulos de divergência."
+    },
+    {
+      "titulo": "O runtime decide o que o modelo vê",
+      "texto": "Quando o modelo escolhia o que carregar, carregava tudo e inventava uma checagem de preço só porque os preços estavam visíveis. Agora o runtime entrega três fatos da ordem e um handle (nome curto) para dados grandes. O runtime valida o handle antes de qualquer escrita, e um diário garante que a escrita ocorra uma vez só.",
+      "t": 473,
+      "legenda": "Mostra o controle por contexto mínimo e pelas barreiras antes da escrita.",
+      "print": "img/oeknLUsN_GE/2.jpg",
+      "descricao": "Slide 'When the model chooses what to load, it invents work': APIs finas, contexto cheio e modelo com fields ['All'] agindo sobre tudo."
+    },
+    {
+      "titulo": "Medidores no lugar de ler cada diff",
+      "texto": "O volume de mudanças passou do que uma pessoa lê. O primeiro medidor foi o próprio autor: se ele está cansado e não consegue explicar o que mudou, para e arruma o processo. Antes de criar uma nova checagem, ele a reexecuta sobre milhares de sessões passadas para estimar o raio de impacto. Depois a checagem precisa falhar uma vez de propósito.",
+      "t": 628,
+      "legenda": "Mostra o replay de sessões antigas para medir o impacto de uma checagem.",
+      "print": "img/oeknLUsN_GE/3.jpg",
+      "descricao": "Slide 'My own sanity is the gauge that fires first': quatro medidores verdes, figura com 'can't explain what changed' e três passos de resposta."
+    },
+    {
+      "titulo": "Evidência real decide o que permanece",
+      "texto": "Após uma refatoração por IA, cada condição e cada linha da tabela de decisão deve ser alcançada exatamente uma vez. Ele congela tarefas reais e reexecuta a versão antiga contra a nova. Um ramo sem tarefa real que o alcance não tem evidência. Um catraca (ratchet) só deixa a contagem de excessos cair, e o que ninguém alcança sai com nome e prova.",
+      "t": 944,
+      "legenda": "Mostra a catraca que só deixa o número de ramos sem uso cair.",
+      "print": "img/oeknLUsN_GE/4.jpg",
+      "descricao": "Slide 'Each kind of entropy needs a gauge, a line and a ratchet': contagem com linha de breach, poda semanal ao cruzar a linha e catraca dos medidores."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Coding agent",
+      "traducao": "agente de código",
+      "nivel": "basico",
+      "chave": "coding agent",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Mutation testing",
+      "traducao": "teste de mutação",
+      "nivel": "intermediario",
+      "chave": "mutation testing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Ledger",
+      "traducao": "livro-razão de créditos e débitos",
+      "nivel": "intermediario",
+      "chave": "ledger",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Contexto do agente",
+      "traducao": "informação disponível ao agente a cada tarefa",
+      "nivel": "intermediario",
+      "chave": "contexto do agente",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Idempotência",
+      "traducao": "repetir a operação sem mudar o resultado final",
+      "nivel": "avancado",
+      "chave": "idempotência",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Blast radius",
+      "traducao": "raio de impacto",
+      "nivel": "intermediario",
+      "chave": "blast radius",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação",
+      "nivel": "intermediario",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "É um relato de experiência de um único projeto, sem medição comparável. Os números (menos de 1%, quase 9/10 do tempo, cerca de um quarto) são estimativas do palestrante, sem método. O sistema é grande e baseado em prosa, com dezenas de especialistas, então muita coisa não se aplica a repositórios pequenos. Ele não cita custo da poda semanal nem do segundo agente revisor. A moldura das Joias do Infinito ajuda a memorizar, mas as seis perguntas são escolha dele.",
+  "acoes": [
+    "Faça uma lista dos arquivos de instrução do seu agente, como CLAUDE.md, e procure duas regras que se contradigam entre si ou com o código.",
+    "Escolha um refactor feito por agente e confira se cada condição nova é alcançada por pelo menos uma tarefa real, ou apague a que não for.",
+    "Crie um registro simples em arquivo com duas partes, o que aconteceu e o que é verdade agora, e faça cada sessão do agente começar por ele.",
+    "Antes de ligar uma checagem nova, reexecute a regra sobre sessões ou commits passados e conte quantas vezes ela teria disparado."
+  ],
+  "numeros": [
+    {
+      "valor": "110",
+      "contexto": "países em que o sistema roda",
+      "t": 97
+    },
+    {
+      "valor": "10.000",
+      "contexto": "cenários de instruções em prosa",
+      "t": 127
+    },
+    {
+      "valor": "menos de 1%",
+      "contexto": "disparos estimados de uma checagem nova, em replay",
+      "t": 628
+    },
+    {
+      "valor": "18",
+      "contexto": "perguntas do checklist final, três por pedra",
+      "t": 1038
+    }
+  ],
+  "rotulo": "Manter código escrito por agentes sem perder o controle",
+  "objetivo": "desenhar uma rotina semanal de poda e verificação para um repositório escrito em grande parte por agentes",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que o runtime, e não o modelo, escolhe o que entra no contexto na tarefa de alterar uma ordem aprovada?",
+      "resposta": "Tudo que está no contexto vira motivo para agir. Ao escolher sozinho, o modelo carregou tudo e inventou uma checagem de preço. O runtime passa só três fatos e handles, e valida antes de escrever."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você aplicaria a ideia de um segundo agente revisor num repositório seu escrito por IA?",
+      "resposta": "Peça a um segundo agente para checar a mudança com um checklist, sem ver o raciocínio do autor, e confira o resultado com tarefas reais congeladas. Assim o revisor não é convencido pelo autor."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta para concluir que o método de poda semanal funciona fora desse projeto?",
+      "resposta": "Falta comparação com um grupo de controle e dados de outros projetos. Os números vêm de estimativas do próprio palestrante, e o contexto (110 países, especialistas de domínio) é incomum."
+    }
+  ],
+  "experimento": {
+    "titulo": "Teste de mutação nas suas instruções de agente",
+    "minutos": 30,
+    "precisa": "Um repositório com arquivo de instruções (CLAUDE.md ou similar) e testes ou tarefas de exemplo",
+    "passos": [
+      "Escolha 5 frases do arquivo de instruções do agente e anote a tarefa de exemplo que cada uma deveria influenciar.",
+      "Altere uma frase por vez para dizer o contrário e rode a mesma tarefa com o agente ou o conjunto de testes.",
+      "Registre se algum teste ou resultado mudou. Frases cuja mudança não afeta nada são candidatas a corte ou a ganhar um teste.",
+      "Restaure o arquivo original e escreva um teste ou eval para a frase mais importante que ficou sem cobertura."
+    ],
+    "sucesso": "Você tem uma lista de frases que ninguém testa e pelo menos um novo teste cobrindo a mais importante."
+  },
+  "consolidado_em": "2026-11-16T13:22:40+00:00"
+}

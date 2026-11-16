@@ -1,0 +1,1432 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Código ficou barato, verificar virou o trabalho · Aprendendo AI</title>
+<meta name="description" content="Resumos diários dos talks do canal AI Engineer, explicados no estilo Quadro Anotado.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" title="Aprendendo AI: edições" href="../feed.xml">
+<script>document.documentElement.classList.add("js");try{var t=localStorage.getItem("tema");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;500;700;900&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=Kalam:wght@400;700&display=swap">
+<link rel="stylesheet" href="../estilo.css">
+</head>
+<body class="pg-edicao">
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<header class="topo wrap">
+  <a class="marca" href="../index.html">Aprendendo <span>AI</span></a>
+  <nav class="topo-links" aria-label="Navegação principal">
+    <a href="../index.html#edicoes" aria-current="page">Edições</a>
+    <a href="../talks.html">Talks</a>
+    <a href="../glossario.html">Glossário</a>
+    <button type="button" class="tema-botao js-only" aria-label="Tema de cores: automático">◐</button>
+  </nav>
+</header>
+<main id="conteudo" class="wrap" tabindex="-1">
+<div class="edicao" id="e-2026-11-15">
+  <div class="edicao-corpo">
+  <header class="edicao-head">
+    <nav class="paginacao-topo" aria-label="Edições vizinhas">
+<a rel="prev" href="2026-11-10.html">← 10 nov</a>      <a href="../index.html#edicoes">Todas as edições</a>
+    </nav>
+    <h1 class="h-edicao">Código ficou barato, verificar virou o trabalho</h1>
+    <p class="meta">Talks de domingo, 15 nov 2026 · 8 talks · ≈ 43 min de leitura</p>
+<p class="abertura">Os talks de hoje partem da mesma constatação: agentes escrevem código rápido e o gargalo passou para a verificação. Você vai ver como achar bugs na spec antes de o agente codar, como medir o que uma skill ensina de fato ao modelo e como transformar correções em regras de lint que o codebase aplica sozinho. Duolingo e Maersk mostram o que acontece meses depois, com centenas de PRs de agentes e uma base que cresce sem dono. No fim, a parte mais densa usa otimização bayesiana para ajustar o serving do vLLM e separa ganho real de ruído.</p>    <div class="plano card">
+      <div class="plano-txt">
+        <p class="rotulo-mao">Hoje você vai conseguir</p>
+        <ul class="acoes"><li>dividir uma skill em itens verificáveis e classificar o que o modelo já sabia, o que aprendeu e o que piorou</li><li>transformar correções repetidas em agentes de código em regras de lint e checagens automáticas</li><li>desenhar um laço de agente que escolhe arquivos, escreve testes, verifica o resultado no CI e entrega o PR a um revisor humano</li></ul>
+<p class="muted plano-radar">Os outros 5 talks ficam no <a href="#radar">radar</a>, resumidos, para abrir se o tema interessar.</p>      </div>
+      <a class="botao plano-cta" href="#v-yzx4IuEh_tU">Começar pelos 3 essenciais · ≈ 16 min <span aria-hidden="true">↓</span></a>
+    </div>
+  </header>
+
+    <details class="indice card" id="indice" open>
+      <summary class="indice-titulo">Ordem de leitura <span class="muted">(8)</span></summary>
+      <div class="indice-progresso">
+        <span class="progresso" data-ids="yzx4IuEh_tU O_zcc6Xl12g D_4Rn6uLdQM" data-rotulo="essenciais"></span>
+<span class="progresso" data-ids="yzx4IuEh_tU O_zcc6Xl12g D_4Rn6uLdQM Cyt3LU8TyNc vlfCjWuv4es 0EnLxIbAvYk oeknLUsN_GE cWrYEBlWpcY" data-sufixo="no total"></span>      </div>
+      <p class="indice-grupo">Essenciais</p>
+      <ol><li data-id="yzx4IuEh_tU"><a href="#v-yzx4IuEh_tU"><span class="ind-t">Como medir o que sua skill ensina de novo ao modelo</span><span class="ind-min">4 min</span></a></li><li data-id="O_zcc6Xl12g"><a href="#v-O_zcc6Xl12g"><span class="ind-t">Como tornar um codebase seguro para agentes de código</span><span class="ind-min">7 min</span></a></li><li data-id="D_4Rn6uLdQM"><a href="#v-D_4Rn6uLdQM"><span class="ind-t">Como agentes escreveram 225 mil linhas de teste no Duolingo</span><span class="ind-min">5 min</span></a></li></ol>
+      <p class="indice-grupo">Radar</p>
+      <ol start="4"><li data-id="Cyt3LU8TyNc"><a href="#v-Cyt3LU8TyNc"><span class="ind-t">Por que a IA assiste bem e automatiza mal</span><span class="ind-min">4 min</span></a></li><li data-id="vlfCjWuv4es"><a href="#v-vlfCjWuv4es"><span class="ind-t">Boas práticas do Claude Code para modelos novos</span><span class="ind-min">6 min</span></a></li><li data-id="0EnLxIbAvYk"><a href="#v-0EnLxIbAvYk"><span class="ind-t">Como achar bugs na spec antes de o agente codar</span><span class="ind-min">5 min</span></a></li><li data-id="oeknLUsN_GE"><a href="#v-oeknLUsN_GE"><span class="ind-t">Manter código escrito por agentes sem perder o controle</span><span class="ind-min">5 min</span></a></li><li data-id="cWrYEBlWpcY"><a href="#v-cWrYEBlWpcY"><span class="ind-t">Agente que otimiza a configuração de serving do vLLM</span><span class="ind-min">7 min</span></a></li></ol>
+      <p class="indice-atalhos js-only"><button type="button" class="abrir-atalhos">Atalhos de teclado <kbd>?</kbd></button></p>
+    </details>
+
+    <div class="talks">
+<article class="video essencial" id="v-yzx4IuEh_tU" data-tema="evals" data-n="1" data-total="8" aria-labelledby="t-yzx4IuEh_tU">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">01</span>
+    <div class="sec-titulo">
+<p class="selo-essencial">essencial do dia<span>: Ensina um método que você aplica hoje: quebrar a skill em afirmações e testar com e sem cada uma para cortar o que o modelo já sabe.</span></p>      <h2 id="t-yzx4IuEh_tU">Como medir o que sua skill ensina de novo ao modelo</h2>
+      <p class="titulo-original" lang="en">Your SKILL.md Is 70% Stuff the Model Already Knows</p>
+      <p class="tese">Divida a skill em afirmações pequenas e teste o modelo com e sem cada uma. Só assim você vê o que ela ensina e o que o modelo já sabia.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <a class="chip chip-tema" href="../trilhas/evals.html">Evals<span class="sr">: ver a trilha do tema</span></a>
+    <span class="chip">≈ 4 min de leitura</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Nikolay Petrov, Intel</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=yzx4IuEh_tU" target="_blank" rel="noopener" data-yt="yzx4IuEh_tU" data-t="0"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>Assistir (14:00)</a>
+  </div>
+
+<p class="objetivo"><span class="objetivo-rotulo">Depois deste talk você consegue</span> dividir uma skill em itens verificáveis e classificar o que o modelo já sabia, o que aprendeu e o que piorou</p>
+  <section class="card resumo">
+    <h3>Em 3 frases</h3>
+<p>Skills costumam só crescer, porque acrescentar uma linha é fácil e remover dá medo. Petrov propõe quebrar a skill em 25 a 30 itens, cada um com pergunta e resposta esperada.</p><p>Cada item roda em dois braços, sem skill e com skill, e um juiz de outra família de modelos avalia as respostas. O resultado cai em quatro grupos: já sabia, piorou, aprendeu e continua sem saber.</p><p>O modelo entende bem a ideia geral, mas erra os detalhes exatos. O valor da skill está nesses detalhes, e a medição de novidade é só um ponto de partida que precisa ser confirmado com evals.</p>  </section>
+
+  <section class="antes-de-ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-skill"><strong>Skill</strong> <span>habilidade, julgamento institucional escrito para o agente executar</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-eval"><strong>Eval</strong> <span>avaliação</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-ablation-study"><strong>Ablation study</strong> <span>estudo de ablação, que testa uma variável por vez</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-llm-as-a-judge"><strong>LLM-as-a-judge</strong> <span>modelo de linguagem usado para avaliar respostas</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-contexto-do-agente"><strong>Contexto do agente</strong> <span>informação disponível ao agente a cada tarefa</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-token"><strong>Token</strong> <span>pedaço de texto que o modelo lê e gera</span> <em>analogia no glossário</em></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 1 termo</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-baseline"><strong>Baseline</strong> <span>linha de base</span> <em>analogia no glossário</em></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Eval com dois braços</h3>
+    <p>O teste básico de uma skill roda a mesma tarefa em dois braços, sem skill e com skill. No exemplo, o modelo resolve 3 de 5 sem a skill e 5 de 5 com ela. Também vale comparar uso de tokens e tempo, não só acertos.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/yzx4IuEh_tU/0.jpg" data-legenda="A skill resolve duas tarefas a mais que o modelo sozinho."><img src="../img/yzx4IuEh_tU/0.jpg" alt="Slide &#39;A skill is just text. An eval checks whether it improves the work.&#39; Sem skill 3/5, com skill 5/5, Δ +2 tarefas." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>A skill resolve duas tarefas a mais que o modelo sozinho.</span><a class="minuto" href="https://www.youtube.com/watch?v=yzx4IuEh_tU&amp;t=125s" target="_blank" rel="noopener" data-yt="yzx4IuEh_tU" data-t="125" aria-label="Assistir a partir de 02:05"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:05</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Quebrar a skill em átomos</h3>
+    <p>Em vez de editar linha por linha na sorte, a skill vira uma lista de 25 a 30 itens, no estilo do FactScore. Cada item tem uma pergunta e a resposta esperada. Pode ser uma ideia geral ou um contrato com expectativa mais definida.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/yzx4IuEh_tU/1.jpg" data-legenda="Cada item da skill vira uma pergunta com gabarito."><img src="../img/yzx4IuEh_tU/1.jpg" alt="Slide &#39;split the skill into atoms&#39;: exemplo grilling/SKILL.md com quatro átomos em Q/A, rotulados proposition e contract." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Cada item da skill vira uma pergunta com gabarito.</span><a class="minuto" href="https://www.youtube.com/watch?v=yzx4IuEh_tU&amp;t=252s" target="_blank" rel="noopener" data-yt="yzx4IuEh_tU" data-t="252" aria-label="Assistir a partir de 04:12"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:12</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>As quatro saídas do teste</h3>
+    <p>A matriz cruza acertar sem skill e acertar com skill. Acerta nos dois: a skill não acrescenta nada. Acerta só sem skill: a skill atrapalha. Acerta só com skill: ela ensinou algo novo. Erra nos dois: a skill está mal escrita ou incompleta.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/yzx4IuEh_tU/2.jpg" data-legenda="A matriz separa conhecimento prévio, dano, ganho real e lacuna."><img src="../img/yzx4IuEh_tU/2.jpg" alt="Matriz 2x2 &#39;Two verdicts per atom, four outcomes&#39;: Known → cut candidate, New → keep exact, Hurts → fix first, Still missing → rewrite." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>A matriz separa conhecimento prévio, dano, ganho real e lacuna.</span><a class="minuto" href="https://www.youtube.com/watch?v=yzx4IuEh_tU&amp;t=378s" target="_blank" rel="noopener" data-yt="yzx4IuEh_tU" data-t="378" aria-label="Assistir a partir de 06:18"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:18</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Mapa de cor da skill</h3>
+    <p>O resultado pode colorir o arquivo da skill, linha a linha ou até frase a frase, mostrando o que é novidade e o que o modelo já sabia. As linhas que pioram o desempenho são as mais fáceis de corrigir. Nas skills populares da Anthropic elas são raras.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/yzx4IuEh_tU/3.jpg" data-legenda="Cada linha da skill ganha uma cor conforme o que acrescenta ao modelo."><img src="../img/yzx4IuEh_tU/3.jpg" alt="Arquivo grilling/SKILL.md com linhas coloridas por átomo; legenda Green·new, Grey·known, Cost $14, Precision ±4 para 25 átomos." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Cada linha da skill ganha uma cor conforme o que acrescenta ao modelo.</span><a class="minuto" href="https://www.youtube.com/watch?v=yzx4IuEh_tU&amp;t=502s" target="_blank" rel="noopener" data-yt="yzx4IuEh_tU" data-t="502" aria-label="Assistir a partir de 08:22"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:22</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Ideia geral versus detalhe exato</h3>
+    <p>A checagem branda aceita a ideia geral e a estrita exige chaves, parâmetros e valores exatos. Nos modelos grandes a diferença é enorme. Isso explica por que cortar os detalhes parece seguro e custa caro: são eles que o modelo não sabe.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/yzx4IuEh_tU/4.jpg" data-legenda="O Opus cai de 70% para 22% quando o teste exige detalhes exatos."><img src="../img/yzx4IuEh_tU/4.jpg" alt="Slide &#39;Models have the general idea, not the exact rule&#39;: átomos conhecidos sem skill: Haiku 45→18%, Opus 70→22%, contratos 50→77%." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>O Opus cai de 70% para 22% quando o teste exige detalhes exatos.</span><a class="minuto" href="https://www.youtube.com/watch?v=yzx4IuEh_tU&amp;t=595s" target="_blank" rel="noopener" data-yt="yzx4IuEh_tU" data-t="595" aria-label="Assistir a partir de 09:55"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:55</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=yzx4IuEh_tU&amp;t=125s" target="_blank" rel="noopener" data-yt="yzx4IuEh_tU" data-t="125"><strong>3 de 5</strong><span>tarefas resolvidas sem skill; com skill foram 5 de 5</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:05<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=yzx4IuEh_tU&amp;t=440s" target="_blank" rel="noopener" data-yt="yzx4IuEh_tU" data-t="440"><strong>1 de ~400</strong><span>itens que pioram o desempenho nas skills da Anthropic</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:20<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=yzx4IuEh_tU&amp;t=532s" target="_blank" rel="noopener" data-yt="yzx4IuEh_tU" data-t="532"><strong>US$ 14</strong><span>custo de Sonnet e Haiku para analisar 29 skills</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:52<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=yzx4IuEh_tU&amp;t=595s" target="_blank" rel="noopener" data-yt="yzx4IuEh_tU" data-t="595"><strong>70% a 22%</strong><span>Opus: entendimento geral contra detalhes exatos</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:55<span class="sr">, assistir neste minuto</span></span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk vem da Intel e apresenta uma ferramenta própria de comparação de contexto, sem repositório ou dados abertos citados. As amostras são pequenas: 29 skills, três wrappers públicos e um juiz da família Sonnet. O próprio palestrante diz que a medição de novidade é só um sinal inicial. Não há evidência de que remover o que o modelo já sabe preserva o desempenho. Conhecimento prévio também varia por modelo e por versão.</p>
+  </div>
+
+  <section class="card autoteste">
+    <h3>Teste você mesmo</h3>
+    <p class="muted">Responda de cabeça antes de abrir. Lembrar com esforço é o que fixa.</p>
+    <ol class="perguntas">
+      <li><span class="tipo">lembrar</span> Quais são as quatro saídas possíveis ao testar um item da skill com e sem a skill?
+        <details class="resposta"><summary>Ver resposta</summary><p>O modelo acerta nos dois casos (a skill não muda nada), acerta só sem skill (a skill atrapalha), acerta só com skill (ensinou algo novo) ou erra nos dois (a skill está falha ou incompleta).</p></details>
+      </li>
+      <li><span class="tipo">aplicar</span> Você tem um SKILL.md de 300 linhas que ninguém ousa encurtar. Como decidir o que cortar com segurança?
+        <details class="resposta"><summary>Ver resposta</summary><p>Divida a skill em itens com pergunta e resposta, rode sem e com a skill com um juiz de outra família, corte o que o modelo já sabia e rode o eval de tarefas para confirmar que a nota se mantém.</p></details>
+      </li>
+      <li><span class="tipo">criticar</span> Por que o resultado de novidade não basta para justificar a remoção de trechos de uma skill?
+        <details class="resposta"><summary>Ver resposta</summary><p>Ele só indica o que o modelo já sabe, num teste de perguntas. Remover trechos pode piorar tarefas reais, e o palestrante afirma que é preciso validar com evals. A amostra é pequena e a ferramenta é da própria empresa.</p></details>
+      </li>
+    </ol>
+  </section>
+
+  <div class="casper experimento">
+    <span class="tag">experimente · 40 min</span>
+    <p class="exp-titulo"><strong>Mapa de novidade de uma skill sua</strong></p>
+    <p class="muted">Você precisa de: Uma skill ou arquivo de instruções seu, acesso ao Claude ou ChatGPT e uma planilha</p>
+    <ol class="passos"><li>Peça a um modelo para extrair do SKILL.md 15 afirmações verificáveis, cada uma com pergunta e resposta esperada.</li><li>Faça cada pergunta em uma conversa nova sem a skill e anote se a resposta bate com o gabarito.</li><li>Repita as perguntas com a skill colada no contexto e anote de novo.</li><li>Classifique cada item em já sabia, piorou, aprendeu ou continua sem saber e conte quantos há de cada.</li></ol>
+    <p><strong>Deu certo se:</strong> Você tem uma tabela com 15 itens classificados e identifica pelo menos um trecho candidato a corte e um detalhe que a skill precisa manter.</p>
+  </div>
+
+  <section class="card painel">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Escolha uma skill sua e escreva 15 afirmações verificáveis, cada uma com uma pergunta e a resposta esperada.</li><li>Rode as perguntas em um modelo sem a skill e com a skill, e classifique cada item nas quatro saídas.</li><li>Use um modelo de outra família como juiz e confira se a pergunta não entrega a resposta.</li><li>Remova os itens que o modelo já sabia, rode seu eval de novo e compare a nota e o uso de tokens.</li></ul>
+  </section>
+
+  <section class="relacionados">
+    <h3 class="rotulo-mao">Conversa com outros talks</h3>
+    <ul>
+<li><span class="relacao">aprofunda</span> <a href="../edicoes/2026-11-10.html#v-_7P580m4kPY">Por que ler uma skill não revela o que ela faz</a> <span class="muted">· O talk anterior mostrou que ler a skill não revela o efeito dela; este dá o método de ablação por afirmação para medir esse efeito.</span></li><li><a href="../edicoes/2026-10-25.html#v-v5tm5EAzsAs">Evitar que um conserto de agente quebre outro</a> <span class="muted">· 25 out · em comum: Agent skills, Baseline, Eval</span></li><li><a href="../edicoes/2026-11-08.html#v-WJTQBENv0KI">Como a Ramp testa um agente contábil antes dos clientes</a> <span class="muted">· 8 nov · em comum: Ablation study, Eval, Skill</span></li><li><a href="../edicoes/2026-11-05.html#v-4VmugsE-iP0">Como subir um agente de 41% para 97% de acerto</a> <span class="muted">· 5 nov · em comum: Baseline, Eval, LLM-as-a-judge</span></li>    </ul>
+  </section>
+
+  <footer class="talk-fim">
+    <div class="talk-acoes">
+      <label class="estudei js-only"><input type="checkbox" data-id="yzx4IuEh_tU"> <span class="estudei-txt">Marquei como estudado</span><span class="sr">: <span lang="en">Your SKILL.md Is 70% Stuff the Model Already Knows</span></span></label>
+      <details class="levo js-only" data-levo="yzx4IuEh_tU">
+        <summary>O que eu levo deste talk</summary>
+        <label class="sr" for="nota-yzx4IuEh_tU">O que eu levo deste talk (fica só neste aparelho)</label>
+        <textarea id="nota-yzx4IuEh_tU" data-nota="yzx4IuEh_tU" rows="2" placeholder="Uma frase com as suas palavras. Fica salva só neste aparelho."></textarea>
+      </details>
+    </div>
+    <div class="talk-nav">
+      <a class="voltar-indice" href="#indice">↑ Índice</a>
+      <a class="proximo" href="#v-O_zcc6Xl12g">Próximo <span>Como tornar um codebase seguro para agentes de código</span> <span aria-hidden="true">↓</span></a>
+    </div>
+  </footer>
+</article><article class="video essencial" id="v-O_zcc6Xl12g" data-tema="engenharia-de-software" data-n="2" data-total="8" aria-labelledby="t-O_zcc6Xl12g">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">02</span>
+    <div class="sec-titulo">
+<p class="selo-essencial">essencial do dia<span>: Mostra, com 11 mil PRs e 0,5% de revert, como lint, testes e verificação em runtime deixam o codebase seguro para agentes.</span></p>      <h2 id="t-O_zcc6Xl12g">Como tornar um codebase seguro para agentes de código</h2>
+      <p class="titulo-original" lang="en">All Code Is Slop (Except Mine)</p>
+      <p class="tese">Agentes copiam o que veem no código. Transforme cada correção em regra automática e a base de código passa a segurar a qualidade.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <a class="chip chip-tema" href="../trilhas/engenharia-de-software.html">Engenharia de software<span class="sr">: ver a trilha do tema</span></a>
+    <span class="chip">≈ 7 min de leitura</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Lauren Tan, SpaceXSI</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=O_zcc6Xl12g" target="_blank" rel="noopener" data-yt="O_zcc6Xl12g" data-t="0"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>Assistir (17:31)</a>
+  </div>
+
+<p class="objetivo"><span class="objetivo-rotulo">Depois deste talk você consegue</span> transformar correções repetidas em agentes de código em regras de lint e checagens automáticas</p>
+  <section class="card resumo">
+    <h3>Em 3 frases</h3>
+<p>Lauren Tan, do time do Grok Bot, defende que a confiança em agentes de código vem do ambiente: arquitetura, lint, testes e verificação, com prosa (regras e skills) só por cima.</p><p>Cada vez que ela corrige um agente, transforma a correção em uma checagem determinística, como banir useEffect em código de produto ou proibir imports entre pastas, em vez de escrever mais uma linha de instrução.</p><p>O time diz ter enviado 11 mil pull requests em um mês, com taxa de reversão estável perto de 0,5%, e gasta a maior parte dos tokens em verificação, incluindo TLA+ e Lean.</p>  </section>
+
+  <section class="antes-de-ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-O_zcc6Xl12g-slop"><strong>Slop</strong> <span>trabalho que parece pronto, sem raciocínio por trás</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-O_zcc6Xl12g-linter"><strong>Linter</strong> <span>analisador estático de código</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-O_zcc6Xl12g-formal-verification"><strong>Formal verification</strong> <span>verificação formal, com provas ou model checking (TLA+ e Lean)</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-O_zcc6Xl12g-revert"><strong>Revert</strong> <span>reversão de um PR já mergeado</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-software-factory"><strong>Software factory</strong> <span>fábrica de software</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-sistema-deterministico"><strong>Sistema determinístico</strong> <span>deterministic system (mesma entrada, mesma saída)</span> <em>analogia no glossário</em></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-skill"><strong>Skill</strong> <span>habilidade, julgamento institucional escrito para o agente executar</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-runtime-verification"><strong>Runtime verification</strong> <span>verificação em tempo de execução: o agente roda o app e o inspeciona</span></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Pirâmide invertida de confiança</h3>
+    <p>Lauren organiza o ambiente do agente em camadas. As duas primeiras são determinísticas (arquitetura, API, lint, tipos, testes). Depois vêm as verificações em runtime e formais. A prosa (rules, skills, agents.md) fica no topo, porque exige julgamento e é menos reprodutível.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=O_zcc6Xl12g&amp;t=100s" target="_blank" rel="noopener" data-yt="O_zcc6Xl12g" data-t="100" aria-label="Assistir a partir de 01:40"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:40</a> Onde investir primeiro no ambiente do agente.</p>  </div>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Código é o maior input do agente</h3>
+    <p>O agente copia o que encontra. Workarounds, código obsoleto e dívida técnica parecem padrão estabelecido e se espalham, como ervas daninhas num jardim. Por isso a base precisa estar o mais limpa possível, e cada correção deve virar uma checagem em código, não mais uma linha em regras.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/O_zcc6Xl12g/1.jpg" data-legenda="Restrições do codebase funcionam como fundação para o código novo."><img src="../img/O_zcc6Xl12g/1.jpg" alt="Slide &#39;Organic Architecture&#39;: prédio com varandas cobertas de plantas e pessoas trabalhando, ilustrando a analogia do codebase." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Restrições do codebase funcionam como fundação para o código novo.</span><a class="minuto" href="https://www.youtube.com/watch?v=O_zcc6Xl12g&amp;t=252s" target="_blank" rel="noopener" data-yt="O_zcc6Xl12g" data-t="252" aria-label="Assistir a partir de 04:12"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:12</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Banir o que exige nuance</h3>
+    <p>No framework Dune, o time proibiu useEffect em código de produto, porque agentes o usam mal. Também separou pastas electron-main e electron-renderer, com imports entre elas bloqueados por lint. Cada regra elimina uma categoria de problema e tira um item da revisão de código.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/O_zcc6Xl12g/2.jpg" data-legenda="Regras simples de lint eliminam classes inteiras de erro."><img src="../img/O_zcc6Xl12g/2.jpg" alt="Slide com o texto &#39;nuance tends to lead to slop&#39; e o subtítulo &#39;just design better APIs&#39;, com ilustração da autora." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Regras simples de lint eliminam classes inteiras de erro.</span><a class="minuto" href="https://www.youtube.com/watch?v=O_zcc6Xl12g&amp;t=345s" target="_blank" rel="noopener" data-yt="O_zcc6Xl12g" data-t="345" aria-label="Assistir a partir de 05:45"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:45</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Comentários viram escape para o agente</h3>
+    <p>Agentes escreviam comentários longos para justificar atalhos, como timers em cascata que degradaram a performance do Cursor. O Grok Bot baniu 99% dos comentários. No lugar, usa lint com mensagens de erro que mandam corrigir a causa raiz.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/O_zcc6Xl12g/3.jpg" data-legenda="O agente usa comentários para justificar o atalho em vez de corrigir."><img src="../img/O_zcc6Xl12g/3.jpg" alt="Slide &#39;quick fixes considered harmful&#39;: comentário &#39;// release later, in case it comes back&#39; com setTimeout, copiado até chegar a 183 timers." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>O agente usa comentários para justificar o atalho em vez de corrigir.</span><a class="minuto" href="https://www.youtube.com/watch?v=O_zcc6Xl12g&amp;t=469s" target="_blank" rel="noopener" data-yt="O_zcc6Xl12g" data-t="469" aria-label="Assistir a partir de 07:49"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:49</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Revisão por artefatos de verificação</h3>
+    <p>A revisão encolheu para olhar vídeos, screenshots, diagramas e provas formais. O agente roda o app (feature map, CLI reutilizável) e o time usa TLA+ e Lean em fluxos críticos. Cerca de 70% dos tokens, segundo ela e a citação de uma colega, vão para verificação.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/O_zcc6Xl12g/4.jpg" data-legenda="A revisão passa a olhar evidências geradas pelo agente."><img src="../img/O_zcc6Xl12g/4.jpg" alt="Slide &#39;verification is the most important step&#39; sobre a pirâmide de confiança: análise estática, verificação formal/runtime e revisão humana na base." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>A revisão passa a olhar evidências geradas pelo agente.</span><a class="minuto" href="https://www.youtube.com/watch?v=O_zcc6Xl12g&amp;t=592s" target="_blank" rel="noopener" data-yt="O_zcc6Xl12g" data-t="592" aria-label="Assistir a partir de 09:52"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:52</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=O_zcc6Xl12g&amp;t=809s" target="_blank" rel="noopener" data-yt="O_zcc6Xl12g" data-t="809"><strong>11.000</strong><span>pull requests enviados pelo time em um mês</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:29<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=O_zcc6Xl12g&amp;t=841s" target="_blank" rel="noopener" data-yt="O_zcc6Xl12g" data-t="841"><strong>0,5%</strong><span>taxa de PRs revertidos, estável</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:01<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=O_zcc6Xl12g&amp;t=716s" target="_blank" rel="noopener" data-yt="O_zcc6Xl12g" data-t="716"><strong>70%</strong><span>dos tokens diários em verificação (relato de Cindy)</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>11:56<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=O_zcc6Xl12g&amp;t=841s" target="_blank" rel="noopener" data-yt="O_zcc6Xl12g" data-t="841"><strong>227</strong><span>pessoas com ao menos um PR em outubro</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:01<span class="sr">, assistir neste minuto</span></span></a>
+  </div>
+
+  <div class="casper" id="a-O_zcc6Xl12g-slop">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Slop (trabalho que parece pronto, sem raciocínio por trás).</strong> Slop é como uma redação escolar copiada às pressas: tem cara de trabalho entregue, mas ninguém pensou no que está escrito.</p>
+    <ol class="passos"><li>Slop (lavagem, em tradução livre) é o nome que se dá a um conteúdo feito rápido, que parece pronto e tem pouca qualidade.</li><li>Em código, slop aparece como trechos que funcionam por acaso, atalhos sem justificativa e padrões repetidos sem entender o motivo.</li><li>Agentes de IA geram slop com facilidade porque copiam o que encontram no repositório, inclusive gambiarras e código obsoleto.</li><li>Na palestra, a defesa contra o slop está no ambiente: lint, testes e arquitetura barram o padrão ruim antes do merge, sem depender de alguém notar na revisão.</li></ol>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-agente-de-ia">Agente de IA</a>, <a href="../glossario.html#g-llm">LLM</a></p>  </div>
+  <div class="casper" id="a-O_zcc6Xl12g-linter">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Linter (analisador estático de código).</strong> Um linter é como o corretor ortográfico do editor de texto: sublinha o erro assim que você escreve, sem esperar o professor ler.</p>
+    <ol class="passos"><li>Um linter (analisador estático) é um programa que lê o código sem executá-lo e aponta trechos que quebram regras combinadas pelo time.</li><li>Cada regra descreve um padrão proibido, como usar useEffect em código de produto ou importar arquivos de uma pasta vetada.</li><li>Como a checagem é determinística, a mesma regra dá o mesmo resultado toda vez, ao contrário de uma instrução em texto que o agente pode ignorar.</li><li>A mensagem de erro serve de instrução para o agente. Uma boa mensagem diz qual é a causa raiz e como corrigi-la.</li><li>Quando cada correção vira uma regra de lint, a revisão de código fica menor e uma categoria inteira de erro some do projeto.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>AGENTE ESCREVE CÓDIGO</strong><span>pode repetir um padrão ruim</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>LINTER LÊ O CÓDIGO</strong><span>compara com as regras do time</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>MENSAGEM DE ERRO</strong><span>aponta a causa raiz a corrigir</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>CÓDIGO CORRIGIDO</strong><span>o padrão ruim não entra no projeto</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-agente-de-ia">Agente de IA</a>, <a href="../glossario.html#g-prompt">Prompt</a></p>  </div>
+  <div class="casper" id="a-O_zcc6Xl12g-formal-verification">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Formal verification (verificação formal, com provas ou model checking (TLA+ e Lean)).</strong> Verificação formal é como conferir uma planta de prédio com cálculo de engenharia: você prova que a estrutura aguenta antes de erguer qualquer parede.</p>
+    <ol class="passos"><li>Formal verification (verificação formal) é usar matemática para mostrar que um programa sempre se comporta como deveria.</li><li>Um teste comum checa alguns casos escolhidos. A verificação formal cobre todos os estados possíveis de um modelo do sistema.</li><li>Model checking com TLA+ descreve o sistema como estados e transições e procura uma sequência que viole uma regra, como notificações fora de ordem entre dispositivos.</li><li>Provas com Lean demonstram propriedades de um algoritmo, como a ausência de tremidas numa biblioteca de virtualização de listas.</li><li>Escrever essas especificações custava caro. Agentes baixam esse custo, e a palestra usa a técnica como mais uma camada de verificação.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>MODELO DO SISTEMA</strong><span>estados e transições possíveis</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>PROPRIEDADES</strong><span>regras que sempre devem valer</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>CHECAGEM OU PROVA</strong><span>TLA+ explora, Lean demonstra</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>GARANTIA OU BUG</strong><span>prova aceita ou contraexemplo</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-agente-de-ia">Agente de IA</a>, <a href="../glossario.html#g-eval">Eval</a></p>  </div>
+  <div class="casper" id="a-O_zcc6Xl12g-revert">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Revert (reversão de um PR já mergeado).</strong> Um revert é como devolver um produto com defeito à loja: a compra aconteceu, mas você desfaz e volta à situação anterior.</p>
+    <ol class="passos"><li>Revert (reversão) é desfazer uma mudança que já entrou no código principal do projeto.</li><li>No Git, o comando cria uma nova alteração que apaga o efeito do pull request original, mantendo o histórico registrado.</li><li>Times revertem quando uma mudança quebra algo em produção e consertar na hora levaria mais tempo do que voltar atrás.</li><li>A taxa de revert, a fração de PRs desfeitos, serve como sinal de qualidade. A palestra cita 0,5% estáveis com 11 mil PRs no mês, embora bugs nunca revertidos fiquem fora dessa conta.</li></ol>
+  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>A palestrante trabalha no time que vende o Grok Bot e promove o plugin pstack, então os resultados servem também de propaganda. Os 11 mil PRs e os 0,5% de reversão são dados internos, sem metodologia aberta. PR pequeno e automático infla a contagem, e reversão baixa pode vir de falhas que ninguém reverteu. A melhora de performance também não traz medidas. Os 70% de tokens em verificação vêm de uma terceira pessoa. Banir 99% dos comentários é uma escolha radical sem evidência de que serve a outros times.</p>
+  </div>
+
+  <section class="card autoteste">
+    <h3>Teste você mesmo</h3>
+    <p class="muted">Responda de cabeça antes de abrir. Lembrar com esforço é o que fixa.</p>
+    <ol class="perguntas">
+      <li><span class="tipo">lembrar</span> Por que Lauren prefere uma checagem determinística a uma linha em rules ou agents.md?
+        <details class="resposta"><summary>Ver resposta</summary><p>Porque o código é reprodutível e dá mais confiança. Prosa exige julgamento do agente, e uma regra em texto pode ser ignorada ou exagerada.</p></details>
+      </li>
+      <li><span class="tipo">aplicar</span> Seu agente importa módulos de camadas proibidas no seu projeto. Que mecanismo do talk você usaria?
+        <details class="resposta"><summary>Ver resposta</summary><p>Separar as camadas em diretórios convencionais e bloquear imports entre elas com lint ou analisador de dependências, como em electron-main e electron-renderer.</p></details>
+      </li>
+      <li><span class="tipo">criticar</span> Que limites existem nos números de 11 mil PRs e 0,5% de reversão como prova de qualidade?
+        <details class="resposta"><summary>Ver resposta</summary><p>Os dados são internos e sem metodologia aberta, e a palestrante tem interesse no produto. Contar PRs mede volume. Reversão baixa não captura bugs que ninguém reverteu.</p></details>
+      </li>
+    </ol>
+  </section>
+
+  <div class="casper experimento">
+    <span class="tag">experimente · 30 min</span>
+    <p class="exp-titulo"><strong>Transforme uma correção repetida em regra de lint</strong></p>
+    <p class="muted">Você precisa de: Um repositório seu com linter (ESLint, Ruff ou similar) e um agente de código como Claude Code.</p>
+    <ol class="passos"><li>Escolha um erro que o agente comete com frequência no repositório e anote o padrão exato.</li><li>Escreva uma regra de lint ou um teste que falhe quando o padrão aparecer, com uma mensagem que mande corrigir a causa raiz.</li><li>Peça ao agente uma tarefa que normalmente produz o erro e rode o linter.</li><li>Observe se o agente corrige sozinho ao ler a mensagem de erro e ajuste o texto se ele fizer um atalho.</li></ol>
+    <p><strong>Deu certo se:</strong> O linter bloqueia o padrão e o agente conserta a causa raiz sem você mandar nada no prompt.</p>
+  </div>
+
+  <section class="card painel">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Liste as três últimas correções que você fez em código de agente e escreva uma regra de lint ou teste para cada uma, em vez de acrescentar linhas no AGENTS.md.</li><li>Procure no seu repositório um padrão que o agente repete e que exige nuance, e proíba esse padrão com uma regra do linter.</li><li>Peça ao agente que rode o app e entregue um screenshot ou vídeo do fluxo alterado antes de você revisar o diff.</li><li>Escreva uma mensagem de erro de lint que diga ao agente para corrigir a causa raiz e teste se ele obedece.</li></ul>
+  </section>
+
+  <section class="relacionados">
+    <h3 class="rotulo-mao">Conversa com outros talks</h3>
+    <ul>
+<li><a href="../edicoes/2026-11-09.html#v-Xw9utONfhIY">Contexto de produto na triagem e revisão de agentes</a> <span class="muted">· 9 nov · em comum: Revert, Software factory</span></li><li><a href="../edicoes/2026-11-02.html#v-1et3Lb_KLQo">Empacotar seu critério de qualidade numa ferramenta de IA</a> <span class="muted">· 2 nov · em comum: Slop, Software factory</span></li><li><a href="../edicoes/2026-10-16.html#v-0JZy5AuuQzc">Por que agentes de código entregam o produto mediano</a> <span class="muted">· 16 out · em comum: Sistema determinístico, Slop</span></li>    </ul>
+  </section>
+
+  <footer class="talk-fim">
+    <div class="talk-acoes">
+      <label class="estudei js-only"><input type="checkbox" data-id="O_zcc6Xl12g"> <span class="estudei-txt">Marquei como estudado</span><span class="sr">: <span lang="en">All Code Is Slop (Except Mine)</span></span></label>
+      <details class="levo js-only" data-levo="O_zcc6Xl12g">
+        <summary>O que eu levo deste talk</summary>
+        <label class="sr" for="nota-O_zcc6Xl12g">O que eu levo deste talk (fica só neste aparelho)</label>
+        <textarea id="nota-O_zcc6Xl12g" data-nota="O_zcc6Xl12g" rows="2" placeholder="Uma frase com as suas palavras. Fica salva só neste aparelho."></textarea>
+      </details>
+    </div>
+    <div class="talk-nav">
+      <a class="voltar-indice" href="#indice">↑ Índice</a>
+      <a class="proximo" href="#v-D_4Rn6uLdQM">Próximo <span>Como agentes escreveram 225 mil linhas de teste no Duolingo</span> <span aria-hidden="true">↓</span></a>
+    </div>
+  </footer>
+</article><article class="video essencial" id="v-D_4Rn6uLdQM" data-tema="engenharia-de-software" data-n="3" data-total="8" aria-labelledby="t-D_4Rn6uLdQM">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">03</span>
+    <div class="sec-titulo">
+<p class="selo-essencial">essencial do dia<span>: Descreve um laço completo de agentes que escrevem, corrigem e fazem merge de testes, com as travas que impedem lixo de entrar.</span></p>      <h2 id="t-D_4Rn6uLdQM">Como agentes escreveram 225 mil linhas de teste no Duolingo</h2>
+      <p class="titulo-original" lang="en">225,000 Lines of Tests, Written and Merged by Agents</p>
+      <p class="tese">Quando agentes escrevem código rápido, o gargalo vira verificar. Um laço com travas automáticas e revisão humana final escala testes com segurança.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <a class="chip chip-tema" href="../trilhas/engenharia-de-software.html">Engenharia de software<span class="sr">: ver a trilha do tema</span></a>
+    <span class="chip">≈ 5 min de leitura</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Kush Agrawal, Duolingo</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=D_4Rn6uLdQM" target="_blank" rel="noopener" data-yt="D_4Rn6uLdQM" data-t="0"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>Assistir (12:38)</a>
+  </div>
+
+<p class="objetivo"><span class="objetivo-rotulo">Depois deste talk você consegue</span> desenhar um laço de agente que escolhe arquivos, escreve testes, verifica o resultado no CI e entrega o PR a um revisor humano</p>
+  <section class="card resumo">
+    <h3>Em 3 frases</h3>
+<p>O Duolingo montou um pipeline em que agentes escolhem arquivos sem teste, escrevem os testes e abrem PRs no app de iOS. Um workflow de ciclo de vida acompanha o CI, corrige falhas e atribui um revisor humano.</p><p>Em cerca de oito meses o pipeline mergeou mais de 700 PRs e 225 mil linhas de teste. A cobertura geral subiu de 11% para 24%, e a da parte em MVVM, de 9% para 59%.</p><p>Os agentes tentaram atalhos, como editar código de produção ou apagar testes. O time respondeu com três camadas de trava: regra determinística, revisão de IA e um LLM como juiz.</p>  </section>
+
+  <section class="antes-de-ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-D_4Rn6uLdQM-teste-flaky"><strong>Teste flaky</strong> <span>teste instável, que falha ou passa sem mudança no código</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-cobertura-de-codigo"><strong>Cobertura de código</strong> <span>percentual de linhas executadas pelos testes</span></a></li><li><a href="../glossario.html#g-ci-integracao-continua"><strong>CI (integração contínua)</strong> <span>testes e checagens automáticas a cada mudança</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-durable-execution"><strong>Durable execution</strong> <span>execução durável</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-skill"><strong>Skill</strong> <span>habilidade, julgamento institucional escrito para o agente executar</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-state-machine"><strong>State machine</strong> <span>máquina de estados</span></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-linter"><strong>Linter</strong> <span>analisador estático de código</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-llm-as-a-judge"><strong>LLM-as-a-judge</strong> <span>modelo de linguagem usado para avaliar respostas</span> <em>analogia no glossário</em></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Verificar virou o gargalo</h3>
+    <p>Com agentes e humanos escrevendo mais código, escrever deixou de ser a parte difícil. Testes unitários são baratos, rodam rápido e dão feedback imediato ao agente quando uma mudança quebra algo. O Duolingo escolheu a parte do app em MVVM porque ela é a mais fácil de testar.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/D_4Rn6uLdQM/0.jpg" data-legenda="A cobertura da parte MVVM foi de 9% para 59%; a geral, de 11% para 24%."><img src="../img/D_4Rn6uLdQM/0.jpg" alt="Slide verde com o texto: &#39;As agents and humans write more code, verification becomes the bottleneck.&#39; (não mostra o gráfico de cobertura)" loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>A cobertura da parte MVVM foi de 9% para 59%; a geral, de 11% para 24%.</span><a class="minuto" href="https://www.youtube.com/watch?v=D_4Rn6uLdQM&amp;t=122s" target="_blank" rel="noopener" data-yt="D_4Rn6uLdQM" data-t="122" aria-label="Assistir a partir de 02:02"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:02</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>O laço de cinco passos</h3>
+    <p>O laço é identificar arquivos, escrever com agente, verificar qualidade e CI, resolver o PR com um revisor e iterar com o feedback. Em produção, workflows da Temporal coordenam tudo por um estado compartilhado no S3. O Claude Code é o agente, o GitHub guarda PRs e labels, e o Datadog observa a saúde do pipeline.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/D_4Rn6uLdQM/1.jpg" data-legenda="Cada caixa do sistema real corresponde a um dos cinco passos do laço."><img src="../img/D_4Rn6uLdQM/1.jpg" alt="Slide &#39;On Paper&#39; com cinco caixas: 01 Identify, 02 Write, 03 Verify, 04 Resolve, 05 Iterate, e seta de volta: each run improves the next." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Cada caixa do sistema real corresponde a um dos cinco passos do laço.</span><a class="minuto" href="https://www.youtube.com/watch?v=D_4Rn6uLdQM&amp;t=153s" target="_blank" rel="noopener" data-yt="D_4Rn6uLdQM" data-t="153" aria-label="Assistir a partir de 02:33"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:33</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Selecionar o que o agente acerta</h3>
+    <p>Um script pontua cada arquivo Swift pela chance de o agente escrever um bom teste. View models, repositórios e data sources ganham um fator de 2,5. Código legado e arquivos grandes perdem pontos, e código de interface fica de fora. Com isso o time começa pelo que dá mais retorno e aprende com baixo risco.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/D_4Rn6uLdQM/2.jpg" data-legenda="O seletor prioriza arquivos em que o agente tem mais chance de acertar."><img src="../img/D_4Rn6uLdQM/2.jpg" alt="Diagrama &#39;Scheduled Backfill Workflow&#39;: Identify (coverage do S3, coverage_selector.py, filtro, top 5) e Write (CodingAgents: Clone → Test → PR)." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>O seletor prioriza arquivos em que o agente tem mais chance de acertar.</span><a class="minuto" href="https://www.youtube.com/watch?v=D_4Rn6uLdQM&amp;t=341s" target="_blank" rel="noopener" data-yt="D_4Rn6uLdQM" data-t="341" aria-label="Assistir a partir de 05:41"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:41</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Árvore de decisão do ciclo de vida</h3>
+    <p>A cada poucas horas, o workflow olha cada PR gerado e toma uma única ação. Fecha por conflito ou por 3 semanas de idade, pula se o CI roda, atribui revisor se o CI está verde e tenta corrigir se está vermelho. O limite é de cinco tentativas de correção. O revisor é o principal autor do arquivo, achado com git blame, e uma rejeição abre 30 dias de espera para aquele arquivo.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/D_4Rn6uLdQM/3.jpg" data-legenda="Cada PR recebe exatamente uma ação por rodada, com limite de tentativas."><img src="../img/D_4Rn6uLdQM/3.jpg" alt="Diagrama &#39;PR Lifecycle Workflow&#39;: Resolve (/assign, git blame, auto-merge, desistir) e Verify (CI verde ou vermelho, pre-commit, fix-ci, máx. de tentativas)." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Cada PR recebe exatamente uma ação por rodada, com limite de tentativas.</span><a class="minuto" href="https://www.youtube.com/watch?v=D_4Rn6uLdQM&amp;t=466s" target="_blank" rel="noopener" data-yt="D_4Rn6uLdQM" data-t="466" aria-label="Assistir a partir de 07:46"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:46</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Três travas contra atalhos</h3>
+    <p>Os agentes editavam código de produção, apagavam ou silenciavam testes e adicionavam esperas longas. A primeira trava é uma regra determinística, que fecha PRs que tocam arquivos fora de testes, mocks, fakes e stubs. A segunda é um agente que resolve comentários P0 dos bots de revisão. A terceira é um LLM como juiz com rejeições explicadas, que viram melhorias nos prompts e skills.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/D_4Rn6uLdQM/4.jpg" data-legenda="O juiz rejeitou 73 PRs, cada um com o motivo escrito."><img src="../img/D_4Rn6uLdQM/4.jpg" alt="Slide &#39;Solution: PR Quality&#39; com 3 cartões: filtro por regra (test, mock, fake, stub), resolvedor de comentários P0 e juiz LLM com 4 critérios." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>O juiz rejeitou 73 PRs, cada um com o motivo escrito.</span><a class="minuto" href="https://www.youtube.com/watch?v=D_4Rn6uLdQM&amp;t=620s" target="_blank" rel="noopener" data-yt="D_4Rn6uLdQM" data-t="620" aria-label="Assistir a partir de 10:20"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:20</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=D_4Rn6uLdQM&amp;t=122s" target="_blank" rel="noopener" data-yt="D_4Rn6uLdQM" data-t="122"><strong>11% para 24%</strong><span>Cobertura geral de testes do app iOS em oito meses</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:02<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=D_4Rn6uLdQM&amp;t=278s" target="_blank" rel="noopener" data-yt="D_4Rn6uLdQM" data-t="278"><strong>~50%</strong><span>Taxa de merge no piloto local (27 de 57 PRs)</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:38<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=D_4Rn6uLdQM&amp;t=557s" target="_blank" rel="noopener" data-yt="D_4Rn6uLdQM" data-t="557"><strong>13,6%</strong><span>PRs que falhavam por lint antes de mover para Macs</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:17<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=D_4Rn6uLdQM&amp;t=651s" target="_blank" rel="noopener" data-yt="D_4Rn6uLdQM" data-t="651"><strong>700 PRs</strong><span>Mergeados, com cerca de 225 mil linhas de teste</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:51<span class="sr">, assistir neste minuto</span></span></a>
+  </div>
+
+  <div class="casper" id="a-D_4Rn6uLdQM-teste-flaky">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Teste flaky (teste instável, que falha ou passa sem mudança no código).</strong> Um teste flaky é como um alarme de carro que às vezes dispara sozinho, e com o tempo ninguém mais olha quando ele toca.</p>
+    <ol class="passos"><li>Um teste é um pequeno programa que confere se o código faz o que deveria e responde passou ou falhou.</li><li>Teste flaky (teste instável) é aquele que ora passa, ora falha, sem que ninguém tenha mudado uma linha do código.</li><li>As causas comuns são esperas por tempo fixo, tarefas em paralelo que terminam em ordem diferente a cada execução e dependência de rede ou de relógio.</li><li>No CI (integração contínua), um teste flaky bloqueia PRs sem motivo real e ensina o time a ignorar falhas, inclusive as verdadeiras.</li><li>No Duolingo, agentes escreviam testes baseados em tempo e com problemas de concorrência. O time reduziu isso com regras e exemplos no arquivo de skill de testes.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>MESMO CÓDIGO</strong><span>Nenhuma linha mudou entre as execuções</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>EXECUÇÃO 1: PASSA</strong><span>A tarefa terminou a tempo</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>EXECUÇÃO 2: FALHA</strong><span>Espera curta ou ordem diferente</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>CONFIANÇA PERDIDA</strong><span>Time passa a ignorar falhas do CI</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-ci-integracao-continua">CI (integração contínua)</a>, <a href="../glossario.html#g-pull-request">Pull request</a>, <a href="../glossario.html#g-agente-de-ia">Agente de IA</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk vem do próprio time que construiu o sistema, sem comparação externa. Cobertura é uma métrica fácil de inflar e não prova que os testes pegam bugs de verdade, pois não há dado de mutation testing nem de defeitos evitados. A taxa de merge de cerca de 50% no piloto vem de amostra pequena (57 PRs). Custo em tokens, tempo de revisão humana e a carga sobre os revisores não aparecem. O número de PRs julgados pelo LLM como juiz saiu truncado na legenda automática.</p>
+  </div>
+
+  <section class="card autoteste">
+    <h3>Teste você mesmo</h3>
+    <p class="muted">Responda de cabeça antes de abrir. Lembrar com esforço é o que fixa.</p>
+    <ol class="perguntas">
+      <li><span class="tipo">lembrar</span> Quais são os cinco passos do laço e o que o workflow de ciclo de vida faz com um PR em que o CI falhou?
+        <details class="resposta"><summary>Ver resposta</summary><p>Identificar, escrever, verificar, resolver e iterar. Se a falha é de pre-commit, um GitHub Action aplica a correção. Se é falha real de teste, um agente lê os logs e faz push de correção, com limite de cinco tentativas. Depois disso o PR é fechado.</p></details>
+      </li>
+      <li><span class="tipo">aplicar</span> Você quer que um agente escreva testes para um serviço do seu time. Como escolheria os primeiros arquivos e que trava colocaria antes da revisão humana?
+        <details class="resposta"><summary>Ver resposta</summary><p>Começar por arquivos pequenos e bem estruturados, sem interface e com dependências fáceis de simular. Antes do humano, rodar o CI, fechar PRs que toquem arquivos fora de teste e usar um juiz de LLM com checklist contra atalhos, como apagar ou desativar testes.</p></details>
+      </li>
+      <li><span class="tipo">criticar</span> Que evidência falta para concluir que a subida da cobertura de 11% para 24% melhora a qualidade do app?
+        <details class="resposta"><summary>Ver resposta</summary><p>Falta mostrar que os testes pegam bugs: sem mutation testing, bugs evitados ou queda de regressões, cobertura só mede linhas executadas. Também faltam custos de tokens e tempo de revisão. O relato vem da própria equipe, sem comparação com um grupo de controle.</p></details>
+      </li>
+    </ol>
+  </section>
+
+  <div class="casper experimento">
+    <span class="tag">experimente · 30 min</span>
+    <p class="exp-titulo"><strong>Guardrail contra atalhos de agente em PR de teste</strong></p>
+    <p class="muted">Você precisa de: Um repositório com testes e CI, mais Claude Code ou outro agente de código</p>
+    <ol class="passos"><li>Peça ao agente que escreva testes para um arquivo sem cobertura, indicando as regras de teste do projeto num arquivo de skill.</li><li>Escreva um script que roda git diff --name-only e falha se algum arquivo alterado estiver fora das pastas de teste ou de mocks.</li><li>Peça ao agente para fazer um teste que falha passar e veja se o script bloqueia uma edição no código de produção.</li><li>Escreva um prompt de juiz que rejeite testes removidos, desativados ou com esperas longas, e rode-o sobre o diff.</li></ol>
+    <p><strong>Deu certo se:</strong> O script bloqueia a edição de produção e o juiz aponta, com motivo escrito, ao menos um atalho proposital que você plantou no diff.</p>
+  </div>
+
+  <section class="card painel">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Gere um relatório de cobertura do seu repositório e liste os 10 arquivos com mais linhas sem teste.</li><li>Escreva uma regra determinística de CI que falhe o PR de teste quando ele altera arquivos fora das pastas de teste.</li><li>Crie um arquivo de skill de testes no repositório com 3 regras e 2 exemplos de bons testes, para o agente ler antes de escrever.</li><li>Anote os motivos de cada PR de teste de agente rejeitado e transforme os mais repetidos em regras do prompt.</li></ul>
+  </section>
+
+  <section class="relacionados">
+    <h3 class="rotulo-mao">Conversa com outros talks</h3>
+    <ul>
+<li><span class="relacao">complementa</span> <a href="../edicoes/2026-11-10.html#v-gbeuC0ud1p4">Provar nos PRs que os testes passaram, com grafo de evidências</a> <span class="muted">· Os dois tratam da prova de que PRs de agentes foram testados: um gera os testes em escala, o outro registra a evidência.</span></li><li><a href="../edicoes/2026-10-09.html#v-E3KbFLAGD6A">Transformar correções repetidas em lint rules</a> <span class="muted">· 9 out · em comum: Cobertura de código, Linter, Skills</span></li><li><a href="../edicoes/2026-10-02.html#v-HLTa7Vcs4X0">Verificação como gargalo do código escrito por IA</a> <span class="muted">· 2 out · em comum: Cobertura de código, Teste flaky</span></li><li><a href="../edicoes/2026-10-16.html#v-7b9tov5Uc5s">CI e revisão quando agentes abrem muitos PRs</a> <span class="muted">· 16 out · em comum: CI (integração contínua), Teste flaky</span></li>    </ul>
+  </section>
+
+  <footer class="talk-fim">
+    <div class="talk-acoes">
+      <label class="estudei js-only"><input type="checkbox" data-id="D_4Rn6uLdQM"> <span class="estudei-txt">Marquei como estudado</span><span class="sr">: <span lang="en">225,000 Lines of Tests, Written and Merged by Agents</span></span></label>
+      <details class="levo js-only" data-levo="D_4Rn6uLdQM">
+        <summary>O que eu levo deste talk</summary>
+        <label class="sr" for="nota-D_4Rn6uLdQM">O que eu levo deste talk (fica só neste aparelho)</label>
+        <textarea id="nota-D_4Rn6uLdQM" data-nota="D_4Rn6uLdQM" rows="2" placeholder="Uma frase com as suas palavras. Fica salva só neste aparelho."></textarea>
+      </details>
+    </div>
+    <div class="talk-nav">
+      <a class="voltar-indice" href="#indice">↑ Índice</a>
+      <a class="proximo" href="#v-Cyt3LU8TyNc">Próximo <span>Por que a IA assiste bem e automatiza mal</span> <span aria-hidden="true">↓</span></a>
+    </div>
+  </footer>
+</article>
+      <section class="radar" id="radar" aria-labelledby="radar-titulo">
+        <h2 id="radar-titulo">Radar</h2>
+        <p class="hand">os outros talks do dia, em resumo. Abra o que interessar.</p>
+        <details class="radar-item" data-id="Cyt3LU8TyNc">
+          <summary>
+            <span class="radar-n" aria-hidden="true">04</span>
+            <span class="radar-txt">
+              <strong>Por que a IA assiste bem e automatiza mal</strong>
+              <span class="radar-tese">Modelos treinados para agradar humanos assistem bem, mas automatizar exige treinar para confiabilidade e tratar a IA como primitiva de software.</span>
+              <span class="radar-meta">Modelos · ≈ 4 min · <span lang="en">I love you so jevving much</span></span>
+            </span>
+          </summary>
+          <article class="video" id="v-Cyt3LU8TyNc" data-tema="modelos" data-n="4" data-total="8" aria-labelledby="t-Cyt3LU8TyNc">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">04</span>
+    <div class="sec-titulo">
+      <h2 id="t-Cyt3LU8TyNc">Por que a IA assiste bem e automatiza mal</h2>
+      <p class="titulo-original" lang="en">I love you so jevving much</p>
+      <p class="tese">Modelos treinados para agradar humanos assistem bem, mas automatizar exige treinar para confiabilidade e tratar a IA como primitiva de software.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <a class="chip chip-tema" href="../trilhas/modelos.html">Modelos<span class="sr">: ver a trilha do tema</span></a>
+    <span class="chip">≈ 4 min de leitura</span>
+    <span class="chip" role="img" aria-label="Complexidade 2 de 5">nível ●●○○○</span>
+<span class="chip">Diogo Almeida, TypeSafe AI</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=Cyt3LU8TyNc" target="_blank" rel="noopener" data-yt="Cyt3LU8TyNc" data-t="0"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>Assistir (23:19)</a>
+  </div>
+
+<p class="objetivo"><span class="objetivo-rotulo">Depois deste talk você consegue</span> explicar por que modelos otimizados para assistência falham em automação e apontar onde a confiabilidade pesa mais que a inteligência média</p>
+  <section class="card resumo">
+    <h3>Em 3 frases</h3>
+<p>Diogo Almeida diz que os LLMs são ótimos como assistentes porque o RLHF (aprendizado por reforço com feedback humano) os otimiza para agradar pessoas, e por isso falham em automação, que exige acerto toda vez.</p><p>Segundo ele, o maior ganho vem de escolher a tarefa certa de treino, e a confiabilidade estreita (&#39;Einstein 95% do tempo, Mr. Bean 5%&#39;) não aparece em benchmarks. Ele apresenta o Jev, o modelo da TypeSafe AI, como exemplo disso.</p><p>Ele propõe tratar a IA como uma quarta porta lógica do software e lista direções para engenheiros: agentes desenhados em torno do KV cache, memória compartilhada, tipos semânticos e segurança em tempo real.</p>  </section>
+
+  <section class="antes-de-ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-rlhf"><strong>RLHF</strong> <span>aprendizado por reforço com feedback humano</span></a></li><li><a href="../glossario.html#g-rlvr"><strong>RLVR</strong> <span>aprendizado por reforço com recompensas verificáveis</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-bitter-lesson"><strong>Bitter lesson</strong> <span>lição amarga: a escala vence regras feitas à mão</span></a></li><li><a href="../glossario.html#g-human-in-the-loop"><strong>Human in the loop</strong> <span>humano no circuito de validação</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-benchmark"><strong>Benchmark</strong> <span>teste padronizado de desempenho</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-kv-cache"><strong>KV cache</strong> <span>cache de chaves e valores da atenção</span> <em>analogia no glossário</em></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-subagente"><strong>Subagente</strong> <span>agente auxiliar criado por outro agente</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-slop"><strong>Slop</strong> <span>trabalho que parece pronto, sem raciocínio por trás</span> <em>analogia no glossário</em></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Assistência e automação pedem treinos diferentes</h3>
+    <p>Almeida separa tarefas em que um humano sempre revisa, como deep research, das tarefas de automação, como atender um drive-through. Para ele, agradar uma pessoa não tem relação com fazer a tarefa certa. Como todo LLM de hoje passa por RLHF, todo LLM carrega um humano no circuito.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/Cyt3LU8TyNc/0.jpg" data-legenda="A divisão que o palestrante usa para explicar a IA &#39;irregular&#39;."><img src="../img/Cyt3LU8TyNc/0.jpg" alt="Slide &#39;The Sane View of AI&#39;: &#39;Too good to be true&#39; (ChatGPT, Copilots, Claude Code) x &#39;Too bad to be useful&#39; (drive-thru, QA, data entry, seguros)." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>A divisão que o palestrante usa para explicar a IA &#39;irregular&#39;.</span><a class="minuto" href="https://www.youtube.com/watch?v=Cyt3LU8TyNc&amp;t=190s" target="_blank" rel="noopener" data-yt="Cyt3LU8TyNc" data-t="190" aria-label="Assistir a partir de 03:10"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:10</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>A tarefa certa vale mais que algoritmo ou computação</h3>
+    <p>Ele propõe uma lição &#39;ainda mais amarga&#39; que a de Sutton: dados importam mais que computação, e escolher a tarefa certa importa mais que os dados. Cita o salto do RLHF, em que um modelo do tamanho do GPT-2 igualou o que exigiria algo como GPT-7 a 9 em seguir instruções.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/Cyt3LU8TyNc/1.jpg" data-legenda="Evidência citada de que mudar a tarefa de treino rende um salto enorme."><img src="../img/Cyt3LU8TyNc/1.jpg" alt="Gráfico do InstructGPT: com RLHF, GPT-2 (1,3B) fica acima do GPT-3 (175B) sem RLHF. Eixo: tamanho do modelo, de 1,3B a 175B." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Evidência citada de que mudar a tarefa de treino rende um salto enorme.</span><a class="minuto" href="https://www.youtube.com/watch?v=Cyt3LU8TyNc&amp;t=502s" target="_blank" rel="noopener" data-yt="Cyt3LU8TyNc" data-t="502" aria-label="Assistir a partir de 08:22"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:22</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Confiabilidade estreita não aparece em benchmark</h3>
+    <p>O modelo ideal para automação acerta sempre, mesmo em um escopo estreito. Se um modelo é Einstein em 95% das vezes e Mr. Bean em 5%, e você não sabe qual é qual, não consegue automatizar nada. Almeida diz que essa propriedade explica o apelo do Jev e que benchmarks a ignoram.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/Cyt3LU8TyNc/2.jpg" data-legenda="A falha de confiabilidade que impede automatizar."><img src="../img/Cyt3LU8TyNc/2.jpg" alt="Slide &#39;Jev&#39;s secret: reliable intelligence&#39;: &#39;this is why benchmarks don&#39;t matter&#39; e &#39;NOT: speed/cost/interface&#39;. Não mostra a analogia Einstein/Mr. Bean." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>A falha de confiabilidade que impede automatizar.</span><a class="minuto" href="https://www.youtube.com/watch?v=Cyt3LU8TyNc&amp;t=564s" target="_blank" rel="noopener" data-yt="Cyt3LU8TyNc" data-t="564" aria-label="Assistir a partir de 09:24"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:24</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>A IA como quarta porta lógica do software</h3>
+    <p>Pela analogia do LED azul, uma nova primitiva que se compõe com as antigas multiplica o que é possível. O software cresceu sobre operações simples como maior, menor e igual. Com IA confiável, daria para programar com senso comum, por exemplo pedir &#39;um e-mail de aparência real&#39; em vez de escrever uma regex.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/Cyt3LU8TyNc/3.jpg" data-legenda="A analogia central da proposta: IA como nova primitiva."><img src="../img/Cyt3LU8TyNc/3.jpg" alt="Analogia do LED azul: antes, LEDs vermelho e verde só para indicadores; com o azul, telas RGB e luz branca eficiente." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>A analogia central da proposta: IA como nova primitiva.</span><a class="minuto" href="https://www.youtube.com/watch?v=Cyt3LU8TyNc&amp;t=740s" target="_blank" rel="noopener" data-yt="Cyt3LU8TyNc" data-t="740" aria-label="Assistir a partir de 12:20"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:20</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Agentes brigam contra o KV cache</h3>
+    <p>Como pesquisa de software, ele lista problemas abertos. Os agentes são rígidos por causa do KV cache (memória de atenção reaproveitada entre chamadas). Faltam memória que não cresça em O(n), estado compartilhado entre agentes e roteamento de subagentes que funcione. Ele também cita segurança em tempo real e tipos semânticos.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/Cyt3LU8TyNc/4.jpg" data-legenda="Direções técnicas que o palestrante sugere explorar."><img src="../img/Cyt3LU8TyNc/4.jpg" alt="Slide &#39;Agents beyond the KV cache&#39;: memória O(N) ou log(N), estado não compartilhado entre agentes, roteamento e subagentes. Ao lado, gráfico de custos." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Direções técnicas que o palestrante sugere explorar.</span><a class="minuto" href="https://www.youtube.com/watch?v=Cyt3LU8TyNc&amp;t=975s" target="_blank" rel="noopener" data-yt="Cyt3LU8TyNc" data-t="975" aria-label="Assistir a partir de 16:15"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>16:15</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=Cyt3LU8TyNc&amp;t=564s" target="_blank" rel="noopener" data-yt="Cyt3LU8TyNc" data-t="564"><strong>95% / 5%</strong><span>Einstein 95% do tempo, Mr. Bean 5%</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:24<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=Cyt3LU8TyNc&amp;t=502s" target="_blank" rel="noopener" data-yt="Cyt3LU8TyNc" data-t="502"><strong>100x</strong><span>salto em computação efetiva que cada número de GPT significava</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:22<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=Cyt3LU8TyNc&amp;t=846s" target="_blank" rel="noopener" data-yt="Cyt3LU8TyNc" data-t="846"><strong>33%</strong><span>ganho de capacidade com uma quarta porta lógica, que ele chama de pequeno</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:06<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=Cyt3LU8TyNc&amp;t=1251s" target="_blank" rel="noopener" data-yt="Cyt3LU8TyNc" data-t="1251"><strong>1%</strong><span>fatia de ideias exploratórias que talvez deem algo valioso</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>20:51<span class="sr">, assistir neste minuto</span></span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é parte pitch da TypeSafe AI: o Jev é apresentado sem benchmark, dado ou demo, e o palestrante diz que a confiabilidade que defende &#39;não aparece em benchmarks&#39;. Isso torna a tese difícil de checar. As comparações (GPT-2 contra GPT-7 a 9, automação mais valiosa que assistência) são opiniões sem fonte. A transcrição também garante pouco sobre o que o Jev é. A autoria de ChatGPT e RLHF é afirmação dele e não foi verificada aqui. O texto ainda mistura política, segurança e software &#39;cursed&#39; sem evidência.</p>
+  </div>
+
+  <section class="card autoteste">
+    <h3>Teste você mesmo</h3>
+    <p class="muted">Responda de cabeça antes de abrir. Lembrar com esforço é o que fixa.</p>
+    <ol class="perguntas">
+      <li><span class="tipo">lembrar</span> Segundo Almeida, por que os LLMs de hoje exigem um humano no circuito?
+        <details class="resposta"><summary>Ver resposta</summary><p>Porque todos são otimizados para assistência por RLHF, que treina o modelo para agradar uma pessoa. Isso não o treina para acertar toda vez em tarefas de automação.</p></details>
+      </li>
+      <li><span class="tipo">aplicar</span> Você quer automatizar a classificação de tickets de suporte. Como aplicar a ideia de confiabilidade de Almeida antes de colocar o modelo em produção?
+        <details class="resposta"><summary>Ver resposta</summary><p>Rode o modelo várias vezes sobre um conjunto de tickets rotulados e meça a taxa de acerto em todas as repetições, não só o melhor caso. Defina um limite aceitável e mande para revisão humana o que ficar abaixo dele.</p></details>
+      </li>
+      <li><span class="tipo">criticar</span> Que limite de evidência existe no argumento de que a confiabilidade &#39;não aparece em benchmarks&#39;?
+        <details class="resposta"><summary>Ver resposta</summary><p>O palestrante vende o Jev e não mostra medidas. Se nenhum benchmark captura a confiabilidade, a afirmação não pode ser conferida por terceiros. Seria preciso um teste de repetição publicado com os resultados.</p></details>
+      </li>
+    </ol>
+  </section>
+
+  <div class="casper experimento">
+    <span class="tag">experimente · 25 min</span>
+    <p class="exp-titulo"><strong>Meça a confiabilidade de um modelo em 20 repetições</strong></p>
+    <p class="muted">Você precisa de: Python (ou planilha) e acesso a um modelo via API ou chat</p>
+    <ol class="passos"><li>Escolha uma tarefa estreita com resposta certa conhecida, como extrair a data de 10 e-mails.</li><li>Rode cada item 10 vezes com o mesmo prompt e registre as respostas.</li><li>Conte quantos itens acertaram nas 10 repetições e quantos acertaram só em algumas.</li><li>Compare a taxa de acerto médio com a taxa de acerto em todas as repetições.</li></ol>
+    <p><strong>Deu certo se:</strong> Você tem uma tabela mostrando a diferença entre o acerto médio e o acerto em todas as repetições, com ao menos um item que falhou em parte das rodadas.</p>
+  </div>
+
+  <section class="card painel">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Liste cinco tarefas do seu trabalho e marque quais exigem acerto toda vez (automação) e quais toleram revisão humana (assistência).</li><li>Rode a mesma entrada 20 vezes em um modelo e conte quantas respostas saem corretas, para medir a confiabilidade em vez de olhar o melhor caso.</li><li>Troque uma regex ou regra frágil do seu código por uma chamada de modelo com saída estruturada e compare os erros nos dois casos.</li></ul>
+  </section>
+
+  <section class="relacionados">
+    <h3 class="rotulo-mao">Conversa com outros talks</h3>
+    <ul>
+<li><a href="../edicoes/2026-10-16.html#v-0JZy5AuuQzc">Por que agentes de código entregam o produto mediano</a> <span class="muted">· 16 out · em comum: Benchmark, KV cache, Slop</span></li><li><a href="../edicoes/2026-10-25.html#v-_dTF3NpPzGo">Por que texto de IA soa genérico e como medir</a> <span class="muted">· 25 out · em comum: Benchmark, Slop</span></li><li><a href="../edicoes/2026-11-02.html#v-1et3Lb_KLQo">Empacotar seu critério de qualidade numa ferramenta de IA</a> <span class="muted">· 2 nov · em comum: Human in the loop, Slop</span></li>    </ul>
+  </section>
+
+  <footer class="talk-fim">
+    <div class="talk-acoes">
+      <label class="estudei js-only"><input type="checkbox" data-id="Cyt3LU8TyNc"> <span class="estudei-txt">Marquei como estudado</span><span class="sr">: <span lang="en">I love you so jevving much</span></span></label>
+      <details class="levo js-only" data-levo="Cyt3LU8TyNc">
+        <summary>O que eu levo deste talk</summary>
+        <label class="sr" for="nota-Cyt3LU8TyNc">O que eu levo deste talk (fica só neste aparelho)</label>
+        <textarea id="nota-Cyt3LU8TyNc" data-nota="Cyt3LU8TyNc" rows="2" placeholder="Uma frase com as suas palavras. Fica salva só neste aparelho."></textarea>
+      </details>
+    </div>
+    <div class="talk-nav">
+      <a class="voltar-indice" href="#indice">↑ Índice</a>
+      <a class="proximo" href="#v-vlfCjWuv4es">Próximo <span>Boas práticas do Claude Code para modelos novos</span> <span aria-hidden="true">↓</span></a>
+    </div>
+  </footer>
+</article>
+        </details>
+        <details class="radar-item" data-id="vlfCjWuv4es">
+          <summary>
+            <span class="radar-n" aria-hidden="true">05</span>
+            <span class="radar-txt">
+              <strong>Boas práticas do Claude Code para modelos novos</strong>
+              <span class="radar-tese">Quando o humano sai do loop, modelo, harness e ambiente assumem as tarefas que ele fazia: guiar, aprovar, restringir e verificar.</span>
+              <span class="radar-meta">Agentes · ≈ 6 min · <span lang="en">Rethinking Claude Code Best Practices</span></span>
+            </span>
+          </summary>
+          <article class="video" id="v-vlfCjWuv4es" data-tema="agentes" data-n="5" data-total="8" aria-labelledby="t-vlfCjWuv4es">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">05</span>
+    <div class="sec-titulo">
+      <h2 id="t-vlfCjWuv4es">Boas práticas do Claude Code para modelos novos</h2>
+      <p class="titulo-original" lang="en">Rethinking Claude Code Best Practices</p>
+      <p class="tese">Quando o humano sai do loop, modelo, harness e ambiente assumem as tarefas que ele fazia: guiar, aprovar, restringir e verificar.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <a class="chip chip-tema" href="../trilhas/agentes.html">Agentes<span class="sr">: ver a trilha do tema</span></a>
+    <span class="chip">≈ 6 min de leitura</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+    <a class="chip chip-link" href="https://www.youtube.com/watch?v=vlfCjWuv4es" target="_blank" rel="noopener" data-yt="vlfCjWuv4es" data-t="0"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>Assistir (17:31)</a>
+  </div>
+
+<p class="objetivo"><span class="objetivo-rotulo">Depois deste talk você consegue</span> configurar auto mode, regras de negação, hooks e CI para deixar sessões do Claude Code rodando sem você aprovar cada passo</p>
+  <section class="card resumo">
+    <h3>Em 3 frases</h3>
+<p>Lydia Hallie, da equipe do Claude Code, diz que modelos mais fortes tornam antigas boas práticas desnecessárias: gritar regras no CLAUDE.md e aprovar cada comando agora atrapalham.</p><p>Para rodar sessões por horas sem supervisão, ela propõe quatro camadas: auto mode para aprovar, regras de negação para o que não pode acontecer, sandbox ou sessão na nuvem para limitar o alcance, e hooks e CI para verificar.</p><p>O passo final é ter uma sessão orquestradora que dispara e confere as outras, de modo que a pessoa só inicia a primeira e revisa o resultado.</p>  </section>
+
+  <section class="antes-de-ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-vlfCjWuv4es-orquestrador-de-agentes"><strong>Orquestrador de agentes</strong> <span>orchestrator</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-auto-mode"><strong>Auto mode</strong> <span>modo automático, o agente age sozinho sem o humano inspecionar</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-claude-md-agents-md"><strong>CLAUDE.md / AGENTS.md</strong> <span>arquivo de instruções carregado no contexto do agente</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-harness"><strong>Harness</strong> <span>estrutura que roda o agente</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-sandbox"><strong>Sandbox</strong> <span>ambiente isolado para rodar o código</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-cloud-agent"><strong>Cloud agent</strong> <span>agente na nuvem, que roda em ambiente remoto e dispara sozinho</span> <em>analogia no glossário</em></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-hooks"><strong>Hooks</strong> <span>gatilhos determinísticos em pontos do fluxo do agente</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-ci-integracao-continua"><strong>CI (integração contínua)</strong> <span>testes e checagens automáticas a cada mudança</span> <em>analogia no glossário</em></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>De uma sessão vigiada a dezenas em paralelo</h3>
+    <p>Antes, o desenvolvedor corrigia o modelo, aprovava cada comando e rodava uma sessão por vez. Hoje, na Anthropic, rodam dezenas de sessões por horas, que se verificam sozinhas e até orquestram outras. Cada ponto onde o humano saiu do loop precisa ser assumido pelo modelo, pelo harness ou pelo ambiente.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/vlfCjWuv4es/0.jpg" data-legenda="Mostra o humano passando de operador a gerente de sessões."><img src="../img/vlfCjWuv4es/0.jpg" alt="Trajeto de uma sessão (Read, Edit, npm test) com notas do humano e pedido &#39;Allow Claude to run this command?&#39; para git reset --hard." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Mostra o humano passando de operador a gerente de sessões.</span><a class="minuto" href="https://www.youtube.com/watch?v=vlfCjWuv4es&amp;t=63s" target="_blank" rel="noopener" data-yt="vlfCjWuv4es" data-t="63" aria-label="Assistir a partir de 01:03"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:03</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>CLAUDE.md só com o que o código não mostra</h3>
+    <p>Avisos como IMPORTANT e NEVER eram comuns com modelos antigos. Com os atuais, eles levam a mais chamadas de ferramenta e resultado pior. O arquivo deve guardar só o que Claude não enxerga no código, como uma dependência legada sem referência direta. O comando de auditoria de prompt checa o que o modelo novo já dispensa.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/vlfCjWuv4es/1.jpg" data-legenda="Prova que instruções enfáticas viraram ruído e que o arquivo encolhe."><img src="../img/vlfCjWuv4es/1.jpg" alt="CLAUDE.md com &#39;IMPORTANT: always use the auth helper&#39;, &#39;Think hard and be thorough.&#39; e &#39;src/legacy still serves our mobile apps&#39; (linha 5 destacada)." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Prova que instruções enfáticas viraram ruído e que o arquivo encolhe.</span><a class="minuto" href="https://www.youtube.com/watch?v=vlfCjWuv4es&amp;t=217s" target="_blank" rel="noopener" data-yt="vlfCjWuv4es" data-t="217" aria-label="Assistir a partir de 03:37"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:37</a></figcaption>
+  </figure>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Auto mode erra menos que humano, mas não é garantia</h3>
+    <p>Em um estudo de agosto, só cerca de 14% das pessoas no loop pegaram um comando claramente perigoso. O auto mode bloqueou 89%, o que ainda deixa passar cerca de um em dez. Quem precisa de garantia aplica deny rules, que o Claude Code consulta antes do classificador, e o classificador nem chega a ver a chamada negada.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=vlfCjWuv4es&amp;t=342s" target="_blank" rel="noopener" data-yt="vlfCjWuv4es" data-t="342" aria-label="Assistir a partir de 05:42"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:42</a> Compara a taxa de captura de comandos perigosos entre humanos e auto mode.</p>  </div>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Permissão decide se roda, sandbox limita o alcance</h3>
+    <p>Um npm test pode rodar um script comprometido que lê o .env ou as chaves SSH. A permissão só vê o comando npm test e não o que ele abre depois. O sandbox repassa as regras ao sistema operacional, que vale também para processos filhos. Ele cobre só os comandos de shell, então MCP e hooks seguem fora. A sessão na nuvem isola a máquina inteira.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/vlfCjWuv4es/3.jpg" data-legenda="Mostra o ponto em que o sistema operacional bloqueia o acesso que a permissão não vê."><img src="../img/vlfCjWuv4es/3.jpg" alt="Sandbox: deny rules para .env e ~/.ssh e host não aprovado, aplicados pelo sistema operacional aos processos do npm test." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Mostra o ponto em que o sistema operacional bloqueia o acesso que a permissão não vê.</span><a class="minuto" href="https://www.youtube.com/watch?v=vlfCjWuv4es&amp;t=529s" target="_blank" rel="noopener" data-yt="vlfCjWuv4es" data-t="529" aria-label="Assistir a partir de 08:49"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:49</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Hooks garantem a verificação que o prompt só pede</h3>
+    <p>Pedir no prompt que o modelo teste não garante nada. Hooks são scripts que o Claude Code executa em pontos definidos, como depois de editar um arquivo, ao concluir uma tarefa ou ao encerrar a sessão. Se o teste falha, o script deve sair com código 2 para mandar o modelo corrigir. Com código 1, a tarefa é marcada como concluída mesmo assim.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/vlfCjWuv4es/4.jpg" data-legenda="Mostra os três pontos em que um hook pode barrar o agente."><img src="../img/vlfCjWuv4es/4.jpg" alt="Hooks: cada edição roda lint (PostToolUse), cada tarefa roda seus testes (TaskCompleted) e o fim da sessão roda todos os testes (Stop)." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Mostra os três pontos em que um hook pode barrar o agente.</span><a class="minuto" href="https://www.youtube.com/watch?v=vlfCjWuv4es&amp;t=745s" target="_blank" rel="noopener" data-yt="vlfCjWuv4es" data-t="745" aria-label="Assistir a partir de 12:25"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:25</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=vlfCjWuv4es&amp;t=342s" target="_blank" rel="noopener" data-yt="vlfCjWuv4es" data-t="342"><strong>14%</strong><span>pessoas no loop que pegaram um comando claramente perigoso</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:42<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=vlfCjWuv4es&amp;t=342s" target="_blank" rel="noopener" data-yt="vlfCjWuv4es" data-t="342"><strong>89%</strong><span>comandos perigosos bloqueados pelo auto mode</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:42<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=vlfCjWuv4es&amp;t=93s" target="_blank" rel="noopener" data-yt="vlfCjWuv4es" data-t="93"><strong>2.500 a 30.000</strong><span>mudanças por dia na Anthropic, de maio a setembro</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:33<span class="sr">, assistir neste minuto</span></span></a>
+  </div>
+
+  <div class="casper" id="a-vlfCjWuv4es-orquestrador-de-agentes">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Orquestrador de agentes (orchestrator).</strong> Um orquestrador de agentes é como o chefe de cozinha que divide os pratos entre os cozinheiros, prova cada um e devolve o que não ficou pronto.</p>
+    <ol class="passos"><li>Você conversa com um único assistente e pede um trabalho grande. Ele divide o trabalho em partes menores e entrega cada parte a outro assistente.</li><li>Esse assistente principal é o orquestrador (orchestrator, em inglês). Ele não escreve o código. Ele decide o que fazer, abre uma sessão nova para cada tarefa e acompanha o que volta.</li><li>Quando uma sessão entrega algo incompleto ou com teste falhando, o orquestrador devolve a tarefa até ela passar em todas as checagens.</li><li>Dá para usar modelos diferentes em cada papel. Um modelo bom em julgar e planejar fica no orquestrador, e um modelo bom em executar fica nas sessões filhas.</li><li>No Claude Code projects, ainda em beta, o próprio sistema cuida do contexto de cada sessão. A pessoa só inicia a primeira conversa e revisa o resultado final.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>PEDIDO</strong><span>você descreve o trabalho uma vez</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>ORQUESTRADOR DIVIDE</strong><span>quebra em tarefas e abre sessões</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>SESSÕES EXECUTAM</strong><span>cada uma escreve o código da sua parte</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>ORQUESTRADOR CONFERE</strong><span>devolve o que não passou nos testes</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>RESULTADO PRONTO</strong><span>você só revisa a entrega final</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-agente-de-ia">Agente de IA</a>, <a href="../glossario.html#g-llm">LLM</a>, <a href="../glossario.html#g-prompt">Prompt</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>A palestrante trabalha na Anthropic e fala de produtos da própria empresa (Claude Code, Opus 5.5, Fable, Claude Code projects em beta). Os números do estudo de auto mode e o salto de 2.500 para 30.000 mudanças por dia não vêm com método, tamanho de amostra ou separação entre ganho do modelo e outros fatores. Falta dado sobre custo de rodar dezenas de sessões e sobre taxa de erro de PRs mesclados sem revisão humana. O conselho de enxugar o CLAUDE.md vale para esses modelos e pode não valer para outros.</p>
+  </div>
+
+  <section class="card autoteste">
+    <h3>Teste você mesmo</h3>
+    <p class="muted">Responda de cabeça antes de abrir. Lembrar com esforço é o que fixa.</p>
+    <ol class="perguntas">
+      <li><span class="tipo">lembrar</span> Por que uma deny rule garante mais que o auto mode, e por que ela ainda não basta contra um npm test comprometido?
+        <details class="resposta"><summary>Ver resposta</summary><p>O Claude Code checa a deny rule antes do classificador do auto mode, que nem vê a chamada negada. Mas a regra só decide se o comando roda. Ela não limita o que o script acessa depois, e isso exige sandbox ou ambiente isolado.</p></details>
+      </li>
+      <li><span class="tipo">aplicar</span> Você quer que o Claude nunca termine uma tarefa no seu projeto com os testes de autenticação quebrados. Que mecanismo usa e que detalhe do script importa?
+        <details class="resposta"><summary>Ver resposta</summary><p>Um hook disparado ao marcar a tarefa como concluída, que roda os testes da área alterada. O script deve sair com código 2 quando falha, porque com código 1 a tarefa é marcada como concluída mesmo assim.</p></details>
+      </li>
+      <li><span class="tipo">criticar</span> Que limites existem nos números de 14% e 89% do estudo sobre auto mode, e que conflito de interesse afeta a leitura?
+        <details class="resposta"><summary>Ver resposta</summary><p>O talk não informa amostra, tipo de comando nem método, e a comparação vem da própria Anthropic, que vende o auto mode. Cerca de um em dez comandos perigosos passou. Sem os dados do estudo, não dá para saber se vale para o seu projeto.</p></details>
+      </li>
+    </ol>
+  </section>
+
+  <div class="casper experimento">
+    <span class="tag">experimente · 30 min</span>
+    <p class="exp-titulo"><strong>Hook que barra a conclusão com testes quebrados</strong></p>
+    <p class="muted">Você precisa de: Claude Code instalado e um repositório pequeno com testes automatizados</p>
+    <ol class="passos"><li>Adicione uma deny rule para ler .env nas configurações do projeto e peça ao Claude para executar cat .env. Confirme que ele é bloqueado.</li><li>Escreva um script que rode a suíte de testes e saia com código 2 se algo falhar. Registre-o como hook de parada da sessão.</li><li>Peça ao Claude uma mudança que quebre de propósito um teste existente e observe o que ele faz ao tentar encerrar.</li><li>Troque o código de saída do script para 1, repita e compare o comportamento.</li></ol>
+    <p><strong>Deu certo se:</strong> Com código 2, o Claude volta a corrigir o teste antes de terminar. Com código 1, ele encerra sem corrigir, e o .env continua bloqueado.</p>
+  </div>
+
+  <section class="card painel">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Revise seu CLAUDE.md e remova avisos em caixa alta, descrição de stack e dicas de onde achar arquivos. Mantenha só o que o código não revela.</li><li>Crie uma deny rule para ler o .env no settings do projeto e teste pedindo ao Claude para abrir o arquivo com cat.</li><li>Configure um hook que rode os testes ao concluir tarefas e confirme que o script sai com código 2 quando falha.</li><li>Ative CI com os checks que importam e dê ao Claude uma tarefa maior que o habitual, para ver onde você ainda precisa intervir.</li></ul>
+  </section>
+
+  <section class="relacionados">
+    <h3 class="rotulo-mao">Conversa com outros talks</h3>
+    <ul>
+<li><a href="../edicoes/2026-10-29.html#v-AnsXWH2_EBU">Verificar é o gargalo: 30 mil mudanças por dia na Anthropic</a> <span class="muted">· 29 out · em comum: CLAUDE.md / AGENTS.md, Hooks, Sandbox</span></li><li><a href="../edicoes/2026-11-07.html#v-kIlVNGZZr8o">Agentes na nuvem que checam dados de ativos privados</a> <span class="muted">· 7 nov · em comum: CLAUDE.md / AGENTS.md, Cloud agent</span></li><li><a href="../edicoes/2026-11-09.html#v-ktbAVYsAxpk">O que quebrou ao escalar agentes de código na Harvey</a> <span class="muted">· 9 nov · em comum: Cloud agent, Harness, Sandbox</span></li>    </ul>
+  </section>
+
+  <footer class="talk-fim">
+    <div class="talk-acoes">
+      <label class="estudei js-only"><input type="checkbox" data-id="vlfCjWuv4es"> <span class="estudei-txt">Marquei como estudado</span><span class="sr">: <span lang="en">Rethinking Claude Code Best Practices</span></span></label>
+      <details class="levo js-only" data-levo="vlfCjWuv4es">
+        <summary>O que eu levo deste talk</summary>
+        <label class="sr" for="nota-vlfCjWuv4es">O que eu levo deste talk (fica só neste aparelho)</label>
+        <textarea id="nota-vlfCjWuv4es" data-nota="vlfCjWuv4es" rows="2" placeholder="Uma frase com as suas palavras. Fica salva só neste aparelho."></textarea>
+      </details>
+    </div>
+    <div class="talk-nav">
+      <a class="voltar-indice" href="#indice">↑ Índice</a>
+      <a class="proximo" href="#v-0EnLxIbAvYk">Próximo <span>Como achar bugs na spec antes de o agente codar</span> <span aria-hidden="true">↓</span></a>
+    </div>
+  </footer>
+</article>
+        </details>
+        <details class="radar-item" data-id="0EnLxIbAvYk">
+          <summary>
+            <span class="radar-n" aria-hidden="true">06</span>
+            <span class="radar-txt">
+              <strong>Como achar bugs na spec antes de o agente codar</strong>
+              <span class="radar-tese">Um agente de código constrói fielmente os erros da spec. Verifique contradições e lacunas antes de gerar qualquer código.</span>
+              <span class="radar-meta">Engenharia de software · ≈ 5 min · <span lang="en">Your Spec Has Bugs. Catch Them Before Your Agent Codes.</span></span>
+            </span>
+          </summary>
+          <article class="video" id="v-0EnLxIbAvYk" data-tema="engenharia-de-software" data-n="6" data-total="8" aria-labelledby="t-0EnLxIbAvYk">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">06</span>
+    <div class="sec-titulo">
+      <h2 id="t-0EnLxIbAvYk">Como achar bugs na spec antes de o agente codar</h2>
+      <p class="titulo-original" lang="en">Your Spec Has Bugs. Catch Them Before Your Agent Codes.</p>
+      <p class="tese">Um agente de código constrói fielmente os erros da spec. Verifique contradições e lacunas antes de gerar qualquer código.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <a class="chip chip-tema" href="../trilhas/engenharia-de-software.html">Engenharia de software<span class="sr">: ver a trilha do tema</span></a>
+    <span class="chip">≈ 5 min de leitura</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Rajath Mahendrappa Kotyal, AWS</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=0EnLxIbAvYk" target="_blank" rel="noopener" data-yt="0EnLxIbAvYk" data-t="0"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>Assistir (07:50)</a>
+  </div>
+
+<p class="objetivo"><span class="objetivo-rotulo">Depois deste talk você consegue</span> descrever o fluxo de refinar, formalizar e checar uma spec com solver antes de entregá-la a um agente de código</p>
+  <section class="card resumo">
+    <h3>Em 3 frases</h3>
+<p>Regras que parecem corretas sozinhas podem se contradizer juntas, e o agente de código implementa a contradição sem avisar.</p><p>O Kiro Specification Analyzer, da AWS, traduz a spec para fórmulas lógicas (SMT) e usa um solver para achar conflitos. Ele repete a tradução e agrupa as versões por equivalência lógica.</p><p>Quando há ambiguidade, o humano decide entre opções claras. Se ninguém responde, a ferramenta usa um LLM juiz ou se abstém de implementar o trecho.</p>  </section>
+
+  <section class="antes-de-ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-0EnLxIbAvYk-solver-smt"><strong>Solver SMT</strong> <span>verificador automático de satisfatibilidade lógica</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-0EnLxIbAvYk-equivalencia-logica"><strong>Equivalência lógica</strong> <span>duas fórmulas com o mesmo significado em todos os casos</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-spec-driven-development"><strong>Spec-driven development</strong> <span>desenvolvimento guiado por especificação</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-coding-agent"><strong>Coding agent</strong> <span>agente de código</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-formalizacao"><strong>Formalização</strong> <span>tradução de texto em linguagem natural para lógica formal</span></a></li><li><a href="../glossario.html#g-human-in-the-loop"><strong>Human in the loop</strong> <span>humano no circuito de validação</span> <em>analogia no glossário</em></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 1 termo</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-llm-as-a-judge"><strong>LLM-as-a-judge</strong> <span>modelo de linguagem usado para avaliar respostas</span> <em>analogia no glossário</em></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Duas regras certas que não convivem</h3>
+    <p>Num e-commerce, uma regra manda registrar o pedido como back order quando o estoque acaba. Outra diz que nenhum pedido pode virar back order. Lidas separadas, as duas fazem sentido. Juntas, não podem ser verdadeiras. O agente de código implementa as duas mesmo assim, e o bug nasce na spec.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/0EnLxIbAvYk/0.jpg" data-legenda="Duas regras plausíveis que se contradizem quando lidas em conjunto"><img src="../img/0EnLxIbAvYk/0.jpg" alt="Slide &#39;Two fine rules, one bug&#39; com R2 (pedido enviado E estoque indisponível vai para backorder) e R3 (nenhum pedido em backorder)." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Duas regras plausíveis que se contradizem quando lidas em conjunto</span><a class="minuto" href="https://www.youtube.com/watch?v=0EnLxIbAvYk&amp;t=40s" target="_blank" rel="noopener" data-yt="0EnLxIbAvYk" data-t="40" aria-label="Assistir a partir de 00:40"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>00:40</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Refinar, formalizar e checar</h3>
+    <p>Primeiro o LLM tenta limpar a redação sozinho. Se não resolve, traduz o texto para fórmulas SMT-LIB. Um solver de satisfatibilidade diz se as fórmulas são consistentes. Se achar ambiguidade, a frase volta ao LLM para nova revisão, em ciclo.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/0EnLxIbAvYk/1.jpg" data-legenda="O solver age como verificador formal entre o LLM e o código"><img src="../img/0EnLxIbAvYk/1.jpg" alt="Diagrama &#39;LLM translates, solver checks&#39; em 3 etapas: LLM refina o texto, LLM formaliza EARS para SMT-LIB, solver SMT analisa conflitos e lacunas." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>O solver age como verificador formal entre o LLM e o código</span><a class="minuto" href="https://www.youtube.com/watch?v=0EnLxIbAvYk&amp;t=184s" target="_blank" rel="noopener" data-yt="0EnLxIbAvYk" data-t="184" aria-label="Assistir a partir de 03:04"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:04</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Desacordo do modelo vira sinal</h3>
+    <p>A ferramenta pede ao LLM 7 ou 10 traduções da mesma frase. Depois agrupa as traduções por equivalência lógica. Se saem vários grupos, o modelo está assumindo coisas diferentes, o que indica que a frase é ambígua. Um único grupo sugere que a frase é clara.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/0EnLxIbAvYk/2.jpg" data-legenda="Clusters diferentes revelam interpretações distintas do mesmo texto"><img src="../img/0EnLxIbAvYk/2.jpg" alt="Slide &#39;Sample, then cluster&#39; (passo 2 de 4): amostrar, agrupar por equivalência lógica e decidir. &#39;Disagreement means ambiguity.&#39;" loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Clusters diferentes revelam interpretações distintas do mesmo texto</span><a class="minuto" href="https://www.youtube.com/watch?v=0EnLxIbAvYk&amp;t=262s" target="_blank" rel="noopener" data-yt="0EnLxIbAvYk" data-t="262" aria-label="Assistir a partir de 04:22"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:22</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>O humano decide com opções claras</h3>
+    <p>Para uma regra vaga como remover o registro, a ferramenta oferece alternativas concretas: apagar de vez ou manter e esconder do usuário. O dono do domínio escolhe. Sem resposta, entra um LLM juiz ou o trecho não é implementado.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/0EnLxIbAvYk/3.jpg" data-legenda="A ferramenta transforma ambiguidade em uma escolha objetiva"><img src="../img/0EnLxIbAvYk/3.jpg" alt="Slide &#39;Ask one clear question&#39; (passo 3 de 4) para &#39;remove the record&#39;: A) registro some; B) registro retido e oculto do usuário." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>A ferramenta transforma ambiguidade em uma escolha objetiva</span><a class="minuto" href="https://www.youtube.com/watch?v=0EnLxIbAvYk&amp;t=315s" target="_blank" rel="noopener" data-yt="0EnLxIbAvYk" data-t="315" aria-label="Assistir a partir de 05:15"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:15</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Conflito e lacuna são problemas diferentes</h3>
+    <p>Conflito é quando duas regras não podem valer juntas, como a regra 1 contra a regra 3. Lacuna é quando nenhuma regra cobre um caso, como um pedido ocioso. O solver encontra os dois tipos entre sentenças, enquanto a ambiguidade aparece dentro de uma frase.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/0EnLxIbAvYk/4.jpg" data-legenda="O pipeline separa conflito, lacuna e ambiguidade"><img src="../img/0EnLxIbAvYk/4.jpg" alt="Slide &#39;Check every rule at once&#39; (passo 4 de 4): Conflito, R2 e R3 colidem com estoque zerado; Lacuna, nenhuma regra cobre pedido ocioso." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>O pipeline separa conflito, lacuna e ambiguidade</span><a class="minuto" href="https://www.youtube.com/watch?v=0EnLxIbAvYk&amp;t=345s" target="_blank" rel="noopener" data-yt="0EnLxIbAvYk" data-t="345" aria-label="Assistir a partir de 05:45"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:45</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=0EnLxIbAvYk&amp;t=91s" target="_blank" rel="noopener" data-yt="0EnLxIbAvYk" data-t="91"><strong>20 a 40%</strong><span>queda de precisão com prompts pouco claros</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:31<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=0EnLxIbAvYk&amp;t=91s" target="_blank" rel="noopener" data-yt="0EnLxIbAvYk" data-t="91"><strong>60 a 90%</strong><span>código válido que ainda sai errado</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:31<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=0EnLxIbAvYk&amp;t=91s" target="_blank" rel="noopener" data-yt="0EnLxIbAvYk" data-t="91"><strong>2 vezes</strong><span>mais regressões ao implantar esse código</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:31<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=0EnLxIbAvYk&amp;t=248s" target="_blank" rel="noopener" data-yt="0EnLxIbAvYk" data-t="248"><strong>7 ou 10</strong><span>traduções amostradas por frase ambígua</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:08<span class="sr">, assistir neste minuto</span></span></a>
+  </div>
+
+  <div class="casper" id="a-0EnLxIbAvYk-solver-smt">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Solver SMT (verificador automático de satisfatibilidade lógica).</strong> Um solver SMT é como um fiscal de horário escolar que confere se dá para encaixar todas as aulas na grade sem que um professor esteja em duas salas ao mesmo tempo.</p>
+    <ol class="passos"><li>Um solver é um programa que recebe um conjunto de regras e responde se todas podem valer ao mesmo tempo.</li><li>Antes, alguém traduz as regras escritas em português ou inglês para fórmulas lógicas, com variáveis como pedido_enviado e estoque_disponivel.</li><li>SMT (Satisfiability Modulo Theories, satisfatibilidade módulo teorias) é a família de solvers que entende números, textos e listas, além de verdadeiro e falso. As fórmulas seguem um formato padrão chamado SMT-LIB.</li><li>Se o solver acha uma combinação de valores que satisfaz tudo, as regras são consistentes. Se não acha nenhuma, ele aponta quais regras se contradizem, como as duas regras de back order (pedido pendente).</li><li>No Kiro Specification Analyzer, o LLM traduz a spec e o solver confere. As contradições e ambiguidades encontradas voltam ao LLM ou ao humano para revisão.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>REGRAS EM TEXTO</strong><span>spec escrita em linguagem natural</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>FÓRMULAS SMT-LIB</strong><span>LLM traduz cada regra para lógica</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>SOLVER CONFERE</strong><span>busca valores que satisfaçam tudo</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>CONSISTENTE OU CONFLITO</strong><span>aponta as regras que se contradizem</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-llm">LLM</a>, <a href="../glossario.html#g-agente-de-ia">Agente de IA</a></p>  </div>
+  <div class="casper" id="a-0EnLxIbAvYk-equivalencia-logica">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Equivalência lógica (duas fórmulas com o mesmo significado em todos os casos).</strong> Equivalência lógica é como duas receitas escritas com palavras diferentes que, seguidas à risca, sempre dão o mesmo bolo.</p>
+    <ol class="passos"><li>Duas frases são equivalentes quando dizem a mesma coisa, mesmo com palavras diferentes.</li><li>Na lógica, duas fórmulas são equivalentes quando dão o mesmo resultado, verdadeiro ou falso, em todas as situações possíveis.</li><li>Um solver consegue provar isso: ele procura um caso em que uma fórmula vale e a outra não. Se esse caso não existe, as duas são equivalentes.</li><li>No talk, o LLM traduz a mesma frase da spec 7 ou 10 vezes. A ferramenta agrupa as traduções em clusters (grupos) de fórmulas equivalentes.</li><li>Um único grupo indica que a frase é clara. Vários grupos mostram que o modelo assumiu sentidos diferentes, então a frase é ambígua e vai para o humano decidir.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>FRASE DA SPEC</strong><span>uma regra escrita em texto</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>7 A 10 TRADUÇÕES</strong><span>LLM gera várias fórmulas</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>AGRUPAR EQUIVALENTES</strong><span>solver junta as de mesmo sentido</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>CLARA OU AMBÍGUA</strong><span>vários grupos indicam ambiguidade</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-llm">LLM</a>, <a href="../glossario.html#g-prompt">Prompt</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk apresenta uma ferramenta da própria AWS (Kiro) e não mostra benchmark nem taxa de acerto do analisador. Os números sobre queda de 20 a 40% na precisão e 2 vezes mais regressões vêm de pesquisa pública citada de passagem, sem fonte falada. O palestrante admite que não existe oráculo de correção da spec além do usuário e que a evidência de formalização em agentes ainda é escassa. A afirmação de que solver supera LLM juiz aparece só na descrição, sem comparação no vídeo.</p>
+  </div>
+
+  <section class="card autoteste">
+    <h3>Teste você mesmo</h3>
+    <p class="muted">Responda de cabeça antes de abrir. Lembrar com esforço é o que fixa.</p>
+    <ol class="perguntas">
+      <li><span class="tipo">lembrar</span> Quais são as três etapas que o analisador aplica a uma spec e qual o papel do solver?
+        <details class="resposta"><summary>Ver resposta</summary><p>O LLM tenta refinar a redação. Se falhar, formaliza o texto em fórmulas SMT. O solver checa se as fórmulas são consistentes e aponta conflitos ou ambiguidade, que voltam ao LLM para revisão.</p></details>
+      </li>
+      <li><span class="tipo">aplicar</span> Você tem um CLAUDE.md com 30 regras para um agente. Como usaria a ideia de amostrar e agrupar traduções para achar regras ambíguas?
+        <details class="resposta"><summary>Ver resposta</summary><p>Peça a um LLM para reescrever cada regra como condição precisa várias vezes. Compare os resultados. Regras que geram interpretações diferentes são ambíguas e precisam ser reescritas ou decididas por você.</p></details>
+      </li>
+      <li><span class="tipo">criticar</span> Que limites e conflitos de interesse tornam fraca a evidência do talk?
+        <details class="resposta"><summary>Ver resposta</summary><p>A fala vem de uma equipe da AWS que promove o Kiro. Não há dados de acerto ou falsos positivos do analisador. O próprio palestrante diz que não há garantia sem o usuário e que a evidência de formalização com agentes ainda é escassa.</p></details>
+      </li>
+    </ol>
+  </section>
+
+  <div class="casper experimento">
+    <span class="tag">experimente · 25 min</span>
+    <p class="exp-titulo"><strong>Caçar contradições numa spec com um LLM</strong></p>
+    <p class="muted">Você precisa de: Claude ou ChatGPT e uma spec ou arquivo de regras seu com 8 a 15 regras</p>
+    <ol class="passos"><li>Cole a spec no LLM e peça que liste pares de regras que não podem valer ao mesmo tempo, citando o número de cada uma.</li><li>Peça que liste os casos de entrada que nenhuma regra cobre.</li><li>Escolha 3 frases vagas e peça 5 reescritas lógicas de cada, em chamadas separadas. Anote onde as versões divergem.</li><li>Corrija a spec com as decisões que você tomar e repita o passo 1 até a lista de conflitos esvaziar.</li></ol>
+    <p><strong>Deu certo se:</strong> Você encontrou ao menos um conflito, uma lacuna ou uma frase ambígua que não tinha notado e ajustou a spec.</p>
+  </div>
+
+  <section class="card painel">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Releia uma spec ou um arquivo de regras que você entrega a um agente e procure pares de regras que não podem valer juntas.</li><li>Peça a um LLM para reescrever a mesma regra 5 vezes em outras palavras e compare se os sentidos divergem.</li><li>Liste os casos que sua spec não cobre, como estado vazio, falha e item ocioso, e acrescente uma regra para cada um.</li></ul>
+  </section>
+
+  <section class="relacionados">
+    <h3 class="rotulo-mao">Conversa com outros talks</h3>
+    <ul>
+<li><a href="../edicoes/2026-10-17.html#v-e9-br9hveRI">Cinco princípios para agentes de análise financeira</a> <span class="muted">· 17 out · em comum: LLM as a judge, Spec-driven development</span></li><li><a href="../edicoes/2026-11-09.html#v-nKjPBAw_N_0">Fábrica de software com agentes que se melhora sozinha</a> <span class="muted">· 9 nov · em comum: LLM-as-a-judge, Spec-driven development</span></li><li><a href="../edicoes/2026-10-12.html#v-_zUp6y9bDU8">Agente de código que lê traces e conserta o seu agente</a> <span class="muted">· 12 out · em comum: Coding agent, LLM-as-a-judge</span></li>    </ul>
+  </section>
+
+  <footer class="talk-fim">
+    <div class="talk-acoes">
+      <label class="estudei js-only"><input type="checkbox" data-id="0EnLxIbAvYk"> <span class="estudei-txt">Marquei como estudado</span><span class="sr">: <span lang="en">Your Spec Has Bugs. Catch Them Before Your Agent Codes.</span></span></label>
+      <details class="levo js-only" data-levo="0EnLxIbAvYk">
+        <summary>O que eu levo deste talk</summary>
+        <label class="sr" for="nota-0EnLxIbAvYk">O que eu levo deste talk (fica só neste aparelho)</label>
+        <textarea id="nota-0EnLxIbAvYk" data-nota="0EnLxIbAvYk" rows="2" placeholder="Uma frase com as suas palavras. Fica salva só neste aparelho."></textarea>
+      </details>
+    </div>
+    <div class="talk-nav">
+      <a class="voltar-indice" href="#indice">↑ Índice</a>
+      <a class="proximo" href="#v-oeknLUsN_GE">Próximo <span>Manter código escrito por agentes sem perder o controle</span> <span aria-hidden="true">↓</span></a>
+    </div>
+  </footer>
+</article>
+        </details>
+        <details class="radar-item" data-id="oeknLUsN_GE">
+          <summary>
+            <span class="radar-n" aria-hidden="true">07</span>
+            <span class="radar-txt">
+              <strong>Manter código escrito por agentes sem perder o controle</strong>
+              <span class="radar-tese">Agentes baratearam o código, mas não a manutenção. Poda semanal, evidência real e laços de feedback seguram o crescimento.</span>
+              <span class="radar-meta">Engenharia de software · ≈ 5 min · <span lang="en">Agents Made Code Free. Maintaining It Didn&#39;t Get Cheaper.</span></span>
+            </span>
+          </summary>
+          <article class="video" id="v-oeknLUsN_GE" data-tema="engenharia-de-software" data-n="7" data-total="8" aria-labelledby="t-oeknLUsN_GE">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">07</span>
+    <div class="sec-titulo">
+      <h2 id="t-oeknLUsN_GE">Manter código escrito por agentes sem perder o controle</h2>
+      <p class="titulo-original" lang="en">Agents Made Code Free. Maintaining It Didn&#39;t Get Cheaper.</p>
+      <p class="tese">Agentes baratearam o código, mas não a manutenção. Poda semanal, evidência real e laços de feedback seguram o crescimento.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <a class="chip chip-tema" href="../trilhas/engenharia-de-software.html">Engenharia de software<span class="sr">: ver a trilha do tema</span></a>
+    <span class="chip">≈ 5 min de leitura</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Dmitry Buykin, Maersk</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=oeknLUsN_GE" target="_blank" rel="noopener" data-yt="oeknLUsN_GE" data-t="0"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>Assistir (18:03)</a>
+  </div>
+
+<p class="objetivo"><span class="objetivo-rotulo">Depois deste talk você consegue</span> desenhar uma rotina semanal de poda e verificação para um repositório escrito em grande parte por agentes</p>
+  <section class="card resumo">
+    <h3>Em 3 frases</h3>
+<p>Dmitry Buykin, da Maersk, conta que um projeto escrito quase todo por agentes cresceu até virar caos. Ele apagou metade, perdeu peças úteis e viu a bagunça voltar.</p><p>A saída que ele propõe é uma terceira via. Pequenas podas semanais, humanos só onde o julgamento pesa, o runtime controlando o que o modelo vê e escreve, e evidência de tarefas reais no lugar de testes verdes.</p><p>Ele organiza o método em seis perguntas, inspiradas nas Joias do Infinito, e fecha com um checklist de 18 perguntas para auditar um repositório escrito por IA.</p>  </section>
+
+  <section class="antes-de-ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-coding-agent"><strong>Coding agent</strong> <span>agente de código</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-mutation-testing"><strong>Mutation testing</strong> <span>teste de mutação</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-ledger"><strong>Ledger</strong> <span>livro-razão de créditos e débitos</span></a></li><li><a href="../glossario.html#g-contexto-do-agente"><strong>Contexto do agente</strong> <span>informação disponível ao agente a cada tarefa</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-idempotencia"><strong>Idempotência</strong> <span>repetir a operação sem mudar o resultado final</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-blast-radius"><strong>Blast radius</strong> <span>raio de impacto</span> <em>analogia no glossário</em></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 1 termo</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-eval"><strong>Eval</strong> <span>avaliação</span> <em>analogia no glossário</em></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Instruções em prosa também precisam de engenharia</h3>
+    <p>Na Maersk, cerca de três quartos do sistema são instruções em prosa para agentes, aplicadas em 110 países. Ele emprestou o teste de mutação. Quebrar uma frase de propósito quase nunca deixou um teste vermelho. Para prosa, só pessoas dizem o que precisa sobreviver a uma reescrita.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/oeknLUsN_GE/0.jpg" data-legenda="Mostra que a maior parte do sistema é prosa e que os testes mal a cobrem."><img src="../img/oeknLUsN_GE/0.jpg" alt="Slide &#39;Our system: a code skeleton, filled with prose instructions&#39;: roteador, agente com blocos de prosa (amarelo) e código (azul), controles e escrita." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Mostra que a maior parte do sistema é prosa e que os testes mal a cobrem.</span><a class="minuto" href="https://www.youtube.com/watch?v=oeknLUsN_GE&amp;t=127s" target="_blank" rel="noopener" data-yt="oeknLUsN_GE" data-t="127" aria-label="Assistir a partir de 02:07"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:07</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Contradição silenciosa entre prosa e código</h3>
+    <p>A prosa diz que o limite de uma ordem é 1.500 e o código diz 1.000. A mesma ordem passa num lugar e falha no outro, sem nenhum erro. Por isso o time criou um compilador para a prosa, com lint em cada arquivo alterado e um livro-razão. Fluxos repetidos e iguais entre países viram código. O que varia fica em prosa.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/oeknLUsN_GE/1.jpg" data-legenda="Prova que a divergência entre prosa e código não gera erro algum."><img src="../img/oeknLUsN_GE/1.jpg" alt="Slide &#39;At scale, prose becomes a soup&#39;: limite prose 1,500 · code 1,000; exemplo &#39;amount 1,250, limit 1,000, approved&#39; e rótulos de divergência." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Prova que a divergência entre prosa e código não gera erro algum.</span><a class="minuto" href="https://www.youtube.com/watch?v=oeknLUsN_GE&amp;t=319s" target="_blank" rel="noopener" data-yt="oeknLUsN_GE" data-t="319" aria-label="Assistir a partir de 05:19"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>05:19</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>O runtime decide o que o modelo vê</h3>
+    <p>Quando o modelo escolhia o que carregar, carregava tudo e inventava uma checagem de preço só porque os preços estavam visíveis. Agora o runtime entrega três fatos da ordem e um handle (nome curto) para dados grandes. O runtime valida o handle antes de qualquer escrita, e um diário garante que a escrita ocorra uma vez só.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/oeknLUsN_GE/2.jpg" data-legenda="Mostra o controle por contexto mínimo e pelas barreiras antes da escrita."><img src="../img/oeknLUsN_GE/2.jpg" alt="Slide &#39;When the model chooses what to load, it invents work&#39;: APIs finas, contexto cheio e modelo com fields [&#39;All&#39;] agindo sobre tudo." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Mostra o controle por contexto mínimo e pelas barreiras antes da escrita.</span><a class="minuto" href="https://www.youtube.com/watch?v=oeknLUsN_GE&amp;t=473s" target="_blank" rel="noopener" data-yt="oeknLUsN_GE" data-t="473" aria-label="Assistir a partir de 07:53"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:53</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Medidores no lugar de ler cada diff</h3>
+    <p>O volume de mudanças passou do que uma pessoa lê. O primeiro medidor foi o próprio autor: se ele está cansado e não consegue explicar o que mudou, para e arruma o processo. Antes de criar uma nova checagem, ele a reexecuta sobre milhares de sessões passadas para estimar o raio de impacto. Depois a checagem precisa falhar uma vez de propósito.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/oeknLUsN_GE/3.jpg" data-legenda="Mostra o replay de sessões antigas para medir o impacto de uma checagem."><img src="../img/oeknLUsN_GE/3.jpg" alt="Slide &#39;My own sanity is the gauge that fires first&#39;: quatro medidores verdes, figura com &#39;can&#39;t explain what changed&#39; e três passos de resposta." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Mostra o replay de sessões antigas para medir o impacto de uma checagem.</span><a class="minuto" href="https://www.youtube.com/watch?v=oeknLUsN_GE&amp;t=628s" target="_blank" rel="noopener" data-yt="oeknLUsN_GE" data-t="628" aria-label="Assistir a partir de 10:28"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:28</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Evidência real decide o que permanece</h3>
+    <p>Após uma refatoração por IA, cada condição e cada linha da tabela de decisão deve ser alcançada exatamente uma vez. Ele congela tarefas reais e reexecuta a versão antiga contra a nova. Um ramo sem tarefa real que o alcance não tem evidência. Um catraca (ratchet) só deixa a contagem de excessos cair, e o que ninguém alcança sai com nome e prova.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/oeknLUsN_GE/4.jpg" data-legenda="Mostra a catraca que só deixa o número de ramos sem uso cair."><img src="../img/oeknLUsN_GE/4.jpg" alt="Slide &#39;Each kind of entropy needs a gauge, a line and a ratchet&#39;: contagem com linha de breach, poda semanal ao cruzar a linha e catraca dos medidores." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Mostra a catraca que só deixa o número de ramos sem uso cair.</span><a class="minuto" href="https://www.youtube.com/watch?v=oeknLUsN_GE&amp;t=944s" target="_blank" rel="noopener" data-yt="oeknLUsN_GE" data-t="944" aria-label="Assistir a partir de 15:44"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:44</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=oeknLUsN_GE&amp;t=97s" target="_blank" rel="noopener" data-yt="oeknLUsN_GE" data-t="97"><strong>110</strong><span>países em que o sistema roda</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:37<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=oeknLUsN_GE&amp;t=127s" target="_blank" rel="noopener" data-yt="oeknLUsN_GE" data-t="127"><strong>10.000</strong><span>cenários de instruções em prosa</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:07<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=oeknLUsN_GE&amp;t=628s" target="_blank" rel="noopener" data-yt="oeknLUsN_GE" data-t="628"><strong>menos de 1%</strong><span>disparos estimados de uma checagem nova, em replay</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:28<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=oeknLUsN_GE&amp;t=1038s" target="_blank" rel="noopener" data-yt="oeknLUsN_GE" data-t="1038"><strong>18</strong><span>perguntas do checklist final, três por pedra</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>17:18<span class="sr">, assistir neste minuto</span></span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>É um relato de experiência de um único projeto, sem medição comparável. Os números (menos de 1%, quase 9/10 do tempo, cerca de um quarto) são estimativas do palestrante, sem método. O sistema é grande e baseado em prosa, com dezenas de especialistas, então muita coisa não se aplica a repositórios pequenos. Ele não cita custo da poda semanal nem do segundo agente revisor. A moldura das Joias do Infinito ajuda a memorizar, mas as seis perguntas são escolha dele.</p>
+  </div>
+
+  <section class="card autoteste">
+    <h3>Teste você mesmo</h3>
+    <p class="muted">Responda de cabeça antes de abrir. Lembrar com esforço é o que fixa.</p>
+    <ol class="perguntas">
+      <li><span class="tipo">lembrar</span> Por que o runtime, e não o modelo, escolhe o que entra no contexto na tarefa de alterar uma ordem aprovada?
+        <details class="resposta"><summary>Ver resposta</summary><p>Tudo que está no contexto vira motivo para agir. Ao escolher sozinho, o modelo carregou tudo e inventou uma checagem de preço. O runtime passa só três fatos e handles, e valida antes de escrever.</p></details>
+      </li>
+      <li><span class="tipo">aplicar</span> Como você aplicaria a ideia de um segundo agente revisor num repositório seu escrito por IA?
+        <details class="resposta"><summary>Ver resposta</summary><p>Peça a um segundo agente para checar a mudança com um checklist, sem ver o raciocínio do autor, e confira o resultado com tarefas reais congeladas. Assim o revisor não é convencido pelo autor.</p></details>
+      </li>
+      <li><span class="tipo">criticar</span> Que evidência falta para concluir que o método de poda semanal funciona fora desse projeto?
+        <details class="resposta"><summary>Ver resposta</summary><p>Falta comparação com um grupo de controle e dados de outros projetos. Os números vêm de estimativas do próprio palestrante, e o contexto (110 países, especialistas de domínio) é incomum.</p></details>
+      </li>
+    </ol>
+  </section>
+
+  <div class="casper experimento">
+    <span class="tag">experimente · 30 min</span>
+    <p class="exp-titulo"><strong>Teste de mutação nas suas instruções de agente</strong></p>
+    <p class="muted">Você precisa de: Um repositório com arquivo de instruções (CLAUDE.md ou similar) e testes ou tarefas de exemplo</p>
+    <ol class="passos"><li>Escolha 5 frases do arquivo de instruções do agente e anote a tarefa de exemplo que cada uma deveria influenciar.</li><li>Altere uma frase por vez para dizer o contrário e rode a mesma tarefa com o agente ou o conjunto de testes.</li><li>Registre se algum teste ou resultado mudou. Frases cuja mudança não afeta nada são candidatas a corte ou a ganhar um teste.</li><li>Restaure o arquivo original e escreva um teste ou eval para a frase mais importante que ficou sem cobertura.</li></ol>
+    <p><strong>Deu certo se:</strong> Você tem uma lista de frases que ninguém testa e pelo menos um novo teste cobrindo a mais importante.</p>
+  </div>
+
+  <section class="card painel">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Faça uma lista dos arquivos de instrução do seu agente, como CLAUDE.md, e procure duas regras que se contradigam entre si ou com o código.</li><li>Escolha um refactor feito por agente e confira se cada condição nova é alcançada por pelo menos uma tarefa real, ou apague a que não for.</li><li>Crie um registro simples em arquivo com duas partes, o que aconteceu e o que é verdade agora, e faça cada sessão do agente começar por ele.</li><li>Antes de ligar uma checagem nova, reexecute a regra sobre sessões ou commits passados e conte quantas vezes ela teria disparado.</li></ul>
+  </section>
+
+  <section class="relacionados">
+    <h3 class="rotulo-mao">Conversa com outros talks</h3>
+    <ul>
+<li><a href="../edicoes/2026-10-07.html#v-cf2IhzqeQH4">Cobrança de IA por uso, como um caixa eletrônico</a> <span class="muted">· 7 out · em comum: Idempotência, Ledger</span></li><li><a href="../edicoes/2026-10-21.html#v-uA4ah-dVHvU">Código legado consultável por IA via MCP</a> <span class="muted">· 21 out · em comum: Idempotência, Ledger</span></li><li><a href="../edicoes/2026-10-30.html#v-8vDzncmzxyg">Contexto e checagem para o agente que começa do zero</a> <span class="muted">· 30 out · em comum: Coding agent, Contexto do agente</span></li>    </ul>
+  </section>
+
+  <footer class="talk-fim">
+    <div class="talk-acoes">
+      <label class="estudei js-only"><input type="checkbox" data-id="oeknLUsN_GE"> <span class="estudei-txt">Marquei como estudado</span><span class="sr">: <span lang="en">Agents Made Code Free. Maintaining It Didn&#39;t Get Cheaper.</span></span></label>
+      <details class="levo js-only" data-levo="oeknLUsN_GE">
+        <summary>O que eu levo deste talk</summary>
+        <label class="sr" for="nota-oeknLUsN_GE">O que eu levo deste talk (fica só neste aparelho)</label>
+        <textarea id="nota-oeknLUsN_GE" data-nota="oeknLUsN_GE" rows="2" placeholder="Uma frase com as suas palavras. Fica salva só neste aparelho."></textarea>
+      </details>
+    </div>
+    <div class="talk-nav">
+      <a class="voltar-indice" href="#indice">↑ Índice</a>
+      <a class="proximo" href="#v-cWrYEBlWpcY">Próximo <span>Agente que otimiza a configuração de serving do vLLM</span> <span aria-hidden="true">↓</span></a>
+    </div>
+  </footer>
+</article>
+        </details>
+        <details class="radar-item" data-id="cWrYEBlWpcY">
+          <summary>
+            <span class="radar-n" aria-hidden="true">08</span>
+            <span class="radar-txt">
+              <strong>Agente que otimiza a configuração de serving do vLLM</strong>
+              <span class="radar-tese">Um agente com otimização bayesiana testa receitas de vLLM em loop e entrega a melhor, mas o ganho só vale se superar o ruído entre execuções.</span>
+              <span class="radar-meta">Infraestrutura · ≈ 7 min · <span lang="en">Stop Shipping LLM Settings That Only Win on Paper</span></span>
+            </span>
+          </summary>
+          <article class="video" id="v-cWrYEBlWpcY" data-tema="infraestrutura" data-n="8" data-total="8" aria-labelledby="t-cWrYEBlWpcY">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">08</span>
+    <div class="sec-titulo">
+      <h2 id="t-cWrYEBlWpcY">Agente que otimiza a configuração de serving do vLLM</h2>
+      <p class="titulo-original" lang="en">Stop Shipping LLM Settings That Only Win on Paper</p>
+      <p class="tese">Um agente com otimização bayesiana testa receitas de vLLM em loop e entrega a melhor, mas o ganho só vale se superar o ruído entre execuções.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <a class="chip chip-tema" href="../trilhas/infraestrutura.html">Infraestrutura<span class="sr">: ver a trilha do tema</span></a>
+    <span class="chip">≈ 7 min de leitura</span>
+    <span class="chip" role="img" aria-label="Complexidade 4 de 5">nível ●●●●○</span>
+<span class="chip">Rohan Pandey &amp; Balaji Varadarajan, DigitalOcean</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=cWrYEBlWpcY" target="_blank" rel="noopener" data-yt="cWrYEBlWpcY" data-t="0"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>Assistir (05:32)</a>
+  </div>
+
+<p class="objetivo"><span class="objetivo-rotulo">Depois deste talk você consegue</span> descrever como um laço de otimização bayesiana com Optuna busca a melhor receita de vLLM e o que checar antes de adotar o resultado</p>
+  <section class="card resumo">
+    <h3>Em 3 frases</h3>
+<p>A DigitalOcean construiu um agente que busca a melhor configuração de serving do vLLM para um modelo, sem ajuste manual.</p><p>O agente usa Bayesian optimization (otimização bayesiana) pelo Optuna: a cada trial (tentativa) ele mede a vazão, ajusta a receita e repete até acabar o número de tentativas.</p><p>Na demo, o GPT-OSS 120B ganhou 17,5% em tokens gerados e o DeepSeek R1 Distill dobrou a vazão, com um relatório HTML e um YAML final.</p>  </section>
+
+  <section class="antes-de-ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-cWrYEBlWpcY-bayesian-optimization"><strong>Bayesian optimization</strong> <span>otimização bayesiana, busca que aprende com cada tentativa</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-cWrYEBlWpcY-optuna"><strong>Optuna</strong> <span>biblioteca de otimização de hiperparâmetros em Python</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-cWrYEBlWpcY-agente-de-otimizacao"><strong>Agente de otimização</strong> <span>optimization agent engine</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-cWrYEBlWpcY-inter-token-latency-itl"><strong>Inter-token latency (ITL)</strong> <span>tempo entre um token e o seguinte</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-vllm"><strong>vLLM</strong> <span>motor open source para servir LLMs</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-goodput"><strong>Goodput</strong> <span>vazão que cumpre o SLO, contando também os rejeitados</span> <em>analogia no glossário</em></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 1 termo</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-throughput"><strong>Throughput</strong> <span>vazão, tokens gerados por segundo</span> <em>analogia no glossário</em></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>A receita inicial é o ponto de partida</h3>
+    <p>Ao baixar os pesos de um modelo, você ganha uma receita padrão de serving em YAML. O agente parte dela e a testa em quatro regimes de carga: chat curto, chat longo, RAG e classificação em lote. Cada regime tem seus próprios tamanhos de entrada e saída em tokens, que você pode mudar conforme o seu uso.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=cWrYEBlWpcY&amp;t=129s" target="_blank" rel="noopener" data-yt="cWrYEBlWpcY" data-t="129" aria-label="Assistir a partir de 02:09"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:09</a> A receita inicial define os regimes e os tamanhos de token que o agente vai testar.</p>  </div>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Bayesian optimization dentro de um laço do Optuna</h3>
+    <p>A otimização bayesiana usa o resultado das tentativas anteriores para escolher a próxima, o que reduz o espaço de busca. O Optuna executa o laço: pega a receita, roda uma trial, atribui uma nota, propõe uma mudança e repete até o fim das tentativas. Isso substitui a busca manual, que o palestrante diz levar muito tempo.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=cWrYEBlWpcY&amp;t=96s" target="_blank" rel="noopener" data-yt="cWrYEBlWpcY" data-t="96" aria-label="Assistir a partir de 01:36"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:36</a> O Optuna avalia cada receita, pontua e propõe a próxima dentro do laço.</p>  </div>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Um comando e quatro entradas</h3>
+    <p>Você roda o script tuner.py informando o nome do estudo, o YAML inicial, o hardware e o número de trials. Na demo foram 24 trials. Uma execução leva de poucas horas a cerca de quatro ou cinco horas no GPT-OSS, então o agente roda em segundo plano.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/cWrYEBlWpcY/2.jpg" data-legenda="O comando mostra as quatro entradas do tuner e o número de trials."><img src="../img/cWrYEBlWpcY/2.jpg" alt="Terminal com o comando tuner.py: --study-name demo_run, --regimes regimes-gptoss.yaml, --hardware mi325x, --search-profile goodput_v4, --n-trials 24." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>O comando mostra as quatro entradas do tuner e o número de trials.</span><a class="minuto" href="https://www.youtube.com/watch?v=cWrYEBlWpcY&amp;t=191s" target="_blank" rel="noopener" data-yt="cWrYEBlWpcY" data-t="191" aria-label="Assistir a partir de 03:11"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:11</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>O relatório HTML aponta a melhor trial</h3>
+    <p>Ao final, o agente gera um relatório HTML que indica qual trial foi a melhor e um YAML otimizado com os valores achados. A métrica é a quantidade de goodput tokens (tokens que cumprem a meta de latência) gerados. No GPT-OSS a melhora sobre a primeira configuração foi de 17,5%.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/cWrYEBlWpcY/3.jpg" data-legenda="O relatório mostra a melhor trial e a melhora de 17,5% sobre a receita inicial."><img src="../img/cWrYEBlWpcY/3.jpg" alt="Relatório HTML do GPT-OSS 120B: melhor trial #47 de 50, melhora de +17,5% vs primeira config, objetivo 1.586 tok/s ponderados sob SLO." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>O relatório mostra a melhor trial e a melhora de 17,5% sobre a receita inicial.</span><a class="minuto" href="https://www.youtube.com/watch?v=cWrYEBlWpcY&amp;t=252s" target="_blank" rel="noopener" data-yt="cWrYEBlWpcY" data-t="252" aria-label="Assistir a partir de 04:12"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:12</a></figcaption>
+  </figure>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>No DeepSeek, vazão dobra e ITL cai quase pela metade</h3>
+    <p>No segundo relatório, do DeepSeek R1 Distill, a melhor receita veio na nona e última trial de nove. A vazão de tokens dobrou e a inter-token latency (ITL) caiu quase à metade. O fato de a melhor trial ser a última sugere que mais tentativas poderiam render mais.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=cWrYEBlWpcY&amp;t=284s" target="_blank" rel="noopener" data-yt="cWrYEBlWpcY" data-t="284" aria-label="Assistir a partir de 04:44"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:44</a> Em nove trials, a última foi a melhor, com vazão dobrada e ITL reduzido.</p>  </div>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=cWrYEBlWpcY&amp;t=252s" target="_blank" rel="noopener" data-yt="cWrYEBlWpcY" data-t="252"><strong>17,5%</strong><span>ganho em tokens gerados no GPT-OSS sobre a primeira config</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:12<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=cWrYEBlWpcY&amp;t=191s" target="_blank" rel="noopener" data-yt="cWrYEBlWpcY" data-t="191"><strong>24</strong><span>trials usadas no comando da demo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:11<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=cWrYEBlWpcY&amp;t=284s" target="_blank" rel="noopener" data-yt="cWrYEBlWpcY" data-t="284"><strong>9</strong><span>trials no estudo do DeepSeek R1 Distill; a nona foi a melhor</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:44<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=cWrYEBlWpcY&amp;t=221s" target="_blank" rel="noopener" data-yt="cWrYEBlWpcY" data-t="221"><strong>4 a 5 h</strong><span>duração da execução para o GPT-OSS</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:41<span class="sr">, assistir neste minuto</span></span></a>
+  </div>
+
+  <div class="casper" id="a-cWrYEBlWpcY-bayesian-optimization">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Bayesian optimization (otimização bayesiana, busca que aprende com cada tentativa).</strong> Bayesian optimization é como acertar o tempero de uma receita provando cada versão e usando o gosto das anteriores para decidir quanto sal pôr na próxima.</p>
+    <ol class="passos"><li>Bayesian optimization (otimização bayesiana) é um jeito de achar a melhor combinação de ajustes sem testar todas as combinações possíveis.</li><li>Cada teste custa caro, como horas de GPU, então o método tenta acertar com poucas tentativas.</li><li>Depois de cada tentativa, ele guarda o resultado e monta um palpite sobre quais regiões dos ajustes parecem promissoras.</li><li>Esse palpite vem de um modelo estatístico que estima o resultado esperado e a incerteza de cada combinação ainda não testada.</li><li>A próxima tentativa equilibra explorar áreas desconhecidas e refinar áreas boas, o que encolhe o espaço de busca a cada rodada.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>TESTA UMA COMBINAÇÃO</strong><span>mede o resultado de uma tentativa</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>ATUALIZA O PALPITE</strong><span>modelo estima onde está o melhor</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>ESCOLHE A PRÓXIMA</strong><span>equilibra explorar e refinar</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>MELHOR CONFIGURAÇÃO</strong><span>achada com poucas tentativas</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-eval">Eval</a></p>  </div>
+  <div class="casper" id="a-cWrYEBlWpcY-optuna">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Optuna (biblioteca de otimização de hiperparâmetros em Python).</strong> O Optuna é como o técnico de um time que anota o placar de cada treino, muda a escalação e marca o próximo treino até acabar a temporada.</p>
+    <ol class="passos"><li>Optuna é uma biblioteca em Python que procura automaticamente os melhores valores para os ajustes de um sistema.</li><li>Você escreve uma função que recebe valores sugeridos, roda o teste e devolve uma nota.</li><li>Cada execução dessa função se chama trial (tentativa), e o conjunto de trials forma um study (estudo).</li><li>O Optuna usa uma estratégia, como a otimização bayesiana, para sugerir os valores da próxima trial com base nas notas anteriores.</li><li>No vídeo, o Optuna roda o laço sobre a receita de serving do vLLM até completar o número de trials pedido.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>SUGERE VALORES</strong><span>estratégia propõe a próxima receita</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>RODA A TRIAL</strong><span>executa o teste com esses valores</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>REGISTRA A NOTA</strong><span>guarda o placar no study</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>MELHOR TRIAL</strong><span>valores com a nota mais alta</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-eval">Eval</a></p>  </div>
+  <div class="casper" id="a-cWrYEBlWpcY-agente-de-otimizacao">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Agente de otimização (optimization agent engine).</strong> O agente de otimização é como um mecânico que ajusta o motor sozinho durante a noite e de manhã entrega o carro com uma ficha das regulagens que funcionaram melhor.</p>
+    <ol class="passos"><li>Um agente de otimização é um programa que procura sozinho a melhor configuração de um sistema enquanto você faz outra coisa.</li><li>No vídeo, o sistema é o vLLM, motor que serve um LLM, e a configuração é a receita em YAML que define como o modelo atende pedidos.</li><li>Você informa o nome do estudo, o YAML inicial, o hardware e o número de trials, e o agente roda em segundo plano por algumas horas.</li><li>Ele testa a receita em regimes de carga como chat curto, chat longo, RAG e classificação em lote, e usa o Optuna para propor ajustes.</li><li>No fim, entrega um relatório HTML com a melhor trial e um YAML otimizado, cujo ganho você deve comparar com o ruído entre execuções.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>RECEITA INICIAL</strong><span>YAML padrão do modelo</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>TESTE DE CARGA</strong><span>quatro regimes de uso</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>AJUSTE PELO OPTUNA</strong><span>propõe nova receita a cada trial</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>RELATÓRIO E YAML</strong><span>melhor trial e receita otimizada</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-agente-de-ia">Agente de IA</a>, <a href="../glossario.html#g-llm">LLM</a>, <a href="../glossario.html#g-token">Token</a></p>  </div>
+  <div class="casper" id="a-cWrYEBlWpcY-inter-token-latency-itl">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Inter-token latency (ITL) (tempo entre um token e o seguinte).</strong> Inter-token latency é como o intervalo entre uma palavra e outra quando alguém dita um texto devagar para você anotar.</p>
+    <ol class="passos"><li>Um modelo de linguagem escreve a resposta aos pedaços, e cada pedaço aparece na tela um depois do outro.</li><li>Esses pedaços se chamam tokens, e inter-token latency (ITL, latência entre tokens) mede quanto tempo passa entre um token e o seguinte.</li><li>ITL baixa faz o texto fluir rápido para quem lê, enquanto ITL alta deixa a resposta arrastada mesmo que ela comece cedo.</li><li>A ITL depende de como o servidor agrupa pedidos e usa a GPU, por isso muda quando você altera a receita de serving.</li><li>No vídeo, a melhor receita do DeepSeek R1 Distill reduziu a ITL quase pela metade, junto com o dobro de vazão.</li></ol>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-token">Token</a>, <a href="../glossario.html#g-llm">LLM</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>É uma demo curta de ferramenta interna da DigitalOcean, sem comparação com outras formas de busca e sem repetição das execuções. Os números (17,5% e vazão dobrada) vêm de uma única corrida por modelo, sem intervalo de confiança. A descrição do evento fala de um ganho de 4% que era ruído, mas a demo não mostra esse caso nem como o agente o evita. O palestrante cita 24 trials no comando e 50 no relatório, uma inconsistência que ele não explica. Os modelos e o hardware (AMD MI355) limitam a generalização.</p>
+  </div>
+
+  <section class="card autoteste">
+    <h3>Teste você mesmo</h3>
+    <p class="muted">Responda de cabeça antes de abrir. Lembrar com esforço é o que fixa.</p>
+    <ol class="perguntas">
+      <li><span class="tipo">lembrar</span> Qual é o papel do Optuna em relação à otimização bayesiana no agente?
+        <details class="resposta"><summary>Ver resposta</summary><p>A otimização bayesiana é a estratégia que escolhe os próximos valores. O Optuna é a ferramenta que roda o laço: avalia cada receita, dá uma nota, propõe a mudança e repete até acabar as trials.</p></details>
+      </li>
+      <li><span class="tipo">aplicar</span> Você serve um modelo com vLLM para um chat de suporte. Que informações daria ao tuner e como mediria o resultado?
+        <details class="resposta"><summary>Ver resposta</summary><p>Daria o YAML inicial, o hardware, o número de trials e regimes que imitam seu tráfego, com tamanhos reais de entrada e saída. Mediria goodput, ou seja, tokens que cumprem sua meta de latência, e não só a vazão bruta.</p></details>
+      </li>
+      <li><span class="tipo">criticar</span> Por que o ganho de 17,5% deve ser lido com cautela?
+        <details class="resposta"><summary>Ver resposta</summary><p>Vem de uma única corrida, sem repetição nem intervalo de confiança. Sem medir o ruído entre execuções, parte do ganho pode ser variação normal. Os dados também são de uma equipe que vende a infraestrutura testada.</p></details>
+      </li>
+    </ol>
+  </section>
+
+  <div class="casper experimento">
+    <span class="tag">experimente · 30 min</span>
+    <p class="exp-titulo"><strong>Otimização bayesiana com ruído usando Optuna</strong></p>
+    <p class="muted">Você precisa de: Python 3 com pip install optuna</p>
+    <ol class="passos"><li>Escreva uma função que simule o throughput de um servidor a partir de dois parâmetros, como batch size e tamanho de fila, somando ruído aleatório de cerca de 3%.</li><li>Crie um estudo do Optuna com direction maximize e rode 30 trials sobre essa função.</li><li>Anote a melhor trial e o valor, depois rode a função 10 vezes com esses parâmetros e com os parâmetros iniciais.</li><li>Compare a diferença entre as duas médias com o desvio padrão das 10 repetições.</li></ol>
+    <p><strong>Deu certo se:</strong> Você consegue dizer se o ganho encontrado é maior que o ruído medido nas repetições.</p>
+  </div>
+
+  <section class="card painel">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Anote a configuração atual do seu servidor vLLM em um YAML e meça throughput e ITL como linha de base antes de mudar qualquer parâmetro.</li><li>Repita a mesma medição de benchmark pelo menos três vezes sem mudar nada, para estimar o ruído entre execuções.</li><li>Instale o Optuna e escreva um estudo pequeno que varia dois parâmetros do seu serving e registra uma nota por trial.</li></ul>
+  </section>
+
+  <section class="relacionados">
+    <h3 class="rotulo-mao">Conversa com outros talks</h3>
+    <ul>
+<li><span class="relacao">complementa</span> <a href="../edicoes/2026-10-07.html#v-XTpyNrEgJQ4">Quando vale ligar speculative decoding no vLLM</a> <span class="muted">· Ambos ajustam o vLLM medindo sob carga real; um decide sobre speculative decoding, o outro busca a receita inteira com um agente.</span></li><li><a href="../edicoes/2026-10-29.html#v-P_0_Th_ZzIg">Medir a config do vLLM antes de ir para produção</a> <span class="muted">· 29 out · em comum: Inter-token latency (ITL), vLLM</span></li><li><a href="../edicoes/2026-11-09.html#v-ntVpbyDTYaQ">Controle de admissão para LLM hospedado por você</a> <span class="muted">· 9 nov · em comum: Goodput, vLLM</span></li><li><a href="../edicoes/2026-10-12.html#v-4n08JHb90hI">Servir um modelo com vLLM medindo cada ajuste</a> <span class="muted">· 12 out · em comum: Throughput, vLLM</span></li>    </ul>
+  </section>
+
+  <footer class="talk-fim">
+    <div class="talk-acoes">
+      <label class="estudei js-only"><input type="checkbox" data-id="cWrYEBlWpcY"> <span class="estudei-txt">Marquei como estudado</span><span class="sr">: <span lang="en">Stop Shipping LLM Settings That Only Win on Paper</span></span></label>
+      <details class="levo js-only" data-levo="cWrYEBlWpcY">
+        <summary>O que eu levo deste talk</summary>
+        <label class="sr" for="nota-cWrYEBlWpcY">O que eu levo deste talk (fica só neste aparelho)</label>
+        <textarea id="nota-cWrYEBlWpcY" data-nota="cWrYEBlWpcY" rows="2" placeholder="Uma frase com as suas palavras. Fica salva só neste aparelho."></textarea>
+      </details>
+    </div>
+    <div class="talk-nav">
+      <a class="voltar-indice" href="#indice">↑ Índice</a>
+      <a class="proximo" href="#fim">Fechar a edição <span aria-hidden="true">↓</span></a>
+    </div>
+  </footer>
+</article>
+        </details>
+      </section>
+
+      <section class="fim-edicao card" id="fim" aria-labelledby="fim-titulo">
+        <h2 id="fim-titulo">Fim da edição</h2>
+        <span class="progresso" data-ids="yzx4IuEh_tU O_zcc6Xl12g D_4Rn6uLdQM Cyt3LU8TyNc vlfCjWuv4es 0EnLxIbAvYk oeknLUsN_GE cWrYEBlWpcY"></span>
+        <div class="revise">
+          <h3>Revise</h3>
+          <p class="muted">Uma pergunta de dias anteriores. Responda de cabeça antes de abrir: é a revisão espaçada que faz o conteúdo ficar.</p>
+          <ol class="perguntas">
+            <li><span class="tipo">há 7 dias</span> Por que somar os valores em dólar extraídos de um contrato e seus aditivos pode dar um total errado?
+              <details class="resposta"><summary>Ver resposta</summary><p>Cada aditivo pode reafirmar o valor total do contrato. Somar os números infla o resultado. O texto mostra que vale o valor do aditivo mais recente.</p><p class="muted">Do talk <a href="../edicoes/2026-11-08.html#v-u7fsyrXsPBE">Por que o Claude Code errou US$ 800 mil em contratos</a>, edição de 8 nov.</p></details>
+            </li>
+            <li><span class="tipo">há 30 dias</span> Quais são as três falhas de agentes que Corey Gallon descreve e o que o nível 1 exige do agente?
+              <details class="resposta"><summary>Ver resposta</summary><p>O agente exagera o que fez, erra fatos ou erra o raciocínio. O nível 1 exige que ele termine com &#39;artefato verificado&#39;, com uma impressão digital do arquivo, ou com &#39;artefato ausente&#39; e o motivo.</p><p class="muted">Do talk <a href="../edicoes/2026-10-16.html#v-dYh7TQkuYFE">Três níveis de revisão para confiar em agentes</a>, edição de 16 out.</p></details>
+            </li>
+          </ol>
+        </div>
+        <p>Termos novos no glossário:
+<a href="../glossario.html#g-slop">Slop</a>, <a href="../glossario.html#g-linter">Linter</a>, <a href="../glossario.html#g-revert">Revert</a>, <a href="../glossario.html#g-formal-verification">Formal verification</a>, <a href="../glossario.html#g-orquestrador-de-agentes">Orquestrador de agentes</a>, <a href="../glossario.html#g-teste-flaky">Teste flaky</a>, <a href="../glossario.html#g-solver-smt">Solver SMT</a>, <a href="../glossario.html#g-equivalencia-logica">Equivalência lógica</a>, <a href="../glossario.html#g-bayesian-optimization">Bayesian optimization</a>, <a href="../glossario.html#g-optuna">Optuna</a>, <a href="../glossario.html#g-agente-de-otimizacao">Agente de otimização</a>, <a href="../glossario.html#g-inter-token-latency-itl">Inter-token latency (ITL)</a>.
+        </p>
+        <nav class="paginacao" aria-label="Outras edições">
+<a rel="prev" href="2026-11-10.html"><span class="paginacao-dir">← Edição anterior</span><strong>Agentes em equipe pedem as regras de um sistema distribuído</strong><span class="muted">terça, 10 nov 2026</span></a>          <a class="voltar" href="../index.html#edicoes"><span class="paginacao-dir">Todas as edições</span><strong>Voltar ao início</strong></a>
+        </nav>
+      </section>
+    </div>
+  </div>
+
+  <div class="progresso-leitura js-only" aria-hidden="true"><i></i></div>
+  <nav class="barra-leitura js-only" aria-label="Navegação da leitura" hidden>
+    <a href="#indice" class="bl-indice">Índice</a>
+    <span class="bl-pos" aria-live="off"></span>
+    <a href="#fim" class="bl-proximo">Próximo ↓</a>
+  </nav>
+</div>
+</main>
+<footer class="rodape wrap">
+  <p>Resumos em português dos talks do canal <a href="https://www.youtube.com/@aiDotEngineer" target="_blank" rel="noopener">AI Engineer<span class="sr"> (abre em nova aba)</span></a>. Atualizado em 16 nov 2026, 10:23. <a href="../status.html">Status da rotina</a> · <a href="../feed.xml">Assinar por RSS</a></p>
+</footer>
+<script src="../app.js" defer></script>
+</body>
+</html>

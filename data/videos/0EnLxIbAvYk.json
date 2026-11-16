@@ -1,0 +1,255 @@
+{
+  "id": "0EnLxIbAvYk",
+  "titulo": "Your Spec Has Bugs. Catch Them Before Your Agent Codes. - Rajath Mahendrappa Kotyal, AWS",
+  "titulo_curto": "Your Spec Has Bugs. Catch Them Before Your Agent Codes.",
+  "palestrante": "Rajath Mahendrappa Kotyal, AWS",
+  "url": "https://www.youtube.com/watch?v=0EnLxIbAvYk",
+  "duracao": 470,
+  "publicado_ts": 1794434435,
+  "edicao": "2026-11-15",
+  "tese": "Um agente de código constrói fielmente os erros da spec. Verifique contradições e lacunas antes de gerar qualquer código.",
+  "tldr": [
+    "Regras que parecem corretas sozinhas podem se contradizer juntas, e o agente de código implementa a contradição sem avisar.",
+    "O Kiro Specification Analyzer, da AWS, traduz a spec para fórmulas lógicas (SMT) e usa um solver para achar conflitos. Ele repete a tradução e agrupa as versões por equivalência lógica.",
+    "Quando há ambiguidade, o humano decide entre opções claras. Se ninguém responde, a ferramenta usa um LLM juiz ou se abstém de implementar o trecho."
+  ],
+  "tema": "engenharia-de-software",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Duas regras certas que não convivem",
+      "texto": "Num e-commerce, uma regra manda registrar o pedido como back order quando o estoque acaba. Outra diz que nenhum pedido pode virar back order. Lidas separadas, as duas fazem sentido. Juntas, não podem ser verdadeiras. O agente de código implementa as duas mesmo assim, e o bug nasce na spec.",
+      "t": 40,
+      "legenda": "Duas regras plausíveis que se contradizem quando lidas em conjunto",
+      "print": "img/0EnLxIbAvYk/0.jpg",
+      "descricao": "Slide 'Two fine rules, one bug' com R2 (pedido enviado E estoque indisponível vai para backorder) e R3 (nenhum pedido em backorder)."
+    },
+    {
+      "titulo": "Refinar, formalizar e checar",
+      "texto": "Primeiro o LLM tenta limpar a redação sozinho. Se não resolve, traduz o texto para fórmulas SMT-LIB. Um solver de satisfatibilidade diz se as fórmulas são consistentes. Se achar ambiguidade, a frase volta ao LLM para nova revisão, em ciclo.",
+      "t": 184,
+      "legenda": "O solver age como verificador formal entre o LLM e o código",
+      "print": "img/0EnLxIbAvYk/1.jpg",
+      "descricao": "Diagrama 'LLM translates, solver checks' em 3 etapas: LLM refina o texto, LLM formaliza EARS para SMT-LIB, solver SMT analisa conflitos e lacunas."
+    },
+    {
+      "titulo": "Desacordo do modelo vira sinal",
+      "texto": "A ferramenta pede ao LLM 7 ou 10 traduções da mesma frase. Depois agrupa as traduções por equivalência lógica. Se saem vários grupos, o modelo está assumindo coisas diferentes, o que indica que a frase é ambígua. Um único grupo sugere que a frase é clara.",
+      "t": 262,
+      "legenda": "Clusters diferentes revelam interpretações distintas do mesmo texto",
+      "print": "img/0EnLxIbAvYk/2.jpg",
+      "descricao": "Slide 'Sample, then cluster' (passo 2 de 4): amostrar, agrupar por equivalência lógica e decidir. 'Disagreement means ambiguity.'"
+    },
+    {
+      "titulo": "O humano decide com opções claras",
+      "texto": "Para uma regra vaga como remover o registro, a ferramenta oferece alternativas concretas: apagar de vez ou manter e esconder do usuário. O dono do domínio escolhe. Sem resposta, entra um LLM juiz ou o trecho não é implementado.",
+      "t": 315,
+      "legenda": "A ferramenta transforma ambiguidade em uma escolha objetiva",
+      "print": "img/0EnLxIbAvYk/3.jpg",
+      "descricao": "Slide 'Ask one clear question' (passo 3 de 4) para 'remove the record': A) registro some; B) registro retido e oculto do usuário."
+    },
+    {
+      "titulo": "Conflito e lacuna são problemas diferentes",
+      "texto": "Conflito é quando duas regras não podem valer juntas, como a regra 1 contra a regra 3. Lacuna é quando nenhuma regra cobre um caso, como um pedido ocioso. O solver encontra os dois tipos entre sentenças, enquanto a ambiguidade aparece dentro de uma frase.",
+      "t": 345,
+      "legenda": "O pipeline separa conflito, lacuna e ambiguidade",
+      "print": "img/0EnLxIbAvYk/4.jpg",
+      "descricao": "Slide 'Check every rule at once' (passo 4 de 4): Conflito, R2 e R3 colidem com estoque zerado; Lacuna, nenhuma regra cobre pedido ocioso."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Spec-driven development",
+      "traducao": "desenvolvimento guiado por especificação",
+      "nivel": "basico",
+      "chave": "spec-driven development",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Coding agent",
+      "traducao": "agente de código",
+      "nivel": "basico",
+      "chave": "coding agent",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Solver SMT",
+      "traducao": "verificador automático de satisfatibilidade lógica",
+      "nivel": "avancado",
+      "chave": "solver smt",
+      "analogia": "Um solver SMT é como um fiscal de horário escolar que confere se dá para encaixar todas as aulas na grade sem que um professor esteja em duas salas ao mesmo tempo.",
+      "explicacao": [
+        "Um solver é um programa que recebe um conjunto de regras e responde se todas podem valer ao mesmo tempo.",
+        "Antes, alguém traduz as regras escritas em português ou inglês para fórmulas lógicas, com variáveis como pedido_enviado e estoque_disponivel.",
+        "SMT (Satisfiability Modulo Theories, satisfatibilidade módulo teorias) é a família de solvers que entende números, textos e listas, além de verdadeiro e falso. As fórmulas seguem um formato padrão chamado SMT-LIB.",
+        "Se o solver acha uma combinação de valores que satisfaz tudo, as regras são consistentes. Se não acha nenhuma, ele aponta quais regras se contradizem, como as duas regras de back order (pedido pendente).",
+        "No Kiro Specification Analyzer, o LLM traduz a spec e o solver confere. As contradições e ambiguidades encontradas voltam ao LLM ou ao humano para revisão."
+      ],
+      "pre_requisitos": [
+        "LLM",
+        "Agente de IA"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "REGRAS EM TEXTO",
+            "nota": "spec escrita em linguagem natural"
+          },
+          {
+            "rotulo": "FÓRMULAS SMT-LIB",
+            "nota": "LLM traduz cada regra para lógica"
+          },
+          {
+            "rotulo": "SOLVER CONFERE",
+            "nota": "busca valores que satisfaçam tudo"
+          },
+          {
+            "rotulo": "CONSISTENTE OU CONFLITO",
+            "nota": "aponta as regras que se contradizem"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Formalização",
+      "traducao": "tradução de texto em linguagem natural para lógica formal",
+      "nivel": "intermediario",
+      "chave": "formalização",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Equivalência lógica",
+      "traducao": "duas fórmulas com o mesmo significado em todos os casos",
+      "nivel": "avancado",
+      "chave": "equivalência lógica",
+      "analogia": "Equivalência lógica é como duas receitas escritas com palavras diferentes que, seguidas à risca, sempre dão o mesmo bolo.",
+      "explicacao": [
+        "Duas frases são equivalentes quando dizem a mesma coisa, mesmo com palavras diferentes.",
+        "Na lógica, duas fórmulas são equivalentes quando dão o mesmo resultado, verdadeiro ou falso, em todas as situações possíveis.",
+        "Um solver consegue provar isso: ele procura um caso em que uma fórmula vale e a outra não. Se esse caso não existe, as duas são equivalentes.",
+        "No talk, o LLM traduz a mesma frase da spec 7 ou 10 vezes. A ferramenta agrupa as traduções em clusters (grupos) de fórmulas equivalentes.",
+        "Um único grupo indica que a frase é clara. Vários grupos mostram que o modelo assumiu sentidos diferentes, então a frase é ambígua e vai para o humano decidir."
+      ],
+      "pre_requisitos": [
+        "LLM",
+        "Prompt"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "FRASE DA SPEC",
+            "nota": "uma regra escrita em texto"
+          },
+          {
+            "rotulo": "7 A 10 TRADUÇÕES",
+            "nota": "LLM gera várias fórmulas"
+          },
+          {
+            "rotulo": "AGRUPAR EQUIVALENTES",
+            "nota": "solver junta as de mesmo sentido"
+          },
+          {
+            "rotulo": "CLARA OU AMBÍGUA",
+            "nota": "vários grupos indicam ambiguidade"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Human in the loop",
+      "traducao": "humano no circuito de validação",
+      "nivel": "basico",
+      "chave": "human in the loop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo de linguagem usado para avaliar respostas",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O talk apresenta uma ferramenta da própria AWS (Kiro) e não mostra benchmark nem taxa de acerto do analisador. Os números sobre queda de 20 a 40% na precisão e 2 vezes mais regressões vêm de pesquisa pública citada de passagem, sem fonte falada. O palestrante admite que não existe oráculo de correção da spec além do usuário e que a evidência de formalização em agentes ainda é escassa. A afirmação de que solver supera LLM juiz aparece só na descrição, sem comparação no vídeo.",
+  "acoes": [
+    "Releia uma spec ou um arquivo de regras que você entrega a um agente e procure pares de regras que não podem valer juntas.",
+    "Peça a um LLM para reescrever a mesma regra 5 vezes em outras palavras e compare se os sentidos divergem.",
+    "Liste os casos que sua spec não cobre, como estado vazio, falha e item ocioso, e acrescente uma regra para cada um."
+  ],
+  "numeros": [
+    {
+      "valor": "20 a 40%",
+      "contexto": "queda de precisão com prompts pouco claros",
+      "t": 91
+    },
+    {
+      "valor": "60 a 90%",
+      "contexto": "código válido que ainda sai errado",
+      "t": 91
+    },
+    {
+      "valor": "2 vezes",
+      "contexto": "mais regressões ao implantar esse código",
+      "t": 91
+    },
+    {
+      "valor": "7 ou 10",
+      "contexto": "traduções amostradas por frase ambígua",
+      "t": 248
+    }
+  ],
+  "rotulo": "Como achar bugs na spec antes de o agente codar",
+  "objetivo": "descrever o fluxo de refinar, formalizar e checar uma spec com solver antes de entregá-la a um agente de código",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são as três etapas que o analisador aplica a uma spec e qual o papel do solver?",
+      "resposta": "O LLM tenta refinar a redação. Se falhar, formaliza o texto em fórmulas SMT. O solver checa se as fórmulas são consistentes e aponta conflitos ou ambiguidade, que voltam ao LLM para revisão."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você tem um CLAUDE.md com 30 regras para um agente. Como usaria a ideia de amostrar e agrupar traduções para achar regras ambíguas?",
+      "resposta": "Peça a um LLM para reescrever cada regra como condição precisa várias vezes. Compare os resultados. Regras que geram interpretações diferentes são ambíguas e precisam ser reescritas ou decididas por você."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites e conflitos de interesse tornam fraca a evidência do talk?",
+      "resposta": "A fala vem de uma equipe da AWS que promove o Kiro. Não há dados de acerto ou falsos positivos do analisador. O próprio palestrante diz que não há garantia sem o usuário e que a evidência de formalização com agentes ainda é escassa."
+    }
+  ],
+  "experimento": {
+    "titulo": "Caçar contradições numa spec com um LLM",
+    "minutos": 25,
+    "precisa": "Claude ou ChatGPT e uma spec ou arquivo de regras seu com 8 a 15 regras",
+    "passos": [
+      "Cole a spec no LLM e peça que liste pares de regras que não podem valer ao mesmo tempo, citando o número de cada uma.",
+      "Peça que liste os casos de entrada que nenhuma regra cobre.",
+      "Escolha 3 frases vagas e peça 5 reescritas lógicas de cada, em chamadas separadas. Anote onde as versões divergem.",
+      "Corrija a spec com as decisões que você tomar e repita o passo 1 até a lista de conflitos esvaziar."
+    ],
+    "sucesso": "Você encontrou ao menos um conflito, uma lacuna ou uma frase ambígua que não tinha notado e ajustou a spec."
+  },
+  "consolidado_em": "2026-11-16T13:22:40+00:00"
+}
