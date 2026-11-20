@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Agentes que trabalham horas sem tirar o controle de quem constrói · Aprendendo AI</title>
+<meta name="description" content="Resumos diários dos talks do canal AI Engineer, explicados no estilo Quadro Anotado.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" title="Aprendendo AI: edições" href="../feed.xml">
+<script>document.documentElement.classList.add("js");try{var t=localStorage.getItem("tema");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;500;700;900&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=Kalam:wght@400;700&display=swap">
+<link rel="stylesheet" href="../estilo.css">
+</head>
+<body class="pg-edicao">
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<header class="topo wrap">
+  <a class="marca" href="../index.html">Aprendendo <span>AI</span></a>
+  <nav class="topo-links" aria-label="Navegação principal">
+    <a href="../index.html#edicoes" aria-current="page">Edições</a>
+    <a href="../talks.html">Talks</a>
+    <a href="../glossario.html">Glossário</a>
+    <button type="button" class="tema-botao js-only" aria-label="Tema de cores: automático">◐</button>
+  </nav>
+</header>
+<main id="conteudo" class="wrap" tabindex="-1">
+<div class="edicao" id="e-2026-11-19">
+  <div class="edicao-corpo">
+  <header class="edicao-head">
+    <nav class="paginacao-topo" aria-label="Edições vizinhas">
+<a rel="prev" href="2026-11-18.html">← 18 nov</a>      <a href="../index.html#edicoes">Todas as edições</a>
+    </nav>
+    <h1 class="h-edicao">Agentes que trabalham horas sem tirar o controle de quem constrói</h1>
+    <p class="meta">Talks de quinta, 19 nov 2026 · 2 talks · ≈ 12 min de leitura</p>
+<p class="abertura">Os dois talks de hoje tratam do mesmo problema por ângulos opostos: o que fazer quando o agente já consegue trabalhar sozinho por muito tempo. Thariq Shihipar mostra como não perder o entendimento do próprio projeto, separando o código do motor de uma especificação que ele lê e edita. Fabian Hedin, da Lovable, abre a infraestrutura por trás de agentes de 10 horas: histórico em log com forks, workers sem estado e um computador que se salva a cada turno.</p>    <div class="plano card">
+      <div class="plano-txt">
+        <p class="rotulo-mao">Hoje você vai conseguir</p>
+        <ul class="acoes"><li>desenhar uma pasta de especificação legível, separada do código do motor, para manter controle sobre o que o agente gera</li><li>desenhar a base de um agente de longa duração com histórico forkável, workers sem estado e sandbox com checkpoint</li></ul>
+      </div>
+      <a class="botao plano-cta" href="#v-xRJMiaUoD_8">Começar · ≈ 12 min <span aria-hidden="true">↓</span></a>
+    </div>
+  </header>
+
+    <details class="indice card" id="indice" open>
+      <summary class="indice-titulo">Ordem de leitura <span class="muted">(2)</span></summary>
+      <div class="indice-progresso">
+        <span class="progresso" data-ids="xRJMiaUoD_8 pZWPq_ZAmM4" data-rotulo="essenciais"></span>
+      </div>
+      <p class="indice-grupo">Essenciais</p>
+      <ol><li data-id="xRJMiaUoD_8"><a href="#v-xRJMiaUoD_8"><span class="ind-t">O lado doce da lição amarga: controle no vibe coding</span><span class="ind-min">5 min</span></a></li><li data-id="pZWPq_ZAmM4"><a href="#v-pZWPq_ZAmM4"><span class="ind-t">Infraestrutura da Lovable para agentes de 10 horas</span><span class="ind-min">7 min</span></a></li></ol>
+      <p class="indice-atalhos js-only"><button type="button" class="abrir-atalhos">Atalhos de teclado <kbd>?</kbd></button></p>
+    </details>
+
+    <div class="talks">
+<article class="video essencial" id="v-xRJMiaUoD_8" data-tema="engenharia-de-software" data-n="1" data-total="2" aria-labelledby="t-xRJMiaUoD_8">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">01</span>
+    <div class="sec-titulo">
+<p class="selo-essencial">essencial do dia<span>: Mostra um jeito prático de manter o controle no vibe coding: uma pasta de especificação legível, separada do código que o agente cuida.</span></p>      <h2 id="t-xRJMiaUoD_8">O lado doce da lição amarga: controle no vibe coding</h2>
+      <p class="titulo-original" lang="en">The Sweet Side of the Bitter Lesson</p>
+      <p class="tese">Abaixo da fronteira os modelos escrevem em qualquer formato, então escolha a linguagem que você consegue ler e controlar.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <a class="chip chip-tema" href="../trilhas/engenharia-de-software.html">Engenharia de software<span class="sr">: ver a trilha do tema</span></a>
+    <span class="chip">≈ 5 min de leitura</span>
+    <span class="chip" role="img" aria-label="Complexidade 2 de 5">nível ●●○○○</span>
+<span class="chip">Thariq Shihipar, Independent</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=xRJMiaUoD_8" target="_blank" rel="noopener" data-yt="xRJMiaUoD_8" data-t="0"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>Assistir (19:08)</a>
+  </div>
+
+<p class="objetivo"><span class="objetivo-rotulo">Depois deste talk você consegue</span> desenhar uma pasta de especificação legível, separada do código do motor, para manter controle sobre o que o agente gera</p>
+  <section class="card resumo">
+    <h3>Em 3 frases</h3>
+<p>Thariq Shihipar revisa previsões erradas do último ano: Bash e React não dominaram tudo, e a IA não virou uma inteligência alienígena que impõe o jeito dela.</p><p>Ele descreve o interior suave: abaixo da fronteira de capacidade, o modelo escreve React, Figma, JSON ou HTML com qualidade parecida, então o formato fica à escolha do humano.</p><p>Para não se perder no vibe coding, ele separa o código do motor, que o agente cuida, de uma pasta de especificação legível, quase uma linguagem de script própria do jogo, que ele lê e edita.</p>  </section>
+
+  <section class="antes-de-ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-xRJMiaUoD_8-bitter-lesson"><strong>Bitter lesson</strong> <span>lição amarga: a escala vence regras feitas à mão</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-vibe-coding"><strong>Vibe coding</strong> <span>programar descrevendo o resultado e deixando a IA escrever o código</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-spec-driven-development"><strong>Spec-driven development</strong> <span>desenvolvimento guiado por especificação</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-mcp"><strong>MCP</strong> <span>protocolo para conectar ferramentas a agentes</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-code-mode"><strong>Code Mode</strong> <span>tratar ferramentas MCP como código que o modelo escreve e navega</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-progressive-disclosure"><strong>Progressive disclosure</strong> <span>revelar ferramentas ao agente só quando necessário</span> <em>analogia no glossário</em></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-software-factory"><strong>Software factory</strong> <span>fábrica de software</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-diffusion-model"><strong>Diffusion model</strong> <span>modelo de difusão</span> <em>analogia no glossário</em></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Previsões que erraram: Bash, React e arte</h3>
+    <p>O palestrante achava que tudo viraria CLI com Bash, que React seria a última linguagem e que modelos de difusão engoliriam a arte. Nada disso aconteceu. Hoje ele prefere MCP a CLIs, e os modelos geram arte por código e por ferramentas como Blender e Figma. O uso de Bash era resquício de como os modelos foram treinados.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/xRJMiaUoD_8/0.jpg" data-legenda="&#39;Bash is all you need&#39;, uma das previsões que não se confirmaram."><img src="../img/xRJMiaUoD_8/0.jpg" alt="Citação &#39;Bash is all you need&#39; com terminal digitando &#39;mcp-cli call github create_issue&#39;. A lista de previsões erradas não aparece." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>&#39;Bash is all you need&#39;, uma das previsões que não se confirmaram.</span><a class="minuto" href="https://www.youtube.com/watch?v=xRJMiaUoD_8&amp;t=87s" target="_blank" rel="noopener" data-yt="xRJMiaUoD_8" data-t="87" aria-label="Assistir a partir de 01:27"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:27</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Fronteira irregular e interior suave</h3>
+    <p>A fronteira de capacidade é irregular, e os benchmarks mostram isso. Dentro dela, porém, o terreno é liso. Se o modelo escreve React, também escreve Figma e JSON. Para ele, o que importa agora é a qualidade do software, e não se o modelo constrói um Mario Kart do zero.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/xRJMiaUoD_8/1.jpg" data-legenda="Abaixo da fronteira, o modelo também cresceu para os lados."><img src="../img/xRJMiaUoD_8/1.jpg" alt="Slide &#39;The smooth interior&#39; sobre fundo escuro: &#39;Models have also grow horizontally.&#39; Sem a animação da fronteira irregular." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Abaixo da fronteira, o modelo também cresceu para os lados.</span><a class="minuto" href="https://www.youtube.com/watch?v=xRJMiaUoD_8&amp;t=411s" target="_blank" rel="noopener" data-yt="xRJMiaUoD_8" data-t="411" aria-label="Assistir a partir de 06:51"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:51</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Mapa terra ou água como medida de conhecimento</h3>
+    <p>Um teste atribuído a Karpathy dá latitude e longitude ao modelo e pergunta se o ponto é terra ou água. Com os pontos, desenha-se um mapa. No slide, o Sonnet 4.5 acerta 60,5% e o Opus 5.5 chega a 99,0%, com mapa quase perfeito. Para ele, o conhecimento geral do modelo importa mais que a fronteira dos benchmarks.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/xRJMiaUoD_8/2.jpg" data-legenda="Quanto cada modelo acerta sobre onde há terra e onde há água."><img src="../img/xRJMiaUoD_8/2.jpg" alt="Grade de mapas &#39;How 12 blind Claudes see the Earth&#39; com % de acerto: Sonnet 4.5 60,5%, Haiku 4.5 81,3%, Opus 4.6 91,2%, Opus 5.5 99,0%." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Quanto cada modelo acerta sobre onde há terra e onde há água.</span><a class="minuto" href="https://www.youtube.com/watch?v=xRJMiaUoD_8&amp;t=568s" target="_blank" rel="noopener" data-yt="xRJMiaUoD_8" data-t="568" aria-label="Assistir a partir de 09:28"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:28</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Código do motor separado da especificação legível</h3>
+    <p>No jogo de luta que ele desenvolve, o vibe coding fazia o modelo tomar decisões que ele não via, como a rocha atravessar ou não uma parede. Ele dividiu o repositório em duas partes. O motor fica com o agente. Uma pasta humana tem código com linter, regras para o Claude e estilo próximo do inglês, que ele consegue ler e ajustar.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/xRJMiaUoD_8/3.jpg" data-legenda="A pasta legível concentra personagens e habilidades, sem o código de câmera do motor."><img src="../img/xRJMiaUoD_8/3.jpg" alt="Zed com a árvore do projeto bending-game, pasta game selecionada, e rock.ts aberto com código TypeScript de habilidade do personagem." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>A pasta legível concentra personagens e habilidades, sem o código de câmera do motor.</span><a class="minuto" href="https://www.youtube.com/watch?v=xRJMiaUoD_8&amp;t=846s" target="_blank" rel="noopener" data-yt="xRJMiaUoD_8" data-t="846" aria-label="Assistir a partir de 14:06"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:06</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Uma linguagem de script própria como especificação</h3>
+    <p>O movimento da rocha usa unidades como metros, tem comentários e três formas de lançar. Ele muda o tamanho para 1,5 e vê o resultado no jogo. O Cursor com tab completion ajuda a escrever novas ações. Para primitivas complexas, ele ainda pede ao Claude. A especificação vira a linguagem do projeto.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/xRJMiaUoD_8/4.jpg" data-legenda="Alterar um parâmetro legível muda o comportamento do personagem no jogo."><img src="../img/xRJMiaUoD_8/4.jpg" alt="Zed com game/heroes (kesar, huan, ondo) e rock.ts: função fromTheGround com rock.size[0] e comentários em inglês sobre a habilidade." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Alterar um parâmetro legível muda o comportamento do personagem no jogo.</span><a class="minuto" href="https://www.youtube.com/watch?v=xRJMiaUoD_8&amp;t=907s" target="_blank" rel="noopener" data-yt="xRJMiaUoD_8" data-t="907" aria-label="Assistir a partir de 15:07"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:07</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=xRJMiaUoD_8&amp;t=876s" target="_blank" rel="noopener" data-yt="xRJMiaUoD_8" data-t="876"><strong>3</strong><span>formas de o personagem lançar a rocha no código legível</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>14:36<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=xRJMiaUoD_8&amp;t=907s" target="_blank" rel="noopener" data-yt="xRJMiaUoD_8" data-t="907"><strong>1,5</strong><span>tamanho da rocha ajustado na especificação durante a demo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:07<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=xRJMiaUoD_8&amp;t=568s" target="_blank" rel="noopener" data-yt="xRJMiaUoD_8" data-t="568"><strong>99,0%</strong><span>acerto do Opus 5.5 no teste do mapa de terra e água</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>09:28<span class="sr">, assistir neste minuto</span></span></a>
+  </div>
+
+  <div class="casper" id="a-xRJMiaUoD_8-bitter-lesson">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Bitter lesson (lição amarga: a escala vence regras feitas à mão).</strong> A bitter lesson é como um aluno que decorou todas as dicas do professor, mas perde para quem simplesmente estudou muito mais horas.</p>
+    <ol class="passos"><li>Bitter lesson (lição amarga) é uma observação de décadas de pesquisa em IA. Regras que humanos escrevem à mão acabam perdendo para métodos gerais que usam mais dados e mais poder de computação.</li><li>Ela é amarga porque o esforço de ensinar truques ao computador costuma ser ultrapassado por quem apenas escala o treino.</li><li>Na palestra, Thariq Shihipar usa o termo para descrever um medo comum. Se a escala manda, o modelo teria um jeito próprio e alienígena de trabalhar, e os humanos teriam de se submeter a ele.</li><li>Ele diz que isso não aconteceu. Um LLM (modelo de linguagem grande) escreve HTML, React, Swift ou JSON do Figma com qualidade parecida. O formato fica à escolha do humano.</li><li>Por isso ele chama a outra face de lado doce da lição. Como o modelo faz quase tudo bem, você escolhe a linguagem que consegue ler e controlar.</li></ol>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-llm">LLM</a>, <a href="../glossario.html#g-eval">Eval</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>É uma reflexão pessoal, sem dados. As previsões erradas e o interior suave são impressões do autor, e o mapa de terra e água é um único teste visual, sem método descrito. O método de especificação legível vem de um único projeto de jogo, por uma pessoa, e ele mesmo diz que está no início. Não há medição de produtividade nem comparação com outras abordagens. O autor tem interesse em narrativas otimistas sobre agentes, e a ressalva de que o interior é suave não indica onde fica a fronteira.</p>
+  </div>
+
+  <section class="card autoteste">
+    <h3>Teste você mesmo</h3>
+    <p class="muted">Responda de cabeça antes de abrir. Lembrar com esforço é o que fixa.</p>
+    <ol class="perguntas">
+      <li><span class="tipo">lembrar</span> O que o palestrante chama de interior suave em contraste com a fronteira irregular?
+        <details class="resposta"><summary>Ver resposta</summary><p>Abaixo da fronteira de capacidade o desempenho é uniforme. Se o modelo escreve React, escreve também Figma, JSON ou HTML com qualidade parecida.</p></details>
+      </li>
+      <li><span class="tipo">aplicar</span> Como você aplicaria a separação entre motor e especificação legível em um projeto seu, como um sistema de regras de preço?
+        <details class="resposta"><summary>Ver resposta</summary><p>Deixe o agente cuidar da infraestrutura e crie uma pasta com as regras de preço em formato quase inglês, com unidades explícitas, linter e instruções para o agente sobre o estilo. Você lê e edita essa pasta e pede ao agente só as primitivas complexas.</p></details>
+      </li>
+      <li><span class="tipo">criticar</span> Que limite de evidência existe no argumento de que o interior é suave e a especificação legível funciona?
+        <details class="resposta"><summary>Ver resposta</summary><p>A base é um único projeto pessoal e impressões do autor, sem medição e sem comparação com outros métodos. O teste do mapa é um único experimento visual. Falta dizer onde a fronteira irregular começa em tarefas reais.</p></details>
+      </li>
+    </ol>
+  </section>
+
+  <div class="casper experimento">
+    <span class="tag">experimente · 25 min</span>
+    <p class="exp-titulo"><strong>Mesma tela em três formatos</strong></p>
+    <p class="muted">Você precisa de: Claude ou ChatGPT, um navegador e um navegador de arquivos</p>
+    <ol class="passos"><li>Descreva uma tela simples, como um formulário de cadastro com três campos, em duas frases.</li><li>Peça a mesma tela em HTML puro, em React e em outro formato que você conheça, como JSON de componentes.</li><li>Abra os três resultados e anote quanto tempo leva para entender e alterar um campo em cada um.</li><li>Escolha o formato que você consegue ler melhor e peça ao modelo para reescrever o código dessa tela nele, com comentários e nomes claros.</li></ol>
+    <p><strong>Deu certo se:</strong> Você tem os três resultados com qualidade parecida e escolheu, com base no que leu, o formato que consegue revisar e editar sozinho.</p>
+  </div>
+
+  <section class="card painel">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Separe no seu repositório uma pasta com a especificação que você precisa ler, e escreva regras para o agente (CLAUDE.md) sobre o estilo dela.</li><li>Reescreva um trecho de lógica de negócio em um formato quase inglês, com unidades explícitas e comentários, e confira se você entende o comportamento sem abrir o motor.</li><li>Peça a mesma interface mockup em HTML, React e outro formato, e compare o resultado para decidir qual você consegue revisar mais rápido.</li></ul>
+  </section>
+
+  <section class="relacionados">
+    <h3 class="rotulo-mao">Conversa com outros talks</h3>
+    <ul>
+<li><span class="relacao">complementa</span> <a href="../edicoes/2026-11-05.html#v-ra8X7_bnujw">Quando esperar o próximo modelo e quando reconstruir</a> <span class="muted">· Blackstone e Norm AI deixam leve o código que o próximo modelo vai superar; Thariq mostra o lado doce: o humano escolhe o formato que lê.</span></li><li><a href="../edicoes/2026-10-27.html#v-dAoOYFx7ZYw">Code mode: dê um sandbox ao agente, não mais ferramentas</a> <span class="muted">· 27 out · em comum: Code Mode, Progressive disclosure</span></li><li><a href="../edicoes/2026-11-17.html#v-UCL4K36SHp0">Clonar apps fechados com agentes e Rust em código aberto</a> <span class="muted">· 17 nov · em comum: MCP, Software factory, Vibe coding</span></li><li><a href="../edicoes/2026-10-02.html#v-pAnLpiAG6Es">MCP e CLI sem encher o contexto do agente</a> <span class="muted">· 2 out · em comum: Code Mode, MCP</span></li>    </ul>
+  </section>
+
+  <footer class="talk-fim">
+    <div class="talk-acoes">
+      <label class="estudei js-only"><input type="checkbox" data-id="xRJMiaUoD_8"> <span class="estudei-txt">Marquei como estudado</span><span class="sr">: <span lang="en">The Sweet Side of the Bitter Lesson</span></span></label>
+      <details class="levo js-only" data-levo="xRJMiaUoD_8">
+        <summary>O que eu levo deste talk</summary>
+        <label class="sr" for="nota-xRJMiaUoD_8">O que eu levo deste talk (fica só neste aparelho)</label>
+        <textarea id="nota-xRJMiaUoD_8" data-nota="xRJMiaUoD_8" rows="2" placeholder="Uma frase com as suas palavras. Fica salva só neste aparelho."></textarea>
+      </details>
+    </div>
+    <div class="talk-nav">
+      <a class="voltar-indice" href="#indice">↑ Índice</a>
+      <a class="proximo" href="#v-pZWPq_ZAmM4">Próximo <span>Infraestrutura da Lovable para agentes de 10 horas</span> <span aria-hidden="true">↓</span></a>
+    </div>
+  </footer>
+</article><article class="video essencial" id="v-pZWPq_ZAmM4" data-tema="agentes" data-n="2" data-total="2" aria-labelledby="t-pZWPq_ZAmM4">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">02</span>
+    <div class="sec-titulo">
+<p class="selo-essencial">essencial do dia<span>: Ensina a montar o histórico do agente como log com forks e a separar prompt de estado, base para qualquer agente de longa duração.</span></p>      <h2 id="t-pZWPq_ZAmM4">Infraestrutura da Lovable para agentes de 10 horas</h2>
+      <p class="titulo-original" lang="en">What it takes to set intelligence free</p>
+      <p class="tese">Agente de longa duração exige histórico em log separado, computador que se salva e forka, e verificação em dois laços.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <a class="chip chip-tema" href="../trilhas/agentes.html">Agentes<span class="sr">: ver a trilha do tema</span></a>
+    <span class="chip">≈ 7 min de leitura</span>
+    <span class="chip" role="img" aria-label="Complexidade 4 de 5">nível ●●●●○</span>
+<span class="chip">Fabian Hedin, CTO, Lovable</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=pZWPq_ZAmM4" target="_blank" rel="noopener" data-yt="pZWPq_ZAmM4" data-t="0"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>Assistir (22:25)</a>
+  </div>
+
+<p class="objetivo"><span class="objetivo-rotulo">Depois deste talk você consegue</span> desenhar a base de um agente de longa duração com histórico forkável, workers sem estado e sandbox com checkpoint</p>
+  <section class="card resumo">
+    <h3>Em 3 frases</h3>
+<p>A Lovable falhou em 2023 com um framework multiagente sofisticado, porque o modelo da época (GPT-4) não sustentava a complexidade, e voltou a um sistema simples até os modelos melhorarem.</p><p>Hoje os agentes rodam por 10 horas ou mais, apoiados em três peças: um histórico de tarefa em log append-only com forks, estilo Git, workers sem estado e um computador (sandbox) com checkpoint e fork de memória.</p><p>A verificação acontece em dois laços, um interno (build, lint, navegador) e um externo (analytics, testes A/B, pagamentos), para o agente otimizar o negócio e não só o código.</p>  </section>
+
+  <section class="antes-de-ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-pZWPq_ZAmM4-long-horizon-agent"><strong>Long-horizon agent</strong> <span>agente de longa duração</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-pZWPq_ZAmM4-trajectory"><strong>Trajectory</strong> <span>trajetória: log append-only do histórico do agente</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-pZWPq_ZAmM4-copy-on-write"><strong>Copy-on-write</strong> <span>cópia só na primeira escrita</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-multi-agent-system"><strong>Multi-agent system</strong> <span>sistema multiagente</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-compaction"><strong>Compaction</strong> <span>compactação do contexto</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-sandbox"><strong>Sandbox</strong> <span>ambiente isolado para rodar o código</span> <em>analogia no glossário</em></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-checkpointing"><strong>Checkpointing</strong> <span>salvar o progresso para retomar após falha</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-inner-outer-e-meta-loop"><strong>Inner, outer e meta loop</strong> <span>ciclo interno, externo e meta</span> <em>analogia no glossário</em></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Quando o framework multiagente falhou</h3>
+    <p>Em 2023 a Lovable montou um agente principal que criava agentes especialistas (implementação, front-end, back-end) trocando mensagens. O produto piorou. Eles voltaram a um sistema simples no fim de 2024: LLMs pequenos para recuperar conhecimento e um LLM principal que escreve a resposta e o código. A lição do palestrante: a ideia estava certa, o momento estava errado.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/pZWPq_ZAmM4/0.jpg" data-legenda="A arquitetura multiagente de 2023 que piorou o produto"><img src="../img/pZWPq_ZAmM4/0.jpg" alt="Slide &#39;First agent framework&#39; (jan 2024): agente principal com três ramos e trechos de XML create-implementation-agent e write-to-agent." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>A arquitetura multiagente de 2023 que piorou o produto</span><a class="minuto" href="https://www.youtube.com/watch?v=pZWPq_ZAmM4&amp;t=158s" target="_blank" rel="noopener" data-yt="pZWPq_ZAmM4" data-t="158" aria-label="Assistir a partir de 02:38"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:38</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Trajetória como log estilo Git</h3>
+    <p>Cada agente tem uma caixa de entrada (inbox) que humanos, outros agentes e agendadores usam. O agente copia as mensagens para sua trajetória, um log append-only em que cada evento aponta para o evento pai. Dois eventos com o mesmo pai criam um fork, o que permite abrir agentes paralelos sem duplicar o histórico. Merge fica de fora, pois o sentido de juntar dois agentes não está claro.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/pZWPq_ZAmM4/1.jpg" data-legenda="Fork de agente: dois eventos com o mesmo pai, sem copiar o histórico"><img src="../img/pZWPq_ZAmM4/1.jpg" alt="Slide &#39;Fork the task history at any step&#39;: linha principal Start até Done e fork &#39;Rewrite it in Rust&#39; apontando para o mesmo pai, sem copiar." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Fork de agente: dois eventos com o mesmo pai, sem copiar o histórico</span><a class="minuto" href="https://www.youtube.com/watch?v=pZWPq_ZAmM4&amp;t=625s" target="_blank" rel="noopener" data-yt="pZWPq_ZAmM4" data-t="625" aria-label="Assistir a partir de 10:25"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:25</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Prompt separado do histórico</h3>
+    <p>O log guarda tudo: chamadas de ferramenta, sucessos e falhas. O prompt é montado a partir dele. Assim a compactação (resumo dos passos antigos) pode variar conforme o modelo e o tamanho do contexto. O mesmo log também alimenta uma ferramenta de debug com um slider que reconstrói a interface em qualquer um dos 156 eventos mostrados.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/pZWPq_ZAmM4/2.jpg" data-legenda="O histórico completo permite reproduzir a interface em qualquer ponto"><img src="../img/pZWPq_ZAmM4/2.jpg" alt="Demo &#39;Replay a run, event by event&#39;: slider no evento 33 de 156, painel de eventos do agente à direita e a interface reconstruída à esquerda." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>O histórico completo permite reproduzir a interface em qualquer ponto</span><a class="minuto" href="https://www.youtube.com/watch?v=pZWPq_ZAmM4&amp;t=750s" target="_blank" rel="noopener" data-yt="pZWPq_ZAmM4" data-t="750" aria-label="Assistir a partir de 12:30"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>12:30</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Workers sem estado e deploy sem interrupção</h3>
+    <p>O processo que roda o agente grava tudo na trajetória a cada turno e não guarda estado. Por isso um worker pode sumir e outro assumir. Com cerca de 700 deploys por dia, isso evita derrubar uma tarefa de 10 horas e permite aplicar correções urgentes, como uma falha no kernel Linux.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/pZWPq_ZAmM4/3.jpg" data-legenda="Uma tarefa continua enquanto os processos por baixo são trocados"><img src="../img/pZWPq_ZAmM4/3.jpg" alt="Slide &#39;The task history lives outside the process&#39;: processo do agente, que pode parar, à esquerda; histórico de eventos em ordem à direita." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Uma tarefa continua enquanto os processos por baixo são trocados</span><a class="minuto" href="https://www.youtube.com/watch?v=pZWPq_ZAmM4&amp;t=812s" target="_blank" rel="noopener" data-yt="pZWPq_ZAmM4" data-t="812" aria-label="Assistir a partir de 13:32"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:32</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Computador com checkpoint e fork de memória</h3>
+    <p>Um checkpoint dourado guarda disco, memória e processos em execução, e é copiado em cerca de 230 ms para um projeto novo. A cada turno o computador é salvo de novo, então retoma em menos de um segundo. Para forks (o recurso drafts) usam copy-on-write na RAM e streaming de memória, e reescreveram o Vite em Rust, indo de 40 s para 3 s no preview.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/pZWPq_ZAmM4/4.jpg" data-legenda="Copy-on-write deixa o fork quase sem custo de RAM"><img src="../img/pZWPq_ZAmM4/4.jpg" alt="Slide &#39;Try different approaches from one snapshot&#39;: um computador salvo (arquivos, app, banco, memória) gera Draft A e Draft B com o mesmo início." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Copy-on-write deixa o fork quase sem custo de RAM</span><a class="minuto" href="https://www.youtube.com/watch?v=pZWPq_ZAmM4&amp;t=996s" target="_blank" rel="noopener" data-yt="pZWPq_ZAmM4" data-t="996" aria-label="Assistir a partir de 16:36"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>16:36</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=pZWPq_ZAmM4&amp;t=221s" target="_blank" rel="noopener" data-yt="pZWPq_ZAmM4" data-t="221"><strong>1 bilhão+</strong><span>tokens por minuto em produção na Lovable</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:41<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=pZWPq_ZAmM4&amp;t=812s" target="_blank" rel="noopener" data-yt="pZWPq_ZAmM4" data-t="812"><strong>700</strong><span>deploys por dia, cerca de um a cada 2 minutos</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:32<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=pZWPq_ZAmM4&amp;t=903s" target="_blank" rel="noopener" data-yt="pZWPq_ZAmM4" data-t="903"><strong>230 ms</strong><span>tempo para copiar o checkpoint dourado num projeto novo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>15:03<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=pZWPq_ZAmM4&amp;t=1089s" target="_blank" rel="noopener" data-yt="pZWPq_ZAmM4" data-t="1089"><strong>40 s para 3 s</strong><span>tempo do preview após reescrever o Vite em Rust</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>18:09<span class="sr">, assistir neste minuto</span></span></a>
+  </div>
+
+  <div class="casper" id="a-pZWPq_ZAmM4-long-horizon-agent">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Long-horizon agent (agente de longa duração).</strong> Um agente de longa duração é como um pedreiro que toca a obra o dia inteiro, em vez de um eletricista que faz um reparo de meia hora e vai embora.</p>
+    <ol class="passos"><li>É um programa de IA que trabalha sozinho numa tarefa por muito tempo, de horas a dias, sem alguém conversando com ele a cada passo.</li><li>Quanto mais longa a tarefa, mais chances de algo dar errado no meio: o processo cair, o contexto encher ou o agente seguir na direção errada.</li><li>Por isso o agente precisa de memória fora do processo (um log de tudo o que fez), de um computador que se salva e de verificações constantes.</li><li>A Lovable antes limitava os agentes a 30 minutos. Hoje não há limite e eles rodam 10 horas ou mais.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>HISTÓRICO EM LOG</strong><span>memória fora do processo</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>WORKER SEM ESTADO</strong><span>pode ser trocado a qualquer hora</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>COMPUTADOR SALVO</strong><span>checkpoint a cada turno</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>VERIFICAÇÃO</strong><span>laços interno e externo</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>TAREFA DE 10 HORAS</strong><span>conclui sem perder o fio</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-agente-de-ia">Agente de IA</a>, <a href="../glossario.html#g-llm">LLM</a>, <a href="../glossario.html#g-prompt">Prompt</a></p>  </div>
+  <div class="casper" id="a-pZWPq_ZAmM4-trajectory">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Trajectory (trajetória: log append-only do histórico do agente).</strong> Uma trajetória é como o caderno de bordo de um navio, em que cada anotação só é acrescentada no fim e nunca apagada.</p>
+    <ol class="passos"><li>É o histórico de tudo o que um agente fez: mensagens recebidas, chamadas de ferramenta, sucessos e falhas.</li><li>Funciona como um log append-only (só se acrescenta no fim). Cada evento aponta para o evento anterior, o seu pai, como os commits do Git.</li><li>Dois eventos com o mesmo pai criam um fork. Assim dá para abrir agentes paralelos a partir de qualquer ponto sem duplicar o histórico.</li><li>O prompt enviado ao modelo é montado a partir desse log, o que permite compactar o contexto de modos diferentes para cada modelo sem perder nada.</li><li>Como o log fica fora do processo, um worker pode cair ou ser trocado e outro retoma lendo o log.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>INBOX</strong><span>humanos, agentes e agendadores</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>EVENTO NO LOG</strong><span>aponta para o evento pai</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>FORK</strong><span>dois filhos do mesmo pai</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>PROMPT MONTADO</strong><span>gerado a partir do log</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-agente-de-ia">Agente de IA</a>, <a href="../glossario.html#g-prompt">Prompt</a>, <a href="../glossario.html#g-token">Token</a></p>  </div>
+  <div class="casper" id="a-pZWPq_ZAmM4-copy-on-write">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Copy-on-write (cópia só na primeira escrita).</strong> Copy-on-write é como dois colegas que leem o mesmo caderno e só tiram uma fotocópia da página quando um deles precisa escrever nela.</p>
+    <ol class="passos"><li>Copiar uma coisa grande custa tempo e espaço. Então, em vez de copiar na hora, as duas versões apontam para os mesmos dados.</li><li>Enquanto ninguém altera nada, o fork (a cópia) não ocupa espaço extra. Criar um é quase de graça.</li><li>Quando um processo escreve numa página da memória RAM, o sistema copia só essa página e dá a cópia a quem escreveu. O resto continua compartilhado.</li><li>A Lovable usa isso para bifurcar o computador do agente (o recurso drafts) e rodar muitos forks em paralelo gastando pouca RAM.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>FORK CRIADO</strong><span>aponta para as mesmas páginas</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>SÓ LEITURA</strong><span>nenhuma memória extra usada</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>PRIMEIRA ESCRITA</strong><span>uma página é copiada</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>FORKS INDEPENDENTES</strong><span>só o alterado ocupa RAM</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-sandbox">Sandbox</a>, <a href="../glossario.html#g-checkpointing">Checkpointing</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>É um talk de produto da Lovable, com convite final para usar a plataforma. Quase todos os números vêm do próprio palestrante e não têm método ou comparação: 230 ms, 40 s para 3 s, 6,5 vezes menos memória, mais de 1 bilhão de tokens por minuto. Faltam taxa de sucesso dos agentes de 10 horas, custo e exemplos de falha. A ideia de que o código deixa de importar é tese comercial e não evidência. Os laços de feedback de negócio, como testes A/B, aparecem só em descrição, sem dados de ganho.</p>
+  </div>
+
+  <section class="card autoteste">
+    <h3>Teste você mesmo</h3>
+    <p class="muted">Responda de cabeça antes de abrir. Lembrar com esforço é o que fixa.</p>
+    <ol class="perguntas">
+      <li><span class="tipo">lembrar</span> Por que a Lovable separa o histórico de tarefa (trajetória) do prompt enviado ao modelo?
+        <details class="resposta"><summary>Ver resposta</summary><p>O log guarda todos os eventos. O prompt é montado a partir dele, então a compactação pode mudar conforme o modelo e o tamanho do contexto, sem perder o histórico completo.</p></details>
+      </li>
+      <li><span class="tipo">aplicar</span> Seu agente roda tarefas de horas e você faz deploy várias vezes por dia. Que mudança de arquitetura evita perder o trabalho em andamento?
+        <details class="resposta"><summary>Ver resposta</summary><p>Tornar o processo sem estado e gravar cada turno e chamada de ferramenta em um log persistente. Qualquer worker novo retoma a tarefa lendo esse log, sem interromper o agente.</p></details>
+      </li>
+      <li><span class="tipo">criticar</span> Que evidência falta para confiar nos ganhos descritos neste talk?
+        <details class="resposta"><summary>Ver resposta</summary><p>Os números são do próprio palestrante, que vende a plataforma, e não trazem método nem comparação. Faltam taxa de sucesso dos agentes de 10 horas, custo por tarefa e casos de falha.</p></details>
+      </li>
+    </ol>
+  </section>
+
+  <div class="casper experimento">
+    <span class="tag">experimente · 40 min</span>
+    <p class="exp-titulo"><strong>Log de eventos com fork para um agente simples</strong></p>
+    <p class="muted">Você precisa de: Python 3 e uma chave de API de um modelo (Claude ou OpenAI)</p>
+    <ol class="passos"><li>Crie um arquivo events.jsonl em que cada linha tem id, parent_id, tipo (usuário, modelo, ferramenta) e conteúdo.</li><li>Escreva uma função que monta o prompt percorrendo os pais a partir de um evento e resume os mais antigos quando passar de um limite.</li><li>Faça um loop que lê o último evento, chama o modelo e grava a resposta como novo evento filho.</li><li>Crie um fork: grave dois eventos distintos com o mesmo parent_id e rode os dois ramos com instruções diferentes.</li><li>Interrompa o script no meio, rode de novo e confirme que ele retoma só pelo log.</li></ol>
+    <p><strong>Deu certo se:</strong> O agente retoma após o processo ser morto sem perder contexto, e os dois ramos do fork seguem com respostas diferentes sem duplicar o histórico anterior.</p>
+  </div>
+
+  <section class="card painel">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Revise seu agente e liste o que se perde se o processo cair no meio de uma tarefa. Esse estado deveria estar num log fora do processo.</li><li>Salve cada evento do seu agente (mensagem, chamada de ferramenta, resultado) em um arquivo JSONL com id e id do pai, e gere o prompt a partir dele.</li><li>Escreva a lista do seu laço interno de verificação (build, lint, tipos, erro em runtime) e faça o agente rodá-la a cada turno.</li><li>Defina uma métrica externa do seu produto (conversão, erro em produção) que o agente poderia ler entre turnos.</li></ul>
+  </section>
+
+  <section class="relacionados">
+    <h3 class="rotulo-mao">Conversa com outros talks</h3>
+    <ul>
+<li><span class="relacao">aprofunda</span> <a href="../edicoes/2026-10-25.html#v-oP2WLFpMoDY">Agentes de longo horizonte que tocam o negócio</a> <span class="muted">· A Arca descreve agentes que tocam trabalho de vários dias; a Lovable mostra a infraestrutura que torna isso possível sem perder o fio quando um processo cai.</span></li><li><a href="../edicoes/2026-11-07.html#v-ZJjRgvjhq3M">Construir plugins financeiros no ChatGPT Work e no Codex</a> <span class="muted">· 7 nov · em comum: Compaction, Sandbox</span></li><li><a href="../edicoes/2026-10-25.html#v-oP2WLFpMoDY">Agentes de longo horizonte que tocam o negócio</a> <span class="muted">· 25 out · em comum: Long-horizon agent, Sandbox</span></li><li><a href="../edicoes/2026-10-07.html#v-X6l4lpA0_NY">Harness engineering e a fábrica de software</a> <span class="muted">· 7 out · em comum: Inner, outer e meta loop, Sandbox</span></li>    </ul>
+  </section>
+
+  <footer class="talk-fim">
+    <div class="talk-acoes">
+      <label class="estudei js-only"><input type="checkbox" data-id="pZWPq_ZAmM4"> <span class="estudei-txt">Marquei como estudado</span><span class="sr">: <span lang="en">What it takes to set intelligence free</span></span></label>
+      <details class="levo js-only" data-levo="pZWPq_ZAmM4">
+        <summary>O que eu levo deste talk</summary>
+        <label class="sr" for="nota-pZWPq_ZAmM4">O que eu levo deste talk (fica só neste aparelho)</label>
+        <textarea id="nota-pZWPq_ZAmM4" data-nota="pZWPq_ZAmM4" rows="2" placeholder="Uma frase com as suas palavras. Fica salva só neste aparelho."></textarea>
+      </details>
+    </div>
+    <div class="talk-nav">
+      <a class="voltar-indice" href="#indice">↑ Índice</a>
+      <a class="proximo" href="#fim">Fechar a edição <span aria-hidden="true">↓</span></a>
+    </div>
+  </footer>
+</article>
+
+      <section class="fim-edicao card" id="fim" aria-labelledby="fim-titulo">
+        <h2 id="fim-titulo">Fim da edição</h2>
+        <span class="progresso" data-ids="xRJMiaUoD_8 pZWPq_ZAmM4"></span>
+        <div class="revise">
+          <h3>Revise</h3>
+          <p class="muted">Uma pergunta de dias anteriores. Responda de cabeça antes de abrir: é a revisão espaçada que faz o conteúdo ficar.</p>
+          <ol class="perguntas">
+            <li><span class="tipo">ontem</span> Por que a Cognition reconstrói as VMs de desenvolvimento a cada hora?
+              <details class="resposta"><summary>Ver resposta</summary><p>Para que cada agente comece numa máquina nova, com a versão mais recente do código. Se o build falha, o Devin é o primeiro a consertar o snapshot.</p><p class="muted">Do talk <a href="../edicoes/2026-11-18.html#v-U92J5mCDLMc">Como a Cognition multiplicou por 40 os PRs com agentes</a>, edição de 18 nov.</p></details>
+            </li>
+            <li><span class="tipo">há 9 dias</span> Por que cargo test com head pode parecer bem-sucedido mesmo com testes falhando?
+              <details class="resposta"><summary>Ver resposta</summary><p>No bash sem pipefail, um pipeline devolve o código de saída do último comando, no caso o head. O sucesso dele mascara a falha do cargo test.</p><p class="muted">Do talk <a href="../edicoes/2026-11-10.html#v-rS36lYuvXQ8">Como ler as transcrições do agente para melhorar seu CLI</a>, edição de 10 nov.</p></details>
+            </li>
+            <li><span class="tipo">há 30 dias</span> Por que, segundo os palestrantes, o Agent Chip decolou no Monzo?
+              <details class="resposta"><summary>Ver resposta</summary><p>A plataforma interna já tinha muitas peças prontas, como alertas, monitoramento, integrações, staging, filas e deploy fácil. Eles chamam isso de lots of little multipliers. O modelo sozinho teria rendido pouco.</p><p class="muted">Do talk <a href="../edicoes/2026-10-20.html#v-adfw3xJBx1o">Como o Monzo construiu seu agente de código</a>, edição de 20 out.</p></details>
+            </li>
+          </ol>
+        </div>
+        <p>Termos novos no glossário:
+<a href="../glossario.html#g-bitter-lesson">Bitter lesson</a>, <a href="../glossario.html#g-long-horizon-agent">Long-horizon agent</a>, <a href="../glossario.html#g-trajectory">Trajectory</a>, <a href="../glossario.html#g-copy-on-write">Copy-on-write</a>.
+        </p>
+        <nav class="paginacao" aria-label="Outras edições">
+<a rel="prev" href="2026-11-18.html"><span class="paginacao-dir">← Edição anterior</span><strong>Como treinar e organizar agentes que entregam de verdade</strong><span class="muted">quarta, 18 nov 2026</span></a>          <a class="voltar" href="../index.html#edicoes"><span class="paginacao-dir">Todas as edições</span><strong>Voltar ao início</strong></a>
+        </nav>
+      </section>
+    </div>
+  </div>
+
+  <div class="progresso-leitura js-only" aria-hidden="true"><i></i></div>
+  <nav class="barra-leitura js-only" aria-label="Navegação da leitura" hidden>
+    <a href="#indice" class="bl-indice">Índice</a>
+    <span class="bl-pos" aria-live="off"></span>
+    <a href="#fim" class="bl-proximo">Próximo ↓</a>
+  </nav>
+</div>
+</main>
+<footer class="rodape wrap">
+  <p>Resumos em português dos talks do canal <a href="https://www.youtube.com/@aiDotEngineer" target="_blank" rel="noopener">AI Engineer<span class="sr"> (abre em nova aba)</span></a>. Atualizado em 20 nov 2026, 08:11. <a href="../status.html">Status da rotina</a> · <a href="../feed.xml">Assinar por RSS</a></p>
+</footer>
+<script src="../app.js" defer></script>
+</body>
+</html>
