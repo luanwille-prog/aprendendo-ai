@@ -1,0 +1,233 @@
+{
+  "id": "0LeT996Hz3E",
+  "titulo": "Engineer Your Coding Agents Like Any Other System — Zach Lloyd, Warp",
+  "titulo_curto": "Engineer Your Coding Agents Like Any Other System",
+  "palestrante": "Zach Lloyd, Warp",
+  "url": "https://www.youtube.com/watch?v=0LeT996Hz3E",
+  "duracao": 1110,
+  "publicado_ts": 1795199406,
+  "edicao": "2026-11-22",
+  "tese": "Agentes de código pedem engenharia de sistema: fábrica definida em código, runs gravadas, evals online e benchmarks com dados próprios.",
+  "tldr": [
+    "Zach Lloyd, fundador da Warp, diz que rodar agentes de código localmente, um prompt por vez, limita a vazão e dificulta custo, segurança e governança.",
+    "Ele define software factory (fábrica de software) como um sistema em circuito fechado, descrito em código declarativo, que mede e melhora continuamente agentes na nuvem.",
+    "A pilha vai de fábrica como código, gravação das runs, sandbox, modelos e harnesses trocáveis até orquestração, com evals online, PRs de autoaperfeiçoamento e benchmarks sobre dados próprios."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Fábrica definida como sistema em circuito fechado",
+      "texto": "Lloyd descarta como definição de fábrica um conjunto solto de automações, skills compartilhadas ou enxames pessoais. Para ele, uma fábrica é um sistema definido em código, com laço contínuo de melhoria, rodando agentes na nuvem e medindo tudo. Sem medição, a escolha de modelo e de configuração fica na base do palpite.",
+      "t": 216,
+      "legenda": "A definição de fábrica que organiza o resto do talk.",
+      "print": "img/0LeT996Hz3E/0.jpg",
+      "descricao": "Slide \"What a software factory is not\": X em automações soltas, colegas de IA, skills e MCP compartilhados e enxame pessoal de agentes."
+    },
+    {
+      "titulo": "A pilha de infraestrutura da fábrica",
+      "texto": "De baixo para cima, a pilha tem fábrica como código, dados e contexto (conversas, artefatos, screenshots, vídeos), compute com sandbox, inferência com vários modelos e harnesses, e orquestração. Tudo exposto por API e MCP para integrar com Slack, Linear, Jira e GitHub. Modelos entram como um grau de liberdade a testar.",
+      "t": 500,
+      "legenda": "As camadas que a fábrica precisa ter, segundo o palestrante.",
+      "print": "img/0LeT996Hz3E/1.jpg",
+      "descricao": "Diagrama \"The factories stack\" em camadas: 00 factories-as-code, 01 dados e contexto, 02 compute, 03 inferência, 04 melhoria, 05 orquestração, 06 acesso."
+    },
+    {
+      "titulo": "Visão ao vivo de todos os agentes do time",
+      "texto": "Gravar todas as runs em um lugar central permite ver, sem instalar nada nos laptops, o que cada agente faz, com conversa e artefatos. Esses dados alimentam métricas como DORA, interações humanas por PR, vazão e custo. Sem eles, diz Lloyd, você voa às cegas.",
+      "t": 717,
+      "legenda": "Todas as runs do time visíveis e gravadas em um painel central.",
+      "print": "img/0LeT996Hz3E/2.jpg",
+      "descricao": "Lista de runs de agentes no painel da Warp, com status, origem (Slack, API, Warp Web) e tempo, todas visíveis em um lugar central."
+    },
+    {
+      "titulo": "Evals online e autoaperfeiçoamento por PR",
+      "texto": "Um agente revisa as sessões gravadas e dá nota em uma dimensão, como testes redundantes. Outro agente procura padrões nas runs com falha e propõe a correção como PR contra a definição da fábrica. Por a fábrica estar em código, a melhoria passa pelo mesmo fluxo de revisão de qualquer mudança.",
+      "t": 839,
+      "legenda": "Um eval online mede uma falha comum de agentes: testes desnecessários.",
+      "print": "img/0LeT996Hz3E/3.jpg",
+      "descricao": "Scorer \"Redundant Tests\" com custo total de US$ 43,54 e taxa de aprovação diária de 14/10 a 12/11, oscilando entre cerca de 60% e 100%."
+    },
+    {
+      "titulo": "Benchmark com seus próprios dados",
+      "texto": "Para saber qual modelo, skill ou harness é melhor, Lloyd propõe montar um conjunto de tarefas reais e reexecutá-las contra configurações diferentes. O gráfico de custo contra qualidade mostra onde ficar, no canto superior esquerdo. Também dá para testar a remoção de skills.",
+      "t": 992,
+      "legenda": "A troca entre custo e qualidade, medida sobre tarefas do próprio time.",
+      "print": null,
+      "descricao": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Software factory",
+      "traducao": "fábrica de software",
+      "nivel": "intermediario",
+      "chave": "software factory",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Closed-loop system",
+      "traducao": "sistema de circuito fechado que se realimenta",
+      "nivel": "intermediario",
+      "chave": "closed-loop system",
+      "analogia": "Um sistema de circuito fechado é como um cozinheiro que prova o molho, acerta o sal e prova de novo até o prato ficar no ponto.",
+      "explicacao": [
+        "Um sistema de circuito fechado olha o resultado do que acabou de fazer e usa essa informação para ajustar a próxima rodada.",
+        "O oposto é o circuito aberto (open loop), que executa sempre do mesmo jeito sem conferir se deu certo.",
+        "Numa fábrica de software, o trabalho entra como ideia ou issue e os agentes o levam por triagem, implementação, verificação e monitoramento.",
+        "Cada run fica gravada, e evals dão nota às sessões. Essas notas mostram onde os agentes falham com frequência.",
+        "Um agente lê as falhas, propõe uma mudança na definição da fábrica como PR, e a nova configuração roda de novo. Quanto mais os agentes rodam, mais eficiente o laço fica."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "Eval"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "TRABALHO ENTRA",
+            "nota": "issue ou sinal automático"
+          },
+          {
+            "rotulo": "AGENTES EXECUTAM",
+            "nota": "da triagem ao monitoramento"
+          },
+          {
+            "rotulo": "MEDIÇÃO",
+            "nota": "runs gravadas e notas de eval"
+          },
+          {
+            "rotulo": "AJUSTE NA FÁBRICA",
+            "nota": "PR na definição em código"
+          },
+          {
+            "rotulo": "LAÇO MAIS EFICIENTE",
+            "nota": "cada rodada melhora a próxima"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Programação declarativa",
+      "traducao": "descrever o resultado desejado em vez de cada passo (imperativo)",
+      "nivel": "intermediario",
+      "chave": "programação declarativa",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Eval",
+      "traducao": "avaliação",
+      "nivel": "intermediario",
+      "chave": "eval",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Online scoring",
+      "traducao": "avaliação automática do tráfego real de produção",
+      "nivel": "intermediario",
+      "chave": "online scoring",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Harness",
+      "traducao": "estrutura que roda o agente",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado para rodar o código",
+      "nivel": "basico",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Benchmark",
+      "traducao": "teste padronizado de desempenho",
+      "nivel": "intermediario",
+      "chave": "benchmark",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O palestrante é CEO da Warp, que vende uma plataforma de software factories, então o talk é também um pitch. A afirmação de que a equipe melhorou muito a vazão e reduziu o custo (t=1023) vem sem números, linha de base ou comparação. Não há dados sobre o custo de montar essa infraestrutura nem sobre quando ela compensa para times pequenos. A demo mostra o produto da Warp, e o ganho de evals e PRs de autoaperfeiçoamento não aparece medido.",
+  "acoes": [
+    "Escreva em um arquivo YAML ou JSON o fluxo do seu agente de código: gatilhos, repositórios, ferramentas permitidas e etapas, para versionar no Git.",
+    "Grave as conversas e artefatos de cada run do seu agente em uma pasta ou banco, mesmo que simples, para ter material de análise.",
+    "Escolha uma falha recorrente do seu agente, como testes redundantes, e escreva um prompt de avaliação que dê nota de 0 a 10 a cada sessão gravada.",
+    "Monte 10 tarefas reais do seu repositório e reexecute com dois modelos ou duas configurações, anotando custo e taxa de acerto."
+  ],
+  "numeros": [
+    {
+      "valor": "65 mil",
+      "contexto": "estrelas no GitHub do terminal open source da Warp",
+      "t": 33
+    },
+    {
+      "valor": "quase 1 milhão",
+      "contexto": "desenvolvedores que usam o terminal da Warp",
+      "t": 33
+    }
+  ],
+  "rotulo": "Engenharia de fábricas de agentes de código",
+  "objetivo": "desenhar uma fábrica de agentes de código com definição em código, evals online e benchmarks sobre dados do próprio time",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais são as três partes da definição de software factory dada por Lloyd?",
+      "resposta": "Ela é codificada em linguagem declarativa, funciona como laço fechado de melhoria contínua e tudo nela é mensurável. Ela roda agentes de código na nuvem."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Como você usaria o benchmark com dados próprios para decidir se vale trocar de modelo no seu time?",
+      "resposta": "Separe tarefas reais já concluídas, reexecute cada uma com o modelo atual e o candidato, e compare custo e qualidade. Troque só se o novo ficar mais perto do quadrante de menor custo e maior qualidade."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que evidência falta para aceitar que essa abordagem melhorou vazão e custo?",
+      "resposta": "Faltam números, linha de base e comparação antes e depois. O palestrante é CEO da empresa que vende a plataforma, e a demo mostra só o produto dela, sem resultado independente."
+    }
+  ],
+  "experimento": {
+    "titulo": "Eval de testes redundantes em sessões de agente",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT e 5 a 10 diffs ou conversas de um agente de código.",
+    "passos": [
+      "Reúna 5 a 10 sessões ou PRs recentes gerados por um agente de código e salve cada um em um arquivo de texto.",
+      "Escreva um prompt de juiz que leia a sessão e dê nota de 0 a 5 para testes redundantes, com uma justificativa de uma frase.",
+      "Rode o prompt em todas as sessões e registre as notas em uma planilha.",
+      "Leia à mão as duas piores e as duas melhores, e ajuste o prompt se a nota não bater com o seu julgamento."
+    ],
+    "sucesso": "As notas do juiz coincidem com a sua leitura manual em pelo menos 4 de 5 casos, e você identifica um padrão a corrigir nas instruções do agente."
+  },
+  "consolidado_em": "2026-11-23T20:05:28+00:00"
+}

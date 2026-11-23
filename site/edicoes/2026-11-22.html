@@ -1,0 +1,712 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Da oficina à fábrica: como organizar o trabalho com agentes de código · Aprendendo AI</title>
+<meta name="description" content="Resumos diários dos talks do canal AI Engineer, explicados no estilo Quadro Anotado.">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="alternate" type="application/atom+xml" title="Aprendendo AI: edições" href="../feed.xml">
+<script>document.documentElement.classList.add("js");try{var t=localStorage.getItem("tema");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;500;700;900&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=Kalam:wght@400;700&display=swap">
+<link rel="stylesheet" href="../estilo.css">
+</head>
+<body class="pg-edicao">
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<header class="topo wrap">
+  <a class="marca" href="../index.html">Aprendendo <span>AI</span></a>
+  <nav class="topo-links" aria-label="Navegação principal">
+    <a href="../index.html#edicoes" aria-current="page">Edições</a>
+    <a href="../talks.html">Talks</a>
+    <a href="../glossario.html">Glossário</a>
+    <button type="button" class="tema-botao js-only" aria-label="Tema de cores: automático">◐</button>
+  </nav>
+</header>
+<main id="conteudo" class="wrap" tabindex="-1">
+<div class="edicao" id="e-2026-11-22">
+  <div class="edicao-corpo">
+  <header class="edicao-head">
+    <nav class="paginacao-topo" aria-label="Edições vizinhas">
+<a rel="prev" href="2026-11-19.html">← 19 nov</a>      <a href="../index.html#edicoes">Todas as edições</a>
+    </nav>
+    <h1 class="h-edicao">Da oficina à fábrica: como organizar o trabalho com agentes de código</h1>
+    <p class="meta">Talks de domingo, 22 nov 2026 · 4 talks · ≈ 20 min de leitura</p>
+<p class="abertura">Os quatro talks de hoje discutem o que muda quando agentes de código já escrevem a maior parte do software. Zach Bruggeman mostra como a Ramp espalhou o uso com sessões públicas, e Armin Ronacher lembra que a atenção humana segue como gargalo e pede qualidade antes de volume. Zach Lloyd, da Warp, descreve a fábrica de software como um sistema em circuito fechado, medido e melhorado em código. Ahmad Osman fecha com a camada de baixo: como escolher hardware, quantização e motor de inferência para rodar modelos na própria máquina.</p>    <div class="plano card">
+      <div class="plano-txt">
+        <p class="rotulo-mao">Hoje você vai conseguir</p>
+        <ul class="acoes"><li>avaliar o seu uso de agentes de código com métricas simples de correções, duração de tarefa e projetos mantidos</li><li>desenhar uma fábrica de agentes de código com definição em código, evals online e benchmarks sobre dados do próprio time</li><li>escolher hardware, quantização e motor de inferência para um fluxo de agentes local, medindo você mesmo em vez de confiar em benchmarks</li></ul>
+<p class="muted plano-radar">Os outros 1 talks ficam no <a href="#radar">radar</a>, resumidos, para abrir se o tema interessar.</p>      </div>
+      <a class="botao plano-cta" href="#v-JNexz3Tbiu8">Começar pelos 3 essenciais · ≈ 14 min <span aria-hidden="true">↓</span></a>
+    </div>
+  </header>
+
+    <details class="indice card" id="indice" open>
+      <summary class="indice-titulo">Ordem de leitura <span class="muted">(4)</span></summary>
+      <div class="indice-progresso">
+        <span class="progresso" data-ids="JNexz3Tbiu8 0LeT996Hz3E GKSQYbELDzw" data-rotulo="essenciais"></span>
+<span class="progresso" data-ids="JNexz3Tbiu8 0LeT996Hz3E GKSQYbELDzw MDI81OaZAD4" data-sufixo="no total"></span>      </div>
+      <p class="indice-grupo">Essenciais</p>
+      <ol><li data-id="JNexz3Tbiu8"><a href="#v-JNexz3Tbiu8"><span class="ind-t">Oficina antes da fábrica: usar agentes de código com critério</span><span class="ind-min">4 min</span></a></li><li data-id="0LeT996Hz3E"><a href="#v-0LeT996Hz3E"><span class="ind-t">Engenharia de fábricas de agentes de código</span><span class="ind-min">5 min</span></a></li><li data-id="GKSQYbELDzw"><a href="#v-GKSQYbELDzw"><span class="ind-t">O que roda onde: IA local em produção</span><span class="ind-min">5 min</span></a></li></ol>
+      <p class="indice-grupo">Radar</p>
+      <ol start="4"><li data-id="MDI81OaZAD4"><a href="#v-MDI81OaZAD4"><span class="ind-t">Como criar cultura de time em volta de um agente de código</span><span class="ind-min">6 min</span></a></li></ol>
+      <p class="indice-atalhos js-only"><button type="button" class="abrir-atalhos">Atalhos de teclado <kbd>?</kbd></button></p>
+    </details>
+
+    <div class="talks">
+<article class="video essencial" id="v-JNexz3Tbiu8" data-tema="agentes" data-n="1" data-total="4" aria-labelledby="t-JNexz3Tbiu8">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">01</span>
+    <div class="sec-titulo">
+<p class="selo-essencial">essencial do dia<span>: Traz dados reais de sessões com agente e um critério prático: quando contrariar o agente e quanto do que se começa vale manter.</span></p>      <h2 id="t-JNexz3Tbiu8">Oficina antes da fábrica: usar agentes de código com critério</h2>
+      <p class="titulo-original" lang="en">Build the Workshop Before the Software Factory</p>
+      <p class="tese">A atenção humana limita o que os agentes entregam. Monte uma oficina de software excelente antes de uma fábrica que só produz mais código.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <a class="chip chip-tema" href="../trilhas/agentes.html">Agentes<span class="sr">: ver a trilha do tema</span></a>
+    <span class="chip">≈ 4 min de leitura</span>
+    <span class="chip" role="img" aria-label="Complexidade 2 de 5">nível ●●○○○</span>
+<span class="chip">Armin Ronacher, Earendil</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=JNexz3Tbiu8" target="_blank" rel="noopener" data-yt="JNexz3Tbiu8" data-t="0"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>Assistir (19:56)</a>
+  </div>
+
+<p class="objetivo"><span class="objetivo-rotulo">Depois deste talk você consegue</span> avaliar o seu uso de agentes de código com métricas simples de correções, duração de tarefa e projetos mantidos</p>
+  <section class="card resumo">
+    <h3>Em 3 frases</h3>
+<p>Armin Ronacher mostra dados das próprias sessões com o agente Pi. O harness (estrutura que roda o agente) quase não mudou em um ano, mas as correções caíram e as tarefas passaram de 2,5 para 14 minutos no percentil 90.</p><p>Ele inicia projetos sem parar, mas só mantém de 10 a 15 vivos. Para ele, a atenção humana segue como gargalo, e saber quando contrariar o agente e entender o que se constrói pesam mais que volume.</p><p>Para tarefas longas, ele defende agentes duráveis que suspendem e retomam, e o code mode (o agente escreve código que chama as ferramentas) combinado com modelos classificadores baratos para decidir milhares de casos.</p>  </section>
+
+  <section class="antes-de-ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-harness"><strong>Harness</strong> <span>estrutura que roda o agente</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-coding-agent"><strong>Coding agent</strong> <span>agente de código</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-autoresearch"><strong>Autoresearch</strong> <span>pesquisa automática por experimentos</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-software-factory"><strong>Software factory</strong> <span>fábrica de software</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-durable-execution"><strong>Durable execution</strong> <span>execução durável</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-sandbox"><strong>Sandbox</strong> <span>ambiente isolado para rodar o código</span> <em>analogia no glossário</em></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-code-mode"><strong>Code Mode</strong> <span>tratar ferramentas MCP como código que o modelo escreve e navega</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-decision-model"><strong>Decision model</strong> <span>modelo barato que devolve rótulo e probabilidade</span> <em>analogia no glossário</em></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>O harness parou, os modelos subiram</h3>
+    <p>O agente Pi tem as mesmas ferramentas de dezembro do ano passado. Mesmo assim, ele faz mais, só porque os modelos melhoraram. Truques de prompt e plugins como o de autoresearch ficaram desnecessários com modelos de ponta. Revise de tempos em tempos o que o seu harness ainda precisa fazer.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/JNexz3Tbiu8/0.jpg" data-legenda="Correções caem a cada modelo e a duração do P90 sobe de 2,5 para 14 min."><img src="../img/JNexz3Tbiu8/0.jpg" alt="Slide &#39;I step in less with every model&#39;: correções por 100 prompts caem de 8,5 (GPT-5.3 Codex) a 3,9 (Opus 5.5); ao lado, abortos por ESC." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Correções caem a cada modelo e a duração do P90 sobe de 2,5 para 14 min.</span><a class="minuto" href="https://www.youtube.com/watch?v=JNexz3Tbiu8&amp;t=186s" target="_blank" rel="noopener" data-yt="JNexz3Tbiu8" data-t="186" aria-label="Assistir a partir de 03:06"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:06</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Prompts estáveis, tempo de agente explodindo</h3>
+    <p>Armin envia entre 120 e 190 prompts por dia, número quase constante no ano. O tempo em que o agente trabalha para ele passou de menos que a jornada para várias vezes a jornada. A atenção humana não escala no mesmo ritmo, e é ela que limita o que dá para revisar bem.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/JNexz3Tbiu8/1.jpg" data-legenda="Prompts por dia ficam estáveis enquanto o tempo de agente cresce muito."><img src="../img/JNexz3Tbiu8/1.jpg" alt="Slide &#39;Agent-hours per day and my prompts per day&#39;: linha de prompts por dia quase plana e barras de horas de agente crescendo até novembro. Imagem pequena." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Prompts por dia ficam estáveis enquanto o tempo de agente cresce muito.</span><a class="minuto" href="https://www.youtube.com/watch?v=JNexz3Tbiu8&amp;t=373s" target="_blank" rel="noopener" data-yt="JNexz3Tbiu8" data-t="373" aria-label="Assistir a partir de 06:13"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:13</a></figcaption>
+  </figure>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Começar é fácil, manter é raro</h3>
+    <p>Armin criou 141 repositórios no ano, mas só de 10 a 15 recebem commits regulares. Ele ouviu o mesmo de amigos. Um amigo automatizou todo um projeto open source e depois o desligou, porque deixou de se importar com ele. Automação não substitui o cuidado de alguém.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=JNexz3Tbiu8&amp;t=403s" target="_blank" rel="noopener" data-yt="JNexz3Tbiu8" data-t="403" aria-label="Assistir a partir de 06:43"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:43</a> 141 projetos iniciados, só 10 a 15 mantidos com regularidade.</p>  </div>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Resumo executivo antes da verificação</h3>
+    <p>Para não perder o controle com tantos commits, Armin pede que o agente produza, por volta de 70% da tarefa e antes da verificação, um resumo executivo curto e uma página HTML bem formatada. Assim ele acompanha o que foi feito sem ler todo o código.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=JNexz3Tbiu8&amp;t=621s" target="_blank" rel="noopener" data-yt="JNexz3Tbiu8" data-t="621" aria-label="Assistir a partir de 10:21"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>10:21</a> Um ponto de checagem humano dentro da trajetória do agente.</p>  </div>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Code mode e modelos de decisão em lote</h3>
+    <p>Com code mode, o agente escreve um workflow em JavaScript que chama ferramentas sem passar tudo pelo contexto. Cada ponto de decisão pode usar um modelo classificador barato e rápido. Armin cita 3.000 pedidos de suporte triados em pouco tempo, tarefa que antes levaria horas.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/JNexz3Tbiu8/4.jpg" data-legenda="O agente monta um workflow e delega cada decisão a um classificador."><img src="../img/JNexz3Tbiu8/4.jpg" alt="Slide &#39;Classifier models&#39;: classificadores processam muitas tarefas, devolvem escolhas e scores e são chamados por codemode e loops, não pelo contexto." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>O agente monta um workflow e delega cada decisão a um classificador.</span><a class="minuto" href="https://www.youtube.com/watch?v=JNexz3Tbiu8&amp;t=1112s" target="_blank" rel="noopener" data-yt="JNexz3Tbiu8" data-t="1112" aria-label="Assistir a partir de 18:32"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>18:32</a></figcaption>
+  </figure>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=JNexz3Tbiu8&amp;t=186s" target="_blank" rel="noopener" data-yt="JNexz3Tbiu8" data-t="186"><strong>2,5 → 14 min</strong><span>Duração de tarefa no percentil 90, dezembro versus hoje</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:06<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=JNexz3Tbiu8&amp;t=373s" target="_blank" rel="noopener" data-yt="JNexz3Tbiu8" data-t="373"><strong>120 a 190</strong><span>Prompts enviados por dia, quase constante no ano</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:13<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=JNexz3Tbiu8&amp;t=403s" target="_blank" rel="noopener" data-yt="JNexz3Tbiu8" data-t="403"><strong>141</strong><span>Repositórios iniciados no ano</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:43<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=JNexz3Tbiu8&amp;t=403s" target="_blank" rel="noopener" data-yt="JNexz3Tbiu8" data-t="403"><strong>10 a 15</strong><span>Projetos com commits regulares</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:43<span class="sr">, assistir neste minuto</span></span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>Os dados vêm de um único usuário, o próprio palestrante, sem grupo de comparação. A queda de correções pode refletir também o hábito dele. Ele trabalha na Earendil, que faz o agente Pi, então tem interesse em mostrar que o harness simples basta. As afirmações sobre amigos e sobre mais forks no open source são impressões, sem número. O ganho do code mode com classificadores aparece sem medição de custo ou de erro.</p>
+  </div>
+
+  <section class="card autoteste">
+    <h3>Teste você mesmo</h3>
+    <p class="muted">Responda de cabeça antes de abrir. Lembrar com esforço é o que fixa.</p>
+    <ol class="perguntas">
+      <li><span class="tipo">lembrar</span> O que mudou no agente Pi em um ano, segundo Armin, e o que explica o desempenho maior?
+        <details class="resposta"><summary>Ver resposta</summary><p>O harness central quase não mudou e tem as mesmas ferramentas de dezembro do ano anterior. O ganho vem dos modelos melhores.</p></details>
+      </li>
+      <li><span class="tipo">aplicar</span> Como você aplicaria a ideia do resumo executivo em um repositório seu em que o agente trabalha por muitos minutos?
+        <details class="resposta"><summary>Ver resposta</summary><p>Escreva no prompt ou no arquivo de instruções que o agente, antes de começar a verificar, gere um resumo curto e uma página HTML com o que mudou e o que ele decidiu. Você revisa isso antes de olhar o diff.</p></details>
+      </li>
+      <li><span class="tipo">criticar</span> Que limites os dados de Armin têm como prova de que modelos melhores exigem menos intervenção?
+        <details class="resposta"><summary>Ver resposta</summary><p>Vêm de uma só pessoa, sem controle, e o hábito dela pode ter mudado. Armin também trabalha na empresa que faz o Pi, o que cria interesse em mostrar um harness simples.</p></details>
+      </li>
+    </ol>
+  </section>
+
+  <div class="casper experimento">
+    <span class="tag">experimente · 20 min</span>
+    <p class="exp-titulo"><strong>Meça seus projetos vivos e mortos</strong></p>
+    <p class="muted">Você precisa de: Terminal com git, uma pasta com seus repositórios e Python ou planilha</p>
+    <ol class="passos"><li>Liste os repositórios criados nos últimos 12 meses com git log e a data do primeiro commit.</li><li>Para cada um, conte em quantos dias distintos houve commits e marque os que passam de cinco.</li><li>Calcule a razão entre projetos mantidos e iniciados e compare com os 10 a 15 de 141 do Armin.</li><li>Escolha um projeto abandonado e decida se vai arquivar ou retomar, anotando o motivo em uma linha.</li></ol>
+    <p><strong>Deu certo se:</strong> Você tem uma tabela com projetos iniciados, mantidos e a razão entre eles, e uma decisão registrada para um projeto parado.</p>
+  </div>
+
+  <section class="card painel">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Exporte suas sessões de agente e conte quantas vezes por semana você corrige o modelo. Compare antes e depois de trocar de modelo.</li><li>Liste seus repositórios criados neste ano e marque os que tiveram commits em mais de cinco dias diferentes.</li><li>Peça ao agente, antes da verificação final, um resumo executivo de uma página com decisões, riscos e o que mudou.</li><li>Reveja plugins e prompts auxiliares do seu harness e desligue um por vez, para ver se o modelo atual ainda precisa deles.</li></ul>
+  </section>
+
+  <section class="relacionados">
+    <h3 class="rotulo-mao">Conversa com outros talks</h3>
+    <ul>
+<li><span class="relacao">complementa</span> <a href="../edicoes/2026-11-18.html#v-U92J5mCDLMc">Como a Cognition multiplicou por 40 os PRs com agentes</a> <span class="muted">· Um talk sobe a vazão com metas medidas e agentes que testam sozinhos; Ronacher lembra que a atenção humana não escala e pede excelência antes de volume.</span></li><li><a href="../edicoes/2026-10-25.html#v-ImnZ7s68jw8">O papel do engenheiro de IA: construir o ciclo</a> <span class="muted">· 25 out · em comum: Durable execution, Harness, Sandbox</span></li><li><a href="../edicoes/2026-11-19.html#v-xRJMiaUoD_8">O lado doce da lição amarga: controle no vibe coding</a> <span class="muted">· 19 nov · em comum: Code Mode, Software factory</span></li><li><a href="../edicoes/2026-10-27.html#v-dAoOYFx7ZYw">Code mode: dê um sandbox ao agente, não mais ferramentas</a> <span class="muted">· 27 out · em comum: Code Mode, Sandbox</span></li>    </ul>
+  </section>
+
+  <footer class="talk-fim">
+    <div class="talk-acoes">
+      <label class="estudei js-only"><input type="checkbox" data-id="JNexz3Tbiu8"> <span class="estudei-txt">Marquei como estudado</span><span class="sr">: <span lang="en">Build the Workshop Before the Software Factory</span></span></label>
+      <details class="levo js-only" data-levo="JNexz3Tbiu8">
+        <summary>O que eu levo deste talk</summary>
+        <label class="sr" for="nota-JNexz3Tbiu8">O que eu levo deste talk (fica só neste aparelho)</label>
+        <textarea id="nota-JNexz3Tbiu8" data-nota="JNexz3Tbiu8" rows="2" placeholder="Uma frase com as suas palavras. Fica salva só neste aparelho."></textarea>
+      </details>
+    </div>
+    <div class="talk-nav">
+      <a class="voltar-indice" href="#indice">↑ Índice</a>
+      <a class="proximo" href="#v-0LeT996Hz3E">Próximo <span>Engenharia de fábricas de agentes de código</span> <span aria-hidden="true">↓</span></a>
+    </div>
+  </footer>
+</article><article class="video essencial" id="v-0LeT996Hz3E" data-tema="agentes" data-n="2" data-total="4" aria-labelledby="t-0LeT996Hz3E">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">02</span>
+    <div class="sec-titulo">
+<p class="selo-essencial">essencial do dia<span>: Mostra a pilha completa de uma fábrica de agentes, com runs gravadas, evals online e benchmarks sobre os seus próprios dados.</span></p>      <h2 id="t-0LeT996Hz3E">Engenharia de fábricas de agentes de código</h2>
+      <p class="titulo-original" lang="en">Engineer Your Coding Agents Like Any Other System</p>
+      <p class="tese">Agentes de código pedem engenharia de sistema: fábrica definida em código, runs gravadas, evals online e benchmarks com dados próprios.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <a class="chip chip-tema" href="../trilhas/agentes.html">Agentes<span class="sr">: ver a trilha do tema</span></a>
+    <span class="chip">≈ 5 min de leitura</span>
+    <span class="chip" role="img" aria-label="Complexidade 3 de 5">nível ●●●○○</span>
+<span class="chip">Zach Lloyd, Warp</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=0LeT996Hz3E" target="_blank" rel="noopener" data-yt="0LeT996Hz3E" data-t="0"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>Assistir (18:30)</a>
+  </div>
+
+<p class="objetivo"><span class="objetivo-rotulo">Depois deste talk você consegue</span> desenhar uma fábrica de agentes de código com definição em código, evals online e benchmarks sobre dados do próprio time</p>
+  <section class="card resumo">
+    <h3>Em 3 frases</h3>
+<p>Zach Lloyd, fundador da Warp, diz que rodar agentes de código localmente, um prompt por vez, limita a vazão e dificulta custo, segurança e governança.</p><p>Ele define software factory (fábrica de software) como um sistema em circuito fechado, descrito em código declarativo, que mede e melhora continuamente agentes na nuvem.</p><p>A pilha vai de fábrica como código, gravação das runs, sandbox, modelos e harnesses trocáveis até orquestração, com evals online, PRs de autoaperfeiçoamento e benchmarks sobre dados próprios.</p>  </section>
+
+  <section class="antes-de-ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-0LeT996Hz3E-closed-loop-system"><strong>Closed-loop system</strong> <span>sistema de circuito fechado que se realimenta</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-software-factory"><strong>Software factory</strong> <span>fábrica de software</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-programacao-declarativa"><strong>Programação declarativa</strong> <span>descrever o resultado desejado em vez de cada passo (imperativo)</span></a></li><li><a href="../glossario.html#g-eval"><strong>Eval</strong> <span>avaliação</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-online-scoring"><strong>Online scoring</strong> <span>avaliação automática do tráfego real de produção</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-harness"><strong>Harness</strong> <span>estrutura que roda o agente</span> <em>analogia no glossário</em></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-sandbox"><strong>Sandbox</strong> <span>ambiente isolado para rodar o código</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-benchmark"><strong>Benchmark</strong> <span>teste padronizado de desempenho</span> <em>analogia no glossário</em></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Fábrica definida como sistema em circuito fechado</h3>
+    <p>Lloyd descarta como definição de fábrica um conjunto solto de automações, skills compartilhadas ou enxames pessoais. Para ele, uma fábrica é um sistema definido em código, com laço contínuo de melhoria, rodando agentes na nuvem e medindo tudo. Sem medição, a escolha de modelo e de configuração fica na base do palpite.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/0LeT996Hz3E/0.jpg" data-legenda="A definição de fábrica que organiza o resto do talk."><img src="../img/0LeT996Hz3E/0.jpg" alt="Slide &#34;What a software factory is not&#34;: X em automações soltas, colegas de IA, skills e MCP compartilhados e enxame pessoal de agentes." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>A definição de fábrica que organiza o resto do talk.</span><a class="minuto" href="https://www.youtube.com/watch?v=0LeT996Hz3E&amp;t=216s" target="_blank" rel="noopener" data-yt="0LeT996Hz3E" data-t="216" aria-label="Assistir a partir de 03:36"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>03:36</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>A pilha de infraestrutura da fábrica</h3>
+    <p>De baixo para cima, a pilha tem fábrica como código, dados e contexto (conversas, artefatos, screenshots, vídeos), compute com sandbox, inferência com vários modelos e harnesses, e orquestração. Tudo exposto por API e MCP para integrar com Slack, Linear, Jira e GitHub. Modelos entram como um grau de liberdade a testar.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/0LeT996Hz3E/1.jpg" data-legenda="As camadas que a fábrica precisa ter, segundo o palestrante."><img src="../img/0LeT996Hz3E/1.jpg" alt="Diagrama &#34;The factories stack&#34; em camadas: 00 factories-as-code, 01 dados e contexto, 02 compute, 03 inferência, 04 melhoria, 05 orquestração, 06 acesso." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>As camadas que a fábrica precisa ter, segundo o palestrante.</span><a class="minuto" href="https://www.youtube.com/watch?v=0LeT996Hz3E&amp;t=500s" target="_blank" rel="noopener" data-yt="0LeT996Hz3E" data-t="500" aria-label="Assistir a partir de 08:20"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>08:20</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Visão ao vivo de todos os agentes do time</h3>
+    <p>Gravar todas as runs em um lugar central permite ver, sem instalar nada nos laptops, o que cada agente faz, com conversa e artefatos. Esses dados alimentam métricas como DORA, interações humanas por PR, vazão e custo. Sem eles, diz Lloyd, você voa às cegas.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/0LeT996Hz3E/2.jpg" data-legenda="Todas as runs do time visíveis e gravadas em um painel central."><img src="../img/0LeT996Hz3E/2.jpg" alt="Lista de runs de agentes no painel da Warp, com status, origem (Slack, API, Warp Web) e tempo, todas visíveis em um lugar central." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Todas as runs do time visíveis e gravadas em um painel central.</span><a class="minuto" href="https://www.youtube.com/watch?v=0LeT996Hz3E&amp;t=717s" target="_blank" rel="noopener" data-yt="0LeT996Hz3E" data-t="717" aria-label="Assistir a partir de 11:57"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>11:57</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Evals online e autoaperfeiçoamento por PR</h3>
+    <p>Um agente revisa as sessões gravadas e dá nota em uma dimensão, como testes redundantes. Outro agente procura padrões nas runs com falha e propõe a correção como PR contra a definição da fábrica. Por a fábrica estar em código, a melhoria passa pelo mesmo fluxo de revisão de qualquer mudança.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/0LeT996Hz3E/3.jpg" data-legenda="Um eval online mede uma falha comum de agentes: testes desnecessários."><img src="../img/0LeT996Hz3E/3.jpg" alt="Scorer &#34;Redundant Tests&#34; com custo total de US$ 43,54 e taxa de aprovação diária de 14/10 a 12/11, oscilando entre cerca de 60% e 100%." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Um eval online mede uma falha comum de agentes: testes desnecessários.</span><a class="minuto" href="https://www.youtube.com/watch?v=0LeT996Hz3E&amp;t=839s" target="_blank" rel="noopener" data-yt="0LeT996Hz3E" data-t="839" aria-label="Assistir a partir de 13:59"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>13:59</a></figcaption>
+  </figure>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Benchmark com seus próprios dados</h3>
+    <p>Para saber qual modelo, skill ou harness é melhor, Lloyd propõe montar um conjunto de tarefas reais e reexecutá-las contra configurações diferentes. O gráfico de custo contra qualidade mostra onde ficar, no canto superior esquerdo. Também dá para testar a remoção de skills.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=0LeT996Hz3E&amp;t=992s" target="_blank" rel="noopener" data-yt="0LeT996Hz3E" data-t="992" aria-label="Assistir a partir de 16:32"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>16:32</a> A troca entre custo e qualidade, medida sobre tarefas do próprio time.</p>  </div>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=0LeT996Hz3E&amp;t=33s" target="_blank" rel="noopener" data-yt="0LeT996Hz3E" data-t="33"><strong>65 mil</strong><span>estrelas no GitHub do terminal open source da Warp</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>00:33<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=0LeT996Hz3E&amp;t=33s" target="_blank" rel="noopener" data-yt="0LeT996Hz3E" data-t="33"><strong>quase 1 milhão</strong><span>desenvolvedores que usam o terminal da Warp</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>00:33<span class="sr">, assistir neste minuto</span></span></a>
+  </div>
+
+  <div class="casper" id="a-0LeT996Hz3E-closed-loop-system">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Closed-loop system (sistema de circuito fechado que se realimenta).</strong> Um sistema de circuito fechado é como um cozinheiro que prova o molho, acerta o sal e prova de novo até o prato ficar no ponto.</p>
+    <ol class="passos"><li>Um sistema de circuito fechado olha o resultado do que acabou de fazer e usa essa informação para ajustar a próxima rodada.</li><li>O oposto é o circuito aberto (open loop), que executa sempre do mesmo jeito sem conferir se deu certo.</li><li>Numa fábrica de software, o trabalho entra como ideia ou issue e os agentes o levam por triagem, implementação, verificação e monitoramento.</li><li>Cada run fica gravada, e evals dão nota às sessões. Essas notas mostram onde os agentes falham com frequência.</li><li>Um agente lê as falhas, propõe uma mudança na definição da fábrica como PR, e a nova configuração roda de novo. Quanto mais os agentes rodam, mais eficiente o laço fica.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>TRABALHO ENTRA</strong><span>issue ou sinal automático</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>AGENTES EXECUTAM</strong><span>da triagem ao monitoramento</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>MEDIÇÃO</strong><span>runs gravadas e notas de eval</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>AJUSTE NA FÁBRICA</strong><span>PR na definição em código</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>LAÇO MAIS EFICIENTE</strong><span>cada rodada melhora a próxima</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-agente-de-ia">Agente de IA</a>, <a href="../glossario.html#g-eval">Eval</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O palestrante é CEO da Warp, que vende uma plataforma de software factories, então o talk é também um pitch. A afirmação de que a equipe melhorou muito a vazão e reduziu o custo (t=1023) vem sem números, linha de base ou comparação. Não há dados sobre o custo de montar essa infraestrutura nem sobre quando ela compensa para times pequenos. A demo mostra o produto da Warp, e o ganho de evals e PRs de autoaperfeiçoamento não aparece medido.</p>
+  </div>
+
+  <section class="card autoteste">
+    <h3>Teste você mesmo</h3>
+    <p class="muted">Responda de cabeça antes de abrir. Lembrar com esforço é o que fixa.</p>
+    <ol class="perguntas">
+      <li><span class="tipo">lembrar</span> Quais são as três partes da definição de software factory dada por Lloyd?
+        <details class="resposta"><summary>Ver resposta</summary><p>Ela é codificada em linguagem declarativa, funciona como laço fechado de melhoria contínua e tudo nela é mensurável. Ela roda agentes de código na nuvem.</p></details>
+      </li>
+      <li><span class="tipo">aplicar</span> Como você usaria o benchmark com dados próprios para decidir se vale trocar de modelo no seu time?
+        <details class="resposta"><summary>Ver resposta</summary><p>Separe tarefas reais já concluídas, reexecute cada uma com o modelo atual e o candidato, e compare custo e qualidade. Troque só se o novo ficar mais perto do quadrante de menor custo e maior qualidade.</p></details>
+      </li>
+      <li><span class="tipo">criticar</span> Que evidência falta para aceitar que essa abordagem melhorou vazão e custo?
+        <details class="resposta"><summary>Ver resposta</summary><p>Faltam números, linha de base e comparação antes e depois. O palestrante é CEO da empresa que vende a plataforma, e a demo mostra só o produto dela, sem resultado independente.</p></details>
+      </li>
+    </ol>
+  </section>
+
+  <div class="casper experimento">
+    <span class="tag">experimente · 30 min</span>
+    <p class="exp-titulo"><strong>Eval de testes redundantes em sessões de agente</strong></p>
+    <p class="muted">Você precisa de: Claude ou ChatGPT e 5 a 10 diffs ou conversas de um agente de código.</p>
+    <ol class="passos"><li>Reúna 5 a 10 sessões ou PRs recentes gerados por um agente de código e salve cada um em um arquivo de texto.</li><li>Escreva um prompt de juiz que leia a sessão e dê nota de 0 a 5 para testes redundantes, com uma justificativa de uma frase.</li><li>Rode o prompt em todas as sessões e registre as notas em uma planilha.</li><li>Leia à mão as duas piores e as duas melhores, e ajuste o prompt se a nota não bater com o seu julgamento.</li></ol>
+    <p><strong>Deu certo se:</strong> As notas do juiz coincidem com a sua leitura manual em pelo menos 4 de 5 casos, e você identifica um padrão a corrigir nas instruções do agente.</p>
+  </div>
+
+  <section class="card painel">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Escreva em um arquivo YAML ou JSON o fluxo do seu agente de código: gatilhos, repositórios, ferramentas permitidas e etapas, para versionar no Git.</li><li>Grave as conversas e artefatos de cada run do seu agente em uma pasta ou banco, mesmo que simples, para ter material de análise.</li><li>Escolha uma falha recorrente do seu agente, como testes redundantes, e escreva um prompt de avaliação que dê nota de 0 a 10 a cada sessão gravada.</li><li>Monte 10 tarefas reais do seu repositório e reexecute com dois modelos ou duas configurações, anotando custo e taxa de acerto.</li></ul>
+  </section>
+
+  <section class="relacionados">
+    <h3 class="rotulo-mao">Conversa com outros talks</h3>
+    <ul>
+<li><a href="../edicoes/2026-11-09.html#v-nKjPBAw_N_0">Fábrica de software com agentes que se melhora sozinha</a> <span class="muted">· 9 nov · em comum: Benchmark, Harness, Online scoring</span></li><li><a href="../edicoes/2026-10-12.html#v-YIxzNZDDy1A">Avaliar agentes, do benchmark ao leaderboard confiável</a> <span class="muted">· 12 out · em comum: Agent harness, Benchmark, Eval</span></li><li><a href="../edicoes/2026-10-18.html#v-7T-gldvgfpo">Workflows de agentes como contratos em markdown</a> <span class="muted">· 18 out · em comum: Harness, Programação declarativa</span></li>    </ul>
+  </section>
+
+  <footer class="talk-fim">
+    <div class="talk-acoes">
+      <label class="estudei js-only"><input type="checkbox" data-id="0LeT996Hz3E"> <span class="estudei-txt">Marquei como estudado</span><span class="sr">: <span lang="en">Engineer Your Coding Agents Like Any Other System</span></span></label>
+      <details class="levo js-only" data-levo="0LeT996Hz3E">
+        <summary>O que eu levo deste talk</summary>
+        <label class="sr" for="nota-0LeT996Hz3E">O que eu levo deste talk (fica só neste aparelho)</label>
+        <textarea id="nota-0LeT996Hz3E" data-nota="0LeT996Hz3E" rows="2" placeholder="Uma frase com as suas palavras. Fica salva só neste aparelho."></textarea>
+      </details>
+    </div>
+    <div class="talk-nav">
+      <a class="voltar-indice" href="#indice">↑ Índice</a>
+      <a class="proximo" href="#v-GKSQYbELDzw">Próximo <span>O que roda onde: IA local em produção</span> <span aria-hidden="true">↓</span></a>
+    </div>
+  </footer>
+</article><article class="video essencial" id="v-GKSQYbELDzw" data-tema="infraestrutura" data-n="3" data-total="4" aria-labelledby="t-GKSQYbELDzw">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">03</span>
+    <div class="sec-titulo">
+<p class="selo-essencial">essencial do dia<span>: Explica prefill, decode, quantização e batching para decidir o que roda local e em qual hardware.</span></p>      <h2 id="t-GKSQYbELDzw">O que roda onde: IA local em produção</h2>
+      <p class="titulo-original" lang="en">What Runs Where? Local AI in Production</p>
+      <p class="tese">IA local só funciona quando hardware, motor de inferência e harness são escolhidos juntos para o seu fluxo, e não por benchmark público.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <a class="chip chip-tema" href="../trilhas/infraestrutura.html">Infraestrutura<span class="sr">: ver a trilha do tema</span></a>
+    <span class="chip">≈ 5 min de leitura</span>
+    <span class="chip" role="img" aria-label="Complexidade 4 de 5">nível ●●●●○</span>
+<span class="chip">Ahmad Osman, Osmantic</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=GKSQYbELDzw" target="_blank" rel="noopener" data-yt="GKSQYbELDzw" data-t="0"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>Assistir (56:08)</a>
+  </div>
+
+<p class="objetivo"><span class="objetivo-rotulo">Depois deste talk você consegue</span> escolher hardware, quantização e motor de inferência para um fluxo de agentes local, medindo você mesmo em vez de confiar em benchmarks</p>
+  <section class="card resumo">
+    <h3>Em 3 frases</h3>
+<p>Ahmad Osman defende que modelos pequenos e especializados, rodando em máquinas que você controla, resolvem boa parte das tarefas de agentes por uma fração do custo da nuvem.</p><p>Ele mostra que o desempenho local depende de quantização, da diferença entre prefill e decode, de batching e de um motor de inferência feito para cada chip, e que o software ainda limita mais que o hardware.</p><p>Ele aposta que aprendizado contínuo só vai existir em máquinas locais e cita engrams, modelos de decisão e edição de pesos como receita, sem apresentar evidência, e promove o próprio projeto, o ODS.</p>  </section>
+
+  <section class="antes-de-ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+<li><a href="../glossario.html#g-quantization"><strong>Quantization</strong> <span>quantização</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-qat-quantization-aware-training"><strong>QAT (quantization-aware training)</strong> <span>treino ciente de quantização</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-prefill-e-decode"><strong>Prefill e decode</strong> <span>leitura do contexto e geração de tokens</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-speculative-decoding"><strong>Speculative decoding</strong> <span>decodificação especulativa</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-mixture-of-experts"><strong>Mixture of experts</strong> <span>mistura de especialistas com roteador</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-kv-cache"><strong>KV cache</strong> <span>cache de chaves e valores da atenção</span> <em>analogia no glossário</em></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-continual-learning"><strong>Continual learning</strong> <span>aprendizado contínuo</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-decision-model"><strong>Decision model</strong> <span>modelo barato que devolve rótulo e probabilidade</span> <em>analogia no glossário</em></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Local pode ser mais rápido que a nuvem</h3>
+    <p>Na comparação com a Hugging Face, um Qwen 3.6 de 27 bilhões de parâmetros rodando local gerou 51 tokens por segundo, contra 34 do GPT 5.5 na nuvem, com respostas parecidas. Em agentes, porém, o tempo costuma ir para esperar comandos de shell, então a velocidade bruta pesa menos que parece.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/GKSQYbELDzw/0.jpg" data-legenda="Modelo local de 27B a 51 tokens/s contra 34 tokens/s na nuvem."><img src="../img/GKSQYbELDzw/0.jpg" alt="Slide &#39;Which answer came from the desktop?&#39; com duas respostas lado a lado sobre transformers; as velocidades em tokens/s não aparecem." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Modelo local de 27B a 51 tokens/s contra 34 tokens/s na nuvem.</span><a class="minuto" href="https://www.youtube.com/watch?v=GKSQYbELDzw&amp;t=168s" target="_blank" rel="noopener" data-yt="GKSQYbELDzw" data-t="168" aria-label="Assistir a partir de 02:48"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:48</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Quantização exige olhar camada por camada</h3>
+    <p>Reduzir tudo para 4 bits pode destruir o modelo. A quantização dinâmica mede quais camadas são mais usadas e mantém essas em precisão alta, comprimindo as pouco usadas. Osman mostra que o GLM 5.3 em 4 bits preserva cerca de 94% da precisão, contra 76,1% de um modelo de um ano antes.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/GKSQYbELDzw/1.jpg" data-legenda="A retenção de precisão em 4 bits subiu de 76% para cerca de 94% em um ano."><img src="../img/GKSQYbELDzw/1.jpg" alt="Gráfico &#39;Fewer bits fit a smaller box&#39;: precisão do DeepSeek V3.1 (baseline 76,1%, 3 bits 75,6%) e top-1 do GLM-5.3 (4 bits 94,3%, 1 bit 72,6%)." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>A retenção de precisão em 4 bits subiu de 76% para cerca de 94% em um ano.</span><a class="minuto" href="https://www.youtube.com/watch?v=GKSQYbELDzw&amp;t=1085s" target="_blank" rel="noopener" data-yt="GKSQYbELDzw" data-t="1085" aria-label="Assistir a partir de 18:05"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>18:05</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Prefill e decode pedem hardware diferente</h3>
+    <p>O prefill, que lê o prompt, depende de poder de cálculo. O decode, que gera tokens, depende de largura de banda de memória. Prompts longos aumentam o tempo até o primeiro token. Por isso a escolha da máquina muda conforme o fluxo: contexto longo, muitas requisições paralelas ou resposta curta.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/GKSQYbELDzw/2.jpg" data-legenda="Cada fase da inferência tem um gargalo diferente, e isso orienta a compra."><img src="../img/GKSQYbELDzw/2.jpg" alt="Slide &#39;Fast at which part?&#39; com barras de prefill e decode para prompt longo com resposta curta e prompt curto com resposta longa." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Cada fase da inferência tem um gargalo diferente, e isso orienta a compra.</span><a class="minuto" href="https://www.youtube.com/watch?v=GKSQYbELDzw&amp;t=1147s" target="_blank" rel="noopener" data-yt="GKSQYbELDzw" data-t="1147" aria-label="Assistir a partir de 19:07"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>19:07</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Batching favorece GPU dedicada</h3>
+    <p>Com 50 requisições simultâneas, a RTX Pro 6000 chegou perto de 1300 tokens por segundo, enquanto as outras máquinas testadas processaram de forma sequencial. Para quem roda vários agentes em paralelo, Osman recomenda GPU Nvidia em vez de Mac, e vê a falta de motores otimizados por chip como problema de software.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=GKSQYbELDzw&amp;t=1398s" target="_blank" rel="noopener" data-yt="GKSQYbELDzw" data-t="1398" aria-label="Assistir a partir de 23:18"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>23:18</a> Em paralelo, a GPU dedicada escala e as demais ficam sequenciais.</p>  </div>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Traces reais viram modelo pequeno</h3>
+    <p>Osman cita um artigo da Airbnb em que um modelo de 2 bilhões de parâmetros chegou a qualidade de fronteira com cerca de 1% do custo. A receita dele é guardar os traces de agentes com modelos grandes, montar uma avaliação, gerar dados sintéticos e treinar com aprendizado por reforço.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=GKSQYbELDzw&amp;t=2213s" target="_blank" rel="noopener" data-yt="GKSQYbELDzw" data-t="2213" aria-label="Assistir a partir de 36:53"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>36:53</a> Traces de agentes são a matéria-prima para treinar um modelo especializado barato.</p>  </div>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=GKSQYbELDzw&amp;t=168s" target="_blank" rel="noopener" data-yt="GKSQYbELDzw" data-t="168"><strong>51 vs 34</strong><span>tokens/s do Qwen 27B local contra GPT 5.5 na nuvem</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:48<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=GKSQYbELDzw&amp;t=1398s" target="_blank" rel="noopener" data-yt="GKSQYbELDzw" data-t="1398"><strong>~1300 tok/s</strong><span>RTX Pro 6000 com 50 requisições paralelas</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>23:18<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=GKSQYbELDzw&amp;t=1713s" target="_blank" rel="noopener" data-yt="GKSQYbELDzw" data-t="1713"><strong>1,1%</strong><span>ganho total com tokenizador 100 vezes mais rápido</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>28:33<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=GKSQYbELDzw&amp;t=2846s" target="_blank" rel="noopener" data-yt="GKSQYbELDzw" data-t="2846"><strong>437x</strong><span>redução do KV cache no DeepSeek V4.1 Flash</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>47:26<span class="sr">, assistir neste minuto</span></span></a>
+  </div>
+
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O palestrante é fundador da Osmantic e promove o ODS, o Portal e uma receita de aprendizado contínuo que ele mesmo diz que ainda está em desenvolvimento, sem dados. Muitos números vêm de slides rápidos sem metodologia (Airbnb, Hugging Face, OpenRouter), e ele admite ter lido o artigo FlashData só por cima. A crítica a benchmarks é pertinente, mas ele usa os mesmos benchmarks quando convêm. Comparações de velocidade ignoram qualidade da resposta, e o custo de manter GPUs próprias aparece só como aviso, sem conta.</p>
+  </div>
+
+  <section class="card autoteste">
+    <h3>Teste você mesmo</h3>
+    <p class="muted">Responda de cabeça antes de abrir. Lembrar com esforço é o que fixa.</p>
+    <ol class="perguntas">
+      <li><span class="tipo">lembrar</span> Qual é o gargalo do prefill e qual é o do decode, e o que isso muda para quem escolhe hardware?
+        <details class="resposta"><summary>Ver resposta</summary><p>O prefill é limitado por computação e o decode por largura de banda de memória. Contextos longos pesam no prefill e aumentam o tempo até o primeiro token. Respostas longas e muitos usuários pesam no decode. A compra deve seguir o seu fluxo.</p></details>
+      </li>
+      <li><span class="tipo">aplicar</span> Você roda um agente de suporte que faz sempre a mesma triagem com um modelo de fronteira. Como usar a ideia de Osman para reduzir custo?
+        <details class="resposta"><summary>Ver resposta</summary><p>Guarde os traces das execuções, monte uma avaliação com casos reais, teste um modelo pequeno ou ajustado nessa avaliação e troque só se a qualidade se mantiver. Meça também latência e custo no seu hardware, sem confiar em números públicos.</p></details>
+      </li>
+      <li><span class="tipo">criticar</span> Que conflito de interesse e que lacunas de evidência você vê na defesa de que local vai vencer a nuvem?
+        <details class="resposta"><summary>Ver resposta</summary><p>Osman vende o ODS e consultoria em IA local. Muitos números vêm de slides sem método, a receita de aprendizado contínuo não tem resultado, e ele desconfia de benchmarks mas os cita quando ajudam. Faltam custo de operação e comparação de qualidade por tarefa.</p></details>
+      </li>
+    </ol>
+  </section>
+
+  <div class="casper experimento">
+    <span class="tag">experimente · 30 min</span>
+    <p class="exp-titulo"><strong>Medir prefill e decode do seu modelo local</strong></p>
+    <p class="muted">Você precisa de: Computador com Ollama ou llama.cpp e um modelo pequeno (1B a 8B) baixado.</p>
+    <ol class="passos"><li>Instale o Ollama e baixe um modelo pequeno, por exemplo qwen2.5:3b.</li><li>Rode um prompt de uma frase com a opção --verbose e anote o tempo até o primeiro token e os tokens por segundo na geração.</li><li>Cole um texto de cerca de 4000 palavras, peça um resumo de três linhas e anote as mesmas duas medidas.</li><li>Se houver duas quantizações do mesmo modelo (q4 e q8), repita os testes em cada uma e compare velocidade e qualidade do resumo.</li></ol>
+    <p><strong>Deu certo se:</strong> Você tem uma tabela com tempo até o primeiro token e tokens por segundo para prompt curto e longo, e consegue dizer qual fase cresceu mais.</p>
+  </div>
+
+  <section class="card painel">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Meça tokens por segundo e tempo até o primeiro token do seu modelo local com um prompt curto e outro de vários milhares de tokens, e anote a diferença.</li><li>Compare duas quantizações do mesmo modelo (por exemplo 4 bits e 8 bits) na sua tarefa real, com 20 exemplos, antes de escolher uma.</li><li>Salve os traces dos seus agentes que usam modelo grande e separe 30 casos para testar um modelo menor na mesma tarefa.</li><li>Dê acesso a busca na web ao seu modelo local antes de concluir que ele não consegue executar uma tarefa com ferramenta recente.</li></ul>
+  </section>
+
+  <section class="relacionados">
+    <h3 class="rotulo-mao">Conversa com outros talks</h3>
+    <ul>
+<li><span class="relacao">complementa</span> <a href="../edicoes/2026-11-10.html#v-hFNbPmzzcEs">Modelos de decisão recursivos no lugar de LLMs</a> <span class="muted">· Os dois defendem modelos pequenos para decisões repetidas; Osman acrescenta como treiná-los com traces reais e rodá-los na própria máquina.</span></li><li><a href="../edicoes/2026-10-12.html#v-4n08JHb90hI">Servir um modelo com vLLM medindo cada ajuste</a> <span class="muted">· 12 out · em comum: KV cache, Mixture of experts, Prefill e decode</span></li><li><a href="../edicoes/2026-10-21.html#v-YvQ4BVTWfHI">Medir o trabalho inteiro ao trocar de modelo</a> <span class="muted">· 21 out · em comum: KV cache, Mixture of experts, Quantization</span></li><li><a href="../edicoes/2026-10-03.html#v-TRe1u7dHYiA">O que torna modelos abertos rápidos em produção</a> <span class="muted">· 3 out · em comum: KV cache, Prefill e decode, Quantization</span></li>    </ul>
+  </section>
+
+  <footer class="talk-fim">
+    <div class="talk-acoes">
+      <label class="estudei js-only"><input type="checkbox" data-id="GKSQYbELDzw"> <span class="estudei-txt">Marquei como estudado</span><span class="sr">: <span lang="en">What Runs Where? Local AI in Production</span></span></label>
+      <details class="levo js-only" data-levo="GKSQYbELDzw">
+        <summary>O que eu levo deste talk</summary>
+        <label class="sr" for="nota-GKSQYbELDzw">O que eu levo deste talk (fica só neste aparelho)</label>
+        <textarea id="nota-GKSQYbELDzw" data-nota="GKSQYbELDzw" rows="2" placeholder="Uma frase com as suas palavras. Fica salva só neste aparelho."></textarea>
+      </details>
+    </div>
+    <div class="talk-nav">
+      <a class="voltar-indice" href="#indice">↑ Índice</a>
+      <a class="proximo" href="#v-MDI81OaZAD4">Próximo <span>Como criar cultura de time em volta de um agente de código</span> <span aria-hidden="true">↓</span></a>
+    </div>
+  </footer>
+</article>
+      <section class="radar" id="radar" aria-labelledby="radar-titulo">
+        <h2 id="radar-titulo">Radar</h2>
+        <p class="hand">os outros talks do dia, em resumo. Abra o que interessar.</p>
+        <details class="radar-item" data-id="MDI81OaZAD4">
+          <summary>
+            <span class="radar-n" aria-hidden="true">04</span>
+            <span class="radar-txt">
+              <strong>Como criar cultura de time em volta de um agente de código</strong>
+              <span class="radar-tese">Agente de código compartilhado e sessões públicas espalham prática e confiança no time mais rápido do que treinamento formal.</span>
+              <span class="radar-meta">Carreira e equipes · ≈ 6 min · <span lang="en">How to build an agent that builds the culture</span></span>
+            </span>
+          </summary>
+          <article class="video" id="v-MDI81OaZAD4" data-tema="carreira-e-equipes" data-n="4" data-total="4" aria-labelledby="t-MDI81OaZAD4">
+  <header class="sec-head">
+    <span class="step" aria-hidden="true">04</span>
+    <div class="sec-titulo">
+      <h2 id="t-MDI81OaZAD4">Como criar cultura de time em volta de um agente de código</h2>
+      <p class="titulo-original" lang="en">How to build an agent that builds the culture</p>
+      <p class="tese">Agente de código compartilhado e sessões públicas espalham prática e confiança no time mais rápido do que treinamento formal.</p>
+      <p class="selo-estudado" aria-hidden="true">estudado ✓</p>
+    </div>
+  </header>
+
+  <div class="chips">
+    <a class="chip chip-tema" href="../trilhas/carreira-e-equipes.html">Carreira e equipes<span class="sr">: ver a trilha do tema</span></a>
+    <span class="chip">≈ 6 min de leitura</span>
+    <span class="chip" role="img" aria-label="Complexidade 2 de 5">nível ●●○○○</span>
+<span class="chip">Zach Bruggeman, Ramp</span>    <a class="chip chip-link" href="https://www.youtube.com/watch?v=MDI81OaZAD4" target="_blank" rel="noopener" data-yt="MDI81OaZAD4" data-t="0"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>Assistir (14:28)</a>
+  </div>
+
+<p class="objetivo"><span class="objetivo-rotulo">Depois deste talk você consegue</span> desenhar um plano para adotar um agente de código compartilhado no seu time, com sessões abertas e verificação visível</p>
+  <section class="card resumo">
+    <h3>Em 3 frases</h3>
+<p>Zach Bruggeman, da Ramp, conta que o Inspect, agente de código próprio da empresa, escreve e entrega cerca de 75% do código, e que a tecnologia deixou de ser a parte difícil.</p><p>Ele resume três lições de cultura: uma ferramenta única que acaba com silos de informação, sessões públicas com verificação visível para criar confiança e a prática de pensar maior em conjunto.</p><p>O caso do bug de telemetria e o surgimento do Review Buddy, agente de revisão de código, ilustram como o trabalho feito em público atrai colegas e gera novas ferramentas.</p>  </section>
+
+  <section class="antes-de-ler">
+    <h3 class="rotulo-mao">Antes de ler</h3>
+    <ul class="termos">
+      <li><a href="#a-MDI81OaZAD4-agente-multiplayer"><strong>Agente multiplayer</strong> <span>agente compartilhado por várias pessoas do time</span> <em>analogia abaixo</em></a></li>
+      <li><a href="#a-MDI81OaZAD4-cloudflare-workers"><strong>Cloudflare Workers</strong> <span>plataforma de execução de código em borda, com banco D1 e KV</span> <em>analogia abaixo</em></a></li>
+<li><a href="../glossario.html#g-coding-agent"><strong>Coding agent</strong> <span>agente de código</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-sandbox"><strong>Sandbox</strong> <span>ambiente isolado para rodar o código</span> <em>analogia no glossário</em></a></li><li><a href="../glossario.html#g-silo-de-informacao"><strong>Silo de informação</strong> <span>conhecimento preso a uma pessoa ou equipe</span></a></li><li><a href="../glossario.html#g-pull-request"><strong>Pull request</strong> <span>pedido de integração de código</span> <em>analogia no glossário</em></a></li>    </ul>
+    <details class="mais-termos">
+      <summary>Mais 2 termos</summary>
+      <ul class="termos"><li><a href="../glossario.html#g-runtime-verification"><strong>Runtime verification</strong> <span>verificação em tempo de execução: o agente roda o app e o inspeciona</span></a></li><li><a href="../glossario.html#g-observability"><strong>Observability</strong> <span>observabilidade (logs, métricas e traces)</span> <em>analogia no glossário</em></a></li></ul>
+    </details>
+  </section>
+
+  <div class="ideias">
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>Uma ferramenta única acaba com os silos</h3>
+    <p>Se cada pessoa monta o próprio setup de agente, a empresa perde dias em configuração repetida e o conhecimento se espalha de forma desigual. Com um único Inspect para todos, uma melhoria descoberta por alguém chega ao time inteiro de forma invisível. Segundo o palestrante, a Ramp nunca precisou obrigar o uso, porque a base já boa reduz a vontade de montar a própria.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/MDI81OaZAD4/0.jpg" data-legenda="Setup individual multiplicado por centenas de pessoas vira dias perdidos."><img src="../img/MDI81OaZAD4/0.jpg" alt="Slide &#39;15 minutes of setup&#39; com o app Inspect: 15 min de setup para 1 engenheiro, repetido em cada pessoa." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Setup individual multiplicado por centenas de pessoas vira dias perdidos.</span><a class="minuto" href="https://www.youtube.com/watch?v=MDI81OaZAD4&amp;t=138s" target="_blank" rel="noopener" data-yt="MDI81OaZAD4" data-t="138" aria-label="Assistir a partir de 02:18"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:18</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Sessões públicas por padrão substituem treinamento</h3>
+    <p>Toda sessão do Inspect é visível na empresa. Quem quer aprender observa como os colegas escrevem prompts e quebram problemas difíceis nos canais em que já está. Dá até para pedir ao agente que leia as sessões recentes de alguém e resuma o método. O time do Inspect também aprende com usos que não previu e decide o que construir.</p>
+  </div>
+  <figure class="shot" style="--tilt: 0.6deg">
+    <a class="ampliar" href="../img/MDI81OaZAD4/1.jpg" data-legenda="Sessões abertas por padrão servem de aula contínua."><img src="../img/MDI81OaZAD4/1.jpg" alt="Slide &#39;Easier to work in public than in private&#39;: sessões públicas, sem treinamentos de IA; ao lado, o agente resume 3 hábitos de colegas." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>Sessões abertas por padrão servem de aula contínua.</span><a class="minuto" href="https://www.youtube.com/watch?v=MDI81OaZAD4&amp;t=260s" target="_blank" rel="noopener" data-yt="MDI81OaZAD4" data-t="260" aria-label="Assistir a partir de 04:20"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>04:20</a></figcaption>
+  </figure>
+</div><div class="ideia">
+  <div class="ideia-texto">
+    <h3>Verificação visível constrói confiança no PR</h3>
+    <p>Quem revisa um pull request não recebe só 400 linhas de diff. Vê a conversa que gerou a mudança, as ferramentas usadas, capturas de tela de antes e depois e até um vídeo do agente de verificação clicando no app no navegador. A sessão vira um registro vivo de por que a mudança merece confiança.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/MDI81OaZAD4/2.jpg" data-legenda="O PR traz a conversa, os prints e o vídeo que provam a mudança."><img src="../img/MDI81OaZAD4/2.jpg" alt="Slide &#39;Every change shows its work&#39;: diff com +312 e -88 linhas, ilustrando uma mudança com evidências de verificação." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>O PR traz a conversa, os prints e o vídeo que provam a mudança.</span><a class="minuto" href="https://www.youtube.com/watch?v=MDI81OaZAD4&amp;t=384s" target="_blank" rel="noopener" data-yt="MDI81OaZAD4" data-t="384" aria-label="Assistir a partir de 06:24"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:24</a></figcaption>
+  </figure>
+</div>    <details class="mais-ideias">
+      <summary>Mais 2 ideias deste talk</summary>
+<div class="ideia">
+  <div class="ideia-texto">
+    <h3>O bug de telemetria resolvido na frente de todos</h3>
+    <p>Um engenheiro reportou um bug. O Inspect apontou a própria instrumentação como causa, e ninguém acreditou de primeira. Como a investigação aconteceu em público, o time insistiu. O agente leu o código da biblioteca de telemetria e achou que ela chamava fetch sem ler nem cancelar o corpo da resposta. Ele corrigiu o exportador, e os erros pararam. Quem reportou o bug entrou na conversa e puxou novas ideias.</p>
+  </div>
+  <figure class="shot" style="--tilt: -0.6deg">
+    <a class="ampliar" href="../img/MDI81OaZAD4/3.jpg" data-legenda="A thread mostra a dúvida do time e a causa achada pelo agente."><img src="../img/MDI81OaZAD4/3.jpg" alt="Thread no Slack: andrew relata sessão do Inspect quebrada; Zach pede ao @Inspect que investigue traces e logs no Datadog." loading="lazy" decoding="async" width="1280" height="720"><span class="sr"> (ampliar imagem)</span></a>
+    <figcaption><span>A thread mostra a dúvida do time e a causa achada pelo agente.</span><a class="minuto" href="https://www.youtube.com/watch?v=MDI81OaZAD4&amp;t=449s" target="_blank" rel="noopener" data-yt="MDI81OaZAD4" data-t="449" aria-label="Assistir a partir de 07:29"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>07:29</a></figcaption>
+  </figure>
+</div><div class="ideia ideia-sem-print">
+  <div class="ideia-texto">
+    <h3>Review Buddy nasceu sem pedir permissão</h3>
+    <p>A Ramp trocava de produto de revisão de código sem achar um bom. Dois engenheiros viram que o Inspect já tinha gatilhos de automação disparados por eventos como a abertura de um PR e construíram o Review Buddy por conta própria. O uso levou o time do Inspect a enxergar o produto como algo além de um agente de código.</p>
+<p class="sem-print"><a class="minuto" href="https://www.youtube.com/watch?v=MDI81OaZAD4&amp;t=699s" target="_blank" rel="noopener" data-yt="MDI81OaZAD4" data-t="699" aria-label="Assistir a partir de 11:39"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>11:39</a> Um gatilho de PR aberto bastou para montar o agente de revisão.</p>  </div>
+</div>    </details>
+  </div>
+
+  <div class="nums">
+    <a class="num" href="https://www.youtube.com/watch?v=MDI81OaZAD4&amp;t=44s" target="_blank" rel="noopener" data-yt="MDI81OaZAD4" data-t="44"><strong>75%</strong><span>parcela do código da Ramp escrita e entregue pelo Inspect</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>00:44<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=MDI81OaZAD4&amp;t=75s" target="_blank" rel="noopener" data-yt="MDI81OaZAD4" data-t="75"><strong>5 s</strong><span>tempo para subir sandboxes, segundo o palestrante</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>01:15<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=MDI81OaZAD4&amp;t=138s" target="_blank" rel="noopener" data-yt="MDI81OaZAD4" data-t="138"><strong>15 min</strong><span>exemplo de setup repetido por pessoa em empresas grandes</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>02:18<span class="sr">, assistir neste minuto</span></span></a>
+    <a class="num" href="https://www.youtube.com/watch?v=MDI81OaZAD4&amp;t=384s" target="_blank" rel="noopener" data-yt="MDI81OaZAD4" data-t="384"><strong>400 linhas</strong><span>tamanho de diff de PR citado como exemplo</span><span class="num-t"><svg class="ico" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M3 1.8v8.4L10 6z" fill="currentColor"/></svg>06:24<span class="sr">, assistir neste minuto</span></span></a>
+  </div>
+
+  <div class="casper" id="a-MDI81OaZAD4-agente-multiplayer">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Agente multiplayer (agente compartilhado por várias pessoas do time).</strong> Um agente multiplayer é como um quadro branco no meio do escritório, onde qualquer colega chega, vê o que já foi escrito e continua a conta de onde ela parou.</p>
+    <ol class="passos"><li>Um agente multiplayer é um assistente de IA que várias pessoas do time usam juntas, na mesma conversa e no mesmo trabalho.</li><li>Na maioria das ferramentas, cada pessoa abre uma sessão só sua no próprio computador. Aqui a sessão fica num servidor e qualquer colega pode abrir, ler e mandar novas instruções.</li><li>Cada sessão roda remotamente, num ambiente próprio na nuvem, então o trabalho continua mesmo com o notebook de quem começou fechado.</li><li>A mesma sessão aparece em vários lugares, como o próprio app, o Slack ou o Linear, e guarda o histórico de prompts, ferramentas usadas e resultados.</li><li>Na Ramp, o Inspect funciona assim e deixa toda sessão pública por padrão, o que transforma o trabalho de cada um em material de estudo e em prova para quem revisa o pull request.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>PESSOA ABRE SESSÃO</strong><span>pelo app, Slack ou Linear</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>AGENTE RODA NA NUVEM</strong><span>ambiente remoto próprio</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>COLEGAS ENTRAM</strong><span>leem, comentam e dão instruções</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>SESSÃO COMPARTILHADA</strong><span>histórico visível para todo o time</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-agente-de-ia">Agente de IA</a>, <a href="../glossario.html#g-prompt">Prompt</a>, <a href="../glossario.html#g-pull-request">Pull request</a></p>  </div>
+  <div class="casper" id="a-MDI81OaZAD4-cloudflare-workers">
+    <span class="tag">analogia</span>
+    <p class="analogia"><strong>Cloudflare Workers (plataforma de execução de código em borda, com banco D1 e KV).</strong> Cloudflare Workers é como uma rede de quiosques de lanche espalhados pela cidade, onde cada pedido é preparado no quiosque mais perto do cliente em vez de numa cozinha central.</p>
+    <ol class="passos"><li>Cloudflare Workers é um serviço que roda pequenos programas na internet sem que você precise cuidar de um servidor.</li><li>O código fica copiado em centenas de centros de dados da Cloudflare e roda no mais próximo de quem fez o pedido, o que reduz a espera. Esse modelo se chama edge computing (computação na borda).</li><li>Cada requisição acorda um ambiente leve e isolado, que responde e some. A plataforma também oferece armazenamento, como o banco D1 e o KV (armazenamento chave-valor).</li><li>Esse ambiente tem limites próprios, como um número máximo de conexões abertas ao mesmo tempo. Uma chamada fetch (pedido HTTP) cuja resposta nunca é lida nem cancelada pode segurar uma dessas vagas.</li><li>No talk, uma biblioteca de telemetria feita para Workers deixava o corpo das respostas sem ler. O Inspect achou a causa e corrigiu o exportador para cancelar o corpo de forma explícita, e os erros pararam.</li></ol>
+    <div class="fluxo" role="list" aria-label="Como funciona">
+      <div class="no" role="listitem"><strong>PEDIDO CHEGA</strong><span>usuário chama o endereço</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>BORDA MAIS PRÓXIMA</strong><span>centro de dados perto do usuário</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no" role="listitem"><strong>WORKER RODA</strong><span>ambiente isolado e com limites</span></div>
+<span class="seta" aria-hidden="true">→</span>      <div class="no fim" role="listitem"><strong>RESPOSTA RÁPIDA</strong><span>sem servidor para você manter</span></div>
+    </div>
+<p class="pre">Ajuda saber antes: <a href="../glossario.html#g-api">API</a></p>  </div>
+
+  <div class="casper critica">
+    <span class="tag">leitura crítica</span>
+    <p>O talk é divulgação de produto de uma empresa que agora vende o Inspect, com lista de espera no fim. O número de 75% do código (t=44) não vem com definição de código escrito, revisado ou medido, nem com dados de qualidade, tempo de ciclo ou incidentes. As lições vêm de uma empresa e de uma equipe, sem comparação com times que usam setups individuais. O caso do bug é uma história única, escolhida porque terminou bem.</p>
+  </div>
+
+  <section class="card autoteste">
+    <h3>Teste você mesmo</h3>
+    <p class="muted">Responda de cabeça antes de abrir. Lembrar com esforço é o que fixa.</p>
+    <ol class="perguntas">
+      <li><span class="tipo">lembrar</span> Quais são as três lições de cultura que Zach Bruggeman apresenta?
+        <details class="resposta"><summary>Ver resposta</summary><p>Primeiro, construir ferramentas que acabam com silos de informação. Segundo, construir confiança com sessões públicas e verificação visível. Terceiro, pensar maior em conjunto, em vez de valorizar o operador solitário.</p></details>
+      </li>
+      <li><span class="tipo">aplicar</span> No seu time, o que você mudaria no próximo PR feito com agente para que o revisor confie nele sem refazer o trabalho?
+        <details class="resposta"><summary>Ver resposta</summary><p>Anexar a sessão ou conversa com o agente, listar as ferramentas usadas, incluir prints de antes e depois e o resultado dos testes ou um vídeo mostrando o fluxo funcionando, como o Inspect faz.</p></details>
+      </li>
+      <li><span class="tipo">criticar</span> Que evidência falta para aceitar que sessões públicas e um agente único explicam o sucesso de 75% do código?
+        <details class="resposta"><summary>Ver resposta</summary><p>Falta definir o que conta como código escrito pelo agente e medir qualidade, retrabalho e incidentes. Também não há comparação com times com setups individuais, e a empresa vende o produto, o que gera conflito de interesse.</p></details>
+      </li>
+    </ol>
+  </section>
+
+  <div class="casper experimento">
+    <span class="tag">experimente · 30 min</span>
+    <p class="exp-titulo"><strong>Montar um PR com prova de verificação anexada</strong></p>
+    <p class="muted">Você precisa de: Um repositório seu, um agente de código (como Claude Code) e um navegador.</p>
+    <ol class="passos"><li>Escolha uma mudança pequena no repositório, como corrigir um texto ou um bug simples de interface.</li><li>Peça ao agente para fazer a mudança e rodar os testes, e salve a conversa em um arquivo de texto.</li><li>Tire prints de antes e depois da tela afetada ou grave um vídeo curto do fluxo funcionando.</li><li>Abra o PR com a descrição apontando a conversa, os prints e o resultado dos testes.</li><li>Peça a um colega ou a outro agente que revise só com o que está no PR e anote o que ainda ficou faltando.</li></ol>
+    <p><strong>Deu certo se:</strong> O revisor aprova ou comenta o PR sem pedir informação extra sobre como a mudança foi feita ou testada.</p>
+  </div>
+
+  <section class="card painel">
+    <h3>O que fazer com isso</h3>
+    <ul class="acoes"><li>Anote por uma semana os setups de agente (arquivos de instruções, ferramentas, prompts) que você e um colega usam e compare as diferenças.</li><li>Compartilhe uma sessão sua com o agente de código em um canal do time e peça comentários sobre o método.</li><li>No próximo PR feito com agente, anexe a conversa, prints de antes e depois e o resultado dos testes na descrição.</li><li>Pergunte a 3 colegas o que o time espera fazer e ainda não fez, como o palestrante sugere, e escolha um item para tentar com o agente.</li></ul>
+  </section>
+
+  <section class="relacionados">
+    <h3 class="rotulo-mao">Conversa com outros talks</h3>
+    <ul>
+<li><a href="../edicoes/2026-11-09.html#v-Enn9dVrRXAo">Fim da arqueologia de agentes: threads compartilhadas</a> <span class="muted">· 9 nov · em comum: Agente multiplayer, Pull request</span></li><li><a href="../edicoes/2026-10-08.html#v-YNT7Plf9KIg">Dar contexto de produção ao agente de código</a> <span class="muted">· 8 out · em comum: Coding agent, Observability</span></li><li><a href="../edicoes/2026-10-30.html#v-8vDzncmzxyg">Contexto e checagem para o agente que começa do zero</a> <span class="muted">· 30 out · em comum: Coding agent, Pull request</span></li>    </ul>
+  </section>
+
+  <footer class="talk-fim">
+    <div class="talk-acoes">
+      <label class="estudei js-only"><input type="checkbox" data-id="MDI81OaZAD4"> <span class="estudei-txt">Marquei como estudado</span><span class="sr">: <span lang="en">How to build an agent that builds the culture</span></span></label>
+      <details class="levo js-only" data-levo="MDI81OaZAD4">
+        <summary>O que eu levo deste talk</summary>
+        <label class="sr" for="nota-MDI81OaZAD4">O que eu levo deste talk (fica só neste aparelho)</label>
+        <textarea id="nota-MDI81OaZAD4" data-nota="MDI81OaZAD4" rows="2" placeholder="Uma frase com as suas palavras. Fica salva só neste aparelho."></textarea>
+      </details>
+    </div>
+    <div class="talk-nav">
+      <a class="voltar-indice" href="#indice">↑ Índice</a>
+      <a class="proximo" href="#fim">Fechar a edição <span aria-hidden="true">↓</span></a>
+    </div>
+  </footer>
+</article>
+        </details>
+      </section>
+
+      <section class="fim-edicao card" id="fim" aria-labelledby="fim-titulo">
+        <h2 id="fim-titulo">Fim da edição</h2>
+        <span class="progresso" data-ids="JNexz3Tbiu8 0LeT996Hz3E GKSQYbELDzw MDI81OaZAD4"></span>
+        <div class="revise">
+          <h3>Revise</h3>
+          <p class="muted">Uma pergunta de dias anteriores. Responda de cabeça antes de abrir: é a revisão espaçada que faz o conteúdo ficar.</p>
+          <ol class="perguntas">
+            <li><span class="tipo">há 3 dias</span> O que o palestrante chama de interior suave em contraste com a fronteira irregular?
+              <details class="resposta"><summary>Ver resposta</summary><p>Abaixo da fronteira de capacidade o desempenho é uniforme. Se o modelo escreve React, escreve também Figma, JSON ou HTML com qualidade parecida.</p><p class="muted">Do talk <a href="../edicoes/2026-11-19.html#v-xRJMiaUoD_8">O lado doce da lição amarga: controle no vibe coding</a>, edição de 19 nov.</p></details>
+            </li>
+            <li><span class="tipo">há 7 dias</span> Quais são as quatro saídas possíveis ao testar um item da skill com e sem a skill?
+              <details class="resposta"><summary>Ver resposta</summary><p>O modelo acerta nos dois casos (a skill não muda nada), acerta só sem skill (a skill atrapalha), acerta só com skill (ensinou algo novo) ou erra nos dois (a skill está falha ou incompleta).</p><p class="muted">Do talk <a href="../edicoes/2026-11-15.html#v-yzx4IuEh_tU">Como medir o que sua skill ensina de novo ao modelo</a>, edição de 15 nov.</p></details>
+            </li>
+            <li><span class="tipo">há 32 dias</span> O que mudou na pesquisa sobre o sistema antigo com o servidor MCP?
+              <details class="resposta"><summary>Ver resposta</summary><p>Antes era preciso pedir a um engenheiro de mainframe ou a um arquiteto, e a resposta levava 7 dias. Com o código legado exposto à IA por um servidor MCP, a mesma pergunta virou um prompt de 15 minutos.</p><p class="muted">Do talk <a href="../edicoes/2026-10-21.html#v-uA4ah-dVHvU">Código legado consultável por IA via MCP</a>, edição de 21 out.</p></details>
+            </li>
+          </ol>
+        </div>
+        <p>Termos novos no glossário:
+<a href="../glossario.html#g-agente-multiplayer">Agente multiplayer</a>, <a href="../glossario.html#g-cloudflare-workers">Cloudflare Workers</a>, <a href="../glossario.html#g-closed-loop-system">Closed-loop system</a>.
+        </p>
+        <nav class="paginacao" aria-label="Outras edições">
+<a rel="prev" href="2026-11-19.html"><span class="paginacao-dir">← Edição anterior</span><strong>Agentes que trabalham horas sem tirar o controle de quem constrói</strong><span class="muted">quinta, 19 nov 2026</span></a>          <a class="voltar" href="../index.html#edicoes"><span class="paginacao-dir">Todas as edições</span><strong>Voltar ao início</strong></a>
+        </nav>
+      </section>
+    </div>
+  </div>
+
+  <div class="progresso-leitura js-only" aria-hidden="true"><i></i></div>
+  <nav class="barra-leitura js-only" aria-label="Navegação da leitura" hidden>
+    <a href="#indice" class="bl-indice">Índice</a>
+    <span class="bl-pos" aria-live="off"></span>
+    <a href="#fim" class="bl-proximo">Próximo ↓</a>
+  </nav>
+</div>
+</main>
+<footer class="rodape wrap">
+  <p>Resumos em português dos talks do canal <a href="https://www.youtube.com/@aiDotEngineer" target="_blank" rel="noopener">AI Engineer<span class="sr"> (abre em nova aba)</span></a>. Atualizado em 23 nov 2026, 17:06. <a href="../status.html">Status da rotina</a> · <a href="../feed.xml">Assinar por RSS</a></p>
+</footer>
+<script src="../app.js" defer></script>
+</body>
+</html>

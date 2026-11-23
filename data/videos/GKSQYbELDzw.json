@@ -1,0 +1,211 @@
+{
+  "id": "GKSQYbELDzw",
+  "titulo": "What Runs Where? Local AI in Production — Ahmad Osman, Osmantic",
+  "titulo_curto": "What Runs Where? Local AI in Production",
+  "palestrante": "Ahmad Osman, Osmantic",
+  "url": "https://www.youtube.com/watch?v=GKSQYbELDzw",
+  "duracao": 3368,
+  "publicado_ts": 1795280406,
+  "edicao": "2026-11-22",
+  "tese": "IA local só funciona quando hardware, motor de inferência e harness são escolhidos juntos para o seu fluxo, e não por benchmark público.",
+  "tldr": [
+    "Ahmad Osman defende que modelos pequenos e especializados, rodando em máquinas que você controla, resolvem boa parte das tarefas de agentes por uma fração do custo da nuvem.",
+    "Ele mostra que o desempenho local depende de quantização, da diferença entre prefill e decode, de batching e de um motor de inferência feito para cada chip, e que o software ainda limita mais que o hardware.",
+    "Ele aposta que aprendizado contínuo só vai existir em máquinas locais e cita engrams, modelos de decisão e edição de pesos como receita, sem apresentar evidência, e promove o próprio projeto, o ODS."
+  ],
+  "tema": "infraestrutura",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "Local pode ser mais rápido que a nuvem",
+      "texto": "Na comparação com a Hugging Face, um Qwen 3.6 de 27 bilhões de parâmetros rodando local gerou 51 tokens por segundo, contra 34 do GPT 5.5 na nuvem, com respostas parecidas. Em agentes, porém, o tempo costuma ir para esperar comandos de shell, então a velocidade bruta pesa menos que parece.",
+      "t": 168,
+      "legenda": "Modelo local de 27B a 51 tokens/s contra 34 tokens/s na nuvem.",
+      "print": "img/GKSQYbELDzw/0.jpg",
+      "descricao": "Slide 'Which answer came from the desktop?' com duas respostas lado a lado sobre transformers; as velocidades em tokens/s não aparecem."
+    },
+    {
+      "titulo": "Quantização exige olhar camada por camada",
+      "texto": "Reduzir tudo para 4 bits pode destruir o modelo. A quantização dinâmica mede quais camadas são mais usadas e mantém essas em precisão alta, comprimindo as pouco usadas. Osman mostra que o GLM 5.3 em 4 bits preserva cerca de 94% da precisão, contra 76,1% de um modelo de um ano antes.",
+      "t": 1085,
+      "legenda": "A retenção de precisão em 4 bits subiu de 76% para cerca de 94% em um ano.",
+      "print": "img/GKSQYbELDzw/1.jpg",
+      "descricao": "Gráfico 'Fewer bits fit a smaller box': precisão do DeepSeek V3.1 (baseline 76,1%, 3 bits 75,6%) e top-1 do GLM-5.3 (4 bits 94,3%, 1 bit 72,6%)."
+    },
+    {
+      "titulo": "Prefill e decode pedem hardware diferente",
+      "texto": "O prefill, que lê o prompt, depende de poder de cálculo. O decode, que gera tokens, depende de largura de banda de memória. Prompts longos aumentam o tempo até o primeiro token. Por isso a escolha da máquina muda conforme o fluxo: contexto longo, muitas requisições paralelas ou resposta curta.",
+      "t": 1147,
+      "legenda": "Cada fase da inferência tem um gargalo diferente, e isso orienta a compra.",
+      "print": "img/GKSQYbELDzw/2.jpg",
+      "descricao": "Slide 'Fast at which part?' com barras de prefill e decode para prompt longo com resposta curta e prompt curto com resposta longa."
+    },
+    {
+      "titulo": "Batching favorece GPU dedicada",
+      "texto": "Com 50 requisições simultâneas, a RTX Pro 6000 chegou perto de 1300 tokens por segundo, enquanto as outras máquinas testadas processaram de forma sequencial. Para quem roda vários agentes em paralelo, Osman recomenda GPU Nvidia em vez de Mac, e vê a falta de motores otimizados por chip como problema de software.",
+      "t": 1398,
+      "legenda": "Em paralelo, a GPU dedicada escala e as demais ficam sequenciais.",
+      "print": null,
+      "descricao": null
+    },
+    {
+      "titulo": "Traces reais viram modelo pequeno",
+      "texto": "Osman cita um artigo da Airbnb em que um modelo de 2 bilhões de parâmetros chegou a qualidade de fronteira com cerca de 1% do custo. A receita dele é guardar os traces de agentes com modelos grandes, montar uma avaliação, gerar dados sintéticos e treinar com aprendizado por reforço.",
+      "t": 2213,
+      "legenda": "Traces de agentes são a matéria-prima para treinar um modelo especializado barato.",
+      "print": null,
+      "descricao": null
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Quantization",
+      "traducao": "quantização",
+      "nivel": "intermediario",
+      "chave": "quantization",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "QAT (quantization-aware training)",
+      "traducao": "treino ciente de quantização",
+      "nivel": "avancado",
+      "chave": "qat (quantization-aware training)",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Prefill e decode",
+      "traducao": "leitura do contexto e geração de tokens",
+      "nivel": "intermediario",
+      "chave": "prefill e decode",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Speculative decoding",
+      "traducao": "decodificação especulativa",
+      "nivel": "avancado",
+      "chave": "speculative decoding",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Mixture of experts",
+      "traducao": "mistura de especialistas com roteador",
+      "nivel": "intermediario",
+      "chave": "mixture of experts",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "KV cache",
+      "traducao": "cache de chaves e valores da atenção",
+      "nivel": "avancado",
+      "chave": "kv cache",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Continual learning",
+      "traducao": "aprendizado contínuo",
+      "nivel": "intermediario",
+      "chave": "continual learning",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Decision model",
+      "traducao": "modelo barato que devolve rótulo e probabilidade",
+      "nivel": "avancado",
+      "chave": "decision model",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O palestrante é fundador da Osmantic e promove o ODS, o Portal e uma receita de aprendizado contínuo que ele mesmo diz que ainda está em desenvolvimento, sem dados. Muitos números vêm de slides rápidos sem metodologia (Airbnb, Hugging Face, OpenRouter), e ele admite ter lido o artigo FlashData só por cima. A crítica a benchmarks é pertinente, mas ele usa os mesmos benchmarks quando convêm. Comparações de velocidade ignoram qualidade da resposta, e o custo de manter GPUs próprias aparece só como aviso, sem conta.",
+  "acoes": [
+    "Meça tokens por segundo e tempo até o primeiro token do seu modelo local com um prompt curto e outro de vários milhares de tokens, e anote a diferença.",
+    "Compare duas quantizações do mesmo modelo (por exemplo 4 bits e 8 bits) na sua tarefa real, com 20 exemplos, antes de escolher uma.",
+    "Salve os traces dos seus agentes que usam modelo grande e separe 30 casos para testar um modelo menor na mesma tarefa.",
+    "Dê acesso a busca na web ao seu modelo local antes de concluir que ele não consegue executar uma tarefa com ferramenta recente."
+  ],
+  "numeros": [
+    {
+      "valor": "51 vs 34",
+      "contexto": "tokens/s do Qwen 27B local contra GPT 5.5 na nuvem",
+      "t": 168
+    },
+    {
+      "valor": "~1300 tok/s",
+      "contexto": "RTX Pro 6000 com 50 requisições paralelas",
+      "t": 1398
+    },
+    {
+      "valor": "1,1%",
+      "contexto": "ganho total com tokenizador 100 vezes mais rápido",
+      "t": 1713
+    },
+    {
+      "valor": "437x",
+      "contexto": "redução do KV cache no DeepSeek V4.1 Flash",
+      "t": 2846
+    }
+  ],
+  "rotulo": "O que roda onde: IA local em produção",
+  "objetivo": "escolher hardware, quantização e motor de inferência para um fluxo de agentes local, medindo você mesmo em vez de confiar em benchmarks",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Qual é o gargalo do prefill e qual é o do decode, e o que isso muda para quem escolhe hardware?",
+      "resposta": "O prefill é limitado por computação e o decode por largura de banda de memória. Contextos longos pesam no prefill e aumentam o tempo até o primeiro token. Respostas longas e muitos usuários pesam no decode. A compra deve seguir o seu fluxo."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você roda um agente de suporte que faz sempre a mesma triagem com um modelo de fronteira. Como usar a ideia de Osman para reduzir custo?",
+      "resposta": "Guarde os traces das execuções, monte uma avaliação com casos reais, teste um modelo pequeno ou ajustado nessa avaliação e troque só se a qualidade se mantiver. Meça também latência e custo no seu hardware, sem confiar em números públicos."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que conflito de interesse e que lacunas de evidência você vê na defesa de que local vai vencer a nuvem?",
+      "resposta": "Osman vende o ODS e consultoria em IA local. Muitos números vêm de slides sem método, a receita de aprendizado contínuo não tem resultado, e ele desconfia de benchmarks mas os cita quando ajudam. Faltam custo de operação e comparação de qualidade por tarefa."
+    }
+  ],
+  "experimento": {
+    "titulo": "Medir prefill e decode do seu modelo local",
+    "minutos": 30,
+    "precisa": "Computador com Ollama ou llama.cpp e um modelo pequeno (1B a 8B) baixado.",
+    "passos": [
+      "Instale o Ollama e baixe um modelo pequeno, por exemplo qwen2.5:3b.",
+      "Rode um prompt de uma frase com a opção --verbose e anote o tempo até o primeiro token e os tokens por segundo na geração.",
+      "Cole um texto de cerca de 4000 palavras, peça um resumo de três linhas e anote as mesmas duas medidas.",
+      "Se houver duas quantizações do mesmo modelo (q4 e q8), repita os testes em cada uma e compare velocidade e qualidade do resumo."
+    ],
+    "sucesso": "Você tem uma tabela com tempo até o primeiro token e tokens por segundo para prompt curto e longo, e consegue dizer qual fase cresceu mais."
+  },
+  "consolidado_em": "2026-11-23T20:05:28+00:00"
+}
