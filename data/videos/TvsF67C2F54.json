@@ -1,0 +1,322 @@
+{
+  "id": "TvsF67C2F54",
+  "titulo": "How to Ship Millions of Lines of Agent-Written Code — Jarred Sumner, Anthropic",
+  "titulo_curto": "How to Ship Millions of Lines of Agent-Written Code",
+  "palestrante": "Jarred Sumner, Anthropic",
+  "url": "https://www.youtube.com/watch?v=TvsF67C2F54",
+  "duracao": 1349,
+  "publicado_ts": 1795550404,
+  "edicao": "2026-11-24",
+  "tese": "Agentes entregam milhões de linhas quando testes anteriores ao projeto verificam o resultado e o humano insiste para o agente tentar mais.",
+  "tldr": [
+    "Jarred Sumner, criador do Bun, mesclou um PR de vários milhões de linhas que adiciona um compilador antecipado (AOT) ao Bun. O Claude Code roda sobre o Bun e passou a usar cerca de 4x menos memória e a iniciar cerca de 2x mais rápido.",
+    "O projeto passou por cinco reescritas em pouco mais de um mês. O critério de confiança foi rodar testes que já existiam antes do projeto, como a suíte do próprio Bun, a do WebKit e a test262, e comparar três versões do mesmo app (JIT, AOT e sem tipos).",
+    "O trabalho diário do humano virou fazer perguntas que cobram o agente, medir de novo e empurrar por ganhos de 10% em vez de 0,1%. Subagentes de vida longa e um placar de métricas a cada hora mantiveram o controle."
+  ],
+  "tema": "engenharia-de-software",
+  "complexidade": 4,
+  "ideias": [
+    {
+      "titulo": "Testes que antecedem o projeto são o que dá confiança",
+      "texto": "Sumner decide a abordagem pela pergunta de como verificar que o código funciona. No Bun, os testes eram escritos em TypeScript, independentes da linguagem de implementação, então rodaram na versão Zig e na Rust. No Claude Code, reescrever em Rust exigiria portar os testes, e testes reescritos deixam de merecer confiança. Por isso o time preferiu tornar o JavaScript mais rápido.",
+      "t": 251,
+      "legenda": "A independência dos testes em relação à linguagem decide se vale reescrever.",
+      "print": "img/TvsF67C2F54/0.jpg",
+      "descricao": "Slide 'We rewrote Bun in Rust. Why not Claude Code?': Bun, Zig → Rust em 11 days; Claude Code, TypeScript → Rust com '?'."
+    },
+    {
+      "titulo": "Três versões do mesmo app que precisam concordar",
+      "texto": "Para cada aplicação, o time roda uma versão com JIT, uma compilada antecipadamente e uma sem os tipos. Se as três se comportam igual, a aplicação funciona. Depois o Claude gera geradores de código que fazem fuzzing de padrões diferentes e acham bugs em escala. Os testes usados vêm de suítes que o agente não escreveu, como a do WebKit, a test262 e a do Cloudflare.",
+      "t": 500,
+      "legenda": "Concordância entre três execuções serve de oráculo barato para agentes.",
+      "print": "img/TvsF67C2F54/1.jpg",
+      "descricao": "Slide 'Any JavaScript program is a test': JIT, AOT e AOT sem tipos dão o mesmo resultado (6 = 6 = 6); CI roda 18.454 programas por PR."
+    },
+    {
+      "titulo": "Cinco reescritas, cada uma com um defeito diferente",
+      "texto": "A primeira versão deixou o Claude Code com um gigabyte. A segunda reduziu memória em 3x, mas o código era slop, como tratar qualquer acesso à propriedade archive como uso da API Bun.archive. A terceira usou 140 agentes ao mesmo tempo. A quarta tinha bom código, mas 50 segundos de compilação. A quinta ficou abaixo de 20 segundos e foi a que será entregue.",
+      "t": 97,
+      "legenda": "Cada reescrita corrigiu o gargalo que a anterior revelou.",
+      "print": null,
+      "descricao": null
+    },
+    {
+      "titulo": "Placar horário e checagem de que os testes pegam bugs",
+      "texto": "Num projeto desse tamanho é difícil acompanhar tudo. Sumner pedia ao agente um scorecard por hora, comparando métricas priorizadas com a versão anterior, postado no Slack. Ele também usou o fuzzer V8 Fuzzilli, estendido para tipos de TypeScript, e alerta que é fácil se enganar achando que o teste pega bugs quando ele não pega. Por isso é preciso verificar se os testes realmente detectam falhas.",
+      "t": 1001,
+      "legenda": "Um placar recorrente substitui a leitura do código para acompanhar o agente.",
+      "print": "img/TvsF67C2F54/3.jpg",
+      "descricao": "Terminal do Claude Code com '/loop 1h' para postar atualização horária no Slack; o placar em si não aparece."
+    },
+    {
+      "titulo": "O que o humano faz o dia todo",
+      "texto": "As mensagens mais enviadas por Sumner eram 'continue'. Em seguida vinham perguntas que cobram o agente, como por que fazer assim, dá para fazer mais rápido e o que está demorando. O modelo subestima o que consegue fazer e inventa regras para si mesmo. Sem pressão, ele propõe melhorias de 0,1% em vez de 10%.",
+      "t": 1158,
+      "legenda": "O trabalho do humano é cobrar, medir de novo e ampliar a ambição.",
+      "print": "img/TvsF67C2F54/4.jpg",
+      "descricao": "Slide 'What do I actually do all day?': continue 34x, hows 32x, commit 9x, sounds good 9x, 'laptop died please resume' 3x; ~5.500 mensagens em 46 dias."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Compilador AOT (ahead-of-time)",
+      "traducao": "compilador antecipado, que compila antes de rodar",
+      "nivel": "intermediario",
+      "chave": "compilador aot (ahead-of-time)",
+      "analogia": "Um compilador AOT é como cozinhar todas as marmitas da semana no domingo, para só esquentar na hora de comer.",
+      "explicacao": [
+        "Um programa precisa ser traduzido para a linguagem da máquina antes que o computador consiga executá-lo.",
+        "No compilador AOT (ahead-of-time, antecipado), essa tradução acontece uma vez, antes do programa rodar, e gera um executável pronto.",
+        "Em JavaScript, o normal é compilar durante a execução, e o talk diz que cerca de metade do tempo de CPU de um app típico vai nisso.",
+        "O AOT do Bun usa os tipos do TypeScript como previsões, sem confiar cegamente neles, para gerar acesso direto a campos quando prova que o tipo é sempre o mesmo.",
+        "No Claude Code, isso trouxe cerca de 4x menos memória e início 2x mais rápido, com o custo de um tempo de build que o time precisou baixar para menos de 20 segundos."
+      ],
+      "pre_requisitos": [
+        "JIT (just-in-time)"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "CÓDIGO TYPESCRIPT",
+            "nota": "fonte com tipos do app"
+          },
+          {
+            "rotulo": "COMPILAÇÃO ANTES",
+            "nota": "tipos usados como previsões"
+          },
+          {
+            "rotulo": "BINÁRIO PRONTO",
+            "nota": "código de máquina gerado"
+          },
+          {
+            "rotulo": "EXECUÇÃO DIRETA",
+            "nota": "menos memória, início mais rápido"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "JIT (just-in-time)",
+      "traducao": "compilação durante a execução do programa",
+      "nivel": "intermediario",
+      "chave": "jit (just-in-time)",
+      "analogia": "Um JIT é como um tradutor simultâneo que traduz cada frase do palestrante enquanto ele fala, e decora as frases que se repetem.",
+      "explicacao": [
+        "O computador só entende instruções de máquina, então o código escrito por pessoas precisa ser traduzido em algum momento.",
+        "No JIT (just-in-time, na hora certa), o programa começa a rodar antes de tudo estar traduzido, e a tradução acontece conforme cada parte é usada.",
+        "O JIT observa o que o código faz de verdade e otimiza os trechos mais usados, o que deixa programas longos bem rápidos.",
+        "O custo aparece na partida e na memória, porque cada sessão do programa compila de novo, e em JavaScript isso disputa a mesma thread única do app.",
+        "No talk, a versão JIT do Claude Code serve de linha de base e de oráculo, e a versão AOT precisa se comportar igual a ela."
+      ],
+      "pre_requisitos": [],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "PROGRAMA INICIA",
+            "nota": "código ainda sem compilar"
+          },
+          {
+            "rotulo": "INTERPRETA E MEDE",
+            "nota": "vê quais trechos repetem"
+          },
+          {
+            "rotulo": "COMPILA TRECHOS",
+            "nota": "otimiza o que é mais usado"
+          },
+          {
+            "rotulo": "RODA OTIMIZADO",
+            "nota": "rápido, mas paga CPU e memória"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Teste de regressão",
+      "traducao": "teste que detecta o que quebrou após uma mudança",
+      "nivel": "basico",
+      "chave": "teste de regressão",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Fuzz testing",
+      "traducao": "teste com entradas amplas e variadas para achar falhas",
+      "nivel": "intermediario",
+      "chave": "fuzz testing",
+      "analogia": "Fuzz testing é como deixar uma turma de crianças apertar todos os botões de um elevador em qualquer ordem para ver se ele trava.",
+      "explicacao": [
+        "Fuzz testing (teste por fuzzing) é testar um programa com uma enxurrada de entradas variadas, muitas vezes aleatórias, para ver se algo quebra.",
+        "Um gerador cria milhares de casos que nenhuma pessoa escreveria à mão, e o teste registra travamentos ou respostas erradas.",
+        "Para saber o que é resposta errada, é preciso um oráculo (referência confiável), e no talk o oráculo é comparar as versões JIT, AOT e sem tipos do mesmo código.",
+        "O time pediu ao Claude geradores de código que exploram padrões diferentes e estendeu o Fuzzilli, fuzzer do V8, para cobrir tipos de TypeScript.",
+        "O palestrante alerta que é fácil achar que o fuzzer pega bugs quando não pega, então vale inserir um bug de propósito e conferir se ele aparece."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "Eval"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "GERADOR DE ENTRADAS",
+            "nota": "programas variados e aleatórios"
+          },
+          {
+            "rotulo": "TRÊS VERSÕES RODAM",
+            "nota": "JIT, AOT e sem tipos"
+          },
+          {
+            "rotulo": "COMPARA SAÍDAS",
+            "nota": "qualquer diferença é suspeita"
+          },
+          {
+            "rotulo": "BUG ENCONTRADO",
+            "nota": "caso mínimo vai para correção"
+          }
+        ]
+      },
+      "no_glossario": false
+    },
+    {
+      "nome": "Subagente",
+      "traducao": "agente auxiliar criado por outro agente",
+      "nivel": "intermediario",
+      "chave": "subagente",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Slop",
+      "traducao": "trabalho que parece pronto, sem raciocínio por trás",
+      "nivel": "basico",
+      "chave": "slop",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Dogfooding",
+      "traducao": "usar o próprio produto internamente",
+      "nivel": "basico",
+      "chave": "dogfooding",
+      "analogia": "Dogfooding é como o cozinheiro do restaurante almoçar todo dia o prato do cardápio antes de servir aos clientes.",
+      "explicacao": [
+        "Dogfooding (comer a própria ração) é quando uma empresa usa o próprio produto no dia a dia antes de lançá-lo.",
+        "Os funcionários viram os primeiros usuários e encontram defeitos que os testes não mostraram.",
+        "A versão interna recebe uso real, com carga, hábitos e casos estranhos que só aparecem no trabalho de verdade.",
+        "No talk, o time da Anthropic roda o Claude Code compilado com o novo compilador do Bun internamente, e só depois a versão sai para o público.",
+        "Dogfooding complementa a suíte de testes, mas tem um viés, porque os funcionários usam o produto de um jeito parecido entre si."
+      ],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Prototype pollution",
+      "traducao": "poluição de protótipo, ataque que altera Object.prototype",
+      "nivel": "avancado",
+      "chave": "prototype pollution",
+      "analogia": "Prototype pollution é como alguém riscar o modelo de formulário da secretaria da escola, e todas as cópias tiradas depois saírem com o mesmo erro.",
+      "explicacao": [
+        "Em JavaScript, cada objeto herda propriedades de um objeto-modelo comum, chamado protótipo (prototype).",
+        "O protótipo base de quase todos os objetos é o Object.prototype, e o que entra nele aparece em todos os objetos do programa.",
+        "Na prototype pollution (poluição de protótipo), um atacante consegue gravar uma propriedade no Object.prototype, em geral por meio de dados de entrada mal validados, como um JSON com a chave __proto__.",
+        "A partir daí, checagens como isAdmin passam a ler o valor injetado, e o ataque pode virar escalada de permissão ou execução de código.",
+        "O compilador AOT do Bun proíbe atribuir propriedades ao Object.prototype, o que fecha esse ataque, gera uma das quebras de compatibilidade e também ajuda o desempenho."
+      ],
+      "pre_requisitos": [],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "ENTRADA MALICIOSA",
+            "nota": "JSON com a chave __proto__"
+          },
+          {
+            "rotulo": "MERGE SEM CHECAGEM",
+            "nota": "código copia as chaves sem filtrar"
+          },
+          {
+            "rotulo": "OBJECT.PROTOTYPE",
+            "nota": "recebe a propriedade injetada"
+          },
+          {
+            "rotulo": "TODOS OS OBJETOS",
+            "nota": "herdam o valor falso, como isAdmin"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O palestrante criou o Bun e trabalha na Anthropic, que vende o Claude Code, então há interesse em mostrar agentes como bem-sucedidos. Os ganhos de 4x e 2x aparecem sem metodologia nem repetições, e o código ainda é de uso interno. Os benchmarks são favoráveis, e o AOT perde em casos como o uglify-js. O método exige suítes de teste enormes e anteriores ao projeto, que poucos times têm. Há também dois breaking changes.",
+  "acoes": [
+    "Liste os testes do seu projeto que existiam antes do código gerado por agente e rode só esses para validar uma mudança grande.",
+    "Peça ao agente um scorecard recorrente com as 3 a 5 métricas que importam e compare sempre com a versão anterior.",
+    "Quando o agente disser que uma ideia não vale a pena, peça que meça de novo com um benchmark reproduzível antes de descartá-la.",
+    "Introduza um bug de propósito no código e confirme que seus testes o detectam."
+  ],
+  "numeros": [
+    {
+      "valor": "4x",
+      "contexto": "menos memória no Claude Code com o compilador AOT",
+      "t": 314
+    },
+    {
+      "valor": "2x",
+      "contexto": "inicialização mais rápida do Claude Code",
+      "t": 314
+    },
+    {
+      "valor": "140",
+      "contexto": "agentes escrevendo código ao mesmo tempo na terceira versão",
+      "t": 746
+    },
+    {
+      "valor": "50 s",
+      "contexto": "tempo de compilação do Claude Code na quarta versão",
+      "t": 778
+    }
+  ],
+  "rotulo": "Como entregar milhões de linhas escritas por agentes",
+  "objetivo": "escolher uma estratégia de verificação para um projeto grande escrito por agentes, usando testes anteriores ao código e comparação entre versões",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Por que o time decidiu não reescrever o Claude Code em Rust?",
+      "resposta": "Os testes do Claude Code estão em TypeScript e precisariam ser portados. Ao reescrever os testes, deixa-se de poder confiar neles. No Bun foi possível rodar os mesmos testes nas versões Zig e Rust, por isso a reescrita lá foi viável."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Você quer pedir a um agente que migre um módulo grande do seu sistema. Como montar a verificação usando as ideias do talk?",
+      "resposta": "Use testes que já existiam antes da migração, sem deixar o agente alterá-los. Rode o módulo antigo e o novo com as mesmas entradas e compare as saídas. Adicione fuzzing para gerar entradas variadas e peça um placar periódico das métricas que importam."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites tem a evidência apresentada de que o código escrito por agentes é confiável?",
+      "resposta": "Os ganhos de 4x e 2x vêm do próprio autor, sem metodologia, e o produto ainda não saiu ao público. O método depende de suítes enormes de testes prévios, que muitos projetos não têm. Concordância entre três versões prova igualdade de comportamento, não correção. O próprio palestrante avisa que é fácil achar que os testes pegam bugs quando não pegam."
+    }
+  ],
+  "experimento": {
+    "titulo": "Compare duas implementações com entradas aleatórias",
+    "minutos": 30,
+    "precisa": "Python 3 e um agente de código (Claude Code ou ChatGPT)",
+    "passos": [
+      "Escolha uma função simples, como ordenar uma lista ou formatar uma data, e peça ao agente duas implementações diferentes dela.",
+      "Escreva um script que gere 1000 entradas aleatórias, rode as duas implementações e imprima qualquer divergência.",
+      "Peça ao agente para corrigir as divergências sem alterar o script de comparação.",
+      "Introduza um bug de propósito em uma das implementações e confirme que o script o detecta."
+    ],
+    "sucesso": "O script acusa o bug que você inseriu e fica sem divergências depois da correção, mostrando que o teste realmente pega erros."
+  },
+  "consolidado_em": "2026-11-25T14:06:48+00:00"
+}
