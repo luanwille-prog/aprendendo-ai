@@ -1,0 +1,244 @@
+{
+  "id": "wrfbI5eyLAI",
+  "titulo": "1,000 Claude Agents Formalized Fermat's Last Theorem — Lance Martin, Anthropic",
+  "titulo_curto": "1,000 Claude Agents Formalized Fermat's Last Theorem",
+  "palestrante": "Lance Martin, Anthropic",
+  "url": "https://www.youtube.com/watch?v=wrfbI5eyLAI",
+  "duracao": 1123,
+  "publicado_ts": 1795636832,
+  "edicao": "2026-11-25",
+  "tese": "Agentes fortes coordenam times com Git e um banco simples, e rodar um passe de dreaming sobre a memória corrige o que o agente anotou errado.",
+  "tldr": [
+    "Mil agentes Claude formalizaram o Último Teorema de Fermat em Lean em cerca de 30 horas, usando só Git e um banco SQL, sem harness específico e sem direção humana na solução.",
+    "O agente líder criou sozinho as tabelas para anunciar, atribuir papéis, trocar notas e registrar o que já estava integrado, e o time se realocou ao longo do trabalho.",
+    "Em memória, modelos mais fortes sabem o que anotar e quando ler, e o dreaming reflete sobre transcrições e notas para corrigir erros, preencher lacunas e montar wikis."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "Primitivas simples bastam",
+      "texto": "Cada um dos mil agentes roda em uma sandbox (ambiente isolado) com rede restrita e só acessa Git e um banco SQL. O prompt define um líder e 999 ajudantes e descreve o problema. O esforço de engenharia ficou concentrado em segurança e monitoramento.",
+      "t": 198,
+      "legenda": "Todo o ambiente se resume a Git, um banco e monitoramento.",
+      "print": "img/wrfbI5eyLAI/0.jpg",
+      "descricao": "Diagrama Anthropic do setup: 1.000 sandboxes com 1 líder e 999 ajudantes, ligadas por Git e Postgres via gateway, com monitoramento em tempo real e offline."
+    },
+    {
+      "titulo": "O líder desenha as próprias tabelas",
+      "texto": "Cerca de 5 minutos após o início, o líder criou tabelas para anúncios globais, atribuição de papéis, notas por subtarefa e código integrado (land). Ninguém pediu isso no prompt. O time usou essas tabelas para se coordenar durante cerca de 30 horas.",
+      "t": 262,
+      "legenda": "As tabelas criadas pelo líder aparecem em uso constante por todo o time.",
+      "print": "img/wrfbI5eyLAI/1.jpg",
+      "descricao": "Diagrama de 1 líder e 999 ajudantes com cinco tabelas: Announce, Assign, Notes, Subtasks e Landed, com setas de leitura e escrita."
+    },
+    {
+      "titulo": "Modelo forte usa memória sem prompt especial",
+      "texto": "No benchmark CL Bench, o agente responde 40 perguntas sobre um banco em sessões novas e pode escrever notas entre elas. Com o Sonnet 4.6, a memória ajudou pouco. Modelos mais fortes ganharam mais com a mesma instrução simples, porque sabem quando escrever e quando ler.",
+      "t": 569,
+      "legenda": "O ganho da memória cresce conforme o modelo fica mais forte.",
+      "print": "img/wrfbI5eyLAI/2.jpg",
+      "descricao": "Gráficos CL-Bench com e sem memória: barras de score por modelo (Opus 5.5 0,838 contra 0,655 sem memória; Sonnet 4.6 0,364) e recompensa acumulada."
+    },
+    {
+      "titulo": "Memória enxuta contra memória indiscriminada",
+      "texto": "No Pokémon, o Sonnet 3.7 encheu o diretório de memória com tudo o que viveu e foi pior no jogo. O Fable 5 guardou poucos arquivos, com insights estratégicos que não se obtêm só do estado do jogo, e avançou mais.",
+      "t": 665,
+      "legenda": "Caixas menores no Fable 5 indicam menos arquivos e mais seleção do que importa.",
+      "print": "img/wrfbI5eyLAI/3.jpg",
+      "descricao": "Treemap de memória: Sonnet 3.7 com 413 arquivos e 977.930 caracteres, contra Fable 5 com 10 arquivos e 43.406 caracteres, na mesma escala."
+    },
+    {
+      "titulo": "Dreaming resgata memória envenenada",
+      "texto": "Uma nota errada sobre a posição de um marco fez o Claude cair em loop no jogo. Com memória crua, a trajetória regride e trava. Com dreaming, o modelo revisa transcrições e notas, corrige o erro e segue para a fase seguinte.",
+      "t": 881,
+      "legenda": "A linha com dreaming supera o ponto onde a memória crua regride.",
+      "print": "img/wrfbI5eyLAI/4.jpg",
+      "descricao": "Slide Correcting mistakes: memória crua leva o agente para a próxima cidade; memória com dreaming corrige a nota e o agente volta à entrada da caverna."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Multi-agent system",
+      "traducao": "sistema multiagente",
+      "nivel": "intermediario",
+      "chave": "multi-agent system",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Harness",
+      "traducao": "estrutura que roda o agente",
+      "nivel": "intermediario",
+      "chave": "harness",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Formal verification",
+      "traducao": "verificação formal, com provas ou model checking (TLA+ e Lean)",
+      "nivel": "avancado",
+      "chave": "formal verification",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Sandbox",
+      "traducao": "ambiente isolado para rodar o código",
+      "nivel": "basico",
+      "chave": "sandbox",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Long-horizon agent",
+      "traducao": "agente de longa duração",
+      "nivel": "intermediario",
+      "chave": "long-horizon agent",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Memória de curto e longo prazo",
+      "traducao": "short-term e long-term memory",
+      "nivel": "intermediario",
+      "chave": "memória de curto e longo prazo",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Dreaming",
+      "traducao": "consolidação de memória entre sessões",
+      "nivel": "intermediario",
+      "chave": "dreaming",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Context poisoning",
+      "traducao": "envenenamento de contexto",
+      "nivel": "intermediario",
+      "chave": "context poisoning",
+      "analogia": "Context poisoning é como um bilhete errado colado na geladeira dizendo que o sal fica no armário de cima, e toda pessoa que cozinha procura ali e volta sem sal.",
+      "explicacao": [
+        "Um assistente de IA guarda anotações para lembrar coisas depois. Se uma anotação estiver errada, ele vai repetir o erro.",
+        "Context poisoning (envenenamento de contexto) acontece quando uma informação falsa entra no contexto, o texto que o modelo lê antes de agir.",
+        "O agente confia nesse texto como se fosse verdade. No talk, uma nota com a posição errada de um marco no Pokémon fez o Claude cair sempre no mesmo alçapão e voltar de fase.",
+        "Como a nota é carregada em toda sessão nova, o erro fica preso na memória e gera um loop. Escrever mais notas não resolve, porque a nota ruim continua lá.",
+        "A correção exige revisar a memória. Um passe de dreaming lê transcrições e notas, encontra a contradição, corrige a nota e o agente volta a progredir."
+      ],
+      "pre_requisitos": [
+        "Agente de IA",
+        "LLM",
+        "Prompt"
+      ],
+      "desenho": {
+        "nos": [
+          {
+            "rotulo": "NOTA ERRADA",
+            "nota": "Agente anota um fato falso"
+          },
+          {
+            "rotulo": "CONTEXTO CARREGADO",
+            "nota": "Nota entra em toda sessão nova"
+          },
+          {
+            "rotulo": "LOOP DE ERRO",
+            "nota": "Agente repete a mesma falha"
+          },
+          {
+            "rotulo": "REVISÃO DA MEMÓRIA",
+            "nota": "Dreaming compara notas e transcrições"
+          },
+          {
+            "rotulo": "MEMÓRIA CORRIGIDA",
+            "nota": "Agente sai do loop e avança"
+          }
+        ]
+      },
+      "no_glossario": false
+    }
+  ],
+  "leitura_critica": "O talk é de um funcionário da Anthropic mostrando resultados de modelos da própria empresa, em parte com modelos ainda sem acesso público, então não há replicação externa. Faltam custo em tokens e dinheiro dos mil agentes, taxa de falhas e quanto da prova veio de bibliotecas já formalizadas. O ganho do dreaming no Pokémon vem de um caso mostrado, sem número de repetições. A wiki da Stainless usa 25 perguntas, amostra pequena. Os valores dos gráficos não são lidos em voz alta, exceto 53% da busca crua.",
+  "acoes": [
+    "Dê a um agente de código apenas um repositório Git e uma tabela SQLite compartilhada, peça um trabalho dividido em subtarefas e observe quais tabelas ele cria sozinho.",
+    "Meça se o seu agente com diretório de memória o usa de fato, contando quantas notas ele escreve e quantas vezes lê em uma sequência de tarefas.",
+    "Escreva um passe de revisão que leia as notas de memória do seu agente a cada semana, apague erros e junte duplicatas.",
+    "Compare, no seu corpus de documentos, busca semântica pura contra busca mais uma wiki gerada pelo modelo, usando 10 a 25 perguntas."
+  ],
+  "numeros": [
+    {
+      "valor": "30 horas",
+      "contexto": "duração da execução do time de agentes",
+      "t": 292
+    },
+    {
+      "valor": "60",
+      "contexto": "enunciados na prova formalizada",
+      "t": 354
+    },
+    {
+      "valor": "40",
+      "contexto": "perguntas sobre um banco no CL Bench",
+      "t": 539
+    },
+    {
+      "valor": "53%",
+      "contexto": "acerto da busca crua na base da Stainless",
+      "t": 972
+    }
+  ],
+  "rotulo": "Mil agentes, Git e dreaming: times e memória no Claude",
+  "objetivo": "desenhar um time de agentes coordenado por Git e uma tabela compartilhada, e explicar como um passe de dreaming corrige a memória",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Quais dois recursos os mil agentes tinham para se coordenar e quem criou a estrutura de tabelas?",
+      "resposta": "Git e um banco SQL. O agente líder criou as tabelas sozinho, cerca de 5 minutos após o início, sem instrução no prompt."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Seu agente tem um diretório de memória que cresce a cada sessão. Como você aplicaria a ideia de dreaming?",
+      "resposta": "Agende um passe separado em que o modelo leia as notas e as transcrições, corrija afirmações erradas, junte duplicatas, preencha lacunas e promova o essencial para o contexto inicial das próximas sessões."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites de evidência impedem tratar o resultado dos mil agentes como receita geral?",
+      "resposta": "Há conflito de interesse, pois o autor trabalha na empresa que vende o modelo. Faltam custo e taxa de falha, e há uma só execução, em um domínio com verificador formal que diz com certeza o que está certo. Tarefas sem verificador podem se comportar diferente."
+    }
+  ],
+  "experimento": {
+    "titulo": "Teste de dreaming em notas de memória",
+    "minutos": 30,
+    "precisa": "Claude Code ou Claude/ChatGPT, e um arquivo de texto simples",
+    "passos": [
+      "Crie um arquivo notas.md com 15 notas de um projeto seu e insira 2 afirmações erradas de propósito.",
+      "Peça ao modelo para responder 5 perguntas sobre o projeto usando só o notas.md e anote os erros.",
+      "Rode um passe de dreaming: peça ao modelo que revise o notas.md, aponte contradições, junte duplicatas e reescreva o arquivo.",
+      "Repita as mesmas 5 perguntas com o arquivo reescrito e compare os acertos."
+    ],
+    "sucesso": "O arquivo reescrito corrige ao menos uma das afirmações erradas e o número de acertos nas 5 perguntas sobe ou se mantém com menos linhas."
+  },
+  "consolidado_em": "2026-11-26T17:10:49+00:00"
+}
