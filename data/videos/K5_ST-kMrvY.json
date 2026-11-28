@@ -1,0 +1,211 @@
+{
+  "id": "K5_ST-kMrvY",
+  "titulo": "Stop Paying LLM Prices for Yes-or-No Answers — Chinmay Goyal, Glean",
+  "titulo_curto": "Stop Paying LLM Prices for Yes-or-No Answers",
+  "palestrante": "Chinmay Goyal, Glean",
+  "url": "https://www.youtube.com/watch?v=K5_ST-kMrvY",
+  "duracao": 964,
+  "publicado_ts": 1795809636,
+  "edicao": "2026-11-27",
+  "tese": "Se a saída cabe numa lista conhecida de rótulos, um decision model barato resolve melhor e mais rápido que um LLM generativo.",
+  "tldr": [
+    "Chinmay Goyal, da Glean, defende que a maioria dos passos de um produto de IA são decisões com resposta em lista fechada, como classificar uma consulta, escolher um especialista ou validar uma citação.",
+    "A Glean trocou LLMs gerais e classificadores próprios pelo Jev, um decision model da TypeSafe, e relata latência cerca de 8x menor no roteamento, 99,2% de sugestões no prazo e recall de segurança de 31,5% para 90,2%.",
+    "A regra final é simples. Se dá para listar as saídas de antemão, use um decision model. Se o texto é livre, volte ao LLM generativo."
+  ],
+  "tema": "modelos",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "A maioria dos passos é decisão limitada",
+      "texto": "Classificar intenção, escolher um especialista, ranquear sugestões e checar citações têm saída previsível. Pagar custo e latência de um LLM generativo para isso desperdiça recurso. O Jev ocupa o espaço entre o LLM geral e o classificador com fine-tuning.",
+      "t": 63,
+      "legenda": "As quatro opções para resolver um problema de classificação.",
+      "print": "img/K5_ST-kMrvY/0.jpg",
+      "descricao": "Slide 'Most AI product steps are bounded decisions': 5 passos marcados CHOICE ou NOUL, de entender o pedido a aplicar guardrail."
+    },
+    {
+      "titulo": "Sem treino, perto do fine-tuning",
+      "texto": "Na classificação de consultas, o Jev quase dobrou a qualidade de um Llama base e chegou a 90% da qualidade de um Llama com fine-tuning. Quando as categorias mudam, o time só ajusta o prompt, sem coletar dados nem treinar de novo.",
+      "t": 219,
+      "legenda": "Jev fica perto do modelo ajustado sem nenhum treino.",
+      "print": "img/K5_ST-kMrvY/1.jpg",
+      "descricao": "Gráfico de concordância com rótulos do LLM: Llama base 35,9%, Jev zero-shot 66,8%, Llama com fine-tuning 74,5%."
+    },
+    {
+      "titulo": "Latência menor e saída sempre válida",
+      "texto": "No ranker de sugestões de acompanhamento, o prazo era de 1,5 a 2 segundos. O Jev entregou a sugestão no prazo em 99,2% dos casos, contra cerca de 90% do LLM geral. Os guardrails programáticos não registraram nenhuma saída inválida com ele.",
+      "t": 437,
+      "legenda": "Comparação de prazo cumprido e validade entre Jev e LLM geral.",
+      "print": "img/K5_ST-kMrvY/2.jpg",
+      "descricao": "Ranker de sugestões: latência p50 de 4,67 s (LLM) para 0,67 s (Jev), timeouts de 10,2% para 0,8% e decisões inválidas de 10 para 0."
+    },
+    {
+      "titulo": "Probabilidades permitem ajustar limiares",
+      "texto": "O decision model devolve a probabilidade de cada opção, não só sim ou não. A Glean usa isso para ajustar limiares por cliente com sistemas que aprendem sozinhos com o uso de cada implantação. Também deu resultado quase idêntico em repetições no juiz de citações.",
+      "t": 656,
+      "legenda": "O juiz de citações com Jev repete o resultado quase sempre.",
+      "print": "img/K5_ST-kMrvY/3.jpg",
+      "descricao": "Tabela do juiz de citações: Jev 6,6 s e US$ 0,014; Luna sem raciocínio 81,3 a 85,5 s; Jev muda 1 de 28 parágrafos, Luna 7 de 28."
+    },
+    {
+      "titulo": "Segurança: recall de 31,5% para 90,2%",
+      "texto": "O primeiro filtro de segurança era um classificador próprio em GPUs T4, mantido para cada cliente em implantações isoladas. A troca pelo Jev subiu o recall, cortou custo de recursos e liberou engenheiros que cuidavam dessa infraestrutura.",
+      "t": 813,
+      "legenda": "O recall da primeira fase de segurança sobe de 31,5% para 90,2%.",
+      "print": "img/K5_ST-kMrvY/4.jpg",
+      "descricao": "Gráfico de recall por dataset de guardrail: recall geral de 31,5% para 90,2% com Jev; precisão de 92,7% para 90,8%."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "Decision model",
+      "traducao": "modelo barato que devolve rótulo e probabilidade",
+      "nivel": "intermediario",
+      "chave": "decision model",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Fine-tuning",
+      "traducao": "ajuste fino de um modelo",
+      "nivel": "intermediario",
+      "chave": "fine-tuning",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Model routing",
+      "traducao": "roteamento de modelos",
+      "nivel": "intermediario",
+      "chave": "model routing",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Re-ranker",
+      "traducao": "modelo que reordena candidatos e escolhe os melhores",
+      "nivel": "intermediario",
+      "chave": "re-ranker",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "LLM-as-a-judge",
+      "traducao": "modelo de linguagem usado para avaliar respostas",
+      "nivel": "intermediario",
+      "chave": "llm-as-a-judge",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Golden dataset",
+      "traducao": "conjunto de referência rotulado por humanos",
+      "nivel": "basico",
+      "chave": "golden dataset",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Precision e recall",
+      "traducao": "precisão e cobertura de um classificador",
+      "nivel": "basico",
+      "chave": "precision e recall",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Latência",
+      "traducao": "tempo entre a pergunta e a resposta",
+      "nivel": "basico",
+      "chave": "latência",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "O talk é de um engenheiro da Glean sobre um fornecedor parceiro, a TypeSafe, e mostra só ganhos. Os números vêm de testbeds internos, sem tamanho de amostra nem intervalo de confiança. No juiz de citações, a consistência vem de 28 ou 30 casos. O próprio palestrante admite que o prompt do ranker foi parecido, mas não idêntico. A comparação com o LLM geral não diz qual modelo foi usado, e a base de segurança com 31,5% de recall era um classificador próprio, possivelmente fraco. Faltam custos em valores e a fonte do 'mais de 50%' de economia.",
+  "acoes": [
+    "Liste os passos do seu produto de IA e marque os que têm saída em lista fechada de rótulos, como classificar, rotear, ranquear ou validar.",
+    "Para um desses passos, monte 50 exemplos rotulados à mão e meça precisão, recall e latência do LLM que você usa hoje.",
+    "Rode a mesma entrada 10 vezes no seu juiz LLM e conte quantas respostas mudam, para medir a consistência.",
+    "Peça probabilidades por rótulo na saída e teste um limiar de confiança que manda os casos duvidosos para o LLM generativo."
+  ],
+  "numeros": [
+    {
+      "valor": "8x",
+      "contexto": "redução de latência no roteamento para especialistas",
+      "t": 312
+    },
+    {
+      "valor": "99,2%",
+      "contexto": "sugestões entregues no prazo, contra cerca de 90% do LLM geral",
+      "t": 437
+    },
+    {
+      "valor": "31,5% a 90,2%",
+      "contexto": "recall da primeira fase do filtro de segurança",
+      "t": 813
+    },
+    {
+      "valor": "1 em 28",
+      "contexto": "execuções do juiz de citações com resposta diferente",
+      "t": 656
+    }
+  ],
+  "rotulo": "Quando trocar o LLM por um modelo de decisão",
+  "objetivo": "decidir quais passos de um produto de IA podem sair do LLM generativo e ir para um decision model com rótulos fixos",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "Qual é a regra final do palestrante para decidir quando usar um decision model?",
+      "resposta": "Se a saída pode ser listada de antemão, use um decision model. Se os rótulos são estáveis e o volume é alto, o fine-tuning também serve, mas rótulos mudam com frequência. Se o texto precisa ser livre, use um LLM generativo, talvez em abordagem híbrida."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "Seu app de suporte usa um LLM para decidir se o ticket é de cobrança, bug ou dúvida. Como você aplicaria a ideia do talk?",
+      "resposta": "Trate como decisão de rótulos fixos. Monte um conjunto rotulado, compare o LLM atual com um decision model ou classificador barato em precisão, recall e latência, e use as probabilidades para mandar casos de baixa confiança ao LLM."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Que limites de evidência você vê na comparação entre Jev e o LLM geral?",
+      "resposta": "Os testes são internos da Glean, sem amostra ou intervalo informados, e o palestrante usa um produto de parceiro. O prompt dos dois lados não era idêntico, o LLM comparado não é nomeado e o juiz de citações usou só cerca de 28 casos."
+    }
+  ],
+  "experimento": {
+    "titulo": "Medir o ganho de um classificador contra um LLM",
+    "minutos": 30,
+    "precisa": "Python ou planilha, acesso a um LLM por API ou chat e uma tarefa de classificação sua",
+    "passos": [
+      "Escolha uma tarefa de classificação com 3 a 5 rótulos e escreva 30 exemplos com o rótulo correto.",
+      "Peça a um LLM que responda só com o rótulo e registre acerto e tempo de cada chamada.",
+      "Repita cada exemplo 3 vezes e conte quantas respostas mudam para o mesmo texto.",
+      "Treine um classificador simples, como regressão logística com TF-IDF, nos exemplos e compare acerto e tempo."
+    ],
+    "sucesso": "Você tem uma tabela com acerto, tempo médio e taxa de respostas instáveis dos dois métodos e decide qual cabe no seu passo."
+  },
+  "consolidado_em": "2026-11-28T10:15:12+00:00"
+}

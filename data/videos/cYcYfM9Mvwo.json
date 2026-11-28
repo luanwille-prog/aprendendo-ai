@@ -1,0 +1,210 @@
+{
+  "id": "cYcYfM9Mvwo",
+  "titulo": "Why Cloudflare Became a Neolab — Michelle Chen, Cloudflare",
+  "titulo_curto": "Why Cloudflare Became a Neolab",
+  "palestrante": "Michelle Chen, Cloudflare",
+  "url": "https://www.youtube.com/watch?v=cYcYfM9Mvwo",
+  "duracao": 1205,
+  "publicado_ts": 1795788004,
+  "edicao": "2026-11-27",
+  "tese": "Modelos System 1 de um único passe assumem as decisões baratas do agente e deixam o LLM só para o raciocínio que importa.",
+  "tldr": [
+    "A Cloudflare apostou que os modelos ficariam menores, errou quando eles chegaram a trilhões de parâmetros e passou a servir modelos grandes na sua plataforma de agentes.",
+    "Quando surgiu o conceito de modelo System 1, que responde com uma única passada pela rede, a empresa treinou o próprio (Clef) em 48 horas e lançou o Cleric, de extração, três semanas depois.",
+    "Numa demo de triagem de falha de CI, a combinação de modelos System 1 com um LLM ficou cerca de 2 vezes mais rápida e 72% mais barata, com a mesma resposta final."
+  ],
+  "tema": "agentes",
+  "complexidade": 3,
+  "ideias": [
+    {
+      "titulo": "A aposta errada que virou pivô",
+      "texto": "A Cloudflare lançou o Workers AI em 2023 com GPUs espalhadas pela rede, apostando em modelos pequenos e em latência de rede decisiva. Os modelos cresceram de 7 bilhões para cerca de 3 trilhões de parâmetros. A empresa passou a servir modelos como Kimi, GLM e DeepSeek em março de 2026, o que encaixou na sua plataforma de agentes.",
+      "t": 307,
+      "legenda": "A hipótese de modelos pequenos falhou e a empresa mudou de rumo.",
+      "print": "img/cYcYfM9Mvwo/0.jpg",
+      "descricao": "Slide 'Cloudflare's hypothesis: Models get smaller' (2023), com a palestrante ao lado e o logo da Cloudflare."
+    },
+    {
+      "titulo": "System 1: uma passada, uma decisão",
+      "texto": "Um LLM autorregressivo gera token por token e gasta muito tempo e dinheiro. Um modelo System 1 faz uma única passada pelas entradas e devolve uma saída que serve para decidir. Os dois trabalham juntos: o modelo pequeno tira trabalho do grande, que fica com as tarefas que exigem raciocínio.",
+      "t": 494,
+      "legenda": "O contraste entre gerar token a token e decidir em uma passada.",
+      "print": "img/cYcYfM9Mvwo/1.jpg",
+      "descricao": "Slide 'The east wind: Jev and System One models': LLM escreve token a token (segundos) contra System One, uma passada (milissegundos)."
+    },
+    {
+      "titulo": "Clef decide e Cleric extrai",
+      "texto": "O Clef dá ao agente decisões programáveis, sem esperar minutos de raciocínio nem um humano no circuito. O Cleric é um modelo de extração. Ele lê e-mails, mensagens ou imagens sem estrutura e devolve objetos JSON tipados, que o agente usa direto. A empresa lançou quatro modelos em três semanas.",
+      "t": 744,
+      "legenda": "Entrada solta de texto vira objeto tipado que o agente consome.",
+      "print": "img/cYcYfM9Mvwo/2.jpg",
+      "descricao": "Slide 'Cleric: for answers you can't list up front': cards extract (INV-20419), compute ($1,450.00), estimate e forecast, com saída tipada."
+    },
+    {
+      "titulo": "Triagem de CI com 40 ferramentas",
+      "texto": "No fluxo só com LLM, cada volta reenvia as 40 ferramentas e o contexto inteiro. No fluxo híbrido, o Clef Flash reduz a lista para cerca de 10 ferramentas, o Cleric extrai o número do PR e lê os logs de centenas de linhas, e o LLM só age no fim. O contexto encolhe muito.",
+      "t": 901,
+      "legenda": "O fluxo híbrido tira do LLM a poda de ferramentas e a leitura de logs.",
+      "print": "img/cYcYfM9Mvwo/3.jpg",
+      "descricao": "Diagrama 'The same agent, with System One': clef-flash poda 40 para 10 ferramentas, Cleric preenche args e lê logs; 1 ida e volta ao glm-5.3."
+    },
+    {
+      "titulo": "O gráfico de cascata da demo",
+      "texto": "Na demo ao vivo, o lado System 1 terminou antes e as barras roxas de geração do LLM dominavam o outro lado. Segundo a palestrante, as duas versões chegaram à mesma resposta. Ela mostra 6 chamadas de LLM contra 1 e 40 mil tokens contra 1.800.",
+      "t": 993,
+      "legenda": "O tempo do fluxo híbrido cai porque quase não há geração de LLM.",
+      "print": "img/cYcYfM9Mvwo/4.jpg",
+      "descricao": "Gráfico de cascata da demo de triagem de CI (baixa resolução): barras de tempo do fluxo só com LLM e do fluxo System 1, com geração do LLM em roxo."
+    }
+  ],
+  "conceitos": [
+    {
+      "nome": "System 1 model",
+      "traducao": "modelo System 1, que responde em uma única passada pela rede",
+      "nivel": "intermediario",
+      "chave": "system 1 model",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "System 2 thinking",
+      "traducao": "pensamento lento e deliberado",
+      "nivel": "basico",
+      "chave": "system 2 thinking",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Decision model",
+      "traducao": "modelo barato que devolve rótulo e probabilidade",
+      "nivel": "intermediario",
+      "chave": "decision model",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Extraction model",
+      "traducao": "modelo de extração, que transforma texto livre em JSON tipado",
+      "nivel": "intermediario",
+      "chave": "extraction model",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": false
+    },
+    {
+      "nome": "Cloudflare Workers",
+      "traducao": "plataforma de execução de código em borda, com banco D1 e KV",
+      "nivel": "basico",
+      "chave": "cloudflare workers",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Scaling law",
+      "traducao": "lei de escala: mais dados e computação reduzem a perda",
+      "nivel": "basico",
+      "chave": "scaling law",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Latência",
+      "traducao": "tempo entre a pergunta e a resposta",
+      "nivel": "basico",
+      "chave": "latência",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    },
+    {
+      "nome": "Tool calling",
+      "traducao": "chamada de ferramentas por um agente",
+      "nivel": "intermediario",
+      "chave": "tool calling",
+      "analogia": null,
+      "explicacao": [],
+      "pre_requisitos": [],
+      "desenho": null,
+      "no_glossario": true
+    }
+  ],
+  "leitura_critica": "A palestrante é gerente de produto da Cloudflare e vende os modelos que a empresa acabou de lançar. A demo é um único caso ilustrativo, ao vivo e com Wi-Fi ruim, e os números finais vêm de uma execução feita fora do palco. As contagens de chamadas divergem (6 contra 1 no palco, 5 contra 1 depois). Não há amostra maior nem teste de qualidade em vários casos, e a frase \"a mesma resposta\" não é medida por métrica. O custo de 72% também não mostra o preço de cada modelo.",
+  "acoes": [
+    "Liste as chamadas de LLM do seu agente e marque as que só escolhem ferramenta, extraem um campo ou resumem log, pois são candidatas a um modelo menor.",
+    "Meça tokens de entrada, tempo e custo de uma tarefa recorrente do seu agente antes de mudar qualquer coisa, para ter uma linha de base comparável.",
+    "Pode a lista de ferramentas enviada ao modelo para só as relevantes à tarefa e compare a taxa de acerto com a lista completa."
+  ],
+  "numeros": [
+    {
+      "valor": "48 horas",
+      "contexto": "tempo de treino do modelo Clef, no fim de semana",
+      "t": 618
+    },
+    {
+      "valor": "9,2 s vs 17,2 s",
+      "contexto": "tempo do fluxo híbrido contra o fluxo só com LLM",
+      "t": 1025
+    },
+    {
+      "valor": "72%",
+      "contexto": "redução de custo no fluxo híbrido da demo",
+      "t": 1025
+    },
+    {
+      "valor": "94%",
+      "contexto": "redução de tokens no fluxo híbrido da demo",
+      "t": 1025
+    }
+  ],
+  "rotulo": "Modelos System 1 e LLMs juntos em agentes",
+  "objetivo": "desenhar um fluxo de agente em que modelos rápidos podam ferramentas, extraem dados e encurtam logs antes de chamar o LLM",
+  "perguntas": [
+    {
+      "tipo": "lembrar",
+      "pergunta": "O que diferencia um modelo System 1 de um LLM autorregressivo, segundo a palestrante?",
+      "resposta": "O modelo System 1 faz uma única passada pelas entradas e gera uma saída para decidir. O LLM gera tokens um a um, o que leva mais tempo e custa mais."
+    },
+    {
+      "tipo": "aplicar",
+      "pergunta": "No seu agente, que três etapas você poderia tirar do LLM e dar a modelos rápidos, seguindo o fluxo da demo de CI?",
+      "resposta": "Podar a lista de ferramentas, extrair campos como o número do PR de um texto e achar o erro dentro de logs longos. O LLM fica só com a decisão final e a ação."
+    },
+    {
+      "tipo": "criticar",
+      "pergunta": "Por que o resultado de 72% mais barato e 94% menos tokens ainda não basta para você adotar a abordagem?",
+      "resposta": "Vem de uma única demo, apresentada por quem vende os modelos, sem métrica de qualidade e com contagens de chamadas que divergem. Você precisa repetir em seus casos e medir acerto."
+    }
+  ],
+  "experimento": {
+    "titulo": "Encurtar logs antes do LLM e comparar",
+    "minutos": 30,
+    "precisa": "Claude ou ChatGPT, um log de falha de CI com centenas de linhas e uma planilha.",
+    "passos": [
+      "Cole o log inteiro no modelo e peça a causa do erro. Anote tokens de entrada, tempo e a resposta.",
+      "Em uma conversa nova, peça a um modelo menor só o trecho do erro e as linhas afetadas, em JSON com os campos mensagem e linhas.",
+      "Envie ao modelo principal apenas esse JSON e peça a causa do erro. Anote tokens, tempo e a resposta.",
+      "Repita com 3 logs diferentes e registre tudo numa planilha com as duas abordagens lado a lado."
+    ],
+    "sucesso": "Você tem uma tabela com tokens, tempo e correção da resposta nos dois fluxos e sabe dizer em que casos a versão encurtada manteve a mesma causa."
+  },
+  "consolidado_em": "2026-11-28T10:15:12+00:00"
+}
